@@ -1,0 +1,44 @@
+package fr.inria.spirals.jtravis.helpers;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
+import java.io.IOException;
+
+/**
+ * Created by urli on 21/12/2016.
+ */
+public abstract class AbstractHelper {
+    public final static String TRAVIS_API_ENDPOINT="https://api.travis-ci.org/";
+
+    private final static String USER_AGENT = "MyClient/1.0.0";
+    private final static String ACCEPT_APP = "application/vnd.travis-ci.2+json";
+    private OkHttpClient client;
+
+    public AbstractHelper() {
+        client = new OkHttpClient();
+    }
+
+    private Request.Builder requestBuilder(String url) {
+        return new Request.Builder().header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+    }
+
+    private void checkResponse(Response response) throws IOException {
+        if (response.code() != 200) {
+            throw new IOException("The response answer is not 200: "+response.code()+" "+response.message());
+        }
+    }
+
+    public ResponseBody get(String url) throws IOException {
+        Request request = this.requestBuilder(url).get().build();
+        Call call = this.client.newCall(request);
+
+        Response response = call.execute();
+        checkResponse(response);
+        return response.body();
+    }
+
+}
