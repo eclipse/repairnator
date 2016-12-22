@@ -21,13 +21,11 @@ public class CommitHelperTest {
             super();
         }
 
-        public Commit getJsonBuildElement(int buildId) throws IOException {
+        public JsonElement getJsonCommitElement(int buildId) throws IOException {
             ResponseBody response = this.get(TRAVIS_API_ENDPOINT+BuildHelper.BUILD_ENDPOINT+buildId);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
-            JsonElement jsonCommit = allAnswer.getAsJsonObject("commit");
-
-            return createGson().fromJson(jsonCommit, Commit.class);
+            return allAnswer.getAsJsonObject("commit");
         }
     }
 
@@ -46,7 +44,7 @@ public class CommitHelperTest {
         expectedCommit.setCompareUrl("https://github.com/INRIA/spoon/compare/3c5ab0fe7a89...d283ce5727f4");
 
         Helper helper = new Helper();
-        Commit obtainedCommit = helper.getJsonBuildElement(buildId);
+        Commit obtainedCommit = CommitHelper.getCommitFromJsonElement(helper.getJsonCommitElement(buildId));
         assertEquals(expectedCommit, obtainedCommit);
     }
 }

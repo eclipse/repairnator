@@ -78,4 +78,12 @@ public class BuildHelperTest {
         assertEquals("INRIA/spoon", obtainedRepo.getSlug());
         assertEquals(2800492, obtainedRepo.getId());
     }
+
+    @Test
+    public void testGetStatusReturnTheRightValue() {
+        int buildId = 185719843;
+        Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        assertEquals(BuildStatus.PASSED, obtainedBuild.getBuildStatus());
+    }
 }
