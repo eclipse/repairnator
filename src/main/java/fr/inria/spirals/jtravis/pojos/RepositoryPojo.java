@@ -8,7 +8,7 @@ public class RepositoryPojo {
     protected String slug;
     protected boolean active;
     protected String description;
-    protected int last_build_id;
+    protected int lastBuildId;
 
     public RepositoryPojo() {}
 
@@ -44,11 +44,35 @@ public class RepositoryPojo {
         this.description = description;
     }
 
-    public int getLast_build_id() {
-        return last_build_id;
+    public int getLastBuildId() {
+        return lastBuildId;
     }
 
-    public void setLast_build_id(int last_build_id) {
-        this.last_build_id = last_build_id;
+    public void setLastBuildId(int lastBuildId) {
+        this.lastBuildId = lastBuildId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RepositoryPojo that = (RepositoryPojo) o;
+
+        if (id != that.id) return false;
+        if (active != that.active) return false;
+        if (lastBuildId != that.lastBuildId) return false;
+        if (slug != null ? !slug.equals(that.slug) : that.slug != null) return false;
+        return description != null ? description.equals(that.description) : that.description == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (slug != null ? slug.hashCode() : 0);
+        result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + lastBuildId;
+        return result;
     }
 }
