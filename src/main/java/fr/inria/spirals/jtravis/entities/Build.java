@@ -12,6 +12,7 @@ import java.util.List;
 public class Build extends BuildPojo {
     private Repository repository;
     private Commit commit;
+    private BuildConfig config;
     private List<Job> jobs;
 
     public BuildStatus getBuildStatus() {
@@ -47,11 +48,20 @@ public class Build extends BuildPojo {
         return jobs;
     }
 
+    public BuildConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(BuildConfig config) {
+        this.config = config;
+    }
+
     @Override
     public String toString() {
         return "Build{" +
                 super.toString()+
                 "commit=" + commit +
+                "config=" + config +
                 '}';
     }
 
@@ -63,13 +73,19 @@ public class Build extends BuildPojo {
 
         Build build = (Build) o;
 
-        return commit != null ? commit.equals(build.commit) : build.commit == null;
+        if (repository != null ? !repository.equals(build.repository) : build.repository != null) return false;
+        if (commit != null ? !commit.equals(build.commit) : build.commit != null) return false;
+        if (config != null ? !config.equals(build.config) : build.config != null) return false;
+        return jobs != null ? jobs.equals(build.jobs) : build.jobs == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
+        result = 31 * result + (repository != null ? repository.hashCode() : 0);
         result = 31 * result + (commit != null ? commit.hashCode() : 0);
+        result = 31 * result + (config != null ? config.hashCode() : 0);
+        result = 31 * result + (jobs != null ? jobs.hashCode() : 0);
         return result;
     }
 }

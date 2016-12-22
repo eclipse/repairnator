@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.BuildConfig;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.Repository;
@@ -54,6 +55,10 @@ public class BuildHelper extends AbstractHelper {
             if (parentRepo != null) {
                 build.setRepository(parentRepo);
             }
+
+            JsonObject configJSON = buildJSON.getAsJsonObject("config");
+            BuildConfig config = ConfigHelper.getBuildConfigFromJsonElement(configJSON);
+            build.setConfig(config);
 
             return build;
         } catch (IOException e) {

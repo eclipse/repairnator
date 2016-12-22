@@ -15,7 +15,6 @@ public class JobPojo {
     private int logId;
     private String state;
     private String number;
-    private BuildConfig config;
     private Date startedAt;
     private Date finishedAt;
     private String queue;
@@ -77,14 +76,6 @@ public class JobPojo {
         this.number = number;
     }
 
-    public BuildConfig getConfig() {
-        return config;
-    }
-
-    public void setConfig(BuildConfig config) {
-        this.config = config;
-    }
-
     public Date getStartedAt() {
         return startedAt;
     }
@@ -132,7 +123,6 @@ public class JobPojo {
         if (allowFailure != jobPojo.allowFailure) return false;
         if (state != null ? !state.equals(jobPojo.state) : jobPojo.state != null) return false;
         if (number != null ? !number.equals(jobPojo.number) : jobPojo.number != null) return false;
-        if (config != null ? !config.equals(jobPojo.config) : jobPojo.config != null) return false;
         if (startedAt != null ? !startedAt.equals(jobPojo.startedAt) : jobPojo.startedAt != null) return false;
         if (finishedAt != null ? !finishedAt.equals(jobPojo.finishedAt) : jobPojo.finishedAt != null) return false;
         return queue != null ? queue.equals(jobPojo.queue) : jobPojo.queue == null;
@@ -147,7 +137,6 @@ public class JobPojo {
         result = 31 * result + logId;
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
-        result = 31 * result + (config != null ? config.hashCode() : 0);
         result = 31 * result + (startedAt != null ? startedAt.hashCode() : 0);
         result = 31 * result + (finishedAt != null ? finishedAt.hashCode() : 0);
         result = 31 * result + (queue != null ? queue.hashCode() : 0);
@@ -165,7 +154,6 @@ public class JobPojo {
                 ", logId=" + logId +
                 ", state='" + state + '\'' +
                 ", number='" + number + '\'' +
-                ", config=" + config +
                 ", startedAt=" + startedAt +
                 ", finishedAt=" + finishedAt +
                 ", queue='" + queue + '\'' +
