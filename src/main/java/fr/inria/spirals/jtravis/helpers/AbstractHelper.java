@@ -1,5 +1,8 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -32,13 +35,17 @@ public abstract class AbstractHelper {
         }
     }
 
-    public ResponseBody get(String url) throws IOException {
+    protected ResponseBody get(String url) throws IOException {
         Request request = this.requestBuilder(url).get().build();
         Call call = this.client.newCall(request);
 
         Response response = call.execute();
         checkResponse(response);
         return response.body();
+    }
+
+    protected static Gson createGson() {
+        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
     }
 
 }

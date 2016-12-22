@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.jtravis.entities.Repository;
@@ -26,15 +27,6 @@ public class RepositoryHelper extends AbstractHelper {
         return instance;
     }
 
-    private static Repository createRepoFromJSON(JsonObject repoJSON) {
-        Repository repo = new Repository();
-        repo.setId(repoJSON.get("id").getAsInt());
-        repo.setSlug(repoJSON.get("slug").getAsString());
-        repo.setDescription(repoJSON.get("description").getAsString());
-        repo.setActive(repoJSON.get("active").getAsBoolean());
-        return repo;
-    }
-
     public static Repository getRepositoryFromSlug(String slug) {
         String resourceUrl = TRAVIS_API_ENDPOINT+REPO_ENDPOINT+slug;
 
@@ -44,7 +36,8 @@ public class RepositoryHelper extends AbstractHelper {
             JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
             JsonObject repoJSON = allAnswer.getAsJsonObject("repo");
 
-            return createRepoFromJSON(repoJSON);
+            Gson gson = new Gson();
+            return gson.fromJson(repoJSON, Repository.class);
         } catch (IOException e) {
             return null;
         }
@@ -59,7 +52,7 @@ public class RepositoryHelper extends AbstractHelper {
             JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
             JsonObject repoJSON = allAnswer.getAsJsonObject("repo");
 
-            return createRepoFromJSON(repoJSON);
+            return createGson().fromJson(repoJSON, Repository.class);
         } catch (IOException e) {
             return null;
         }

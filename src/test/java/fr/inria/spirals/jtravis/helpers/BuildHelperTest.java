@@ -31,7 +31,6 @@ public class BuildHelperTest {
         expectedBuild.setDuration(415);
 
         Commit commit = new Commit();
-        commit.setHash("d283ce5727f47c854470e64ac25144de5d8e6c05");
         commit.setMessage("test: add test for method parameter templating (#1064)");
         commit.setCompareUrl("https://github.com/INRIA/spoon/compare/3c5ab0fe7a89...d283ce5727f4");
         commit.setBranch("master");
