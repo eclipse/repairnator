@@ -75,4 +75,15 @@ public class RepositoryPojo {
         result = 31 * result + lastBuildId;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RepositoryPojo{" +
+                "id=" + id +
+                ", slug='" + slug + '\'' +
+                ", active=" + active +
+                ", description='" + description + '\'' +
+                ", lastBuildId=" + lastBuildId +
+                '}';
+    }
 }

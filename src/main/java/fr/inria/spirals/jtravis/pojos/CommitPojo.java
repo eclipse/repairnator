@@ -121,4 +121,19 @@ public class CommitPojo {
         result = 31 * result + (compareUrl != null ? compareUrl.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "CommitPojo{" +
+                "sha='" + sha + '\'' +
+                ", branch='" + branch + '\'' +
+                ", message='" + message + '\'' +
+                ", committedAt=" + committedAt +
+                ", authorName='" + authorName + '\'' +
+                ", authorEmail='" + authorEmail + '\'' +
+                ", committerName='" + committerName + '\'' +
+                ", committerEmail='" + committerEmail + '\'' +
+                ", compareUrl='" + compareUrl + '\'' +
+                '}';
+    }
 }

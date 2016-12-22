@@ -7,5 +7,4 @@ import fr.inria.spirals.jtravis.pojos.CommitPojo;
  */
 public class Commit extends CommitPojo {
 
-
 }
