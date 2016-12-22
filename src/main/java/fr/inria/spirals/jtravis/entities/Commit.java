@@ -6,8 +6,7 @@ import java.util.Date;
  * Created by urli on 21/12/2016.
  */
 public class Commit {
-    private int id;
-    private String sha;
+    private String hash;
     private String branch;
     private String message;
     private Date committedAt;
@@ -17,20 +16,12 @@ public class Commit {
     private String committerEmail;
     private String compareUrl;
 
-    public int getId() {
-        return id;
+    public String getHash() {
+        return hash;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getSha() {
-        return sha;
-    }
-
-    public void setSha(String sha) {
-        this.sha = sha;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getBranch() {
@@ -95,5 +86,30 @@ public class Commit {
 
     public void setCompareUrl(String compareUrl) {
         this.compareUrl = compareUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Commit commit = (Commit) o;
+
+        if (hash != null ? !hash.equals(commit.hash) : commit.hash != null) return false;
+        if (branch != null ? !branch.equals(commit.branch) : commit.branch != null) return false;
+        if (message != null ? !message.equals(commit.message) : commit.message != null) return false;
+        if (committedAt != null ? !committedAt.equals(commit.committedAt) : commit.committedAt != null) return false;
+        if (authorName != null ? !authorName.equals(commit.authorName) : commit.authorName != null) return false;
+        if (authorEmail != null ? !authorEmail.equals(commit.authorEmail) : commit.authorEmail != null) return false;
+        if (committerName != null ? !committerName.equals(commit.committerName) : commit.committerName != null)
+            return false;
+        if (committerEmail != null ? !committerEmail.equals(commit.committerEmail) : commit.committerEmail != null)
+            return false;
+        return compareUrl != null ? compareUrl.equals(commit.compareUrl) : commit.compareUrl == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return hash != null ? hash.hashCode() : 0;
     }
 }

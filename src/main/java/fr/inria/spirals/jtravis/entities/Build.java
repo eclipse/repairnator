@@ -115,4 +115,31 @@ public class Build {
     public void setJobs(List<Job> jobs) {
         this.jobs = jobs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Build build = (Build) o;
+
+        if (id != build.id) return false;
+        if (number != build.number) return false;
+        if (fromPullRequest != build.fromPullRequest) return false;
+        if (pullRequestNumber != build.pullRequestNumber) return false;
+        if (duration != build.duration) return false;
+        if (repository != null ? !repository.equals(build.repository) : build.repository != null) return false;
+        if (commit != null ? !commit.equals(build.commit) : build.commit != null) return false;
+        if (pullRequestTitle != null ? !pullRequestTitle.equals(build.pullRequestTitle) : build.pullRequestTitle != null)
+            return false;
+        if (status != build.status) return false;
+        if (startedAt != null ? !startedAt.equals(build.startedAt) : build.startedAt != null) return false;
+        if (finishedAt != null ? !finishedAt.equals(build.finishedAt) : build.finishedAt != null) return false;
+        return jobs != null ? jobs.equals(build.jobs) : build.jobs == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

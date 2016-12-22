@@ -49,4 +49,23 @@ public class Repository {
     public void setActive(boolean active) {
         isActive = active;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Repository that = (Repository) o;
+
+        if (id != that.id) return false;
+        if (isActive != that.isActive) return false;
+        if (slug != null ? !slug.equals(that.slug) : that.slug != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        return lastBuild != null ? lastBuild.equals(that.lastBuild) : that.lastBuild == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }
