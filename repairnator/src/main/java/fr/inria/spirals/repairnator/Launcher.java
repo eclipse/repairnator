@@ -16,5 +16,10 @@ public class Launcher {
 
     public static void main(String[] args) throws IOException {
         List<Build> buildList = ProjectScanner.getListOfFailingBuildFromProjects("src/main/resources/project_list.txt");
+        System.out.println("# Retrieved builds: "+buildList.size());
+
+        for (Build build : buildList) {
+            System.out.println("Build failing: "+build+" : "+build.getBuildStatus().name());
+        }
     }
 }

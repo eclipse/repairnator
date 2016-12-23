@@ -47,14 +47,21 @@ public class ProjectScanner {
         List<Build> result = new ArrayList<Build>();
 
         for (String slug : slugs) {
+            Launcher.LOGGER.debug("Get repo "+slug);
             Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
             if (repo != null) {
                 Build lastBuild = repo.getLastBuild();
                 if (lastBuild != null) {
-                    if (lastBuild.getBuildStatus() == BuildStatus.FAILED) {
-                        result.add(lastBuild);
+                    Launcher.LOGGER.debug("Examinate repo "+slug+" - build "+lastBuild.getId());
+                    if (lastBuild.getConfig().getLanguage().equals("java")) {
+                        Launcher.LOGGER.debug("Accept repo "+slug+" - build "+lastBuild.getId()+" - Status : "+lastBuild.getBuildStatus().name());
+                        if (lastBuild.getBuildStatus() == BuildStatus.FAILED || lastBuild.getBuildStatus() == BuildStatus.ERRORED) {
+                            result.add(lastBuild);
+                        }
+                    } else {
+                        Launcher.LOGGER.warn("Examine repo "+slug+" Careful the following build "+lastBuild.getId()+" is not in java but language: "+lastBuild.getConfig().getLanguage());
                     }
-                    Launcher.LOGGER.debug("Examinate repo "+slug+" - build "+lastBuild.getId()+" - Status : "+lastBuild.getBuildStatus().name());
+
                 } else {
                     Launcher.LOGGER.info("It seems that the repo "+slug+" does not have any Travis build.");
                 }
