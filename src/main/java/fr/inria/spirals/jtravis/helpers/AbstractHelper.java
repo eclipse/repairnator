@@ -35,6 +35,14 @@ public abstract class AbstractHelper {
         }
     }
 
+    protected ResponseBody rawGet(String url) throws IOException {
+        Request request = new Request.Builder().url(url).build();
+        Call call = this.client.newCall(request);
+        Response response = call.execute();
+        checkResponse(response);
+        return response.body();
+    }
+
     protected ResponseBody get(String url) throws IOException {
         Request request = this.requestBuilder(url).get().build();
         Call call = this.client.newCall(request);

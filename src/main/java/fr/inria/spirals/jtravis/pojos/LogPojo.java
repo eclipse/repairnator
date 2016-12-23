@@ -7,6 +7,7 @@ public class LogPojo {
     private int id;
     private String type;
     private String body;
+    private int jobId;
 
     public int getId() {
         return id;
@@ -32,6 +33,14 @@ public class LogPojo {
         this.body = body;
     }
 
+    public int getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,6 +49,7 @@ public class LogPojo {
         LogPojo logPojo = (LogPojo) o;
 
         if (id != logPojo.id) return false;
+        if (jobId != logPojo.jobId) return false;
         if (type != null ? !type.equals(logPojo.type) : logPojo.type != null) return false;
         return body != null ? body.equals(logPojo.body) : logPojo.body == null;
     }
@@ -49,6 +59,7 @@ public class LogPojo {
         int result = id;
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (body != null ? body.hashCode() : 0);
+        result = 31 * result + jobId;
         return result;
     }
 
@@ -58,6 +69,7 @@ public class LogPojo {
                 "id=" + id +
                 ", type='" + type + '\'' +
                 ", body='" + body + '\'' +
+                ", jobId=" + jobId +
                 '}';
     }
 }
