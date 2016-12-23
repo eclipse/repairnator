@@ -1,7 +1,9 @@
 package fr.inria.spirals.jtravis.pojos;
 
 /**
- * Created by urli on 22/12/2016.
+ * Represent a log object in Travis CI API (see {@link https://docs.travis-ci.com/api#logs})
+ *
+ * @author Simon Urli
  */
 public class LogPojo {
     private int id;

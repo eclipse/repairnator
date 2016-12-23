@@ -9,7 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by urli on 21/12/2016.
+ * Business object to deal with Build of Travis CI API.
+ * This object can return its repository, commit, configuration and jobs.
+ * It also has helpful methods to get its status and a complete log of its jobs.
+ * If the jobs and/or repository are not retrieved when creating the object, there are lazily get on getters.
+ *
+ * @author Simon Urli
  */
 public class Build extends BuildPojo {
     private Repository repository;
@@ -72,7 +77,8 @@ public class Build extends BuildPojo {
     }
 
     public String getCompleteLog() {
-        if (this.completeLog == null) {
+        if (!this.getJobs().isEmpty() && (this.completeLog == null || this.completeLog.equals(""))) {
+            this.completeLog = "";
             for (Job job : this.getJobs()) {
                 Log log = job.getLog();
                 if (log != null) {
@@ -92,15 +98,6 @@ public class Build extends BuildPojo {
     }
 
     @Override
-    public String toString() {
-        return "Build{" +
-                super.toString()+
-                "commit=" + commit +
-                "config=" + config +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -111,7 +108,8 @@ public class Build extends BuildPojo {
         if (repository != null ? !repository.equals(build.repository) : build.repository != null) return false;
         if (commit != null ? !commit.equals(build.commit) : build.commit != null) return false;
         if (config != null ? !config.equals(build.config) : build.config != null) return false;
-        return jobs != null ? jobs.equals(build.jobs) : build.jobs == null;
+        if (jobs != null ? !jobs.equals(build.jobs) : build.jobs != null) return false;
+        return completeLog != null ? completeLog.equals(build.completeLog) : build.completeLog == null;
     }
 
     @Override
@@ -121,6 +119,19 @@ public class Build extends BuildPojo {
         result = 31 * result + (commit != null ? commit.hashCode() : 0);
         result = 31 * result + (config != null ? config.hashCode() : 0);
         result = 31 * result + (jobs != null ? jobs.hashCode() : 0);
+        result = 31 * result + (completeLog != null ? completeLog.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Build{" +
+                super.toString() +
+                "repository=" + repository +
+                ", commit=" + commit +
+                ", config=" + config +
+                ", jobs=" + jobs +
+                ", completeLog='" + completeLog + '\'' +
+                '}';
     }
 }

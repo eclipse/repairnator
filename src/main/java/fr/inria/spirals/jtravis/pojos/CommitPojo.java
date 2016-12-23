@@ -3,7 +3,9 @@ package fr.inria.spirals.jtravis.pojos;
 import java.util.Date;
 
 /**
- * Created by urli on 22/12/2016.
+ * Represent a Commit object in Travis CI API (see {@link https://docs.travis-ci.com/api#commits})
+ *
+ * @author Simon Urli
  */
 public class CommitPojo {
     private String sha;

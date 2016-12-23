@@ -5,7 +5,9 @@ import fr.inria.spirals.jtravis.entities.BuildConfig;
 import java.util.Date;
 
 /**
- * Created by urli on 22/12/2016.
+ * Represents a job object in Travis CI API (see {@link https://docs.travis-ci.com/api#jobs})
+ *
+ * @author Simon Urli
  */
 public class JobPojo {
     private int id;

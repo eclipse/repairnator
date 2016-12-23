@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by urli on 22/12/2016.
+ * Represent a Build object of Travis CI API (see {@link https://docs.travis-ci.com/api#builds})
+ *
+ * @author Simon Urli
  */
 public class BuildPojo {
     private int id;

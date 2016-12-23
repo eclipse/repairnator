@@ -12,7 +12,10 @@ import okhttp3.ResponseBody;
 import java.io.IOException;
 
 /**
- * Created by urli on 21/12/2016.
+ * This abstract helper is the base helper for all the others.
+ * It defines constants for Travis CI API and methods to do requests and to parse them.
+ *
+ * @author Simon Urli
  */
 public abstract class AbstractHelper {
     public final static String TRAVIS_API_ENDPOINT="https://api.travis-ci.org/";

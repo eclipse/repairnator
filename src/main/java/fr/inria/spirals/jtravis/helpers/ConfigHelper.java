@@ -5,7 +5,9 @@ import fr.inria.spirals.jtravis.entities.BuildConfig;
 import fr.inria.spirals.jtravis.entities.JobConfig;
 
 /**
- * Created by urli on 22/12/2016.
+ * The helper to deal with config objects (both JobConfig and BuildConfig)
+ *
+ * @author Simon Urli
  */
 public class ConfigHelper extends AbstractHelper {
     public static BuildConfig getBuildConfigFromJsonElement(JsonElement jsonConfig) {

@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import fr.inria.spirals.jtravis.entities.Commit;
 
 /**
- * Created by urli on 22/12/2016.
+ * The helper to deal with Commit objects
+ *
+ * @author Simon Urli
  */
 public class CommitHelper extends AbstractHelper {
 

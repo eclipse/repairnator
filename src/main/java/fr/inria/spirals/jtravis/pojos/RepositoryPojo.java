@@ -1,7 +1,9 @@
 package fr.inria.spirals.jtravis.pojos;
 
 /**
- * Created by urli on 22/12/2016.
+ * Represent a repository object in Travis CI API (see {@link https://docs.travis-ci.com/api#repositories})
+ *
+ * @author Simon Urli
  */
 public class RepositoryPojo {
     private int id;

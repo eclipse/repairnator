@@ -3,7 +3,11 @@ package fr.inria.spirals.jtravis.pojos;
 import java.util.List;
 
 /**
- * Created by urli on 22/12/2016.
+ *
+ * Represents the config attribute object in a build object (see {@link fr.inria.spirals.jtravis.entities.Build})
+ * This object is different from a {@link fr.inria.spirals.jtravis.pojos.JobConfigPojo} for the jdk attribute which is a list of String here.
+ *
+ * @author Simon Urli
  */
 public class BuildConfigPojo extends ConfigPojo {
     private List<String> jdk;

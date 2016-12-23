@@ -1,7 +1,10 @@
 package fr.inria.spirals.jtravis.pojos;
 
 /**
- * Created by urli on 22/12/2016.
+ * Represents the config attribute object in a job object (see {@link fr.inria.spirals.jtravis.entities.Job})
+ * This object is different from a {@link fr.inria.spirals.jtravis.pojos.BuildConfigPojo} for the jdk attribute which is a simple String here.
+ *
+ * @author Simon Urli
  */
 public class JobConfigPojo extends ConfigPojo {
     private String jdk;

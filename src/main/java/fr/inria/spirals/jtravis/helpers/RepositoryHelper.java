@@ -9,7 +9,9 @@ import okhttp3.ResponseBody;
 import java.io.IOException;
 
 /**
- * Created by urli on 21/12/2016.
+ * The helper to deal with repository objects.
+ *
+ * @author Simon Urli
  */
 public class RepositoryHelper extends AbstractHelper {
     public static final String REPO_ENDPOINT = "repos/";

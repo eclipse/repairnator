@@ -3,7 +3,9 @@ package fr.inria.spirals.jtravis.entities;
 import fr.inria.spirals.jtravis.pojos.JobConfigPojo;
 
 /**
- * Created by urli on 22/12/2016.
+ * Business object to deal with configuration of a job
+ *
+ * @author Simon Urli
  */
 public class JobConfig extends JobConfigPojo {
 }

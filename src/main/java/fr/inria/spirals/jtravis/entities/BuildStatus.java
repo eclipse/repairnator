@@ -1,7 +1,9 @@
 package fr.inria.spirals.jtravis.entities;
 
 /**
- * Created by urli on 21/12/2016.
+ * Business object to deal with status of the build or of the job in Travis CI API
+ *
+ * @author Simon Urli
  */
 public enum BuildStatus {
     FAILED, PASSED, CREATED, STARTED

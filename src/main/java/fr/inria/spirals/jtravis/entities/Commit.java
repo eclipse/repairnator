@@ -3,7 +3,10 @@ package fr.inria.spirals.jtravis.entities;
 import fr.inria.spirals.jtravis.pojos.CommitPojo;
 
 /**
- * Created by urli on 21/12/2016.
+ * Business object to deal with a commit in Travis CI API
+ * Please note that as of now commit are automatically retrieved when creating build objects, and can't be retrieved later.
+ *
+ * @author Simon Urli
  */
 public class Commit extends CommitPojo {
 

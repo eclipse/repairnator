@@ -10,7 +10,9 @@ import okhttp3.ResponseBody;
 import java.io.IOException;
 
 /**
- * Created by urli on 22/12/2016.
+ * The helper to deal with job objects
+ *
+ * @author Simon Urli
  */
 public class JobHelper extends AbstractHelper {
     public static final String JOB_ENDPOINT = "jobs/";

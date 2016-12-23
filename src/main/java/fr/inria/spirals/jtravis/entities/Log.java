@@ -4,7 +4,10 @@ import fr.inria.spirals.jtravis.helpers.LogHelper;
 import fr.inria.spirals.jtravis.pojos.LogPojo;
 
 /**
- * Created by urli on 21/12/2016.
+ * Business object to deal with log in Travis CI API
+ * If the body of the log has been archived, it is lazily get as plain text from the archive using job endpoint (see {@link https://docs.travis-ci.com/api#logs})
+ *
+ * @author Simon Urli
  */
 public class Log extends LogPojo {
 

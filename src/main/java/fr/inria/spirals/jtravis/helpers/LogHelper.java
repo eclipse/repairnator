@@ -10,7 +10,9 @@ import okhttp3.ResponseBody;
 import java.io.IOException;
 
 /**
- * Created by urli on 23/12/2016.
+ * The helper to deal with log objects
+ *
+ * @author Simon Urli
  */
 public class LogHelper extends AbstractHelper {
     public final static String LOG_ENDPOINT = "logs/";

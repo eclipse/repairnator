@@ -3,7 +3,10 @@ package fr.inria.spirals.jtravis.pojos;
 import java.util.List;
 
 /**
- * Created by urli on 22/12/2016.
+ * An abstract object representing config attribute both for {@link fr.inria.spirals.jtravis.pojos.BuildPojo} and {@link fr.inria.spirals.jtravis.pojos.JobPojo}
+ * It is keeping abstract as some differences still exist for each class.
+ *
+ * @author Simon Urli
  */
 public abstract class ConfigPojo {
     private String language;

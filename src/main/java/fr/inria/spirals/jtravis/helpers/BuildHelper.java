@@ -21,7 +21,9 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by urli on 21/12/2016.
+ * The helper to deal with Build objects
+ *
+ * @author Simon Urli
  */
 public class BuildHelper extends AbstractHelper {
 
