@@ -1,9 +1,7 @@
 INRIA/spoon
 Spirals-Team/librepair
-structr/structr
 nutzam/nutz
 square/okhttp
-apache/sling
 CloudifySource/cloudify
 orbeon/orbeon-forms
 facebook/presto
@@ -11,7 +9,6 @@ tinkerpop/blueprints
 l0rdn1kk0n/wicket-bootstrap
 naver/pinpoint
 deeplearning4j/deeplearning4j
-eclipse/jetty.project
 Graylog2/graylog2-server
 Unidata/thredds
 jOOQ/jOOQ
@@ -48,14 +45,12 @@ mybatis/mybatis-3
 notnoop/java-apns
 dropwizard/dropwizard
 qos-ch/logback
-myui/hivemall
 p6spy/p6spy
 adamfisk/LittleProxy
 jsonld-java/jsonld-java
 springside/springside4
 undera/jmeter-plugins
 qiniu/java-sdk
-sparklemotion/nokogiri
 getsentry/raven-java
 jsprit/jsprit
 mockito/mockito
@@ -89,7 +84,6 @@ OryxProject/oryx
 mikera/vectorz
 spotify/docker-client
 lviggiano/owner
-selendroid/selendroid
 jmkgreen/morphia
 javaslang/javaslang
 go-lang-plugin-org/go-lang-idea-plugin
