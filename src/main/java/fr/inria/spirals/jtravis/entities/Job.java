@@ -1,13 +1,14 @@
 package fr.inria.spirals.jtravis.entities;
 
+import fr.inria.spirals.jtravis.helpers.LogHelper;
 import fr.inria.spirals.jtravis.pojos.JobPojo;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by urli on 21/12/2016.
  */
 public class Job extends JobPojo {
     private JobConfig config;
+    private Log log;
 
     public JobConfig getConfig() {
         return config;
@@ -26,6 +27,9 @@ public class Job extends JobPojo {
     }
 
     public Log getLog() {
-        throw new NotImplementedException();
+        if (log == null && this.getLogId() > 0) {
+            this.log = LogHelper.getLogFromId(this.getLogId());
+        }
+        return this.log;
     }
 }

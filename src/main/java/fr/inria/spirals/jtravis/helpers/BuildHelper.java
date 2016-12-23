@@ -1,12 +1,15 @@
 package fr.inria.spirals.jtravis.helpers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildConfig;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Commit;
+import fr.inria.spirals.jtravis.entities.Job;
 import fr.inria.spirals.jtravis.entities.Repository;
 import okhttp3.ResponseBody;
 
@@ -59,6 +62,13 @@ public class BuildHelper extends AbstractHelper {
             JsonObject configJSON = buildJSON.getAsJsonObject("config");
             BuildConfig config = ConfigHelper.getBuildConfigFromJsonElement(configJSON);
             build.setConfig(config);
+
+            JsonArray arrayJobs = allAnswer.getAsJsonArray("jobs");
+
+            for (JsonElement jobJSONElement : arrayJobs) {
+                Job job = JobHelper.createJobFromJsonElement((JsonObject)jobJSONElement);
+                build.addJob(job);
+            }
 
             return build;
         } catch (IOException e) {

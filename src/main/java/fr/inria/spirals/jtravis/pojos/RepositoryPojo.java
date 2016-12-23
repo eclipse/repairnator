@@ -4,11 +4,11 @@ package fr.inria.spirals.jtravis.pojos;
  * Created by urli on 22/12/2016.
  */
 public class RepositoryPojo {
-    protected int id;
-    protected String slug;
-    protected boolean active;
-    protected String description;
-    protected int lastBuildId;
+    private int id;
+    private String slug;
+    private boolean active;
+    private String description;
+    private int lastBuildId;
 
     public RepositoryPojo() {}
 

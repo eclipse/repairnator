@@ -1,8 +1,10 @@
 package fr.inria.spirals.jtravis.entities;
 
+import fr.inria.spirals.jtravis.helpers.JobHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.jtravis.pojos.BuildPojo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +16,12 @@ public class Build extends BuildPojo {
     private Commit commit;
     private BuildConfig config;
     private List<Job> jobs;
+    private String completeLog;
+
+    public Build() {
+        super();
+        this.jobs = new ArrayList<Job>();
+    }
 
     public BuildStatus getBuildStatus() {
         if (this.getState() != null) {
@@ -44,8 +52,35 @@ public class Build extends BuildPojo {
         return commit;
     }
 
+    public boolean addJob(Job job) {
+        if (this.getJobIds().contains(job.getId()) && !jobs.contains(job)) {
+            return this.jobs.add(job);
+        }
+        return false;
+    }
+
     public List<Job> getJobs() {
+        if (this.jobs.isEmpty() && !this.getJobIds().isEmpty()) {
+            for (int jobId : this.getJobIds()) {
+                Job job = JobHelper.getJobFromId(jobId);
+                if (job != null) {
+                    this.jobs.add(job);
+                }
+            }
+        }
         return jobs;
+    }
+
+    public String getCompleteLog() {
+        if (this.completeLog == null) {
+            for (Job job : this.getJobs()) {
+                Log log = job.getLog();
+                if (log != null) {
+                    this.completeLog.concat(log.getBody());
+                }
+            }
+        }
+        return this.completeLog;
     }
 
     public BuildConfig getConfig() {
