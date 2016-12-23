@@ -44,34 +44,7 @@ public class BuildHelperTest {
 
         BuildConfig expectedConfig = new BuildConfig();
         expectedConfig.setLanguage("java");
-        expectedConfig.setSudo("required");
         expectedConfig.setJdk(Arrays.asList(new String[]{"oraclejdk8"}));
-        expectedConfig.setInstall(Arrays.asList(new String[]{ null, "mvn dependency:resolve", "pip install --user CommonMark requests", "sudo apt-get install xmlstarlet"}));
-
-        String configScript = "# compiles and install\n" +
-                "mvn install -DskipTests &&\n" +
-                "\n" +
-                "# checks that it works with spoon-maven-pluging\n" +
-                "git clone https://github.com/square/javawriter.git &&\n" +
-                "cd javawriter &&  \n" +
-                "git checkout d39761f9ec25ca5bf3b7bf15d34fa2b831fed9c1 &&\n" +
-                "bash ../doc/jenkins/build.sh &&\n" +
-                "cd .. &&\n" +
-                "rm -rf javawriter &&\n" +
-                "\n" +
-                "# checkstyle, license, javadoc, animal sniffer.\n" +
-                "mvn verify site -DskipTests &&\n" +
-                "\n" +
-                "# the unit tests\n" +
-                "mvn test jacoco:report  &&\n" +
-                "\n" +
-                "# uploading coverage, but not failing\n" +
-                "mvn coveralls:report -Pcoveralls --fail-never &&\n" +
-                "\n" +
-                "# documentation\n" +
-                "python chore/check-links-in-doc.py\n";
-
-        expectedConfig.setScript(configScript);
         expectedConfig.setGroup("stable");
         expectedConfig.setDist("precise");
         expectedBuild.setConfig(expectedConfig);
@@ -91,10 +64,7 @@ public class BuildHelperTest {
 
         JobConfig expectedJobConfig = new JobConfig();
         expectedJobConfig.setLanguage("java");
-        expectedJobConfig.setSudo("required");
         expectedJobConfig.setJdk("oraclejdk8");
-        expectedJobConfig.setInstall(Arrays.asList(new String[]{ null, "mvn dependency:resolve", "pip install --user CommonMark requests", "sudo apt-get install xmlstarlet"}));
-        expectedJobConfig.setScript(configScript);
         expectedJobConfig.setGroup("stable");
         expectedJobConfig.setDist("precise");
         expectedJobConfig.setOs("linux");
