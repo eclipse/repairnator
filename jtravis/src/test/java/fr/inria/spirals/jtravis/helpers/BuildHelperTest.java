@@ -1,16 +1,14 @@
 package fr.inria.spirals.jtravis.helpers;
 
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.BuildConfig;
+import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.Job;
-import fr.inria.spirals.jtravis.entities.JobConfig;
 import fr.inria.spirals.jtravis.entities.Repository;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,11 +40,8 @@ public class BuildHelperTest {
         commit.setCommittedAt(TestUtils.getDate(2016,12,21,9,48,50));
         expectedBuild.setCommit(commit);
 
-        BuildConfig expectedConfig = new BuildConfig();
+        Config expectedConfig = new Config();
         expectedConfig.setLanguage("java");
-        expectedConfig.setJdk(Arrays.asList(new String[]{"oraclejdk8"}));
-        expectedConfig.setGroup("stable");
-        expectedConfig.setDist("precise");
         expectedBuild.setConfig(expectedConfig);
 
         Job expectedJob = new Job();
@@ -62,12 +57,8 @@ public class BuildHelperTest {
         expectedJob.setState("passed");
         expectedJob.setStartedAt(TestUtils.getDate(2016,12,21,9,49,46));
 
-        JobConfig expectedJobConfig = new JobConfig();
+        Config expectedJobConfig = new Config();
         expectedJobConfig.setLanguage("java");
-        expectedJobConfig.setJdk("oraclejdk8");
-        expectedJobConfig.setGroup("stable");
-        expectedJobConfig.setDist("precise");
-        expectedJobConfig.setOs("linux");
 
         expectedJob.setConfig(expectedJobConfig);
         expectedBuild.addJob(expectedJob);

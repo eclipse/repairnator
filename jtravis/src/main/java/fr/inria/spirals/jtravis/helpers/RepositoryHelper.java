@@ -33,9 +33,9 @@ public class RepositoryHelper extends AbstractHelper {
         String resourceUrl = TRAVIS_API_ENDPOINT+REPO_ENDPOINT+slug;
 
         try {
-            ResponseBody response = getInstance().get(resourceUrl);
+            String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
-            JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
+            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
             JsonObject repoJSON = allAnswer.getAsJsonObject("repo");
 
             return createGson().fromJson(repoJSON, Repository.class);
@@ -48,9 +48,9 @@ public class RepositoryHelper extends AbstractHelper {
         String resourceUrl = TRAVIS_API_ENDPOINT+REPO_ENDPOINT+repoId;
 
         try {
-            ResponseBody response = getInstance().get(resourceUrl);
+            String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
-            JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
+            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
             JsonObject repoJSON = allAnswer.getAsJsonObject("repo");
 
             return createGson().fromJson(repoJSON, Repository.class);

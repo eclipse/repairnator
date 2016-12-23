@@ -38,21 +38,27 @@ public abstract class AbstractHelper {
         }
     }
 
-    protected ResponseBody rawGet(String url) throws IOException {
+    protected String rawGet(String url) throws IOException {
         Request request = new Request.Builder().url(url).build();
         Call call = this.client.newCall(request);
         Response response = call.execute();
         checkResponse(response);
-        return response.body();
+        ResponseBody responseBody = response.body();
+        String result = responseBody.string();
+        response.close();
+        return result;
     }
 
-    protected ResponseBody get(String url) throws IOException {
+    protected String get(String url) throws IOException {
         Request request = this.requestBuilder(url).get().build();
         Call call = this.client.newCall(request);
 
         Response response = call.execute();
         checkResponse(response);
-        return response.body();
+        ResponseBody responseBody = response.body();
+        String result = responseBody.string();
+        response.close();
+        return result;
     }
 
     protected static Gson createGson() {

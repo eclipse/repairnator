@@ -6,5 +6,5 @@ package fr.inria.spirals.jtravis.entities;
  * @author Simon Urli
  */
 public enum BuildStatus {
-    FAILED, PASSED, CREATED, STARTED
+    FAILED, PASSED, CREATED, STARTED, ERRORED
 }

@@ -1,7 +1,5 @@
 package fr.inria.spirals.jtravis.pojos;
 
-import fr.inria.spirals.jtravis.entities.BuildConfig;
-
 import java.util.Date;
 
 /**

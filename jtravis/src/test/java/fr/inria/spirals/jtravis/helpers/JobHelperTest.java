@@ -1,7 +1,7 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Job;
-import fr.inria.spirals.jtravis.entities.JobConfig;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -28,12 +28,8 @@ public class JobHelperTest {
         expectedJob.setState("passed");
         expectedJob.setStartedAt(TestUtils.getDate(2016,12,21,9,49,46));
 
-        JobConfig expectedConfig = new JobConfig();
+        Config expectedConfig = new Config();
         expectedConfig.setLanguage("java");
-        expectedConfig.setJdk("oraclejdk8");
-        expectedConfig.setGroup("stable");
-        expectedConfig.setDist("precise");
-        expectedConfig.setOs("linux");
 
         expectedJob.setConfig(expectedConfig);
 

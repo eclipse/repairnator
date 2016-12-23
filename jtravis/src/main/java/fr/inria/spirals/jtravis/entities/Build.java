@@ -5,7 +5,6 @@ import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.jtravis.pojos.BuildPojo;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +18,7 @@ import java.util.List;
 public class Build extends BuildPojo {
     private Repository repository;
     private Commit commit;
-    private BuildConfig config;
+    private Config config;
     private List<Job> jobs;
     private String completeLog;
 
@@ -89,11 +88,11 @@ public class Build extends BuildPojo {
         return this.completeLog;
     }
 
-    public BuildConfig getConfig() {
+    public Config getConfig() {
         return config;
     }
 
-    public void setConfig(BuildConfig config) {
+    public void setConfig(Config config) {
         this.config = config;
     }
 
@@ -127,7 +126,6 @@ public class Build extends BuildPojo {
     public String toString() {
         return "Build{" +
                 super.toString() +
-                "repository=" + repository +
                 ", commit=" + commit +
                 ", config=" + config +
                 ", jobs=" + jobs +

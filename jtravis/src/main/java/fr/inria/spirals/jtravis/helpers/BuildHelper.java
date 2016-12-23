@@ -1,24 +1,17 @@
 package fr.inria.spirals.jtravis.helpers;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.BuildConfig;
-import fr.inria.spirals.jtravis.entities.BuildStatus;
+import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.Job;
 import fr.inria.spirals.jtravis.entities.Repository;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * The helper to deal with Build objects
@@ -46,9 +39,9 @@ public class BuildHelper extends AbstractHelper {
         String resourceUrl = TRAVIS_API_ENDPOINT+BUILD_ENDPOINT+id;
 
         try {
-            ResponseBody response = getInstance().get(resourceUrl);
+            String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
-            JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
+            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
 
             JsonObject buildJSON = allAnswer.getAsJsonObject("build");
             Build build = createGson().fromJson(buildJSON, Build.class);
@@ -62,7 +55,7 @@ public class BuildHelper extends AbstractHelper {
             }
 
             JsonObject configJSON = buildJSON.getAsJsonObject("config");
-            BuildConfig config = ConfigHelper.getBuildConfigFromJsonElement(configJSON);
+            Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
             build.setConfig(config);
 
             JsonArray arrayJobs = allAnswer.getAsJsonArray("jobs");

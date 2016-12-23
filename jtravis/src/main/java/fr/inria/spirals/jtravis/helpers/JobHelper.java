@@ -3,8 +3,8 @@ package fr.inria.spirals.jtravis.helpers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Job;
-import fr.inria.spirals.jtravis.entities.JobConfig;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class JobHelper extends AbstractHelper {
         Job result = createGson().fromJson(jobJson, Job.class);
 
         JsonElement configJSON = jobJson.getAsJsonObject("config");
-        JobConfig config = ConfigHelper.getJobConfigFromJsonElement(configJSON);
+        Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
         result.setConfig(config);
         return result;
     }
@@ -43,9 +43,9 @@ public class JobHelper extends AbstractHelper {
         String resourceUrl = TRAVIS_API_ENDPOINT+JOB_ENDPOINT+jobId;
 
         try {
-            ResponseBody response = getInstance().get(resourceUrl);
+            String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
-            JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
+            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
 
             JsonObject jobJSON = allAnswer.getAsJsonObject("job");
             return createJobFromJsonElement(jobJSON);

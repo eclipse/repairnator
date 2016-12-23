@@ -10,14 +10,14 @@ import fr.inria.spirals.jtravis.pojos.JobPojo;
  * @author Simon Urli
  */
 public class Job extends JobPojo {
-    private JobConfig config;
+    private Config config;
     private Log log;
 
-    public JobConfig getConfig() {
+    public Config getConfig() {
         return config;
     }
 
-    public void setConfig(JobConfig config) {
+    public void setConfig(Config config) {
         this.config = config;
     }
 
