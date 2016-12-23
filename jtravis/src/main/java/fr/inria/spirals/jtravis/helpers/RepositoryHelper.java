@@ -38,8 +38,7 @@ public class RepositoryHelper extends AbstractHelper {
             JsonObject allAnswer = parser.parse(response.string()).getAsJsonObject();
             JsonObject repoJSON = allAnswer.getAsJsonObject("repo");
 
-            Gson gson = new Gson();
-            return gson.fromJson(repoJSON, Repository.class);
+            return createGson().fromJson(repoJSON, Repository.class);
         } catch (IOException e) {
             return null;
         }
