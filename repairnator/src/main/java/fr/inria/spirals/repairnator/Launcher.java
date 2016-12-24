@@ -101,12 +101,18 @@ public class Launcher {
             }
         }).create();
 
-        JsonElement allResults = gson.toJsonTree(results, List.class);
         JsonObject root = new JsonObject();
-        root.add("results", allResults);
+
+        JsonElement dateJson = gson.toJsonTree(new Date());
+        root.add("date", dateJson);
 
         JsonElement sizeJson = gson.toJsonTree(results.size());
         root.add("number", sizeJson);
+
+        JsonElement allResults = gson.toJsonTree(results, List.class);
+        root.add("results", allResults);
+
+
 
         String serialization = gson.toJson(root);
 

@@ -4,7 +4,7 @@ nutzam/nutz
 square/okhttp
 CloudifySource/cloudify
 orbeon/orbeon-forms
-facebook/presto
+prestodb/presto
 tinkerpop/blueprints
 l0rdn1kk0n/wicket-bootstrap
 naver/pinpoint
@@ -25,7 +25,7 @@ caelum/vraptor4
 owlcs/owlapi
 killbill/killbill
 sanity/quickml
-chocoteam/choco3
+chocoteam/choco-solver
 torakiki/pdfsam
 SpongePowered/SpongeAPI
 neuland/jade4j
@@ -38,7 +38,7 @@ thatJavaNerd/JRAW
 geoserver/geoserver
 brettwooldridge/HikariCP
 julianhyde/optiq
-kuujo/copycat
+atomix/atomix
 zeroturnaround/zt-zip
 searchbox-io/Jest
 mybatis/mybatis-3
@@ -52,7 +52,7 @@ springside/springside4
 undera/jmeter-plugins
 qiniu/java-sdk
 getsentry/raven-java
-jsprit/jsprit
+graphhopper/jsprit
 mockito/mockito
 kongchen/swagger-maven-plugin
 DozerMapper/dozer
@@ -61,8 +61,8 @@ biojava/biojava
 Findwise/Hydra
 mikaelhg/urlbuilder
 dynjs/dynjs
-twall/jna
-lemire/RoaringBitmap
+java-native-access/jna
+RoaringBitmap/RoaringBitmap
 OpenTSDB/opentsdb
 igniterealtime/Openfire
 datastax/java-driver

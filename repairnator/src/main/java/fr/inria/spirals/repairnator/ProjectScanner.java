@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator;
 
-import com.sun.tools.internal.xjc.Language;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Repository;
