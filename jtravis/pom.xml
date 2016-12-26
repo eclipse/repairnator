@@ -24,7 +24,11 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>1.82</version>
+        </dependency>
     </dependencies>
 
 </project>

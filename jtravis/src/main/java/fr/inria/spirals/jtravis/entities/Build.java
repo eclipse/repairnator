@@ -17,7 +17,15 @@ import java.util.List;
  */
 public class Build extends BuildPojo {
     private Repository repository;
+    /**
+     * If this build came from a PR, defines the repository where the commit is located.
+     */
+    private Repository prRepository;
     private Commit commit;
+    /**
+     * In case of a PR, define the head commit to merge with the actual PR commit
+     */
+    private Commit headCommit;
     private Config config;
     private List<Job> jobs;
     private String completeLog;
@@ -94,6 +102,22 @@ public class Build extends BuildPojo {
 
     public void setConfig(Config config) {
         this.config = config;
+    }
+
+    public Repository getPRRepository() {
+        return prRepository;
+    }
+
+    public void setPRRepository(Repository prRepository) {
+        this.prRepository = prRepository;
+    }
+
+    public Commit getHeadCommit() {
+        return headCommit;
+    }
+
+    public void setHeadCommit(Commit headCommit) {
+        this.headCommit = headCommit;
     }
 
     @Override

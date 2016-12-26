@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class BuildHelperTest {
 
-    private static Build expectedBuild() {
+    private static Build expectedBuildWithoutPR() {
         Build expectedBuild = new Build();
         expectedBuild.setNumber("2373");
         expectedBuild.setState("passed");
@@ -73,7 +73,7 @@ public class BuildHelperTest {
 
         int buildId = 185719843;
 
-        Build expectedBuild = expectedBuild();
+        Build expectedBuild = expectedBuildWithoutPR();
         expectedBuild.setId(buildId);
         expectedBuild.setRepository(repo);
         Build obtainedBuild = BuildHelper.getBuildFromId(buildId, repo);
@@ -85,7 +85,7 @@ public class BuildHelperTest {
     public void testGetBuildFromIdWithoutRepo() {
         int buildId = 185719843;
 
-        Build expectedBuild = expectedBuild();
+        Build expectedBuild = expectedBuildWithoutPR();
         expectedBuild.setId(buildId);
         Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
 

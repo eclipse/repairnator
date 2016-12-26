@@ -10,6 +10,11 @@ import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.Job;
 import fr.inria.spirals.jtravis.entities.Repository;
 import okhttp3.ResponseBody;
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHCommitPointer;
+import org.kohsuke.github.GHPullRequest;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 
 import java.io.IOException;
 
@@ -63,6 +68,34 @@ public class BuildHelper extends AbstractHelper {
             for (JsonElement jobJSONElement : arrayJobs) {
                 Job job = JobHelper.createJobFromJsonElement((JsonObject)jobJSONElement);
                 build.addJob(job);
+            }
+
+            if (build.isPullRequest()) {
+                GitHub github = GitHub.connectAnonymously();
+                GHRepository ghRepo = github.getRepository(build.getRepository().getSlug());
+                GHPullRequest pullRequest = ghRepo.getPullRequest(build.getPullRequestNumber());
+
+
+                GHCommitPointer base = pullRequest.getBase();
+                GHRepository headRepo = pullRequest.getHead().getRepository();
+
+                Repository repoPR = new Repository();
+                repoPR.setId(headRepo.getId());
+                repoPR.setDescription(headRepo.getDescription());
+                repoPR.setActive(true);
+                repoPR.setSlug(headRepo.getFullName());
+
+                build.setPRRepository(repoPR);
+
+                Commit commitHead = new Commit();
+                commitHead.setSha(base.getSha());
+                commitHead.setBranch(base.getRef());
+                commitHead.setMessage(base.getCommit().getLastStatus().getDescription());
+                commitHead.setCompareUrl(base.getCommit().getHtmlUrl().toString());
+                commitHead.setCommitterEmail(base.getCommit().getAuthor().getEmail());
+                commitHead.setCommitterName(base.getCommit().getAuthor().getName());
+                commitHead.setCommittedAt(base.getCommit().getCommitDate());
+                build.setHeadCommit(commitHead);
             }
 
             return build;
