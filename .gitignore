@@ -14,3 +14,5 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 .idea/
 *.iml
+repairnator/local_project_list.txt
+workspace/

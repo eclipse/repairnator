@@ -54,7 +54,7 @@ public class ProjectScanner {
                     Launcher.LOGGER.debug("Examinate repo "+slug+" - build "+lastBuild.getId());
                     if (lastBuild.getConfig().getLanguage().equals("java")) {
                         Launcher.LOGGER.debug("Accept repo "+slug+" - build "+lastBuild.getId()+" - Status : "+lastBuild.getBuildStatus().name());
-                        if (lastBuild.getBuildStatus() == BuildStatus.FAILED || lastBuild.getBuildStatus() == BuildStatus.ERRORED) {
+                        if (lastBuild.getBuildStatus() == BuildStatus.FAILED) {
                             result.add(lastBuild);
                         }
                     } else {

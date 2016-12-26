@@ -14,14 +14,19 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.jtravis.entities.Build;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +47,13 @@ public class Launcher {
         sw1.setDefault("false");
         jsap.registerParameter(sw1);
 
+        // verbosity
+        sw1 = new Switch("debug");
+        sw1.setShortFlag('d');
+        sw1.setLongFlag("debug");
+        sw1.setDefault("false");
+        jsap.registerParameter(sw1);
+
         // Tab size
         FlaggedOption opt2 = new FlaggedOption("input");
         opt2.setShortFlag('i');
@@ -51,7 +63,7 @@ public class Launcher {
         opt2.setHelp("Specify where to find the list of projects to scan.");
         jsap.registerParameter(opt2);
 
-        // Spooned output directory
+        // output directory
         opt2 = new FlaggedOption("output");
         opt2.setShortFlag('o');
         opt2.setLongFlag("output");
@@ -60,7 +72,44 @@ public class Launcher {
         opt2.setRequired(true);
         jsap.registerParameter(opt2);
 
+        // Spooned output directory
+        opt2 = new FlaggedOption("workspace");
+        opt2.setShortFlag('w');
+        opt2.setLongFlag("workspace");
+        opt2.setHelp("Specify where to clone failing repository");
+        opt2.setDefault("./workspace");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        jsap.registerParameter(opt2);
+
         return jsap;
+    }
+
+    private static void setLevel(Level level) {
+        final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        final Configuration config = ctx.getConfiguration();
+
+        LoggerConfig loggerConfig = config.getLoggerConfig(LOGGER.getName());
+        LoggerConfig specificConfig = loggerConfig;
+
+        // We need a specific configuration for this logger,
+        // otherwise we would change the level of all other loggers
+        // having the original configuration as parent as well
+
+        if (!loggerConfig.getName().equals(LOGGER.getName())) {
+            specificConfig = new LoggerConfig(LOGGER.getName(), level, true);
+            specificConfig.setParent(loggerConfig);
+            config.addLogger(LOGGER.getName(), specificConfig);
+        }
+        specificConfig.setLevel(level);
+        ctx.updateLoggers();
+    }
+
+    private static void initWorkspace(String path) throws IOException {
+        File file = new File(path);
+
+        if (file.exists()) {
+            throw new IOException("The following directory already exists: "+path+". Please choose an empty directory.");
+        }
     }
 
     private static void run(String[] args) throws JSAPException, IOException {
@@ -82,15 +131,41 @@ public class Launcher {
             System.exit(-1);
         }
         if (arguments.success()) {
+            if (arguments.getBoolean("debug")) {
+                setLevel(Level.DEBUG);
+            }
+
+            Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
             List<Build> buildList = ProjectScanner.getListOfFailingBuildFromProjects(arguments.getString("input"));
             for (Build build : buildList) {
                 System.out.println("Incriminated project : "+build.getRepository().getSlug());
             }
-            buildFileFromResults(buildList, arguments.getString("output"));
+
+            Launcher.LOGGER.debug("Start cloning and compiling projects...");
+            String workspace = arguments.getString("workspace");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmm");
+            String completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
+
+            List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
+
+            Launcher.LOGGER.debug("Start writing a JSON output...");
+            buildFileFromResults(projectInspectors, arguments.getString("output"));
         }
     }
 
-    private static void buildFileFromResults(List<Build> results, String output) throws IOException {
+    private static List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
+        initWorkspace(workspace);
+
+        List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
+        for (Build build : results) {
+            ProjectInspector scanner = new ProjectInspector(build);
+            projectInspectors.add(scanner);
+            scanner.cloneInWorkspace(workspace);
+        }
+        return projectInspectors;
+    }
+
+    private static void buildFileFromResults(List<ProjectInspector> results, String output) throws IOException {
         Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
             public boolean shouldSkipField(FieldAttributes fieldAttributes) {
                 return (fieldAttributes.getName().equals("lastBuild"));
@@ -106,13 +181,43 @@ public class Launcher {
         JsonElement dateJson = gson.toJsonTree(new Date());
         root.add("date", dateJson);
 
-        JsonElement sizeJson = gson.toJsonTree(results.size());
-        root.add("number", sizeJson);
+        List<Build> buildable = new ArrayList<Build>();
+        List<Build> notBuildable = new ArrayList<Build>();
+        List<Build> notClonable = new ArrayList<Build>();
 
-        JsonElement allResults = gson.toJsonTree(results, List.class);
-        root.add("results", allResults);
+        for (ProjectInspector inspector : results) {
+            if (inspector.canBeCloned()) {
+                if (inspector.canBeBuilt()) {
+                    buildable.add(inspector.getBuild());
+                } else {
+                    notBuildable.add(inspector.getBuild());
+                }
+            } else {
+                notClonable.add(inspector.getBuild());
+            }
 
+        }
 
+        JsonElement nbFailedJson = gson.toJsonTree(results.size());
+        root.add("nbFailDetected", nbFailedJson);
+
+        JsonElement nbFailCompilable = gson.toJsonTree(buildable.size());
+        root.add("nbFailCompilable", nbFailCompilable);
+
+        JsonElement nbFailNotCompilable = gson.toJsonTree(notBuildable.size());
+        root.add("nbFailNotCompilable", nbFailNotCompilable);
+
+        JsonElement nbFailNotClonable = gson.toJsonTree(notClonable.size());
+        root.add("nbFailNotClonable", nbFailNotClonable);
+
+        JsonElement compilableResultsJSON = gson.toJsonTree(buildable, List.class);
+        root.add("compilable", compilableResultsJSON);
+
+        JsonElement notCompilableResultsJSON = gson.toJsonTree(notBuildable, List.class);
+        root.add("notCompilable", notCompilableResultsJSON);
+
+        JsonElement notClonableResultsJSON = gson.toJsonTree(notClonable, List.class);
+        root.add("notClonable", notClonableResultsJSON);
 
         String serialization = gson.toJson(root);
 
