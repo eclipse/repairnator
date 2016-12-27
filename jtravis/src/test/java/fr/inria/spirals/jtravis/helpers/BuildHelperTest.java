@@ -120,6 +120,7 @@ public class BuildHelperTest {
         headCommit.setSha("7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
         headCommit.setBranch("master");
         headCommit.setCommitterName("Martin Monperrus");
+        headCommit.setCommitterEmail("monperrus@users.noreply.github.com");
         headCommit.setMessage("doc: improve template documentation (#1068)");
         headCommit.setCommittedAt(TestUtils.getDate(2016, 12, 22,9,32,7));
         headCommit.setCompareUrl("https://github.com/INRIA/spoon/commit/7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
