@@ -97,11 +97,14 @@ public class BuildHelper extends AbstractHelper {
                     Commit commitHead = new Commit();
                     commitHead.setSha(base.getSha());
                     commitHead.setBranch(base.getRef());
-                    commitHead.setMessage(base.getCommit().getLastStatus().getDescription());
                     commitHead.setCompareUrl(base.getCommit().getHtmlUrl().toString());
-                    commitHead.setCommitterEmail(base.getCommit().getAuthor().getEmail());
-                    commitHead.setCommitterName(base.getCommit().getAuthor().getName());
-                    commitHead.setCommittedAt(base.getCommit().getCommitDate());
+
+                    GHCommit.ShortInfo infoCommit = base.getCommit().getCommitShortInfo();
+
+                    commitHead.setMessage(infoCommit.getMessage());
+                    commitHead.setCommitterEmail(infoCommit.getAuthor().getEmail());
+                    commitHead.setCommitterName(infoCommit.getAuthor().getName());
+                    commitHead.setCommittedAt(infoCommit.getCommitDate());
                     build.setHeadCommit(commitHead);
                 } else {
                     AbstractHelper.LOGGER.warn("You reach your rate limit for github, you have to wait "+rateLimit.reset+" to get datas.");
