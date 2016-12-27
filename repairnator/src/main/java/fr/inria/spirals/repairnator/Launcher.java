@@ -85,23 +85,15 @@ public class Launcher {
         return jsap;
     }
 
-    private static void setLevel(Logger logger, Level level) {
+    private static void setLevel(Level level) {
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         final Configuration config = ctx.getConfiguration();
 
-        LoggerConfig loggerConfig = config.getLoggerConfig(logger.getName());
-        LoggerConfig specificConfig = loggerConfig;
+        LoggerConfig loggerConfig = config.getLoggerConfig(LOGGER.getName());
+        loggerConfig.setLevel(level);
 
-        // We need a specific configuration for this logger,
-        // otherwise we would change the level of all other loggers
-        // having the original configuration as parent as well
-
-        if (!loggerConfig.getName().equals(logger.getName())) {
-            specificConfig = new LoggerConfig(logger.getName(), level, true);
-            specificConfig.setParent(loggerConfig);
-            config.addLogger(logger.getName(), specificConfig);
-        }
-        specificConfig.setLevel(level);
+        loggerConfig = config.getLoggerConfig("fr.inria.spirals.jtravis.helpers.AbstractHelper");
+        loggerConfig.setLevel(level);
         ctx.updateLoggers();
     }
 
@@ -133,8 +125,7 @@ public class Launcher {
         }
         if (arguments.success()) {
             if (arguments.getBoolean("debug")) {
-                setLevel(AbstractHelper.LOGGER, Level.DEBUG);
-                setLevel(LogManager.getContext().getLogger("fr.inria.spirals.jtravis.helpers.AbstractHelper"), Level.DEBUG);
+                setLevel(Level.DEBUG);
             }
 
             Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
