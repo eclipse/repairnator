@@ -100,6 +100,7 @@ public class BuildHelper extends AbstractHelper {
 
             return build;
         } catch (IOException e) {
+            AbstractHelper.LOGGER.warn("Error when getting build id "+id+" : "+e.getMessage());
             return null;
         }
     }

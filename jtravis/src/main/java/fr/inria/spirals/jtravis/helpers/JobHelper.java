@@ -50,6 +50,7 @@ public class JobHelper extends AbstractHelper {
             JsonObject jobJSON = allAnswer.getAsJsonObject("job");
             return createJobFromJsonElement(jobJSON);
         } catch (IOException e) {
+            AbstractHelper.LOGGER.warn("Error when getting job id "+jobId+" : "+e.getMessage());
             return null;
         }
 

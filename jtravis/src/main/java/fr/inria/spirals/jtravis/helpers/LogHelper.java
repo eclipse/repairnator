@@ -39,6 +39,7 @@ public class LogHelper extends AbstractHelper {
             JsonObject logJson = allAnswer.getAsJsonObject("log");
             return createGson().fromJson(logJson, Log.class);
         } catch (IOException e) {
+            AbstractHelper.LOGGER.warn("Error when getting log id "+logId+" : "+e.getMessage());
             return null;
         }
     }
@@ -51,6 +52,7 @@ public class LogHelper extends AbstractHelper {
                 try {
                     return getInstance().rawGet(logJobUrl);
                 } catch (IOException e) {
+                    AbstractHelper.LOGGER.warn("Error when getting raw log "+log.getId()+" : "+e.getMessage());
                 }
             }
         }
