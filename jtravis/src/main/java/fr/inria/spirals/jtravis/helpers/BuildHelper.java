@@ -13,10 +13,12 @@ import okhttp3.ResponseBody;
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHCommitPointer;
 import org.kohsuke.github.GHPullRequest;
+import org.kohsuke.github.GHRateLimit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 /**
  * The helper to deal with Build objects
@@ -71,31 +73,40 @@ public class BuildHelper extends AbstractHelper {
             }
 
             if (build.isPullRequest()) {
-                GitHub github = GitHub.connectAnonymously();
-                GHRepository ghRepo = github.getRepository(build.getRepository().getSlug());
-                GHPullRequest pullRequest = ghRepo.getPullRequest(build.getPullRequestNumber());
+                GitHub github = getInstance().getGithub();
+                GHRateLimit rateLimit = github.getRateLimit();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                AbstractHelper.LOGGER.debug("GitHub ratelimit: Limit: "+rateLimit.limit+" Remaining: "+rateLimit.remaining+" Reset hour: "+dateFormat.format(rateLimit.reset));
+
+                if (rateLimit.remaining > 2) {
+                    GHRepository ghRepo = github.getRepository(build.getRepository().getSlug());
+                    GHPullRequest pullRequest = ghRepo.getPullRequest(build.getPullRequestNumber());
 
 
-                GHCommitPointer base = pullRequest.getBase();
-                GHRepository headRepo = pullRequest.getHead().getRepository();
+                    GHCommitPointer base = pullRequest.getBase();
+                    GHRepository headRepo = pullRequest.getHead().getRepository();
 
-                Repository repoPR = new Repository();
-                repoPR.setId(headRepo.getId());
-                repoPR.setDescription(headRepo.getDescription());
-                repoPR.setActive(true);
-                repoPR.setSlug(headRepo.getFullName());
+                    Repository repoPR = new Repository();
+                    repoPR.setId(headRepo.getId());
+                    repoPR.setDescription(headRepo.getDescription());
+                    repoPR.setActive(true);
+                    repoPR.setSlug(headRepo.getFullName());
 
-                build.setPRRepository(repoPR);
+                    build.setPRRepository(repoPR);
 
-                Commit commitHead = new Commit();
-                commitHead.setSha(base.getSha());
-                commitHead.setBranch(base.getRef());
-                commitHead.setMessage(base.getCommit().getLastStatus().getDescription());
-                commitHead.setCompareUrl(base.getCommit().getHtmlUrl().toString());
-                commitHead.setCommitterEmail(base.getCommit().getAuthor().getEmail());
-                commitHead.setCommitterName(base.getCommit().getAuthor().getName());
-                commitHead.setCommittedAt(base.getCommit().getCommitDate());
-                build.setHeadCommit(commitHead);
+                    Commit commitHead = new Commit();
+                    commitHead.setSha(base.getSha());
+                    commitHead.setBranch(base.getRef());
+                    commitHead.setMessage(base.getCommit().getLastStatus().getDescription());
+                    commitHead.setCompareUrl(base.getCommit().getHtmlUrl().toString());
+                    commitHead.setCommitterEmail(base.getCommit().getAuthor().getEmail());
+                    commitHead.setCommitterName(base.getCommit().getAuthor().getName());
+                    commitHead.setCommittedAt(base.getCommit().getCommitDate());
+                    build.setHeadCommit(commitHead);
+                } else {
+                    AbstractHelper.LOGGER.warn("You reach your rate limit for github, you have to wait "+rateLimit.reset+" to get datas.");
+                }
+
             }
 
             return build;

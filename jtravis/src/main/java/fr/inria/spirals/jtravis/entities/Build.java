@@ -129,7 +129,9 @@ public class Build extends BuildPojo {
         Build build = (Build) o;
 
         if (repository != null ? !repository.equals(build.repository) : build.repository != null) return false;
+        if (prRepository != null ? !prRepository.equals(build.prRepository) : build.prRepository != null) return false;
         if (commit != null ? !commit.equals(build.commit) : build.commit != null) return false;
+        if (headCommit != null ? !headCommit.equals(build.headCommit) : build.headCommit != null) return false;
         if (config != null ? !config.equals(build.config) : build.config != null) return false;
         if (jobs != null ? !jobs.equals(build.jobs) : build.jobs != null) return false;
         return completeLog != null ? completeLog.equals(build.completeLog) : build.completeLog == null;
@@ -139,7 +141,9 @@ public class Build extends BuildPojo {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (repository != null ? repository.hashCode() : 0);
+        result = 31 * result + (prRepository != null ? prRepository.hashCode() : 0);
         result = 31 * result + (commit != null ? commit.hashCode() : 0);
+        result = 31 * result + (headCommit != null ? headCommit.hashCode() : 0);
         result = 31 * result + (config != null ? config.hashCode() : 0);
         result = 31 * result + (jobs != null ? jobs.hashCode() : 0);
         result = 31 * result + (completeLog != null ? completeLog.hashCode() : 0);
@@ -148,12 +152,16 @@ public class Build extends BuildPojo {
 
     @Override
     public String toString() {
+        String repo = (repository == null) ? "" : repository.toStringPojo();
         return "Build{" +
                 super.toString() +
+                ", repository=" + repo +
                 ", commit=" + commit +
                 ", config=" + config +
                 ", jobs=" + jobs +
                 ", completeLog='" + completeLog + '\'' +
+                ", PRrepository='" + prRepository +'\''+
+                ", HeadCommit='" + headCommit +'\'' +
                 '}';
     }
 }

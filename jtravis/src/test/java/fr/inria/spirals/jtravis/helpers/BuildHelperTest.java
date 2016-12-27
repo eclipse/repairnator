@@ -57,11 +57,73 @@ public class BuildHelperTest {
         expectedJob.setState("passed");
         expectedJob.setStartedAt(TestUtils.getDate(2016,12,21,9,49,46));
 
-        Config expectedJobConfig = new Config();
-        expectedJobConfig.setLanguage("java");
-
-        expectedJob.setConfig(expectedJobConfig);
+        expectedJob.setConfig(expectedConfig);
         expectedBuild.addJob(expectedJob);
+
+        return expectedBuild;
+    }
+
+    private static Build expectedBuildWithPR() {
+        Build expectedBuild = new Build();
+        expectedBuild.setId(186814810);
+        expectedBuild.setCommitId(53352968);
+        expectedBuild.setRepositoryId(2800492);
+        expectedBuild.setNumber("2387");
+        expectedBuild.setPullRequest(true);
+        expectedBuild.setPullRequestTitle("Query improvements");
+        expectedBuild.setPullRequestNumber(1076);
+        expectedBuild.setJobIds(Arrays.asList(new Integer[]{186814811}));
+        expectedBuild.setDuration(474);
+        expectedBuild.setState("passed");
+        expectedBuild.setStartedAt(TestUtils.getDate(2016,12,26,17,42,4));
+        expectedBuild.setFinishedAt(TestUtils.getDate(2016,12,26,17,49,58));
+        expectedBuild.setRepository(null);
+
+        Config expectedConfig = new Config();
+        expectedConfig.setLanguage("java");
+        expectedBuild.setConfig(expectedConfig);
+
+        Commit commit = new Commit();
+        commit.setSha("fef7aadba83da317b7de99bd67b0acffeba91591");
+        commit.setBranch("master");
+        commit.setCommittedAt(TestUtils.getDate(2016,12,26,17,36,34));
+        commit.setAuthorName("Pavel Vojtechovsky");
+        commit.setCommitterEmail("p.vojtechovsky@post.cz");
+        commit.setAuthorEmail("p.vojtechovsky@post.cz");
+        commit.setCommitterName("Pavel Vojtechovsky");
+        commit.setCompareUrl("https://github.com/INRIA/spoon/pull/1076");
+        commit.setMessage("Support of CtScanner based queries\n\n- Extraction of code to CtBaseQuery to make code cleaner and to allow\nreuse of queries\n- CtFunction can return Iterator now too");
+        expectedBuild.setCommit(commit);
+
+        Job expectedJob = new Job();
+        expectedJob.setId(186814811);
+        expectedJob.setRepositoryId(2800492);
+        expectedJob.setBuildId(186814810);
+        expectedJob.setCommitId(53352968);
+        expectedJob.setLogId(136641711);
+        expectedJob.setState("passed");
+        expectedJob.setNumber("2387.1");
+        expectedJob.setConfig(expectedConfig);
+        expectedJob.setStartedAt(TestUtils.getDate(2016,12,26,17,42,4));
+        expectedJob.setFinishedAt(TestUtils.getDate(2016,12,26,17,49,58));
+        expectedJob.setQueue("builds.gce");
+        expectedBuild.addJob(expectedJob);
+
+        Repository prRepo = new Repository();
+        prRepo.setId(72202535);
+        prRepo.setSlug("pvojtechovsky/spoon");
+        prRepo.setActive(true);
+        prRepo.setDescription("Spoon is a library for analyzing, rewriting, transforming, transpiling Java source code. It parses source files to build a well-designed AST with powerful analysis and transformation API. It fully supports Java 8.  :beers: :sparkles:");
+        expectedBuild.setPRRepository(prRepo);
+
+        Commit headCommit = new Commit();
+        headCommit.setSha("7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
+        headCommit.setBranch("master");
+        headCommit.setCommitterName("Martin Monperrus");
+        headCommit.setMessage("Coverage remained the same at 80.627%");
+        headCommit.setCommittedAt(TestUtils.getDate(2016, 12, 22,9,32,7));
+        headCommit.setCompareUrl("https://github.com/INRIA/spoon/commit/7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
+        expectedBuild.setHeadCommit(headCommit);
 
         return expectedBuild;
     }
@@ -109,5 +171,18 @@ public class BuildHelperTest {
         Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
 
         assertEquals(BuildStatus.PASSED, obtainedBuild.getBuildStatus());
+    }
+
+    @Test
+    public void testGetBuildWithPR() {
+        int buildId = 186814810;
+        Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
+        Build expectedBuild = expectedBuildWithPR();
+        obtainedBuild.setRepository(null); // we cannot guarantee the information of the obtained repo...
+
+        assertEquals(expectedBuild.getCommit(), obtainedBuild.getCommit());
+        assertEquals(expectedBuild.getHeadCommit(), obtainedBuild.getHeadCommit());
+        assertEquals(expectedBuild.getPRRepository(), obtainedBuild.getPRRepository());
+        assertEquals(expectedBuild, obtainedBuild);
     }
 }

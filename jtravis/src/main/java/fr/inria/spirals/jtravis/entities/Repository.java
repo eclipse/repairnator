@@ -44,4 +44,8 @@ public class Repository extends RepositoryPojo {
                 "lastBuild=" + lastBuild +
                 '}';
     }
+
+    public String toStringPojo() {
+        return super.toString();
+    }
 }

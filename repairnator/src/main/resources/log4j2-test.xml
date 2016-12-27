@@ -9,7 +9,10 @@
     <Logger name="fr.inria.spirals.repairnator.Launcher" level="warn" additivity="false">
       <AppenderRef ref="Console"/>
     </Logger>
-    <Root level="debug">
+    <Logger name="fr.inria.spirals.jtravis.helpers.AbstractHelper" level="warn" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    <Root level="warn">
       <AppenderRef ref="Console"/>
     </Root>
   </Loggers>

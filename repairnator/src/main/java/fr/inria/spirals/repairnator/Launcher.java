@@ -14,6 +14,7 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.helpers.AbstractHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,21 +85,21 @@ public class Launcher {
         return jsap;
     }
 
-    private static void setLevel(Level level) {
+    private static void setLevel(Logger logger, Level level) {
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         final Configuration config = ctx.getConfiguration();
 
-        LoggerConfig loggerConfig = config.getLoggerConfig(LOGGER.getName());
+        LoggerConfig loggerConfig = config.getLoggerConfig(logger.getName());
         LoggerConfig specificConfig = loggerConfig;
 
         // We need a specific configuration for this logger,
         // otherwise we would change the level of all other loggers
         // having the original configuration as parent as well
 
-        if (!loggerConfig.getName().equals(LOGGER.getName())) {
-            specificConfig = new LoggerConfig(LOGGER.getName(), level, true);
+        if (!loggerConfig.getName().equals(logger.getName())) {
+            specificConfig = new LoggerConfig(logger.getName(), level, true);
             specificConfig.setParent(loggerConfig);
-            config.addLogger(LOGGER.getName(), specificConfig);
+            config.addLogger(logger.getName(), specificConfig);
         }
         specificConfig.setLevel(level);
         ctx.updateLoggers();
@@ -132,7 +133,8 @@ public class Launcher {
         }
         if (arguments.success()) {
             if (arguments.getBoolean("debug")) {
-                setLevel(Level.DEBUG);
+                setLevel(AbstractHelper.LOGGER, Level.DEBUG);
+                setLevel(LogManager.getContext().getLogger("fr.inria.spirals.jtravis.helpers.AbstractHelper"), Level.DEBUG);
             }
 
             Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
