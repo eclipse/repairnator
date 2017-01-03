@@ -4,7 +4,11 @@ import fr.inria.spirals.jtravis.entities.Build;
 import org.apache.maven.cli.MavenCli;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
+import org.eclipse.jgit.lib.AnyObjectId;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
 
 import java.io.File;
@@ -64,27 +68,32 @@ public class ProjectInspector {
                 String commitHeadSha = this.build.getHeadCommit().getSha();
                 String commitBaseSha = this.build.getBaseCommit().getSha();
 
-                Ref commitHeadRef = git.getRepository().exactRef(commitHeadSha);
-                Ref commitBaseRef = git.getRepository().exactRef(commitBaseSha);
 
-                if (commitHeadRef == null) {
-                    Launcher.LOGGER.warn("Commit head ref cannot be retrieved in the repository: "+commitHeadSha);
+                ObjectId commitHeadId = git.getRepository().resolve(commitHeadSha);
+                ObjectId commitBaseId = git.getRepository().resolve(commitBaseSha);
+
+                if (commitHeadId == null) {
+                    Launcher.LOGGER.warn("Commit head ref cannot be retrieved in the repository: "+commitHeadSha+". Operation aborted.");
                     Launcher.LOGGER.debug(this.build.getHeadCommit());
                     this.canBeCloned = false;
+                    return;
                 }
 
-                if (commitBaseRef == null) {
-                    Launcher.LOGGER.warn("Commit base ref cannot be retrieved in the repository: "+commitBaseSha);
+                if (commitBaseId == null) {
+                    Launcher.LOGGER.warn("Commit base ref cannot be retrieved in the repository: "+commitBaseSha+". Operation aborted.");
                     Launcher.LOGGER.debug(this.build.getBaseCommit());
                     this.canBeCloned = false;
+                    return;
                 }
-
 
                 Launcher.LOGGER.debug("Get the commit "+commitHeadSha+" for repo "+repository);
                 git.checkout().setName(commitHeadSha).call();
 
+                RevWalk revwalk = new RevWalk(git.getRepository());
+                RevCommit revCommitBase = revwalk.lookupCommit(commitBaseId);
+
                 Launcher.LOGGER.debug("Do the merge with the PR commit for repo "+repository);
-                git.merge().include(commitBaseRef).call();
+                git.merge().include(revCommitBase).call();
             } else {
                 String commitCheckout = this.build.getCommit().getSha();
 
