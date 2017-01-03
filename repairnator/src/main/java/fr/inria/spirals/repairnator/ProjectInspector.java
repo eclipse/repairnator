@@ -4,15 +4,10 @@ import fr.inria.spirals.jtravis.entities.Build;
 import org.apache.maven.cli.MavenCli;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.URIish;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 /**
  * Created by urli on 26/12/2016.
@@ -66,14 +61,30 @@ public class ProjectInspector {
 
                 git.fetch().setRemote("PR").call();
 
-                String commitCheckout = this.build.getHeadCommit().getSha();
+                String commitHeadSha = this.build.getHeadCommit().getSha();
+                String commitBaseSha = this.build.getBaseCommit().getSha();
 
-                Launcher.LOGGER.debug("Get the commit "+commitCheckout+" for repo "+repository);
-                git.checkout().setName(commitCheckout).call();
+                Ref commitHeadRef = git.getRepository().exactRef(commitHeadSha);
+                Ref commitBaseRef = git.getRepository().exactRef(commitBaseSha);
+
+                if (commitHeadRef == null) {
+                    Launcher.LOGGER.warn("Commit head ref cannot be retrieved in the repository: "+commitHeadSha);
+                    Launcher.LOGGER.debug(this.build.getHeadCommit());
+                    this.canBeCloned = false;
+                }
+
+                if (commitBaseRef == null) {
+                    Launcher.LOGGER.warn("Commit base ref cannot be retrieved in the repository: "+commitBaseSha);
+                    Launcher.LOGGER.debug(this.build.getBaseCommit());
+                    this.canBeCloned = false;
+                }
+
+
+                Launcher.LOGGER.debug("Get the commit "+commitHeadSha+" for repo "+repository);
+                git.checkout().setName(commitHeadSha).call();
 
                 Launcher.LOGGER.debug("Do the merge with the PR commit for repo "+repository);
-                Ref prCommitRef = git.getRepository().exactRef(this.build.getCommit().getSha());
-                git.merge().include(prCommitRef).call();
+                git.merge().include(commitBaseRef).call();
             } else {
                 String commitCheckout = this.build.getCommit().getSha();
 
@@ -85,7 +96,7 @@ public class ProjectInspector {
 
         } catch (Exception e) {
             Launcher.LOGGER.warn("Repository "+repository+" cannot be cloned.");
-            Launcher.LOGGER.debug(e.getMessage());
+            Launcher.LOGGER.debug(e.toString());
             this.canBeCloned = false;
         }
 
