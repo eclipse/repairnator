@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import org.apache.maven.cli.MavenCli;
+import org.codehaus.plexus.classworlds.ClassWorld;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.lib.AnyObjectId;
@@ -109,7 +110,8 @@ public class ProjectInspector {
             this.canBeCloned = false;
         }
 
-        MavenCli cli = new MavenCli();
+        final ClassWorld classWorld = new ClassWorld("plexus.core", getClass().getClassLoader());
+        MavenCli cli = new MavenCli(classWorld);
 
         System.setProperty("maven.test.skip","true");
         int result = cli.doMain(new String[]{"test"},
