@@ -1,0 +1,1283 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: ip-10-12-6-204:dd8a2050-81d6-4e64-ae0e-1de9a66d667f
+version: v2.5.0-8-g19ea9c2 https://github.com/travis-ci/worker/tree/19ea9c20425c78100500c7cc935892b47024922c
+instance: 7d784ce:travis:java
+startup: 522.443105ms
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: precise
+Build id: 187678498
+Job id: 187678504
+travis-build version: 7cac7d393
+[34m[1mBuild image provisioning date and time[0m
+Thu Feb  5 15:09:33 UTC 2015
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 12.04.5 LTS
+Release:	12.04
+Codename:	precise
+[34m[1mLinux Version[0m
+3.13.0-29-generic
+[34m[1mCookbooks Version[0m
+a68419e https://github.com/travis-ci/travis-cookbooks/tree/a68419e
+[34m[1mGCC version[0m
+gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mLLVM version[0m
+clang version 3.4 (tags/RELEASE_34/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mPre-installed Ruby versions[0m
+ruby-1.9.3-p551
+[34m[1mPre-installed Node.js versions[0m
+v0.10.36
+[34m[1mPre-installed Go versions[0m
+1.4.1
+[34m[1mRedis version[0m
+redis-server 2.8.19
+[34m[1mriak version[0m
+2.0.2
+[34m[1mMongoDB version[0m
+MongoDB 2.4.12
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mNeo4j version[0m
+1.9.4
+[34m[1mRabbitMQ Version[0m
+3.4.3
+[34m[1mElasticSearch version[0m
+1.4.0
+[34m[1mInstalled Sphinx versions[0m
+2.0.10
+2.1.9
+2.2.6
+[34m[1mDefault Sphinx version[0m
+2.2.6
+[34m[1mInstalled Firefox version[0m
+firefox 31.0esr
+[34m[1mPhantomJS version[0m
+1.9.8
+[34m[1mant -version[0m
+Apache Ant(TM) version 1.8.2 compiled on December 3 2011
+[34m[1mmvn -version[0m
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.7.0_76, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-7-oracle/jre
+Default locale: en_US, platform encoding: ANSI_X3.4-1968
+OS name: "linux", version: "3.13.0-29-generic", arch: "amd64", family: "unix"
+travis_fold:end:system_info[0K
+travis_fold:start:fix.CVE-2015-7547[0K$ export DEBIAN_FRONTEND=noninteractive
+W: Size of file /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_precise-security_restricted_binary-amd64_Packages.gz is not what the server reported 13782 14904
+W: Size of file /var/lib/apt/lists/us.archive.ubuntu.com_ubuntu_dists_precise-updates_restricted_binary-amd64_Packages.gz is not what the server reported 19576 20785
+W: Size of file /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_precise-security_restricted_binary-i386_Packages.gz is not what the server reported 13751 14885
+W: Size of file /var/lib/apt/lists/us.archive.ubuntu.com_ubuntu_dists_precise-updates_restricted_binary-i386_Packages.gz is not what the server reported 19521 20707
+W: Size of file /var/lib/apt/lists/us.archive.ubuntu.com_ubuntu_dists_precise-backports_multiverse_source_Sources.gz is not what the server reported 5886 5888
+W: Size of file /var/lib/apt/lists/ppa.launchpad.net_travis-ci_zero-mq_ubuntu_dists_precise_main_binary-amd64_Packages.gz is not what the server reported 832 1195
+W: Size of file /var/lib/apt/lists/ppa.launchpad.net_ubuntugis_ppa_ubuntu_dists_precise_main_binary-amd64_Packages.gz is not what the server reported 33653 36677
+W: Size of file /var/lib/apt/lists/ppa.launchpad.net_ubuntugis_ppa_ubuntu_dists_precise_main_binary-i386_Packages.gz is not what the server reported 33699 36733
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  libc-bin libc-dev-bin libc6-dev
+Suggested packages:
+  glibc-doc
+The following packages will be upgraded:
+  libc-bin libc-dev-bin libc6 libc6-dev
+4 upgraded, 0 newly installed, 0 to remove and 267 not upgraded.
+Need to get 8,840 kB of archives.
+After this operation, 14.3 kB disk space will be freed.
+Get:1 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6-dev amd64 2.15-0ubuntu10.15 [2,943 kB]
+Get:2 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-dev-bin amd64 2.15-0ubuntu10.15 [84.7 kB]
+Get:3 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-bin amd64 2.15-0ubuntu10.15 [1,177 kB]
+Get:4 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6 amd64 2.15-0ubuntu10.15 [4,636 kB]
+Fetched 8,840 kB in 0s (36.1 MB/s)
+Preconfiguring packages ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72019 files and directories currently installed.)
+Preparing to replace libc6-dev 2.15-0ubuntu10.10 (using .../libc6-dev_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc6-dev ...
+Preparing to replace libc-dev-bin 2.15-0ubuntu10.10 (using .../libc-dev-bin_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc-dev-bin ...
+Preparing to replace libc-bin 2.15-0ubuntu10.10 (using .../libc-bin_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc-bin ...
+Processing triggers for man-db ...
+Setting up libc-bin (2.15-0ubuntu10.15) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72018 files and directories currently installed.)
+Preparing to replace libc6 2.15-0ubuntu10.10 (using .../libc6_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc6 ...
+Setting up libc6 (2.15-0ubuntu10.15) ...
+Setting up libc-dev-bin (2.15-0ubuntu10.15) ...
+Setting up libc6-dev (2.15-0ubuntu10.15) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+travis_fold:end:fix.CVE-2015-7547[0Ktravis_fold:start:git.checkout[0Ktravis_time:start:2cd47d0c[0K$ git clone --depth=50 https://github.com/javaee-samples/javaee7-samples.git javaee-samples/javaee7-samples
+Cloning into 'javaee-samples/javaee7-samples'...
+remote: Counting objects: 17109, done.[K
+remote: Compressing objects:   0% (1/6345)   [Kremote: Compressing objects:   1% (64/6345)   [Kremote: Compressing objects:   2% (127/6345)   [Kremote: Compressing objects:   3% (191/6345)   [Kremote: Compressing objects:   4% (254/6345)   [Kremote: Compressing objects:   5% (318/6345)   [Kremote: Compressing objects:   6% (381/6345)   [Kremote: Compressing objects:   7% (445/6345)   [Kremote: Compressing objects:   8% (508/6345)   [Kremote: Compressing objects:   9% (572/6345)   [Kremote: Compressing objects:  10% (635/6345)   [Kremote: Compressing objects:  11% (698/6345)   [Kremote: Compressing objects:  12% (762/6345)   [Kremote: Compressing objects:  13% (825/6345)   [Kremote: Compressing objects:  14% (889/6345)   [Kremote: Compressing objects:  15% (952/6345)   [Kremote: Compressing objects:  16% (1016/6345)   [Kremote: Compressing objects:  17% (1079/6345)   [Kremote: Compressing objects:  18% (1143/6345)   [Kremote: Compressing objects:  19% (1206/6345)   [Kremote: Compressing objects:  20% (1269/6345)   [Kremote: Compressing objects:  21% (1333/6345)   [Kremote: Compressing objects:  22% (1396/6345)   [Kremote: Compressing objects:  23% (1460/6345)   [Kremote: Compressing objects:  24% (1523/6345)   [Kremote: Compressing objects:  25% (1587/6345)   [Kremote: Compressing objects:  26% (1650/6345)   [Kremote: Compressing objects:  27% (1714/6345)   [Kremote: Compressing objects:  28% (1777/6345)   [Kremote: Compressing objects:  29% (1841/6345)   [Kremote: Compressing objects:  30% (1904/6345)   [Kremote: Compressing objects:  31% (1967/6345)   [Kremote: Compressing objects:  32% (2031/6345)   [Kremote: Compressing objects:  33% (2094/6345)   [Kremote: Compressing objects:  34% (2158/6345)   [Kremote: Compressing objects:  35% (2221/6345)   [Kremote: Compressing objects:  36% (2285/6345)   [Kremote: Compressing objects:  37% (2348/6345)   [Kremote: Compressing objects:  38% (2412/6345)   [Kremote: Compressing objects:  39% (2475/6345)   [Kremote: Compressing objects:  40% (2538/6345)   [Kremote: Compressing objects:  41% (2602/6345)   [Kremote: Compressing objects:  42% (2665/6345)   [Kremote: Compressing objects:  43% (2729/6345)   [Kremote: Compressing objects:  44% (2792/6345)   [Kremote: Compressing objects:  45% (2856/6345)   [Kremote: Compressing objects:  46% (2919/6345)   [Kremote: Compressing objects:  47% (2983/6345)   [Kremote: Compressing objects:  48% (3046/6345)   [Kremote: Compressing objects:  49% (3110/6345)   [Kremote: Compressing objects:  50% (3173/6345)   [Kremote: Compressing objects:  51% (3236/6345)   [Kremote: Compressing objects:  52% (3300/6345)   [Kremote: Compressing objects:  53% (3363/6345)   [Kremote: Compressing objects:  54% (3427/6345)   [Kremote: Compressing objects:  55% (3490/6345)   [Kremote: Compressing objects:  56% (3554/6345)   [Kremote: Compressing objects:  57% (3617/6345)   [Kremote: Compressing objects:  58% (3681/6345)   [Kremote: Compressing objects:  59% (3744/6345)   [Kremote: Compressing objects:  60% (3807/6345)   [Kremote: Compressing objects:  61% (3871/6345)   [Kremote: Compressing objects:  62% (3934/6345)   [Kremote: Compressing objects:  63% (3998/6345)   [Kremote: Compressing objects:  64% (4061/6345)   [Kremote: Compressing objects:  65% (4125/6345)   [Kremote: Compressing objects:  66% (4188/6345)   [Kremote: Compressing objects:  67% (4252/6345)   [Kremote: Compressing objects:  68% (4315/6345)   [Kremote: Compressing objects:  69% (4379/6345)   [Kremote: Compressing objects:  70% (4442/6345)   [Kremote: Compressing objects:  71% (4505/6345)   [Kremote: Compressing objects:  72% (4569/6345)   [Kremote: Compressing objects:  73% (4632/6345)   [Kremote: Compressing objects:  74% (4696/6345)   [Kremote: Compressing objects:  75% (4759/6345)   [Kremote: Compressing objects:  76% (4823/6345)   [Kremote: Compressing objects:  77% (4886/6345)   [Kremote: Compressing objects:  78% (4950/6345)   [Kremote: Compressing objects:  79% (5013/6345)   [Kremote: Compressing objects:  80% (5076/6345)   [Kremote: Compressing objects:  81% (5140/6345)   [Kremote: Compressing objects:  82% (5203/6345)   [Kremote: Compressing objects:  83% (5267/6345)   [Kremote: Compressing objects:  84% (5330/6345)   [Kremote: Compressing objects:  85% (5394/6345)   [Kremote: Compressing objects:  86% (5457/6345)   [Kremote: Compressing objects:  87% (5521/6345)   [Kremote: Compressing objects:  88% (5584/6345)   [Kremote: Compressing objects:  89% (5648/6345)   [Kremote: Compressing objects:  90% (5711/6345)   [Kremote: Compressing objects:  91% (5774/6345)   [Kremote: Compressing objects:  92% (5838/6345)   [Kremote: Compressing objects:  93% (5901/6345)   [Kremote: Compressing objects:  94% (5965/6345)   [Kremote: Compressing objects:  95% (6028/6345)   [Kremote: Compressing objects:  96% (6092/6345)   [Kremote: Compressing objects:  97% (6155/6345)   [Kremote: Compressing objects:  98% (6219/6345)   [Kremote: Compressing objects:  99% (6282/6345)   [Kremote: Compressing objects: 100% (6345/6345)   [Kremote: Compressing objects: 100% (6345/6345), done.[K
+Receiving objects:   0% (1/17109)   Receiving objects:   1% (172/17109)   Receiving objects:   2% (343/17109)   Receiving objects:   3% (514/17109)   Receiving objects:   4% (685/17109)   Receiving objects:   5% (856/17109)   Receiving objects:   6% (1027/17109)   Receiving objects:   7% (1198/17109)   Receiving objects:   8% (1369/17109)   Receiving objects:   9% (1540/17109)   Receiving objects:  10% (1711/17109)   Receiving objects:  11% (1882/17109)   Receiving objects:  12% (2054/17109)   Receiving objects:  13% (2225/17109)   Receiving objects:  14% (2396/17109)   Receiving objects:  15% (2567/17109)   Receiving objects:  16% (2738/17109)   Receiving objects:  17% (2909/17109)   Receiving objects:  18% (3080/17109)   Receiving objects:  19% (3251/17109)   Receiving objects:  20% (3422/17109)   Receiving objects:  21% (3593/17109)   Receiving objects:  22% (3764/17109)   Receiving objects:  23% (3936/17109)   Receiving objects:  24% (4107/17109)   Receiving objects:  25% (4278/17109)   Receiving objects:  26% (4449/17109)   Receiving objects:  27% (4620/17109)   Receiving objects:  28% (4791/17109)   Receiving objects:  29% (4962/17109)   Receiving objects:  30% (5133/17109)   Receiving objects:  31% (5304/17109)   Receiving objects:  32% (5475/17109)   Receiving objects:  33% (5646/17109)   Receiving objects:  34% (5818/17109)   Receiving objects:  35% (5989/17109)   Receiving objects:  36% (6160/17109)   Receiving objects:  37% (6331/17109)   Receiving objects:  38% (6502/17109)   Receiving objects:  39% (6673/17109)   Receiving objects:  40% (6844/17109)   Receiving objects:  41% (7015/17109)   Receiving objects:  42% (7186/17109)   Receiving objects:  43% (7357/17109)   Receiving objects:  44% (7528/17109)   Receiving objects:  45% (7700/17109)   Receiving objects:  46% (7871/17109)   Receiving objects:  47% (8042/17109)   Receiving objects:  48% (8213/17109)   Receiving objects:  49% (8384/17109)   Receiving objects:  50% (8555/17109)   Receiving objects:  51% (8726/17109)   Receiving objects:  52% (8897/17109)   Receiving objects:  53% (9068/17109)   Receiving objects:  54% (9239/17109)   Receiving objects:  55% (9410/17109)   Receiving objects:  56% (9582/17109)   Receiving objects:  57% (9753/17109)   Receiving objects:  58% (9924/17109)   Receiving objects:  59% (10095/17109)   Receiving objects:  60% (10266/17109)   Receiving objects:  61% (10437/17109)   Receiving objects:  62% (10608/17109)   Receiving objects:  63% (10779/17109)   Receiving objects:  64% (10950/17109)   Receiving objects:  65% (11121/17109)   Receiving objects:  66% (11292/17109)   Receiving objects:  67% (11464/17109)   Receiving objects:  68% (11635/17109)   Receiving objects:  69% (11806/17109)   Receiving objects:  70% (11977/17109)   Receiving objects:  71% (12148/17109)   Receiving objects:  72% (12319/17109)   Receiving objects:  73% (12490/17109)   Receiving objects:  74% (12661/17109)   Receiving objects:  75% (12832/17109)   Receiving objects:  76% (13003/17109)   Receiving objects:  77% (13174/17109)   Receiving objects:  78% (13346/17109)   Receiving objects:  79% (13517/17109)   Receiving objects:  80% (13688/17109)   Receiving objects:  81% (13859/17109)   Receiving objects:  82% (14030/17109)   Receiving objects:  83% (14201/17109)   Receiving objects:  84% (14372/17109)   Receiving objects:  85% (14543/17109)   Receiving objects:  86% (14714/17109)   Receiving objects:  87% (14885/17109)   Receiving objects:  88% (15056/17109)   Receiving objects:  89% (15228/17109)   Receiving objects:  90% (15399/17109)   Receiving objects:  91% (15570/17109)   Receiving objects:  92% (15741/17109)   Receiving objects:  93% (15912/17109)   Receiving objects:  94% (16083/17109)   Receiving objects:  95% (16254/17109)   remote: Total 17109 (delta 4512), reused 16362 (delta 3901), pack-reused 0[K
+Receiving objects:  96% (16425/17109)   Receiving objects:  97% (16596/17109)   Receiving objects:  98% (16767/17109)   Receiving objects:  99% (16938/17109)   Receiving objects: 100% (17109/17109)   Receiving objects: 100% (17109/17109), 2.17 MiB | 0 bytes/s, done.
+Resolving deltas:   0% (0/4512)   Resolving deltas:   3% (157/4512)   Resolving deltas:   4% (192/4512)   Resolving deltas:   6% (275/4512)   Resolving deltas:   7% (339/4512)   Resolving deltas:   8% (361/4512)   Resolving deltas:   9% (443/4512)   Resolving deltas:  13% (589/4512)   Resolving deltas:  14% (669/4512)   Resolving deltas:  15% (700/4512)   Resolving deltas:  16% (729/4512)   Resolving deltas:  17% (768/4512)   Resolving deltas:  20% (907/4512)   Resolving deltas:  21% (950/4512)   Resolving deltas:  25% (1171/4512)   Resolving deltas:  26% (1195/4512)   Resolving deltas:  27% (1229/4512)   Resolving deltas:  29% (1346/4512)   Resolving deltas:  30% (1378/4512)   Resolving deltas:  38% (1724/4512)   Resolving deltas:  39% (1760/4512)   Resolving deltas:  45% (2042/4512)   Resolving deltas:  48% (2171/4512)   Resolving deltas:  49% (2212/4512)   Resolving deltas:  51% (2336/4512)   Resolving deltas:  53% (2414/4512)   Resolving deltas:  54% (2444/4512)   Resolving deltas:  55% (2501/4512)   Resolving deltas:  56% (2527/4512)   Resolving deltas:  57% (2575/4512)   Resolving deltas:  58% (2618/4512)   Resolving deltas:  59% (2669/4512)   Resolving deltas:  60% (2712/4512)   Resolving deltas:  61% (2758/4512)   Resolving deltas:  62% (2805/4512)   Resolving deltas:  63% (2843/4512)   Resolving deltas:  64% (2916/4512)   Resolving deltas:  65% (2944/4512)   Resolving deltas:  66% (2979/4512)   Resolving deltas:  67% (3036/4512)   Resolving deltas:  68% (3112/4512)   Resolving deltas:  69% (3114/4512)   Resolving deltas:  70% (3159/4512)   Resolving deltas:  71% (3204/4512)   Resolving deltas:  72% (3249/4512)   Resolving deltas:  73% (3297/4512)   Resolving deltas:  74% (3339/4512)   Resolving deltas:  75% (3388/4512)   Resolving deltas:  76% (3430/4512)   Resolving deltas:  77% (3483/4512)   Resolving deltas:  78% (3530/4512)   Resolving deltas:  79% (3593/4512)   Resolving deltas:  80% (3611/4512)   Resolving deltas:  81% (3656/4512)   Resolving deltas:  82% (3700/4512)   Resolving deltas:  83% (3747/4512)   Resolving deltas:  84% (3807/4512)   Resolving deltas:  85% (3845/4512)   Resolving deltas:  86% (3882/4512)   Resolving deltas:  87% (3928/4512)   Resolving deltas:  88% (3995/4512)   Resolving deltas:  89% (4019/4512)   Resolving deltas:  90% (4063/4512)   Resolving deltas:  91% (4110/4512)   Resolving deltas:  92% (4152/4512)   Resolving deltas:  93% (4198/4512)   Resolving deltas:  94% (4243/4512)   Resolving deltas:  95% (4289/4512)   Resolving deltas:  96% (4332/4512)   Resolving deltas:  97% (4377/4512)   Resolving deltas:  98% (4429/4512)   Resolving deltas:  99% (4468/4512)   Resolving deltas: 100% (4512/4512)   Resolving deltas: 100% (4512/4512), done.
+Checking connectivity... done.
+
+travis_time:end:2cd47d0c:start=1483101203046005807,finish=1483101204282369389,duration=1236363582[0K$ cd javaee-samples/javaee7-samples
+travis_time:start:06c9e79c[0K$ git fetch origin +refs/pull/374/merge:
+remote: Counting objects: 33, done.[K
+remote: Compressing objects:   6% (1/15)   [Kremote: Compressing objects:  13% (2/15)   [Kremote: Compressing objects:  20% (3/15)   [Kremote: Compressing objects:  26% (4/15)   [Kremote: Compressing objects:  33% (5/15)   [Kremote: Compressing objects:  40% (6/15)   [Kremote: Compressing objects:  46% (7/15)   [Kremote: Compressing objects:  53% (8/15)   [Kremote: Compressing objects:  60% (9/15)   [Kremote: Compressing objects:  66% (10/15)   [Kremote: Compressing objects:  73% (11/15)   [Kremote: Compressing objects:  80% (12/15)   [Kremote: Compressing objects:  86% (13/15)   [Kremote: Compressing objects:  93% (14/15)   [Kremote: Compressing objects: 100% (15/15)   [Kremote: Compressing objects: 100% (15/15), done.[K
+remote: Total 33 (delta 10), reused 31 (delta 9), pack-reused 0[K
+Unpacking objects:   3% (1/33)   Unpacking objects:   6% (2/33)   Unpacking objects:   9% (3/33)   Unpacking objects:  12% (4/33)   Unpacking objects:  15% (5/33)   Unpacking objects:  18% (6/33)   Unpacking objects:  21% (7/33)   Unpacking objects:  24% (8/33)   Unpacking objects:  27% (9/33)   Unpacking objects:  30% (10/33)   Unpacking objects:  33% (11/33)   Unpacking objects:  36% (12/33)   Unpacking objects:  39% (13/33)   Unpacking objects:  42% (14/33)   Unpacking objects:  45% (15/33)   Unpacking objects:  48% (16/33)   Unpacking objects:  51% (17/33)   Unpacking objects:  54% (18/33)   Unpacking objects:  57% (19/33)   Unpacking objects:  60% (20/33)   Unpacking objects:  63% (21/33)   Unpacking objects:  66% (22/33)   Unpacking objects:  69% (23/33)   Unpacking objects:  72% (24/33)   Unpacking objects:  75% (25/33)   Unpacking objects:  78% (26/33)   Unpacking objects:  81% (27/33)   Unpacking objects:  84% (28/33)   Unpacking objects:  87% (29/33)   Unpacking objects:  90% (30/33)   Unpacking objects:  93% (31/33)   Unpacking objects:  96% (32/33)   Unpacking objects: 100% (33/33)   Unpacking objects: 100% (33/33), done.
+From https://github.com/javaee-samples/javaee7-samples
+ * branch            refs/pull/374/merge -> FETCH_HEAD
+
+travis_time:end:06c9e79c:start=1483101204288600173,finish=1483101204628491703,duration=339891530[0K$ git checkout -qf FETCH_HEAD
+travis_fold:end:git.checkout[0K
+[33;1mThis job is running on container-based infrastructure, which does not allow use of 'sudo', setuid and setguid executables.[0m
+[33;1mIf you require sudo, add 'sudo: required' to your .travis.yml[0m
+[33;1mSee https://docs.travis-ci.com/user/workers/container-based-infrastructure/ for details.[0m
+
+[33;1mSetting environment variables from .travis.yml[0m
+$ export TESTFOLDER=extra
+
+$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+$ java -Xmx32m -version
+java version "1.8.0_31"
+Java(TM) SE Runtime Environment (build 1.8.0_31-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 25.31-b07, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.8.0_31
+travis_fold:start:install[0Ktravis_time:start:017ce65e[0K$ mvn install --quiet -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=192m; support was removed in 8.0
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.8.0_31, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.8.12-040812-generic", arch: "amd64", family: "unix"
+parsing WSDL...
+
+
+generating code...
+
+org/javaee7/jaxws/client/gen/AddAppendix.java
+org/javaee7/jaxws/client/gen/AddAppendixResponse.java
+org/javaee7/jaxws/client/gen/EBook.java
+org/javaee7/jaxws/client/gen/EBookStore.java
+org/javaee7/jaxws/client/gen/EBookStoreImplService.java
+org/javaee7/jaxws/client/gen/FindEBooks.java
+org/javaee7/jaxws/client/gen/FindEBooksResponse.java
+org/javaee7/jaxws/client/gen/ObjectFactory.java
+org/javaee7/jaxws/client/gen/SaveBook.java
+org/javaee7/jaxws/client/gen/SaveBookResponse.java
+org/javaee7/jaxws/client/gen/TakeBook.java
+org/javaee7/jaxws/client/gen/TakeBookResponse.java
+org/javaee7/jaxws/client/gen/WelcomeMessage.java
+org/javaee7/jaxws/client/gen/WelcomeMessageResponse.java
+org/javaee7/jaxws/client/gen/package-info.java
+
+travis_time:end:017ce65e:start=1483101210474345948,finish=1483101288789342370,duration=78314996422[0Ktravis_fold:end:install[0Ktravis_time:start:20b74960[0K$ cd $TESTFOLDER && mvn -q --fail-at-end install -Pglassfish-embedded-arquillian -B 2>&1
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=192m; support was removed in 8.0
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.javaee7.extra.nosql.hibernateogm.EhcacheTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.007 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1
+
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.javaee7.jpa.listeners.JpaListenerInjectionSpecification
+Dec 30, 2016 12:35:24 PM org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl initialize
+INFO: Authorization Service has successfully initialized.
+Dec 30, 2016 12:35:24 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator 5.1.2.Final
+Dec 30, 2016 12:35:25 PM org.glassfish.grizzly.config.Utils newInstance
+WARNING: Instance could not be initialized. Class=interface org.glassfish.grizzly.http.server.AddOn, name=http-listener, realClassName=org.glassfish.grizzly.http2.Http2AddOn
+Dec 30, 2016 12:35:25 PM com.sun.enterprise.v3.services.impl.GrizzlyProxy start0
+INFO: Grizzly Framework 2.3.23 started in: 36ms - bound to [/0.0.0.0:8181]
+Dec 30, 2016 12:35:25 PM com.sun.enterprise.v3.services.impl.GrizzlyService createNetworkProxy
+INFO: Network listener https-listener on port 0 disabled per domain.xml
+Dec 30, 2016 12:35:25 PM com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider setGuiContextRoot
+INFO: Admin Console Adapter: context root: /admin
+Dec 30, 2016 12:35:25 PM com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider setGuiContextRoot
+INFO: Admin Console Adapter: context root: /admin
+Dec 30, 2016 12:35:25 PM com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider setGuiContextRoot
+INFO: Admin Console Adapter: context root: /admin
+Dec 30, 2016 12:35:26 PM com.sun.enterprise.v3.server.AppServerStartup postStartupJob
+INFO: Undefined Product Name - define product and version info in config/branding  0.0.0  (0) startup time : Embedded (1,176ms), startup services(2,068ms), total(3,244ms)
+Dec 30, 2016 12:35:26 PM com.sun.jts.CosTransactions.DefaultTransactionService setServerName
+INFO: JTS5014: Recoverable JTS instance, serverId = [100]
+Dec 30, 2016 12:35:26 PM org.glassfish.admin.mbeanserver.JMXStartupService$JMXConnectorsStarterThread run
+INFO: JMXStartupService has disabled JMXConnector system
+Dec 30, 2016 12:35:26 PM com.sun.enterprise.connectors.jms.util.JmsRaUtil getInstalledMqVersion
+WARNING: jmsra.upgrade_check_failed
+Dec 30, 2016 12:35:28 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/jpa-listeners-injection/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:jpa-listeners-injection:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:28 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/jpa/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:jpa:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:28 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/samples-parent/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:samples-parent:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:28 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/test-utils/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:test-utils:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.security.SecurityLifecycle <init>
+INFO: Java security manager is disabled.
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.security.SecurityLifecycle onInitialization
+INFO: Entering Security Startup Service.
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.security.PolicyLoader loadPolicy
+INFO: Loading policy provider com.sun.enterprise.security.jacc.provider.SimplePolicyProvider.
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.security.auth.realm.Realm doInstantiate
+INFO: Realm [admin-realm] of classtype [com.sun.enterprise.security.auth.realm.file.FileRealm] successfully created.
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.security.auth.realm.Realm doInstantiate
+INFO: Realm [file] of classtype [com.sun.enterprise.security.auth.realm.file.FileRealm] successfully created.
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.security.auth.realm.Realm doInstantiate
+INFO: Realm [certificate] of classtype [com.sun.enterprise.security.auth.realm.certificate.CertificateRealm] successfully created.
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.security.SecurityLifecycle onInitialization
+INFO: Security Service(s) started successfully.
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.web.WebContainer createHttpListener
+INFO: Created HTTP listener http-listener on host/port 0.0.0.0:8181
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.web.VirtualServer addProbes
+SEVERE: Error adding HttpProbes. NetworkListener https-listeners GrizzlyProxy is NULL
+Dec 30, 2016 12:35:32 PM com.sun.enterprise.web.WebContainer createHosts
+INFO: Created virtual server server
+Dec 30, 2016 12:35:33 PM org.apache.catalina.realm.JAASRealm setContainer
+INFO: Setting JAAS app name glassfish-web
+Dec 30, 2016 12:35:33 PM com.sun.enterprise.web.WebContainer loadSystemDefaultWebModules
+INFO: Virtual server server loaded default web module 
+[EL Info]: server: 2016-12-30 12:35:34.168--Detected server platform: org.eclipse.persistence.platform.server.NoServerPlatform.
+Dec 30, 2016 12:35:34 PM org.eclipse.persistence.default
+INFO: Detected server platform: org.eclipse.persistence.platform.server.NoServerPlatform.
+Dec 30, 2016 12:35:35 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/cd0a051d-de71-4579-b8c7-5facb93fb4e5/WEB-INF/lib/jpa-listeners-injection-1.0-SNAPSHOT-classes.jar_myPU
+INFO: EclipseLink, version: Eclipse Persistence Services - 2.6.1.v20150605-31e8258
+Dec 30, 2016 12:35:36 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/cd0a051d-de71-4579-b8c7-5facb93fb4e5/WEB-INF/lib/jpa-listeners-injection-1.0-SNAPSHOT-classes.jar_myPU.connection
+INFO: /file:/tmp/gfembed3487529536390238180tmp/applications/cd0a051d-de71-4579-b8c7-5facb93fb4e5/WEB-INF/lib/jpa-listeners-injection-1.0-SNAPSHOT-classes.jar_myPU login successful
+Dec 30, 2016 12:35:36 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/cd0a051d-de71-4579-b8c7-5facb93fb4e5/WEB-INF/lib/jpa-listeners-injection-1.0-SNAPSHOT-classes.jar_myPU
+WARNING: 
+Local Exception Stack: 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.6.1.v20150605-31e8258): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLSyntaxErrorException: 'DROP TABLE' cannot be performed on 'MOVIE_LISTENER' because it does not exist.
+Error Code: 30000
+Call: DROP TABLE MOVIE_LISTENER
+Query: DataModifyQuery(sql="DROP TABLE MOVIE_LISTENER")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:340)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:684)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:560)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:2055)
+	at org.eclipse.persistence.sessions.server.ServerSession.executeCall(ServerSession.java:570)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:242)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:228)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelectCall(DatasourceCallQueryMechanism.java:271)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelect(DatasourceCallQueryMechanism.java:251)
+	at org.eclipse.persistence.queries.DataModifyQuery.executeDatabaseQuery(DataModifyQuery.java:85)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:904)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:3267)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1857)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1839)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1790)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeNonSelectingCall(AbstractSession.java:1559)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeNonSelectingSQL(AbstractSession.java:1577)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.writeSourceScriptToDatabase(EntityManagerSetupImpl.java:4354)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.writeDDL(EntityManagerSetupImpl.java:4188)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.writeDDL(EntityManagerSetupImpl.java:4060)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:777)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.getAbstractSession(EntityManagerFactoryDelegate.java:205)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.getDatabaseSession(EntityManagerFactoryDelegate.java:183)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.getDatabaseSession(EntityManagerFactoryImpl.java:528)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createContainerEntityManagerFactoryImpl(PersistenceProvider.java:385)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createContainerEntityManagerFactory(PersistenceProvider.java:313)
+	at org.glassfish.persistence.jpa.PersistenceUnitLoader.loadPU(PersistenceUnitLoader.java:199)
+	at org.glassfish.persistence.jpa.PersistenceUnitLoader.<init>(PersistenceUnitLoader.java:107)
+	at org.glassfish.persistence.jpa.JPADeployer$1.visitPUD(JPADeployer.java:223)
+	at org.glassfish.persistence.jpa.JPADeployer$PersistenceUnitDescriptorIterator.iteratePUDs(JPADeployer.java:510)
+	at org.glassfish.persistence.jpa.JPADeployer.createEMFs(JPADeployer.java:230)
+	at org.glassfish.persistence.jpa.JPADeployer.prepare(JPADeployer.java:168)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.prepareModule(ApplicationLifecycle.java:925)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:434)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:219)
+	at org.glassfish.deployment.admin.DeployCommand.execute(DeployCommand.java:491)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$2$1.run(CommandRunnerImpl.java:539)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$2$1.run(CommandRunnerImpl.java:535)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:360)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$2.execute(CommandRunnerImpl.java:534)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$3.run(CommandRunnerImpl.java:565)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$3.run(CommandRunnerImpl.java:557)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:360)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.doCommand(CommandRunnerImpl.java:556)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.doCommand(CommandRunnerImpl.java:1464)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.access$1300(CommandRunnerImpl.java:109)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$ExecutionContext.execute(CommandRunnerImpl.java:1846)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$ExecutionContext.execute(CommandRunnerImpl.java:1722)
+	at com.sun.enterprise.admin.cli.embeddable.DeployerImpl.deploy(DeployerImpl.java:133)
+	at com.sun.enterprise.admin.cli.embeddable.DeployerImpl.deploy(DeployerImpl.java:109)
+	at org.jboss.arquillian.container.glassfish.embedded_3_1.GlassFishContainer.deploy(GlassFishContainer.java:227)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:161)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:128)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.executeOperation(ContainerDeployController.java:271)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.deploy(ContainerDeployController.java:127)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createDeploymentContext(ContainerDeploymentContextHandler.java:78)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createContainerContext(ContainerDeploymentContextHandler.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.container.impl.client.container.DeploymentExceptionHandler.verifyExpectedExceptionDuringDeploy(DeploymentExceptionHandler.java:50)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$1.perform(ContainerDeployController.java:95)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$1.perform(ContainerDeployController.java:80)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachDeployment(ContainerDeployController.java:263)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachManagedDeployment(ContainerDeployController.java:239)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.deployManaged(ContainerDeployController.java:79)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.execute(ContainerEventController.java:101)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.beforeClass(EventTestRunnerAdaptor.java:87)
+	at org.jboss.arquillian.spock.ArquillianInterceptor.interceptSetupSpecMethod(ArquillianInterceptor.java:53)
+	at org.spockframework.runtime.extension.AbstractMethodInterceptor.intercept(AbstractMethodInterceptor.java:34)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:319)
+	at org.spockframework.runtime.BaseSpecRunner.invokeSetupSpec(BaseSpecRunner.java:144)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:111)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:91)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:82)
+	at org.jboss.arquillian.spock.ArquillianSputnik.run(ArquillianSputnik.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:264)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+Caused by: java.sql.SQLSyntaxErrorException: 'DROP TABLE' cannot be performed on 'MOVIE_LISTENER' because it does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.wrapInSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.ConnectionChild.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement20.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement30.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement40.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement42.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver42.newEmbedPreparedStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at com.sun.gjc.spi.base.ConnectionHolder.prepareStatement(ConnectionHolder.java:586)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:255)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:52)
+	at com.sun.gjc.spi.ManagedConnectionImpl.prepareCachedStatement(ManagedConnectionImpl.java:992)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareStatement(ConnectionWrapper40.java:173)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1565)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1514)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:778)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:621)
+	... 148 more
+Caused by: java.sql.SQLException: 'DROP TABLE' cannot be performed on 'MOVIE_LISTENER' because it does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 171 more
+Caused by: ERROR 42Y55: 'DROP TABLE' cannot be performed on 'MOVIE_LISTENER' because it does not exist.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DDLStatementNode.justGetDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DDLStatementNode.getTableDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DDLStatementNode.getTableDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DropTableNode.bindStatement(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepMinion(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepare(Unknown Source)
+	at org.apache.derby.impl.sql.conn.GenericLanguageConnectionContext.prepareInternalStatement(Unknown Source)
+	... 165 more
+
+Dec 30, 2016 12:35:36 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/cd0a051d-de71-4579-b8c7-5facb93fb4e5/WEB-INF/lib/jpa-listeners-injection-1.0-SNAPSHOT-classes.jar_myPU
+WARNING: 
+Local Exception Stack: 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.6.1.v20150605-31e8258): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLSyntaxErrorException: 'DROP TABLE' cannot be performed on 'MOVIE_RATINGS' because it does not exist.
+Error Code: 30000
+Call: DROP TABLE MOVIE_RATINGS
+Query: DataModifyQuery(sql="DROP TABLE MOVIE_RATINGS")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:340)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:684)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:560)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:2055)
+	at org.eclipse.persistence.sessions.server.ServerSession.executeCall(ServerSession.java:570)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:242)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:228)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelectCall(DatasourceCallQueryMechanism.java:271)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeNoSelect(DatasourceCallQueryMechanism.java:251)
+	at org.eclipse.persistence.queries.DataModifyQuery.executeDatabaseQuery(DataModifyQuery.java:85)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:904)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.internalExecuteQuery(AbstractSession.java:3267)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1857)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1839)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1790)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeNonSelectingCall(AbstractSession.java:1559)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeNonSelectingSQL(AbstractSession.java:1577)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.writeSourceScriptToDatabase(EntityManagerSetupImpl.java:4354)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.writeDDL(EntityManagerSetupImpl.java:4188)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.writeDDL(EntityManagerSetupImpl.java:4060)
+	at org.eclipse.persistence.internal.jpa.EntityManagerSetupImpl.deploy(EntityManagerSetupImpl.java:777)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.getAbstractSession(EntityManagerFactoryDelegate.java:205)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate.getDatabaseSession(EntityManagerFactoryDelegate.java:183)
+	at org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl.getDatabaseSession(EntityManagerFactoryImpl.java:528)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createContainerEntityManagerFactoryImpl(PersistenceProvider.java:385)
+	at org.eclipse.persistence.jpa.PersistenceProvider.createContainerEntityManagerFactory(PersistenceProvider.java:313)
+	at org.glassfish.persistence.jpa.PersistenceUnitLoader.loadPU(PersistenceUnitLoader.java:199)
+	at org.glassfish.persistence.jpa.PersistenceUnitLoader.<init>(PersistenceUnitLoader.java:107)
+	at org.glassfish.persistence.jpa.JPADeployer$1.visitPUD(JPADeployer.java:223)
+	at org.glassfish.persistence.jpa.JPADeployer$PersistenceUnitDescriptorIterator.iteratePUDs(JPADeployer.java:510)
+	at org.glassfish.persistence.jpa.JPADeployer.createEMFs(JPADeployer.java:230)
+	at org.glassfish.persistence.jpa.JPADeployer.prepare(JPADeployer.java:168)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.prepareModule(ApplicationLifecycle.java:925)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:434)
+	at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:219)
+	at org.glassfish.deployment.admin.DeployCommand.execute(DeployCommand.java:491)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$2$1.run(CommandRunnerImpl.java:539)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$2$1.run(CommandRunnerImpl.java:535)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:360)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$2.execute(CommandRunnerImpl.java:534)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$3.run(CommandRunnerImpl.java:565)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$3.run(CommandRunnerImpl.java:557)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:360)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.doCommand(CommandRunnerImpl.java:556)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.doCommand(CommandRunnerImpl.java:1464)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl.access$1300(CommandRunnerImpl.java:109)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$ExecutionContext.execute(CommandRunnerImpl.java:1846)
+	at com.sun.enterprise.v3.admin.CommandRunnerImpl$ExecutionContext.execute(CommandRunnerImpl.java:1722)
+	at com.sun.enterprise.admin.cli.embeddable.DeployerImpl.deploy(DeployerImpl.java:133)
+	at com.sun.enterprise.admin.cli.embeddable.DeployerImpl.deploy(DeployerImpl.java:109)
+	at org.jboss.arquillian.container.glassfish.embedded_3_1.GlassFishContainer.deploy(GlassFishContainer.java:227)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:161)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:128)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.executeOperation(ContainerDeployController.java:271)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.deploy(ContainerDeployController.java:127)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createDeploymentContext(ContainerDeploymentContextHandler.java:78)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.container.impl.client.ContainerDeploymentContextHandler.createContainerContext(ContainerDeploymentContextHandler.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.container.impl.client.container.DeploymentExceptionHandler.verifyExpectedExceptionDuringDeploy(DeploymentExceptionHandler.java:50)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$1.perform(ContainerDeployController.java:95)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController$1.perform(ContainerDeployController.java:80)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachDeployment(ContainerDeployController.java:263)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.forEachManagedDeployment(ContainerDeployController.java:239)
+	at org.jboss.arquillian.container.impl.client.container.ContainerDeployController.deployManaged(ContainerDeployController.java:79)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.execute(ContainerEventController.java:101)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.beforeClass(EventTestRunnerAdaptor.java:87)
+	at org.jboss.arquillian.spock.ArquillianInterceptor.interceptSetupSpecMethod(ArquillianInterceptor.java:53)
+	at org.spockframework.runtime.extension.AbstractMethodInterceptor.intercept(AbstractMethodInterceptor.java:34)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:319)
+	at org.spockframework.runtime.BaseSpecRunner.invokeSetupSpec(BaseSpecRunner.java:144)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:111)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:91)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:82)
+	at org.jboss.arquillian.spock.ArquillianSputnik.run(ArquillianSputnik.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:264)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+Caused by: java.sql.SQLSyntaxErrorException: 'DROP TABLE' cannot be performed on 'MOVIE_RATINGS' because it does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.wrapInSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.ConnectionChild.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement20.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement30.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement40.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement42.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver42.newEmbedPreparedStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at com.sun.gjc.spi.base.ConnectionHolder.prepareStatement(ConnectionHolder.java:586)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:255)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:52)
+	at com.sun.gjc.spi.ManagedConnectionImpl.prepareCachedStatement(ManagedConnectionImpl.java:992)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareStatement(ConnectionWrapper40.java:173)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1565)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1514)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:778)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:621)
+	... 148 more
+Caused by: java.sql.SQLException: 'DROP TABLE' cannot be performed on 'MOVIE_RATINGS' because it does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 171 more
+Caused by: ERROR 42Y55: 'DROP TABLE' cannot be performed on 'MOVIE_RATINGS' because it does not exist.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DDLStatementNode.justGetDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DDLStatementNode.getTableDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DDLStatementNode.getTableDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DropTableNode.bindStatement(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepMinion(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepare(Unknown Source)
+	at org.apache.derby.impl.sql.conn.GenericLanguageConnectionContext.prepareInternalStatement(Unknown Source)
+	... 165 more
+
+Dec 30, 2016 12:35:36 PM com.sun.ejb.containers.BaseContainer initializeHome
+INFO: Portable JNDI names for EJB RatingService: [java:global/cd0a051d-de71-4579-b8c7-5facb93fb4e5/RatingService!org.javaee7.jpa.listeners.RatingService, java:global/cd0a051d-de71-4579-b8c7-5facb93fb4e5/RatingService]
+Dec 30, 2016 12:35:36 PM com.sun.ejb.containers.BaseContainer initializeHome
+INFO: Portable JNDI names for EJB MovieBean: [java:global/cd0a051d-de71-4579-b8c7-5facb93fb4e5/MovieBean!org.javaee7.jpa.listeners.MovieBean, java:global/cd0a051d-de71-4579-b8c7-5facb93fb4e5/MovieBean]
+Dec 30, 2016 12:35:36 PM org.jboss.weld.bootstrap.WeldStartup <clinit>
+INFO: WELD-000900: SNAPSHOT
+Dec 30, 2016 12:35:37 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] private org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:37 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] private org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:37 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] org.glassfish.sse.impl.ServerSentEventCdiExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>, BeanManager) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:37 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] public org.glassfish.jms.injection.JMSCDIExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:37 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] public org.glassfish.jms.injection.JMSCDIExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:37 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] org.glassfish.sse.impl.ServerSentEventCdiExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>, BeanManager) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:37 PM com.sun.enterprise.web.WebApplication start
+INFO: Loading application [cd0a051d-de71-4579-b8c7-5facb93fb4e5] at [/cd0a051d-de71-4579-b8c7-5facb93fb4e5]
+Dec 30, 2016 12:35:37 PM org.glassfish.deployment.admin.DeployCommand execute
+INFO: cd0a051d-de71-4579-b8c7-5facb93fb4e5 was successfully deployed in 6,502 milliseconds.
+Dec 30, 2016 12:35:38 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/cd0a051d-de71-4579-b8c7-5facb93fb4e5/WEB-INF/lib/jpa-listeners-injection-1.0-SNAPSHOT-classes.jar_myPU.connection
+INFO: /file:/tmp/gfembed3487529536390238180tmp/applications/cd0a051d-de71-4579-b8c7-5facb93fb4e5/WEB-INF/lib/jpa-listeners-injection-1.0-SNAPSHOT-classes.jar_myPU logout successful
+PlainTextActionReporterSUCCESSNo monitoring data to report.
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.934 sec - in org.javaee7.jpa.listeners.JpaListenerInjectionSpecification
+Running org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification
+Dec 30, 2016 12:35:38 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/jpa-extended-pc/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:jpa-extended-pc:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:38 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/jpa/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:jpa:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:38 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/samples-parent/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:samples-parent:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:38 PM org.jboss.shrinkwrap.resolver.impl.maven.logging.LogTransferListener transferFailed
+WARNING: Failed downloading org/javaee7/test-utils/1.0-SNAPSHOT/maven-metadata.xml from https://repository.apache.org/snapshots/. Reason: 
+org.eclipse.aether.transfer.MetadataNotFoundException: Could not find metadata org.javaee7:test-utils:1.0-SNAPSHOT/maven-metadata.xml in apache-snapshots (https://repository.apache.org/snapshots/)
+Dec 30, 2016 12:35:42 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/3a12733a-60d9-4873-b045-68436f528093/WEB-INF/lib/jpa-extended-pc-1.0-SNAPSHOT-classes.jar_MyPU
+INFO: EclipseLink, version: Eclipse Persistence Services - 2.6.1.v20150605-31e8258
+Dec 30, 2016 12:35:42 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/3a12733a-60d9-4873-b045-68436f528093/WEB-INF/lib/jpa-extended-pc-1.0-SNAPSHOT-classes.jar_MyPU.connection
+INFO: /file:/tmp/gfembed3487529536390238180tmp/applications/3a12733a-60d9-4873-b045-68436f528093/WEB-INF/lib/jpa-extended-pc-1.0-SNAPSHOT-classes.jar_MyPU login successful
+Dec 30, 2016 12:35:42 PM com.sun.ejb.containers.StatefulContainerFactory buildComponents
+INFO: TopLevel AvailabilityService.getAvailabilityEnabled: [true]
+Dec 30, 2016 12:35:42 PM com.sun.ejb.containers.StatefulContainerFactory buildComponents
+INFO: Global AvailabilityEnabled: [true], application AvailabilityEnabled: [false]
+Dec 30, 2016 12:35:42 PM com.sun.ejb.containers.StatefulContainerFactory buildComponents
+INFO: StatefulContainerBuilder AvailabilityEnabled [false] for this application
+Dec 30, 2016 12:35:42 PM com.sun.ejb.containers.StatefulContainerFactory buildStoreManager
+INFO: StatefulContainerBuilder.buildStoreManager() storeName: [CharactersBean-97196528930914304-BackingStore]
+Dec 30, 2016 12:35:42 PM org.glassfish.ha.store.adapter.file.FileBackingStore initialize
+INFO: [FileBackingStore::initialize] Successfully Created and initialized store. Working dir: /tmp/gfembed3487529536390238180tmp/session-store/CharactersBean-97196528930914304; Configuration: BackingStoreConfiguration{clusterName='null', instanceName='null', storeName='CharactersBean-97196528930914304-BackingStore', shortUniqueName='97196528930914304', storeType='file', maxIdleTimeInSeconds=-1, relaxVersionCheck='null', maxLoadWaitTimeInSeconds=0, baseDirectoryName='/tmp/gfembed3487529536390238180tmp/session-store/CharactersBean-97196528930914304', keyClazz=interface java.io.Serializable, valueClazz=class org.glassfish.ha.store.util.SimpleMetadata, synchronousSave=false, typicalPayloadSizeInKiloBytes=0, vendorSpecificSettings={value.class.is.thread.safe=true, async.replication=true, start.gms=false, local.caching=true, broadcast.remove.expired=false, key.transformer=com.sun.ejb.base.sfsb.util.SimpleKeyGenerator@7f5335c0}}
+Dec 30, 2016 12:35:42 PM com.sun.ejb.containers.StatefulContainerFactory buildStoreManager
+INFO: StatefulContainerbuilder instantiated store: org.glassfish.ha.store.adapter.file.FileBackingStore@6769013a, with ha-enabled [false], and backing store configuration: BackingStoreConfiguration{clusterName='null', instanceName='null', storeName='CharactersBean-97196528930914304-BackingStore', shortUniqueName='97196528930914304', storeType='file', maxIdleTimeInSeconds=-1, relaxVersionCheck='null', maxLoadWaitTimeInSeconds=0, baseDirectoryName='/tmp/gfembed3487529536390238180tmp/session-store/CharactersBean-97196528930914304', keyClazz=interface java.io.Serializable, valueClazz=class org.glassfish.ha.store.util.SimpleMetadata, synchronousSave=false, typicalPayloadSizeInKiloBytes=0, vendorSpecificSettings={value.class.is.thread.safe=true, async.replication=true, start.gms=false, local.caching=true, broadcast.remove.expired=false, key.transformer=com.sun.ejb.base.sfsb.util.SimpleKeyGenerator@7f5335c0}}
+Dec 30, 2016 12:35:42 PM com.sun.ejb.containers.BaseContainer initializeHome
+INFO: Portable JNDI names for EJB CharactersBean: [java:global/3a12733a-60d9-4873-b045-68436f528093/CharactersBean!org.javaee7.jpa.extended.pc.CharactersBean, java:global/3a12733a-60d9-4873-b045-68436f528093/CharactersBean]
+Dec 30, 2016 12:35:42 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] public org.glassfish.jms.injection.JMSCDIExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:42 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] org.glassfish.sse.impl.ServerSentEventCdiExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>, BeanManager) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:42 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] private org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:42 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] private org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:42 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] org.glassfish.sse.impl.ServerSentEventCdiExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>, BeanManager) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:42 PM org.jboss.weld.event.ExtensionObserverMethodImpl checkRequiredTypeAnnotations
+WARN: WELD-000411: Observer method [BackedAnnotatedMethod] public org.glassfish.jms.injection.JMSCDIExtension.processAnnotatedType(@Observes ProcessAnnotatedType<Object>) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
+Dec 30, 2016 12:35:43 PM com.sun.enterprise.web.WebApplication start
+INFO: Loading application [3a12733a-60d9-4873-b045-68436f528093] at [/3a12733a-60d9-4873-b045-68436f528093]
+Dec 30, 2016 12:35:43 PM org.glassfish.deployment.admin.DeployCommand execute
+INFO: 3a12733a-60d9-4873-b045-68436f528093 was successfully deployed in 1,414 milliseconds.
+Dec 30, 2016 12:35:43 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/3a12733a-60d9-4873-b045-68436f528093/WEB-INF/lib/jpa-extended-pc-1.0-SNAPSHOT-classes.jar_MyPU
+WARNING: 
+Local Exception Stack: 
+Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.6.1.v20150605-31e8258): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLSyntaxErrorException: Table/View 'CHARACTERS' does not exist.
+Error Code: 30000
+Call: SELECT ID, NAME FROM CHARACTERS
+Query: ReadAllQuery(name="Character.findAll" referenceClass=Character sql="SELECT ID, NAME FROM CHARACTERS")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:340)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:684)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:560)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:2055)
+	at org.eclipse.persistence.sessions.server.ServerSession.executeCall(ServerSession.java:570)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:242)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:228)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeSelectCall(DatasourceCallQueryMechanism.java:299)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.selectAllRows(DatasourceCallQueryMechanism.java:694)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRowsFromTable(ExpressionQueryMechanism.java:2740)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2693)
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:559)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1175)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:904)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1134)
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:460)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1222)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2896)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1857)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1839)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1804)
+	at org.eclipse.persistence.internal.jpa.QueryImpl.executeReadQuery(QueryImpl.java:258)
+	at org.eclipse.persistence.internal.jpa.QueryImpl.getResultList(QueryImpl.java:473)
+	at com.sun.enterprise.container.common.impl.QueryWrapper.getResultList(QueryWrapper.java:84)
+	at com.sun.enterprise.container.common.impl.TypedQueryWrapper.getResultList(TypedQueryWrapper.java:73)
+	at org.javaee7.jpa.extended.pc.CharactersBean.get(CharactersBean.java:32)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.glassfish.ejb.security.application.EJBSecurityManager.runMethod(EJBSecurityManager.java:1081)
+	at org.glassfish.ejb.security.application.EJBSecurityManager.invoke(EJBSecurityManager.java:1153)
+	at com.sun.ejb.containers.BaseContainer.invokeBeanMethod(BaseContainer.java:4786)
+	at com.sun.ejb.EjbInvocation.invokeBeanMethod(EjbInvocation.java:656)
+	at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:822)
+	at com.sun.ejb.EjbInvocation.proceed(EjbInvocation.java:608)
+	at org.jboss.weld.ejb.AbstractEJBRequestScopeActivationInterceptor.aroundInvoke(AbstractEJBRequestScopeActivationInterceptor.java:64)
+	at org.jboss.weld.ejb.SessionBeanInterceptor.aroundInvoke(SessionBeanInterceptor.java:52)
+	at sun.reflect.GeneratedMethodAccessor44.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at com.sun.ejb.containers.interceptors.AroundInvokeInterceptor.intercept(InterceptorManager.java:883)
+	at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:822)
+	at com.sun.ejb.containers.interceptors.InterceptorManager.intercept(InterceptorManager.java:369)
+	at com.sun.ejb.containers.BaseContainer.__intercept(BaseContainer.java:4758)
+	at com.sun.ejb.containers.BaseContainer.intercept(BaseContainer.java:4746)
+	at com.sun.ejb.containers.EJBLocalObjectInvocationHandler.invoke(EJBLocalObjectInvocationHandler.java:212)
+	at com.sun.ejb.containers.EJBLocalObjectInvocationHandlerDelegate.invoke(EJBLocalObjectInvocationHandlerDelegate.java:88)
+	at com.sun.proxy.$Proxy231.get(Unknown Source)
+	at org.javaee7.jpa.extended.pc.__EJB31_Generated__CharactersBean__Intf____Bean__.get(Unknown Source)
+	at org.javaee7.jpa.extended.pc.__EJB31_Generated__CharactersBean__Intf____Bean__$get$0.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:108)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:112)
+	at org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification.setup(ExtendedPersistenceContextSpecification.groovy:43)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.MethodInvocation.invokeTargetMethod(MethodInvocation.java:91)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:85)
+	at org.jboss.arquillian.spock.ArquillianInterceptor$InvocationExecutor.invoke(ArquillianInterceptor.java:130)
+	at org.jboss.arquillian.container.test.impl.execution.BeforeLifecycleEventExecuter.on(BeforeLifecycleEventExecuter.java:35)
+	at sun.reflect.GeneratedMethodAccessor50.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createTestContext(TestContextHandler.java:130)
+	at sun.reflect.GeneratedMethodAccessor43.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+	at sun.reflect.GeneratedMethodAccessor42.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+	at sun.reflect.GeneratedMethodAccessor41.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.before(EventTestRunnerAdaptor.java:108)
+	at org.jboss.arquillian.spock.ArquillianInterceptor.interceptSetupMethod(ArquillianInterceptor.java:74)
+	at org.spockframework.runtime.extension.AbstractMethodInterceptor.intercept(AbstractMethodInterceptor.java:28)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:319)
+	at org.spockframework.runtime.BaseSpecRunner.invokeSetup(BaseSpecRunner.java:279)
+	at org.spockframework.runtime.BaseSpecRunner.doRunIteration(BaseSpecRunner.java:255)
+	at sun.reflect.GeneratedMethodAccessor47.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runIteration(BaseSpecRunner.java:223)
+	at org.spockframework.runtime.BaseSpecRunner.initializeAndRunIteration(BaseSpecRunner.java:214)
+	at org.spockframework.runtime.BaseSpecRunner.runSimpleFeature(BaseSpecRunner.java:205)
+	at org.spockframework.runtime.BaseSpecRunner.doRunFeature(BaseSpecRunner.java:199)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runFeature(BaseSpecRunner.java:175)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatures(BaseSpecRunner.java:152)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:91)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:82)
+	at org.jboss.arquillian.spock.ArquillianSputnik.run(ArquillianSputnik.java:141)
+	at org.jboss.arquillian.spock.container.SpockTestRunner.runTest(SpockTestRunner.java:82)
+	at org.jboss.arquillian.spock.container.SpockTestRunner.execute(SpockTestRunner.java:62)
+	at org.jboss.arquillian.protocol.servlet.runner.ServletTestRunner.executeTest(ServletTestRunner.java:170)
+	at org.jboss.arquillian.protocol.servlet.runner.ServletTestRunner.execute(ServletTestRunner.java:135)
+	at org.jboss.arquillian.protocol.servlet.runner.ServletTestRunner.doGet(ServletTestRunner.java:98)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.apache.catalina.core.StandardWrapper.service(StandardWrapper.java:1682)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:318)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:160)
+	at org.apache.catalina.core.StandardPipeline.doInvoke(StandardPipeline.java:734)
+	at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.java:673)
+	at com.sun.enterprise.web.WebPipeline.invoke(WebPipeline.java:99)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:174)
+	at org.apache.catalina.connector.CoyoteAdapter.doService(CoyoteAdapter.java:416)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:283)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper$HttpHandlerCallable.call(ContainerMapper.java:459)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper.service(ContainerMapper.java:167)
+	at org.glassfish.grizzly.http.server.HttpHandler.runService(HttpHandler.java:206)
+	at org.glassfish.grizzly.http.server.HttpHandler.doHandle(HttpHandler.java:180)
+	at org.glassfish.grizzly.http.server.HttpServerFilter.handleRead(HttpServerFilter.java:235)
+	at org.glassfish.grizzly.filterchain.ExecutorResolver$9.execute(ExecutorResolver.java:119)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.executeFilter(DefaultFilterChain.java:283)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.executeChainPart(DefaultFilterChain.java:200)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.execute(DefaultFilterChain.java:132)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.process(DefaultFilterChain.java:111)
+	at org.glassfish.grizzly.ProcessorExecutor.execute(ProcessorExecutor.java:77)
+	at org.glassfish.grizzly.nio.transport.TCPNIOTransport.fireIOEvent(TCPNIOTransport.java:536)
+	at org.glassfish.grizzly.strategies.AbstractIOStrategy.fireIOEvent(AbstractIOStrategy.java:112)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.run0(WorkerThreadIOStrategy.java:117)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.access$100(WorkerThreadIOStrategy.java:56)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run(WorkerThreadIOStrategy.java:137)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:591)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:571)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.sql.SQLSyntaxErrorException: Table/View 'CHARACTERS' does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.wrapInSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.ConnectionChild.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement20.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement30.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement40.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement42.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver42.newEmbedPreparedStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at com.sun.gjc.spi.base.ConnectionHolder.prepareStatement(ConnectionHolder.java:586)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:255)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:52)
+	at com.sun.gjc.spi.ManagedConnectionImpl.prepareCachedStatement(ManagedConnectionImpl.java:992)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareStatement(ConnectionWrapper40.java:173)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1565)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1514)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:778)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:621)
+	... 160 more
+Caused by: java.sql.SQLException: Table/View 'CHARACTERS' does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 183 more
+Caused by: ERROR 42X05: Table/View 'CHARACTERS' does not exist.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.sql.compile.FromBaseTable.bindTableDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.FromBaseTable.bindNonVTITables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.FromList.bindTables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.SelectNode.bindNonVTITables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DMLStatementNode.bindTables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DMLStatementNode.bind(Unknown Source)
+	at org.apache.derby.impl.sql.compile.CursorNode.bindStatement(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepMinion(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepare(Unknown Source)
+	at org.apache.derby.impl.sql.conn.GenericLanguageConnectionContext.prepareInternalStatement(Unknown Source)
+	... 177 more
+
+Dec 30, 2016 12:35:43 PM com.sun.ejb.containers.BaseContainer postInvoke
+WARNING: A system exception occurred during an invocation on EJB CharactersBean, method: public java.util.List org.javaee7.jpa.extended.pc.CharactersBean.get()
+Dec 30, 2016 12:35:43 PM com.sun.ejb.containers.BaseContainer postInvoke
+WARNING: 
+javax.ejb.EJBException
+	at com.sun.ejb.containers.EJBContainerTransactionManager.processSystemException(EJBContainerTransactionManager.java:752)
+	at com.sun.ejb.containers.EJBContainerTransactionManager.checkExceptionNoTx(EJBContainerTransactionManager.java:642)
+	at com.sun.ejb.containers.EJBContainerTransactionManager.postInvokeTx(EJBContainerTransactionManager.java:484)
+	at com.sun.ejb.containers.BaseContainer.postInvokeTx(BaseContainer.java:4566)
+	at com.sun.ejb.containers.StatefulSessionContainer.postInvokeTx(StatefulSessionContainer.java:1853)
+	at com.sun.ejb.containers.BaseContainer.postInvoke(BaseContainer.java:2074)
+	at com.sun.ejb.containers.BaseContainer.postInvoke(BaseContainer.java:2044)
+	at com.sun.ejb.containers.EJBLocalObjectInvocationHandler.invoke(EJBLocalObjectInvocationHandler.java:220)
+	at com.sun.ejb.containers.EJBLocalObjectInvocationHandlerDelegate.invoke(EJBLocalObjectInvocationHandlerDelegate.java:88)
+	at com.sun.proxy.$Proxy231.get(Unknown Source)
+	at org.javaee7.jpa.extended.pc.__EJB31_Generated__CharactersBean__Intf____Bean__.get(Unknown Source)
+	at org.javaee7.jpa.extended.pc.__EJB31_Generated__CharactersBean__Intf____Bean__$get$0.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:108)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:112)
+	at org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification.setup(ExtendedPersistenceContextSpecification.groovy:43)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.MethodInvocation.invokeTargetMethod(MethodInvocation.java:91)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:85)
+	at org.jboss.arquillian.spock.ArquillianInterceptor$InvocationExecutor.invoke(ArquillianInterceptor.java:130)
+	at org.jboss.arquillian.container.test.impl.execution.BeforeLifecycleEventExecuter.on(BeforeLifecycleEventExecuter.java:35)
+	at sun.reflect.GeneratedMethodAccessor50.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:99)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:81)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createTestContext(TestContextHandler.java:130)
+	at sun.reflect.GeneratedMethodAccessor43.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+	at sun.reflect.GeneratedMethodAccessor42.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+	at sun.reflect.GeneratedMethodAccessor41.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:94)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:88)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:145)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:116)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.before(EventTestRunnerAdaptor.java:108)
+	at org.jboss.arquillian.spock.ArquillianInterceptor.interceptSetupMethod(ArquillianInterceptor.java:74)
+	at org.spockframework.runtime.extension.AbstractMethodInterceptor.intercept(AbstractMethodInterceptor.java:28)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:319)
+	at org.spockframework.runtime.BaseSpecRunner.invokeSetup(BaseSpecRunner.java:279)
+	at org.spockframework.runtime.BaseSpecRunner.doRunIteration(BaseSpecRunner.java:255)
+	at sun.reflect.GeneratedMethodAccessor47.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runIteration(BaseSpecRunner.java:223)
+	at org.spockframework.runtime.BaseSpecRunner.initializeAndRunIteration(BaseSpecRunner.java:214)
+	at org.spockframework.runtime.BaseSpecRunner.runSimpleFeature(BaseSpecRunner.java:205)
+	at org.spockframework.runtime.BaseSpecRunner.doRunFeature(BaseSpecRunner.java:199)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runFeature(BaseSpecRunner.java:175)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatures(BaseSpecRunner.java:152)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:91)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:82)
+	at org.jboss.arquillian.spock.ArquillianSputnik.run(ArquillianSputnik.java:141)
+	at org.jboss.arquillian.spock.container.SpockTestRunner.runTest(SpockTestRunner.java:82)
+	at org.jboss.arquillian.spock.container.SpockTestRunner.execute(SpockTestRunner.java:62)
+	at org.jboss.arquillian.protocol.servlet.runner.ServletTestRunner.executeTest(ServletTestRunner.java:170)
+	at org.jboss.arquillian.protocol.servlet.runner.ServletTestRunner.execute(ServletTestRunner.java:135)
+	at org.jboss.arquillian.protocol.servlet.runner.ServletTestRunner.doGet(ServletTestRunner.java:98)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
+	at org.apache.catalina.core.StandardWrapper.service(StandardWrapper.java:1682)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:318)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:160)
+	at org.apache.catalina.core.StandardPipeline.doInvoke(StandardPipeline.java:734)
+	at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.java:673)
+	at com.sun.enterprise.web.WebPipeline.invoke(WebPipeline.java:99)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:174)
+	at org.apache.catalina.connector.CoyoteAdapter.doService(CoyoteAdapter.java:416)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:283)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper$HttpHandlerCallable.call(ContainerMapper.java:459)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper.service(ContainerMapper.java:167)
+	at org.glassfish.grizzly.http.server.HttpHandler.runService(HttpHandler.java:206)
+	at org.glassfish.grizzly.http.server.HttpHandler.doHandle(HttpHandler.java:180)
+	at org.glassfish.grizzly.http.server.HttpServerFilter.handleRead(HttpServerFilter.java:235)
+	at org.glassfish.grizzly.filterchain.ExecutorResolver$9.execute(ExecutorResolver.java:119)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.executeFilter(DefaultFilterChain.java:283)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.executeChainPart(DefaultFilterChain.java:200)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.execute(DefaultFilterChain.java:132)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.process(DefaultFilterChain.java:111)
+	at org.glassfish.grizzly.ProcessorExecutor.execute(ProcessorExecutor.java:77)
+	at org.glassfish.grizzly.nio.transport.TCPNIOTransport.fireIOEvent(TCPNIOTransport.java:536)
+	at org.glassfish.grizzly.strategies.AbstractIOStrategy.fireIOEvent(AbstractIOStrategy.java:112)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.run0(WorkerThreadIOStrategy.java:117)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.access$100(WorkerThreadIOStrategy.java:56)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run(WorkerThreadIOStrategy.java:137)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:591)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:571)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: javax.persistence.PersistenceException: Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.6.1.v20150605-31e8258): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLSyntaxErrorException: Table/View 'CHARACTERS' does not exist.
+Error Code: 30000
+Call: SELECT ID, NAME FROM CHARACTERS
+Query: ReadAllQuery(name="Character.findAll" referenceClass=Character sql="SELECT ID, NAME FROM CHARACTERS")
+	at org.eclipse.persistence.internal.jpa.QueryImpl.getDetailedException(QueryImpl.java:382)
+	at org.eclipse.persistence.internal.jpa.QueryImpl.executeReadQuery(QueryImpl.java:260)
+	at org.eclipse.persistence.internal.jpa.QueryImpl.getResultList(QueryImpl.java:473)
+	at com.sun.enterprise.container.common.impl.QueryWrapper.getResultList(QueryWrapper.java:84)
+	at com.sun.enterprise.container.common.impl.TypedQueryWrapper.getResultList(TypedQueryWrapper.java:73)
+	at org.javaee7.jpa.extended.pc.CharactersBean.get(CharactersBean.java:32)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at org.glassfish.ejb.security.application.EJBSecurityManager.runMethod(EJBSecurityManager.java:1081)
+	at org.glassfish.ejb.security.application.EJBSecurityManager.invoke(EJBSecurityManager.java:1153)
+	at com.sun.ejb.containers.BaseContainer.invokeBeanMethod(BaseContainer.java:4786)
+	at com.sun.ejb.EjbInvocation.invokeBeanMethod(EjbInvocation.java:656)
+	at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:822)
+	at com.sun.ejb.EjbInvocation.proceed(EjbInvocation.java:608)
+	at org.jboss.weld.ejb.AbstractEJBRequestScopeActivationInterceptor.aroundInvoke(AbstractEJBRequestScopeActivationInterceptor.java:64)
+	at org.jboss.weld.ejb.SessionBeanInterceptor.aroundInvoke(SessionBeanInterceptor.java:52)
+	at sun.reflect.GeneratedMethodAccessor44.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at com.sun.ejb.containers.interceptors.AroundInvokeInterceptor.intercept(InterceptorManager.java:883)
+	at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:822)
+	at com.sun.ejb.containers.interceptors.InterceptorManager.intercept(InterceptorManager.java:369)
+	at com.sun.ejb.containers.BaseContainer.__intercept(BaseContainer.java:4758)
+	at com.sun.ejb.containers.BaseContainer.intercept(BaseContainer.java:4746)
+	at com.sun.ejb.containers.EJBLocalObjectInvocationHandler.invoke(EJBLocalObjectInvocationHandler.java:212)
+	... 115 more
+Caused by: Exception [EclipseLink-4002] (Eclipse Persistence Services - 2.6.1.v20150605-31e8258): org.eclipse.persistence.exceptions.DatabaseException
+Internal Exception: java.sql.SQLSyntaxErrorException: Table/View 'CHARACTERS' does not exist.
+Error Code: 30000
+Call: SELECT ID, NAME FROM CHARACTERS
+Query: ReadAllQuery(name="Character.findAll" referenceClass=Character sql="SELECT ID, NAME FROM CHARACTERS")
+	at org.eclipse.persistence.exceptions.DatabaseException.sqlException(DatabaseException.java:340)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:684)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:560)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:2055)
+	at org.eclipse.persistence.sessions.server.ServerSession.executeCall(ServerSession.java:570)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:242)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:228)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeSelectCall(DatasourceCallQueryMechanism.java:299)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.selectAllRows(DatasourceCallQueryMechanism.java:694)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRowsFromTable(ExpressionQueryMechanism.java:2740)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2693)
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:559)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1175)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:904)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1134)
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:460)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1222)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2896)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1857)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1839)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1804)
+	at org.eclipse.persistence.internal.jpa.QueryImpl.executeReadQuery(QueryImpl.java:258)
+	... 140 more
+Caused by: java.sql.SQLSyntaxErrorException: Table/View 'CHARACTERS' does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.wrapInSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.TransactionResourceImpl.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.ConnectionChild.handleException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement20.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement30.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement40.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedPreparedStatement42.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver42.newEmbedPreparedStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.prepareStatement(Unknown Source)
+	at com.sun.gjc.spi.base.ConnectionHolder.prepareStatement(ConnectionHolder.java:586)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:255)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:52)
+	at com.sun.gjc.spi.ManagedConnectionImpl.prepareCachedStatement(ManagedConnectionImpl.java:992)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareStatement(ConnectionWrapper40.java:173)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1565)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1514)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:778)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:621)
+	... 160 more
+Caused by: java.sql.SQLException: Table/View 'CHARACTERS' does not exist.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 183 more
+Caused by: ERROR 42X05: Table/View 'CHARACTERS' does not exist.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.sql.compile.FromBaseTable.bindTableDescriptor(Unknown Source)
+	at org.apache.derby.impl.sql.compile.FromBaseTable.bindNonVTITables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.FromList.bindTables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.SelectNode.bindNonVTITables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DMLStatementNode.bindTables(Unknown Source)
+	at org.apache.derby.impl.sql.compile.DMLStatementNode.bind(Unknown Source)
+	at org.apache.derby.impl.sql.compile.CursorNode.bindStatement(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepMinion(Unknown Source)
+	at org.apache.derby.impl.sql.GenericStatement.prepare(Unknown Source)
+	at org.apache.derby.impl.sql.conn.GenericLanguageConnectionContext.prepareInternalStatement(Unknown Source)
+	... 177 more
+
+Dec 30, 2016 12:35:43 PM org.eclipse.persistence.session./file:/tmp/gfembed3487529536390238180tmp/applications/3a12733a-60d9-4873-b045-68436f528093/WEB-INF/lib/jpa-extended-pc-1.0-SNAPSHOT-classes.jar_MyPU.connection
+INFO: /file:/tmp/gfembed3487529536390238180tmp/applications/3a12733a-60d9-4873-b045-68436f528093/WEB-INF/lib/jpa-extended-pc-1.0-SNAPSHOT-classes.jar_MyPU logout successful
+PlainTextActionReporterSUCCESSNo monitoring data to report.
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 4.645 sec <<< FAILURE! - in org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification
+should not persist changes without transaction flush(org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification)  Time elapsed: 0.131 sec  <<< ERROR!
+javax.ejb.EJBException: null
+	at com.sun.gjc.spi.base.ConnectionHolder.prepareStatement(ConnectionHolder.java:586)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:255)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareCachedStatement(ConnectionWrapper40.java:52)
+	at com.sun.gjc.spi.ManagedConnectionImpl.prepareCachedStatement(ManagedConnectionImpl.java:992)
+	at com.sun.gjc.spi.jdbc40.ConnectionWrapper40.prepareStatement(ConnectionWrapper40.java:173)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1565)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.prepareStatement(DatabaseAccessor.java:1514)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseCall.prepareStatement(DatabaseCall.java:778)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.basicExecuteCall(DatabaseAccessor.java:621)
+	at org.eclipse.persistence.internal.databaseaccess.DatabaseAccessor.executeCall(DatabaseAccessor.java:560)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.basicExecuteCall(AbstractSession.java:2055)
+	at org.eclipse.persistence.sessions.server.ServerSession.executeCall(ServerSession.java:570)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:242)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeCall(DatasourceCallQueryMechanism.java:228)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.executeSelectCall(DatasourceCallQueryMechanism.java:299)
+	at org.eclipse.persistence.internal.queries.DatasourceCallQueryMechanism.selectAllRows(DatasourceCallQueryMechanism.java:694)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRowsFromTable(ExpressionQueryMechanism.java:2740)
+	at org.eclipse.persistence.internal.queries.ExpressionQueryMechanism.selectAllRows(ExpressionQueryMechanism.java:2693)
+	at org.eclipse.persistence.queries.ReadAllQuery.executeObjectLevelReadQuery(ReadAllQuery.java:559)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeDatabaseQuery(ObjectLevelReadQuery.java:1175)
+	at org.eclipse.persistence.queries.DatabaseQuery.execute(DatabaseQuery.java:904)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.execute(ObjectLevelReadQuery.java:1134)
+	at org.eclipse.persistence.queries.ReadAllQuery.execute(ReadAllQuery.java:460)
+	at org.eclipse.persistence.queries.ObjectLevelReadQuery.executeInUnitOfWork(ObjectLevelReadQuery.java:1222)
+	at org.eclipse.persistence.internal.sessions.UnitOfWorkImpl.internalExecuteQuery(UnitOfWorkImpl.java:2896)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1857)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1839)
+	at org.eclipse.persistence.internal.sessions.AbstractSession.executeQuery(AbstractSession.java:1804)
+	at org.eclipse.persistence.internal.jpa.QueryImpl.executeReadQuery(QueryImpl.java:258)
+	at org.eclipse.persistence.internal.jpa.QueryImpl.getResultList(QueryImpl.java:473)
+	at com.sun.enterprise.container.common.impl.QueryWrapper.getResultList(QueryWrapper.java:84)
+	at com.sun.enterprise.container.common.impl.TypedQueryWrapper.getResultList(TypedQueryWrapper.java:73)
+	at org.javaee7.jpa.extended.pc.CharactersBean.get(CharactersBean.java:32)
+	at org.glassfish.ejb.security.application.EJBSecurityManager.runMethod(EJBSecurityManager.java:1081)
+	at org.glassfish.ejb.security.application.EJBSecurityManager.invoke(EJBSecurityManager.java:1153)
+	at com.sun.ejb.containers.BaseContainer.invokeBeanMethod(BaseContainer.java:4786)
+	at com.sun.ejb.EjbInvocation.invokeBeanMethod(EjbInvocation.java:656)
+	at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:822)
+	at com.sun.ejb.EjbInvocation.proceed(EjbInvocation.java:608)
+	at org.jboss.weld.ejb.AbstractEJBRequestScopeActivationInterceptor.aroundInvoke(AbstractEJBRequestScopeActivationInterceptor.java:64)
+	at org.jboss.weld.ejb.SessionBeanInterceptor.aroundInvoke(SessionBeanInterceptor.java:52)
+	at com.sun.ejb.containers.interceptors.AroundInvokeInterceptor.intercept(InterceptorManager.java:883)
+	at com.sun.ejb.containers.interceptors.AroundInvokeChainImpl.invokeNext(InterceptorManager.java:822)
+	at com.sun.ejb.containers.interceptors.InterceptorManager.intercept(InterceptorManager.java:369)
+	at com.sun.ejb.containers.BaseContainer.__intercept(BaseContainer.java:4758)
+	at com.sun.ejb.containers.BaseContainer.intercept(BaseContainer.java:4746)
+	at com.sun.ejb.containers.EJBLocalObjectInvocationHandler.invoke(EJBLocalObjectInvocationHandler.java:212)
+	at com.sun.ejb.containers.EJBLocalObjectInvocationHandlerDelegate.invoke(EJBLocalObjectInvocationHandlerDelegate.java:88)
+	at org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification.setup(ExtendedPersistenceContextSpecification.groovy:43)
+
+should update characters after transaction flush(org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification)  Time elapsed: 0.037 sec  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke method save() on null object
+	at org.javaee7.jpa.extended.pc.ExtendedPersistenceContextSpecification.setup(ExtendedPersistenceContextSpecification.groovy:41)
+
+Running org.javaee7.servlet.filters.FilterServletSpecification
+Dec 30, 2016 12:35:43 PM com.sun.enterprise.web.WebApplication start
+INFO: Loading application [6705fe71-b015-4032-8809-021d0e0361b8] at [/6705fe71-b015-4032-8809-021d0e0361b8]
+Dec 30, 2016 12:35:43 PM org.glassfish.deployment.admin.DeployCommand execute
+INFO: 6705fe71-b015-4032-8809-021d0e0361b8 was successfully deployed in 76 milliseconds.
+PlainTextActionReporterSUCCESSNo monitoring data to report.
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.419 sec - in org.javaee7.servlet.filters.FilterServletSpecification
+Dec 30, 2016 12:35:43 PM org.glassfish.admin.mbeanserver.JMXStartupService shutdown
+INFO: JMXStartupService and JMXConnectors have been shut down.
+JdbcRuntimeExtension,  getAllSystemRAResourcesAndPools = [GlassFishConfigBean.org.glassfish.jdbc.config.JdbcResource, GlassFishConfigBean.org.glassfish.jdbc.config.JdbcResource, GlassFishConfigBean.org.glassfish.jdbc.config.JdbcConnectionPool, GlassFishConfigBean.org.glassfish.jdbc.config.JdbcConnectionPool]
+Dec 30, 2016 12:35:43 PM com.sun.enterprise.connectors.service.ResourceAdapterAdminServiceImpl sendStopToResourceAdapter
+INFO: RAR7094: __ds_jdbc_ra shutdown successful.
+Dec 30, 2016 12:35:43 PM com.sun.enterprise.v3.server.AppServerStartup stop
+INFO: Shutdown procedure finished
+
+Results :
+
+Tests in error: 
+  ExtendedPersistenceContextSpecification.setup:43 » EJB
+  ExtendedPersistenceContextSpecification.setup:41 NullPointer Cannot invoke met...
+
+Tests run: 8, Failures: 0, Errors: 2, Skipped: 0
+
+[ERROR] Failed to execute goal on project twitter-search: Could not resolve dependencies for project org.javaee7.extra:twitter-search:war:1.0-SNAPSHOT: Could not find artifact org.glassfish.samples:twitter-api:jar:1.0-SNAPSHOT at specified path /home/travis/build/javaee-samples/javaee7-samples/extra/twitter-search/src/main/webapp/WEB-INF/lib/twitter.jar -> [Help 1]
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.17:test (spock-test) on project spock-tests: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /home/travis/build/javaee-samples/javaee7-samples/extra/spock-tests/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 2]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException
+[ERROR] [Help 2] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <goals> -rf :twitter-search
+
+travis_time:end:20b74960:start=1483101288794814508,finish=1483101344041838202,duration=55247023694[0K
+[31;1mThe command "cd $TESTFOLDER && mvn -q --fail-at-end install -Pglassfish-embedded-arquillian -B 2>&1" exited with 1.[0m
+
+Done. Your build exited with 1.
