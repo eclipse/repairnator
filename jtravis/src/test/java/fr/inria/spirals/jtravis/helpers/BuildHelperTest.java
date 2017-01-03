@@ -117,14 +117,24 @@ public class BuildHelperTest {
         expectedBuild.setPRRepository(prRepo);
 
         Commit headCommit = new Commit();
-        headCommit.setSha("7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
-        headCommit.setBranch("master");
-        headCommit.setCommitterName("Martin Monperrus");
-        headCommit.setCommitterEmail("monperrus@users.noreply.github.com");
-        headCommit.setMessage("doc: improve template documentation (#1068)");
-        headCommit.setCommittedAt(TestUtils.getDate(2016, 12, 22,9,32,7));
-        headCommit.setCompareUrl("https://github.com/INRIA/spoon/commit/7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
+        headCommit.setSha("cc6467d1d86915409d325905bf7727423635d7db");
+        headCommit.setBranch("lazyQueries");
+        headCommit.setCommitterName("Pavel Vojtechovsky");
+        headCommit.setCommitterEmail("p.vojtechovsky@post.cz");
+        headCommit.setMessage("added concept diagram");
+        headCommit.setCommittedAt(TestUtils.getDate(2017, 01, 01,10,57,16));
+        headCommit.setCompareUrl("https://github.com/pvojtechovsky/spoon/commit/cc6467d1d86915409d325905bf7727423635d7db");
         expectedBuild.setHeadCommit(headCommit);
+
+        Commit baseCommit = new Commit();
+        baseCommit.setSha("7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
+        baseCommit.setBranch("master");
+        baseCommit.setCommitterName("Martin Monperrus");
+        baseCommit.setCommitterEmail("monperrus@users.noreply.github.com");
+        baseCommit.setMessage("doc: improve template documentation (#1068)");
+        baseCommit.setCommittedAt(TestUtils.getDate(2016, 12, 22,9,32,7));
+        baseCommit.setCompareUrl("https://github.com/INRIA/spoon/commit/7a55cd2c526a7bbb914dacbe6ba2ddc621f23870");
+        expectedBuild.setBaseCommit(baseCommit);
 
         return expectedBuild;
     }
@@ -187,11 +197,4 @@ public class BuildHelperTest {
         assertEquals(expectedBuild, obtainedBuild);
     }
 
-    @Test
-    public void testGetBuildWithPRRightMessage() {
-        int buildId = 180646666;
-        Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
-
-        assertEquals("update maven version",obtainedBuild.getHeadCommit().getMessage());
-    }
 }

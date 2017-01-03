@@ -84,7 +84,9 @@ public class BuildHelper extends AbstractHelper {
 
 
                     GHCommitPointer base = pullRequest.getBase();
-                    GHRepository headRepo = pullRequest.getHead().getRepository();
+                    GHCommitPointer head = pullRequest.getHead();
+
+                    GHRepository headRepo = head.getRepository();
 
                     Repository repoPR = new Repository();
                     repoPR.setId(headRepo.getId());
@@ -95,17 +97,32 @@ public class BuildHelper extends AbstractHelper {
                     build.setPRRepository(repoPR);
 
                     Commit commitHead = new Commit();
-                    commitHead.setSha(base.getSha());
-                    commitHead.setBranch(base.getRef());
-                    commitHead.setCompareUrl(base.getCommit().getHtmlUrl().toString());
+                    commitHead.setSha(head.getSha());
+                    commitHead.setBranch(head.getRef());
+                    commitHead.setCompareUrl(head.getCommit().getHtmlUrl().toString());
 
-                    GHCommit.ShortInfo infoCommit = base.getCommit().getCommitShortInfo();
+                    GHCommit.ShortInfo infoCommit = head.getCommit().getCommitShortInfo();
 
                     commitHead.setMessage(infoCommit.getMessage());
                     commitHead.setCommitterEmail(infoCommit.getAuthor().getEmail());
                     commitHead.setCommitterName(infoCommit.getAuthor().getName());
                     commitHead.setCommittedAt(infoCommit.getCommitDate());
                     build.setHeadCommit(commitHead);
+
+                    Commit commitBase = new Commit();
+                    commitBase.setSha(base.getSha());
+                    commitBase.setBranch(base.getRef());
+                    commitBase.setCompareUrl(base.getCommit().getHtmlUrl().toString());
+
+                    infoCommit = base.getCommit().getCommitShortInfo();
+
+                    commitBase.setMessage(infoCommit.getMessage());
+                    commitBase.setCommitterEmail(infoCommit.getAuthor().getEmail());
+                    commitBase.setCommitterName(infoCommit.getAuthor().getName());
+                    commitBase.setCommittedAt(infoCommit.getCommitDate());
+                    build.setBaseCommit(commitBase);
+
+
                 } else {
                     AbstractHelper.LOGGER.warn("You reach your rate limit for github, you have to wait "+rateLimit.reset+" to get datas.");
                 }
