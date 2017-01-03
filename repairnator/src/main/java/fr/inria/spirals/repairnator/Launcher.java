@@ -151,9 +151,9 @@ public class Launcher {
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector scanner = new ProjectInspector(build);
+            ProjectInspector scanner = new ProjectInspector(build, workspace);
             projectInspectors.add(scanner);
-            scanner.cloneInWorkspace(workspace);
+            scanner.processRepair();
         }
         return projectInspectors;
     }
@@ -174,28 +174,42 @@ public class Launcher {
         JsonElement dateJson = gson.toJsonTree(new Date());
         root.add("date", dateJson);
 
-        List<Build> buildable = new ArrayList<Build>();
+        List<Build> testsFailing = new ArrayList<Build>();
+        List<Build> buildableWithoutFailingTests = new ArrayList<Build>();
         List<Build> notBuildable = new ArrayList<Build>();
         List<Build> notClonable = new ArrayList<Build>();
 
         for (ProjectInspector inspector : results) {
-            if (inspector.canBeCloned()) {
-                if (inspector.canBeBuilt()) {
-                    buildable.add(inspector.getBuild());
-                } else {
-                    notBuildable.add(inspector.getBuild());
-                }
-            } else {
-                notClonable.add(inspector.getBuild());
-            }
 
+            Build build = inspector.getBuild();
+
+            switch (inspector.getState()) {
+                case NONE:
+                    notClonable.add(build);
+                    break;
+
+                case CLONABLE:
+                    notBuildable.add(build);
+                    break;
+
+                case BUILDABLE:
+                    buildableWithoutFailingTests.add(build);
+                    break;
+
+                case HASTESTFAILURE:
+                    testsFailing.add(build);
+                    break;
+            }
         }
 
         JsonElement nbFailedJson = gson.toJsonTree(results.size());
-        root.add("nbFailDetected", nbFailedJson);
+        root.add("nbTravisFailDetected", nbFailedJson);
 
-        JsonElement nbFailCompilable = gson.toJsonTree(buildable.size());
-        root.add("nbFailCompilable", nbFailCompilable);
+        JsonElement nbBuildableWithFailingTests = gson.toJsonTree(testsFailing.size());
+        root.add("nbBuildableWithFailingTests", nbBuildableWithFailingTests);
+
+        JsonElement nbBuildableWithoutFailingTests = gson.toJsonTree(buildableWithoutFailingTests.size());
+        root.add("nbBuildableWithoutFailingTests", nbBuildableWithoutFailingTests);
 
         JsonElement nbFailNotCompilable = gson.toJsonTree(notBuildable.size());
         root.add("nbFailNotCompilable", nbFailNotCompilable);
@@ -203,8 +217,11 @@ public class Launcher {
         JsonElement nbFailNotClonable = gson.toJsonTree(notClonable.size());
         root.add("nbFailNotClonable", nbFailNotClonable);
 
-        JsonElement compilableResultsJSON = gson.toJsonTree(buildable, List.class);
-        root.add("compilable", compilableResultsJSON);
+        JsonElement compilableWithFailingTestsJSON = gson.toJsonTree(testsFailing, List.class);
+        root.add("compilableWithFailingTests", compilableWithFailingTestsJSON);
+
+        JsonElement compilableResultsJSON = gson.toJsonTree(buildableWithoutFailingTests, List.class);
+        root.add("compilableWithoutFailingTests", compilableResultsJSON);
 
         JsonElement notCompilableResultsJSON = gson.toJsonTree(notBuildable, List.class);
         root.add("notCompilable", notCompilableResultsJSON);
