@@ -25,7 +25,7 @@ public class ProjectInspector {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
-        this.repoLocalPath = workspace+File.separator+getRepoSlug();
+        this.repoLocalPath = workspace+File.separator+getRepoSlug()+File.separator+build.getId();
         this.stepsDurations = new HashMap<String, Integer>();
     }
 

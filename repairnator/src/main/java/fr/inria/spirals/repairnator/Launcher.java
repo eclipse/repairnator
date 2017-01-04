@@ -40,6 +40,7 @@ public class Launcher {
     private JSAP jsap;
     private long dateBegin;
     private long dateEnd;
+    private ProjectScanner scanner;
 
     public Launcher() {}
 
@@ -79,13 +80,22 @@ public class Launcher {
         opt2.setRequired(true);
         jsap.registerParameter(opt2);
 
-        // Spooned output directory
+        // Workspace to clone repo
         opt2 = new FlaggedOption("workspace");
         opt2.setShortFlag('w');
         opt2.setLongFlag("workspace");
         opt2.setHelp("Specify where to clone failing repository");
         opt2.setDefault("./workspace");
         opt2.setStringParser(JSAP.STRING_PARSER);
+        jsap.registerParameter(opt2);
+
+        // Number of day to consider for retrieving builds
+        opt2 = new FlaggedOption("lookup");
+        opt2.setShortFlag('l');
+        opt2.setLongFlag("lookup");
+        opt2.setHelp("Specify the number of day to lookup in past for builds");
+        opt2.setDefault("1");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
         jsap.registerParameter(opt2);
     }
 
@@ -128,11 +138,11 @@ public class Launcher {
             System.exit(-1);
         }
         if (arguments.success()) {
-            mainProcess(arguments.getString("input"), arguments.getString("workspace"), arguments.getString("output"), arguments.getBoolean("debug"));
+            mainProcess(arguments.getString("input"), arguments.getString("workspace"), arguments.getString("output"), arguments.getInt("lookup"), arguments.getBoolean("debug"));
         }
     }
 
-    private void mainProcess(String input, String workspace, String output, boolean debug) throws IOException {
+    private void mainProcess(String input, String workspace, String output, int lookupDays, boolean debug) throws IOException {
         if (debug) {
             setLevel(Level.DEBUG);
         }
@@ -140,7 +150,9 @@ public class Launcher {
         this.dateBegin = new Date().getTime();
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
-        List<Build> buildList = ProjectScanner.getListOfFailingBuildFromProjects(input);
+
+        this.scanner = new ProjectScanner(lookupDays);
+        List<Build> buildList = this.scanner.getListOfFailingBuildFromProjects(input);
         for (Build build : buildList) {
             System.out.println("Incriminated project : "+build.getRepository().getSlug());
         }
@@ -187,6 +199,7 @@ public class Launcher {
         JsonElement dateJson = gson.toJsonTree(new Date());
         root.add("date", dateJson);
         root.add("duration", gson.toJsonTree(duration));
+        root.add("projects",gson.toJsonTree(this.scanner));
 
         List<ProjectInspector> testsFailing = new ArrayList<ProjectInspector>();
         List<ProjectInspector> buildableWithoutFailingTests = new ArrayList<ProjectInspector>();
