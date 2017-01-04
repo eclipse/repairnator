@@ -17,25 +17,8 @@ import java.util.List;
  */
 public class Build extends BuildPojo {
     private Repository repository;
-    /**
-     * If this build came from a PR, defines the repository where the commit is located.
-     */
-    private Repository prRepository;
-
-    /**
-     * In case of a PR, this commit won't be in the tree: it's a merge commit which is created by github and not referenced.
-     */
+    private PRInformation prInformation;
     private Commit commit;
-
-    /**
-     * In case of a PR, define the head commit to merge
-     */
-    private Commit headCommit;
-
-    /**
-     * In case of a PR, define the base commit to merge
-     */
-    private Commit baseCommit;
     private Config config;
     private List<Job> jobs;
     private String completeLog;
@@ -114,30 +97,6 @@ public class Build extends BuildPojo {
         this.config = config;
     }
 
-    public Repository getPRRepository() {
-        return prRepository;
-    }
-
-    public void setPRRepository(Repository prRepository) {
-        this.prRepository = prRepository;
-    }
-
-    public Commit getHeadCommit() {
-        return headCommit;
-    }
-
-    public void setHeadCommit(Commit headCommit) {
-        this.headCommit = headCommit;
-    }
-
-    public Commit getBaseCommit() {
-        return baseCommit;
-    }
-
-    public void setBaseCommit(Commit baseCommit) {
-        this.baseCommit = baseCommit;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -147,10 +106,7 @@ public class Build extends BuildPojo {
         Build build = (Build) o;
 
         if (repository != null ? !repository.equals(build.repository) : build.repository != null) return false;
-        if (prRepository != null ? !prRepository.equals(build.prRepository) : build.prRepository != null) return false;
         if (commit != null ? !commit.equals(build.commit) : build.commit != null) return false;
-        if (headCommit != null ? !headCommit.equals(build.headCommit) : build.headCommit != null) return false;
-        if (baseCommit != null ? !baseCommit.equals(build.baseCommit) : build.baseCommit != null) return false;
         if (config != null ? !config.equals(build.config) : build.config != null) return false;
         if (jobs != null ? !jobs.equals(build.jobs) : build.jobs != null) return false;
         return completeLog != null ? completeLog.equals(build.completeLog) : build.completeLog == null;
@@ -160,10 +116,7 @@ public class Build extends BuildPojo {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (repository != null ? repository.hashCode() : 0);
-        result = 31 * result + (prRepository != null ? prRepository.hashCode() : 0);
         result = 31 * result + (commit != null ? commit.hashCode() : 0);
-        result = 31 * result + (headCommit != null ? headCommit.hashCode() : 0);
-        result = 31 * result + (baseCommit != null ? baseCommit.hashCode() : 0);
         result = 31 * result + (config != null ? config.hashCode() : 0);
         result = 31 * result + (jobs != null ? jobs.hashCode() : 0);
         result = 31 * result + (completeLog != null ? completeLog.hashCode() : 0);
@@ -180,9 +133,6 @@ public class Build extends BuildPojo {
                 ", config=" + config +
                 ", jobs=" + jobs +
                 ", completeLog='" + completeLog + '\'' +
-                ", PRrepository='" + prRepository +'\''+
-                ", HeadCommit='" + headCommit +'\'' +
-                ", BaseCommit='" + baseCommit +'\'' +
                 '}';
     }
 }

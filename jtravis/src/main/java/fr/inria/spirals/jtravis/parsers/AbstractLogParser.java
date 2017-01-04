@@ -1,5 +1,7 @@
 package fr.inria.spirals.jtravis.parsers;
 
+import fr.inria.spirals.jtravis.entities.TestsInformation;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -83,23 +85,13 @@ public abstract class AbstractLogParser {
         this.reader.close();
     }
 
-    public int getSkippingTests() {
-        return skippingTests;
-    }
-
-    public int getErroredTests() {
-        return erroredTests;
-    }
-
-    public int getRunningTests() {
-        return runningTests;
-    }
-
-    public int getFailingTests() {
-        return failingTests;
-    }
-
-    public int getPassingTests() {
-        return passingTests;
+    public TestsInformation getTestsInformation() {
+        TestsInformation result = new TestsInformation();
+        result.setErrored(this.erroredTests);
+        result.setFailing(this.failingTests);
+        result.setPassing(this.passingTests);
+        result.setRunning(this.runningTests);
+        result.setSkipping(this.skippingTests);
+        return result;
     }
 }

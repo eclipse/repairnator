@@ -1,6 +1,7 @@
 package fr.inria.spirals.jtravis.entities;
 
 import fr.inria.spirals.jtravis.helpers.LogHelper;
+import fr.inria.spirals.jtravis.parsers.MavenLogParser;
 import fr.inria.spirals.jtravis.pojos.LogPojo;
 
 /**
@@ -11,6 +12,8 @@ import fr.inria.spirals.jtravis.pojos.LogPojo;
  */
 public class Log extends LogPojo {
 
+    private TestsInformation testsInformation;
+
     @Override
     public String getBody() {
         if (super.getBody() != null && !super.getBody().equals("")) {
@@ -20,5 +23,16 @@ public class Log extends LogPojo {
             this.setBody(body);
             return body;
         }
+    }
+
+    public TestsInformation getTestsInformation() {
+        if (testsInformation == null) {
+            String body = getBody();
+            MavenLogParser logParser = new MavenLogParser(body);
+
+            this.testsInformation = logParser.getTestsInformation();
+        }
+
+        return this.testsInformation;
     }
 }

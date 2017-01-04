@@ -72,62 +72,7 @@ public class BuildHelper extends AbstractHelper {
                 build.addJob(job);
             }
 
-            if (build.isPullRequest()) {
-                GitHub github = getInstance().getGithub();
-                GHRateLimit rateLimit = github.getRateLimit();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                AbstractHelper.LOGGER.debug("GitHub ratelimit: Limit: "+rateLimit.limit+" Remaining: "+rateLimit.remaining+" Reset hour: "+dateFormat.format(rateLimit.reset));
 
-                if (rateLimit.remaining > 2) {
-                    GHRepository ghRepo = github.getRepository(build.getRepository().getSlug());
-                    GHPullRequest pullRequest = ghRepo.getPullRequest(build.getPullRequestNumber());
-
-
-                    GHCommitPointer base = pullRequest.getBase();
-                    GHCommitPointer head = pullRequest.getHead();
-
-                    GHRepository headRepo = head.getRepository();
-
-                    Repository repoPR = new Repository();
-                    repoPR.setId(headRepo.getId());
-                    repoPR.setDescription(headRepo.getDescription());
-                    repoPR.setActive(true);
-                    repoPR.setSlug(headRepo.getFullName());
-
-                    build.setPRRepository(repoPR);
-
-                    Commit commitHead = new Commit();
-                    commitHead.setSha(head.getSha());
-                    commitHead.setBranch(head.getRef());
-                    commitHead.setCompareUrl(head.getCommit().getHtmlUrl().toString());
-
-                    GHCommit.ShortInfo infoCommit = head.getCommit().getCommitShortInfo();
-
-                    commitHead.setMessage(infoCommit.getMessage());
-                    commitHead.setCommitterEmail(infoCommit.getAuthor().getEmail());
-                    commitHead.setCommitterName(infoCommit.getAuthor().getName());
-                    commitHead.setCommittedAt(infoCommit.getCommitDate());
-                    build.setHeadCommit(commitHead);
-
-                    Commit commitBase = new Commit();
-                    commitBase.setSha(base.getSha());
-                    commitBase.setBranch(base.getRef());
-                    commitBase.setCompareUrl(base.getCommit().getHtmlUrl().toString());
-
-                    infoCommit = base.getCommit().getCommitShortInfo();
-
-                    commitBase.setMessage(infoCommit.getMessage());
-                    commitBase.setCommitterEmail(infoCommit.getAuthor().getEmail());
-                    commitBase.setCommitterName(infoCommit.getAuthor().getName());
-                    commitBase.setCommittedAt(infoCommit.getCommitDate());
-                    build.setBaseCommit(commitBase);
-
-
-                } else {
-                    AbstractHelper.LOGGER.warn("You reach your rate limit for github, you have to wait "+rateLimit.reset+" to get datas.");
-                }
-
-            }
 
             return build;
         } catch (IOException e) {

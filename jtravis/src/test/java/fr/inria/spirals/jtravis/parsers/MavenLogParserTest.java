@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.parsers;
 
+import fr.inria.spirals.jtravis.entities.TestsInformation;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -30,12 +31,13 @@ public class MavenLogParserTest {
 
         String fileContent = readFile(path);
         MavenLogParser parser = new MavenLogParser(fileContent);
+        TestsInformation infoTest = parser.getTestsInformation();
 
-        assertEquals(0, parser.getFailingTests());
-        assertEquals(2, parser.getErroredTests());
-        assertEquals(1, parser.getSkippingTests());
-        assertEquals(9, parser.getRunningTests());
-        assertEquals(6, parser.getPassingTests());
+        assertEquals(0, infoTest.getFailing());
+        assertEquals(2, infoTest.getErrored());
+        assertEquals(1, infoTest.getSkipping());
+        assertEquals(9, infoTest.getRunning());
+        assertEquals(6, infoTest.getPassing());
 
     }
 
@@ -45,12 +47,12 @@ public class MavenLogParserTest {
 
         String fileContent = readFile(path);
         MavenLogParser parser = new MavenLogParser(fileContent);
+        TestsInformation infoTest = parser.getTestsInformation();
 
-        assertEquals(2, parser.getFailingTests());
-        assertEquals(0, parser.getErroredTests());
-        assertEquals(2, parser.getSkippingTests());
-        assertEquals(1114, parser.getRunningTests());
-        assertEquals(1110, parser.getPassingTests());
-
+        assertEquals(2, infoTest.getFailing());
+        assertEquals(0, infoTest.getErrored());
+        assertEquals(2, infoTest.getSkipping());
+        assertEquals(1114, infoTest.getRunning());
+        assertEquals(1110, infoTest.getPassing());
     }
 }
