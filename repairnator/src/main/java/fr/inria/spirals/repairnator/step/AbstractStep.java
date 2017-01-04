@@ -21,6 +21,7 @@ public abstract class AbstractStep {
     public AbstractStep(ProjectInspector inspector) {
         this.inspector = inspector;
         this.shouldStop = false;
+        this.state = ProjectState.NONE;
     }
 
     public AbstractStep setNextStep(AbstractStep nextStep) {
