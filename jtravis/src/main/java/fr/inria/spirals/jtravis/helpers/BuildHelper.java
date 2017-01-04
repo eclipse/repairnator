@@ -126,6 +126,7 @@ public class BuildHelper extends AbstractHelper {
             }
 
             JsonArray buildArray = allAnswer.getAsJsonArray("builds");
+
             int lastBuildId = 0;
 
             for (JsonElement buildJson : buildArray) {
@@ -147,6 +148,10 @@ public class BuildHelper extends AbstractHelper {
                     dateReached = true;
                     break;
                 }
+            }
+
+            if (buildArray.size() == 0) {
+                dateReached = true;
             }
 
             if (dateReached && pullBuild) {
