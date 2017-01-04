@@ -33,6 +33,7 @@ public class CommitHelperTest {
     public void buildElementContainCommitInformation() throws IOException {
         int buildId = 185719843;
         Commit expectedCommit = new Commit();
+        expectedCommit.setId(53036982);
         expectedCommit.setSha("d283ce5727f47c854470e64ac25144de5d8e6c05");
         expectedCommit.setBranch("master");
         expectedCommit.setMessage("test: add test for method parameter templating (#1064)");

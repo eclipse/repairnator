@@ -63,4 +63,8 @@ public class ProjectInspector {
         return this.stepsDurations;
     }
 
+    public void cleanInspector() {
+        this.build.clearJobs();
+    }
+
 }

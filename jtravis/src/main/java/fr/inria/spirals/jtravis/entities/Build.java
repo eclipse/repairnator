@@ -77,6 +77,10 @@ public class Build extends BuildPojo {
         return jobs;
     }
 
+    public void clearJobs() {
+        this.jobs.clear();
+    }
+
     public String getCompleteLog() {
         if (!this.getJobs().isEmpty() && (this.completeLog == null || this.completeLog.equals(""))) {
             this.completeLog = "";

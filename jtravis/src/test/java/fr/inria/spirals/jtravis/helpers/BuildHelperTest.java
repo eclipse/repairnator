@@ -29,6 +29,7 @@ public class BuildHelperTest {
         expectedBuild.setJobIds(Arrays.asList(new Integer[]{185719844}));
 
         Commit commit = new Commit();
+        commit.setId(53036982);
         commit.setSha("d283ce5727f47c854470e64ac25144de5d8e6c05");
         commit.setMessage("test: add test for method parameter templating (#1064)");
         commit.setCompareUrl("https://github.com/INRIA/spoon/compare/3c5ab0fe7a89...d283ce5727f4");

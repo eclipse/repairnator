@@ -8,6 +8,7 @@ import java.util.Date;
  * @author Simon Urli
  */
 public class CommitPojo {
+    private int id;
     private String sha;
     private String branch;
     private String message;
@@ -90,6 +91,14 @@ public class CommitPojo {
         this.compareUrl = compareUrl;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,6 +106,7 @@ public class CommitPojo {
 
         CommitPojo that = (CommitPojo) o;
 
+        if (id != that.id) return false;
         if (sha != null ? !sha.equals(that.sha) : that.sha != null) return false;
         if (branch != null ? !branch.equals(that.branch) : that.branch != null) return false;
         if (message != null ? !message.equals(that.message) : that.message != null) return false;
@@ -112,7 +122,8 @@ public class CommitPojo {
 
     @Override
     public int hashCode() {
-        int result = sha != null ? sha.hashCode() : 0;
+        int result = id;
+        result = 31 * result + (sha != null ? sha.hashCode() : 0);
         result = 31 * result + (branch != null ? branch.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + (committedAt != null ? committedAt.hashCode() : 0);
@@ -127,7 +138,8 @@ public class CommitPojo {
     @Override
     public String toString() {
         return "CommitPojo{" +
-                "sha='" + sha + '\'' +
+                "id='"+ id +'\'' +
+                ", sha='" + sha + '\'' +
                 ", branch='" + branch + '\'' +
                 ", message='" + message + '\'' +
                 ", committedAt=" + committedAt +
