@@ -1,6 +1,7 @@
 package fr.inria.spirals.jtravis.entities;
 
 import fr.inria.spirals.jtravis.helpers.JobHelper;
+import fr.inria.spirals.jtravis.helpers.PRInformationHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.jtravis.pojos.BuildPojo;
 
@@ -95,6 +96,13 @@ public class Build extends BuildPojo {
 
     public void setConfig(Config config) {
         this.config = config;
+    }
+
+    public PRInformation getPRInformation() {
+        if (isPullRequest() && prInformation == null) {
+            prInformation = PRInformationHelper.getPRInformationFromBuild(this);
+        }
+        return prInformation;
     }
 
     @Override
