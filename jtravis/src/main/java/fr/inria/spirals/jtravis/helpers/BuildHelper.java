@@ -131,7 +131,7 @@ public class BuildHelper extends AbstractHelper {
             for (JsonElement buildJson : buildArray) {
                 Build build = createGson().fromJson(buildJson, Build.class);
 
-                if ((limitDate == null) || (build.getFinishedAt().after(limitDate))) {
+                if ((limitDate == null) || (build.getFinishedAt() == null) || (build.getFinishedAt().after(limitDate))) {
                     int commitId = build.getCommitId();
 
                     if (commits.containsKey(commitId)) {
