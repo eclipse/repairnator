@@ -3,6 +3,7 @@ package fr.inria.spirals.jtravis.parsers;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +34,7 @@ public abstract class AbstractLogParser {
         this.erroredTests = 0;
 
         this.log = log;
+        this.folds = new ArrayList<TravisFold>();
 
         this.reader = new BufferedReader(new StringReader(log));
         try {
@@ -47,34 +49,38 @@ public abstract class AbstractLogParser {
         TravisFold fold = null;
         this.outOfFold = new TravisFold("outOfFold");
 
-        Pattern patternFoldStart = Pattern.compile("/travis_fold:start:([\\w\\.]*)/");
-        Pattern patternFoldEnd = Pattern.compile("/travis_fold:end:([\\w\\.]*)/");
+        Pattern patternFoldStart = Pattern.compile(".*travis_fold:start:([\\w\\.]*)");
+        Pattern patternFoldEnd = Pattern.compile(".*travis_fold:end:([\\w\\.]*)");
 
         while (this.reader.ready()) {
             String line = this.reader.readLine();
 
-            Matcher matcherFoldStart = patternFoldStart.matcher(line);
-            Matcher matcherFoldEnd = patternFoldEnd.matcher(line);
+            if (line != null) {
+                Matcher matcherFoldStart = patternFoldStart.matcher(line);
+                Matcher matcherFoldEnd = patternFoldEnd.matcher(line);
 
-            if (matcherFoldStart.matches()) {
-                String title = matcherFoldStart.group();
-                fold = new TravisFold(title);
-                this.folds.add(fold);
-                continue;
-            }
+                if (matcherFoldStart.matches()) {
+                    String title = matcherFoldStart.group(1);
+                    fold = new TravisFold(title);
+                    this.folds.add(fold);
+                    continue;
+                }
 
-            if (matcherFoldEnd.matches()) {
-                fold = null;
-                continue;
-            }
+                if (matcherFoldEnd.matches()) {
+                    fold = null;
+                    continue;
+                }
 
-            if (fold == null) {
-                this.outOfFold.addContent(line);
+                if (fold == null) {
+                    this.outOfFold.addContent(line);
+                } else {
+                    fold.addContent(line);
+                }
             } else {
-                fold.addContent(line);
+                break;
             }
-
         }
+        this.reader.close();
     }
 
     public int getSkippingTests() {
