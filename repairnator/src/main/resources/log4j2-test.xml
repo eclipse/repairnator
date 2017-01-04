@@ -6,7 +6,7 @@
     </Console>
   </Appenders>
   <Loggers>
-    <Logger name="fr.inria.spirals.repairnator.Launcher" level="warn" additivity="false">
+    <Logger name="fr.inria.spirals.repairnator.Launcher" level="info" additivity="false">
       <AppenderRef ref="Console"/>
     </Logger>
     <Logger name="fr.inria.spirals.jtravis.helpers.AbstractHelper" level="warn" additivity="false">

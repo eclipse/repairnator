@@ -27,7 +27,7 @@ public class CloneRepository extends AbstractStep {
         this.build = inspector.getBuild();
     }
 
-    public void execute() {
+    protected void businessExecute() {
         String repository = this.inspector.getRepoSlug();
         String repoRemotePath = GITHUB_ROOT_REPO+repository+".git";
         String repoLocalPath = this.inspector.getRepoLocalPath();
@@ -63,12 +63,14 @@ public class CloneRepository extends AbstractStep {
                 if (commitHeadId == null) {
                     Launcher.LOGGER.warn("Commit head ref cannot be retrieved in the repository: "+commitHeadSha+". Operation aborted.");
                     Launcher.LOGGER.debug(prInformation.getHead());
+                    this.shouldStop = true;
                     return;
                 }
 
                 if (commitBaseId == null) {
                     Launcher.LOGGER.warn("Commit base ref cannot be retrieved in the repository: "+commitBaseSha+". Operation aborted.");
                     Launcher.LOGGER.debug(prInformation.getBase());
+                    this.shouldStop = true;
                     return;
                 }
 
@@ -92,10 +94,10 @@ public class CloneRepository extends AbstractStep {
         } catch (Exception e) {
             Launcher.LOGGER.warn("Repository "+repository+" cannot be cloned.");
             Launcher.LOGGER.debug(e.toString());
+            this.shouldStop = true;
             return;
         }
 
         this.state = ProjectState.CLONABLE;
-        this.executeNextStep();
     }
 }

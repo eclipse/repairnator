@@ -37,9 +37,15 @@ import java.util.List;
 public class Launcher {
     public static final Logger LOGGER = LogManager.getLogger();
 
-    protected static JSAP defineArgs() throws JSAPException {
+    private JSAP jsap;
+    private long dateBegin;
+    private long dateEnd;
+
+    public Launcher() {}
+
+    private void defineArgs() throws JSAPException {
         // Verbose output
-        JSAP jsap = new JSAP();
+        jsap = new JSAP();
 
         // help
         Switch sw1 = new Switch("help");
@@ -81,8 +87,6 @@ public class Launcher {
         opt2.setDefault("./workspace");
         opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
-
-        return jsap;
     }
 
     private static void setLevel(Level level) {
@@ -105,9 +109,9 @@ public class Launcher {
         }
     }
 
-    private static void run(String[] args) throws JSAPException, IOException {
-        JSAP jsapSpec = defineArgs();
-        JSAPResult arguments = jsapSpec.parse(args);
+    private void run(String[] args) throws JSAPException, IOException {
+        this.defineArgs();
+        JSAPResult arguments = jsap.parse(args);
 
         if (!arguments.success()) {
             // print out specific error messages describing the problems
@@ -120,7 +124,7 @@ public class Launcher {
             System.err.println();
             System.err.println("Options : ");
             System.err.println();
-            System.err.println(jsapSpec.getHelp());
+            System.err.println(jsap.getHelp());
             System.exit(-1);
         }
         if (arguments.success()) {
@@ -128,10 +132,12 @@ public class Launcher {
         }
     }
 
-    private static void mainProcess(String input, String workspace, String output, boolean debug) throws IOException {
+    private void mainProcess(String input, String workspace, String output, boolean debug) throws IOException {
         if (debug) {
             setLevel(Level.DEBUG);
         }
+
+        this.dateBegin = new Date().getTime();
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
         List<Build> buildList = ProjectScanner.getListOfFailingBuildFromProjects(input);
@@ -145,11 +151,13 @@ public class Launcher {
 
         List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
 
+        this.dateEnd = new Date().getTime();
+
         Launcher.LOGGER.debug("Start writing a JSON output...");
         buildFileFromResults(projectInspectors, output);
     }
 
-    private static List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
+    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
         initWorkspace(workspace);
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
@@ -161,7 +169,7 @@ public class Launcher {
         return projectInspectors;
     }
 
-    private static void buildFileFromResults(List<ProjectInspector> results, String output) throws IOException {
+    private void buildFileFromResults(List<ProjectInspector> results, String output) throws IOException {
         Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
             public boolean shouldSkipField(FieldAttributes fieldAttributes) {
                 return (fieldAttributes.getName().equals("lastBuild"));
@@ -172,35 +180,36 @@ public class Launcher {
             }
         }).create();
 
+        int duration = Math.round(this.dateEnd-this.dateBegin)/1000;
+
         JsonObject root = new JsonObject();
 
         JsonElement dateJson = gson.toJsonTree(new Date());
         root.add("date", dateJson);
+        root.add("duration", gson.toJsonTree(duration));
 
-        List<Build> testsFailing = new ArrayList<Build>();
-        List<Build> buildableWithoutFailingTests = new ArrayList<Build>();
-        List<Build> notBuildable = new ArrayList<Build>();
-        List<Build> notClonable = new ArrayList<Build>();
+        List<ProjectInspector> testsFailing = new ArrayList<ProjectInspector>();
+        List<ProjectInspector> buildableWithoutFailingTests = new ArrayList<ProjectInspector>();
+        List<ProjectInspector> notBuildable = new ArrayList<ProjectInspector>();
+        List<ProjectInspector> notClonable = new ArrayList<ProjectInspector>();
 
         for (ProjectInspector inspector : results) {
 
-            Build build = inspector.getBuild();
-
             switch (inspector.getState()) {
-                case NONE:
-                    notClonable.add(build);
+                default:
+                    notClonable.add(inspector);
                     break;
 
                 case CLONABLE:
-                    notBuildable.add(build);
+                    notBuildable.add(inspector);
                     break;
 
                 case BUILDABLE:
-                    buildableWithoutFailingTests.add(build);
+                    buildableWithoutFailingTests.add(inspector);
                     break;
 
                 case HASTESTFAILURE:
-                    testsFailing.add(build);
+                    testsFailing.add(inspector);
                     break;
             }
         }
@@ -248,6 +257,7 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws Exception {
-        Launcher.run(args);
+        Launcher launcher = new Launcher();
+        launcher.run(args);
     }
 }

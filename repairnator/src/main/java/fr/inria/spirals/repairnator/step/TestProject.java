@@ -13,15 +13,18 @@ public class TestProject extends BuildProject {
         super(inspector);
     }
 
-    public void execute() {
+    protected void businessExecute() {
         Launcher.LOGGER.debug("Start launching tests with maven.");
+
+        System.setProperty("maven.surefire.timeout","1");
         int result = this.mavenBuild(true);
+        System.clearProperty("maven.surefire.timeout");
 
         if (result == 0) {
             Launcher.LOGGER.info("Repository "+this.inspector.getRepoSlug()+" has passing all tests: then no test can be fixed...");
+            this.shouldStop = true;
         } else {
             this.state = ProjectState.HASTESTFAILURE;
-            this.executeNextStep();
         }
     }
 }

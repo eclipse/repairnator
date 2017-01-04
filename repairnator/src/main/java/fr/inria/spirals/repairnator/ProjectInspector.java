@@ -7,6 +7,8 @@ import fr.inria.spirals.repairnator.step.CloneRepository;
 import fr.inria.spirals.repairnator.step.TestProject;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by urli on 26/12/2016.
@@ -16,6 +18,7 @@ public class ProjectInspector {
     private String repoLocalPath;
     private ProjectState state;
     private String workspace;
+    Map<String, Integer> stepsDurations;
 
 
     public ProjectInspector(Build failingBuild, String workspace) {
@@ -23,6 +26,7 @@ public class ProjectInspector {
         this.state = ProjectState.NONE;
         this.workspace = workspace;
         this.repoLocalPath = workspace+File.separator+getRepoSlug();
+        this.stepsDurations = new HashMap<String, Integer>();
     }
 
     public ProjectState getState() {
@@ -43,12 +47,20 @@ public class ProjectInspector {
 
     public void processRepair() {
 
-        AbstractStep firstStep = new CloneRepository(this);
-        AbstractStep lastStep = firstStep.setNextStep(new BuildProject(this))
-                                        .setNextStep(new TestProject(this));
-        firstStep.execute();
+        AbstractStep cloneRepo = new CloneRepository(this);
+        AbstractStep buildRepo = new BuildProject(this);
+        AbstractStep testProject = new TestProject(this);
 
-        this.state = lastStep.getState();
+        cloneRepo.setNextStep(buildRepo).setNextStep(testProject);
+        this.state = cloneRepo.execute();
+
+        this.stepsDurations.put("clone",cloneRepo.getDuration());
+        this.stepsDurations.put("build",buildRepo.getDuration());
+        this.stepsDurations.put("test",testProject.getDuration());
+    }
+
+    public Map<String, Integer> getStepsDurations() {
+        return this.stepsDurations;
     }
 
 }

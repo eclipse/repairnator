@@ -29,21 +29,21 @@ public class BuildProject extends AbstractStep {
                 System.out, System.err);
 
         if (!withTests) {
-            System.setProperty("maven.test.skip","false");
+            System.clearProperty("maven.test.skip");
         }
 
         return result;
     }
 
-    public void execute() {
+    protected void businessExecute() {
         Launcher.LOGGER.debug("Start building project with maven (skip tests).");
         int result = this.mavenBuild(false);
 
         if (result == 0) {
             this.state = ProjectState.BUILDABLE;
-            this.executeNextStep();
         } else {
             Launcher.LOGGER.info("Repository "+this.inspector.getRepoSlug()+" cannot be built.");
+            this.shouldStop = true;
         }
     }
 }
