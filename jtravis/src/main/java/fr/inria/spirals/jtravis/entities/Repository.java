@@ -18,34 +18,4 @@ public class Repository extends RepositoryPojo {
         }
         return this.lastBuild;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        Repository that = (Repository) o;
-
-        return lastBuild != null ? lastBuild.equals(that.lastBuild) : that.lastBuild == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (lastBuild != null ? lastBuild.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Repository{" +
-                super.toString() +
-                "lastBuild=" + lastBuild +
-                '}';
-    }
-
-    public String toStringPojo() {
-        return super.toString();
-    }
 }

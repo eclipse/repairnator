@@ -137,7 +137,7 @@ public class Build extends BuildPojo {
 
     @Override
     public String toString() {
-        String repo = (repository == null) ? "" : repository.toStringPojo();
+        String repo = (repository == null) ? "" : repository.toString();
         return "Build{" +
                 super.toString() +
                 ", repository=" + repo +

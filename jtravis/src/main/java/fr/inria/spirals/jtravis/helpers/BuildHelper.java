@@ -87,14 +87,31 @@ public class BuildHelper extends AbstractHelper {
         }
     }
 
-    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number) {
+    /**
+     * This is a recursive method allowing to get build from a slug.
+     *
+     * @param slug The slug where to get the builds
+     * @param result The list result to aggregate
+     * @param limitDate If given, the date limit to get builds: all builds *before* this date are considered
+     * @param after_number Used for pagination: multiple requests may have to be made to reach the final date
+     * @param pullBuild Travis does not mix builds from PR and builds from push. When set to true this mean we get builds from PR.
+     */
+    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, boolean pullBuild) {
         Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
         String resourceUrl = TRAVIS_API_ENDPOINT+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
 
-        if (after_number > 0) {
-            resourceUrl += "?after_number="+after_number;
+        if (pullBuild) {
+            resourceUrl += "?event_type=pull_request";
+        } else {
+            resourceUrl += "?event_type=push";
         }
+
+        if (after_number > 0) {
+            resourceUrl += "&after_number="+after_number;
+        }
+
+        boolean dateReached = false;
 
         try {
             String response = getInstance().get(resourceUrl);
@@ -114,7 +131,7 @@ public class BuildHelper extends AbstractHelper {
             for (JsonElement buildJson : buildArray) {
                 Build build = createGson().fromJson(buildJson, Build.class);
 
-                if ((limitDate == null) || (build.getFinishedAt().compareTo(limitDate) < 0)) {
+                if ((limitDate == null) || (build.getFinishedAt().after(limitDate))) {
                     int commitId = build.getCommitId();
 
                     if (commits.containsKey(commitId)) {
@@ -127,12 +144,25 @@ public class BuildHelper extends AbstractHelper {
 
                     result.add(build);
                 } else {
-                    return;
+                    dateReached = true;
+                    break;
                 }
             }
 
-            if (limitDate != null) {
-                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildId);
+            if (dateReached && pullBuild) {
+                return;
+            }
+
+            if (dateReached && !pullBuild) {
+                getBuildsFromSlugRecursively(slug, result, limitDate, 0, true);
+            }
+
+            if (limitDate == null) {
+                getBuildsFromSlugRecursively(slug, result, limitDate, 0, true);
+            }
+
+            if (limitDate != null && !dateReached) {
+                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildId, pullBuild);
             }
         } catch (IOException e) {
             AbstractHelper.LOGGER.warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
@@ -141,7 +171,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromSlugWithLimitDate(String slug, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(slug, result, limitDate, 0);
+        getBuildsFromSlugRecursively(slug, result, limitDate, 0, false);
         return result;
     }
 
@@ -151,7 +181,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0);
+        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, false);
 
         for (Build b : result) {
             b.setRepository(repository);
