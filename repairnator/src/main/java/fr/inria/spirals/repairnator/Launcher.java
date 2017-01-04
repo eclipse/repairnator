@@ -124,26 +124,29 @@ public class Launcher {
             System.exit(-1);
         }
         if (arguments.success()) {
-            if (arguments.getBoolean("debug")) {
-                setLevel(Level.DEBUG);
-            }
-
-            Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
-            List<Build> buildList = ProjectScanner.getListOfFailingBuildFromProjects(arguments.getString("input"));
-            for (Build build : buildList) {
-                System.out.println("Incriminated project : "+build.getRepository().getSlug());
-            }
-
-            Launcher.LOGGER.debug("Start cloning and compiling projects...");
-            String workspace = arguments.getString("workspace");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmm");
-            String completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
-
-            List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
-
-            Launcher.LOGGER.debug("Start writing a JSON output...");
-            buildFileFromResults(projectInspectors, arguments.getString("output"));
+            mainProcess(arguments.getString("input"), arguments.getString("workspace"), arguments.getString("output"), arguments.getBoolean("debug"));
         }
+    }
+
+    private static void mainProcess(String input, String workspace, String output, boolean debug) throws IOException {
+        if (debug) {
+            setLevel(Level.DEBUG);
+        }
+
+        Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
+        List<Build> buildList = ProjectScanner.getListOfFailingBuildFromProjects(input);
+        for (Build build : buildList) {
+            System.out.println("Incriminated project : "+build.getRepository().getSlug());
+        }
+
+        Launcher.LOGGER.debug("Start cloning and compiling projects...");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmm");
+        String completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
+
+        List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
+
+        Launcher.LOGGER.debug("Start writing a JSON output...");
+        buildFileFromResults(projectInspectors, output);
     }
 
     private static List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {

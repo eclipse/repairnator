@@ -2,7 +2,11 @@ package fr.inria.spirals.repairnator;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
+import fr.inria.spirals.jtravis.entities.Job;
+import fr.inria.spirals.jtravis.entities.Log;
 import fr.inria.spirals.jtravis.entities.Repository;
+import fr.inria.spirals.jtravis.entities.TestsInformation;
+import fr.inria.spirals.jtravis.helpers.LogHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 
 import java.io.BufferedReader;
@@ -43,7 +47,15 @@ public class ProjectScanner {
      */
     public static List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
         List<String> slugs = readSlugProjectFromFilepath(path);
-        List<Build> result = new ArrayList<Build>();
+
+        List<Repository> selectedRepo = getListOfValidRepository(slugs);
+        List<Build> selectedBuilds = getListOfBuildsFromRepo(selectedRepo);
+
+        return selectedBuilds;
+    }
+
+    private static List<Repository> getListOfValidRepository(List<String> slugs) {
+        List<Repository> listRepo = new ArrayList<Repository>();
 
         for (String slug : slugs) {
             Launcher.LOGGER.debug("Get repo "+slug);
@@ -51,16 +63,7 @@ public class ProjectScanner {
             if (repo != null) {
                 Build lastBuild = repo.getLastBuild();
                 if (lastBuild != null) {
-                    Launcher.LOGGER.debug("Examinate repo "+slug+" - build "+lastBuild.getId());
-                    if (lastBuild.getConfig().getLanguage().equals("java")) {
-                        Launcher.LOGGER.debug("Accept repo "+slug+" - build "+lastBuild.getId()+" - Status : "+lastBuild.getBuildStatus().name());
-                        if (lastBuild.getBuildStatus() == BuildStatus.FAILED) {
-                            result.add(lastBuild);
-                        }
-                    } else {
-                        Launcher.LOGGER.warn("Examine repo "+slug+" Careful the following build "+lastBuild.getId()+" is not in java but language: "+lastBuild.getConfig().getLanguage());
-                    }
-
+                    listRepo.add(repo);
                 } else {
                     Launcher.LOGGER.info("It seems that the repo "+slug+" does not have any Travis build.");
                 }
@@ -70,6 +73,33 @@ public class ProjectScanner {
             }
         }
 
+        return listRepo;
+    }
+
+    private static List<Build> getListOfBuildsFromRepo(List<Repository> repositories) {
+        List<Build> result = new ArrayList<Build>();
+
+        for (Repository repo : repositories) {
+            Build lastBuild = repo.getLastBuild();
+
+            if (lastBuild.getConfig().getLanguage().equals("java")) {
+                Launcher.LOGGER.debug("Repo "+repo.getSlug()+" with java language - build "+lastBuild.getId()+" - Status : "+lastBuild.getBuildStatus().name());
+                if (lastBuild.getBuildStatus() == BuildStatus.FAILED) {
+
+                    for (Job job : lastBuild.getJobs()) {
+                        Log jobLog = job.getLog();
+                        TestsInformation testInfo = jobLog.getTestsInformation();
+
+                        if (testInfo.getFailing() > 0) {
+                            result.add(lastBuild);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                Launcher.LOGGER.warn("Examine repo "+repo.getSlug()+" Careful the following build "+lastBuild.getId()+" is not in java but language: "+lastBuild.getConfig().getLanguage());
+            }
+        }
         return result;
     }
 }
