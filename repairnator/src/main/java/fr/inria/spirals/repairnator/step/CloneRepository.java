@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.step;
 
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.ProjectInspector;
 import fr.inria.spirals.repairnator.ProjectState;
@@ -40,8 +41,10 @@ public class CloneRepository extends AbstractStep {
                     .call();
 
             if (this.build.isPullRequest()) {
+                PRInformation prInformation = this.build.getPRInformation();
+
                 Launcher.LOGGER.debug("Reproduce the PR for "+repository+" by fetching remote branch and merging.");
-                String remoteBranchPath = GITHUB_ROOT_REPO+build.getPRRepository().getSlug()+".git";
+                String remoteBranchPath = GITHUB_ROOT_REPO+prInformation.getOtherRepo().getSlug()+".git";
 
                 RemoteAddCommand remoteBranchCommand = git.remoteAdd();
                 remoteBranchCommand.setName("PR");
@@ -50,8 +53,8 @@ public class CloneRepository extends AbstractStep {
 
                 git.fetch().setRemote("PR").call();
 
-                String commitHeadSha = this.build.getHeadCommit().getSha();
-                String commitBaseSha = this.build.getBaseCommit().getSha();
+                String commitHeadSha = prInformation.getHead().getSha();
+                String commitBaseSha = prInformation.getBase().getSha();
 
 
                 ObjectId commitHeadId = git.getRepository().resolve(commitHeadSha);
@@ -59,13 +62,13 @@ public class CloneRepository extends AbstractStep {
 
                 if (commitHeadId == null) {
                     Launcher.LOGGER.warn("Commit head ref cannot be retrieved in the repository: "+commitHeadSha+". Operation aborted.");
-                    Launcher.LOGGER.debug(this.build.getHeadCommit());
+                    Launcher.LOGGER.debug(prInformation.getHead());
                     return;
                 }
 
                 if (commitBaseId == null) {
                     Launcher.LOGGER.warn("Commit base ref cannot be retrieved in the repository: "+commitBaseSha+". Operation aborted.");
-                    Launcher.LOGGER.debug(this.build.getBaseCommit());
+                    Launcher.LOGGER.debug(prInformation.getBase());
                     return;
                 }
 

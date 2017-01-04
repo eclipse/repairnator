@@ -93,3 +93,8 @@ rackerlabs/blueflood
 joelittlejohn/jsonschema2pojo
 openpnp/openpnp
 FasterXML/jackson-core
+apache/commons-io
+apache/commons-beanutils
+apache/commons-codec
+apache/commons-logging
+apache/commons-collections
