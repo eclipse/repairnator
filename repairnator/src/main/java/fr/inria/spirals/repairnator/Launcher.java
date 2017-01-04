@@ -207,6 +207,7 @@ public class Launcher {
         List<ProjectInspector> notClonable = new ArrayList<ProjectInspector>();
 
         for (ProjectInspector inspector : results) {
+            inspector.cleanInspector();
 
             switch (inspector.getState()) {
                 default:
