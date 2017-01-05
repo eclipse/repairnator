@@ -82,9 +82,9 @@ public class JsonSerializer {
 
     private void outputNotClonableInspector(ProjectInspector inspector, JsonArray notClonable) {
         JsonObject result = new JsonObject();
-        result.add("slug", serialize(inspector.getRepoSlug()));
+        result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
-        result.add("buildId", serialize(build.getId()));
+        result.addProperty("buildId", build.getId());
         if (build.isPullRequest()) {
             result.add("commit", serialize(build.getPRInformation()));
         } else {
@@ -95,11 +95,16 @@ public class JsonSerializer {
 
     private void outputNotBuildableInspector(ProjectInspector inspector, JsonArray notBuildable) {
         JsonObject result = new JsonObject();
-        result.add("slug", serialize(inspector.getRepoSlug()));
+        result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
-        result.add("buildId", serialize(build.getId()));
+        result.addProperty("buildId", build.getId());
         result.add("stepsDuration", serialize(inspector.getStepsDurations()));
-        result.add("localRepo", serialize(inspector.getRepoLocalPath()));
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
+        if (build.isPullRequest()) {
+            result.add("commit", serialize(build.getPRInformation()));
+        } else {
+            result.add("commit", serialize(build.getCommit()));
+        }
         notBuildable.add(result);
     }
 
@@ -113,31 +118,31 @@ public class JsonSerializer {
 
     private void outputHasTestFailureInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
         JsonObject result = new JsonObject();
-        result.add("slug", serialize(inspector.getRepoSlug()));
+        result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
-        result.add("buildId", serialize(build.getId()));
+        result.addProperty("buildId", build.getId());
         result.add("stepsDuration", serialize(inspector.getStepsDurations()));
-        result.add("localRepo", serialize(inspector.getRepoLocalPath()));
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
 
         GatherTestInformation testInformation = inspector.getTestInformations();
-        result.add("nbTests", serialize(testInformation.getNbTotalTests()));
-        result.add("nbSkippingTests", serialize(testInformation.getNbSkippingTests()));
-        result.add("nbFailingtests",serialize(testInformation.getNbFailingTests()));
+        result.addProperty("nbTests", testInformation.getNbTotalTests());
+        result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
+        result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
         result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
         hasTestFailure.add(result);
     }
 
     private void outputNotFailingInspector(ProjectInspector inspector, JsonArray notFailing) {
         JsonObject result = new JsonObject();
-        result.add("slug", serialize(inspector.getRepoSlug()));
+        result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
-        result.add("buildId", serialize(build.getId()));
+        result.addProperty("buildId", build.getId());
         result.add("stepsDuration", serialize(inspector.getStepsDurations()));
-        result.add("localRepo", serialize(inspector.getRepoLocalPath()));
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
 
         GatherTestInformation testInformation = inspector.getTestInformations();
-        result.add("nbTests", serialize(testInformation.getNbTotalTests()));
-        result.add("nbSkippingTests", serialize(testInformation.getNbSkippingTests()));
+        result.addProperty("nbTests", testInformation.getNbTotalTests());
+        result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         notFailing.add(result);
     }
 
@@ -199,23 +204,23 @@ public class JsonSerializer {
         root.add("notFailing", notFailing);
 
         JsonObject failWhenGatheringInfo = new JsonObject();
-        notFailing.add("number", serialize(failWhenGatheringInfoArray.size()));
-        notFailing.add("builds", failWhenGatheringInfoArray);
+        failWhenGatheringInfo.add("number", serialize(failWhenGatheringInfoArray.size()));
+        failWhenGatheringInfo.add("builds", failWhenGatheringInfoArray);
         root.add("failWhenGatheringInfo", failWhenGatheringInfo);
 
         JsonObject notTestable = new JsonObject();
-        notFailing.add("number", serialize(notTestableArray.size()));
-        notFailing.add("builds", notTestableArray);
+        notTestable.add("number", serialize(notTestableArray.size()));
+        notTestable.add("builds", notTestableArray);
         root.add("notTestable", notTestable);
 
         JsonObject notBuildable = new JsonObject();
-        notFailing.add("number", serialize(notBuildableArray.size()));
-        notFailing.add("builds", notBuildableArray);
+        notBuildable.add("number", serialize(notBuildableArray.size()));
+        notBuildable.add("builds", notBuildableArray);
         root.add("notBuildable", notBuildable);
 
         JsonObject notClonable = new JsonObject();
-        notFailing.add("number", serialize(notClonableArray.size()));
-        notFailing.add("builds", notClonableArray);
+        notClonable.add("number", serialize(notClonableArray.size()));
+        notClonable.add("builds", notClonableArray);
         root.add("notClonable", notClonable);
 
         writeFile();
