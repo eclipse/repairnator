@@ -127,7 +127,7 @@ public class BuildHelper extends AbstractHelper {
 
             JsonArray buildArray = allAnswer.getAsJsonArray("builds");
 
-            int lastBuildId = 0;
+            int lastBuildId = Integer.MAX_VALUE;
 
             for (JsonElement buildJson : buildArray) {
                 Build build = createGson().fromJson(buildJson, Build.class);
@@ -139,7 +139,7 @@ public class BuildHelper extends AbstractHelper {
                         build.setCommit(commits.get(commitId));
                     }
 
-                    if (lastBuildId < build.getId()) {
+                    if (lastBuildId > build.getId()) {
                         lastBuildId = build.getId();
                     }
 
