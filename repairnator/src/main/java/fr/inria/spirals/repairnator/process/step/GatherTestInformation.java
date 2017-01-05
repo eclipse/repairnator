@@ -88,7 +88,7 @@ public class GatherTestInformation extends AbstractStep {
                             this.nbFailingTests++;
                             String tof = testCase.getFailureType();
                             if (!this.typeOfFailures.containsKey(tof)) {
-                                this.typeOfFailures.put(tof, new HashSet<>());
+                                this.typeOfFailures.put(tof, new HashSet<String>());
                             }
                             Set<String> failingClasses = this.typeOfFailures.get(tof);
                             failingClasses.add(testCase.getFullClassName());
