@@ -51,6 +51,14 @@ public class Launcher {
         sw1.setDefault("false");
         jsap.registerParameter(sw1);
 
+        // verbosity
+        sw1 = new Switch("push");
+        sw1.setShortFlag('p');
+        sw1.setLongFlag("push");
+        sw1.setDefault("true");
+        sw1.setHelp("If set to true this flag push failing builds.");
+        jsap.registerParameter(sw1);
+
         // Tab size
         FlaggedOption opt2 = new FlaggedOption("input");
         opt2.setShortFlag('i');
@@ -127,11 +135,11 @@ public class Launcher {
             System.exit(-1);
         }
         if (arguments.success()) {
-            mainProcess(arguments.getString("input"), arguments.getString("workspace"), arguments.getString("output"), arguments.getInt("lookup"), arguments.getBoolean("debug"));
+            mainProcess(arguments.getString("input"), arguments.getString("workspace"), arguments.getString("output"), arguments.getInt("lookup"), arguments.getBoolean("push"), arguments.getBoolean("debug"));
         }
     }
 
-    private void mainProcess(String input, String workspace, String output, int lookupDays, boolean debug) throws IOException {
+    private void mainProcess(String input, String workspace, String output, int lookupDays, boolean push, boolean debug) throws IOException {
         if (debug) {
             setLevel(Level.DEBUG);
         }
@@ -152,7 +160,7 @@ public class Launcher {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmm");
         String completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
 
-        List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
+        List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace, push);
 
         this.serializer.setInspectors(projectInspectors);
 
@@ -161,12 +169,12 @@ public class Launcher {
         this.serializer.createOutput();
     }
 
-    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
+    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace, boolean push) throws IOException {
         initWorkspace(workspace);
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector scanner = new ProjectInspector(build, workspace);
+            ProjectInspector scanner = new ProjectInspector(build, workspace, push);
             projectInspectors.add(scanner);
             scanner.processRepair();
         }

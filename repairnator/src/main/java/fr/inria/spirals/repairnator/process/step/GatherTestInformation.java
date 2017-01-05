@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +33,8 @@ public class GatherTestInformation extends AbstractStep {
     private int nbTotalTests;
     private int nbSkippingTests;
     private int nbFailingTests;
-    private Map<String, Set<String>> typeOfFailures;
+    private Map<String, Map<String,String>> typeOfFailures;
+    private String failingModulePath;
 
     public GatherTestInformation(ProjectInspector inspector) {
         super(inspector);
@@ -51,8 +53,12 @@ public class GatherTestInformation extends AbstractStep {
         return nbSkippingTests;
     }
 
-    public Map<String, Set<String>> getTypeOfFailures() {
+    public Map<String, Map<String, String>> getTypeOfFailures() {
         return typeOfFailures;
+    }
+
+    public String getFailingModulePath() {
+        return failingModulePath;
     }
 
     @Override
@@ -76,36 +82,47 @@ public class GatherTestInformation extends AbstractStep {
             Launcher.LOGGER.warn("Error while traversing files to get surefire reports: "+e);
         }
 
-        SurefireReportParser parser = new SurefireReportParser(surefireDirs, Locale.ENGLISH);
-        try {
-            List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
-            for (ReportTestSuite testSuite : testSuites) {
-                this.nbTotalTests += testSuite.getNumberOfTests();
-                this.nbSkippingTests += testSuite.getNumberOfSkipped();
-                if (testSuite.getNumberOfFailures() > 0) {
-                    for (ReportTestCase testCase : testSuite.getTestCases()) {
-                        if (testCase.hasFailure()) {
-                            this.nbFailingTests++;
-                            String tof = testCase.getFailureType();
-                            if (!this.typeOfFailures.containsKey(tof)) {
-                                this.typeOfFailures.put(tof, new HashSet<String>());
+        for (File surefireDir : surefireDirs) {
+            SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[]{surefireDir}), Locale.ENGLISH);
+            try {
+                List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
+                for (ReportTestSuite testSuite : testSuites) {
+                    if (testSuite.getNumberOfFailures() > 0) {
+                        File failingModule = surefireDir.getParentFile().getParentFile();
+                        this.failingModulePath = failingModule.getCanonicalPath();
+                    }
+
+                    this.nbTotalTests += testSuite.getNumberOfTests();
+                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
+                    if (testSuite.getNumberOfFailures() > 0) {
+                        for (ReportTestCase testCase : testSuite.getTestCases()) {
+                            if (testCase.hasFailure()) {
+                                this.nbFailingTests++;
+                                String tof = testCase.getFailureType();
+                                if (!this.typeOfFailures.containsKey(tof)) {
+                                    this.typeOfFailures.put(tof, new HashMap<String,String>());
+                                }
+                                Map<String,String> failingClasses = this.typeOfFailures.get(tof);
+                                failingClasses.put(testCase.getFullClassName()+":"+testCase.getName(),testCase.getFailureDetail());
                             }
-                            Set<String> failingClasses = this.typeOfFailures.get(tof);
-                            failingClasses.add(testCase.getFullClassName());
                         }
                     }
                 }
-            }
 
-            if (this.nbFailingTests > 0) {
-                this.setState(ProjectState.HASTESTFAILURE);
-                this.shouldStop = false;
-            } else {
-                this.setState(ProjectState.NOTFAILING);
-                this.shouldStop = true;
+                if (this.nbFailingTests > 0) {
+                    this.setState(ProjectState.HASTESTFAILURE);
+                    this.shouldStop = false;
+                } else {
+                    this.setState(ProjectState.NOTFAILING);
+                    this.shouldStop = true;
+                }
+            } catch (MavenReportException e) {
+                Launcher.LOGGER.warn("Error while parsing files to get test information: "+e);
+            } catch (IOException e) {
+                Launcher.LOGGER.warn("Error while getting the failing module path: "+e);
             }
-        } catch (MavenReportException e) {
-            Launcher.LOGGER.warn("Error while parsing files to get test information: "+e);
         }
+
+
     }
 }

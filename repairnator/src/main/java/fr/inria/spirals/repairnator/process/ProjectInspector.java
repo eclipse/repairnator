@@ -24,9 +24,10 @@ public class ProjectInspector {
     Map<String, Integer> stepsDurations;
     private GatherTestInformation testInformations;
     private PushIncriminatedBuild pushBuild;
+    private boolean push;
 
 
-    public ProjectInspector(Build failingBuild, String workspace) {
+    public ProjectInspector(Build failingBuild, String workspace, boolean push) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -61,8 +62,11 @@ public class ProjectInspector {
         cloneRepo
                 .setNextStep(buildRepo)
                 .setNextStep(testProject)
-                .setNextStep(this.testInformations)
-                .setNextStep(this.pushBuild);
+                .setNextStep(this.testInformations);
+
+        if (push) {
+            this.testInformations.setNextStep(this.pushBuild);
+        }
 
         cloneRepo.setState(ProjectState.INIT);
         this.state = cloneRepo.execute();

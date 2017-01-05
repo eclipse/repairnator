@@ -130,6 +130,7 @@ public class JsonSerializer {
         }
 
         GatherTestInformation testInformation = inspector.getTestInformations();
+        result.addProperty("failingModulePath", testInformation.getFailingModulePath());
         result.addProperty("nbTests", testInformation.getNbTotalTests());
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
@@ -188,6 +189,7 @@ public class JsonSerializer {
                     outputFailWhenGatheringInfoInspector(inspector, failWhenGatheringInfoArray);
                     break;
 
+                case PUSHED:
                 case HASTESTFAILURE:
                     outputHasTestFailureInspector(inspector, hasTestFailureArray);
                     break;
