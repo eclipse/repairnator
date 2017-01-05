@@ -1,10 +1,12 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.process;
 
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.step.AbstractStep;
-import fr.inria.spirals.repairnator.step.BuildProject;
-import fr.inria.spirals.repairnator.step.CloneRepository;
-import fr.inria.spirals.repairnator.step.TestProject;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.ProjectState;
+import fr.inria.spirals.repairnator.process.step.TestProject;
 
 import java.io.File;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ public class ProjectInspector {
     private ProjectState state;
     private String workspace;
     Map<String, Integer> stepsDurations;
+    private GatherTestInformation testInformations;
 
 
     public ProjectInspector(Build failingBuild, String workspace) {
@@ -50,21 +53,27 @@ public class ProjectInspector {
         AbstractStep cloneRepo = new CloneRepository(this);
         AbstractStep buildRepo = new BuildProject(this);
         AbstractStep testProject = new TestProject(this);
+        this.testInformations = new GatherTestInformation(this);
 
-        cloneRepo.setNextStep(buildRepo).setNextStep(testProject);
+        cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
+        cloneRepo.setState(ProjectState.INIT);
         this.state = cloneRepo.execute();
 
         this.stepsDurations.put("clone",cloneRepo.getDuration());
         this.stepsDurations.put("build",buildRepo.getDuration());
         this.stepsDurations.put("test",testProject.getDuration());
+        this.stepsDurations.put("gatherInfo",this.testInformations.getDuration());
     }
 
     public Map<String, Integer> getStepsDurations() {
         return this.stepsDurations;
     }
 
-    public void cleanInspector() {
-        this.build.clearJobs();
+    public GatherTestInformation getTestInformations() {
+        return testInformations;
     }
 
+    public String toString() {
+        return this.getRepoLocalPath()+" : "+this.getState();
+    }
 }

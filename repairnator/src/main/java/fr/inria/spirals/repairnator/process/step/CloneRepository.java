@@ -1,10 +1,9 @@
-package fr.inria.spirals.repairnator.step;
+package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.Launcher;
-import fr.inria.spirals.repairnator.ProjectInspector;
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.process.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.lib.ObjectId;

@@ -1,20 +1,13 @@
 package fr.inria.spirals.repairnator;
 
-
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.helpers.AbstractHelper;
+import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.ProjectScanner;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,9 +15,7 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,9 +29,7 @@ public class Launcher {
     public static final Logger LOGGER = LogManager.getLogger();
 
     private JSAP jsap;
-    private long dateBegin;
-    private long dateEnd;
-    private ProjectScanner scanner;
+    private JsonSerializer serializer;
 
     public Launcher() {}
 
@@ -146,15 +135,17 @@ public class Launcher {
         if (debug) {
             setLevel(Level.DEBUG);
         }
-
-        this.dateBegin = new Date().getTime();
+        this.serializer = new JsonSerializer(output);
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
 
-        this.scanner = new ProjectScanner(lookupDays);
-        List<Build> buildList = this.scanner.getListOfFailingBuildFromProjects(input);
+        ProjectScanner scanner = new ProjectScanner(lookupDays);
+
+        this.serializer.setScanner(scanner);
+
+        List<Build> buildList = scanner.getListOfFailingBuildFromProjects(input);
         for (Build build : buildList) {
-            System.out.println("Incriminated project : "+build.getRepository().getSlug());
+            System.out.println("Incriminated project : "+build.getRepository().getSlug()+":"+build.getId());
         }
 
         Launcher.LOGGER.debug("Start cloning and compiling projects...");
@@ -163,10 +154,11 @@ public class Launcher {
 
         List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
 
-        this.dateEnd = new Date().getTime();
+        this.serializer.setInspectors(projectInspectors);
 
         Launcher.LOGGER.debug("Start writing a JSON output...");
-        buildFileFromResults(projectInspectors, output);
+
+        this.serializer.createOutput();
     }
 
     private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
@@ -179,95 +171,6 @@ public class Launcher {
             scanner.processRepair();
         }
         return projectInspectors;
-    }
-
-    private void buildFileFromResults(List<ProjectInspector> results, String output) throws IOException {
-        Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                return (fieldAttributes.getName().equals("lastBuild"));
-            }
-
-            public boolean shouldSkipClass(Class<?> aClass) {
-                return false;
-            }
-        }).create();
-
-        int duration = Math.round(this.dateEnd-this.dateBegin)/1000;
-
-        JsonObject root = new JsonObject();
-
-        JsonElement dateJson = gson.toJsonTree(new Date());
-        root.add("date", dateJson);
-        root.add("duration", gson.toJsonTree(duration));
-        root.add("projects",gson.toJsonTree(this.scanner));
-
-        List<ProjectInspector> testsFailing = new ArrayList<ProjectInspector>();
-        List<ProjectInspector> buildableWithoutFailingTests = new ArrayList<ProjectInspector>();
-        List<ProjectInspector> notBuildable = new ArrayList<ProjectInspector>();
-        List<ProjectInspector> notClonable = new ArrayList<ProjectInspector>();
-
-        for (ProjectInspector inspector : results) {
-            inspector.cleanInspector();
-
-            switch (inspector.getState()) {
-                default:
-                    notClonable.add(inspector);
-                    break;
-
-                case CLONABLE:
-                    notBuildable.add(inspector);
-                    break;
-
-                case BUILDABLE:
-                    buildableWithoutFailingTests.add(inspector);
-                    break;
-
-                case HASTESTFAILURE:
-                    testsFailing.add(inspector);
-                    break;
-            }
-        }
-
-        JsonElement nbFailedJson = gson.toJsonTree(results.size());
-        root.add("nbTravisFailDetected", nbFailedJson);
-
-        JsonElement nbBuildableWithFailingTests = gson.toJsonTree(testsFailing.size());
-        root.add("nbBuildableWithFailingTests", nbBuildableWithFailingTests);
-
-        JsonElement nbBuildableWithoutFailingTests = gson.toJsonTree(buildableWithoutFailingTests.size());
-        root.add("nbBuildableWithoutFailingTests", nbBuildableWithoutFailingTests);
-
-        JsonElement nbFailNotCompilable = gson.toJsonTree(notBuildable.size());
-        root.add("nbFailNotCompilable", nbFailNotCompilable);
-
-        JsonElement nbFailNotClonable = gson.toJsonTree(notClonable.size());
-        root.add("nbFailNotClonable", nbFailNotClonable);
-
-        JsonElement compilableWithFailingTestsJSON = gson.toJsonTree(testsFailing, List.class);
-        root.add("compilableWithFailingTests", compilableWithFailingTestsJSON);
-
-        JsonElement compilableResultsJSON = gson.toJsonTree(buildableWithoutFailingTests, List.class);
-        root.add("compilableWithoutFailingTests", compilableResultsJSON);
-
-        JsonElement notCompilableResultsJSON = gson.toJsonTree(notBuildable, List.class);
-        root.add("notCompilable", notCompilableResultsJSON);
-
-        JsonElement notClonableResultsJSON = gson.toJsonTree(notClonable, List.class);
-        root.add("notClonable", notClonableResultsJSON);
-
-        String serialization = gson.toJson(root);
-
-        File outputFile = new File(output);
-        if (outputFile.isDirectory()) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
-            String formattedDate = dateFormat.format(new Date());
-            String filename = "repairbot_"+formattedDate+".json";
-            outputFile = new File(outputFile.getPath()+File.separator+filename);
-        }
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-        writer.write(serialization);
-        writer.close();
     }
 
     public static void main(String[] args) throws Exception {

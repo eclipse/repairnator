@@ -1,8 +1,7 @@
-package fr.inria.spirals.repairnator.step;
+package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Launcher;
-import fr.inria.spirals.repairnator.ProjectInspector;
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.process.ProjectInspector;
 import org.apache.maven.cli.MavenCli;
 import org.codehaus.plexus.classworlds.ClassWorld;
 

@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.process;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
@@ -7,8 +7,8 @@ import fr.inria.spirals.jtravis.entities.Log;
 import fr.inria.spirals.jtravis.entities.Repository;
 import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
-import fr.inria.spirals.jtravis.helpers.LogHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
+import fr.inria.spirals.repairnator.Launcher;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,9 +28,12 @@ import java.util.List;
  */
 public class ProjectScanner {
 
-    private int totalSlugNumber;
     private int totalRepoNumber;
-    private int totalBuildNumber;
+    private int totalScannedRepo;
+    private int totalScannedBuilds;
+    private int totalBuildInJava;
+    private int totalBuildInJavaFailing;
+    private int totalBuildInJavaWithFailingTests;
 
     private Collection<String> slugs;
     private Collection<Repository> repositories;
@@ -45,16 +48,20 @@ public class ProjectScanner {
         this.limitDate = limitCal.getTime();
     }
 
-    public int getTotalSlugNumber() {
-        return totalSlugNumber;
-    }
-
     public int getTotalRepoNumber() {
         return totalRepoNumber;
     }
 
-    public int getTotalBuildNumber() {
-        return totalBuildNumber;
+    public int getTotalScannedRepo() {
+        return totalScannedRepo;
+    }
+
+    public int getTotalBuildInJavaWithFailingTests() {
+        return totalBuildInJavaWithFailingTests;
+    }
+
+    public int getTotalScannedBuilds() {
+        return totalScannedBuilds;
     }
 
     public Collection<String> getSlugs() {
@@ -94,7 +101,7 @@ public class ProjectScanner {
             result.add(reader.readLine().trim());
         }
 
-        this.totalSlugNumber = result.size();
+        this.totalRepoNumber = result.size();
 
         return result;
     }
@@ -118,7 +125,7 @@ public class ProjectScanner {
             }
         }
 
-        this.totalRepoNumber = result.size();
+        this.totalScannedRepo = result.size();
         return result;
     }
 
@@ -129,10 +136,12 @@ public class ProjectScanner {
             List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
 
             for (Build build : repoBuilds) {
+                this.totalScannedBuilds++;
                 if (build.getConfig().getLanguage().equals("java")) {
+                    this.totalBuildInJava++;
                     Launcher.LOGGER.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
                     if (build.getBuildStatus() == BuildStatus.FAILED) {
-
+                        this.totalBuildInJavaFailing++;
                         for (Job job : build.getJobs()) {
                             Log jobLog = job.getLog();
                             TestsInformation testInfo = jobLog.getTestsInformation();
@@ -151,7 +160,7 @@ public class ProjectScanner {
             }
         }
 
-        this.totalBuildNumber = result.size();
+        this.totalBuildInJavaWithFailingTests = result.size();
         return result;
     }
 }
