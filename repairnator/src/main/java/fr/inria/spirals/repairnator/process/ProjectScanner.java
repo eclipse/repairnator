@@ -39,12 +39,12 @@ public class ProjectScanner {
     private Collection<Repository> repositories;
     private Date limitDate;
 
-    public ProjectScanner(int lookupDays) {
+    public ProjectScanner(int lookupHours) {
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
 
         Calendar limitCal = Calendar.getInstance();
-        limitCal.add(Calendar.DAY_OF_MONTH, -lookupDays);
+        limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
         this.limitDate = limitCal.getTime();
     }
 

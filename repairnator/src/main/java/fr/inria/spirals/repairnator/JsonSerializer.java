@@ -12,6 +12,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.ProjectState;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -123,6 +124,10 @@ public class JsonSerializer {
         result.addProperty("buildId", build.getId());
         result.add("stepsDuration", serialize(inspector.getStepsDurations()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
+
+        if (inspector.getState() == ProjectState.PUSHED) {
+            result.addProperty("remoteLocation",inspector.getPushBuild().getRemoteLocation());
+        }
 
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("nbTests", testInformation.getNbTotalTests());

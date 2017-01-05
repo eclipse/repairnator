@@ -23,6 +23,7 @@ public class ProjectInspector {
     private String workspace;
     Map<String, Integer> stepsDurations;
     private GatherTestInformation testInformations;
+    private PushIncriminatedBuild pushBuild;
 
 
     public ProjectInspector(Build failingBuild, String workspace) {
@@ -55,13 +56,13 @@ public class ProjectInspector {
         AbstractStep buildRepo = new BuildProject(this);
         AbstractStep testProject = new TestProject(this);
         this.testInformations = new GatherTestInformation(this);
-        AbstractStep pushInfo = new PushIncriminatedBuild(this);
+        this.pushBuild = new PushIncriminatedBuild(this);
 
         cloneRepo
                 .setNextStep(buildRepo)
                 .setNextStep(testProject)
                 .setNextStep(this.testInformations)
-                .setNextStep(pushInfo);
+                .setNextStep(this.pushBuild);
 
         cloneRepo.setState(ProjectState.INIT);
         this.state = cloneRepo.execute();
@@ -70,7 +71,7 @@ public class ProjectInspector {
         this.stepsDurations.put("build",buildRepo.getDuration());
         this.stepsDurations.put("test",testProject.getDuration());
         this.stepsDurations.put("gatherInfo",this.testInformations.getDuration());
-        this.stepsDurations.put("pushFail",pushInfo.getDuration());
+        this.stepsDurations.put("pushFail",this.pushBuild.getDuration());
     }
 
     public Map<String, Integer> getStepsDurations() {
@@ -79,6 +80,10 @@ public class ProjectInspector {
 
     public GatherTestInformation getTestInformations() {
         return testInformations;
+    }
+
+    public PushIncriminatedBuild getPushBuild() {
+        return pushBuild;
     }
 
     public String toString() {

@@ -82,7 +82,7 @@ public class Launcher {
         opt2 = new FlaggedOption("lookup");
         opt2.setShortFlag('l');
         opt2.setLongFlag("lookup");
-        opt2.setHelp("Specify the number of day to lookup in past for builds");
+        opt2.setHelp("Specify the number of hours to lookup in past for builds");
         opt2.setDefault("1");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         jsap.registerParameter(opt2);

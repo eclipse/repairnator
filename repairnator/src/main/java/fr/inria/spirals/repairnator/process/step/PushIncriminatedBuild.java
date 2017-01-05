@@ -18,16 +18,24 @@ import java.net.URISyntaxException;
  * Created by urli on 05/01/2017.
  */
 public class PushIncriminatedBuild extends AbstractStep {
-    private static final String REMOTE_REPO = "https://github.com/Spirals-Team/librepair-experiments.git";
+    private static final String REMOTE_REPO_ROOT = "https://github.com/Spirals-Team/librepair-experiments";
+    private static final String REMOTE_REPO = REMOTE_REPO_ROOT+".git";
+    private static final String REMOTE_REPO_TREE = REMOTE_REPO_ROOT+"/tree/";
+
+    private String branchName;
 
     public PushIncriminatedBuild(ProjectInspector inspector) {
         super(inspector);
+
+        this.branchName = inspector.getRepoSlug().replace('/','-')+'-'+inspector.getBuild().getId();
+    }
+
+    public String getRemoteLocation() {
+        return REMOTE_REPO_TREE+this.branchName;
     }
 
     @Override
     protected void businessExecute() {
-        String branchName = inspector.getRepoSlug().replace('/','-')+'-'+inspector.getBuild().getId();
-
         Launcher.LOGGER.debug("Start to push failing state in the remote repository: "+REMOTE_REPO+" branch: "+branchName);
         if (System.getenv("GITHUB_OAUTH") == null) {
             Launcher.LOGGER.warn("You must the GITHUB_OAUTH env property to push incriminated build.");
@@ -49,6 +57,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             if (theRef != null) {
                 Launcher.LOGGER.warn("A branch already exist in the remote repo with the following name: "+branchName);
+                this.setState(ProjectState.PUSHED);
                 return;
             }
 
@@ -59,6 +68,8 @@ public class PushIncriminatedBuild extends AbstractStep {
                 .add(branch)
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider( System.getenv("GITHUB_OAUTH"), "" ))
                 .call();
+
+            this.setState(ProjectState.PUSHED);
 
         } catch (IOException e) {
             Launcher.LOGGER.error("Error while reading git directory at the following location: "+inspector.getRepoLocalPath()+" : "+e);
