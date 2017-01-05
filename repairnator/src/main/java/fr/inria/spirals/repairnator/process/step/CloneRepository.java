@@ -5,6 +5,7 @@ import fr.inria.spirals.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -80,7 +81,7 @@ public class CloneRepository extends AbstractStep {
                 RevCommit revCommitBase = revwalk.lookupCommit(commitBaseId);
 
                 Launcher.LOGGER.debug("Do the merge with the PR commit for repo "+repository);
-                git.merge().include(revCommitBase).call();
+                git.merge().include(revCommitBase).setFastForward(MergeCommand.FastForwardMode.NO_FF).call();
             } else {
                 String commitCheckout = this.build.getCommit().getSha();
 

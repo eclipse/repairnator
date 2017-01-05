@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.ProjectState;
+import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 
 import java.io.File;
@@ -54,8 +55,14 @@ public class ProjectInspector {
         AbstractStep buildRepo = new BuildProject(this);
         AbstractStep testProject = new TestProject(this);
         this.testInformations = new GatherTestInformation(this);
+        AbstractStep pushInfo = new PushIncriminatedBuild(this);
 
-        cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
+        cloneRepo
+                .setNextStep(buildRepo)
+                .setNextStep(testProject)
+                .setNextStep(this.testInformations)
+                .setNextStep(pushInfo);
+
         cloneRepo.setState(ProjectState.INIT);
         this.state = cloneRepo.execute();
 
@@ -63,6 +70,7 @@ public class ProjectInspector {
         this.stepsDurations.put("build",buildRepo.getDuration());
         this.stepsDurations.put("test",testProject.getDuration());
         this.stepsDurations.put("gatherInfo",this.testInformations.getDuration());
+        this.stepsDurations.put("pushFail",pushInfo.getDuration());
     }
 
     public Map<String, Integer> getStepsDurations() {
