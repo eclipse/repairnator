@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public abstract class AbstractStep {
 
+    private int limitStepNumber;
     protected ProjectInspector inspector;
     protected ProjectState state;
 
@@ -21,6 +22,10 @@ public abstract class AbstractStep {
         this.inspector = inspector;
         this.shouldStop = false;
         this.state = ProjectState.NONE;
+    }
+
+    public void setLimitStepNumber(int limitStepNumber) {
+        this.limitStepNumber = limitStepNumber;
     }
 
     public AbstractStep setNextStep(AbstractStep nextStep) {
@@ -38,8 +43,14 @@ public abstract class AbstractStep {
 
     protected ProjectState executeNextStep() {
         if (this.nextStep != null) {
-            this.nextStep.setState(this.state);
-            return this.nextStep.execute();
+            this.limitStepNumber--;
+
+            if (this.limitStepNumber > 0) {
+                this.nextStep.setLimitStepNumber(this.limitStepNumber);
+                this.nextStep.setState(this.state);
+                return this.nextStep.execute();
+            }
+
         }
         return this.state;
     }

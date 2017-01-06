@@ -152,13 +152,7 @@ public class JsonSerializer {
         notFailing.add(result);
     }
 
-    public void createOutput() throws IOException {
-        this.dateFinish = new Date();
-
-        root.add("dateStart", serialize(this.dateStart));
-        root.add("dateFinish", serialize(this.dateFinish));
-        root.add("scanStatistics", serialize(this.scanner));
-
+    private void outputInspectors() {
         JsonArray notClonableArray = new JsonArray();
         JsonArray notBuildableArray = new JsonArray();
         JsonArray notTestableArray = new JsonArray();
@@ -229,6 +223,18 @@ public class JsonSerializer {
         notClonable.add("number", serialize(notClonableArray.size()));
         notClonable.add("builds", notClonableArray);
         root.add("notClonable", notClonable);
+    }
+
+    public void createOutput() throws IOException {
+        this.dateFinish = new Date();
+
+        root.add("dateStart", serialize(this.dateStart));
+        root.add("dateFinish", serialize(this.dateFinish));
+        root.add("scanStatistics", serialize(this.scanner));
+
+        if (this.inspectors != null) {
+            this.outputInspectors();
+        }
 
         writeFile();
     }

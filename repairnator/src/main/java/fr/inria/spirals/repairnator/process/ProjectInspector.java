@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process;
 
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
@@ -25,9 +26,10 @@ public class ProjectInspector {
     private GatherTestInformation testInformations;
     private PushIncriminatedBuild pushBuild;
     private boolean push;
+    private int steps;
 
 
-    public ProjectInspector(Build failingBuild, String workspace, boolean push) {
+    public ProjectInspector(Build failingBuild, String workspace, boolean push, int steps) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -66,6 +68,8 @@ public class ProjectInspector {
 
         if (push) {
             this.testInformations.setNextStep(this.pushBuild);
+        } else {
+            Launcher.LOGGER.debug("Push boolean is set to false the failing builds won't be pushed.");
         }
 
         cloneRepo.setState(ProjectState.INIT);
