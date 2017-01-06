@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Created by urli on 05/01/2017.
@@ -99,7 +98,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("stepsDuration", serialize(inspector.getStepsDurations()));
+        result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
         if (build.isPullRequest()) {
             result.add("commit", serialize(build.getPRInformation()));
@@ -122,7 +121,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("stepsDuration", serialize(inspector.getStepsDurations()));
+        result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
         if (inspector.getState() == ProjectState.PUSHED) {
@@ -143,7 +142,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("stepsDuration", serialize(inspector.getStepsDurations()));
+        result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
         GatherTestInformation testInformation = inspector.getTestInformations();

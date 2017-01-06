@@ -29,11 +29,11 @@ import java.util.List;
 public class ProjectScanner {
 
     private int totalRepoNumber;
-    private int totalScannedRepo;
+    private int totalRepoUsingTravis;
     private int totalScannedBuilds;
     private int totalBuildInJava;
     private int totalBuildInJavaFailing;
-    private int totalBuildInJavaWithFailingTests;
+    private int totalBuildInJavaFailingWithFailingTests;
 
     private Collection<String> slugs;
     private Collection<Repository> repositories;
@@ -52,12 +52,12 @@ public class ProjectScanner {
         return totalRepoNumber;
     }
 
-    public int getTotalScannedRepo() {
-        return totalScannedRepo;
+    public int getTotalRepoUsingTravis() {
+        return totalRepoUsingTravis;
     }
 
-    public int getTotalBuildInJavaWithFailingTests() {
-        return totalBuildInJavaWithFailingTests;
+    public int getTotalBuildInJavaFailingWithFailingTests() {
+        return totalBuildInJavaFailingWithFailingTests;
     }
 
     public int getTotalScannedBuilds() {
@@ -125,7 +125,7 @@ public class ProjectScanner {
             }
         }
 
-        this.totalScannedRepo = result.size();
+        this.totalRepoUsingTravis = result.size();
         return result;
     }
 
@@ -160,7 +160,7 @@ public class ProjectScanner {
             }
         }
 
-        this.totalBuildInJavaWithFailingTests = result.size();
+        this.totalBuildInJavaFailingWithFailingTests = result.size();
         return result;
     }
 }

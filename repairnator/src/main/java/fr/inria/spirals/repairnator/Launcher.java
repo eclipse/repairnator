@@ -57,7 +57,6 @@ public class Launcher {
         sw1 = new Switch("push");
         sw1.setShortFlag('p');
         sw1.setLongFlag("push");
-        sw1.setDefault("true");
         sw1.setHelp("If set to true this flag push failing builds. (this argument allow to avoid push even if the step number is higher with -s argument)");
         jsap.registerParameter(sw1);
 

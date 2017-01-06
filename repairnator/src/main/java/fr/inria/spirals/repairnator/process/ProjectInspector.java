@@ -22,7 +22,7 @@ public class ProjectInspector {
     private String repoLocalPath;
     private ProjectState state;
     private String workspace;
-    Map<String, Integer> stepsDurations;
+    Map<String, Integer> stepsDurationsInSeconds;
     private GatherTestInformation testInformations;
     private PushIncriminatedBuild pushBuild;
     private boolean push;
@@ -34,7 +34,9 @@ public class ProjectInspector {
         this.state = ProjectState.NONE;
         this.workspace = workspace;
         this.repoLocalPath = workspace+File.separator+getRepoSlug()+File.separator+build.getId();
-        this.stepsDurations = new HashMap<String, Integer>();
+        this.stepsDurationsInSeconds = new HashMap<String, Integer>();
+        this.push = push;
+        this.steps = steps;
     }
 
     public ProjectState getState() {
@@ -75,15 +77,15 @@ public class ProjectInspector {
         cloneRepo.setState(ProjectState.INIT);
         this.state = cloneRepo.execute();
 
-        this.stepsDurations.put("clone",cloneRepo.getDuration());
-        this.stepsDurations.put("build",buildRepo.getDuration());
-        this.stepsDurations.put("test",testProject.getDuration());
-        this.stepsDurations.put("gatherInfo",this.testInformations.getDuration());
-        this.stepsDurations.put("pushFail",this.pushBuild.getDuration());
+        this.stepsDurationsInSeconds.put("clone",cloneRepo.getDuration());
+        this.stepsDurationsInSeconds.put("build",buildRepo.getDuration());
+        this.stepsDurationsInSeconds.put("test",testProject.getDuration());
+        this.stepsDurationsInSeconds.put("gatherInfo",this.testInformations.getDuration());
+        this.stepsDurationsInSeconds.put("pushFail",this.pushBuild.getDuration());
     }
 
-    public Map<String, Integer> getStepsDurations() {
-        return this.stepsDurations;
+    public Map<String, Integer> getStepsDurationsInSeconds() {
+        return this.stepsDurationsInSeconds;
     }
 
     public GatherTestInformation getTestInformations() {
