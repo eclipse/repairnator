@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 
 import java.util.Date;
@@ -44,6 +45,7 @@ public abstract class AbstractStep {
     protected ProjectState executeNextStep() {
         if (this.nextStep != null) {
             this.limitStepNumber--;
+            Launcher.LOGGER.debug(this.limitStepNumber+" steps remaining...");
 
             if (this.limitStepNumber > 0) {
                 this.nextStep.setLimitStepNumber(this.limitStepNumber);
