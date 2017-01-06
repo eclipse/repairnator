@@ -63,6 +63,7 @@ public class ProjectInspector {
         this.testInformations = new GatherTestInformation(this);
         this.pushBuild = new PushIncriminatedBuild(this);
 
+        cloneRepo.setLimitStepNumber(this.steps-1);
         cloneRepo
                 .setNextStep(buildRepo)
                 .setNextStep(testProject)
