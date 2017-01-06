@@ -11,5 +11,6 @@ public enum ProjectState {
     TESTABLE,
     HASTESTFAILURE,
     NOTFAILING,
-    PUSHED
+    PUSHED,
+    PATCHED
 }

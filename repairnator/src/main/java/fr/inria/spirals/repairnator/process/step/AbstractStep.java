@@ -2,6 +2,8 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import org.apache.maven.cli.MavenCli;
+import org.codehaus.plexus.classworlds.ClassWorld;
 
 import java.util.Date;
 
@@ -55,6 +57,13 @@ public abstract class AbstractStep {
 
         }
         return this.state;
+    }
+
+    protected MavenCli getMavenCli() {
+        final ClassWorld classWorld = new ClassWorld("plexus.core", getClass().getClassLoader());
+        System.setProperty("maven.multiModuleProjectDirectory",this.inspector.getRepoLocalPath());
+        MavenCli cli = new MavenCli(classWorld);
+        return cli;
     }
 
     public ProjectState execute() {

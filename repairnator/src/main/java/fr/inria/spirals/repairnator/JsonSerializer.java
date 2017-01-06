@@ -12,6 +12,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.ProjectState;
 
 import java.io.BufferedWriter;
@@ -151,6 +152,30 @@ public class JsonSerializer {
         notFailing.add(result);
     }
 
+    private void outputHasBeenPatchedInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
+        JsonObject result = new JsonObject();
+        result.addProperty("slug", inspector.getRepoSlug());
+        Build build = inspector.getBuild();
+        result.addProperty("buildId", build.getId());
+        result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
+
+        if (inspector.getState() == ProjectState.PUSHED) {
+            result.addProperty("remoteLocation",inspector.getPushBuild().getRemoteLocation());
+        }
+
+        NopolRepair nopolRepair = inspector.getNopolRepair();
+        result.add("patches", serialize(nopolRepair.getPatches()));
+
+        GatherTestInformation testInformation = inspector.getTestInformations();
+        result.addProperty("failingModulePath", testInformation.getFailingModulePath());
+        result.addProperty("nbTests", testInformation.getNbTotalTests());
+        result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
+        result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
+        result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
+        hasTestFailure.add(result);
+    }
+
     private void outputInspectors() {
         JsonArray notClonableArray = new JsonArray();
         JsonArray notBuildableArray = new JsonArray();
@@ -158,7 +183,7 @@ public class JsonSerializer {
         JsonArray failWhenGatheringInfoArray = new JsonArray();
         JsonArray hasTestFailureArray = new JsonArray();
         JsonArray notFailingArray = new JsonArray();
-
+        JsonArray hasBeenPatchedArray = new JsonArray();
 
         for (ProjectInspector inspector : this.inspectors) {
             switch (inspector.getState()) {
@@ -190,8 +215,17 @@ public class JsonSerializer {
                 case NOTFAILING:
                     outputNotFailingInspector(inspector, notFailingArray);
                     break;
+
+                case PATCHED:
+                    outputHasBeenPatchedInspector(inspector, hasBeenPatchedArray);
+                    break;
             }
         }
+
+        JsonObject hasBeenPatched = new JsonObject();
+        hasBeenPatched.add("number", serialize(hasBeenPatchedArray.size()));
+        hasBeenPatched.add("builds", hasBeenPatchedArray);
+        root.add("hasBeenPatched",hasBeenPatched);
 
         JsonObject hasTestFailure = new JsonObject();
         hasTestFailure.add("number", serialize(hasTestFailureArray.size()));

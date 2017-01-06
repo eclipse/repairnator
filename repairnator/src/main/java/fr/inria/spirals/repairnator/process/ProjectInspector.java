@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.ProjectState;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
@@ -25,6 +26,7 @@ public class ProjectInspector {
     Map<String, Integer> stepsDurationsInSeconds;
     private GatherTestInformation testInformations;
     private PushIncriminatedBuild pushBuild;
+    private NopolRepair nopolRepair;
     private boolean push;
     private int steps;
 
@@ -62,17 +64,21 @@ public class ProjectInspector {
         AbstractStep testProject = new TestProject(this);
         this.testInformations = new GatherTestInformation(this);
         this.pushBuild = new PushIncriminatedBuild(this);
+        this.nopolRepair = new NopolRepair(this);
 
-        cloneRepo.setLimitStepNumber(this.steps-1);
+
+        cloneRepo.setLimitStepNumber(this.steps);
         cloneRepo
                 .setNextStep(buildRepo)
                 .setNextStep(testProject)
                 .setNextStep(this.testInformations);
 
         if (push) {
-            this.testInformations.setNextStep(this.pushBuild);
+            this.testInformations.setNextStep(this.pushBuild)
+                                .setNextStep(this.nopolRepair);
         } else {
             Launcher.LOGGER.debug("Push boolean is set to false the failing builds won't be pushed.");
+            this.testInformations.setNextStep(this.nopolRepair);
         }
 
         cloneRepo.setState(ProjectState.INIT);
@@ -83,6 +89,7 @@ public class ProjectInspector {
         this.stepsDurationsInSeconds.put("test",testProject.getDuration());
         this.stepsDurationsInSeconds.put("gatherInfo",this.testInformations.getDuration());
         this.stepsDurationsInSeconds.put("pushFail",this.pushBuild.getDuration());
+        this.stepsDurationsInSeconds.put("nopolRepair",this.nopolRepair.getDuration());
     }
 
     public Map<String, Integer> getStepsDurationsInSeconds() {
@@ -95,6 +102,10 @@ public class ProjectInspector {
 
     public PushIncriminatedBuild getPushBuild() {
         return pushBuild;
+    }
+
+    public NopolRepair getNopolRepair() {
+        return nopolRepair;
     }
 
     public String toString() {

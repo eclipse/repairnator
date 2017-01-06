@@ -115,6 +115,9 @@ public class Launcher {
 
         loggerConfig = config.getLoggerConfig("fr.inria.spirals.jtravis.helpers.AbstractHelper");
         loggerConfig.setLevel(level);
+
+        loggerConfig = config.getLoggerConfig("fr.inria.lille.repair.nopol.NoPol");
+        loggerConfig.setLevel(level);
         ctx.updateLoggers();
     }
 

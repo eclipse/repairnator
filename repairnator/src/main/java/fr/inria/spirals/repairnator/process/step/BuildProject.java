@@ -15,9 +15,7 @@ public class BuildProject extends AbstractStep {
     }
 
     protected int mavenBuild(boolean withTests) {
-        final ClassWorld classWorld = new ClassWorld("plexus.core", getClass().getClassLoader());
-
-        MavenCli cli = new MavenCli(classWorld);
+        MavenCli cli = this.getMavenCli();
 
         if (!withTests) {
             System.setProperty("maven.test.skip","true");
