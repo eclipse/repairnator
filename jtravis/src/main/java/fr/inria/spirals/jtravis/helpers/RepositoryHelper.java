@@ -30,7 +30,7 @@ public class RepositoryHelper extends AbstractHelper {
     }
 
     public static Repository getRepositoryFromSlug(String slug) {
-        String resourceUrl = TRAVIS_API_ENDPOINT+REPO_ENDPOINT+slug;
+        String resourceUrl = getInstance().getEndpoint()+REPO_ENDPOINT+slug;
 
         try {
             String response = getInstance().get(resourceUrl);
@@ -46,7 +46,7 @@ public class RepositoryHelper extends AbstractHelper {
     }
 
     public static Repository getRepositoryFromId(int repoId) {
-        String resourceUrl = TRAVIS_API_ENDPOINT+REPO_ENDPOINT+repoId;
+        String resourceUrl = getInstance().getEndpoint()+REPO_ENDPOINT+repoId;
 
         try {
             String response = getInstance().get(resourceUrl);

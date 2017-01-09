@@ -22,7 +22,7 @@ public class CommitHelperTest {
         }
 
         public JsonElement getJsonCommitElement(int buildId) throws IOException {
-            String response = this.get(TRAVIS_API_ENDPOINT+BuildHelper.BUILD_ENDPOINT+buildId);
+            String response = this.get(getEndpoint()+BuildHelper.BUILD_ENDPOINT+buildId);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
             return allAnswer.getAsJsonObject("commit");

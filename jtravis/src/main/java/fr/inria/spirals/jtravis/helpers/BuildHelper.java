@@ -41,7 +41,7 @@ public class BuildHelper extends AbstractHelper {
     }
 
     public static Build getBuildFromId(int id, Repository parentRepo) {
-        String resourceUrl = TRAVIS_API_ENDPOINT+BUILD_ENDPOINT+id;
+        String resourceUrl = getInstance().getEndpoint()+BUILD_ENDPOINT+id;
 
         try {
             String response = getInstance().get(resourceUrl);
@@ -91,7 +91,7 @@ public class BuildHelper extends AbstractHelper {
     private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, boolean pullBuild) {
         Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
-        String resourceUrl = TRAVIS_API_ENDPOINT+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
+        String resourceUrl = getInstance().getEndpoint()+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
 
         if (pullBuild) {
             resourceUrl += "?event_type=pull_request";

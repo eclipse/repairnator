@@ -40,7 +40,7 @@ public class JobHelper extends AbstractHelper {
     }
 
     public static Job getJobFromId(int jobId) {
-        String resourceUrl = TRAVIS_API_ENDPOINT+JOB_ENDPOINT+jobId;
+        String resourceUrl = getInstance().getEndpoint()+JOB_ENDPOINT+jobId;
 
         try {
             String response = getInstance().get(resourceUrl);

@@ -33,7 +33,7 @@ public class LogHelper extends AbstractHelper {
 
     public static Log getLogFromId(int logId) {
         try {
-            String response = getInstance().get(TRAVIS_API_ENDPOINT+LOG_ENDPOINT+logId);
+            String response = getInstance().get(getInstance().getEndpoint()+LOG_ENDPOINT+logId);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
             JsonObject logJson = allAnswer.getAsJsonObject("log");
@@ -48,7 +48,7 @@ public class LogHelper extends AbstractHelper {
         if (log.getJobId() != 0) {
             Job job = JobHelper.getJobFromId(log.getJobId());
             if (job.getBuildStatus() == BuildStatus.FAILED || job.getBuildStatus() == BuildStatus.PASSED) {
-                String logJobUrl = TRAVIS_API_ENDPOINT+JobHelper.JOB_ENDPOINT+log.getJobId()+LOG_JOB_ENDPOINT;
+                String logJobUrl = getInstance().getEndpoint()+JobHelper.JOB_ENDPOINT+log.getJobId()+LOG_JOB_ENDPOINT;
                 try {
                     return getInstance().rawGet(logJobUrl);
                 } catch (IOException e) {
