@@ -30,7 +30,7 @@ public class PushIncriminatedBuild extends AbstractStep {
         super(inspector);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
-        String formattedDate = dateFormat.format(new Date());
+        String formattedDate = dateFormat.format(this.inspector.getBuild().getFinishedAt());
 
         this.branchName = inspector.getRepoSlug().replace('/','-')+'-'+inspector.getBuild().getId()+'-'+formattedDate;
     }
