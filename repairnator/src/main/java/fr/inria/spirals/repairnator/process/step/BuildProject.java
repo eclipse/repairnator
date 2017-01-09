@@ -31,6 +31,12 @@ public class BuildProject extends AbstractStep {
         request.setGoals( Arrays.asList( "test" ) );
 
         Invoker invoker = new DefaultInvoker();
+
+        if (!withTests) {
+            MavenErrorHandler errorHandler = new MavenErrorHandler(this.inspector, this.getClass().getName());
+            invoker.setErrorHandler(errorHandler);
+        }
+
         try {
             InvocationResult result = invoker.execute( request );
 
@@ -38,9 +44,6 @@ public class BuildProject extends AbstractStep {
                 System.clearProperty("maven.test.skip");
             }
 
-            if (result.getExitCode() != 0) {
-                this.addStepError(result.getExecutionException().getMessage());
-            }
             return result.getExitCode();
         } catch (MavenInvocationException e) {
             Launcher.LOGGER.debug("Error while launching tests goal :"+e);

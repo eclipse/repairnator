@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -73,6 +72,9 @@ public class NopolRepair extends AbstractStep {
 
         Invoker invoker = new DefaultInvoker();
 
+        MavenErrorHandler errorHandler = new MavenErrorHandler(this.inspector, this.getClass().getName());
+        invoker.setErrorHandler(errorHandler);
+
         System.setProperty("maven.test.skip","true");
 
         InvocationResult result = null;
@@ -87,8 +89,7 @@ public class NopolRepair extends AbstractStep {
         System.clearProperty("maven.test.skip");
 
         if (result != null && result.getExitCode() != 0) {
-            Launcher.LOGGER.debug("Error while installing multimodule maven: "+result.getExecutionException());
-            this.addStepError("Error while installing multimodule maven: "+result.getExecutionException());
+            Launcher.LOGGER.debug("Error while installing multimodule maven");
         }
 
         Launcher.LOGGER.debug("Compute classpath from incriminated module...");
@@ -102,6 +103,9 @@ public class NopolRepair extends AbstractStep {
 
         invoker = new DefaultInvoker();
 
+        errorHandler = new MavenErrorHandler(this.inspector, this.getClass().getName());
+        invoker.setErrorHandler(errorHandler);
+
         try {
             result = invoker.execute(request);
         } catch (MavenInvocationException e) {
@@ -111,8 +115,7 @@ public class NopolRepair extends AbstractStep {
         }
 
         if (result != null && result.getExitCode() != 0) {
-            Launcher.LOGGER.debug("Error while computing classpath maven: "+result.getExecutionException());
-            this.addStepError("Error while computing classpath maven: "+result.getExecutionException());
+            Launcher.LOGGER.debug("Error while computing classpath maven");
             return;
         }
 
