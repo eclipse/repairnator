@@ -14,6 +14,8 @@ import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.ProjectState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,6 +30,7 @@ import java.util.List;
  */
 public class JsonSerializer {
 
+    private final Logger logger = LoggerFactory.getLogger(JsonSerializer.class);
     private Gson serializer;
     private Date dateStart;
     private Date dateFinish;
@@ -42,7 +45,7 @@ public class JsonSerializer {
 
         this.serializer = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
             public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                return (fieldAttributes.getName().equals("lastBuild"));
+                return (fieldAttributes.getName().equals("lastBuild") || fieldAttributes.getName().equals("logger"));
             }
 
             public boolean shouldSkipClass(Class<?> aClass) {
@@ -170,6 +173,7 @@ public class JsonSerializer {
 
         NopolRepair nopolRepair = inspector.getNopolRepair();
         result.add("patches", serialize(nopolRepair.getPatches()));
+        result.add("projectReference", serialize(nopolRepair.getProjectReference()));
 
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
@@ -193,7 +197,7 @@ public class JsonSerializer {
         for (ProjectInspector inspector : this.inspectors) {
             switch (inspector.getState()) {
                 default:
-                    Launcher.LOGGER.warn("Project inspector with not defined state: "+inspector);
+                    this.logger.warn("Project inspector with not defined state: "+inspector);
                     break;
 
                 case INIT:

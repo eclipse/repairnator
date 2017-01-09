@@ -63,7 +63,7 @@ public class GatherTestInformation extends AbstractStep {
 
     @Override
     protected void businessExecute() {
-        Launcher.LOGGER.debug("Start gathering test information...");
+        this.getLogger().debug("Start gathering test information...");
         File rootRepo = new File(this.inspector.getRepoLocalPath());
         final List<File> surefireDirs = new ArrayList<File>();
 
@@ -79,7 +79,7 @@ public class GatherTestInformation extends AbstractStep {
                 }
             });
         } catch (IOException e) {
-            Launcher.LOGGER.warn("Error while traversing files to get surefire reports: "+e);
+            this.getLogger().warn("Error while traversing files to get surefire reports: "+e);
             this.addStepError(e.getMessage());
         }
 
@@ -118,10 +118,10 @@ public class GatherTestInformation extends AbstractStep {
                     this.shouldStop = true;
                 }
             } catch (MavenReportException e) {
-                Launcher.LOGGER.warn("Error while parsing files to get test information: "+e);
+                this.getLogger().warn("Error while parsing files to get test information: "+e);
                 this.addStepError(e.getMessage());
             } catch (IOException e) {
-                Launcher.LOGGER.warn("Error while getting the failing module path: "+e);
+                this.getLogger().warn("Error while getting the failing module path: "+e);
                 this.addStepError(e.getMessage());
             }
         }

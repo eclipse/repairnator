@@ -3,6 +3,8 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import org.codehaus.plexus.util.cli.CommandLineException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Date;
@@ -47,6 +49,10 @@ public abstract class AbstractStep {
         this.state = state;
     }
 
+    protected Logger getLogger() {
+        return LoggerFactory.getLogger(this.getClass());
+    }
+
     protected void addStepError(String error) {
         this.inspector.addStepError(this.name, error);
     }
@@ -54,7 +60,7 @@ public abstract class AbstractStep {
     protected ProjectState executeNextStep() {
         if (this.nextStep != null) {
             this.limitStepNumber--;
-            Launcher.LOGGER.debug(this.limitStepNumber+" steps remaining...");
+            this.getLogger().debug(this.limitStepNumber+" steps remaining...");
 
             if (this.limitStepNumber > 0) {
                 this.nextStep.setLimitStepNumber(this.limitStepNumber);

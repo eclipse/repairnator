@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator;
 
+import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -9,12 +10,8 @@ import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
+import ch.qos.logback.classic.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +24,7 @@ import java.util.List;
  * Created by urli on 23/12/2016.
  */
 public class Launcher {
-    public static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
     private JSAP jsap;
     private JsonSerializer serializer;
@@ -107,18 +104,14 @@ public class Launcher {
     }
 
     private static void setLevel(Level level) {
-        final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        final Configuration config = ctx.getConfiguration();
+        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria.spirals.jtravis.helpers");
+        jtravis.setLevel(Level.DEBUG);
 
-        LoggerConfig loggerConfig = config.getLoggerConfig(LOGGER.getName());
-        loggerConfig.setLevel(level);
+        Logger nopol = (Logger) LoggerFactory.getLogger("fr.inria.lille.repair.nopol");
+        nopol.setLevel(Level.DEBUG);
 
-        loggerConfig = config.getLoggerConfig("fr.inria.spirals.jtravis.helpers.AbstractHelper");
-        loggerConfig.setLevel(level);
-
-        loggerConfig = config.getLoggerConfig("fr.inria.lille.repair.nopol.NoPol");
-        loggerConfig.setLevel(level);
-        ctx.updateLoggers();
+        Logger repairnator = (Logger) LoggerFactory.getLogger("fr.inria.spirals.repairnator");
+        repairnator.setLevel(Level.DEBUG);
     }
 
     private static void initWorkspace(String path) throws IOException {

@@ -10,6 +10,8 @@ import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.ProjectState;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.Map;
  * Created by urli on 26/12/2016.
  */
 public class ProjectInspector {
+    private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
     private Build build;
     private String repoLocalPath;
     private ProjectState state;
@@ -93,7 +96,7 @@ public class ProjectInspector {
             this.testInformations.setNextStep(this.pushBuild)
                                 .setNextStep(this.nopolRepair);
         } else {
-            Launcher.LOGGER.debug("Push boolean is set to false the failing builds won't be pushed.");
+            this.logger.debug("Push boolean is set to false the failing builds won't be pushed.");
             this.testInformations.setNextStep(this.nopolRepair);
         }
 

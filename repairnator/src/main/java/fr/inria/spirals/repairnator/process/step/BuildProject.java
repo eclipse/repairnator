@@ -11,6 +11,7 @@ import org.apache.maven.shared.invoker.MavenInvocationException;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Properties;
 
 /**
  * Created by urli on 03/01/2017.
@@ -22,13 +23,15 @@ public class BuildProject extends AbstractStep {
     }
 
     protected int mavenBuild(boolean withTests) {
+        Properties properties = new Properties();
         if (!withTests) {
-            System.setProperty("maven.test.skip","true");
+            properties.setProperty("maven.test.skip","true");
         }
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile( new File( this.getPom() ) );
         request.setGoals( Arrays.asList( "test" ) );
+        request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
 
@@ -40,13 +43,9 @@ public class BuildProject extends AbstractStep {
         try {
             InvocationResult result = invoker.execute( request );
 
-            if (!withTests) {
-                System.clearProperty("maven.test.skip");
-            }
-
             return result.getExitCode();
         } catch (MavenInvocationException e) {
-            Launcher.LOGGER.debug("Error while launching tests goal :"+e);
+            this.getLogger().debug("Error while launching tests goal :"+e);
             this.addStepError(e.getMessage());
             return 1;
         }
@@ -54,14 +53,14 @@ public class BuildProject extends AbstractStep {
     }
 
     protected void businessExecute() {
-        Launcher.LOGGER.debug("Start building project with maven (skip tests).");
+        this.getLogger().debug("Start building project with maven (skip tests).");
 
         int result = this.mavenBuild(false);
 
         if (result == 0) {
             this.state = ProjectState.BUILDABLE;
         } else {
-            Launcher.LOGGER.info("Repository "+this.inspector.getRepoSlug()+" cannot be built.");
+            this.getLogger().info("Repository "+this.inspector.getRepoSlug()+" cannot be built.");
             this.shouldStop = true;
         }
     }

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -34,6 +35,8 @@ public class NopolRepair extends AbstractStep {
 
     private List<Patch> patches;
 
+    private ProjectReference projectReference;
+
     public NopolRepair(ProjectInspector inspector) {
         super(inspector);
     }
@@ -42,9 +45,13 @@ public class NopolRepair extends AbstractStep {
         return patches;
     }
 
+    public ProjectReference getProjectReference() {
+        return projectReference;
+    }
+
     @Override
     protected void businessExecute() {
-        Launcher.LOGGER.debug("Start operation to repair failing build.");
+        this.getLogger().debug("Start operation to repair failing build.");
 
         GatherTestInformation infoStep = inspector.getTestInformations();
         String incriminatedModule = infoStep.getFailingModulePath();
@@ -56,7 +63,7 @@ public class NopolRepair extends AbstractStep {
             for (String testNames : failures.keySet()) {
                 String[] splitName = testNames.split(":");
                 if (splitName.length != 2) {
-                    Launcher.LOGGER.error("Error while splitting test name: "+testNames+". It won't be considered for Nopol.");
+                    this.getLogger().error("Error while splitting test name: "+testNames+". It won't be considered for Nopol.");
                     this.addStepError("Error while splitting test name: "+testNames+". It won't be considered for Nopol.");
                 } else {
                     failingTests.add(splitName[0]);
@@ -64,42 +71,47 @@ public class NopolRepair extends AbstractStep {
             }
         }
 
-        Launcher.LOGGER.debug("Try to install multimodule to avoid missing dependencies...");
+        this.getLogger().debug("Try to install multimodule to avoid missing dependencies...");
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile( new File( this.getPom() ) );
         request.setGoals( Arrays.asList( "install" ) );
+
+        Properties properties = new Properties();
+        properties.setProperty("maven.test.skip","true");
+
+        request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
 
         MavenErrorHandler errorHandler = new MavenErrorHandler(this.inspector, this.getClass().getName());
         invoker.setErrorHandler(errorHandler);
 
-        System.setProperty("maven.test.skip","true");
 
         InvocationResult result = null;
 
         try {
             result = invoker.execute(request);
         } catch (MavenInvocationException e) {
-            Launcher.LOGGER.debug("Error while installing multimodule maven: "+e);
+            this.getLogger().debug("Error while installing multimodule maven: "+e);
             this.addStepError(e.getMessage());
         }
 
-        System.clearProperty("maven.test.skip");
-
         if (result != null && result.getExitCode() != 0) {
-            Launcher.LOGGER.debug("Error while installing multimodule maven");
+            this.getLogger().debug("Error while installing multimodule maven");
         }
 
-        Launcher.LOGGER.debug("Compute classpath from incriminated module...");
-        System.setProperty("mdep.outputFile",CLASSPATH_FILENAME);
+        this.getLogger().debug("Compute classpath from incriminated module...");
+        properties = new Properties();
+        properties.setProperty("mdep.outputFile",CLASSPATH_FILENAME);
+
         String goal = "dependency:build-classpath";
         String pomModule = incriminatedModule+File.separator+"pom.xml";
 
         request = new DefaultInvocationRequest();
         request.setPomFile( new File( pomModule ) );
         request.setGoals( Arrays.asList( goal ) );
+        request.setProperties(properties);
 
         invoker = new DefaultInvoker();
 
@@ -109,17 +121,15 @@ public class NopolRepair extends AbstractStep {
         try {
             result = invoker.execute(request);
         } catch (MavenInvocationException e) {
-            Launcher.LOGGER.debug("Error while computing classpath maven: "+e);
+            this.getLogger().debug("Error while computing classpath maven: "+e);
             this.addStepError(e.getMessage());
             return;
         }
 
         if (result != null && result.getExitCode() != 0) {
-            Launcher.LOGGER.debug("Error while computing classpath maven");
+            this.getLogger().debug("Error while computing classpath maven");
             return;
         }
-
-        System.clearProperty("mdep.outputfile");
 
 
         String classpathPath = incriminatedModule+File.separator+CLASSPATH_FILENAME;
@@ -128,7 +138,7 @@ public class NopolRepair extends AbstractStep {
             BufferedReader reader = new BufferedReader(new FileReader(new File(classpathPath)));
             classPath += reader.readLine();
         } catch (IOException e) {
-            Launcher.LOGGER.error("Problem while getting classpath: "+e);
+            this.getLogger().error("Problem while getting classpath: "+e);
             this.addStepError(e.getMessage());
             return;
         }
@@ -136,14 +146,16 @@ public class NopolRepair extends AbstractStep {
         File sourceDir = new File(incriminatedModule+DEFAULT_SRC_DIR);
 
         if (!sourceDir.isDirectory() || !sourceDir.canRead()) {
-            Launcher.LOGGER.error("Source dir "+sourceDir.getAbsolutePath()+" is not a directory or cannot be read.");
+            this.getLogger().error("Source dir "+sourceDir.getAbsolutePath()+" is not a directory or cannot be read.");
             this.addStepError("Source dir "+sourceDir.getAbsolutePath()+" is not a directory or cannot be read.");
             return;
         }
 
-        ProjectReference projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, failingTests.toArray(new String[failingTests.size()]));
+        this.getLogger().debug("Launching repair with Nopol...");
+
+        this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, failingTests.toArray(new String[failingTests.size()]));
         Config config = new Config();
-        config.setTimeoutTestExecution(10);
+        config.setTimeoutTestExecution(5);
         config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
         NoPol nopol = new NoPol(projectReference, config);
         this.patches = nopol.build();

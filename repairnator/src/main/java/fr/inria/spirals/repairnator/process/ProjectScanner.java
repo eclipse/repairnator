@@ -9,6 +9,8 @@ import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.Launcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,7 +29,7 @@ import java.util.List;
  * @author Simon Urli
  */
 public class ProjectScanner {
-
+    private final Logger logger = LoggerFactory.getLogger(ProjectScanner.class);
     private int totalRepoNumber;
     private int totalRepoUsingTravis;
     private int totalScannedBuilds;
@@ -110,18 +112,18 @@ public class ProjectScanner {
         List<Repository> result = new ArrayList<Repository>();
 
         for (String slug : allSlugs) {
-            Launcher.LOGGER.debug("Get repo "+slug);
+            this.logger.debug("Get repo "+slug);
             Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
             if (repo != null) {
                 Build lastBuild = repo.getLastBuild();
                 if (lastBuild != null) {
                     result.add(repo);
                 } else {
-                    Launcher.LOGGER.info("It seems that the repo "+slug+" does not have any Travis build.");
+                    this.logger.info("It seems that the repo "+slug+" does not have any Travis build.");
                 }
 
             } else {
-                Launcher.LOGGER.warn("Can't examine repo : "+slug);
+                this.logger.warn("Can't examine repo : "+slug);
             }
         }
 
@@ -139,7 +141,7 @@ public class ProjectScanner {
                 this.totalScannedBuilds++;
                 if (build.getConfig().getLanguage().equals("java")) {
                     this.totalBuildInJava++;
-                    Launcher.LOGGER.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
+                    this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
                     if (build.getBuildStatus() == BuildStatus.FAILED) {
                         this.totalBuildInJavaFailing++;
                         for (Job job : build.getJobs()) {
@@ -155,7 +157,7 @@ public class ProjectScanner {
                         }
                     }
                 } else {
-                    Launcher.LOGGER.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());
+                    this.logger.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());
                 }
             }
         }

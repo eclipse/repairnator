@@ -41,9 +41,9 @@ public class PushIncriminatedBuild extends AbstractStep {
 
     @Override
     protected void businessExecute() {
-        Launcher.LOGGER.debug("Start to push failing state in the remote repository: "+REMOTE_REPO+" branch: "+branchName);
+        this.getLogger().debug("Start to push failing state in the remote repository: "+REMOTE_REPO+" branch: "+branchName);
         if (System.getenv("GITHUB_OAUTH") == null) {
-            Launcher.LOGGER.warn("You must the GITHUB_OAUTH env property to push incriminated build.");
+            this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
             return;
         }
 
@@ -61,7 +61,7 @@ public class PushIncriminatedBuild extends AbstractStep {
             Ref theRef = git.getRepository().findRef("refs/remotes/saveFail/"+branchName);
 
             if (theRef != null) {
-                Launcher.LOGGER.warn("A branch already exist in the remote repo with the following name: "+branchName);
+                this.getLogger().warn("A branch already exist in the remote repo with the following name: "+branchName);
                 this.setState(ProjectState.PUSHED);
                 return;
             }
@@ -77,13 +77,13 @@ public class PushIncriminatedBuild extends AbstractStep {
             this.setState(ProjectState.PUSHED);
 
         } catch (IOException e) {
-            Launcher.LOGGER.error("Error while reading git directory at the following location: "+inspector.getRepoLocalPath()+" : "+e);
+            this.getLogger().error("Error while reading git directory at the following location: "+inspector.getRepoLocalPath()+" : "+e);
             this.addStepError(e.getMessage());
         } catch (URISyntaxException e) {
-            Launcher.LOGGER.error("Error while setting remote repository with following URL: "+REMOTE_REPO+" : "+e);
+            this.getLogger().error("Error while setting remote repository with following URL: "+REMOTE_REPO+" : "+e);
             this.addStepError(e.getMessage());
         } catch (GitAPIException e) {
-            Launcher.LOGGER.error("Error while executing a JGit operation: "+e);
+            this.getLogger().error("Error while executing a JGit operation: "+e);
             this.addStepError(e.getMessage());
         }
     }
