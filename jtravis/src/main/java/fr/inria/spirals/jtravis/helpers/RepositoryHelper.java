@@ -40,7 +40,7 @@ public class RepositoryHelper extends AbstractHelper {
 
             return createGson().fromJson(repoJSON, Repository.class);
         } catch (IOException e) {
-            AbstractHelper.LOGGER.warn("Error when getting repo from slug "+slug+" : "+e.getMessage());
+            getInstance().getLogger().warn("Error when getting repo from slug "+slug+" : "+e.getMessage());
             return null;
         }
     }
@@ -56,7 +56,7 @@ public class RepositoryHelper extends AbstractHelper {
 
             return createGson().fromJson(repoJSON, Repository.class);
         } catch (IOException e) {
-            AbstractHelper.LOGGER.warn("Error when getting repo id "+repoId+" : "+e.getMessage());
+            getInstance().getLogger().warn("Error when getting repo id "+repoId+" : "+e.getMessage());
             return null;
         }
     }

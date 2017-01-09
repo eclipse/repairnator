@@ -9,16 +9,8 @@ import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.Job;
 import fr.inria.spirals.jtravis.entities.Repository;
-import okhttp3.ResponseBody;
-import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHCommitPointer;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRateLimit;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,7 +74,7 @@ public class BuildHelper extends AbstractHelper {
 
             return build;
         } catch (IOException e) {
-            AbstractHelper.LOGGER.warn("Error when getting build id "+id+" : "+e.getMessage());
+            getInstance().getLogger().warn("Error when getting build id "+id+" : "+e.getMessage());
             return null;
         }
     }
@@ -175,7 +167,7 @@ public class BuildHelper extends AbstractHelper {
                 getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, pullBuild);
             }
         } catch (IOException e) {
-            AbstractHelper.LOGGER.warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
+            getInstance().getLogger().warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
         }
     }
 

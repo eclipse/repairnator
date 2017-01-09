@@ -38,7 +38,7 @@ public class PRInformationHelper extends AbstractHelper {
                 GitHub github = getInstance().getGithub();
                 GHRateLimit rateLimit = github.getRateLimit();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                AbstractHelper.LOGGER.debug("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
+                getInstance().getLogger().debug("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
 
                 if (rateLimit.remaining > 2) {
                     GHRepository ghRepo = github.getRepository(build.getRepository().getSlug());
@@ -87,13 +87,13 @@ public class PRInformationHelper extends AbstractHelper {
 
                     return prInformation;
                 } else {
-                    AbstractHelper.LOGGER.warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
+                    getInstance().getLogger().warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
                 }
             } else {
-                AbstractHelper.LOGGER.info("Getting PRInformation return null for build id "+build.getId()+" as it does not come from a PR.");
+                getInstance().getLogger().info("Getting PRInformation return null for build id "+build.getId()+" as it does not come from a PR.");
             }
         } catch (IOException e) {
-            AbstractHelper.LOGGER.warn("Error when getting PRInformation for build id "+build.getId()+" : "+e.getMessage());
+            getInstance().getLogger().warn("Error when getting PRInformation for build id "+build.getId()+" : "+e.getMessage());
         }
         return null;
     }
