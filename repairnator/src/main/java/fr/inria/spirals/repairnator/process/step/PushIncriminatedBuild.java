@@ -13,6 +13,8 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by urli on 05/01/2017.
@@ -27,7 +29,10 @@ public class PushIncriminatedBuild extends AbstractStep {
     public PushIncriminatedBuild(ProjectInspector inspector) {
         super(inspector);
 
-        this.branchName = inspector.getRepoSlug().replace('/','-')+'-'+inspector.getBuild().getId();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
+        String formattedDate = dateFormat.format(new Date());
+
+        this.branchName = inspector.getRepoSlug().replace('/','-')+'-'+inspector.getBuild().getId()+'-'+formattedDate;
     }
 
     public String getRemoteLocation() {
