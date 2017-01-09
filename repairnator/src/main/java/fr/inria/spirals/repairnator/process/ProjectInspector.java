@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Created by urli on 26/12/2016.
@@ -28,6 +29,7 @@ public class ProjectInspector {
     private String repoLocalPath;
     private ProjectState state;
     private String workspace;
+    private String nopolSolverPath;
     Map<String, Integer> stepsDurationsInSeconds;
     private GatherTestInformation testInformations;
     private PushIncriminatedBuild pushBuild;
@@ -37,14 +39,20 @@ public class ProjectInspector {
     private Map<String, List<String>> stepErrors;
 
 
-    public ProjectInspector(Build failingBuild, String workspace, boolean push, int steps) {
+    public ProjectInspector(Build failingBuild, String workspace, String nopolSolverPath, boolean push, int steps) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
+        this.nopolSolverPath = nopolSolverPath;
         this.repoLocalPath = workspace+File.separator+getRepoSlug()+File.separator+build.getId();
         this.stepsDurationsInSeconds = new HashMap<String, Integer>();
         this.push = push;
         this.steps = steps;
+        this.stepErrors = new HashMap<String, List<String>>();
+    }
+
+    public String getNopolSolverPath() {
+        return nopolSolverPath;
     }
 
     public ProjectState getState() {

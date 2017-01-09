@@ -16,3 +16,4 @@ buildNumber.properties
 *.iml
 repairnator/local_project_list.txt
 workspace/
+*.z3

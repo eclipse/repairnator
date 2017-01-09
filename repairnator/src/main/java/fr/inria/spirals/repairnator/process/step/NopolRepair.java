@@ -4,7 +4,6 @@ import fr.inria.lille.repair.ProjectReference;
 import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.NoPol;
-import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
@@ -12,6 +11,7 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by urli on 05/01/2017.
@@ -32,6 +39,7 @@ public class NopolRepair extends AbstractStep {
     private static final String DEFAULT_SRC_DIR = "/src/main/java";
     private static final String DEFAULT_CLASSES_DIR = "/target/classes";
     private static final String DEFAULT_TEST_CLASSES_DIR = "/target/test-classes";
+    private static final String CMD_KILL_GZOLTAR_AGENT = "ps -ef | grep gzoltar | grep -v grep | awk '{print $2}' |xargs kill";
 
     private List<Patch> patches;
 
@@ -156,9 +164,40 @@ public class NopolRepair extends AbstractStep {
         this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, failingTests.toArray(new String[failingTests.size()]));
         Config config = new Config();
         config.setTimeoutTestExecution(5);
+        config.setMaxTimeInMinutes(1);
         config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
-        NoPol nopol = new NoPol(projectReference, config);
-        this.patches = nopol.build();
+        config.setSolverPath(this.inspector.getNopolSolverPath());
+        final NoPol nopol = new NoPol(projectReference, config);
+
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+        final Future nopolExecution = executor.submit(
+                new Callable() {
+                    @Override
+                    public Object call() throws Exception {
+                        return nopol.build();
+                    }
+                });
+        try {
+            this.patches = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+        } catch (TimeoutException exception) {
+            this.getLogger().error("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+            this.addStepError("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+
+            // Really ugly but did not find any other way to kill agents...
+            try {
+                Runtime.getRuntime().exec(CMD_KILL_GZOLTAR_AGENT);
+            } catch (IOException e) {
+                this.getLogger().error("Error while killing gzoltar agent using following command: "+CMD_KILL_GZOLTAR_AGENT);
+                this.getLogger().error(e.getMessage());
+            }
+            return;
+        } catch (InterruptedException e) {
+            this.getLogger().error(e.getMessage());
+            this.addStepError(e.getMessage());
+        } catch (ExecutionException e) {
+            this.getLogger().error(e.getMessage());
+            this.addStepError(e.getMessage());
+        }
 
         this.setState(ProjectState.PATCHED);
 

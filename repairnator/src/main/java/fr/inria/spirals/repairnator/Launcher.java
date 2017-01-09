@@ -79,6 +79,7 @@ public class Launcher {
         opt2 = new FlaggedOption("workspace");
         opt2.setShortFlag('w');
         opt2.setLongFlag("workspace");
+        opt2.setRequired(true);
         opt2.setHelp("Specify where to clone failing repository");
         opt2.setDefault("./workspace");
         opt2.setStringParser(JSAP.STRING_PARSER);
@@ -88,6 +89,7 @@ public class Launcher {
         opt2 = new FlaggedOption("lookup");
         opt2.setShortFlag('l');
         opt2.setLongFlag("lookup");
+        opt2.setRequired(true);
         opt2.setHelp("Specify the number of hours to lookup in past for builds");
         opt2.setDefault("1");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
@@ -100,6 +102,15 @@ public class Launcher {
         opt2.setHelp("Specify the number of steps to realize (0: only scan projects, 1: try to clone, 2: try to build, 3: try to test, 4: gather info on test, 5: push build, 6: call Nopol)");
         opt2.setDefault("6");
         opt2.setStringParser(EnumeratedStringParser.getParser("0;1;2;3;4;5;6"));
+        jsap.registerParameter(opt2);
+
+        // Solver path
+        opt2 = new FlaggedOption("z3Path");
+        opt2.setShortFlag('z');
+        opt2.setLongFlag("z3Path");
+        opt2.setRequired(true);
+        opt2.setHelp("Specify the solver path used by Nopol");
+        opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
     }
 
@@ -188,11 +199,12 @@ public class Launcher {
     private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
         boolean push = arguments.getBoolean("push");
         int steps = Integer.parseInt(arguments.getString("steps"));
+        String solverPath = arguments.getString("z3Path");
         initWorkspace(workspace);
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector scanner = new ProjectInspector(build, workspace, push, steps);
+            ProjectInspector scanner = new ProjectInspector(build, workspace, solverPath, push, steps);
             projectInspectors.add(scanner);
             scanner.processRepair();
         }
