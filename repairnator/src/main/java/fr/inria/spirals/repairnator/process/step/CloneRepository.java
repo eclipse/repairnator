@@ -94,6 +94,7 @@ public class CloneRepository extends AbstractStep {
         } catch (Exception e) {
             Launcher.LOGGER.warn("Repository "+repository+" cannot be cloned.");
             Launcher.LOGGER.debug(e.toString());
+            this.addStepError(e.getMessage());
             this.shouldStop = true;
             return;
         }

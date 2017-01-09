@@ -73,10 +73,13 @@ public class PushIncriminatedBuild extends AbstractStep {
 
         } catch (IOException e) {
             Launcher.LOGGER.error("Error while reading git directory at the following location: "+inspector.getRepoLocalPath()+" : "+e);
+            this.addStepError(e.getMessage());
         } catch (URISyntaxException e) {
             Launcher.LOGGER.error("Error while setting remote repository with following URL: "+REMOTE_REPO+" : "+e);
+            this.addStepError(e.getMessage());
         } catch (GitAPIException e) {
             Launcher.LOGGER.error("Error while executing a JGit operation: "+e);
+            this.addStepError(e.getMessage());
         }
     }
 

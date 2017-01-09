@@ -2,16 +2,18 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
-import org.apache.maven.cli.MavenCli;
-import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.util.cli.CommandLineException;
 
+import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by urli on 03/01/2017.
  */
 public abstract class AbstractStep {
 
+    private String name;
     private int limitStepNumber;
     protected ProjectInspector inspector;
     protected ProjectState state;
@@ -22,6 +24,7 @@ public abstract class AbstractStep {
     private long dateEnd;
 
     public AbstractStep(ProjectInspector inspector) {
+        this.name = this.getClass().getName();
         this.inspector = inspector;
         this.shouldStop = false;
         this.state = ProjectState.NONE;
@@ -44,6 +47,10 @@ public abstract class AbstractStep {
         this.state = state;
     }
 
+    protected void addStepError(String error) {
+        this.inspector.addStepError(this.name, error);
+    }
+
     protected ProjectState executeNextStep() {
         if (this.nextStep != null) {
             this.limitStepNumber--;
@@ -59,12 +66,16 @@ public abstract class AbstractStep {
         return this.state;
     }
 
-    protected MavenCli getMavenCli() {
+    protected String getPom() {
+        return this.inspector.getRepoLocalPath()+File.separator+"pom.xml";
+    }
+
+    /*protected MavenCli getMavenCli() {
         final ClassWorld classWorld = new ClassWorld("plexus.core", getClass().getClassLoader());
         System.setProperty("maven.multiModuleProjectDirectory",this.inspector.getRepoLocalPath());
         MavenCli cli = new MavenCli(classWorld);
         return cli;
-    }
+    }*/
 
     public ProjectState execute() {
         this.dateBegin = new Date().getTime();

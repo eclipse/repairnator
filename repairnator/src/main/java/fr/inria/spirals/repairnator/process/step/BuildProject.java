@@ -2,8 +2,15 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
-import org.apache.maven.cli.MavenCli;
-import org.codehaus.plexus.classworlds.ClassWorld;
+import org.apache.maven.shared.invoker.DefaultInvocationRequest;
+import org.apache.maven.shared.invoker.DefaultInvoker;
+import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.InvocationResult;
+import org.apache.maven.shared.invoker.Invoker;
+import org.apache.maven.shared.invoker.MavenInvocationException;
+
+import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by urli on 03/01/2017.
@@ -15,25 +22,37 @@ public class BuildProject extends AbstractStep {
     }
 
     protected int mavenBuild(boolean withTests) {
-        MavenCli cli = this.getMavenCli();
-
         if (!withTests) {
             System.setProperty("maven.test.skip","true");
         }
 
-        int result = cli.doMain(new String[]{"test"},
-                this.inspector.getRepoLocalPath(),
-                System.out, System.err);
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setPomFile( new File( this.getPom() ) );
+        request.setGoals( Arrays.asList( "test" ) );
 
-        if (!withTests) {
-            System.clearProperty("maven.test.skip");
+        Invoker invoker = new DefaultInvoker();
+        try {
+            InvocationResult result = invoker.execute( request );
+
+            if (!withTests) {
+                System.clearProperty("maven.test.skip");
+            }
+
+            if (result.getExitCode() != 0) {
+                this.addStepError(result.getExecutionException().getMessage());
+            }
+            return result.getExitCode();
+        } catch (MavenInvocationException e) {
+            Launcher.LOGGER.debug("Error while launching tests goal :"+e);
+            this.addStepError(e.getMessage());
+            return 1;
         }
 
-        return result;
     }
 
     protected void businessExecute() {
         Launcher.LOGGER.debug("Start building project with maven (skip tests).");
+
         int result = this.mavenBuild(false);
 
         if (result == 0) {

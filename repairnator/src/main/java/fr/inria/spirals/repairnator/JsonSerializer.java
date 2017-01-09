@@ -91,6 +91,7 @@ public class JsonSerializer {
         } else {
             result.add("commit", serialize(build.getCommit()));
         }
+        result.add("errors", serialize(inspector.getStepErrors()));
         notClonable.add(result);
     }
 
@@ -106,6 +107,7 @@ public class JsonSerializer {
         } else {
             result.add("commit", serialize(build.getCommit()));
         }
+        result.add("errors", serialize(inspector.getStepErrors()));
         notBuildable.add(result);
     }
 
@@ -135,6 +137,7 @@ public class JsonSerializer {
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
         result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
+        result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
     }
 
@@ -149,6 +152,7 @@ public class JsonSerializer {
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("nbTests", testInformation.getNbTotalTests());
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
+        result.add("errors", serialize(inspector.getStepErrors()));
         notFailing.add(result);
     }
 
@@ -173,6 +177,7 @@ public class JsonSerializer {
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
         result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
+        result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
     }
 

@@ -50,34 +50,9 @@
         </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-embedder</artifactId>
-            <version>3.3.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.aether</groupId>
-            <artifactId>aether-connector-basic</artifactId>
-            <version>1.0.2.v20150114</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.aether</groupId>
-            <artifactId>aether-transport-wagon</artifactId>
-            <version>1.0.2.v20150114</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-http</artifactId>
-            <version>2.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-provider-api</artifactId>
-            <version>2.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-core</artifactId>
-            <version>3.3.9</version>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>2.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.surefire</groupId>
@@ -96,7 +71,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.0.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -114,7 +89,7 @@
                         <id>make-assembly</id><!-- this is used for inheritance merges -->
                         <phase>package</phase><!-- append to the packaging phase. -->
                         <goals>
-                            <goal>attached</goal><!-- goals == mojos -->
+                            <goal>single</goal><!-- goals == mojos -->
                         </goals>
                     </execution>
                 </executions>

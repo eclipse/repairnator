@@ -80,6 +80,7 @@ public class GatherTestInformation extends AbstractStep {
             });
         } catch (IOException e) {
             Launcher.LOGGER.warn("Error while traversing files to get surefire reports: "+e);
+            this.addStepError(e.getMessage());
         }
 
         for (File surefireDir : surefireDirs) {
@@ -118,8 +119,10 @@ public class GatherTestInformation extends AbstractStep {
                 }
             } catch (MavenReportException e) {
                 Launcher.LOGGER.warn("Error while parsing files to get test information: "+e);
+                this.addStepError(e.getMessage());
             } catch (IOException e) {
                 Launcher.LOGGER.warn("Error while getting the failing module path: "+e);
+                this.addStepError(e.getMessage());
             }
         }
 

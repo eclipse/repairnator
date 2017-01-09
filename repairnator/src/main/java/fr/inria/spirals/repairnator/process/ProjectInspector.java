@@ -12,7 +12,9 @@ import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +31,7 @@ public class ProjectInspector {
     private NopolRepair nopolRepair;
     private boolean push;
     private int steps;
+    private Map<String, List<String>> stepErrors;
 
 
     public ProjectInspector(Build failingBuild, String workspace, boolean push, int steps) {
@@ -55,6 +58,19 @@ public class ProjectInspector {
 
     public String getRepoLocalPath() {
         return repoLocalPath;
+    }
+
+    public void addStepError(String step, String error) {
+        if (!stepErrors.containsKey(step)) {
+            stepErrors.put(step, new ArrayList<String>());
+        }
+
+        List<String> errors = stepErrors.get(step);
+        errors.add(error);
+    }
+
+    public Map<String, List<String>> getStepErrors() {
+        return stepErrors;
     }
 
     public void processRepair() {
