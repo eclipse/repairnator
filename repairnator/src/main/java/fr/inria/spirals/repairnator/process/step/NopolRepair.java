@@ -167,6 +167,7 @@ public class NopolRepair extends AbstractStep {
         config.setMaxTimeInMinutes(1);
         config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
         config.setSolverPath(this.inspector.getNopolSolverPath());
+        config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
         final NoPol nopol = new NoPol(projectReference, config);
 
         final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -194,9 +195,11 @@ public class NopolRepair extends AbstractStep {
         } catch (InterruptedException e) {
             this.getLogger().error(e.getMessage());
             this.addStepError(e.getMessage());
+            return;
         } catch (ExecutionException e) {
             this.getLogger().error(e.getMessage());
             this.addStepError(e.getMessage());
+            return;
         }
 
         this.setState(ProjectState.PATCHED);
