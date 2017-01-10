@@ -25,7 +25,7 @@ public class PRInformationHelper extends AbstractHelper {
         super();
     }
 
-    private static PRInformationHelper getInstance() {
+    protected static PRInformationHelper getInstance() {
         if (instance == null) {
             instance = new PRInformationHelper();
         }

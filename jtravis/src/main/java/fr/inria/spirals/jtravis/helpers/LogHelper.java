@@ -24,7 +24,7 @@ public class LogHelper extends AbstractHelper {
         super();
     }
 
-    private static LogHelper getInstance() {
+    protected static LogHelper getInstance() {
         if (instance == null) {
             instance = new LogHelper();
         }

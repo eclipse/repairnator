@@ -22,7 +22,7 @@ public class RepositoryHelper extends AbstractHelper {
         super();
     }
 
-    private static RepositoryHelper getInstance() {
+    protected static RepositoryHelper getInstance() {
         if (instance == null) {
             instance = new RepositoryHelper();
         }

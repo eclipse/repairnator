@@ -23,7 +23,7 @@ public class JobHelper extends AbstractHelper {
         super();
     }
 
-    private static JobHelper getInstance() {
+    protected static JobHelper getInstance() {
         if (instance == null) {
             instance = new JobHelper();
         }

@@ -33,7 +33,7 @@ public class BuildHelper extends AbstractHelper {
         super();
     }
 
-    private static BuildHelper getInstance() {
+    protected static BuildHelper getInstance() {
         if (instance == null) {
             instance = new BuildHelper();
         }

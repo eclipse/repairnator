@@ -23,27 +23,25 @@ import java.util.Date;
  * @author Simon Urli
  */
 public abstract class AbstractHelper {
-    private final static String TRAVIS_API_ENDPOINT="https://api.travis-ci.org/";
+    public final static String TRAVIS_API_ENDPOINT="https://api.travis-ci.org/";
 
     private final static String USER_AGENT = "MyClient/1.0.0";
     private final static String ACCEPT_APP = "application/vnd.travis-ci.2+json";
 
-    private static String endpoint;
+    private String endpoint;
     private OkHttpClient client;
     private GitHub github;
 
     public AbstractHelper() {
         client = new OkHttpClient();
-        if (endpoint == null) {
-            setEndpoint(TRAVIS_API_ENDPOINT);
-        }
+        setEndpoint(TRAVIS_API_ENDPOINT);
     }
 
-    public static void setEndpoint(String endpoint) {
-        AbstractHelper.endpoint = endpoint;
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
-    public static String getEndpoint() {
+    protected String getEndpoint() {
         return endpoint;
     }
 
