@@ -5,13 +5,14 @@ import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenErrorHandler;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,31 +82,14 @@ public class NopolRepair extends AbstractStep {
 
         this.getLogger().debug("Try to install multimodule to avoid missing dependencies...");
 
-        InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile( new File( this.getPom() ) );
-        request.setGoals( Arrays.asList( "install" ) );
-
         Properties properties = new Properties();
         properties.setProperty("maven.test.skip","true");
 
-        request.setProperties(properties);
+        MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getName(), this.inspector, true);
 
-        Invoker invoker = new DefaultInvoker();
+        int result = helper.run();
 
-        MavenErrorHandler errorHandler = new MavenErrorHandler(this.inspector, this.getClass().getName());
-        invoker.setErrorHandler(errorHandler);
-
-
-        InvocationResult result = null;
-
-        try {
-            result = invoker.execute(request);
-        } catch (MavenInvocationException e) {
-            this.getLogger().debug("Error while installing multimodule maven: "+e);
-            this.addStepError(e.getMessage());
-        }
-
-        if (result != null && result.getExitCode() != 0) {
+        if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while installing multimodule maven");
         }
 
@@ -116,25 +100,11 @@ public class NopolRepair extends AbstractStep {
         String goal = "dependency:build-classpath";
         String pomModule = incriminatedModule+File.separator+"pom.xml";
 
-        request = new DefaultInvocationRequest();
-        request.setPomFile( new File( pomModule ) );
-        request.setGoals( Arrays.asList( goal ) );
-        request.setProperties(properties);
+        helper = new MavenHelper(pomModule, goal, properties, this.getClass().getName(), this.inspector, true);
 
-        invoker = new DefaultInvoker();
+        result = helper.run();
 
-        errorHandler = new MavenErrorHandler(this.inspector, this.getClass().getName());
-        invoker.setErrorHandler(errorHandler);
-
-        try {
-            result = invoker.execute(request);
-        } catch (MavenInvocationException e) {
-            this.getLogger().debug("Error while computing classpath maven: "+e);
-            this.addStepError(e.getMessage());
-            return;
-        }
-
-        if (result != null && result.getExitCode() != 0) {
+        if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");
             return;
         }

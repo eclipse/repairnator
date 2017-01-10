@@ -1,7 +1,8 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenErrorHandler;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -22,42 +23,16 @@ public class BuildProject extends AbstractStep {
         super(inspector);
     }
 
-    protected int mavenBuild(boolean withTests) {
-        Properties properties = new Properties();
-        if (!withTests) {
-            properties.setProperty("maven.test.skip","true");
-        }
-
-        InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile( new File( this.getPom() ) );
-        request.setGoals( Arrays.asList( "test" ) );
-        request.setProperties(properties);
-
-        Invoker invoker = new DefaultInvoker();
-
-        if (!withTests) {
-            MavenErrorHandler errorHandler = new MavenErrorHandler(this.inspector, this.getClass().getName());
-            invoker.setErrorHandler(errorHandler);
-        }
-
-        try {
-            InvocationResult result = invoker.execute( request );
-
-            return result.getExitCode();
-        } catch (MavenInvocationException e) {
-            this.getLogger().debug("Error while launching tests goal :"+e);
-            this.addStepError(e.getMessage());
-            return 1;
-        }
-
-    }
-
     protected void businessExecute() {
         this.getLogger().debug("Start building project with maven (skip tests).");
+        Properties properties = new Properties();
+        properties.setProperty("maven.test.skip","true");
 
-        int result = this.mavenBuild(false);
+        MavenHelper helper = new MavenHelper(this.getPom(), "test", properties, this.getClass().getName(), this.inspector, true);
 
-        if (result == 0) {
+        int result = helper.run();
+
+        if (result == MavenHelper.MAVEN_SUCCESS) {
             this.state = ProjectState.BUILDABLE;
         } else {
             this.getLogger().info("Repository "+this.inspector.getRepoSlug()+" cannot be built.");
