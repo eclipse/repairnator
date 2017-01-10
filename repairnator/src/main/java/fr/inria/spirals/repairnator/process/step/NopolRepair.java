@@ -10,8 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +27,14 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by urli on 05/01/2017.
  */
-public class NopolRepair extends AbstractStep {
+public class cNopolRepair extends AbstractStep {
     private static final String CLASSPATH_FILENAME = "classpath.info";
     private static final String DEFAULT_SRC_DIR = "/src/main/java";
     private static final String DEFAULT_CLASSES_DIR = "/target/classes";
     private static final String DEFAULT_TEST_CLASSES_DIR = "/target/test-classes";
     private static final String CMD_KILL_GZOLTAR_AGENT = "ps -ef | grep gzoltar | grep -v grep | awk '{print $2}' |xargs kill";
 
-    private List<Patch> patches;
+    private Map<String,List<Patch>> patches;
 
     private ProjectReference projectReference;
 
@@ -43,12 +42,8 @@ public class NopolRepair extends AbstractStep {
         super(inspector);
     }
 
-    public List<String> getPatches() {
-        List<String> result = new ArrayList<String>();
-        for (Patch patch : this.patches) {
-            result.add(patch.toString());
-        }
-        return result;
+    public Map<String,List<Patch>> getPatches() {
+        return patches;
     }
 
     public ProjectReference getProjectReference() {
@@ -133,49 +128,65 @@ public class NopolRepair extends AbstractStep {
             return;
         }
 
-        this.getLogger().debug("Launching repair with Nopol...");
+        this.patches = new HashMap<String,List<Patch>>();
+        boolean patchCreated = false;
 
-        this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, failingTests.toArray(new String[failingTests.size()]));
-        Config config = new Config();
-        config.setTimeoutTestExecution(5);
-        config.setMaxTimeInMinutes(1);
-        config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
-        config.setSolverPath(this.inspector.getNopolSolverPath());
-        config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
-        final NoPol nopol = new NoPol(projectReference, config);
+        for (String failingTest : failingTests) {
+            this.getLogger().debug("Launching repair with Nopol for following test: "+failingTest+"...");
 
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        final Future nopolExecution = executor.submit(
-                new Callable() {
-                    @Override
-                    public Object call() throws Exception {
-                        return nopol.build();
-                    }
-                });
-        try {
-            this.patches = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
-        } catch (TimeoutException exception) {
-            this.getLogger().error("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
-            this.addStepError("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+            this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, new String[] {failingTest});
+            Config config = new Config();
+            config.setTimeoutTestExecution(5);
+            config.setMaxTimeInMinutes(1);
+            config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
+            config.setSolverPath(this.inspector.getNopolSolverPath());
+            config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
+            final NoPol nopol = new NoPol(projectReference, config);
+            List<Patch> patch = null;
 
-            // Really ugly but did not find any other way to kill agents...
+            final ExecutorService executor = Executors.newSingleThreadExecutor();
+            final Future nopolExecution = executor.submit(
+                    new Callable() {
+                        @Override
+                        public Object call() throws Exception {
+                            return nopol.build();
+                        }
+                    });
             try {
-                Runtime.getRuntime().exec(CMD_KILL_GZOLTAR_AGENT);
-            } catch (IOException e) {
-                this.getLogger().error("Error while killing gzoltar agent using following command: "+CMD_KILL_GZOLTAR_AGENT);
+                patch = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+            } catch (TimeoutException exception) {
+                this.getLogger().error("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+                this.addStepError("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+
+                // Really ugly but did not find any other way to kill agents...
+                try {
+                    Runtime.getRuntime().exec(CMD_KILL_GZOLTAR_AGENT);
+                } catch (IOException e) {
+                    this.getLogger().error("Error while killing gzoltar agent using following command: "+CMD_KILL_GZOLTAR_AGENT);
+                    this.getLogger().error(e.getMessage());
+                }
+                continue;
+            } catch (InterruptedException e) {
                 this.getLogger().error(e.getMessage());
+                this.addStepError(e.getMessage());
+                continue;
+            } catch (ExecutionException e) {
+                this.getLogger().error(e.getMessage());
+                this.addStepError(e.getMessage());
+                continue;
             }
-            return;
-        } catch (InterruptedException e) {
-            this.getLogger().error(e.getMessage());
-            this.addStepError(e.getMessage());
-            return;
-        } catch (ExecutionException e) {
-            this.getLogger().error(e.getMessage());
-            this.addStepError(e.getMessage());
+
+            if (patch != null && !patch.isEmpty()) {
+                this.patches.put(failingTest, patch);
+                patchCreated = true;
+            }
+        }
+        this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, failingTests.toArray(new String[failingTests.size()]));
+
+        if (!patchCreated) {
+            this.addStepError("No patch has been generated by Nopol. Look at the trace to get more information.");
             return;
         }
-
         this.setState(ProjectState.PATCHED);
 
     }
