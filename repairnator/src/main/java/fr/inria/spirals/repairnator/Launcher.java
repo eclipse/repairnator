@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +30,7 @@ import java.util.List;
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
+    private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN","GITHUB_OAUTH"};
     private JSAP jsap;
     private JsonSerializer serializer;
     private JSAPResult arguments;
@@ -133,6 +138,27 @@ public class Launcher {
         }
     }
 
+    private boolean checkEnvironmentVariables() {
+        for (String envVar : Launcher.ENVIRONMENT_VARIABLES) {
+            if (System.getenv(envVar) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void checkToolsLoaded() {
+        URLClassLoader loader;
+
+        try {
+            loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+            loader.loadClass("com.sun.jdi.AbsentInformationException");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
+            System.exit(-1);
+        }
+    }
+
     private void run(String[] args) throws JSAPException, IOException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
@@ -143,15 +169,20 @@ public class Launcher {
                 System.err.println("Error: " + errs.next());
             }
         }
-        if (!arguments.success() || arguments.getBoolean("help")) {
+        if (!arguments.success() || !checkEnvironmentVariables() || arguments.getBoolean("help")) {
             System.err.println("Usage: java <repairnator name> [option(s)]");
             System.err.println();
             System.err.println("Options : ");
             System.err.println();
             System.err.println(jsap.getHelp());
+            System.err.println("Please note that the following environment variables must be set: ");
+            for (String env : Launcher.ENVIRONMENT_VARIABLES) {
+                System.err.println(" - "+env);
+            }
+            System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
             System.exit(-1);
         }
-        if (arguments.success()) {
+        if (arguments.success() && checkEnvironmentVariables()) {
             mainProcess();
         }
     }

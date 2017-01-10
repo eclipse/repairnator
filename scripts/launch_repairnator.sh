@@ -3,6 +3,7 @@
 #export GITHUB_LOGIN=login
 #export GITHUB_OAUTH=token
 #export M2_HOME=mvn home
+#export JAVA_HOME=...
 
 cd /opt/repairnator
 # launch repairnator with following args:
@@ -13,4 +14,4 @@ cd /opt/repairnator
 # -p : push failing builds
 # -w : specify the workspace path
 # -z : specify the path for the solver used by Nopol
-java -jar repairnator.jar -d -p -l 4 -i project_list.txt -w /media/experimentations/repairnator -z /opt/repairnator/nopol/lib/z3/z3_for_linux -o /var/www/html/repairnator/ &> /var/log/repairnator/output_`date "+%Y-%m-%d_%H%M"`.log
+java -cp $JAVA_HOME/../lib/tools.jar:target/repairnator-1.0-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.Launcher -d -p -l 4 -i project_list.txt -w /media/experimentations/repairnator -z /opt/repairnator/nopol/lib/z3/z3_for_linux -o /var/www/html/repairnator/ &> /var/log/repairnator/output_`date "+%Y-%m-%d_%H%M"`.log

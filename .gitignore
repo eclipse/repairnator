@@ -19,3 +19,4 @@ workspace/
 *.z3
 output/
 localScripts/
+log

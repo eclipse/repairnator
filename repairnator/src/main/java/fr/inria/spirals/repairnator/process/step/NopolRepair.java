@@ -5,20 +5,13 @@ import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
-import fr.inria.spirals.repairnator.process.maven.MavenErrorHandler;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
-import org.apache.maven.shared.invoker.DefaultInvocationRequest;
-import org.apache.maven.shared.invoker.DefaultInvoker;
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.apache.maven.shared.invoker.Invoker;
-import org.apache.maven.shared.invoker.MavenInvocationException;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +43,23 @@ public class NopolRepair extends AbstractStep {
         super(inspector);
     }
 
-    public List<Patch> getPatches() {
-        return patches;
+    public List<String> getPatches() {
+        List<String> result = new ArrayList<String>();
+        for (Patch patch : this.patches) {
+            result.add(patch.toString());
+        }
+        return result;
     }
 
     public ProjectReference getProjectReference() {
         return projectReference;
+    }
+
+    private String initClasspath(String incriminatedModule) {
+        String result = incriminatedModule+File.separator+DEFAULT_CLASSES_DIR+":";
+        result += incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR+":";
+        result += System.getenv("JAVA_HOME")+"/../lib/tools.jar:";
+        return result;
     }
 
     @Override
@@ -111,7 +115,7 @@ public class NopolRepair extends AbstractStep {
 
 
         String classpathPath = incriminatedModule+File.separator+CLASSPATH_FILENAME;
-        String classPath = incriminatedModule+File.separator+DEFAULT_CLASSES_DIR+":"+incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR+":";
+        String classPath = initClasspath(incriminatedModule);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(new File(classpathPath)));
             classPath += reader.readLine();
