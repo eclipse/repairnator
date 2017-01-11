@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class aims to provide utility methods to scan the projects and get failing builds
@@ -74,6 +75,37 @@ public class ProjectScanner {
         return repositories;
     }
 
+    public List<Build> getListOfFailingBuildFromGivenBuildIds(String path) throws IOException {
+        List<String> buildsIds = getFileContent(path);
+        this.totalScannedBuilds = buildsIds.size();
+
+        List<Build> result = new ArrayList<Build>();
+
+        for (String s : buildsIds) {
+            int buildId;
+            try {
+                buildId = Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                this.logger.error("Error while reading build ids from input: "+e.getMessage());
+                continue;
+            }
+
+            Build build = BuildHelper.getBuildFromId(buildId, null);
+            if (build == null) {
+                this.logger.warn("The following build cannot be retrieved: "+buildId);
+                continue;
+            }
+            if (testBuild(build)) {
+                result.add(build);
+            }
+        }
+
+        this.totalRepoNumber = this.repositories.size();
+        this.totalRepoUsingTravis = this.repositories.size();
+        this.totalBuildInJavaFailingWithFailingTests = result.size();
+        return result;
+    }
+
     /**
      * Take a filepath as input containing a list of projects to scan. Check last build of each project. And finally returns the list of failing builds.
      *
@@ -82,29 +114,22 @@ public class ProjectScanner {
      * @throws IOException
      */
     public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
-        List<String> slugs = readSlugProjectFromFilepath(path);
+        List<String> slugs = getFileContent(path);
+        this.totalRepoNumber = slugs.size();
+
         List<Repository> repos = getListOfValidRepository(slugs);
         List<Build> builds = getListOfBuildsFromRepo(repos);
 
         return builds;
     }
 
-    /**
-     * Utility method to read the file and return the list of slug name
-     * @param path A path to a file formatted to contain a slug name of project per line (ex: INRIA/spoon)
-     * @return the list of slug name as strings
-     * @throws IOException
-     */
-    private List<String> readSlugProjectFromFilepath(String path) throws IOException {
+    private List<String> getFileContent(String path) throws IOException {
         List<String> result = new ArrayList<String>();
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while (reader.ready()) {
             result.add(reader.readLine().trim());
         }
-
-        this.totalRepoNumber = result.size();
-
         return result;
     }
 
@@ -131,6 +156,30 @@ public class ProjectScanner {
         return result;
     }
 
+    private boolean testBuild(Build build) {
+        Repository repo = build.getRepository();
+        if (build.getConfig().getLanguage().equals("java")) {
+            this.totalBuildInJava++;
+            this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
+            if (build.getBuildStatus() == BuildStatus.FAILED) {
+                this.totalBuildInJavaFailing++;
+                for (Job job : build.getJobs()) {
+                    Log jobLog = job.getLog();
+                    TestsInformation testInfo = jobLog.getTestsInformation();
+
+                    if (testInfo.getFailing() > 0) {
+                        this.slugs.add(repo.getSlug());
+                        this.repositories.add(repo);
+                        return true;
+                    }
+                }
+            }
+        } else {
+            this.logger.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());
+        }
+        return false;
+    }
+
     private List<Build> getListOfBuildsFromRepo(List<Repository> repos) {
         List<Build> result = new ArrayList<Build>();
 
@@ -139,25 +188,8 @@ public class ProjectScanner {
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;
-                if (build.getConfig().getLanguage().equals("java")) {
-                    this.totalBuildInJava++;
-                    this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
-                    if (build.getBuildStatus() == BuildStatus.FAILED) {
-                        this.totalBuildInJavaFailing++;
-                        for (Job job : build.getJobs()) {
-                            Log jobLog = job.getLog();
-                            TestsInformation testInfo = jobLog.getTestsInformation();
-
-                            if (testInfo.getFailing() > 0) {
-                                result.add(build);
-                                this.slugs.add(repo.getSlug());
-                                this.repositories.add(repo);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    this.logger.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());
+                if (testBuild(build)) {
+                    result.add(build);
                 }
             }
         }

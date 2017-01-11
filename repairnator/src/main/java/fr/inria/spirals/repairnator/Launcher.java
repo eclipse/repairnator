@@ -28,7 +28,11 @@ import java.util.List;
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
+    private static final String BUILD_MODE = "builds";
+    private static final String SLUG_MODE = "slug";
+
     private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN","GITHUB_OAUTH"};
+
     private JSAP jsap;
     private JsonSerializer serializer;
     private JSAPResult arguments;
@@ -60,13 +64,25 @@ public class Launcher {
         sw1.setHelp("If set to true this flag push failing builds. (this argument allow to avoid push even if the step number is higher with -s argument)");
         jsap.registerParameter(sw1);
 
+
+
         // Tab size
         FlaggedOption opt2 = new FlaggedOption("input");
         opt2.setShortFlag('i');
         opt2.setLongFlag("input");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setRequired(true);
-        opt2.setHelp("Specify where to find the list of projects to scan.");
+        opt2.setHelp("Specify where to find the list of projects or builds to scan.");
+        jsap.registerParameter(opt2);
+
+        // Tab size
+        opt2 = new FlaggedOption("mode");
+        opt2.setShortFlag('m');
+        opt2.setLongFlag("mode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setRequired(true);
+        opt2.setDefault(SLUG_MODE);
+        opt2.setHelp("Specify if the input contains project names (slug) or build ids.");
         jsap.registerParameter(opt2);
 
         // output directory
@@ -191,6 +207,7 @@ public class Launcher {
         int lookupDays = arguments.getInt("lookup");
         String output = arguments.getString("output");
         boolean debug = arguments.getBoolean("debug");
+        boolean slugMode = (arguments.getString("mode").equals(SLUG_MODE));
         int steps = Integer.parseInt(arguments.getString("steps"));
 
         if (debug) {
@@ -204,7 +221,14 @@ public class Launcher {
 
         this.serializer.setScanner(scanner);
 
-        List<Build> buildList = scanner.getListOfFailingBuildFromProjects(input);
+        List<Build> buildList;
+
+        if (slugMode) {
+            buildList = scanner.getListOfFailingBuildFromProjects(input);
+        } else {
+            buildList = scanner.getListOfFailingBuildFromGivenBuildIds(input);
+        }
+
         for (Build build : buildList) {
             System.out.println("Incriminated project : "+build.getRepository().getSlug()+":"+build.getId());
         }
