@@ -12,6 +12,7 @@ import fr.inria.spirals.jtravis.entities.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,12 @@ public class BuildHelper extends AbstractHelper {
 
     private BuildHelper() {
         super();
+    }
+
+    private static List<String> getEventTypes() {
+        List<String> result = new ArrayList<String>();
+        result.addAll(Arrays.asList(new String[]{ "cron", "push", "pull_request"}));
+        return result;
     }
 
     protected static BuildHelper getInstance() {
@@ -86,18 +93,18 @@ public class BuildHelper extends AbstractHelper {
      * @param result The list result to aggregate
      * @param limitDate If given, the date limit to get builds: all builds *before* this date are considered
      * @param after_number Used for pagination: multiple requests may have to be made to reach the final date
-     * @param pullBuild Travis does not mix builds from PR and builds from push. When set to true this mean we get builds from PR.
+     * @param eventTypes Travis support multiple event types for builds like Push, PR or CRON. Those are retrieved individually
      */
-    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, boolean pullBuild) {
+    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, List<String> eventTypes) {
         Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
         String resourceUrl = getInstance().getEndpoint()+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
 
-        if (pullBuild) {
-            resourceUrl += "?event_type=pull_request";
-        } else {
-            resourceUrl += "?event_type=push";
+        if (eventTypes.isEmpty()) {
+            return;
         }
+        String evenType = eventTypes.get(0);
+        resourceUrl += "?event_type="+evenType;
 
         if (after_number > 0) {
             resourceUrl += "&after_number="+after_number;
@@ -151,20 +158,11 @@ public class BuildHelper extends AbstractHelper {
                 dateReached = true;
             }
 
-            if (dateReached && pullBuild) {
-                return;
-            }
-
-            if (dateReached && !pullBuild) {
-                getBuildsFromSlugRecursively(slug, result, limitDate, 0, true);
-            }
-
-            if (limitDate == null) {
-                getBuildsFromSlugRecursively(slug, result, limitDate, 0, true);
-            }
-
             if (limitDate != null && !dateReached) {
-                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, pullBuild);
+                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, eventTypes);
+            } else {
+                eventTypes.remove(0);
+                getBuildsFromSlugRecursively(slug, result, limitDate, 0, eventTypes);
             }
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
@@ -173,7 +171,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromSlugWithLimitDate(String slug, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(slug, result, limitDate, 0, false);
+        getBuildsFromSlugRecursively(slug, result, limitDate, 0, getEventTypes());
         return result;
     }
 
@@ -183,7 +181,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, false);
+        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, getEventTypes());
 
         for (Build b : result) {
             b.setRepository(repository);
