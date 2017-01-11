@@ -44,7 +44,7 @@ public class MavenHelper {
         request.setPomFile( new File( this.pomFile ) );
         request.setGoals( Arrays.asList( this.goal ) );
 
-        if (properties != null) {
+        if (properties == null) {
             properties = new Properties();
         }
 
