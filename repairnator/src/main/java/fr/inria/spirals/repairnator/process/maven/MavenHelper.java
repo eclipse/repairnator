@@ -45,8 +45,11 @@ public class MavenHelper {
         request.setGoals( Arrays.asList( this.goal ) );
 
         if (properties != null) {
-            request.setProperties(properties);
+            properties = new Properties();
         }
+
+        properties.setProperty("enforcer.skip","true");
+        request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
         if (this.enableHandlers) {
