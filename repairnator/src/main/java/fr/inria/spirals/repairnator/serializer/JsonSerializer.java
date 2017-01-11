@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.serializer;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -43,15 +43,7 @@ public class JsonSerializer {
         this.dateStart = new Date();
         this.outputPath = outputPath;
 
-        this.serializer = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                return (fieldAttributes.getName().equals("lastBuild") || fieldAttributes.getName().equals("logger"));
-            }
-
-            public boolean shouldSkipClass(Class<?> aClass) {
-                return false;
-            }
-        }).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        this.serializer = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
         this.root = new JsonObject();
     }
@@ -89,6 +81,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
+        result.add("buildDate",serialize(build.getFinishedAt()));
         if (build.isPullRequest()) {
             result.add("commit", serialize(build.getPRInformation()));
         } else {
@@ -103,6 +96,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
+        result.add("buildDate",serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
         if (build.isPullRequest()) {
@@ -127,6 +121,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
+        result.add("buildDate",serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
@@ -149,6 +144,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
+        result.add("buildDate",serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
@@ -164,6 +160,7 @@ public class JsonSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
+        result.add("buildDate",serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 

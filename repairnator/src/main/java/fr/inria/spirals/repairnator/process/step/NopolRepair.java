@@ -27,7 +27,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by urli on 05/01/2017.
  */
-public class cNopolRepair extends AbstractStep {
+public class NopolRepair extends AbstractStep {
     private static final String CLASSPATH_FILENAME = "classpath.info";
     private static final String DEFAULT_SRC_DIR = "/src/main/java";
     private static final String DEFAULT_CLASSES_DIR = "/target/classes";
@@ -53,7 +53,6 @@ public class cNopolRepair extends AbstractStep {
     private String initClasspath(String incriminatedModule) {
         String result = incriminatedModule+File.separator+DEFAULT_CLASSES_DIR+":";
         result += incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR+":";
-        result += System.getenv("JAVA_HOME")+"/../lib/tools.jar:";
         return result;
     }
 
