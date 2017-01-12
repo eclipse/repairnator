@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +70,7 @@ public abstract class AbstractStep {
             }
 
         }
+        this.cleanMavenArtifacts();
         return this.state;
     }
 
@@ -76,12 +78,10 @@ public abstract class AbstractStep {
         return this.inspector.getRepoLocalPath()+File.separator+"pom.xml";
     }
 
-    /*protected MavenCli getMavenCli() {
-        final ClassWorld classWorld = new ClassWorld("plexus.core", getClass().getClassLoader());
-        System.setProperty("maven.multiModuleProjectDirectory",this.inspector.getRepoLocalPath());
-        MavenCli cli = new MavenCli(classWorld);
-        return cli;
-    }*/
+    protected void cleanMavenArtifacts() {
+        MavenHelper helper = new MavenHelper(this.getPom(), MavenHelper.CLEAN_ARTIFACT_GOAL, null, this.getClass().getName(), this.inspector, true);
+        helper.run();
+    }
 
     public ProjectState execute() {
         this.dateBegin = new Date().getTime();
@@ -90,6 +90,7 @@ public abstract class AbstractStep {
         if (!shouldStop) {
             return this.executeNextStep();
         } else {
+            this.cleanMavenArtifacts();
             return this.state;
         }
     }

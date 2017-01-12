@@ -21,6 +21,8 @@ public class MavenHelper {
     public static final int MAVEN_SUCCESS = 0;
     public static final int MAVEN_ERROR = 1;
 
+    public static final String CLEAN_ARTIFACT_GOAL = "build-helper:remove-project-artifact";
+
     private final Logger logger = LoggerFactory.getLogger(MavenHelper.class);
 
     private String goal;

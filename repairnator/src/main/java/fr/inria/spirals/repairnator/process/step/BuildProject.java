@@ -28,7 +28,7 @@ public class BuildProject extends AbstractStep {
         Properties properties = new Properties();
         properties.setProperty("maven.test.skip","true");
 
-        MavenHelper helper = new MavenHelper(this.getPom(), "test", properties, this.getClass().getName(), this.inspector, true);
+        MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getName(), this.inspector, true);
 
         int result = helper.run();
 
