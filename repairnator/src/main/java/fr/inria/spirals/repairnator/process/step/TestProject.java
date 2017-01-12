@@ -22,6 +22,7 @@ public class TestProject extends AbstractStep {
         if (result == MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().info("Repository "+this.inspector.getRepoSlug()+" has passing all tests: then no test can be fixed...");
             this.shouldStop = true;
+            this.state = ProjectState.NOTFAILING;
         } else {
             this.state = ProjectState.TESTABLE;
         }

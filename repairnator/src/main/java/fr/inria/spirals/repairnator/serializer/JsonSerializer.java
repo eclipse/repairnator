@@ -7,6 +7,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.Job;
+import fr.inria.spirals.jtravis.entities.Log;
+import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
@@ -21,7 +24,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by urli on 05/01/2017.
@@ -150,6 +155,16 @@ public class JsonSerializer {
         result.addProperty("nbTests", testInformation.getNbTotalTests());
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.add("errors", serialize(inspector.getStepErrors()));
+
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        for (Job job : build.getJobs()) {
+            Log jobLog = job.getLog();
+            TestsInformation testInfo = jobLog.getTestsInformation();
+
+            testInformationPerJobId.put(job.getId(), testInfo);
+        }
+
+        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notFailing.add(result);
     }
 
