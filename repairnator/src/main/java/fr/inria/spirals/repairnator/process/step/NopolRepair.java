@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.lille.repair.ProjectReference;
 import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
+import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
@@ -140,6 +141,8 @@ public class NopolRepair extends AbstractStep {
             config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
             config.setSolverPath(this.inspector.getNopolSolverPath());
             config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
+            config.setType(StatementType.PRE_THEN_COND);
+
             final NoPol nopol = new NoPol(projectReference, config);
             List<Patch> patch = null;
 
@@ -148,10 +151,11 @@ public class NopolRepair extends AbstractStep {
                     new Callable() {
                         @Override
                         public Object call() throws Exception {
-                            return nopol.build();
+                            return nopol.build(projectReference.testClasses());
                         }
                     });
             try {
+                executor.shutdown();
                 patch = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
             } catch (TimeoutException exception) {
                 this.getLogger().error("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
