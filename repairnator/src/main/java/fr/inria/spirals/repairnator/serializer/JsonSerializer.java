@@ -161,7 +161,9 @@ public class JsonSerializer {
             Log jobLog = job.getLog();
             TestsInformation testInfo = jobLog.getTestsInformation();
 
-            testInformationPerJobId.put(job.getId(), testInfo);
+            if (testInfo.getFailing() > 0) {
+                testInformationPerJobId.put(job.getId(), testInfo);
+            }
         }
 
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
