@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,15 +43,19 @@ public class JsonSerializer {
     private String outputPath;
     private JsonObject root;
     private boolean slugMode;
+    private List<String> tsv;
+    private SimpleDateFormat tsvDateFormat;
 
     public JsonSerializer(String outputPath, boolean slugMode) {
         this.dateStart = new Date();
         this.outputPath = outputPath;
 
-        this.serializer = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        this.serializer = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new CustomExclusionStrategy()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
         this.root = new JsonObject();
         this.slugMode = slugMode;
+        this.tsvDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
+        this.tsv = new ArrayList<String>();
     }
 
     public void setScanner(ProjectScanner scanner) {
@@ -87,6 +92,7 @@ public class JsonSerializer {
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
         result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         if (build.isPullRequest()) {
             result.add("commit", serialize(build.getPRInformation()));
         } else {
@@ -94,6 +100,8 @@ public class JsonSerializer {
         }
         result.add("errors", serialize(inspector.getStepErrors()));
         notClonable.add(result);
+
+        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not clonable");
     }
 
     private void outputNotBuildableInspector(ProjectInspector inspector, JsonArray notBuildable) {
@@ -122,14 +130,68 @@ public class JsonSerializer {
 
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notBuildable.add(result);
+
+        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not buildable");
     }
 
     private void outputNotTestableInspector(ProjectInspector inspector, JsonArray notTestable) {
-        this.outputNotBuildableInspector(inspector, notTestable);
+        JsonObject result = new JsonObject();
+        result.addProperty("slug", inspector.getRepoSlug());
+        Build build = inspector.getBuild();
+        result.addProperty("buildId", build.getId());
+        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
+        if (build.isPullRequest()) {
+            result.add("commit", serialize(build.getPRInformation()));
+        } else {
+            result.add("commit", serialize(build.getCommit()));
+        }
+        result.add("errors", serialize(inspector.getStepErrors()));
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        for (Job job : build.getJobs()) {
+            Log jobLog = job.getLog();
+            TestsInformation testInfo = jobLog.getTestsInformation();
+
+            if (testInfo.getFailing() > 0) {
+                testInformationPerJobId.put(job.getId(), testInfo);
+            }
+        }
+
+        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
+        notTestable.add(result);
+
+        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not testable");
     }
 
     private void outputFailWhenGatheringInfoInspector(ProjectInspector inspector, JsonArray failWhenGatheringInfo) {
-        this.outputNotBuildableInspector(inspector, failWhenGatheringInfo);
+        JsonObject result = new JsonObject();
+        result.addProperty("slug", inspector.getRepoSlug());
+        Build build = inspector.getBuild();
+        result.addProperty("buildId", build.getId());
+        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
+        if (build.isPullRequest()) {
+            result.add("commit", serialize(build.getPRInformation()));
+        } else {
+            result.add("commit", serialize(build.getCommit()));
+        }
+        result.add("errors", serialize(inspector.getStepErrors()));
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        for (Job job : build.getJobs()) {
+            Log jobLog = job.getLog();
+            TestsInformation testInfo = jobLog.getTestsInformation();
+
+            if (testInfo.getFailing() > 0) {
+                testInformationPerJobId.put(job.getId(), testInfo);
+            }
+        }
+
+        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
+        failWhenGatheringInfo.add(result);
+
+        this.addToTSV(build.getId(), build.getRepository().getSlug(), "fail when gathering info");
     }
 
     private void outputHasTestFailureInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
@@ -153,6 +215,8 @@ public class JsonSerializer {
         result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
         result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
+
+        this.addToTSV(build.getId(), build.getRepository().getSlug(), "test failure");
     }
 
     private void outputNotFailingInspector(ProjectInspector inspector, JsonArray notFailing) {
@@ -181,6 +245,8 @@ public class JsonSerializer {
 
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notFailing.add(result);
+
+        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not failing");
     }
 
     private void outputHasBeenPatchedInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
@@ -208,9 +274,12 @@ public class JsonSerializer {
         result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
         result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
+
+        this.addToTSV(build.getId(), build.getRepository().getSlug(), "PATCHED");
     }
 
-    private void outputInspectors() {
+    private JsonObject outputInspectors() {
+        JsonObject inspectors = new JsonObject();
         JsonArray notClonableArray = new JsonArray();
         JsonArray notBuildableArray = new JsonArray();
         JsonArray notTestableArray = new JsonArray();
@@ -259,48 +328,61 @@ public class JsonSerializer {
         JsonObject hasBeenPatched = new JsonObject();
         hasBeenPatched.add("number", serialize(hasBeenPatchedArray.size()));
         hasBeenPatched.add("builds", hasBeenPatchedArray);
-        root.add("hasBeenPatched",hasBeenPatched);
+        inspectors.add("hasBeenPatched",hasBeenPatched);
 
         JsonObject hasTestFailure = new JsonObject();
         hasTestFailure.add("number", serialize(hasTestFailureArray.size()));
         hasTestFailure.add("builds", hasTestFailureArray);
-        root.add("hasTestFailure",hasTestFailure);
+        inspectors.add("hasTestFailure",hasTestFailure);
 
         JsonObject notFailing = new JsonObject();
         notFailing.add("number", serialize(notFailingArray.size()));
         notFailing.add("builds", notFailingArray);
-        root.add("notFailing", notFailing);
+        inspectors.add("notFailing", notFailing);
 
         JsonObject failWhenGatheringInfo = new JsonObject();
         failWhenGatheringInfo.add("number", serialize(failWhenGatheringInfoArray.size()));
         failWhenGatheringInfo.add("builds", failWhenGatheringInfoArray);
-        root.add("failWhenGatheringInfo", failWhenGatheringInfo);
+        inspectors.add("failWhenGatheringInfo", failWhenGatheringInfo);
 
         JsonObject notTestable = new JsonObject();
         notTestable.add("number", serialize(notTestableArray.size()));
         notTestable.add("builds", notTestableArray);
-        root.add("notTestable", notTestable);
+        inspectors.add("notTestable", notTestable);
 
         JsonObject notBuildable = new JsonObject();
         notBuildable.add("number", serialize(notBuildableArray.size()));
         notBuildable.add("builds", notBuildableArray);
-        root.add("notBuildable", notBuildable);
+        inspectors.add("notBuildable", notBuildable);
 
         JsonObject notClonable = new JsonObject();
         notClonable.add("number", serialize(notClonableArray.size()));
         notClonable.add("builds", notClonableArray);
-        root.add("notClonable", notClonable);
+        inspectors.add("notClonable", notClonable);
+
+        return inspectors;
+    }
+
+    private void addToTSV(int buildId, String slug, String state) {
+        String line = buildId+"\t"+slug+"\t"+state+"\t"+this.tsvDateFormat.format(this.dateStart);
+        this.tsv.add(line);
     }
 
     public void createOutput() throws IOException {
         this.dateFinish = new Date();
 
+        JsonObject inspectorsJson = null;
+        if (this.inspectors != null) {
+            inspectorsJson = this.outputInspectors();
+        }
+
         root.add("dateStart", serialize(this.dateStart));
         root.add("dateFinish", serialize(this.dateFinish));
-        root.add("scanStatistics", serialize(this.scanner));
+        root.add("tsv",serialize(this.tsv));
+        root.add("scanner", serialize(this.scanner));
 
         if (this.inspectors != null) {
-            this.outputInspectors();
+            root.add("builds", inspectorsJson);
         }
 
         writeFile();

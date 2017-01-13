@@ -101,4 +101,6 @@ public class CloneRepository extends AbstractStep {
 
         this.state = ProjectState.CLONABLE;
     }
+
+    protected void cleanMavenArtifacts() {}
 }
