@@ -82,11 +82,6 @@ public abstract class AbstractStep {
     protected void cleanMavenArtifacts() {
         MavenHelper helper = new MavenHelper(this.getPom(), MavenHelper.CLEAN_ARTIFACT_GOAL, null, this.getClass().getName(), this.inspector, true);
         helper.run();
-
-        Properties properties = new Properties();
-        properties.setProperty(MavenHelper.CLEAN_DEPENDENCIES_PROPERTY,"false");
-        helper = new MavenHelper(this.getPom(), MavenHelper.CLEAN_DEPENDENCIES_GOAL, properties, this.getClass().getName(), this.inspector, true);
-        helper.run();
     }
 
     public ProjectState execute() {
