@@ -213,7 +213,7 @@ public class Launcher {
         if (debug) {
             setLevel(Level.DEBUG);
         }
-        this.serializer = new JsonSerializer(output);
+        this.serializer = new JsonSerializer(output, slugMode);
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
 

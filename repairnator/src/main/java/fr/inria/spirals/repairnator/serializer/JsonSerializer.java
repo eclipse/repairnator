@@ -41,14 +41,16 @@ public class JsonSerializer {
     private List<ProjectInspector> inspectors;
     private String outputPath;
     private JsonObject root;
+    private boolean slugMode;
 
-    public JsonSerializer(String outputPath) {
+    public JsonSerializer(String outputPath, boolean slugMode) {
         this.dateStart = new Date();
         this.outputPath = outputPath;
 
         this.serializer = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
         this.root = new JsonObject();
+        this.slugMode = slugMode;
     }
 
     public void setScanner(ProjectScanner scanner) {
@@ -70,7 +72,7 @@ public class JsonSerializer {
         if (outputFile.isDirectory()) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             String formattedDate = dateFormat.format(new Date());
-            String filename = "repairbot_"+formattedDate+".json";
+            String filename = (slugMode) ? "librepair_bot_"+formattedDate+".json" : "librepair_"+formattedDate+".json";
             outputFile = new File(outputFile.getPath()+File.separator+filename);
         }
 
