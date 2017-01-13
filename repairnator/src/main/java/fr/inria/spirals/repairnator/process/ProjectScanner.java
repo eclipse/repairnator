@@ -37,9 +37,12 @@ public class ProjectScanner {
     private int totalBuildInJava;
     private int totalBuildInJavaFailing;
     private int totalBuildInJavaFailingWithFailingTests;
+    private Date dateStart;
+    private Date dateFinish;
 
     private Collection<String> slugs;
     private Collection<Repository> repositories;
+    private Collection<Integer> buildsId;
     private Date limitDate;
 
     public ProjectScanner(int lookupHours) {
@@ -76,8 +79,11 @@ public class ProjectScanner {
     }
 
     public List<Build> getListOfFailingBuildFromGivenBuildIds(String path) throws IOException {
+        this.dateStart = new Date();
         List<String> buildsIds = getFileContent(path);
         this.totalScannedBuilds = buildsIds.size();
+
+        this.buildsId = new ArrayList<Integer>();
 
         List<Build> result = new ArrayList<Build>();
 
@@ -97,12 +103,15 @@ public class ProjectScanner {
             }
             if (testBuild(build)) {
                 result.add(build);
+                this.buildsId.add(build.getId());
             }
         }
 
         this.totalRepoNumber = this.repositories.size();
         this.totalRepoUsingTravis = this.repositories.size();
         this.totalBuildInJavaFailingWithFailingTests = result.size();
+        this.dateFinish = new Date();
+
         return result;
     }
 
@@ -114,12 +123,14 @@ public class ProjectScanner {
      * @throws IOException
      */
     public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
+        this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
         List<Build> builds = getListOfBuildsFromRepo(repos);
 
+        this.dateFinish = new Date();
         return builds;
     }
 
@@ -183,6 +194,7 @@ public class ProjectScanner {
     private List<Build> getListOfBuildsFromRepo(List<Repository> repos) {
         List<Build> result = new ArrayList<Build>();
 
+        this.buildsId = new ArrayList<Integer>();
         for (Repository repo : repos) {
             List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
 
@@ -190,6 +202,7 @@ public class ProjectScanner {
                 this.totalScannedBuilds++;
                 if (testBuild(build)) {
                     result.add(build);
+                    this.buildsId.add(build.getId());
                 }
             }
         }
