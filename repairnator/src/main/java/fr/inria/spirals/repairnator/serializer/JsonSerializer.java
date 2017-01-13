@@ -108,6 +108,17 @@ public class JsonSerializer {
             result.add("commit", serialize(build.getCommit()));
         }
         result.add("errors", serialize(inspector.getStepErrors()));
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        for (Job job : build.getJobs()) {
+            Log jobLog = job.getLog();
+            TestsInformation testInfo = jobLog.getTestsInformation();
+
+            if (testInfo.getFailing() > 0) {
+                testInformationPerJobId.put(job.getId(), testInfo);
+            }
+        }
+
+        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notBuildable.add(result);
     }
 

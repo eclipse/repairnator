@@ -112,10 +112,8 @@ public class GatherTestInformation extends AbstractStep {
 
                 if (this.nbFailingTests > 0) {
                     this.setState(ProjectState.HASTESTFAILURE);
-                    this.shouldStop = false;
                 } else {
                     this.setState(ProjectState.NOTFAILING);
-                    this.shouldStop = true;
                 }
             } catch (MavenReportException e) {
                 this.getLogger().warn("Error while parsing files to get test information: "+e);
@@ -126,6 +124,10 @@ public class GatherTestInformation extends AbstractStep {
             }
         }
 
-
+        if (this.getState() == ProjectState.HASTESTFAILURE) {
+            this.shouldStop = false;
+        } else {
+            this.shouldStop = true;
+        }
     }
 }
