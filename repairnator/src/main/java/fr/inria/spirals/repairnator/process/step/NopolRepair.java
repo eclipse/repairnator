@@ -137,7 +137,7 @@ public class NopolRepair extends AbstractStep {
             this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, new String[] {failingTest});
             Config config = new Config();
             config.setTimeoutTestExecution(5);
-            config.setMaxTimeInMinutes(1);
+            config.setMaxTimeInMinutes(5);
             config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
             config.setSolverPath(this.inspector.getNopolSolverPath());
             config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);

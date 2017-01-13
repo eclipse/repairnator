@@ -24,26 +24,19 @@ public class BuildProject extends AbstractStep {
     }
 
     protected void businessExecute() {
-        this.getLogger().debug("Start cleaning dependencies to check if resolution work.");
-        MavenHelper helper = new MavenHelper(this.getPom(), MavenHelper.CLEAN_DEPENDENCIES_GOAL,null, this.getClass().getName(), this.inspector, true);
+        this.getLogger().debug("Start building project with maven (skip tests).");
+        Properties properties = new Properties();
+        properties.setProperty("maven.test.skip","true");
+
+        MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getName(), this.inspector, true);
+
         int result = helper.run();
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
-            this.getLogger().debug("Start building project with maven (skip tests).");
-            Properties properties = new Properties();
-            properties.setProperty("maven.test.skip","true");
-
-            helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getName(), this.inspector, true);
-
-            result = helper.run();
-
-            if (result == MavenHelper.MAVEN_SUCCESS) {
-                this.state = ProjectState.BUILDABLE;
-                return;
-            }
+            this.state = ProjectState.BUILDABLE;
+        } else {
+            this.getLogger().info("Repository "+this.inspector.getRepoSlug()+" cannot be built.");
+            this.shouldStop = true;
         }
-        this.getLogger().info("Repository "+this.inspector.getRepoSlug()+" cannot be built.");
-        this.shouldStop = true;
-
     }
 }

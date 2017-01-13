@@ -22,7 +22,7 @@ public class MavenHelper {
     public static final int MAVEN_ERROR = 1;
 
     public static final String CLEAN_ARTIFACT_GOAL = "build-helper:remove-project-artifact";
-    public static final String CLEAN_DEPENDENCIES_GOAL = "dependency:purge-local-repository";
+    public static final String CLEAN_DEPENDENCIES_GOAL = "dependency:purge-local-repository -DreResolve=false";
 
     private final Logger logger = LoggerFactory.getLogger(MavenHelper.class);
 
@@ -52,6 +52,8 @@ public class MavenHelper {
         }
 
         properties.setProperty("enforcer.skip","true");
+        properties.setProperty("checkstyle.skip","true");
+        properties.setProperty("cobertura.skip","true");
         request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
