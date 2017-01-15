@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +42,7 @@ public class JsonSerializer {
     private String outputPath;
     private JsonObject root;
     private boolean slugMode;
-    private List<String> tsv;
-    private SimpleDateFormat tsvDateFormat;
+    private CSVSerializer csvSerializer;
 
     public JsonSerializer(String outputPath, boolean slugMode) {
         this.dateStart = new Date();
@@ -54,8 +52,7 @@ public class JsonSerializer {
 
         this.root = new JsonObject();
         this.slugMode = slugMode;
-        this.tsvDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
-        this.tsv = new ArrayList<String>();
+        this.csvSerializer = new CSVSerializer(this.outputPath);
     }
 
     public void setScanner(ProjectScanner scanner) {
@@ -101,7 +98,7 @@ public class JsonSerializer {
         result.add("errors", serialize(inspector.getStepErrors()));
         notClonable.add(result);
 
-        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not clonable");
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not clonable", this.dateStart);
     }
 
     private void outputNotBuildableInspector(ProjectInspector inspector, JsonArray notBuildable) {
@@ -131,7 +128,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notBuildable.add(result);
 
-        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not buildable");
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not buildable", this.dateStart);
     }
 
     private void outputNotTestableInspector(ProjectInspector inspector, JsonArray notTestable) {
@@ -161,7 +158,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notTestable.add(result);
 
-        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not testable");
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not testable", this.dateStart);
     }
 
     private void outputFailWhenGatheringInfoInspector(ProjectInspector inspector, JsonArray failWhenGatheringInfo) {
@@ -191,7 +188,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         failWhenGatheringInfo.add(result);
 
-        this.addToTSV(build.getId(), build.getRepository().getSlug(), "fail when gathering info");
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "fail when gathering info", this.dateStart);
     }
 
     private void outputHasTestFailureInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
@@ -216,7 +213,7 @@ public class JsonSerializer {
         result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
 
-        this.addToTSV(build.getId(), build.getRepository().getSlug(), "test failure");
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "test failure", this.dateStart);
     }
 
     private void outputNotFailingInspector(ProjectInspector inspector, JsonArray notFailing) {
@@ -246,7 +243,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notFailing.add(result);
 
-        this.addToTSV(build.getId(), build.getRepository().getSlug(), "not failing");
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not failing", this.dateStart);
     }
 
     private void outputHasBeenPatchedInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
@@ -275,7 +272,7 @@ public class JsonSerializer {
         result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
 
-        this.addToTSV(build.getId(), build.getRepository().getSlug(), "PATCHED");
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "PATCHED", this.dateStart);
     }
 
     private JsonObject outputInspectors() {
@@ -363,11 +360,6 @@ public class JsonSerializer {
         return inspectors;
     }
 
-    private void addToTSV(int buildId, String slug, String state) {
-        String line = buildId+"\t"+slug+"\t"+state+"\t"+this.tsvDateFormat.format(this.dateStart);
-        this.tsv.add(line);
-    }
-
     public void createOutput() throws IOException {
         this.dateFinish = new Date();
 
@@ -378,7 +370,6 @@ public class JsonSerializer {
 
         root.add("dateStart", serialize(this.dateStart));
         root.add("dateFinish", serialize(this.dateFinish));
-        root.add("tsv",serialize(this.tsv));
         root.add("scanner", serialize(this.scanner));
 
         if (this.inspectors != null) {
