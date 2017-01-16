@@ -36,6 +36,7 @@ public class ProjectInspector {
     private int steps;
     private Map<String, List<String>> stepErrors;
     private boolean autoclean;
+    private String m2LocalPath;
 
 
     public ProjectInspector(Build failingBuild, String workspace, String nopolSolverPath, boolean push, int steps) {
@@ -44,11 +45,16 @@ public class ProjectInspector {
         this.workspace = workspace;
         this.nopolSolverPath = nopolSolverPath;
         this.repoLocalPath = workspace+File.separator+getRepoSlug()+File.separator+build.getId();
+        this.m2LocalPath = new File(workspace+File.separator+".m2").getAbsolutePath();
         this.stepsDurationsInSeconds = new HashMap<String, Integer>();
         this.push = push;
         this.steps = steps;
         this.stepErrors = new HashMap<String, List<String>>();
         this.autoclean = false;
+    }
+
+    public String getM2LocalPath() {
+        return m2LocalPath;
     }
 
     public boolean isAutoclean() {

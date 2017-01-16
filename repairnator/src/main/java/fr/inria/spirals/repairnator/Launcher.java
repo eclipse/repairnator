@@ -12,6 +12,7 @@ import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.JsonSerializer;
+import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -213,6 +214,7 @@ public class Launcher {
         boolean debug = arguments.getBoolean("debug");
         boolean slugMode = (arguments.getString("mode").equals(SLUG_MODE));
         int steps = Integer.parseInt(arguments.getString("steps"));
+        boolean clean = arguments.getBoolean("clean");
 
         if (debug) {
             setLevel(Level.DEBUG);
@@ -237,10 +239,11 @@ public class Launcher {
             System.out.println("Incriminated project : "+build.getRepository().getSlug()+":"+build.getId());
         }
 
+        String completeWorkspace = null;
         if (steps > 0) {
             Launcher.LOGGER.debug("Start cloning and compiling projects...");
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
-            String completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
+            completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
 
             List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
 
@@ -251,6 +254,11 @@ public class Launcher {
         Launcher.LOGGER.debug("Start writing a JSON output...");
 
         this.serializer.createOutput();
+
+        if (clean && completeWorkspace != null) {
+            Launcher.LOGGER.debug("Clean the workspace now...");
+            FileUtils.deleteDirectory(completeWorkspace);
+        }
     }
 
     private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {

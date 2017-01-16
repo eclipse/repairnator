@@ -51,6 +51,7 @@ public class MavenHelper {
             properties = new Properties();
         }
 
+        properties.setProperty("maven.repo.local",this.inspector.getM2LocalPath());
         properties.setProperty("enforcer.skip","true");
         properties.setProperty("checkstyle.skip","true");
         properties.setProperty("cobertura.skip","true");
