@@ -12,7 +12,7 @@
 
 	<logger name="org.apache" level="OFF" />
 	<logger name="ch.qos.logback" level="OFF" />
-	<logger name="org.eclipse.jgit" level="warn" />
+	<logger name="org.eclipse.jgit" level="OFF" />
 
 	<root level="debug">
 		<appender-ref ref="STDOUT" />

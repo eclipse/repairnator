@@ -3,11 +3,13 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -86,6 +88,14 @@ public abstract class AbstractStep {
 
         helper = new MavenHelper(this.getPom(), MavenHelper.CLEAN_DEPENDENCIES_GOAL, null, this.getClass().getName(), this.inspector, true);
         helper.run();
+
+        if (this.inspector.isAutoclean()) {
+            try {
+                FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
+            } catch (IOException e) {
+                getLogger().warn("Error while deleting the workspace directory ("+this.inspector.getRepoLocalPath()+"): "+e);
+            }
+        }
     }
 
     public ProjectState execute() {

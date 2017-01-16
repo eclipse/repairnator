@@ -61,10 +61,14 @@ public class Launcher {
         sw1 = new Switch("push");
         sw1.setShortFlag('p');
         sw1.setLongFlag("push");
-        sw1.setHelp("If set to true this flag push failing builds. (this argument allow to avoid push even if the step number is higher with -s argument)");
+        sw1.setHelp("If set this flag push failing builds (bypass push even in conjunction with steps option)");
         jsap.registerParameter(sw1);
 
-
+        // cleaning
+        sw1 = new Switch("clean");
+        sw1.setLongFlag("clean");
+        sw1.setHelp("Clean workspace after each finished process.");
+        jsap.registerParameter(sw1);
 
         // Tab size
         FlaggedOption opt2 = new FlaggedOption("input");
@@ -253,13 +257,15 @@ public class Launcher {
         boolean push = arguments.getBoolean("push");
         int steps = Integer.parseInt(arguments.getString("steps"));
         String solverPath = arguments.getString("z3Path");
+        boolean clean = arguments.getBoolean("clean");
         initWorkspace(workspace);
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector scanner = new ProjectInspector(build, workspace, solverPath, push, steps);
-            projectInspectors.add(scanner);
-            scanner.processRepair();
+            ProjectInspector inspector = new ProjectInspector(build, workspace, solverPath, push, steps);
+            inspector.setAutoclean(clean);
+            projectInspectors.add(inspector);
+            inspector.processRepair();
         }
         return projectInspectors;
     }

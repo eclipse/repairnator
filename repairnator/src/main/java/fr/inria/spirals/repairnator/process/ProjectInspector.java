@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.process;
 
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Created by urli on 26/12/2016.
@@ -37,6 +35,7 @@ public class ProjectInspector {
     private boolean push;
     private int steps;
     private Map<String, List<String>> stepErrors;
+    private boolean autoclean;
 
 
     public ProjectInspector(Build failingBuild, String workspace, String nopolSolverPath, boolean push, int steps) {
@@ -49,6 +48,15 @@ public class ProjectInspector {
         this.push = push;
         this.steps = steps;
         this.stepErrors = new HashMap<String, List<String>>();
+        this.autoclean = false;
+    }
+
+    public boolean isAutoclean() {
+        return autoclean;
+    }
+
+    public void setAutoclean(boolean autoclean) {
+        this.autoclean = autoclean;
     }
 
     public String getNopolSolverPath() {
