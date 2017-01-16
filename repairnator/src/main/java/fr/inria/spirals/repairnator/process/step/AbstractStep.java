@@ -56,6 +56,7 @@ public abstract class AbstractStep {
     }
 
     protected void addStepError(String error) {
+        getLogger().error(error);
         this.inspector.addStepError(this.name, error);
     }
 

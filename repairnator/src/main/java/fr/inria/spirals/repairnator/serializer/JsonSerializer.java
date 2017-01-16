@@ -98,7 +98,7 @@ public class JsonSerializer {
         result.add("errors", serialize(inspector.getStepErrors()));
         notClonable.add(result);
 
-        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not clonable", this.dateStart);
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not clonable", build.getFinishedAt());
     }
 
     private void outputNotBuildableInspector(ProjectInspector inspector, JsonArray notBuildable) {
@@ -128,7 +128,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notBuildable.add(result);
 
-        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not buildable", this.dateStart);
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not buildable", build.getFinishedAt());
     }
 
     private void outputNotTestableInspector(ProjectInspector inspector, JsonArray notTestable) {
@@ -158,7 +158,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notTestable.add(result);
 
-        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not testable", this.dateStart);
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not testable", build.getFinishedAt());
     }
 
     private void outputFailWhenGatheringInfoInspector(ProjectInspector inspector, JsonArray failWhenGatheringInfo) {
@@ -188,7 +188,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         failWhenGatheringInfo.add(result);
 
-        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "fail when gathering info", this.dateStart);
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "fail when gathering info", build.getFinishedAt());
     }
 
     private void outputHasTestFailureInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
@@ -213,7 +213,7 @@ public class JsonSerializer {
         result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
 
-        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "test failure", this.dateStart);
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "test failure", build.getFinishedAt());
     }
 
     private void outputNotFailingInspector(ProjectInspector inspector, JsonArray notFailing) {
@@ -243,7 +243,7 @@ public class JsonSerializer {
         result.add("testInformationPerJobId",serialize(testInformationPerJobId));
         notFailing.add(result);
 
-        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not failing", this.dateStart);
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "not failing", build.getFinishedAt());
     }
 
     private void outputHasBeenPatchedInspector(ProjectInspector inspector, JsonArray hasTestFailure) {
@@ -272,7 +272,7 @@ public class JsonSerializer {
         result.add("errors", serialize(inspector.getStepErrors()));
         hasTestFailure.add(result);
 
-        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "PATCHED", this.dateStart);
+        this.csvSerializer.writeData(build.getId(), build.getRepository().getSlug(), "PATCHED", build.getFinishedAt());
     }
 
     private JsonObject outputInspectors() {

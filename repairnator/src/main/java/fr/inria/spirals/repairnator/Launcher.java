@@ -235,7 +235,7 @@ public class Launcher {
 
         if (steps > 0) {
             Launcher.LOGGER.debug("Start cloning and compiling projects...");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmm");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             String completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
 
             List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
