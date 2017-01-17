@@ -147,6 +147,9 @@ public class Launcher {
 
         Logger repairnator = (Logger) LoggerFactory.getLogger("fr.inria.spirals.repairnator");
         repairnator.setLevel(Level.DEBUG);
+
+        Logger jgit = (Logger)LoggerFactory.getLogger("org.eclipse.jgit");
+        jgit.setLevel(Level.WARN);
     }
 
     private static void initWorkspace(String path) throws IOException {

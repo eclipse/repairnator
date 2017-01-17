@@ -24,13 +24,22 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHCompare;
+import org.kohsuke.github.GHRateLimit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by urli on 03/01/2017.
@@ -46,6 +55,38 @@ public class CloneRepository extends AbstractStep {
         this.build = inspector.getBuild();
     }
 
+    private void showGitHubRateInformation(GitHub gh) throws IOException {
+        GHRateLimit rateLimit = gh.getRateLimit();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        this.getLogger().info("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
+    }
+
+    private String getLastKnowParent(GitHub gh, GHRepository ghRepo, Git git, String oldCommitSha) throws IOException {
+        this.showGitHubRateInformation(gh);
+        GHCommit commit = ghRepo.getCommit(oldCommitSha); // get the deleted commit from GH
+        List<String> commitParents = commit.getParentSHA1s();
+
+        if (commitParents.isEmpty()) {
+            this.addStepError("The following commit does not have any parent in GitHub: "+oldCommitSha+". It cannot be resolved.");
+            return null;
+        }
+
+        if (commitParents.size() > 1) {
+            this.getLogger().debug("The commit has more than one parent : "+commit.getHtmlUrl());
+        }
+
+        String parent = commitParents.get(0);
+
+        try {
+            ObjectId commitObject = git.getRepository().resolve(parent);
+            git.getRepository().open(commitObject);
+
+            return parent;
+        } catch (MissingObjectException e) {
+            return getLastKnowParent(gh, ghRepo, git, parent);
+        }
+    }
+
     /**
      * When a commit has been force deleted it still can be retrieved from GitHub API.
      * This function intend to retrieve a patch from the Github API and to apply it back on the repo
@@ -58,22 +99,8 @@ public class CloneRepository extends AbstractStep {
         try {
             GitHub gh = GitHubBuilder.fromEnvironment().build();
             GHRepository ghRepo = gh.getRepository(this.build.getRepository().getSlug());
-            GHCommit commit = ghRepo.getCommit(oldCommitSha); // get the deleted commit from GH
 
-            // the loop compute the last parent of the deleted commit which is still in the repo
-            // sometimes multiple commits may have been deleted...
-            String lastKnowParent = null;
-            for (String parentSha : commit.getParentSHA1s()) {
-                try {
-                    ObjectId commitObject = git.getRepository().resolve(parentSha);
-                    git.getRepository().open(commitObject);
-
-                    lastKnowParent = parentSha;
-                    break;
-                } catch (MissingObjectException e) {
-                    continue;
-                }
-            }
+            String lastKnowParent = this.getLastKnowParent(gh, ghRepo, git, oldCommitSha);
 
             // checkout the repo to the last known parent of the deleted commit
             git.checkout().setName(lastKnowParent).call();
@@ -81,7 +108,12 @@ public class CloneRepository extends AbstractStep {
             // get from github a patch between that commit and the targeted commit
             // note that this patch could contain changes of multiple commits
             GHCompare compare = ghRepo.getCompare(lastKnowParent, oldCommitSha);
+
+            this.showGitHubRateInformation(gh);
+
             URL patchUrl = compare.getPatchUrl();
+
+            this.getLogger().debug("Retrieve commit patch from the following URL: "+patchUrl);
 
             // retrieve it through a simple HTTP request
             // some errors occurs when applying patch from snippets contained in GHCompare object
@@ -90,19 +122,48 @@ public class CloneRepository extends AbstractStep {
             Call call = client.newCall(request);
             Response response = call.execute();
 
+            File tempFile = File.createTempFile(this.build.getRepository().getSlug(),"patch");
+
             // apply the patch and commit changes using message and authors of the referenced commit.
             if (response.code() == 200) {
-                ApplyResult result = git.apply().setPatch(response.body().byteStream()).call();
 
-                Commit buildCommit = this.build.getCommit();
+                FileWriter writer = new FileWriter(tempFile);
+                writer.write(response.body().string());
+                writer.flush();
+                writer.close();
 
-                RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(buildCommit.getAuthorName(),buildCommit.getAuthorEmail())
-                            .setCommitter(buildCommit.getCommitterName(),buildCommit.getCommitterEmail())
-                            .setMessage(buildCommit.getMessage()+"\n(This is a retrieve from the following deleted commit: "+oldCommitSha+")")
-                            .call();
+                this.getLogger().info("Exec following command: git apply "+tempFile.getAbsolutePath());
+                ProcessBuilder processBuilder = new ProcessBuilder("git","apply",tempFile.getAbsolutePath())
+                                                    .directory(new File(this.inspector.getRepoLocalPath()))
+                                                    .inheritIO();
 
-                return ref.getName();
+                Process p = processBuilder.start();
+                try {
+                    p.waitFor();
+
+                    // Applying patch does not work as the move of file is broken in JGit
+                    // It assumes the target directory exists.
+                    //ApplyResult result = git.apply().setPatch(response.body().byteStream()).call();
+
+                    Commit buildCommit = this.build.getCommit();
+
+                    // add all file for the next commit
+                    git.add().addFilepattern(".").call();
+
+                    // do the commit
+                    RevCommit ref = git.commit().setAll(true)
+                                                .setAuthor(buildCommit.getAuthorName(),buildCommit.getAuthorEmail())
+                                                .setCommitter(buildCommit.getCommitterName(),buildCommit.getCommitterEmail())
+                                                .setMessage(buildCommit.getMessage()+"\n(This is a retrieve from the following deleted commit: "+oldCommitSha+")")
+                                                .call();
+
+                    tempFile.delete();
+
+                    return ref.getName();
+                } catch (InterruptedException e) {
+                    this.addStepError("Error while executing git command to apply patch: "+e);
+                }
+
             }
         } catch (IOException e) {
             this.addStepError("Error while getting commit from Github: "+e);
