@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
 import fr.inria.lille.repair.ProjectReference;
 import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
@@ -142,6 +143,8 @@ public class NopolRepair extends AbstractStep {
             config.setSolverPath(this.inspector.getNopolSolverPath());
             config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
             config.setType(StatementType.PRE_THEN_COND);
+
+            SolverFactory.setSolver(config.getSolver(), config.getSolverPath());
 
             final NoPol nopol = new NoPol(projectReference, config);
             List<Patch> patch = null;
