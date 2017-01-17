@@ -3,12 +3,14 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -28,12 +30,14 @@ public abstract class AbstractStep {
     private AbstractStep nextStep;
     private long dateBegin;
     private long dateEnd;
+    private boolean pomLocationTested;
 
     public AbstractStep(ProjectInspector inspector) {
         this.name = this.getClass().getName();
         this.inspector = inspector;
         this.shouldStop = false;
         this.state = ProjectState.NONE;
+        this.pomLocationTested = false;
     }
 
     public void setLimitStepNumber(int limitStepNumber) {
@@ -78,16 +82,52 @@ public abstract class AbstractStep {
         return this.state;
     }
 
+    private void testPomLocation() {
+        this.pomLocationTested = true;
+        File defaultPomFile = new File(this.inspector.getRepoLocalPath()+File.separator+"pom.xml");
+
+        if (defaultPomFile.exists()) {
+            return;
+        } else {
+            this.getLogger().info("The pom.xml file is not at the root of the repository. Try to find another one.");
+
+            File rootRepo = new File(this.inspector.getRepoLocalPath());
+
+            File[] dirs = rootRepo.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return pathname.isDirectory();
+                }
+            });
+
+            for (File dir : dirs) {
+                File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
+
+                if (pomFile.exists()) {
+                    this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
+                    this.inspector.setRepoLocalPath(dir.getPath());
+                    return;
+                }
+            }
+
+            this.addStepError("RepairNator was unable to found a pom.xml in the repository. It will stop now.");
+            this.shouldStop = true;
+        }
+    }
+
     protected String getPom() {
+        if (!pomLocationTested) {
+            testPomLocation();
+        }
         return this.inspector.getRepoLocalPath()+File.separator+"pom.xml";
     }
 
     protected void cleanMavenArtifacts() {
-        MavenHelper helper = new MavenHelper(this.getPom(), MavenHelper.CLEAN_ARTIFACT_GOAL, null, this.getClass().getName(), this.inspector, true);
-        helper.run();
-
-        helper = new MavenHelper(this.getPom(), MavenHelper.CLEAN_DEPENDENCIES_GOAL, null, this.getClass().getName(), this.inspector, true);
-        helper.run();
+        try {
+            FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
+        } catch (IOException e) {
+            getLogger().warn("Error while deleting the M2 local directory ("+this.inspector.getM2LocalPath()+"): "+e);
+        }
 
         if (this.inspector.isAutoclean()) {
             try {

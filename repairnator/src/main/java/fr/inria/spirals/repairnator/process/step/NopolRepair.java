@@ -11,9 +11,11 @@ import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuilder;
+import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
+import org.apache.maven.model.profile.DefaultProfileSelector;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -70,15 +72,6 @@ public class NopolRepair extends AbstractStep {
         return result;
     }
 
-    private Model readPomXml(File pomXml) throws ModelBuildingException {
-        ModelBuildingRequest req = new DefaultModelBuildingRequest();
-        req.setProcessPlugins(false);
-        req.setPomFile(pomXml);
-        req.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL );
-
-        return new DefaultModelBuilder().build(req).getEffectiveModel();
-    }
-
     private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
         List<File> result = new ArrayList<File>();
         File defaultSourceDir = new File(incriminatedModulePath+DEFAULT_SRC_DIR);
@@ -93,7 +86,7 @@ public class NopolRepair extends AbstractStep {
 
         try
         {
-            Model model = this.readPomXml(pomIncriminatedModule);
+            Model model = MavenHelper.readPomXml(pomIncriminatedModule);
 
             Build buildSection = model.getBuild();
 
@@ -121,7 +114,7 @@ public class NopolRepair extends AbstractStep {
 
                 File parentPomXml = new File(incriminatedModulePath+File.separator+relativePath);
 
-                model = this.readPomXml(parentPomXml);
+                model = MavenHelper.readPomXml(parentPomXml);
 
                 for (String module : model.getModules()) {
                     File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent()+File.separator+module, false);

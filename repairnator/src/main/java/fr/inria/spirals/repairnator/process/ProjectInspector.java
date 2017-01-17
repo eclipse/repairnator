@@ -65,6 +65,10 @@ public class ProjectInspector {
         this.autoclean = autoclean;
     }
 
+    public void setRepoLocalPath(String repoLocalPath) {
+        this.repoLocalPath = repoLocalPath;
+    }
+
     public String getNopolSolverPath() {
         return nopolSolverPath;
     }

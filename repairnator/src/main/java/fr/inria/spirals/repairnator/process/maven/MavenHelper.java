@@ -1,6 +1,11 @@
 package fr.inria.spirals.repairnator.process.maven;
 
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.building.DefaultModelBuilderFactory;
+import org.apache.maven.model.building.DefaultModelBuildingRequest;
+import org.apache.maven.model.building.ModelBuildingException;
+import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -40,6 +45,15 @@ public class MavenHelper {
         this.name = name;
         this.inspector = inspector;
         this.enableHandlers = enableHandlers;
+    }
+
+    public static Model readPomXml(File pomXml) throws ModelBuildingException {
+        ModelBuildingRequest req = new DefaultModelBuildingRequest();
+        req.setProcessPlugins(false);
+        req.setPomFile(pomXml);
+        req.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL );
+
+        return new DefaultModelBuilderFactory().newInstance().build(req).getEffectiveModel();
     }
 
     public int run() {
