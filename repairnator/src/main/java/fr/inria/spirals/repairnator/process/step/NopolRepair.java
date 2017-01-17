@@ -8,10 +8,21 @@ import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import org.apache.maven.model.Build;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.building.DefaultModelBuilder;
+import org.apache.maven.model.building.DefaultModelBuildingRequest;
+import org.apache.maven.model.building.ModelBuildingException;
+import org.apache.maven.model.building.ModelBuildingRequest;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,10 +63,89 @@ public class NopolRepair extends AbstractStep {
         return projectReference;
     }
 
-    private String initClasspath(String incriminatedModule) {
-        String result = incriminatedModule+File.separator+DEFAULT_CLASSES_DIR+":";
-        result += incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR+":";
+    private List<URL> initClasspath(String incriminatedModule) throws MalformedURLException {
+        List<URL> result = new ArrayList<URL>();
+        result.add(new URL("file://"+incriminatedModule+File.separator+DEFAULT_CLASSES_DIR));
+        result.add(new URL("file://"+incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR));
         return result;
+    }
+
+    private Model readPomXml(File pomXml) throws ModelBuildingException {
+        ModelBuildingRequest req = new DefaultModelBuildingRequest();
+        req.setProcessPlugins(false);
+        req.setPomFile(pomXml);
+        req.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL );
+
+        return new DefaultModelBuilder().build(req).getEffectiveModel();
+    }
+
+    private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
+        List<File> result = new ArrayList<File>();
+        File defaultSourceDir = new File(incriminatedModulePath+DEFAULT_SRC_DIR);
+
+        if (defaultSourceDir.exists()) {
+            result.add(defaultSourceDir);
+            return result.toArray(new File[result.size()]);
+        }
+
+        this.getLogger().debug("The default source directory ("+defaultSourceDir.getPath()+") does not exists. Try to read pom.xml to get informations.");
+        File pomIncriminatedModule = new File(incriminatedModulePath+"/pom.xml");
+
+        try
+        {
+            Model model = this.readPomXml(pomIncriminatedModule);
+
+            Build buildSection = model.getBuild();
+
+            if (buildSection != null) {
+                String pathSrcDirFromPom = model.getBuild().getSourceDirectory();
+
+                File srcDirFromPom = new File(pathSrcDirFromPom);
+
+                if (srcDirFromPom.exists()) {
+                    result.add(srcDirFromPom);
+                    return result.toArray(new File[result.size()]);
+                }
+
+                this.getLogger().debug("The source directory given in pom.xml ("+pathSrcDirFromPom+") does not exists. Try to get source dir from all modules if multimodule.");
+            } else {
+                this.getLogger().debug("Build section does not exists in this pom.xml. Try to get source dir from all modules.");
+            }
+
+            if (model.getParent() != null && rootCall) {
+                String relativePath = "../pom.xml";
+
+                if (model.getParent().getRelativePath() != null) {
+                    relativePath = model.getParent().getRelativePath();
+                }
+
+                File parentPomXml = new File(incriminatedModulePath+File.separator+relativePath);
+
+                model = this.readPomXml(parentPomXml);
+
+                for (String module : model.getModules()) {
+                    File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent()+File.separator+module, false);
+                    if (srcDir != null) {
+                        result.addAll(Arrays.asList(srcDir));
+                    }
+                }
+
+                if (result.size() > 0) {
+                    return result.toArray(new File[result.size()]);
+                } else {
+                    return null;
+                }
+            } else {
+                if (rootCall) {
+                    this.addStepError("Source directory is not at default location or specified in build section and no parent can be found.");
+                }
+            }
+
+        }
+        catch ( ModelBuildingException e ) {
+            this.addStepError("Error while building pom.xml model: "+e);
+        }
+        return null;
     }
 
     @Override
@@ -111,21 +201,26 @@ public class NopolRepair extends AbstractStep {
 
 
         String classpathPath = incriminatedModule+File.separator+CLASSPATH_FILENAME;
-        String classPath = initClasspath(incriminatedModule);
+        List<URL> classPath;
+
         try {
+            classPath = initClasspath(incriminatedModule);
             BufferedReader reader = new BufferedReader(new FileReader(new File(classpathPath)));
-            classPath += reader.readLine();
+            String classpathLine = reader.readLine();
+
+            String[] allJars = classpathLine.split(":");
+            for (String jar : allJars) {
+                classPath.add(new URL("file://"+jar));
+            }
         } catch (IOException e) {
-            this.getLogger().error("Problem while getting classpath: "+e);
-            this.addStepError(e.getMessage());
+            this.addStepError("Problem while getting classpath: "+e);
             return;
         }
 
-        File sourceDir = new File(incriminatedModule+DEFAULT_SRC_DIR);
+        File[] sources = this.searchForSourcesDirectory(incriminatedModule, true);
 
-        if (!sourceDir.isDirectory() || !sourceDir.canRead()) {
-            this.getLogger().error("Source dir "+sourceDir.getAbsolutePath()+" is not a directory or cannot be read.");
-            this.addStepError("Source dir "+sourceDir.getAbsolutePath()+" is not a directory or cannot be read.");
+        if (sources == null) {
+             this.addStepError("Fail to find the sources directory.");
             return;
         }
 
@@ -135,7 +230,7 @@ public class NopolRepair extends AbstractStep {
         for (String failingTest : failingTests) {
             this.getLogger().debug("Launching repair with Nopol for following test: "+failingTest+"...");
 
-            this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, new String[] {failingTest});
+            this.projectReference = new ProjectReference(sources, classPath.toArray(new URL[classPath.size()]), new String[] {failingTest});
             Config config = new Config();
             config.setTimeoutTestExecution(5);
             config.setMaxTimeInMinutes(5);
@@ -187,7 +282,6 @@ public class NopolRepair extends AbstractStep {
                 patchCreated = true;
             }
         }
-        this.projectReference = new ProjectReference(sourceDir.getAbsolutePath(), classPath, failingTests.toArray(new String[failingTests.size()]));
 
         if (!patchCreated) {
             this.addStepError("No patch has been generated by Nopol. Look at the trace to get more information.");
