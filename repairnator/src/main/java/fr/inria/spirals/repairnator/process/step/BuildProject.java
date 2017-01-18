@@ -26,8 +26,9 @@ public class BuildProject extends AbstractStep {
     protected void businessExecute() {
         this.getLogger().debug("Start building project with maven (skip tests).");
         Properties properties = new Properties();
-        properties.setProperty("maven.test.skip","true");
+        properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY,"true");
 
+        this.getLogger().debug("Start to install artifacts without test execution.");
         MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getName(), this.inspector, true);
 
         int result = helper.run();

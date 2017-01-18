@@ -163,29 +163,16 @@ public class NopolRepair extends AbstractStep {
             }
         }
 
-        this.getLogger().debug("Try to install multimodule to avoid missing dependencies...");
-
-        Properties properties = new Properties();
-        properties.setProperty("maven.test.skip","true");
-
-        MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getName(), this.inspector, true);
-
-        int result = helper.run();
-
-        if (result != MavenHelper.MAVEN_SUCCESS) {
-            this.getLogger().debug("Error while installing multimodule maven");
-        }
-
         this.getLogger().debug("Compute classpath from incriminated module...");
-        properties = new Properties();
+        Properties properties = new Properties();
         properties.setProperty("mdep.outputFile",CLASSPATH_FILENAME);
 
         String goal = "dependency:build-classpath";
         String pomModule = incriminatedModule+File.separator+"pom.xml";
 
-        helper = new MavenHelper(pomModule, goal, properties, this.getClass().getName(), this.inspector, true);
+        MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getName(), this.inspector, true);
 
-        result = helper.run();
+        int result = helper.run();
 
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");

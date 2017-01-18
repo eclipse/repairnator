@@ -28,6 +28,7 @@ public class MavenHelper {
 
     public static final String CLEAN_ARTIFACT_GOAL = "build-helper:remove-project-artifact";
     public static final String CLEAN_DEPENDENCIES_GOAL = "dependency:purge-local-repository -DreResolve=false";
+    public static final String SKIP_TEST_PROPERTY = "maven.test.skip.exec";
 
     private final Logger logger = LoggerFactory.getLogger(MavenHelper.class);
 
