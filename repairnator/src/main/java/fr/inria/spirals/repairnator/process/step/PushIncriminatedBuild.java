@@ -1,12 +1,18 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import fr.inria.spirals.jtravis.entities.Repository;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevSort;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -49,6 +55,9 @@ public class PushIncriminatedBuild extends AbstractStep {
         }
 
         try {
+            Git git = Git.open(new File(inspector.getRepoLocalPath()));
+            git.checkout().setCreateBranch(true).setName("detached").call();
+
             ProcessBuilder processBuilder = new ProcessBuilder("git","rebase-last-x",NB_COMMITS_TO_KEEP)
                     .directory(new File(this.inspector.getRepoLocalPath()))
                     .inheritIO();
@@ -56,15 +65,13 @@ public class PushIncriminatedBuild extends AbstractStep {
             Process p = processBuilder.start();
             p.waitFor();
 
-            Git git = Git.open(new File(inspector.getRepoLocalPath()));
+
             RemoteAddCommand remoteAdd = git.remoteAdd();
             remoteAdd.setName("saveFail");
             remoteAdd.setUri(new URIish(REMOTE_REPO));
             remoteAdd.call();
 
             git.fetch().setRemote("saveFail").call();
-
-
 
             Ref theRef = git.getRepository().findRef("refs/remotes/saveFail/"+branchName);
 
@@ -94,7 +101,7 @@ public class PushIncriminatedBuild extends AbstractStep {
             this.getLogger().error("Error while executing a JGit operation: "+e);
             this.addStepError(e.getMessage());
         } catch (InterruptedException e) {
-            this.addStepError("Error while git command to only keep last 10 commits: "+e);
+            this.addStepError("Error while executing git command to gest last 10 commits"+e.getMessage());
         }
     }
 
