@@ -1,0 +1,1 @@
+SELECT u.login, p.name, COUNT(w.user_id) as pwatchers FROM projects p, users u, watchers w WHERE p.language = "java" and p.deleted is false and p.forked_from IS NULL and w.repo_id = p.id and u.id = p.owner_id GROUP BY p.id ORDER BY pwatchers DESC LIMIT 5000;
