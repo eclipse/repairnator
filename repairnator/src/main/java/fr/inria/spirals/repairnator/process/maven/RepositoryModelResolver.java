@@ -16,6 +16,8 @@ import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.resolution.InvalidRepositoryException;
 import org.apache.maven.model.resolution.ModelResolver;
 import org.apache.maven.model.resolution.UnresolvableModelException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by urli on 19/01/2017.
@@ -24,12 +26,13 @@ import org.apache.maven.model.resolution.UnresolvableModelException;
 
 class RepositoryModelResolver implements ModelResolver {
     private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2";
-    private File repository;
+    private static final Logger logger = LoggerFactory.getLogger(RepositoryModelResolver.class);
+    private File localRepository;
 
     private List<Repository> repositories = new ArrayList<Repository>();
 
-    RepositoryModelResolver(File repository) {
-        this.repository = repository;
+    RepositoryModelResolver(String localRepository) {
+        this.localRepository = new File(localRepository);
 
         Repository mainRepo = new Repository();
         mainRepo.setUrl(MAVEN_CENTRAL_URL);
@@ -37,6 +40,56 @@ class RepositoryModelResolver implements ModelResolver {
         repositories.add(mainRepo);
     }
 
+    private File getLocalFile(String groupId, String artifactId, String versionId) {
+        File pom = this.localRepository;
+        String[] groupIds = groupId.split("\\.");
+
+        // go through subdirectories
+        for (String id : groupIds) {
+            pom = new File(pom, id);
+        }
+
+        pom = new File(pom, artifactId);
+
+        pom = new File(pom, versionId);
+
+        pom = new File(pom, artifactId + "-" + versionId + ".pom");
+        return pom;
+    }
+
+    private void download(File localRepoFile) throws IOException {
+        for (Repository repository1 : repositories) {
+            String repository1Url = repository1.getUrl();
+            if (repository1Url.endsWith("/"))
+                repository1Url = repository1Url.substring(0, repository1Url.length() - 1);
+            URL url = new URL(repository1Url + localRepoFile.getAbsolutePath().substring(this.localRepository.getAbsolutePath().length()));
+
+            logger.debug("Downloading " + url);
+
+            try {
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setInstanceFollowRedirects(true);
+                InputStream in = conn.getInputStream();
+                localRepoFile.getParentFile().mkdirs();
+                FileOutputStream out = new FileOutputStream(localRepoFile);
+                byte[] buffer = new byte[4096];
+                int len;
+                while ((len = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, len);
+                }
+                in.close();
+                out.close();
+                return;
+            } catch (IOException e) {
+                logger.warn("Failed to download " + url);
+                logger.debug(e.getMessage());
+            }
+        }
+
+        throw new IOException("Failed to download " + localRepoFile);
+    }
+
+    @Override
     public ModelSource resolveModel(String groupId, String artifactId, String versionId) throws UnresolvableModelException {
         File pom = getLocalFile(groupId, artifactId, versionId);
 
@@ -56,21 +109,7 @@ class RepositoryModelResolver implements ModelResolver {
         return resolveModel(parent.getGroupId(), parent.getArtifactId(), parent.getId());
     }
 
-    private File getLocalFile(String groupId, String artifactId, String versionId) {
-        File pom = repository;
-        String[] groupIds = groupId.split("\\.");
-        for (String id : groupIds) {
-            pom = new File(pom, id);
-        }
-
-        pom = new File(pom, artifactId);
-
-        pom = new File(pom, versionId);
-
-        pom = new File(pom, artifactId + "-" + versionId + ".pom");
-        return pom;
-    }
-
+    @Override
     public void addRepository(Repository repository) throws InvalidRepositoryException {
         this.addRepository(repository, false);
     }
@@ -85,39 +124,9 @@ class RepositoryModelResolver implements ModelResolver {
         repositories.add(repository);
     }
 
+    @Override
     public ModelResolver newCopy() {
-        return new RepositoryModelResolver(repository);
-    }
-
-    private void download(File localRepoFile) throws IOException {
-        for (Repository repository1 : repositories) {
-            String repository1Url = repository1.getUrl();
-            if (repository1Url.endsWith("/"))
-                repository1Url = repository1Url.substring(0, repository1Url.length() - 1);
-            URL url = new URL(repository1Url + localRepoFile.getAbsolutePath().substring(repository.getAbsolutePath().length()));
-
-            System.out.println("Downloading " + url);
-
-            try {
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setInstanceFollowRedirects(true);
-                InputStream in = conn.getInputStream();
-                localRepoFile.getParentFile().mkdirs();
-                FileOutputStream out = new FileOutputStream(localRepoFile);
-                byte[] buffer = new byte[4096];
-                int len;
-                while ((len = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
-                }
-                in.close();
-                out.close();
-                return;
-            } catch (IOException e) {
-                System.err.println("Failed to download " + url);
-            }
-        }
-
-        throw new IOException("Failed to download " + localRepoFile);
+        return new RepositoryModelResolver(this.localRepository.getAbsolutePath());
     }
 }
 

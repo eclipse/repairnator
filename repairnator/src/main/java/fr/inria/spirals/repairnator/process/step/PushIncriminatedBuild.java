@@ -23,6 +23,7 @@ public class PushIncriminatedBuild extends AbstractStep {
     private static final String REMOTE_REPO_ROOT = "https://github.com/Spirals-Team/librepair-experiments";
     private static final String REMOTE_REPO = REMOTE_REPO_ROOT+".git";
     private static final String REMOTE_REPO_TREE = REMOTE_REPO_ROOT+"/tree/";
+    private static final String NB_COMMITS_TO_KEEP = "10";
 
     private String branchName;
 
@@ -48,6 +49,13 @@ public class PushIncriminatedBuild extends AbstractStep {
         }
 
         try {
+            ProcessBuilder processBuilder = new ProcessBuilder("git","rebase-last-x",NB_COMMITS_TO_KEEP)
+                    .directory(new File(this.inspector.getRepoLocalPath()))
+                    .inheritIO();
+
+            Process p = processBuilder.start();
+            p.waitFor();
+
             Git git = Git.open(new File(inspector.getRepoLocalPath()));
             RemoteAddCommand remoteAdd = git.remoteAdd();
             remoteAdd.setName("saveFail");
@@ -85,6 +93,8 @@ public class PushIncriminatedBuild extends AbstractStep {
         } catch (GitAPIException e) {
             this.getLogger().error("Error while executing a JGit operation: "+e);
             this.addStepError(e.getMessage());
+        } catch (InterruptedException e) {
+            this.addStepError("Error while git command to only keep last 10 commits: "+e);
         }
     }
 
