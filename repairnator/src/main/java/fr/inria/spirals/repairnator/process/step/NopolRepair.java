@@ -86,7 +86,7 @@ public class NopolRepair extends AbstractStep {
 
         try
         {
-            Model model = MavenHelper.readPomXml(pomIncriminatedModule);
+            Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
 
             Build buildSection = model.getBuild();
 
@@ -114,7 +114,7 @@ public class NopolRepair extends AbstractStep {
 
                 File parentPomXml = new File(incriminatedModulePath+File.separator+relativePath);
 
-                model = MavenHelper.readPomXml(parentPomXml);
+                model = MavenHelper.readPomXml(parentPomXml, this.inspector.getM2LocalPath());
 
                 for (String module : model.getModules()) {
                     File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent()+File.separator+module, false);

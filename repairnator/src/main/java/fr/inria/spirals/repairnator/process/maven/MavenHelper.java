@@ -2,10 +2,16 @@ package fr.inria.spirals.repairnator.process.maven;
 
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Parent;
+import org.apache.maven.model.Repository;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
+import org.apache.maven.model.building.ModelSource;
+import org.apache.maven.model.resolution.InvalidRepositoryException;
+import org.apache.maven.model.resolution.ModelResolver;
+import org.apache.maven.model.resolution.UnresolvableModelException;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
@@ -17,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -48,11 +55,14 @@ public class MavenHelper {
         this.enableHandlers = enableHandlers;
     }
 
-    public static Model readPomXml(File pomXml) throws ModelBuildingException {
+    public static Model readPomXml(File pomXml, String localMavenRepository) throws ModelBuildingException {
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
         req.setProcessPlugins(false);
         req.setPomFile(pomXml);
         req.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL );
+        req.setModelResolver(new RepositoryModelResolver(new File(localMavenRepository)));
+        //req.setModelResolver();
+
 
         return new DefaultModelBuilderFactory().newInstance().build(req).getEffectiveModel();
     }
