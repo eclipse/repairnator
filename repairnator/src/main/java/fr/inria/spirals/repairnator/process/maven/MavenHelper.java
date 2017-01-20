@@ -80,6 +80,7 @@ public class MavenHelper {
         properties.setProperty("enforcer.skip","true");
         properties.setProperty("checkstyle.skip","true");
         properties.setProperty("cobertura.skip","true");
+        properties.setProperty("skipITs","true");
         request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();

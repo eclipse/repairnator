@@ -232,6 +232,7 @@ public class NopolRepair extends AbstractStep {
                             return nopol.build(projectReference.testClasses());
                         }
                     });
+
             try {
                 executor.shutdown();
                 patch = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
