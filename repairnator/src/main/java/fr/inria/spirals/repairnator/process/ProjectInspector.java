@@ -130,7 +130,14 @@ public class ProjectInspector {
         }
 
         cloneRepo.setState(ProjectState.INIT);
-        this.state = cloneRepo.execute();
+
+        try {
+            this.state = cloneRepo.execute();
+        } catch (Exception e) {
+            this.addStepError("Unknown", e.getMessage());
+            this.logger.debug("Exception catch while executing steps: ",e);
+        }
+
 
         this.stepsDurationsInSeconds.put("clone",cloneRepo.getDuration());
         this.stepsDurationsInSeconds.put("build",buildRepo.getDuration());
