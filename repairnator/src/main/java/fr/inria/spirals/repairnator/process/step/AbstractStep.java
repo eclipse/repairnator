@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -31,6 +33,7 @@ public abstract class AbstractStep {
     private long dateBegin;
     private long dateEnd;
     private boolean pomLocationTested;
+    private List<AbstractDataSerializer> serializers;
 
     public AbstractStep(ProjectInspector inspector) {
         this.name = this.getClass().getName();
@@ -38,6 +41,11 @@ public abstract class AbstractStep {
         this.shouldStop = false;
         this.state = ProjectState.NONE;
         this.pomLocationTested = false;
+        this.serializers = new ArrayList<AbstractDataSerializer>();
+    }
+
+    public void setDataSerializer(List<AbstractDataSerializer> serializers) {
+        this.serializers = serializers;
     }
 
     public void setLimitStepNumber(int limitStepNumber) {
@@ -46,6 +54,7 @@ public abstract class AbstractStep {
 
     public AbstractStep setNextStep(AbstractStep nextStep) {
         this.nextStep = nextStep;
+        nextStep.setDataSerializer(this.serializers);
         return nextStep;
     }
 
@@ -79,7 +88,14 @@ public abstract class AbstractStep {
 
         }
         this.cleanMavenArtifacts();
+        this.serializeData();
         return this.state;
+    }
+
+    private void serializeData() {
+        for (AbstractDataSerializer serializer : this.serializers) {
+            serializer.serializeData(this.inspector);
+        }
     }
 
     private void testPomLocation() {
@@ -146,6 +162,7 @@ public abstract class AbstractStep {
             return this.executeNextStep();
         } else {
             this.cleanMavenArtifacts();
+            this.serializeData();
             return this.state;
         }
     }

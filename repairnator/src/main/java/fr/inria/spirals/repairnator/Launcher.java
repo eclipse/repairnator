@@ -11,7 +11,9 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
-import fr.inria.spirals.repairnator.serializer.JsonSerializer;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
+import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +37,12 @@ public class Launcher {
     private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN","GITHUB_OAUTH"};
 
     private JSAP jsap;
-    private JsonSerializer serializer;
     private JSAPResult arguments;
+    private List<AbstractDataSerializer> serializers;
 
-    public Launcher() {}
+    public Launcher() {
+        this.serializers = new ArrayList<AbstractDataSerializer>();
+    }
 
     private void defineArgs() throws JSAPException {
         // Verbose output
@@ -204,6 +208,7 @@ public class Launcher {
             System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
             System.exit(-1);
         }
+        this.checkToolsLoaded();
         if (arguments.success() && checkEnvironmentVariables()) {
             mainProcess();
         }
@@ -222,13 +227,17 @@ public class Launcher {
         if (debug) {
             setLevel(Level.DEBUG);
         }
-        this.serializer = new JsonSerializer(output, slugMode);
+        JsonSerializer jsonSerializer = new JsonSerializer(output, slugMode);
+        CSVSerializer csvSerializer = new CSVSerializer(output);
+
+        this.serializers.add(jsonSerializer);
+        this.serializers.add(csvSerializer);
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
 
         ProjectScanner scanner = new ProjectScanner(lookupDays);
 
-        this.serializer.setScanner(scanner);
+        jsonSerializer.setScanner(scanner);
 
         List<Build> buildList;
 
@@ -249,14 +258,12 @@ public class Launcher {
             completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
 
             List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
-
-            this.serializer.setInspectors(projectInspectors);
         }
 
 
         Launcher.LOGGER.debug("Start writing a JSON output...");
 
-        this.serializer.createOutput();
+        jsonSerializer.createOutput();
 
         if (clean && completeWorkspace != null) {
             Launcher.LOGGER.debug("Clean the workspace now...");
@@ -273,7 +280,7 @@ public class Launcher {
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector inspector = new ProjectInspector(build, workspace, solverPath, push, steps);
+            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, steps);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
             inspector.processRepair();

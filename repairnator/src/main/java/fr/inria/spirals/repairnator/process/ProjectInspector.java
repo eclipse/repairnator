@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.ProjectState;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +38,10 @@ public class ProjectInspector {
     private Map<String, List<String>> stepErrors;
     private boolean autoclean;
     private String m2LocalPath;
+    private List<AbstractDataSerializer> serializers;
 
 
-    public ProjectInspector(Build failingBuild, String workspace, String nopolSolverPath, boolean push, int steps) {
+    public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, int steps) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -113,6 +115,7 @@ public class ProjectInspector {
 
 
         cloneRepo.setLimitStepNumber(this.steps);
+        cloneRepo.setDataSerializer(this.serializers);
         cloneRepo
                 .setNextStep(buildRepo)
                 .setNextStep(testProject)

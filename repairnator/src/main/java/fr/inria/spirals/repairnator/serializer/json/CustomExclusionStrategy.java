@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.serializer;
+package fr.inria.spirals.repairnator.serializer.json;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;

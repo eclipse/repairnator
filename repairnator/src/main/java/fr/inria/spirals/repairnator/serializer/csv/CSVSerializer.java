@@ -1,5 +1,8 @@
-package fr.inria.spirals.repairnator.serializer;
+package fr.inria.spirals.repairnator.serializer.csv;
 
+import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +16,7 @@ import java.util.Date;
 /**
  * Created by urli on 15/01/2017.
  */
-public class CSVSerializer {
+public class CSVSerializer extends AbstractDataSerializer {
     private final static char SEPARATOR = ',';
     private final static String FIRST_LINE = "BuildIds"+SEPARATOR+"Slug"+SEPARATOR+"Status"+SEPARATOR+"Date";
     private final static String FILENAME = "all_data_builds.csv";
@@ -57,11 +60,17 @@ public class CSVSerializer {
         }
     }
 
-    public void writeData(int buildid, String slug, String status, Date date) {
+    private void writeData(int buildid, String slug, String status, int prNumber, Date date) {
         String buildId = buildid+"";
-        String line = buildId+SEPARATOR+slug+SEPARATOR+status+SEPARATOR+this.tsvDateFormat.format(date);
+        String prNumberStr = prNumber+"";
+        String line = buildId+SEPARATOR+slug+SEPARATOR+status+SEPARATOR+prNumberStr+SEPARATOR+this.tsvDateFormat.format(date);
         this.writeNewLine(line);
     }
 
 
+    @Override
+    public void serializeData(ProjectInspector inspector) {
+        Build build = inspector.getBuild();
+        this.writeData(build.getId(), build.getRepository().getSlug(), inspector.getState().name(), build.getPullRequestNumber(), build.getFinishedAt());
+    }
 }

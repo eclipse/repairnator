@@ -171,6 +171,8 @@ public class ProjectScanner {
         Repository repo = build.getRepository();
         if (build.getConfig().getLanguage().equals("java")) {
             this.totalBuildInJava++;
+
+            // TODO: get number of build due to PR by project by day
             this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
             if (build.getBuildStatus() == BuildStatus.FAILED) {
                 this.totalBuildInJavaFailing++;

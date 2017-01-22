@@ -61,7 +61,6 @@ public class MavenHelper {
         req.setPomFile(pomXml);
         req.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL );
         req.setModelResolver(new RepositoryModelResolver(localMavenRepository));
-        //req.setModelResolver();
 
 
         return new DefaultModelBuilderFactory().newInstance().build(req).getEffectiveModel();
