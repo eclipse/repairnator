@@ -17,6 +17,6 @@ buildNumber.properties
 local_project_list.txt
 workspace/
 *.z3
-output/
 localScripts/
 log
+localoutput/
