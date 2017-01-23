@@ -109,6 +109,10 @@ public class ProjectInspector {
         return stepErrors;
     }
 
+    public void addStepDuration(String step, int duration) {
+        this.stepsDurationsInSeconds.put(step, duration);
+    }
+
     public void processRepair() {
 
         AbstractStep cloneRepo = new CloneRepository(this);
@@ -142,14 +146,6 @@ public class ProjectInspector {
             this.addStepError("Unknown", e.getMessage());
             this.logger.debug("Exception catch while executing steps: ",e);
         }
-
-
-        this.stepsDurationsInSeconds.put("clone",cloneRepo.getDuration());
-        this.stepsDurationsInSeconds.put("build",buildRepo.getDuration());
-        this.stepsDurationsInSeconds.put("test",testProject.getDuration());
-        this.stepsDurationsInSeconds.put("gatherInfo",this.testInformations.getDuration());
-        this.stepsDurationsInSeconds.put("pushFail",this.pushBuild.getDuration());
-        this.stepsDurationsInSeconds.put("nopolRepair",this.nopolRepair.getDuration());
     }
 
     public Map<String, Integer> getStepsDurationsInSeconds() {

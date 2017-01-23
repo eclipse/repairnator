@@ -29,7 +29,7 @@ public class CSVSerializer extends AbstractDataSerializer {
 
     public CSVSerializer(String outputPath) {
         this.tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
-        this.csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YY");
+        this.csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
         File outputFile = new File(outputPath);
 
         if (!outputFile.isDirectory()) {

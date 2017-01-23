@@ -44,6 +44,10 @@ public abstract class AbstractStep {
         this.serializers = new ArrayList<AbstractDataSerializer>();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setDataSerializer(List<AbstractDataSerializer> serializers) {
         if (serializers != null) {
             this.serializers = serializers;
@@ -163,6 +167,9 @@ public abstract class AbstractStep {
         this.dateBegin = new Date().getTime();
         this.businessExecute();
         this.dateEnd = new Date().getTime();
+
+        this.inspector.addStepDuration(this.name, getDuration());
+
         if (!shouldStop) {
             this.executeNextStep();
         } else {
@@ -172,7 +179,7 @@ public abstract class AbstractStep {
         }
     }
 
-    public int getDuration() {
+    private int getDuration() {
         if (dateEnd == 0 || dateBegin == 0) {
             return 0;
         }
