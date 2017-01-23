@@ -1,17 +1,8 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.ProjectInspector;
-import fr.inria.spirals.repairnator.process.maven.MavenErrorHandler;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
-import org.apache.maven.shared.invoker.DefaultInvocationRequest;
-import org.apache.maven.shared.invoker.DefaultInvoker;
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.apache.maven.shared.invoker.Invoker;
-import org.apache.maven.shared.invoker.MavenInvocationException;
 
-import java.io.File;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**

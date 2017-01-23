@@ -71,7 +71,8 @@ public class CSVSerializer extends AbstractDataSerializer {
                     prNumberStr+SEPARATOR+
                     this.tsvCompleteDateFormat.format(date)+SEPARATOR+
                     this.csvOnlyDayFormat.format(date)+SEPARATOR+
-                    realState;
+                    realState+SEPARATOR+
+                    this.tsvCompleteDateFormat.format(new Date());
         this.writeNewLine(line);
     }
 
@@ -91,6 +92,7 @@ public class CSVSerializer extends AbstractDataSerializer {
                 state = "not buildable";
                 break;
 
+            case NOTTESTABLE:
             case BUILDABLE:
                 state = "not testable";
                 break;

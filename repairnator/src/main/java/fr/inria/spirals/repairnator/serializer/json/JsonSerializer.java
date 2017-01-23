@@ -287,6 +287,7 @@ public class JsonSerializer extends AbstractDataSerializer {
                 outputNotBuildableInspector(inspector);
                 break;
 
+            case NOTTESTABLE:
             case BUILDABLE:
                 outputNotTestableInspector(inspector);
                 break;
