@@ -45,7 +45,9 @@ public abstract class AbstractStep {
     }
 
     public void setDataSerializer(List<AbstractDataSerializer> serializers) {
-        this.serializers = serializers;
+        if (serializers != null) {
+            this.serializers = serializers;
+        }
     }
 
     public void setLimitStepNumber(int limitStepNumber) {
@@ -93,8 +95,10 @@ public abstract class AbstractStep {
     }
 
     private void serializeData() {
-        for (AbstractDataSerializer serializer : this.serializers) {
-            serializer.serializeData(this.inspector);
+        if (serializers != null) {
+            for (AbstractDataSerializer serializer : this.serializers) {
+                serializer.serializeData(this.inspector);
+            }
         }
     }
 

@@ -53,6 +53,7 @@ public class ProjectInspector {
         this.steps = steps;
         this.stepErrors = new HashMap<String, List<String>>();
         this.autoclean = false;
+        this.serializers = serializers;
     }
 
     public String getM2LocalPath() {
