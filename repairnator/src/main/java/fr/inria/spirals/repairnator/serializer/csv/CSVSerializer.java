@@ -62,10 +62,16 @@ public class CSVSerializer extends AbstractDataSerializer {
         }
     }
 
-    private void writeData(int buildid, String slug, String status, int prNumber, Date date) {
+    private void writeData(int buildid, String slug, String state, String realState, int prNumber, Date date) {
         String buildId = buildid+"";
         String prNumberStr = prNumber+"";
-        String line = buildId+SEPARATOR+slug+SEPARATOR+status+SEPARATOR+prNumberStr+SEPARATOR+this.tsvCompleteDateFormat.format(date)+SEPARATOR+this.csvOnlyDayFormat.format(date);
+        String line = buildId+SEPARATOR+
+                    slug+SEPARATOR+
+                    state+SEPARATOR+
+                    prNumberStr+SEPARATOR+
+                    this.tsvCompleteDateFormat.format(date)+SEPARATOR+
+                    this.csvOnlyDayFormat.format(date)+SEPARATOR+
+                    realState;
         this.writeNewLine(line);
     }
 
@@ -73,6 +79,45 @@ public class CSVSerializer extends AbstractDataSerializer {
     @Override
     public void serializeData(ProjectInspector inspector) {
         Build build = inspector.getBuild();
-        this.writeData(build.getId(), build.getRepository().getSlug(), inspector.getState().name(), build.getPullRequestNumber(), build.getFinishedAt());
+
+        String state;
+        switch (inspector.getState()) {
+            case NONE:
+            case INIT:
+                state = "not clonable";
+                break;
+
+            case CLONABLE:
+                state = "not buildable";
+                break;
+
+            case BUILDABLE:
+                state = "not testable";
+                break;
+
+            case TESTABLE:
+                state = "testable";
+                break;
+
+            case HASTESTFAILURE:
+                state = "test failure";
+                break;
+
+            case NOTFAILING:
+                state = "not failing";
+                break;
+
+            case PATCHED:
+                state = "PATCHED";
+                break;
+
+            default:
+                state = "unknown";
+                break;
+        }
+
+        String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
+
+        this.writeData(build.getId(), build.getRepository().getSlug(), state, realState, build.getPullRequestNumber(), build.getFinishedAt());
     }
 }
