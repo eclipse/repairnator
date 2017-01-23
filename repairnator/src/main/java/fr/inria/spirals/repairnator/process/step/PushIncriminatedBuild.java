@@ -85,7 +85,6 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             if (theRef != null) {
                 this.getLogger().warn("A branch already exist in the remote repo with the following name: "+branchName);
-                this.setState(ProjectState.PUSHED);
                 return;
             }
 
@@ -96,8 +95,6 @@ public class PushIncriminatedBuild extends AbstractStep {
                 .add(branch)
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider( System.getenv("GITHUB_OAUTH"), "" ))
                 .call();
-
-            this.setState(ProjectState.PUSHED);
 
         } catch (IOException e) {
             this.getLogger().error("Error while reading git directory at the following location: "+inspector.getRepoLocalPath()+" : "+e);
