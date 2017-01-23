@@ -212,6 +212,7 @@ public class NopolRepair extends AbstractStep {
 
             this.projectReference = new ProjectReference(sources, classPath.toArray(new URL[classPath.size()]), new String[] {failingTest});
             Config config = new Config();
+            config.setComplianceLevel(8);
             config.setTimeoutTestExecution(5);
             config.setMaxTimeInMinutes(5);
             config.setLocalizer(Config.NopolLocalizer.GZOLTAR);

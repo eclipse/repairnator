@@ -32,7 +32,7 @@ public class TestProject extends AbstractStep {
             }
             this.state = ProjectState.NOTFAILING;
         } else {
-            if (outputTestFilter.getFailingTests() > 0) {
+            if (outputTestFilter.isFailingWithTest()) {
                 this.getLogger().debug(outputTestFilter.getFailingTests()+" tests failed, go to next step.");
                 this.state = ProjectState.TESTABLE;
             } else {
