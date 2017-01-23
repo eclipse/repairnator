@@ -57,13 +57,21 @@ public class PushIncriminatedBuild extends AbstractStep {
         try {
             Git git = Git.open(new File(inspector.getRepoLocalPath()));
             git.checkout().setCreateBranch(true).setName("detached").call();
+            ObjectId id = git.getRepository().resolve("HEAD~"+NB_COMMITS_TO_KEEP);
+            if (id != null) {
+                this.getLogger().debug("Get only the last "+NB_COMMITS_TO_KEEP+" commits before push.");
+                ProcessBuilder processBuilder = new ProcessBuilder("git","rebase-last-x",NB_COMMITS_TO_KEEP)
+                        .directory(new File(this.inspector.getRepoLocalPath()))
+                        .inheritIO();
 
-            ProcessBuilder processBuilder = new ProcessBuilder("git","rebase-last-x",NB_COMMITS_TO_KEEP)
-                    .directory(new File(this.inspector.getRepoLocalPath()))
-                    .inheritIO();
+                Process p = processBuilder.start();
+                p.waitFor();
+            } else {
+                this.getLogger().debug("The repository contains less than "+NB_COMMITS_TO_KEEP+": push all the repo.");
+            }
 
-            Process p = processBuilder.start();
-            p.waitFor();
+
+
 
 
             RemoteAddCommand remoteAdd = git.remoteAdd();

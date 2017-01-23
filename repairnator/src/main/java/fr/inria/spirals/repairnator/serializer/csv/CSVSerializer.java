@@ -24,10 +24,12 @@ public class CSVSerializer extends AbstractDataSerializer {
     private final Logger logger = LoggerFactory.getLogger(CSVSerializer.class);
 
     private BufferedWriter stream;
-    private SimpleDateFormat tsvDateFormat;
+    private SimpleDateFormat tsvCompleteDateFormat;
+    private SimpleDateFormat csvOnlyDayFormat;
 
     public CSVSerializer(String outputPath) {
-        this.tsvDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
+        this.tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
+        this.csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YY");
         File outputFile = new File(outputPath);
 
         if (!outputFile.isDirectory()) {
@@ -63,7 +65,7 @@ public class CSVSerializer extends AbstractDataSerializer {
     private void writeData(int buildid, String slug, String status, int prNumber, Date date) {
         String buildId = buildid+"";
         String prNumberStr = prNumber+"";
-        String line = buildId+SEPARATOR+slug+SEPARATOR+status+SEPARATOR+prNumberStr+SEPARATOR+this.tsvDateFormat.format(date);
+        String line = buildId+SEPARATOR+slug+SEPARATOR+status+SEPARATOR+prNumberStr+SEPARATOR+this.tsvCompleteDateFormat.format(date)+SEPARATOR+this.csvOnlyDayFormat.format(date);
         this.writeNewLine(line);
     }
 
