@@ -191,10 +191,6 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
-        if (inspector.getState() == ProjectState.PUSHED) {
-            result.addProperty("remoteLocation",inspector.getPushBuild().getRemoteLocation());
-        }
-
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
         result.addProperty("nbTests", testInformation.getNbTotalTests());
@@ -241,10 +237,6 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("buildDate",serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
-
-        if (inspector.getState() == ProjectState.PUSHED) {
-            result.addProperty("remoteLocation",inspector.getPushBuild().getRemoteLocation());
-        }
 
         NopolRepair nopolRepair = inspector.getNopolRepair();
         result.add("patches", serialize(nopolRepair.getPatches()));
@@ -303,7 +295,6 @@ public class JsonSerializer extends AbstractDataSerializer {
                 outputFailWhenGatheringInfoInspector(inspector);
                 break;
 
-            case PUSHED:
             case HASTESTFAILURE:
                 outputHasTestFailureInspector(inspector);
                 break;
