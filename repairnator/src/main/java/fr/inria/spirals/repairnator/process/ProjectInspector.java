@@ -80,6 +80,10 @@ public class ProjectInspector {
         return state;
     }
 
+    public void setState(ProjectState state) {
+        this.state = state;
+    }
+
     public Build getBuild() {
         return build;
     }
@@ -133,7 +137,7 @@ public class ProjectInspector {
         cloneRepo.setState(ProjectState.INIT);
 
         try {
-            this.state = cloneRepo.execute();
+            cloneRepo.execute();
         } catch (Exception e) {
             this.addStepError("Unknown", e.getMessage());
             this.logger.debug("Exception catch while executing steps: ",e);

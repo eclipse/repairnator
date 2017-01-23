@@ -77,7 +77,7 @@ public abstract class AbstractStep {
         this.inspector.addStepError(this.name, error);
     }
 
-    protected ProjectState executeNextStep() {
+    protected void executeNextStep() {
         if (this.nextStep != null) {
             this.limitStepNumber--;
             this.getLogger().debug(this.limitStepNumber+" steps remaining...");
@@ -85,13 +85,14 @@ public abstract class AbstractStep {
             if (this.limitStepNumber > 0) {
                 this.nextStep.setLimitStepNumber(this.limitStepNumber);
                 this.nextStep.setState(this.state);
-                return this.nextStep.execute();
+                this.nextStep.execute();
+                return;
             }
 
         }
         this.cleanMavenArtifacts();
+        this.inspector.setState(this.state);
         this.serializeData();
-        return this.state;
     }
 
     private void serializeData() {
@@ -158,16 +159,16 @@ public abstract class AbstractStep {
         }
     }
 
-    public ProjectState execute() {
+    public void execute() {
         this.dateBegin = new Date().getTime();
         this.businessExecute();
         this.dateEnd = new Date().getTime();
         if (!shouldStop) {
-            return this.executeNextStep();
+            this.executeNextStep();
         } else {
             this.cleanMavenArtifacts();
+            this.inspector.setState(this.state);
             this.serializeData();
-            return this.state;
         }
     }
 
