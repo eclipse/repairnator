@@ -185,6 +185,15 @@ public class Launcher {
         }
     }
 
+    private void checkNopolSolverPath() {
+        File file = new File(this.arguments.getString("z3Path"));
+
+        if (!file.exists()) {
+            System.err.println("The Nopol solver path should be an existing file: "+file.getPath()+" does not exist.");
+            System.exit(-1);
+        }
+    }
+
     private void run(String[] args) throws JSAPException, IOException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
@@ -209,6 +218,7 @@ public class Launcher {
             System.exit(-1);
         }
         this.checkToolsLoaded();
+        this.checkNopolSolverPath();
         if (arguments.success() && checkEnvironmentVariables()) {
             mainProcess();
         }
