@@ -45,6 +45,7 @@ public class JsonSerializer extends AbstractDataSerializer {
     Map<String, JsonArray> inspectors;
 
     public JsonSerializer(String outputPath, boolean slugMode) {
+        super();
         this.dateStart = new Date();
         this.outputPath = outputPath;
 

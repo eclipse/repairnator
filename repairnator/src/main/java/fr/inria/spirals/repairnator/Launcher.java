@@ -13,6 +13,7 @@ import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadsheetSerializer;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.LoggerFactory;
@@ -239,9 +240,11 @@ public class Launcher {
         }
         JsonSerializer jsonSerializer = new JsonSerializer(output, slugMode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
+        GoogleSpreadsheetSerializer googleSpreadsheetSerializer = new GoogleSpreadsheetSerializer();
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
+        this.serializers.add(googleSpreadsheetSerializer);
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
 

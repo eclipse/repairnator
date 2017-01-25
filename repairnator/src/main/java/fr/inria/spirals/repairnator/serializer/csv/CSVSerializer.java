@@ -24,12 +24,9 @@ public class CSVSerializer extends AbstractDataSerializer {
     private final Logger logger = LoggerFactory.getLogger(CSVSerializer.class);
 
     private BufferedWriter stream;
-    private SimpleDateFormat tsvCompleteDateFormat;
-    private SimpleDateFormat csvOnlyDayFormat;
 
     public CSVSerializer(String outputPath) {
-        this.tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
-        this.csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
+        super();
         File outputFile = new File(outputPath);
 
         if (!outputFile.isDirectory()) {
@@ -81,42 +78,7 @@ public class CSVSerializer extends AbstractDataSerializer {
     public void serializeData(ProjectInspector inspector) {
         Build build = inspector.getBuild();
 
-        String state;
-        switch (inspector.getState()) {
-            case NONE:
-            case INIT:
-                state = "not clonable";
-                break;
-
-            case CLONABLE:
-                state = "not buildable";
-                break;
-
-            case NOTTESTABLE:
-            case BUILDABLE:
-                state = "not testable";
-                break;
-
-            case TESTABLE:
-                state = "testable";
-                break;
-
-            case HASTESTFAILURE:
-                state = "test failure";
-                break;
-
-            case NOTFAILING:
-                state = "not failing";
-                break;
-
-            case PATCHED:
-                state = "PATCHED";
-                break;
-
-            default:
-                state = "unknown";
-                break;
-        }
+        String state = this.getPrettyPrintState(inspector.getState());
 
         String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
 
