@@ -13,6 +13,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
@@ -43,7 +44,7 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
     private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"), ".credentials/sheets.googleapis.com-repairnator");
     private static final String GOOGLE_SECRET_PATH = "./client_secret.json";
     private static final String SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
-    private static final String RANGE = "All data!A1:H1";
+    private static final String RANGE = "All data!A1:I1";
 
 
     private FileDataStoreFactory dataStoreFactory;
@@ -109,6 +110,7 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
         dataCol.add(this.csvOnlyDayFormat.format(build.getFinishedAt()));
         dataCol.add(realState);
         dataCol.add(this.tsvCompleteDateFormat.format(new Date()));
+        dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
 
         List<List<Object>> dataRow = new ArrayList<List<Object>>();
         dataRow.add(dataCol);
