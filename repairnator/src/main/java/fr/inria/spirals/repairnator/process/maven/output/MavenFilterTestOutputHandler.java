@@ -76,11 +76,14 @@ public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
             this.failingTests += failing;
             this.erroringTests += Integer.parseInt(matcher.group(3));
             this.skippingTests += Integer.parseInt(matcher.group(4));
-            this.totalElapsedTime += Float.parseFloat(matcher.group(6));
 
-            if (failing > 0) {
-                this.failingClasses.add(matcher.group(8));
-                this.failingWithTest = true;
+            if (matcher.group(5) != null) {
+                this.totalElapsedTime += Float.parseFloat(matcher.group(6));
+
+                if (failing > 0) {
+                    this.failingClasses.add(matcher.group(8));
+                    this.failingWithTest = true;
+                }
             }
         }
 
