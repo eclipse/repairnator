@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,8 +41,9 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadsheetSerializer.class);
     private static final String APPLICATION_NAME = "RepairNator Bot";
     private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"), ".credentials/sheets.googleapis.com-repairnator");
+    private static final String GOOGLE_SECRET_PATH = "./client_secret.json";
     private static final String SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
-    private static final String RANGE = "Feuille2!A1:H1";
+    private static final String RANGE = "All data!A1:H1";
 
 
     private FileDataStoreFactory dataStoreFactory;
@@ -50,7 +52,7 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
     private List<String> scopes;
     private Sheets sheets;
 
-    public GoogleSpreadsheetSerializer() {
+    public GoogleSpreadsheetSerializer() throws IOException {
         super();
         try {
             this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -62,7 +64,31 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
         }
 
         this.jsonFactory = JacksonFactory.getDefaultInstance();
-        this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
+        this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
+
+        this.initSheets();
+    }
+
+    private void initSheets() throws IOException {
+        File secretFile = new File(GOOGLE_SECRET_PATH);
+        if (!secretFile.exists()) {
+            throw new IOException("File containing the token information to access Google API does not exist.");
+        }
+
+        // Load client secrets.
+        InputStream in = new FileInputStream(secretFile);
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(this.jsonFactory, new InputStreamReader(in));
+
+        // Build flow and trigger user authorization request.
+        GoogleAuthorizationCodeFlow flow =
+                new GoogleAuthorizationCodeFlow.Builder(
+                        this.httpTransport, this.jsonFactory, clientSecrets, this.scopes)
+                        .setDataStoreFactory(this.dataStoreFactory)
+                        .build();
+        Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+        this.logger.debug("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
+
+        this.sheets = new Sheets.Builder(this.httpTransport, this.jsonFactory, credential).setApplicationName(APPLICATION_NAME).build();
     }
 
 
@@ -91,51 +117,13 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
         valueRange.setValues(dataRow);
 
         try {
-            Sheets sheets = this.getSheetsService();
-            AppendValuesResponse response = sheets.spreadsheets().values().append(SPREADSHEET_ID, RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+            AppendValuesResponse response = this.sheets.spreadsheets().values().append(SPREADSHEET_ID, RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                 this.logger.debug("Data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting data in Google Spreadsheet.");
+            this.logger.error("An error occured while inserting data in Google Spreadsheet.",e);
         }
     }
-
-    /**
-     * Creates an authorized Credential object.
-     * @return an authorized Credential object.
-     * @throws IOException
-     */
-    private Credential authorize() throws IOException {
-        // Load client secrets.
-        InputStream in = GoogleSpreadsheetSerializer.class.getResourceAsStream("/client_secret.json");
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(this.jsonFactory, new InputStreamReader(in));
-
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow =
-                new GoogleAuthorizationCodeFlow.Builder(
-                        this.httpTransport, this.jsonFactory, clientSecrets, this.scopes)
-                        .setDataStoreFactory(this.dataStoreFactory)
-                        .build();
-        Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-        this.logger.debug("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-        return credential;
-    }
-
-    /**
-     * Build and return an authorized Sheets API client service.
-     * @return an authorized Sheets API client service
-     * @throws IOException
-     */
-    private Sheets getSheetsService() throws IOException {
-        if (this.sheets == null) {
-            Credential credential = this.authorize();
-            this.sheets = new Sheets.Builder(this.httpTransport, this.jsonFactory, credential)
-                    .setApplicationName(APPLICATION_NAME)
-                    .build();
-        }
-        return this.sheets;
-    }
-
 
 }
