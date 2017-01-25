@@ -234,6 +234,7 @@ public class Launcher {
         boolean slugMode = (arguments.getString("mode").equals(SLUG_MODE));
         int steps = Integer.parseInt(arguments.getString("steps"));
         boolean clean = arguments.getBoolean("clean");
+        boolean push = arguments.getBoolean("push");
 
         if (debug) {
             setLevel(Level.DEBUG);
@@ -244,7 +245,10 @@ public class Launcher {
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
-        this.serializers.add(googleSpreadsheetSerializer);
+
+        if (push) {
+            this.serializers.add(googleSpreadsheetSerializer);
+        }
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
 

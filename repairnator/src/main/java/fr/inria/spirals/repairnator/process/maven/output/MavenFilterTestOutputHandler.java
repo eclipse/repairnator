@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
 
-    private static final String MVN_TEST_PATTERN = "^Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*), Skipped: (\\d*), Time elapsed: ([\\d\\.]*) sec (<<< FAILURE! )?- in ([\\w\\.]*)$";
+    private static final String MVN_TEST_PATTERN = "^Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*), Skipped: (\\d*)(, Time elapsed: ([\\d\\.]*) sec (<<< FAILURE! )?- in ([\\w\\.]*))?$";
     private static final String MVN_GOAL_FAILED_WITH_TEST_FAILURE = "There are test failures.";
 
     private Pattern mvnGoalFailPattern;
@@ -60,7 +60,7 @@ public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
     }
 
     public boolean isFailingWithTest() {
-        return failingWithTest;
+        return failingWithTest || failingTests > 0;
     }
 
     @Override
@@ -76,10 +76,10 @@ public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
             this.failingTests += failing;
             this.erroringTests += Integer.parseInt(matcher.group(3));
             this.skippingTests += Integer.parseInt(matcher.group(4));
-            this.totalElapsedTime += Float.parseFloat(matcher.group(5));
+            this.totalElapsedTime += Float.parseFloat(matcher.group(6));
 
             if (failing > 0) {
-                this.failingClasses.add(matcher.group(7));
+                this.failingClasses.add(matcher.group(8));
                 this.failingWithTest = true;
             }
         }
