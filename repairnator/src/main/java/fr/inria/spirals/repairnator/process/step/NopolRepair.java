@@ -197,6 +197,18 @@ public class NopolRepair extends AbstractStep {
             return;
         }
 
+        boolean containJunit = false;
+        for (URL url : classPath) {
+            if (url.toString().contains("junit")) {
+                containJunit = true;
+                break;
+            }
+        }
+
+        if (!containJunit) {
+            this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
+        }
+
         File[] sources = this.searchForSourcesDirectory(incriminatedModule, true);
 
         if (sources == null) {

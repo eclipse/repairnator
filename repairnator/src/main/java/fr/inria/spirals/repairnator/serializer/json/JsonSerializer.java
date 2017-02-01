@@ -10,6 +10,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.Job;
 import fr.inria.spirals.jtravis.entities.Log;
 import fr.inria.spirals.jtravis.entities.TestsInformation;
+import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
@@ -41,17 +42,17 @@ public class JsonSerializer extends AbstractDataSerializer {
     private Date dateFinish;
     private ProjectScanner scanner;
     private String outputPath;
-    private boolean slugMode;
+    private RepairMode mode;
     Map<String, JsonArray> inspectors;
 
-    public JsonSerializer(String outputPath, boolean slugMode) {
+    public JsonSerializer(String outputPath, RepairMode mode) {
         super();
         this.dateStart = new Date();
         this.outputPath = outputPath;
 
         this.serializer = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new CustomExclusionStrategy()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
-        this.slugMode = slugMode;
+        this.mode = mode;
         this.inspectors = new HashMap<String, JsonArray>();
 
         for (ProjectState state : ProjectState.values()) {
@@ -74,7 +75,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         if (outputFile.isDirectory()) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             String formattedDate = dateFormat.format(new Date());
-            String filename = (slugMode) ? "librepair_bot_"+formattedDate+".json" : "librepair_"+formattedDate+".json";
+            String filename = "librepair_"+mode.name().toLowerCase()+"_"+formattedDate+".json";
             outputFile = new File(outputFile.getPath()+File.separator+filename);
         }
 

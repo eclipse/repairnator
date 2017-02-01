@@ -32,9 +32,6 @@ import java.util.List;
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
-    private static final String BUILD_MODE = "builds";
-    private static final String SLUG_MODE = "slug";
-
     private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN","GITHUB_OAUTH"};
 
     private JSAP jsap;
@@ -85,14 +82,21 @@ public class Launcher {
         opt2.setHelp("Specify where to find the list of projects or builds to scan.");
         jsap.registerParameter(opt2);
 
+
+        String modeValues = "";
+        for (RepairMode mode : RepairMode.values()) {
+            modeValues += mode.name()+";";
+        }
+        modeValues.substring(0, modeValues.length()-2);
+
         // Tab size
         opt2 = new FlaggedOption("mode");
         opt2.setShortFlag('m');
         opt2.setLongFlag("mode");
-        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setStringParser(EnumeratedStringParser.getParser(modeValues));
         opt2.setRequired(true);
-        opt2.setDefault(SLUG_MODE);
-        opt2.setHelp("Specify if the input contains project names (slug) or build ids.");
+        opt2.setDefault(RepairMode.SLUG.name());
+        opt2.setHelp("Specify if the input contains project names (slug), build ids or path to repair.");
         jsap.registerParameter(opt2);
 
         // output directory
@@ -231,7 +235,7 @@ public class Launcher {
         int lookupDays = arguments.getInt("lookup");
         String output = arguments.getString("output");
         boolean debug = arguments.getBoolean("debug");
-        boolean slugMode = (arguments.getString("mode").equals(SLUG_MODE));
+        RepairMode mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
         int steps = Integer.parseInt(arguments.getString("steps"));
         boolean clean = arguments.getBoolean("clean");
         boolean push = arguments.getBoolean("push");
@@ -239,7 +243,7 @@ public class Launcher {
         if (debug) {
             setLevel(Level.DEBUG);
         }
-        JsonSerializer jsonSerializer = new JsonSerializer(output, slugMode);
+        JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
         GoogleSpreadsheetSerializer googleSpreadsheetSerializer = new GoogleSpreadsheetSerializer();
 
@@ -256,48 +260,67 @@ public class Launcher {
 
         jsonSerializer.setScanner(scanner);
 
-        List<Build> buildList;
-
-        if (slugMode) {
-            buildList = scanner.getListOfFailingBuildFromProjects(input);
-        } else {
-            buildList = scanner.getListOfFailingBuildFromGivenBuildIds(input);
-        }
-
-        for (Build build : buildList) {
-            System.out.println("Incriminated project : "+build.getRepository().getSlug()+":"+build.getId());
-        }
+        List<Build> buildList = null;
 
         String completeWorkspace = null;
-        if (steps > 0) {
+
+        switch (mode) {
+            case BUILD:
+                buildList = scanner.getListOfFailingBuildFromGivenBuildIds(input);
+                break;
+
+            case SLUG:
+                buildList = scanner.getListOfFailingBuildFromProjects(input);
+                break;
+
+            case NOPOLONLY:
+                completeWorkspace = scanner.readWorkspaceFromInput(input);
+                buildList = scanner.readBuildFromInput(input);
+                break;
+        }
+
+        if (buildList != null) {
+            for (Build build : buildList) {
+                System.out.println("Incriminated project : "+build.getRepository().getSlug()+":"+build.getId());
+            }
+        }
+
+        if (mode != RepairMode.NOPOLONLY) {
             Launcher.LOGGER.debug("Start cloning and compiling projects...");
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
-
-            List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace);
         }
 
 
-        Launcher.LOGGER.debug("Start writing a JSON output...");
+        if (completeWorkspace != null) {
+            List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace, mode);
 
-        jsonSerializer.createOutput();
 
-        if (clean && completeWorkspace != null) {
-            Launcher.LOGGER.debug("Clean the workspace now...");
-            FileUtils.deleteDirectory(completeWorkspace);
+            Launcher.LOGGER.debug("Start writing a JSON output...");
+
+            jsonSerializer.createOutput();
+
+            if (clean && completeWorkspace != null) {
+                Launcher.LOGGER.debug("Clean the workspace now...");
+                FileUtils.deleteDirectory(completeWorkspace);
+            }
         }
+
     }
 
-    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
+    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace, RepairMode mode) throws IOException {
         boolean push = arguments.getBoolean("push");
         int steps = Integer.parseInt(arguments.getString("steps"));
         String solverPath = arguments.getString("z3Path");
         boolean clean = arguments.getBoolean("clean");
-        initWorkspace(workspace);
+
+        if (mode != RepairMode.NOPOLONLY) {
+            initWorkspace(workspace);
+        }
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, steps);
+            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, steps, mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
             inspector.processRepair();

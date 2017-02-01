@@ -91,6 +91,7 @@ public class GatherTestInformation extends AbstractStep {
                     if (testSuite.getNumberOfFailures() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
                         this.failingModulePath = failingModule.getCanonicalPath();
+                        this.writeProperty("failingModule",this.failingModulePath);
                     }
 
                     this.nbTotalTests += testSuite.getNumberOfTests();

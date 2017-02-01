@@ -9,19 +9,25 @@ import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.Launcher;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -210,6 +216,42 @@ public class ProjectScanner {
         }
 
         this.totalBuildInJavaFailingWithFailingTests = result.size();
+        return result;
+    }
+
+    private Properties getPropertiesFromInput(String input) throws IOException {
+        List<String> content = getFileContent(input);
+
+        if (content.isEmpty()) {
+            throw new IOException("File "+input+" is empty.");
+        }
+
+        String propertyFileDir = content.get(0);
+        String propFilePath = propertyFileDir+File.separator+AbstractStep.PROPERTY_FILENAME;
+        InputStream inputStream = new FileInputStream(propFilePath);
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        return properties;
+    }
+
+    public String readWorkspaceFromInput(String input) throws IOException {
+        Properties properties = getPropertiesFromInput(input);
+        return properties.getProperty("workspace");
+    }
+
+    public List<Build> readBuildFromInput(String input) throws IOException {
+        List<Build> result = new ArrayList<Build>();
+
+        Properties properties = getPropertiesFromInput(input);
+        String buildId = properties.getProperty("buildid");
+        if (buildId != null) {
+            Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
+            if (build != null) {
+                result.add(build);
+            }
+        }
+
+
         return result;
     }
 }

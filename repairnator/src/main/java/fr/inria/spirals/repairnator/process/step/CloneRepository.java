@@ -214,6 +214,9 @@ public class CloneRepository extends AbstractStep {
                     .setDirectory(new File(repoLocalPath))
                     .call();
 
+            this.writeProperty("workspace", this.inspector.getWorkspace());
+            this.writeProperty("buildid",this.build.getId()+"");
+
             if (this.build.isPullRequest()) {
                 PRInformation prInformation = this.build.getPRInformation();
 

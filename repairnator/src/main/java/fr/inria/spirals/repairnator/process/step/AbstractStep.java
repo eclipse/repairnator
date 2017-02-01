@@ -10,9 +10,13 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +26,7 @@ import java.util.Properties;
  * Created by urli on 03/01/2017.
  */
 public abstract class AbstractStep {
-
+    public static final String PROPERTY_FILENAME = "repairnator.properties";
     private String name;
     private int limitStepNumber;
     protected ProjectInspector inspector;
@@ -34,6 +38,7 @@ public abstract class AbstractStep {
     private long dateEnd;
     private boolean pomLocationTested;
     private List<AbstractDataSerializer> serializers;
+    private Properties properties;
 
     public AbstractStep(ProjectInspector inspector) {
         this.name = this.getClass().getName();
@@ -42,6 +47,11 @@ public abstract class AbstractStep {
         this.state = ProjectState.NONE;
         this.pomLocationTested = false;
         this.serializers = new ArrayList<AbstractDataSerializer>();
+        this.properties = new Properties();
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
     public String getName() {
@@ -61,6 +71,7 @@ public abstract class AbstractStep {
     public AbstractStep setNextStep(AbstractStep nextStep) {
         this.nextStep = nextStep;
         nextStep.setDataSerializer(this.serializers);
+        nextStep.setProperties(properties);
         return nextStep;
     }
 
@@ -148,6 +159,7 @@ public abstract class AbstractStep {
     }
 
     protected void cleanMavenArtifacts() {
+        this.writeProperty("lastStep",this.getName());
         try {
             FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
         } catch (IOException e) {
@@ -184,6 +196,24 @@ public abstract class AbstractStep {
             return 0;
         }
         return Math.round((dateEnd-dateBegin) / 1000);
+    }
+
+    protected void writeProperty(String property, String value) {
+        this.properties.setProperty(property, value);
+
+        String filePath = this.inspector.getRepoLocalPath()+File.separator+PROPERTY_FILENAME;
+        File file = new File(filePath);
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            OutputStream outputStream = new FileOutputStream(file);
+
+            this.properties.store(outputStream, "Repairnator properties");
+        } catch (IOException e) {
+            this.getLogger().error("Cannot write property to the following file: "+filePath, e);
+        }
     }
 
     protected abstract void businessExecute();

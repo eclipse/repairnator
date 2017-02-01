@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by urli on 25/01/2017.
@@ -100,6 +101,13 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
         String state = this.getPrettyPrintState(inspector.getState());
 
         String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
+        String typeOfFailures = "";
+        Set<String> failures = inspector.getTestInformations().getTypeOfFailures().keySet();
+
+        for (String failure : failures) {
+            typeOfFailures += failure+",";
+        }
+
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId()+"");
@@ -111,6 +119,7 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
         dataCol.add(realState);
         dataCol.add(this.tsvCompleteDateFormat.format(new Date()));
         dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+        dataCol.add(typeOfFailures);
 
         List<List<Object>> dataRow = new ArrayList<List<Object>>();
         dataRow.add(dataCol);

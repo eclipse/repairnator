@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process;
 
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
@@ -39,9 +40,10 @@ public class ProjectInspector {
     private boolean autoclean;
     private String m2LocalPath;
     private List<AbstractDataSerializer> serializers;
+    private RepairMode mode;
 
 
-    public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, int steps) {
+    public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, int steps, RepairMode mode) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -54,6 +56,11 @@ public class ProjectInspector {
         this.stepErrors = new HashMap<String, List<String>>();
         this.autoclean = false;
         this.serializers = serializers;
+        this.mode = mode;
+    }
+
+    public String getWorkspace() {
+        return workspace;
     }
 
     public String getM2LocalPath() {
@@ -115,20 +122,27 @@ public class ProjectInspector {
 
     public void processRepair() {
 
-        AbstractStep cloneRepo = new CloneRepository(this);
-        AbstractStep buildRepo = new BuildProject(this);
-        AbstractStep testProject = new TestProject(this);
+        AbstractStep firstStep = null;
+
         this.testInformations = new GatherTestInformation(this);
         this.pushBuild = new PushIncriminatedBuild(this);
         this.nopolRepair = new NopolRepair(this);
 
+        if (mode != RepairMode.NOPOLONLY) {
+            AbstractStep cloneRepo = new CloneRepository(this);
+            AbstractStep buildRepo = new BuildProject(this);
+            AbstractStep testProject = new TestProject(this);
+            cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
+            firstStep = cloneRepo;
+        }
 
-        cloneRepo.setLimitStepNumber(this.steps);
-        cloneRepo.setDataSerializer(this.serializers);
-        cloneRepo
-                .setNextStep(buildRepo)
-                .setNextStep(testProject)
-                .setNextStep(this.testInformations);
+
+
+        if (mode == RepairMode.NOPOLONLY) {
+            firstStep = this.testInformations;
+        }
+        firstStep.setLimitStepNumber(this.steps);
+        firstStep.setDataSerializer(this.serializers);
 
         if (push) {
             this.testInformations.setNextStep(this.pushBuild)
@@ -138,10 +152,10 @@ public class ProjectInspector {
             this.testInformations.setNextStep(this.nopolRepair);
         }
 
-        cloneRepo.setState(ProjectState.INIT);
+        firstStep.setState(ProjectState.INIT);
 
         try {
-            cloneRepo.execute();
+            firstStep.execute();
         } catch (Exception e) {
             this.addStepError("Unknown", e.getMessage());
             this.logger.debug("Exception catch while executing steps: ",e);
