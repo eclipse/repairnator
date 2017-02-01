@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by urli on 22/12/2016.
@@ -107,6 +108,30 @@ public class BuildHelperTest {
         Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
 
         assertEquals(BuildStatus.PASSED, obtainedBuild.getBuildStatus());
+    }
+
+    @Test
+    public void testGetLastFailingBuildBeforeGivenBuild() {
+        int buildId = 197104485;
+        Build passingBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        int expectedBuildId = 197067445;
+        Build obtainedBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(passingBuild, BuildStatus.FAILED);
+
+        assertTrue(obtainedBuild != null);
+        assertEquals(expectedBuildId, obtainedBuild.getId());
+    }
+
+    @Test
+    public void testGetLastErroredBuildBeforeGivenBuild() {
+        int buildId = 197233494;
+        Build passingBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        int expectedBuildId = 193970329;
+        Build obtainedBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(passingBuild, BuildStatus.ERRORED);
+
+        assertTrue(obtainedBuild != null);
+        assertEquals(expectedBuildId, obtainedBuild.getId());
     }
 
 }

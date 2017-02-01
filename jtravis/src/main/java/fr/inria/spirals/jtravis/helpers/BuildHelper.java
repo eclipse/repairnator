@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.Job;
@@ -13,6 +14,7 @@ import fr.inria.spirals.jtravis.entities.Repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +88,12 @@ public class BuildHelper extends AbstractHelper {
         }
     }
 
+    private static boolean isAcceptedBuild(Build build, int prNumber, BuildStatus status) {
+        boolean result = (prNumber == -1) ? true : build.getPullRequestNumber() == prNumber;
+        result = (status == null) ? result : result && build.getBuildStatus() == status;
+        return result;
+    }
+
     /**
      * This is a recursive method allowing to get build from a slug.
      *
@@ -94,8 +102,11 @@ public class BuildHelper extends AbstractHelper {
      * @param limitDate If given, the date limit to get builds: all builds *before* this date are considered
      * @param after_number Used for pagination: multiple requests may have to be made to reach the final date
      * @param eventTypes Travis support multiple event types for builds like Push, PR or CRON. Those are retrieved individually
+     * @param limitNumber Allow to finish early based on the number of builds selected. if 0 passed use only the date to stop searching
+     * @param status Allow to only select builds of that status, if null it takes all status
+     * @param prNumber Allow to only consider builds of that PR, if -1 given it takes all builds
      */
-    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, List<String> eventTypes) {
+    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, List<String> eventTypes, int limitNumber, BuildStatus status, int prNumber) {
         Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
         String resourceUrl = getInstance().getEndpoint()+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
@@ -146,8 +157,14 @@ public class BuildHelper extends AbstractHelper {
                         }
                     }
 
+                    if (isAcceptedBuild(build, prNumber, status)) {
+                        result.add(build);
+                    }
 
-                    result.add(build);
+                    if (limitNumber != 0 && result.size() >= limitNumber) {
+                        dateReached = true;
+                        break;
+                    }
                 } else {
                     dateReached = true;
                     break;
@@ -159,10 +176,10 @@ public class BuildHelper extends AbstractHelper {
             }
 
             if (limitDate != null && !dateReached) {
-                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, eventTypes);
+                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, eventTypes, limitNumber, status, prNumber);
             } else {
                 eventTypes.remove(0);
-                getBuildsFromSlugRecursively(slug, result, limitDate, 0, eventTypes);
+                getBuildsFromSlugRecursively(slug, result, limitDate, 0, eventTypes, limitNumber, status, prNumber);
             }
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
@@ -171,7 +188,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromSlugWithLimitDate(String slug, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(slug, result, limitDate, 0, getEventTypes());
+        getBuildsFromSlugRecursively(slug, result, limitDate, 0, getEventTypes(), 0, null, -1);
         return result;
     }
 
@@ -181,7 +198,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, getEventTypes());
+        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, getEventTypes(), 0, null, -1);
 
         for (Build b : result) {
             b.setRepository(repository);
@@ -191,5 +208,42 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository) {
         return getBuildsFromRepositoryWithLimitDate(repository, null);
+    }
+
+    /**
+     * Return the last build before the given build which respect the given status and which is from the same PR if it's a PR build. If given status is null, it will return the last build before.
+     * If no build is found, it returns null.
+     * @param build
+     * @param status
+     * @return
+     */
+    public static Build getLastBuildOfSameBranchOfStatusBeforeBuild(Build build, BuildStatus status) {
+        String slug = build.getRepository().getSlug();
+        List<Build> results = new ArrayList<Build>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
+        Date limitDate = calendar.getTime();
+        int after_number = Integer.parseInt(build.getNumber());
+        int limitNumber = 1;
+        List<String> eventTypes = new ArrayList<String>();
+        int prNumber;
+
+        if (build.isPullRequest()) {
+            eventTypes.add("pull_request");
+            prNumber = build.getPullRequestNumber();
+        } else {
+            eventTypes.add("cron");
+            eventTypes.add("push");
+            prNumber = -1;
+        }
+
+        getBuildsFromSlugRecursively(slug, results, limitDate, after_number, eventTypes, limitNumber, status, prNumber);
+
+        if (results.size() > 0) {
+            return results.get(0);
+        } else {
+            return null;
+        }
     }
 }
