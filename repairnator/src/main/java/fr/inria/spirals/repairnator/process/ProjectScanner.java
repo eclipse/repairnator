@@ -219,6 +219,13 @@ public class ProjectScanner {
         return result;
     }
 
+    public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
+        InputStream inputStream = new FileInputStream(propertyFile);
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        return properties;
+    }
+
     private Properties getPropertiesFromInput(String input) throws IOException {
         List<String> content = getFileContent(input);
 
@@ -228,10 +235,7 @@ public class ProjectScanner {
 
         String propertyFileDir = content.get(0);
         String propFilePath = propertyFileDir+File.separator+AbstractStep.PROPERTY_FILENAME;
-        InputStream inputStream = new FileInputStream(propFilePath);
-        Properties properties = new Properties();
-        properties.load(inputStream);
-        return properties;
+        return getPropertiesFromFile(propFilePath);
     }
 
     public String readWorkspaceFromInput(String input) throws IOException {
