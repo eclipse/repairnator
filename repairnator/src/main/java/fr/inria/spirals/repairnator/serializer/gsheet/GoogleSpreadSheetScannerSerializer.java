@@ -23,19 +23,17 @@ public class GoogleSpreadSheetScannerSerializer {
 
     private Sheets sheets;
     private ProjectScanner scanner;
-    private SimpleDateFormat tsvCompleteDateFormat;
 
     public GoogleSpreadSheetScannerSerializer(ProjectScanner scanner) throws IOException {
         this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.scanner = scanner;
-        this.tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     }
 
     public void serialize() {
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(SerializerUtils.getHostname());
-        dataCol.add(this.tsvCompleteDateFormat.format(new Date()));
-        dataCol.add(this.tsvCompleteDateFormat.format(this.scanner.getLimitDate()));
+        dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
+        dataCol.add(SerializerUtils.formatCompleteDate(this.scanner.getLimitDate()));
         dataCol.add(this.scanner.getTotalRepoNumber());
         dataCol.add(this.scanner.getTotalRepoUsingTravis());
         dataCol.add(this.scanner.getTotalScannedBuilds());
@@ -53,10 +51,10 @@ public class GoogleSpreadSheetScannerSerializer {
         try {
             AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.SPREADSHEET_ID, RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                this.logger.debug("Data have been inserted in Google Spreadsheet.");
+                this.logger.debug("Scanner data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting data in Google Spreadsheet.",e);
+            this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.",e);
         }
     }
 }

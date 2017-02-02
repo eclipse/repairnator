@@ -11,13 +11,8 @@ import java.text.SimpleDateFormat;
 public abstract class AbstractDataSerializer {
 
     private static final String TRAVIS_URL = "http://travis-ci.org/";
-    protected SimpleDateFormat tsvCompleteDateFormat;
-    protected SimpleDateFormat csvOnlyDayFormat;
 
-    public AbstractDataSerializer() {
-        this.tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
-        this.csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
-    }
+    public AbstractDataSerializer() {}
 
     protected String getTravisUrl(int buildId, String slug) {
         return TRAVIS_URL+slug+"/builds/"+buildId;

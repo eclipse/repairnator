@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetInspectorSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetInspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
 import org.codehaus.plexus.util.FileUtils;
@@ -248,9 +249,11 @@ public class Launcher {
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
         GoogleSpreadSheetInspectorSerializer googleSpreadsheetSerializer = new GoogleSpreadSheetInspectorSerializer();
+        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer();
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
+        this.serializers.add(googleSpreadSheetInspectorTimeSerializer);
 
         if (push) {
             this.serializers.add(googleSpreadsheetSerializer);
