@@ -76,6 +76,10 @@ public abstract class AbstractStep {
 
     public AbstractStep setNextStep(AbstractStep nextStep) {
         this.nextStep = nextStep;
+        nextStep.setDataSerializer(this.serializers);
+        nextStep.setProperties(this.properties);
+        nextStep.setLimitStepNumber(this.limitStepNumber);
+        nextStep.setState(this.state);
         return nextStep;
     }
 
