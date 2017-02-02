@@ -40,6 +40,7 @@ public class ProjectScanner {
     private int totalRepoNumber;
     private int totalRepoUsingTravis;
     private int totalScannedBuilds;
+    private int totalPassingBuilds;
     private int totalBuildInJava;
     private int totalBuildInJavaFailing;
     private int totalBuildInJavaFailingWithFailingTests;
@@ -58,6 +59,22 @@ public class ProjectScanner {
         Calendar limitCal = Calendar.getInstance();
         limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
         this.limitDate = limitCal.getTime();
+    }
+
+    public int getTotalBuildInJava() {
+        return totalBuildInJava;
+    }
+
+    public int getTotalBuildInJavaFailing() {
+        return totalBuildInJavaFailing;
+    }
+
+    public Date getLimitDate() {
+        return limitDate;
+    }
+
+    public int getTotalPassingBuilds() {
+        return totalPassingBuilds;
     }
 
     public int getTotalRepoNumber() {
@@ -192,6 +209,8 @@ public class ProjectScanner {
                         return true;
                     }
                 }
+            } else if (build.getBuildStatus() == BuildStatus.PASSED) {
+                this.totalPassingBuilds++;
             }
         } else {
             this.logger.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());

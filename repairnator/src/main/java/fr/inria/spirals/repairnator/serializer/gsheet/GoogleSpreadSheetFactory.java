@@ -11,13 +11,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
-
-import com.google.api.services.sheets.v4.model.AppendValuesResponse;
-import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
-import com.google.api.services.sheets.v4.model.ValueRange;
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.process.ProjectInspector;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import com.google.api.client.json.JsonFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,32 +22,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by urli on 25/01/2017.
  */
-public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
+public class GoogleSpreadSheetFactory {
 
-    private Logger logger = LoggerFactory.getLogger(GoogleSpreadsheetSerializer.class);
+    private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetFactory.class);
     private static final String APPLICATION_NAME = "RepairNator Bot";
     private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"), ".credentials/sheets.googleapis.com-repairnator");
     private static final String GOOGLE_SECRET_PATH = "./client_secret.json";
-    private static final String SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
-    private static final String RANGE = "All data!A1:I1";
+    public static final String SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
 
-
+    private static GoogleSpreadSheetFactory instance;
     private FileDataStoreFactory dataStoreFactory;
     private final JsonFactory jsonFactory;
     private HttpTransport httpTransport;
     private List<String> scopes;
     private Sheets sheets;
 
-    public GoogleSpreadsheetSerializer() throws IOException {
+    private GoogleSpreadSheetFactory() throws IOException {
         super();
         try {
             this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -93,48 +82,11 @@ public class GoogleSpreadsheetSerializer extends AbstractDataSerializer {
         this.sheets = new Sheets.Builder(this.httpTransport, this.jsonFactory, credential).setApplicationName(APPLICATION_NAME).build();
     }
 
-
-    @Override
-    public void serializeData(ProjectInspector inspector) {
-        Build build = inspector.getBuild();
-
-        String state = this.getPrettyPrintState(inspector.getState());
-
-        String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
-        String typeOfFailures = "";
-        Set<String> failures = inspector.getTestInformations().getTypeOfFailures().keySet();
-
-        for (String failure : failures) {
-            typeOfFailures += failure+",";
+    public static Sheets getSheets() throws IOException {
+        if (instance == null) {
+            instance = new GoogleSpreadSheetFactory();
         }
-
-
-        List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(build.getId()+"");
-        dataCol.add(build.getRepository().getSlug());
-        dataCol.add(state);
-        dataCol.add(build.getPullRequestNumber()+"");
-        dataCol.add(this.tsvCompleteDateFormat.format(build.getFinishedAt()));
-        dataCol.add(this.csvOnlyDayFormat.format(build.getFinishedAt()));
-        dataCol.add(realState);
-        dataCol.add(this.tsvCompleteDateFormat.format(new Date()));
-        dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
-        dataCol.add(typeOfFailures);
-
-        List<List<Object>> dataRow = new ArrayList<List<Object>>();
-        dataRow.add(dataCol);
-
-        ValueRange valueRange = new ValueRange();
-        valueRange.setValues(dataRow);
-
-        try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values().append(SPREADSHEET_ID, RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-            if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                this.logger.debug("Data have been inserted in Google Spreadsheet.");
-            }
-        } catch (IOException e) {
-            this.logger.error("An error occured while inserting data in Google Spreadsheet.",e);
-        }
+        return instance.sheets;
     }
 
 }

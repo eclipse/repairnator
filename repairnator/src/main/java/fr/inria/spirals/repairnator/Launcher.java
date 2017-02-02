@@ -13,7 +13,9 @@ import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadsheetSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetInspectorSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.LoggerFactory;
@@ -245,7 +247,7 @@ public class Launcher {
         }
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
-        GoogleSpreadsheetSerializer googleSpreadsheetSerializer = new GoogleSpreadsheetSerializer();
+        GoogleSpreadSheetInspectorSerializer googleSpreadsheetSerializer = new GoogleSpreadSheetInspectorSerializer();
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
@@ -277,6 +279,11 @@ public class Launcher {
                 completeWorkspace = scanner.readWorkspaceFromInput(input);
                 buildList = scanner.readBuildFromInput(input);
                 break;
+        }
+
+        if (mode == RepairMode.SLUG) {
+            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
+            scannerSerializer.serialize();
         }
 
         if (buildList != null) {
