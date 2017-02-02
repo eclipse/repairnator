@@ -39,6 +39,9 @@ public abstract class AbstractDataSerializer {
             case TESTABLE:
                 return "testable";
 
+            case HASTESTERRORS:
+                return "test errors";
+
             case HASTESTFAILURE:
                 return "test failure";
 
