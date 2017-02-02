@@ -6,6 +6,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.serializer.SerializerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ import java.util.Set;
  */
 public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorSerializer.class);
-    private static final String RANGE = "All data!A1:J1";
+    private static final String RANGE = "All data!A1:K1";
 
     private Sheets sheets;
 
@@ -46,6 +47,7 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
 
 
         List<Object> dataCol = new ArrayList<Object>();
+        dataCol.add(SerializerUtils.getHostname());
         dataCol.add(build.getId()+"");
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(state);

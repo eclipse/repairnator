@@ -4,6 +4,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
+import fr.inria.spirals.repairnator.serializer.SerializerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class GoogleSpreadSheetScannerSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetScannerSerializer.class);
-    private static final String RANGE = "Scanner Data!A1:I1";
+    private static final String RANGE = "Scanner Data!A1:J1";
 
     private Sheets sheets;
     private ProjectScanner scanner;
@@ -32,6 +33,7 @@ public class GoogleSpreadSheetScannerSerializer {
 
     public void serialize() {
         List<Object> dataCol = new ArrayList<Object>();
+        dataCol.add(SerializerUtils.getHostname());
         dataCol.add(this.tsvCompleteDateFormat.format(new Date()));
         dataCol.add(this.tsvCompleteDateFormat.format(this.scanner.getLimitDate()));
         dataCol.add(this.scanner.getTotalRepoNumber());

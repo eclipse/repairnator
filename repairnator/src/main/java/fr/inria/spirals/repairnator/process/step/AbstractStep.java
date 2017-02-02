@@ -111,11 +111,11 @@ public abstract class AbstractStep {
                 this.nextStep.execute();
                 return;
             }
-
+        } else {
+            this.inspector.setState(this.state);
+            this.serializeData();
+            this.cleanMavenArtifacts();
         }
-        this.cleanMavenArtifacts();
-        this.inspector.setState(this.state);
-        this.serializeData();
     }
 
     private void serializeData() {

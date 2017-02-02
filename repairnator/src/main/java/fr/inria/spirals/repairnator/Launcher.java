@@ -300,8 +300,7 @@ public class Launcher {
 
 
         if (completeWorkspace != null) {
-            List<ProjectInspector> projectInspectors = cloneAndRepair(buildList, completeWorkspace, mode);
-
+            cloneAndRepair(buildList, completeWorkspace, mode);
 
             Launcher.LOGGER.debug("Start writing a JSON output...");
 
