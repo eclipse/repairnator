@@ -47,7 +47,6 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
 
 
         List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(SerializerUtils.getHostname());
         dataCol.add(build.getId()+"");
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(state);
@@ -55,6 +54,7 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
         dataCol.add(this.tsvCompleteDateFormat.format(build.getFinishedAt()));
         dataCol.add(this.csvOnlyDayFormat.format(build.getFinishedAt()));
         dataCol.add(realState);
+        dataCol.add(SerializerUtils.getHostname());
         dataCol.add(this.tsvCompleteDateFormat.format(new Date()));
         dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         dataCol.add(typeOfFailures);
