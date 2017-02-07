@@ -263,6 +263,7 @@ public class Launcher {
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
         GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer();
+
         GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer();
 
         this.serializers.add(jsonSerializer);
@@ -307,6 +308,11 @@ public class Launcher {
         }
 
         if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
+            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
+            scannerSerializer.serialize();
+        }
+
+        if (mode == RepairMode.SLUG) {
             GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
             scannerSerializer.serialize();
         }

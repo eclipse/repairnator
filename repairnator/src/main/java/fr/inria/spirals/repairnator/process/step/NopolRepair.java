@@ -67,8 +67,8 @@ public class NopolRepair extends AbstractStep {
 
     private List<URL> initClasspath(String incriminatedModule) throws MalformedURLException {
         List<URL> result = new ArrayList<URL>();
-        result.add(new URL("file://"+incriminatedModule+File.separator+DEFAULT_CLASSES_DIR));
-        result.add(new URL("file://"+incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR));
+        result.add(new URL("file://"+incriminatedModule+File.separator+DEFAULT_CLASSES_DIR+"/"));
+        result.add(new URL("file://"+incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR+"/"));
         return result;
     }
 
@@ -225,8 +225,8 @@ public class NopolRepair extends AbstractStep {
             this.projectReference = new ProjectReference(sources, classPath.toArray(new URL[classPath.size()]), new String[] {failingTest});
             Config config = new Config();
             config.setComplianceLevel(8);
-            config.setTimeoutTestExecution(5);
-            config.setMaxTimeInMinutes(5);
+            config.setTimeoutTestExecution(60);
+            config.setMaxTimeInMinutes(30);
             config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
             config.setSolverPath(this.inspector.getNopolSolverPath());
             config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);

@@ -106,7 +106,7 @@ class RepositoryModelResolver implements ModelResolver {
 
     @Override
     public ModelSource resolveModel(Parent parent) throws UnresolvableModelException {
-        return resolveModel(parent.getGroupId(), parent.getArtifactId(), parent.getId());
+        return resolveModel(parent.getGroupId(), parent.getArtifactId(), parent.getVersion());
     }
 
     @Override

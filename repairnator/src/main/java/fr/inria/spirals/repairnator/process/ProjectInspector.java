@@ -15,10 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by urli on 26/12/2016.
@@ -140,6 +142,12 @@ public class ProjectInspector {
 
         if (mode == RepairMode.NOPOLONLY) {
             firstStep = this.testInformations;
+            try {
+                Properties properties = ProjectScanner.getPropertiesFromFile(this.getRepoLocalPath()+File.separator+AbstractStep.PROPERTY_FILENAME);
+                firstStep.setProperties(properties);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         firstStep.setLimitStepNumber(this.steps);
         firstStep.setDataSerializer(this.serializers);
