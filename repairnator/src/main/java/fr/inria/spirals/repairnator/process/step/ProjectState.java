@@ -10,6 +10,7 @@ public enum ProjectState {
     BUILDABLE,
     TESTABLE,
     HASTESTFAILURE,
+    HASTESTERRORS,
     NOTFAILING,
     PATCHED,
     NOTTESTABLE

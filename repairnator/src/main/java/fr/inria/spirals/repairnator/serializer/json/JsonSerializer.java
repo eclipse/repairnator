@@ -198,6 +198,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("nbTests", testInformation.getNbTotalTests());
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
+        result.addProperty("nbErroringTests", testInformation.getNbErroringTests());
         result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
         result.add("errors", serialize(inspector.getStepErrors()));
         this.inspectors.get(inspector.getState().name()).add(result);
@@ -298,6 +299,7 @@ public class JsonSerializer extends AbstractDataSerializer {
                 outputFailWhenGatheringInfoInspector(inspector);
                 break;
 
+            case HASTESTERRORS:
             case HASTESTFAILURE:
                 outputHasTestFailureInspector(inspector);
                 break;

@@ -33,6 +33,7 @@ public class GatherTestInformation extends AbstractStep {
     private int nbTotalTests;
     private int nbSkippingTests;
     private int nbFailingTests;
+    private int nbErroringTests;
     private Map<String, Map<String,String>> typeOfFailures;
     private String failingModulePath;
 
@@ -43,6 +44,10 @@ public class GatherTestInformation extends AbstractStep {
 
     public int getNbFailingTests() {
         return nbFailingTests;
+    }
+
+    public int getNbErroringTests() {
+        return nbErroringTests;
     }
 
     public int getNbTotalTests() {
@@ -96,10 +101,9 @@ public class GatherTestInformation extends AbstractStep {
 
                     this.nbTotalTests += testSuite.getNumberOfTests();
                     this.nbSkippingTests += testSuite.getNumberOfSkipped();
-                    if (testSuite.getNumberOfFailures() > 0) {
+                    if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
                             if (testCase.hasFailure()) {
-                                this.nbFailingTests++;
                                 String tof = testCase.getFailureType();
                                 if (!this.typeOfFailures.containsKey(tof)) {
                                     this.typeOfFailures.put(tof, new HashMap<String,String>());
@@ -109,10 +113,14 @@ public class GatherTestInformation extends AbstractStep {
                             }
                         }
                     }
+                    this.nbErroringTests += testSuite.getNumberOfErrors();
+                    this.nbFailingTests += testSuite.getNumberOfFailures();
                 }
 
                 if (this.nbFailingTests > 0) {
                     this.setState(ProjectState.HASTESTFAILURE);
+                } else if (this.nbErroringTests > 0) {
+                    this.setState(ProjectState.HASTESTERRORS);
                 } else {
                     this.setState(ProjectState.NOTFAILING);
                 }
@@ -126,6 +134,9 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         if (this.getState() == ProjectState.HASTESTFAILURE) {
+            this.shouldStop = false;
+        } else if (this.getState() == ProjectState.HASTESTERRORS) {
+            this.addStepError("Only get test errors, no failing tests. It will try to repair it.");
             this.shouldStop = false;
         } else {
             this.shouldStop = true;

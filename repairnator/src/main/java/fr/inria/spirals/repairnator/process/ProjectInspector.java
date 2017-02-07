@@ -24,22 +24,22 @@ import java.util.Map;
  * Created by urli on 26/12/2016.
  */
 public class ProjectInspector {
-    private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
+    protected final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
     private Build build;
     private String repoLocalPath;
     private ProjectState state;
     private String workspace;
     private String nopolSolverPath;
     Map<String, Integer> stepsDurationsInSeconds;
-    private GatherTestInformation testInformations;
+    protected GatherTestInformation testInformations;
     private PushIncriminatedBuild pushBuild;
     private NopolRepair nopolRepair;
     private boolean push;
-    private int steps;
+    protected int steps;
     private Map<String, List<String>> stepErrors;
     private boolean autoclean;
     private String m2LocalPath;
-    private List<AbstractDataSerializer> serializers;
+    protected List<AbstractDataSerializer> serializers;
     private RepairMode mode;
 
 

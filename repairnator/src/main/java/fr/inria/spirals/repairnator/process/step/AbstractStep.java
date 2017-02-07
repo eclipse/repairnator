@@ -52,6 +52,9 @@ public abstract class AbstractStep {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
+        if (this.nextStep != null) {
+            this.nextStep.setProperties(properties);
+        }
     }
 
     public String getName() {
@@ -61,6 +64,9 @@ public abstract class AbstractStep {
     public void setDataSerializer(List<AbstractDataSerializer> serializers) {
         if (serializers != null) {
             this.serializers = serializers;
+            if (this.nextStep != null) {
+                this.nextStep.setDataSerializer(serializers);
+            }
         }
     }
 
@@ -71,7 +77,9 @@ public abstract class AbstractStep {
     public AbstractStep setNextStep(AbstractStep nextStep) {
         this.nextStep = nextStep;
         nextStep.setDataSerializer(this.serializers);
-        nextStep.setProperties(properties);
+        nextStep.setProperties(this.properties);
+        nextStep.setLimitStepNumber(this.limitStepNumber);
+        nextStep.setState(this.state);
         return nextStep;
     }
 
@@ -103,11 +111,11 @@ public abstract class AbstractStep {
                 this.nextStep.execute();
                 return;
             }
-
+        } else {
+            this.inspector.setState(this.state);
+            this.serializeData();
+            this.cleanMavenArtifacts();
         }
-        this.cleanMavenArtifacts();
-        this.inspector.setState(this.state);
-        this.serializeData();
     }
 
     private void serializeData() {
