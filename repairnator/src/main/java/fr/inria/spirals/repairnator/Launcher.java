@@ -29,6 +29,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by urli on 23/12/2016.
@@ -37,6 +40,8 @@ public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
     private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN","GITHUB_OAUTH"};
+    private static final long TIMEOUT_PER_JOB = 1; // in hours
+    private static final int NB_THREADS = 4;
 
     private JSAP jsap;
     private JSAPResult arguments;
@@ -240,6 +245,7 @@ public class Launcher {
         this.checkToolsLoaded();
         this.checkNopolSolverPath();
         if (arguments.success() && checkEnvironmentVariables()) {
+            System.out.println(arguments.toString());
             mainProcess();
         }
     }
@@ -352,7 +358,26 @@ public class Launcher {
             ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
-            inspector.run();
+        }
+        final ExecutorService pool = Executors.newWorkStealingPool();
+
+        for (final ProjectInspector inspector : projectInspectors) {
+            pool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    inspector.run();
+                }
+            });
+        }
+
+        try {
+            if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
+                pool.shutdownNow();
+                LOGGER.error("Shutdown pool of threads.");
+            }
+        } catch (InterruptedException e) {
+            pool.shutdownNow();
+            LOGGER.error(e.getMessage(), e);
         }
         return projectInspectors;
     }

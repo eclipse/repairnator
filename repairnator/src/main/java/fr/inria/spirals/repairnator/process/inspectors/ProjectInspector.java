@@ -56,7 +56,7 @@ public class ProjectInspector {
         this.workspace = workspace;
         this.nopolSolverPath = nopolSolverPath;
         this.repoLocalPath = workspace+File.separator+getRepoSlug()+File.separator+build.getId();
-        this.m2LocalPath = new File(workspace+File.separator+".m2").getAbsolutePath();
+        this.m2LocalPath = new File(this.repoLocalPath+File.separator+".m2").getAbsolutePath();
         this.stepsDurationsInSeconds = new HashMap<String, Integer>();
         this.push = push;
         this.stepErrors = new HashMap<String, List<String>>();
