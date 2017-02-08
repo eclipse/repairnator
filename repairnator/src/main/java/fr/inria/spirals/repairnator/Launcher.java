@@ -9,6 +9,7 @@ import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -40,6 +41,18 @@ public class Launcher {
     private JSAP jsap;
     private JSAPResult arguments;
     private List<AbstractDataSerializer> serializers;
+    
+    private String input;
+    private String workspace;
+    private int lookupDays;
+    private String output;
+    private boolean debug;
+    private RepairMode mode;
+    private int steps;
+    private boolean clean;
+    private boolean push;
+    private String solverPath;
+    private String googleSecretPath;
 
     public Launcher() {
         this.serializers = new ArrayList<AbstractDataSerializer>();
@@ -99,7 +112,7 @@ public class Launcher {
         opt2.setStringParser(EnumeratedStringParser.getParser(modeValues));
         opt2.setRequired(true);
         opt2.setDefault(RepairMode.SLUG.name());
-        opt2.setHelp("Specify if the input contains project names (slug), build ids or path to repair.");
+        opt2.setHelp("Specify if the input contains project names (SLUG), build ids (BUILD), path to repair (NOPOLONLY), or if it is to inspect passing builds (FORBEARS).");
         jsap.registerParameter(opt2);
 
         // output directory
@@ -146,6 +159,15 @@ public class Launcher {
         opt2.setLongFlag("z3Path");
         opt2.setRequired(true);
         opt2.setHelp("Specify the solver path used by Nopol");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        jsap.registerParameter(opt2);
+        
+        // Google secret path
+        opt2 = new FlaggedOption("googleSecretPath");
+        opt2.setShortFlag('g');
+        opt2.setLongFlag("googleSecretPath");
+        opt2.setHelp("Specify the path of the google client secret file");
+        opt2.setDefault("./client_secret.json");
         opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
     }
@@ -233,33 +255,37 @@ public class Launcher {
     }
 
     private void mainProcess() throws IOException {
-        String input = this.arguments.getString("input");
-        String workspace = arguments.getString("workspace");
-        int lookupDays = arguments.getInt("lookup");
-        String output = arguments.getString("output");
-        boolean debug = arguments.getBoolean("debug");
-        RepairMode mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
-        int steps = Integer.parseInt(arguments.getString("steps"));
-        boolean clean = arguments.getBoolean("clean");
-        boolean push = arguments.getBoolean("push");
+        input = this.arguments.getString("input");
+        workspace = arguments.getString("workspace");
+        lookupDays = arguments.getInt("lookup");
+        output = arguments.getString("output");
+        debug = arguments.getBoolean("debug");
+        mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
+        steps = Integer.parseInt(arguments.getString("steps"));
+        clean = arguments.getBoolean("clean");
+        push = arguments.getBoolean("push");
+        solverPath = arguments.getString("z3Path");
+        googleSecretPath = arguments.getString("googleSecretPath");
 
         if (debug) {
             setLevel(Level.DEBUG);
         }
+        
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
-        GoogleSpreadSheetInspectorSerializer googleSpreadsheetSerializer = new GoogleSpreadSheetInspectorSerializer();
-        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer();
+        GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
+
+        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
         this.serializers.add(googleSpreadSheetInspectorTimeSerializer);
-
-        if (push) {
-            this.serializers.add(googleSpreadsheetSerializer);
+        
+        if (push || mode == RepairMode.FORBEARS) {
+            this.serializers.add(googleSpreadSheetInspectorSerializer);
         }
 
-        Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
+        Launcher.LOGGER.debug("Start to scan projects in travis...");
 
         ProjectScanner scanner = new ProjectScanner(lookupDays);
 
@@ -282,10 +308,14 @@ public class Launcher {
                 completeWorkspace = scanner.readWorkspaceFromInput(input);
                 buildList = scanner.readBuildFromInput(input);
                 break;
+                
+            case FORBEARS:
+            	buildList = scanner.getListOfPassingBuildsFromProjects(input);
+            	break;
         }
 
-        if (mode == RepairMode.SLUG) {
-            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
+        if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
+            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
             scannerSerializer.serialize();
         }
 
@@ -303,7 +333,11 @@ public class Launcher {
 
 
         if (completeWorkspace != null) {
-            cloneAndRepair(buildList, completeWorkspace, mode);
+        	if (mode != RepairMode.FORBEARS) {
+        		cloneAndRepair(buildList, completeWorkspace);
+        	} else {
+        		inspectBuildsForBears(buildList, completeWorkspace);
+        	}
 
             Launcher.LOGGER.debug("Start writing a JSON output...");
 
@@ -314,15 +348,9 @@ public class Launcher {
                 FileUtils.deleteDirectory(completeWorkspace);
             }
         }
-
     }
 
-    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace, RepairMode mode) throws IOException {
-        boolean push = arguments.getBoolean("push");
-        int steps = Integer.parseInt(arguments.getString("steps"));
-        String solverPath = arguments.getString("z3Path");
-        boolean clean = arguments.getBoolean("clean");
-
+    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
         if (mode != RepairMode.NOPOLONLY) {
             initWorkspace(workspace);
         }
@@ -332,9 +360,20 @@ public class Launcher {
             ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, steps, mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
-            inspector.processRepair();
+            inspector.run();
         }
         return projectInspectors;
+    }
+    
+    private void inspectBuildsForBears(List<Build> buildList, String workspace) throws IOException {
+    	initWorkspace(workspace);
+    	
+    	ProjectInspector4Bears inspector;
+    	for (Build build : buildList) {
+            inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, steps, mode);
+            inspector.setAutoclean(clean);
+            inspector.run();
+        }
     }
 
     public static void main(String[] args) throws Exception {

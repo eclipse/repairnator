@@ -1,5 +1,22 @@
 package fr.inria.spirals.repairnator.process;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Job;
@@ -8,27 +25,7 @@ import fr.inria.spirals.jtravis.entities.Repository;
 import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
-import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * This class aims to provide utility methods to scan the projects and get failing builds
@@ -124,7 +121,7 @@ public class ProjectScanner {
                 this.logger.warn("The following build cannot be retrieved: "+buildId);
                 continue;
             }
-            if (testBuild(build)) {
+            if (testBuild(build, true)) {
                 result.add(build);
                 this.buildsId.add(build.getId());
             }
@@ -146,12 +143,20 @@ public class ProjectScanner {
      * @throws IOException
      */
     public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
+        return getListOfBuildsFromProjectsByBuildStatus(path, true);
+    }
+    
+    public List<Build> getListOfPassingBuildsFromProjects(String path) throws IOException {
+    	return getListOfBuildsFromProjectsByBuildStatus(path, false);
+	}
+    
+    private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing) throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
-        List<Build> builds = getListOfBuildsFromRepo(repos);
+        List<Build> builds = getListOfBuildsFromRepo(repos, targetFailing);
 
         this.dateFinish = new Date();
         return builds;
@@ -190,14 +195,15 @@ public class ProjectScanner {
         return result;
     }
 
-    private boolean testBuild(Build build) {
+    
+    private boolean testBuild(Build build, boolean targetFailing) {
         Repository repo = build.getRepository();
         if (build.getConfig().getLanguage().equals("java")) {
             this.totalBuildInJava++;
 
             // TODO: get number of build due to PR by project by day
             this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
-            if (build.getBuildStatus() == BuildStatus.FAILED) {
+            if (targetFailing && build.getBuildStatus() == BuildStatus.FAILED) {
                 this.totalBuildInJavaFailing++;
                 for (Job job : build.getJobs()) {
                     Log jobLog = job.getLog();
@@ -209,8 +215,11 @@ public class ProjectScanner {
                         return true;
                     }
                 }
-            } else if (build.getBuildStatus() == BuildStatus.PASSED) {
+            } else if (!targetFailing && build.getBuildStatus() == BuildStatus.PASSED) {
                 this.totalPassingBuilds++;
+				this.slugs.add(repo.getSlug());
+				this.repositories.add(repo);
+                return true;
             }
         } else {
             this.logger.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());
@@ -218,7 +227,7 @@ public class ProjectScanner {
         return false;
     }
 
-    private List<Build> getListOfBuildsFromRepo(List<Repository> repos) {
+    private List<Build> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
         List<Build> result = new ArrayList<Build>();
 
         this.buildsId = new ArrayList<Integer>();
@@ -227,14 +236,18 @@ public class ProjectScanner {
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;
-                if (testBuild(build)) {
+                if (testBuild(build, targetFailing)) {
                     result.add(build);
                     this.buildsId.add(build.getId());
                 }
             }
         }
 
-        this.totalBuildInJavaFailingWithFailingTests = result.size();
+        if (targetFailing) {
+        	this.totalBuildInJavaFailingWithFailingTests = result.size();
+        } else {
+        	this.totalPassingBuilds = result.size();
+        }
         return result;
     }
 
