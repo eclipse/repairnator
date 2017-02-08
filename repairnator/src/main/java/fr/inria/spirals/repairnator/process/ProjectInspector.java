@@ -26,7 +26,7 @@ import java.util.Properties;
  * Created by urli on 26/12/2016.
  */
 public class ProjectInspector {
-    protected final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
+	private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
     private Build build;
     private String repoLocalPath;
     private ProjectState state;
@@ -122,7 +122,7 @@ public class ProjectInspector {
         this.stepsDurationsInSeconds.put(step, duration);
     }
 
-    public void processRepair() {
+    public void run() {
 
         AbstractStep firstStep = null;
 

@@ -33,7 +33,7 @@ public class GoogleSpreadSheetFactory {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetFactory.class);
     private static final String APPLICATION_NAME = "RepairNator Bot";
     private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"), ".credentials/sheets.googleapis.com-repairnator");
-    private static final String GOOGLE_SECRET_PATH = "/home/fernanda/git/librepair/repairnator/client_secret.json";
+    private static String GOOGLE_SECRET_PATH;
     //public static final String SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
     public static final String SPREADSHEET_ID = "1MnRwoZGCxxbmkiswc0O6Rg43wJFTBc3bIyrNdTiBhQ4";
 
@@ -44,7 +44,7 @@ public class GoogleSpreadSheetFactory {
     private List<String> scopes;
     private Sheets sheets;
 
-    private GoogleSpreadSheetFactory() throws IOException {
+    private GoogleSpreadSheetFactory(String googleSecretPath) throws IOException {
         super();
         try {
             this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -58,11 +58,13 @@ public class GoogleSpreadSheetFactory {
         this.jsonFactory = JacksonFactory.getDefaultInstance();
         this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
 
-        this.initSheets();
+        this.initSheets(googleSecretPath);
     }
 
-    private void initSheets() throws IOException {
-        File secretFile = new File(GOOGLE_SECRET_PATH);
+    private void initSheets(String googleSecretPath) throws IOException {
+    	GOOGLE_SECRET_PATH = googleSecretPath;
+        
+    	File secretFile = new File(GOOGLE_SECRET_PATH);
         if (!secretFile.exists()) {
             throw new IOException("File containing the token information to access Google API does not exist.");
         }
@@ -83,9 +85,9 @@ public class GoogleSpreadSheetFactory {
         this.sheets = new Sheets.Builder(this.httpTransport, this.jsonFactory, credential).setApplicationName(APPLICATION_NAME).build();
     }
 
-    public static Sheets getSheets() throws IOException {
+    public static Sheets getSheets(String googleSecretPath) throws IOException {
         if (instance == null) {
-            instance = new GoogleSpreadSheetFactory();
+            instance = new GoogleSpreadSheetFactory(googleSecretPath);
         }
         return instance.sheets;
     }

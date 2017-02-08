@@ -121,7 +121,7 @@ public class ProjectScanner {
                 this.logger.warn("The following build cannot be retrieved: "+buildId);
                 continue;
             }
-            if (testBuild(build, BuildStatus.FAILED)) {
+            if (testBuild(build, true)) {
                 result.add(build);
                 this.buildsId.add(build.getId());
             }
@@ -143,20 +143,20 @@ public class ProjectScanner {
      * @throws IOException
      */
     public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
-        return getListOfBuildsFromProjectsByBuildStatus(path, BuildStatus.FAILED);
+        return getListOfBuildsFromProjectsByBuildStatus(path, true);
     }
     
     public List<Build> getListOfPassingBuildsFromProjects(String path) throws IOException {
-    	return getListOfBuildsFromProjectsByBuildStatus(path, BuildStatus.PASSED);
+    	return getListOfBuildsFromProjectsByBuildStatus(path, false);
 	}
     
-    private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, BuildStatus targetBuildStatus) throws IOException {
+    private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing) throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
-        List<Build> builds = getListOfBuildsFromRepo(repos, targetBuildStatus);
+        List<Build> builds = getListOfBuildsFromRepo(repos, targetFailing);
 
         this.dateFinish = new Date();
         return builds;
@@ -195,14 +195,15 @@ public class ProjectScanner {
         return result;
     }
 
-    private boolean testBuild(Build build, BuildStatus targetBuildStatus) {
+    
+    private boolean testBuild(Build build, boolean targetFailing) {
         Repository repo = build.getRepository();
         if (build.getConfig().getLanguage().equals("java")) {
             this.totalBuildInJava++;
 
             // TODO: get number of build due to PR by project by day
             this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
-            if (targetBuildStatus == BuildStatus.FAILED && build.getBuildStatus() == BuildStatus.FAILED) {
+            if (targetFailing && build.getBuildStatus() == BuildStatus.FAILED) {
                 this.totalBuildInJavaFailing++;
                 for (Job job : build.getJobs()) {
                     Log jobLog = job.getLog();
@@ -214,7 +215,7 @@ public class ProjectScanner {
                         return true;
                     }
                 }
-            } else if (targetBuildStatus == BuildStatus.PASSED && build.getBuildStatus() == BuildStatus.PASSED) {
+            } else if (!targetFailing && build.getBuildStatus() == BuildStatus.PASSED) {
                 this.totalPassingBuilds++;
 				this.slugs.add(repo.getSlug());
 				this.repositories.add(repo);
@@ -226,7 +227,7 @@ public class ProjectScanner {
         return false;
     }
 
-    private List<Build> getListOfBuildsFromRepo(List<Repository> repos, BuildStatus targetBuildStatus) {
+    private List<Build> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
         List<Build> result = new ArrayList<Build>();
 
         this.buildsId = new ArrayList<Integer>();
@@ -235,14 +236,14 @@ public class ProjectScanner {
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;
-                if (testBuild(build, targetBuildStatus)) {
+                if (testBuild(build, targetFailing)) {
                     result.add(build);
                     this.buildsId.add(build.getId());
                 }
             }
         }
 
-        if (targetBuildStatus == BuildStatus.FAILED) {
+        if (targetFailing) {
         	this.totalBuildInJavaFailingWithFailingTests = result.size();
         } else {
         	this.totalPassingBuilds = result.size();

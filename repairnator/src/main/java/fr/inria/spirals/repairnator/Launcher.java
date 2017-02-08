@@ -52,6 +52,7 @@ public class Launcher {
     private boolean clean;
     private boolean push;
     private String solverPath;
+    private String googleSecretPath;
 
     public Launcher() {
         this.serializers = new ArrayList<AbstractDataSerializer>();
@@ -160,6 +161,15 @@ public class Launcher {
         opt2.setHelp("Specify the solver path used by Nopol");
         opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
+        
+        // Google secret path
+        opt2 = new FlaggedOption("googleSecretPath");
+        opt2.setShortFlag('g');
+        opt2.setLongFlag("googleSecretPath");
+        opt2.setHelp("Specify the path of the google client secret file");
+        opt2.setDefault("./client_secret.json");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        jsap.registerParameter(opt2);
     }
 
     private static void setLevel(Level level) {
@@ -255,6 +265,7 @@ public class Launcher {
         clean = arguments.getBoolean("clean");
         push = arguments.getBoolean("push");
         solverPath = arguments.getString("z3Path");
+        googleSecretPath = arguments.getString("googleSecretPath");
 
         if (debug) {
             setLevel(Level.DEBUG);
@@ -262,9 +273,9 @@ public class Launcher {
         
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
-        GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer();
+        GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
 
-        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer();
+        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
@@ -274,11 +285,7 @@ public class Launcher {
             this.serializers.add(googleSpreadSheetInspectorSerializer);
         }
 
-        if (mode != RepairMode.FORBEARS) {
-        	Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
-        } else {
-        	Launcher.LOGGER.debug("Start to scan projects in travis for passing builds...");
-        }
+        Launcher.LOGGER.debug("Start to scan projects in travis...");
 
         ProjectScanner scanner = new ProjectScanner(lookupDays);
 
@@ -308,12 +315,7 @@ public class Launcher {
         }
 
         if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
-            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
-            scannerSerializer.serialize();
-        }
-
-        if (mode == RepairMode.SLUG) {
-            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
+            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
             scannerSerializer.serialize();
         }
 
@@ -358,7 +360,7 @@ public class Launcher {
             ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, steps, mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
-            inspector.processRepair();
+            inspector.run();
         }
         return projectInspectors;
     }
@@ -370,7 +372,7 @@ public class Launcher {
     	for (Build build : buildList) {
             inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, steps, mode);
             inspector.setAutoclean(clean);
-            inspector.processRepair();
+            inspector.run();
         }
     }
 
