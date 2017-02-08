@@ -68,7 +68,7 @@ public class NopolRepair extends AbstractStep {
 
             this.getLogger().debug("Launching repair with Nopol for following test class: "+testClass+" (should timeout in "+timeout+" minutes)");
 
-            ProjectReference projectReference = new ProjectReference(sources, classPath.toArray(new URL[classPath.size()]), new String[] {testClass});
+            final ProjectReference projectReference = new ProjectReference(sources, classPath.toArray(new URL[classPath.size()]), new String[] {testClass});
             Config config = new Config();
             config.setComplianceLevel(8);
             config.setTimeoutTestExecution(60);
