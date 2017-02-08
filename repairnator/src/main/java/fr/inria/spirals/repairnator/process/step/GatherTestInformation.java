@@ -95,7 +95,7 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         for (File surefireDir : surefireDirs) {
-            SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[]{surefireDir}), Locale.ENGLISH);
+            SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[]{surefireDir}), Locale.ENGLISH, null);
             try {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
@@ -110,7 +110,7 @@ public class GatherTestInformation extends AbstractStep {
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
                             if (testCase.hasFailure()) {
-                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureDetail());
+                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureDetail(), testCase.isError());
                                 FailureLocation failureLocation = null;
 
                                 for (FailureLocation location : this.failureLocations) {

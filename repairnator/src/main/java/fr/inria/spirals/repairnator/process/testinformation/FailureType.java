@@ -6,25 +6,15 @@ import java.util.Arrays;
  * Created by urli on 08/02/2017.
  */
 public class FailureType {
-    private static final String[] ERRORS = {
-            "java.lang.ClassNotFoundException",
-            "java.lang.NullPointerException",
-            "java.lang.NoClassDefFoundError",
-            "java.lang.RuntimeException"
-    };
 
     private String failureName;
     private String failureDetail;
     private boolean isError;
 
-    public FailureType(String name, String detail) {
+    public FailureType(String name, String detail, boolean isError) {
         this.failureName = name;
         this.failureDetail = detail;
-        this.detectIfIsError();
-    }
-
-    private void detectIfIsError() {
-        this.isError = (Arrays.asList(ERRORS).contains(this.failureName));
+        this.isError = isError;
     }
 
     public String getFailureName() {

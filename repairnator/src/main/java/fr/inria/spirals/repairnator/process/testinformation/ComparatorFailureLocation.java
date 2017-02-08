@@ -11,8 +11,8 @@ public class ComparatorFailureLocation implements Comparator<FailureLocation> {
         if (o1.equals(o2)) {
             return 0;
         } else {
-            int diffFail = o1.getNbFailures()-o2.getNbFailures();
-            int diffErr = o1.getNbErrors()-o2.getNbErrors();
+            int diffFail = o2.getNbFailures()-o1.getNbFailures();
+            int diffErr = o2.getNbErrors()-o1.getNbErrors();
 
             return (diffFail != 0) ? diffFail : diffErr;
         }

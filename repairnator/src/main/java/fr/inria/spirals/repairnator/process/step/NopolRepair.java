@@ -15,6 +15,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeoutException;
  * Created by urli on 05/01/2017.
  */
 public class NopolRepair extends AbstractStep {
-    private static final int TOTAL_MAX_TIME = 4*60; // We expect it to run 4 hours top.
+    private static final int TOTAL_MAX_TIME = 10; // We expect it to run 4 hours top.
     private static final int MIN_TIMEOUT = 2;
 
     private Map<String,List<Patch>> patches;
@@ -56,22 +57,16 @@ public class NopolRepair extends AbstractStep {
 
         this.patches = new HashMap<String,List<Patch>>();
         boolean patchCreated = false;
-
-        int allocatedTimeForFails, allocatedTimeForErrors;
-
-        allocatedTimeForErrors = TOTAL_MAX_TIME/(infoStep.getNbFailingTests()*2+infoStep.getNbErroringTests());
-        if (allocatedTimeForErrors < MIN_TIMEOUT) {
-            allocatedTimeForErrors = MIN_TIMEOUT;
-        }
-        allocatedTimeForFails = allocatedTimeForErrors*2;
-
-
+        int passingTime = 0;
 
         for (FailureLocation failureLocation : failureLocationList) {
             String testClass = failureLocation.getClassName();
-            int timeout = (failureLocation.isError()) ? allocatedTimeForErrors : allocatedTimeForFails;
+            int timeout = (TOTAL_MAX_TIME-passingTime)/2;
+            if (timeout < MIN_TIMEOUT) {
+                timeout = MIN_TIMEOUT;
+            }
 
-            this.getLogger().debug("Launching repair with Nopol for following test class: "+testClass+" (should timeout in "+timeout+" minutes");
+            this.getLogger().debug("Launching repair with Nopol for following test class: "+testClass+" (should timeout in "+timeout+" minutes)");
 
             ProjectReference projectReference = new ProjectReference(sources, classPath.toArray(new URL[classPath.size()]), new String[] {testClass});
             Config config = new Config();
@@ -84,6 +79,8 @@ public class NopolRepair extends AbstractStep {
             config.setType(StatementType.PRE_THEN_COND);
 
             SolverFactory.setSolver(config.getSolver(), config.getSolverPath());
+
+            long beforeNopol = new Date().getTime();
 
             final NoPol nopol = new NoPol(projectReference, config);
             List<Patch> patch = null;
@@ -102,12 +99,15 @@ public class NopolRepair extends AbstractStep {
                 patch = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
             } catch (TimeoutException exception) {
                 this.addStepError("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+                nopolExecution.cancel(true);
             } catch (InterruptedException | ExecutionException e) {
                 this.addStepError(e.getMessage());
-                continue;
+                nopolExecution.cancel(true);
             }
 
-            nopolExecution.cancel(true);
+            long afterNopol = new Date().getTime();
+
+            passingTime = Math.round((afterNopol-beforeNopol)/60000);
 
             if (patch != null && !patch.isEmpty()) {
                 this.patches.put(testClass, patch);
