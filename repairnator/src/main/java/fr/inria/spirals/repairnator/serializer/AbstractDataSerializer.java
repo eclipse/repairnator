@@ -1,9 +1,7 @@
 package fr.inria.spirals.repairnator.serializer;
 
 import fr.inria.spirals.repairnator.process.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.ProjectState;
-
-import java.text.SimpleDateFormat;
+import fr.inria.spirals.repairnator.process.ProjectState;
 
 /**
  * Created by urli on 20/01/2017.

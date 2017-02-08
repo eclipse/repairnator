@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process;
 
 /**
  * Created by urli on 03/01/2017.
@@ -13,5 +13,7 @@ public enum ProjectState {
     HASTESTERRORS,
     NOTFAILING,
     PATCHED,
-    NOTTESTABLE
+    NOTTESTABLE,
+    CLASSPATHCOMPUTED,
+    SOURCEDIRCOMPUTED
 }

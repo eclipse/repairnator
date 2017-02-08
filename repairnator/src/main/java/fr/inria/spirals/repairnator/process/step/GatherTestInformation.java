@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
@@ -18,11 +18,9 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,12 +34,22 @@ public class GatherTestInformation extends AbstractStep {
     private int nbSkippingTests;
     private int nbFailingTests;
     private int nbErroringTests;
-    private Map<FailureType, List<FailureLocation>> typeOfFailures;
+    private Set<FailureLocation> failureLocations;
+    private Set<String> failureNames;
     private String failingModulePath;
 
     public GatherTestInformation(ProjectInspector inspector) {
         super(inspector);
-        this.typeOfFailures = new HashMap<>();
+        this.failureLocations = new HashSet<>();
+        this.failureNames = new HashSet<>();
+    }
+
+    public Set<FailureLocation> getFailureLocations() {
+        return failureLocations;
+    }
+
+    public Set<String> getFailureNames() {
+        return failureNames;
     }
 
     public int getNbFailingTests() {
@@ -58,10 +66,6 @@ public class GatherTestInformation extends AbstractStep {
 
     public int getNbSkippingTests() {
         return nbSkippingTests;
-    }
-
-    public Map<FailureType, List<FailureLocation>> getTypeOfFailures() {
-        return typeOfFailures;
     }
 
     public String getFailingModulePath() {
@@ -106,14 +110,23 @@ public class GatherTestInformation extends AbstractStep {
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
                             if (testCase.hasFailure()) {
-                                String tof = testCase.getFailureType();
-                                FailureType typeTof = new FailureType(tof);
-                                FailureLocation location = new FailureLocation(testCase.getFullClassName(), testCase.getName(), testCase.getFailureDetail());
-                                if (!this.typeOfFailures.containsKey(typeTof)) {
-                                    this.typeOfFailures.put(typeTof, new ArrayList<>());
+                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureDetail());
+                                FailureLocation failureLocation = null;
+
+                                for (FailureLocation location : this.failureLocations) {
+                                    if (location.getClassName().equals(testCase.getFullClassName())) {
+                                        failureLocation = location;
+                                        break;
+                                    }
                                 }
-                                List<FailureLocation> failingClasses = this.typeOfFailures.get(typeTof);
-                                failingClasses.add(location);
+
+                                if (failureLocation != null) {
+                                    failureLocation.addFailure(typeTof);
+                                } else {
+                                    failureLocation = new FailureLocation(testCase.getFullClassName());
+                                    failureLocation.addFailure(typeTof);
+                                    this.failureLocations.add(failureLocation);
+                                }
                             }
                         }
                     }

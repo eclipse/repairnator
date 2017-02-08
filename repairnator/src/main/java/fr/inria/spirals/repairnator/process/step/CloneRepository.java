@@ -4,11 +4,11 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.ProjectState;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.eclipse.jgit.api.ApplyResult;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.RemoteAddCommand;
@@ -29,17 +29,12 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by urli on 03/01/2017.

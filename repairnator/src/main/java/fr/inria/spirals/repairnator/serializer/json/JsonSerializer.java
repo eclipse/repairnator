@@ -15,9 +15,8 @@ import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
-import fr.inria.spirals.repairnator.process.step.ProjectState;
+import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -199,7 +197,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
         result.addProperty("nbErroringTests", testInformation.getNbErroringTests());
-        result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
+        result.add("failureLocations",serialize(testInformation.getFailureLocations()));
         result.add("errors", serialize(inspector.getStepErrors()));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
@@ -243,14 +241,13 @@ public class JsonSerializer extends AbstractDataSerializer {
 
         NopolRepair nopolRepair = inspector.getNopolRepair();
         result.add("patches", serialize(nopolRepair.getPatches()));
-        result.add("projectReference", serialize(nopolRepair.getProjectReference()));
 
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
         result.addProperty("nbTests", testInformation.getNbTotalTests());
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
-        result.add("typeOfFailures",serialize(testInformation.getTypeOfFailures()));
+        result.add("failureLocations",serialize(testInformation.getFailureLocations()));
         result.add("errors", serialize(inspector.getStepErrors()));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
@@ -301,6 +298,8 @@ public class JsonSerializer extends AbstractDataSerializer {
 
             case HASTESTERRORS:
             case HASTESTFAILURE:
+            case CLASSPATHCOMPUTED:
+            case SOURCEDIRCOMPUTED:
                 outputHasTestFailureInspector(inspector);
                 break;
 

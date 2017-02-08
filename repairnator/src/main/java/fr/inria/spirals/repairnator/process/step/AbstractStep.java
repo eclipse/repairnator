@@ -1,19 +1,14 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
-import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

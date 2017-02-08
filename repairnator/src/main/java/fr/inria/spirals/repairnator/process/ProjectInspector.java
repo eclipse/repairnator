@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
-import fr.inria.spirals.repairnator.process.step.ProjectState;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +43,8 @@ public class ProjectInspector {
     private String m2LocalPath;
     private List<AbstractDataSerializer> serializers;
     private RepairMode mode;
+    private List<URL> repairClassPath;
+    private File[] repairSourceDir;
 
 
     public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, int steps, RepairMode mode) {
@@ -59,6 +61,22 @@ public class ProjectInspector {
         this.autoclean = false;
         this.serializers = serializers;
         this.mode = mode;
+    }
+
+    public List<URL> getRepairClassPath() {
+        return repairClassPath;
+    }
+
+    public void setRepairClassPath(List<URL> repairClassPath) {
+        this.repairClassPath = repairClassPath;
+    }
+
+    public File[] getRepairSourceDir() {
+        return repairSourceDir;
+    }
+
+    public void setRepairSourceDir(File[] repairSourceDir) {
+        this.repairSourceDir = repairSourceDir;
     }
 
     public String getWorkspace() {

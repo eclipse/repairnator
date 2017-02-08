@@ -14,10 +14,12 @@ public class FailureType {
     };
 
     private String failureName;
+    private String failureDetail;
     private boolean isError;
 
-    public FailureType(String name) {
+    public FailureType(String name, String detail) {
         this.failureName = name;
+        this.failureDetail = detail;
         this.detectIfIsError();
     }
 
@@ -33,6 +35,10 @@ public class FailureType {
         return isError;
     }
 
+    public String getFailureDetail() {
+        return failureDetail;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,12 +47,14 @@ public class FailureType {
         FailureType that = (FailureType) o;
 
         if (isError != that.isError) return false;
-        return failureName != null ? failureName.equals(that.failureName) : that.failureName == null;
+        if (failureName != null ? !failureName.equals(that.failureName) : that.failureName != null) return false;
+        return failureDetail != null ? failureDetail.equals(that.failureDetail) : that.failureDetail == null;
     }
 
     @Override
     public int hashCode() {
         int result = failureName != null ? failureName.hashCode() : 0;
+        result = 31 * result + (failureDetail != null ? failureDetail.hashCode() : 0);
         result = 31 * result + (isError ? 1 : 0);
         return result;
     }

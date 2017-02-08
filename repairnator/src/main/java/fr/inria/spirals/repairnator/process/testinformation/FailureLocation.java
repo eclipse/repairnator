@@ -1,29 +1,50 @@
 package fr.inria.spirals.repairnator.process.testinformation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by urli on 08/02/2017.
+ * Represent the location of a failure for Repair Tools.
+ * For now only Nopol is using and it's repairing Test Classes, so we only consider that information
  */
 public class FailureLocation {
     private String className;
-    private String method;
-    private String details;
+    private List<FailureType> failures;
+    private int nbFailures;
+    private int nbErrors;
 
-    public FailureLocation(String className, String method, String details) {
+    public FailureLocation(String className) {
         this.className = className;
-        this.method = method;
-        this.details = details;
+        this.failures = new ArrayList<>();
     }
 
     public String getClassName() {
         return className;
     }
 
-    public String getMethod() {
-        return method;
+    public void addFailure(FailureType failure) {
+        this.failures.add(failure);
+        if (failure.isError()) {
+            nbErrors++;
+        } else {
+            nbFailures++;
+        }
     }
 
-    public String getDetails() {
-        return details;
+    public List<FailureType> getFailures() {
+        return failures;
+    }
+
+    public int getNbFailures() {
+        return nbFailures;
+    }
+
+    public int getNbErrors() {
+        return nbErrors;
+    }
+
+    public boolean isError() {
+        return (nbErrors > nbFailures);
     }
 
     @Override
@@ -33,16 +54,11 @@ public class FailureLocation {
 
         FailureLocation that = (FailureLocation) o;
 
-        if (className != null ? !className.equals(that.className) : that.className != null) return false;
-        if (method != null ? !method.equals(that.method) : that.method != null) return false;
-        return details != null ? details.equals(that.details) : that.details == null;
+        return className != null ? className.equals(that.className) : that.className == null;
     }
 
     @Override
     public int hashCode() {
-        int result = className != null ? className.hashCode() : 0;
-        result = 31 * result + (method != null ? method.hashCode() : 0);
-        result = 31 * result + (details != null ? details.hashCode() : 0);
-        return result;
+        return className != null ? className.hashCode() : 0;
     }
 }

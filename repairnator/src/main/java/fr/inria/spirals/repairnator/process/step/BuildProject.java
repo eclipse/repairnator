@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
 import java.util.Properties;

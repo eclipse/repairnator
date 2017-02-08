@@ -39,7 +39,7 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
 
         String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
         String typeOfFailures = "";
-        Set<String> failures = inspector.getTestInformations().getTypeOfFailures().keySet();
+        Set<String> failures = inspector.getTestInformations().getFailureNames();
 
         for (String failure : failures) {
             typeOfFailures += failure+",";
