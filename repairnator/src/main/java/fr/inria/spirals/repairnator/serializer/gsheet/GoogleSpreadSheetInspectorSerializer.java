@@ -66,7 +66,7 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
         valueRange.setValues(dataRow);
 
         try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.SPREADSHEET_ID, RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+            AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                 this.logger.debug("Data have been inserted in Google Spreadsheet.");
             }

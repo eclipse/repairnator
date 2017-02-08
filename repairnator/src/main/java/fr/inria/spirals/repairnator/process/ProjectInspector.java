@@ -39,7 +39,6 @@ public class ProjectInspector {
     private PushIncriminatedBuild pushBuild;
     private NopolRepair nopolRepair;
     private boolean push;
-    protected int steps;
     private Map<String, List<String>> stepErrors;
     private boolean autoclean;
     private String m2LocalPath;
@@ -49,7 +48,7 @@ public class ProjectInspector {
     private File[] repairSourceDir;
 
 
-    public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, int steps, RepairMode mode) {
+    public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, RepairMode mode) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -58,7 +57,6 @@ public class ProjectInspector {
         this.m2LocalPath = new File(workspace+File.separator+".m2").getAbsolutePath();
         this.stepsDurationsInSeconds = new HashMap<String, Integer>();
         this.push = push;
-        this.steps = steps;
         this.stepErrors = new HashMap<String, List<String>>();
         this.autoclean = false;
         this.serializers = serializers;
@@ -169,7 +167,6 @@ public class ProjectInspector {
                 e.printStackTrace();
             }
         }
-        firstStep.setLimitStepNumber(this.steps);
         firstStep.setDataSerializer(this.serializers);
 
         if (push) {

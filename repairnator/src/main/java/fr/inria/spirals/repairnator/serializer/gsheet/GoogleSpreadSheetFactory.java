@@ -34,9 +34,10 @@ public class GoogleSpreadSheetFactory {
     private static final String APPLICATION_NAME = "RepairNator Bot";
     private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"), ".credentials/sheets.googleapis.com-repairnator");
     private static String GOOGLE_SECRET_PATH;
-    //public static final String SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
-    public static final String SPREADSHEET_ID = "1MnRwoZGCxxbmkiswc0O6Rg43wJFTBc3bIyrNdTiBhQ4";
+    public static final String REPAIR_SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
+    public static final String BEAR_SPREADSHEET_ID = "1MnRwoZGCxxbmkiswc0O6Rg43wJFTBc3bIyrNdTiBhQ4";
 
+    private static String spreadsheetID = REPAIR_SPREADSHEET_ID;
     private static GoogleSpreadSheetFactory instance;
     private FileDataStoreFactory dataStoreFactory;
     private final JsonFactory jsonFactory;
@@ -59,6 +60,14 @@ public class GoogleSpreadSheetFactory {
         this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
 
         this.initSheets(googleSecretPath);
+    }
+
+    public static void setSpreadsheetId(String spreadsheetID) {
+        GoogleSpreadSheetFactory.spreadsheetID = spreadsheetID;
+    }
+
+    public static String getSpreadsheetID() {
+        return GoogleSpreadSheetFactory.spreadsheetID;
     }
 
     private void initSheets(String googleSecretPath) throws IOException {

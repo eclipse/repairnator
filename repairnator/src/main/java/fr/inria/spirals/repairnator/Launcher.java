@@ -48,7 +48,6 @@ public class Launcher {
     private String output;
     private boolean debug;
     private RepairMode mode;
-    private int steps;
     private boolean clean;
     private boolean push;
     private String solverPath;
@@ -142,15 +141,6 @@ public class Launcher {
         opt2.setHelp("Specify the number of hours to lookup in past for builds");
         opt2.setDefault("1");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        jsap.registerParameter(opt2);
-
-        // Steps to do
-        opt2 = new FlaggedOption("steps");
-        opt2.setShortFlag('s');
-        opt2.setLongFlag("steps");
-        opt2.setHelp("Specify the number of steps to realize (0: only scan projects, 1: try to clone, 2: try to build, 3: try to test, 4: gather info on test, 5: push build, 6: call Nopol)");
-        opt2.setDefault("6");
-        opt2.setStringParser(EnumeratedStringParser.getParser("0;1;2;3;4;5;6"));
         jsap.registerParameter(opt2);
 
         // Solver path
@@ -261,7 +251,6 @@ public class Launcher {
         output = arguments.getString("output");
         debug = arguments.getBoolean("debug");
         mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
-        steps = Integer.parseInt(arguments.getString("steps"));
         clean = arguments.getBoolean("clean");
         push = arguments.getBoolean("push");
         solverPath = arguments.getString("z3Path");
@@ -280,10 +269,13 @@ public class Launcher {
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
         this.serializers.add(googleSpreadSheetInspectorTimeSerializer);
-        
-        if (push || mode == RepairMode.FORBEARS) {
-            this.serializers.add(googleSpreadSheetInspectorSerializer);
+
+        if (mode == RepairMode.FORBEARS) {
+            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
         }
+
+        this.serializers.add(googleSpreadSheetInspectorSerializer);
+
 
         Launcher.LOGGER.debug("Start to scan projects in travis...");
 
@@ -357,7 +349,7 @@ public class Launcher {
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, steps, mode);
+            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
             inspector.run();
@@ -370,7 +362,7 @@ public class Launcher {
     	
     	ProjectInspector4Bears inspector;
     	for (Build build : buildList) {
-            inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, steps, mode);
+            inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, mode);
             inspector.setAutoclean(clean);
             inspector.run();
         }

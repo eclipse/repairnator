@@ -23,7 +23,6 @@ import java.util.Properties;
 public abstract class AbstractStep {
     public static final String PROPERTY_FILENAME = "repairnator.properties";
     private String name;
-    private int limitStepNumber;
     protected ProjectInspector inspector;
     protected ProjectState state;
 
@@ -65,15 +64,10 @@ public abstract class AbstractStep {
         }
     }
 
-    public void setLimitStepNumber(int limitStepNumber) {
-        this.limitStepNumber = limitStepNumber;
-    }
-
     public AbstractStep setNextStep(AbstractStep nextStep) {
         this.nextStep = nextStep;
         nextStep.setDataSerializer(this.serializers);
         nextStep.setProperties(this.properties);
-        nextStep.setLimitStepNumber(this.limitStepNumber);
         nextStep.setState(this.state);
         return nextStep;
     }
@@ -97,15 +91,8 @@ public abstract class AbstractStep {
 
     protected void executeNextStep() {
         if (this.nextStep != null) {
-            this.limitStepNumber--;
-            this.getLogger().debug(this.limitStepNumber+" steps remaining...");
-
-            if (this.limitStepNumber > 0) {
-                this.nextStep.setLimitStepNumber(this.limitStepNumber);
-                this.nextStep.setState(this.state);
-                this.nextStep.execute();
-                return;
-            }
+            this.nextStep.setState(this.state);
+            this.nextStep.execute();
         } else {
             this.inspector.setState(this.state);
             this.serializeData();
