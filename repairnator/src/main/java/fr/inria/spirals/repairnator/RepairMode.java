@@ -6,5 +6,6 @@ package fr.inria.spirals.repairnator;
 public enum RepairMode {
     BUILD,
     SLUG,
-    NOPOLONLY
+    NOPOLONLY,
+    FORBEARS
 }
