@@ -153,24 +153,14 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         if (this.getState() == ProjectState.HASTESTFAILURE) {
-        	if (!(inspector.getMode() == RepairMode.FORBEARS)) {
-        		this.shouldStop = false;
-        	} else {
-        		this.shouldStop = true;
-        	}
+        	this.shouldStop = false;
         } else if (this.getState() == ProjectState.HASTESTERRORS) {
             this.addStepError("Only get test errors, no failing tests. It will try to repair it.");
-            if (!(inspector.getMode() == RepairMode.FORBEARS)) {
-        		this.shouldStop = false;
-        	} else {
-        		this.shouldStop = true;
-        	}
+            this.shouldStop = false;
         } else {
-        	if (!(inspector.getMode() == RepairMode.FORBEARS)) {
-        		this.shouldStop = true;
-        	} else {
-        		this.shouldStop = false;
-        	}
+        	this.shouldStop = true;
         }
+        
+        this.shouldStop = (inspector.getMode() == RepairMode.FORBEARS) ? !this.shouldStop : this.shouldStop;
     }
 }
