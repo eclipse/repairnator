@@ -209,6 +209,10 @@ public class ProjectInspector {
     public NopolRepair getNopolRepair() {
         return nopolRepair;
     }
+    
+    public RepairMode getMode() {
+    	return mode;
+    }
 
     public String toString() {
         return this.getRepoLocalPath()+" : "+this.getState();

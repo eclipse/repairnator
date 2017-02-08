@@ -1,6 +1,8 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.Launcher;
+import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
@@ -151,12 +153,14 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         if (this.getState() == ProjectState.HASTESTFAILURE) {
-            this.shouldStop = false;
+        	this.shouldStop = false;
         } else if (this.getState() == ProjectState.HASTESTERRORS) {
             this.addStepError("Only get test errors, no failing tests. It will try to repair it.");
             this.shouldStop = false;
         } else {
-            this.shouldStop = true;
+        	this.shouldStop = true;
         }
+        
+        this.shouldStop = (inspector.getMode() == RepairMode.FORBEARS) ? !this.shouldStop : this.shouldStop;
     }
 }
