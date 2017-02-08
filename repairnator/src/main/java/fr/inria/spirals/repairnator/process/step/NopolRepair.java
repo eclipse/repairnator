@@ -252,7 +252,6 @@ public class NopolRepair extends AbstractStep {
             } catch (TimeoutException exception) {
                 this.getLogger().error("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
                 this.addStepError("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
-
                 // Really ugly but did not find any other way to kill agents...
                 try {
                     Runtime.getRuntime().exec(CMD_KILL_GZOLTAR_AGENT);
@@ -261,15 +260,13 @@ public class NopolRepair extends AbstractStep {
                     this.getLogger().error(e.getMessage());
                 }
                 continue;
-            } catch (InterruptedException e) {
-                this.getLogger().error(e.getMessage());
-                this.addStepError(e.getMessage());
-                continue;
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 this.getLogger().error(e.getMessage());
                 this.addStepError(e.getMessage());
                 continue;
             }
+
+            nopolExecution.cancel(true);
 
             if (patch != null && !patch.isEmpty()) {
                 this.patches.put(failingTest, patch);

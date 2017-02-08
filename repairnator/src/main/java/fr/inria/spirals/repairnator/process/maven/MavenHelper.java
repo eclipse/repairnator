@@ -93,6 +93,7 @@ public class MavenHelper {
         properties.setProperty("checkstyle.skip","true");
         properties.setProperty("cobertura.skip","true");
         properties.setProperty("skipITs","true");
+        properties.setProperty("rat.skip","true");
         request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
