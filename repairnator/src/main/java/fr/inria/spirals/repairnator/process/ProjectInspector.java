@@ -5,6 +5,8 @@ import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
@@ -172,10 +174,15 @@ public class ProjectInspector {
 
         if (push) {
             this.testInformations.setNextStep(this.pushBuild)
+                                .setNextStep(new ComputeClasspath(this))
+                                .setNextStep(new ComputeSourceDir(this))
                                 .setNextStep(this.nopolRepair);
         } else {
             this.logger.debug("Push boolean is set to false the failing builds won't be pushed.");
-            this.testInformations.setNextStep(this.nopolRepair);
+            this.testInformations
+                    .setNextStep(new ComputeClasspath(this))
+                    .setNextStep(new ComputeSourceDir(this))
+                    .setNextStep(this.nopolRepair);
         }
 
         firstStep.setState(ProjectState.INIT);
