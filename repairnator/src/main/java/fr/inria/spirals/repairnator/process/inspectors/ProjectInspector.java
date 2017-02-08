@@ -1,7 +1,9 @@
-package fr.inria.spirals.repairnator.process;
+package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.RepairMode;
+import fr.inria.spirals.repairnator.process.ProjectScanner;
+import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;

@@ -1,32 +1,23 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import com.sun.xml.internal.org.jvnet.mimepull.MIMEConfig;
 import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
 import fr.inria.lille.repair.ProjectReference;
 import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
-import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
-import fr.inria.spirals.repairnator.process.testinformation.FailureType;
-import org.apache.maven.model.Build;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.building.ModelBuildingException;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;

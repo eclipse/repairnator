@@ -1,18 +1,11 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.jtravis.entities.Repository;
-import fr.inria.spirals.repairnator.Launcher;
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevSort;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -20,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by urli on 05/01/2017.

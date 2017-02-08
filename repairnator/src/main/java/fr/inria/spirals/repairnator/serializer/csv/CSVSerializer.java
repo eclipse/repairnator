@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.serializer.csv;
 
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.SerializerUtils;
 import org.slf4j.Logger;
@@ -11,7 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**

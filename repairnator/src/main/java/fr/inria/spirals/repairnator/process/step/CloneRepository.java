@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.PRInformation;
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;

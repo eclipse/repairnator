@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.serializer;
 
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
 
 /**

@@ -1,17 +1,14 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
-import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
-import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;

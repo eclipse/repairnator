@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

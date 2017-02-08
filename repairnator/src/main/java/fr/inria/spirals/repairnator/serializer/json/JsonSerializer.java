@@ -11,7 +11,7 @@ import fr.inria.spirals.jtravis.entities.Job;
 import fr.inria.spirals.jtravis.entities.Log;
 import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.repairnator.RepairMode;
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;

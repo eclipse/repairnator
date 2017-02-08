@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.maven;
 
-import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.output.MavenErrorHandler;
 import fr.inria.spirals.repairnator.process.maven.output.MavenFilterOutputHandler;
 import fr.inria.spirals.repairnator.process.maven.output.MavenMuteOutputHandler;

@@ -1,7 +1,8 @@
-package fr.inria.spirals.repairnator.process;
+package fr.inria.spirals.repairnator.process.inspectors;
 
 import java.util.List;
 
+import fr.inria.spirals.repairnator.process.ProjectState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
