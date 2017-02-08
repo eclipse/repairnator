@@ -8,6 +8,8 @@ import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuilder;
@@ -48,6 +50,7 @@ public class NopolRepair extends AbstractStep {
     private static final String DEFAULT_CLASSES_DIR = "/target/classes";
     private static final String DEFAULT_TEST_CLASSES_DIR = "/target/test-classes";
     private static final String CMD_KILL_GZOLTAR_AGENT = "ps -ef | grep gzoltar | grep -v grep | awk '{print $2}' |xargs kill";
+    private static final int TOTAL_MAX_TIME = 4*60; // We expect it to run 4 hours top.
 
     private Map<String,List<Patch>> patches;
 
@@ -147,21 +150,7 @@ public class NopolRepair extends AbstractStep {
 
         GatherTestInformation infoStep = inspector.getTestInformations();
         String incriminatedModule = infoStep.getFailingModulePath();
-        Map<String, Map<String, String>> infoTests = infoStep.getTypeOfFailures();
-
-        Set<String> failingTests = new HashSet<String>();
-
-        for (Map<String,String> failures : infoTests.values()) {
-            for (String testNames : failures.keySet()) {
-                String[] splitName = testNames.split(":");
-                if (splitName.length != 2) {
-                    this.getLogger().error("Error while splitting test name: "+testNames+". It won't be considered for Nopol.");
-                    this.addStepError("Error while splitting test name: "+testNames+". It won't be considered for Nopol.");
-                } else {
-                    failingTests.add(splitName[0]);
-                }
-            }
-        }
+        Map<FailureType, List<FailureLocation>> infoTests = infoStep.getTypeOfFailures();
 
         this.getLogger().debug("Compute classpath from incriminated module...");
         Properties properties = new Properties();

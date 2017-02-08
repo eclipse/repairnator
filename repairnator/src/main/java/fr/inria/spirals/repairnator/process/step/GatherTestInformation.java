@@ -2,6 +2,8 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.process.ProjectInspector;
+import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
 import org.apache.maven.plugins.surefire.report.ReportTestSuite;
 import org.apache.maven.plugins.surefire.report.SurefireReportParser;
@@ -34,7 +36,7 @@ public class GatherTestInformation extends AbstractStep {
     private int nbSkippingTests;
     private int nbFailingTests;
     private int nbErroringTests;
-    private Map<String, Map<String,String>> typeOfFailures;
+    private Map<FailureType, List<FailureLocation>> typeOfFailures;
     private String failingModulePath;
 
     public GatherTestInformation(ProjectInspector inspector) {
@@ -58,7 +60,7 @@ public class GatherTestInformation extends AbstractStep {
         return nbSkippingTests;
     }
 
-    public Map<String, Map<String, String>> getTypeOfFailures() {
+    public Map<FailureType, List<FailureLocation>> getTypeOfFailures() {
         return typeOfFailures;
     }
 
@@ -105,11 +107,13 @@ public class GatherTestInformation extends AbstractStep {
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
                             if (testCase.hasFailure()) {
                                 String tof = testCase.getFailureType();
-                                if (!this.typeOfFailures.containsKey(tof)) {
-                                    this.typeOfFailures.put(tof, new HashMap<String,String>());
+                                FailureType typeTof = new FailureType(tof);
+                                FailureLocation location = new FailureLocation(testCase.getFullClassName(), testCase.getName(), testCase.getFailureDetail());
+                                if (!this.typeOfFailures.containsKey(typeTof)) {
+                                    this.typeOfFailures.put(typeTof, new ArrayList<>());
                                 }
-                                Map<String,String> failingClasses = this.typeOfFailures.get(tof);
-                                failingClasses.put(testCase.getFullClassName()+":"+testCase.getName(),testCase.getFailureDetail());
+                                List<FailureLocation> failingClasses = this.typeOfFailures.get(typeTof);
+                                failingClasses.add(location);
                             }
                         }
                     }
