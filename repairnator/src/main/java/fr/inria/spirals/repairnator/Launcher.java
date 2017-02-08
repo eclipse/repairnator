@@ -13,7 +13,6 @@ import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetInspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetInspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetScannerSerializer;
@@ -28,6 +27,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by urli on 23/12/2016.
@@ -36,6 +41,8 @@ public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
     private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN","GITHUB_OAUTH"};
+    private static final long TIMEOUT_PER_JOB = 1; // in hours
+    private static final int NB_THREADS = 4;
 
     private JSAP jsap;
     private JSAPResult arguments;
@@ -228,11 +235,13 @@ public class Launcher {
         this.checkToolsLoaded();
         this.checkNopolSolverPath();
         if (arguments.success() && checkEnvironmentVariables()) {
+            System.out.println(arguments.toString());
             mainProcess();
         }
     }
 
     private void mainProcess() throws IOException {
+
         String input = this.arguments.getString("input");
         String workspace = arguments.getString("workspace");
         int lookupDays = arguments.getInt("lookup");
@@ -254,10 +263,8 @@ public class Launcher {
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
         this.serializers.add(googleSpreadSheetInspectorTimeSerializer);
+        this.serializers.add(googleSpreadsheetSerializer);
 
-        if (push) {
-            this.serializers.add(googleSpreadsheetSerializer);
-        }
 
         Launcher.LOGGER.debug("Start to scan projects in travis for failing builds...");
 
@@ -332,7 +339,27 @@ public class Launcher {
             ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, steps, mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
-            inspector.processRepair();
+
+        }
+        final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS, new TimeoutThreadFactory(TIMEOUT_PER_JOB, TimeUnit.MINUTES, LOGGER));
+
+        for (final ProjectInspector inspector : projectInspectors) {
+            pool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    inspector.processRepair();
+                }
+            });
+        }
+
+        try {
+            if (!pool.awaitTermination(projectInspectors.size()*TIMEOUT_PER_JOB, TimeUnit.MINUTES)) {
+                pool.shutdownNow();
+                LOGGER.error("Shutdown pool of threads.");
+            }
+        } catch (InterruptedException e) {
+            pool.shutdownNow();
+            LOGGER.error(e.getMessage(), e);
         }
         return projectInspectors;
     }
