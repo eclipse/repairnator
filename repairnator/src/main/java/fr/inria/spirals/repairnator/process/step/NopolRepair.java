@@ -107,7 +107,7 @@ public class NopolRepair extends AbstractStep {
 
             long afterNopol = new Date().getTime();
 
-            passingTime = Math.round((afterNopol-beforeNopol)/60000);
+            passingTime += Math.round((afterNopol-beforeNopol)/60000);
 
             if (patch != null && !patch.isEmpty()) {
                 this.patches.put(testClass, patch);

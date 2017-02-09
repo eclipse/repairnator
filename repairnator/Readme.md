@@ -20,6 +20,7 @@ For Nopol, follow the instructions given [there](https://github.com/SpoonLabs/no
 For maven surefire-report-parser, just clone [this fork](https://github.com/surli/maven-surefire) and execute:
 
 ```
+$ git checkout surefire-parser-feature-error-status
 $ cd surefire-report-parser
 $ mvn install -DskipTests=true
 ```
