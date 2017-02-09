@@ -35,7 +35,7 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
     public void serializeData(ProjectInspector inspector) {
         Build build = inspector.getBuild();
 
-        String state = this.getPrettyPrintState(inspector.getState());
+        String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
 
         String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
         String typeOfFailures = "";

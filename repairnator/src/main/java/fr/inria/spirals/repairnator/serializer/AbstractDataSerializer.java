@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.serializer;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 
 /**
  * Created by urli on 20/01/2017.
@@ -16,7 +17,7 @@ public abstract class AbstractDataSerializer {
         return TRAVIS_URL+slug+"/builds/"+buildId;
     }
 
-    protected String getPrettyPrintState(ProjectState state) {
+    protected String getPrettyPrintState(ProjectState state, GatherTestInformation gatherTestInformation) {
         switch (state) {
             case NONE:
             case INIT:
@@ -43,6 +44,14 @@ public abstract class AbstractDataSerializer {
 
             case PATCHED:
                 return  "PATCHED";
+
+            case SOURCEDIRCOMPUTED:
+            case CLASSPATHCOMPUTED:
+                if (gatherTestInformation.getNbFailingTests() > 0) {
+                    return "test failure";
+                } else {
+                    return "test errors";
+                }
 
             default:
                 return  "unknown";
