@@ -371,6 +371,7 @@ public class Launcher {
         }
 
         try {
+            pool.shutdown();
             if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
                 pool.shutdownNow();
                 LOGGER.error("Shutdown pool of threads.");
