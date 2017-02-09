@@ -31,7 +31,7 @@ import java.util.concurrent.TimeoutException;
  * Created by urli on 05/01/2017.
  */
 public class NopolRepair extends AbstractStep {
-    private static final int TOTAL_MAX_TIME = 10; // We expect it to run 4 hours top.
+    private static final int TOTAL_MAX_TIME = 60*4; // We expect it to run 4 hours top.
     private static final int MIN_TIMEOUT = 2;
 
     private Map<String,List<Patch>> patches;
