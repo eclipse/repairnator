@@ -207,13 +207,19 @@ public class ProjectScanner {
                 this.totalBuildInJavaFailing++;
                 for (Job job : build.getJobs()) {
                     Log jobLog = job.getLog();
-                    TestsInformation testInfo = jobLog.getTestsInformation();
 
-                    if (testInfo.getFailing() > 0) {
-                        this.slugs.add(repo.getSlug());
-                        this.repositories.add(repo);
-                        return true;
+                    if (jobLog != null) {
+                        TestsInformation testInfo = jobLog.getTestsInformation();
+
+                        if (testInfo.getFailing() > 0) {
+                            this.slugs.add(repo.getSlug());
+                            this.repositories.add(repo);
+                            return true;
+                        }
+                    } else {
+                        logger.error("Error while getting a job log: (jobId: "+job.getId()+")");
                     }
+
                 }
             } else if (!targetFailing && build.getBuildStatus() == BuildStatus.PASSED) {
                 this.totalPassingBuilds++;
