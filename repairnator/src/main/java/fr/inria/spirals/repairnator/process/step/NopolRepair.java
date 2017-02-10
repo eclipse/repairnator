@@ -12,6 +12,7 @@ import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLoc
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeoutException;
 public class NopolRepair extends AbstractStep {
     private static final int TOTAL_MAX_TIME = 60*4; // We expect it to run 4 hours top.
     private static final int MIN_TIMEOUT = 2;
+    private static final String CMD_KILL_GZOLTAR_AGENT = "ps -ef | grep gzoltar | grep -v grep | awk '{print $2}' |xargs kill";
 
     private Map<String,List<Patch>> patches;
 
@@ -103,6 +105,13 @@ public class NopolRepair extends AbstractStep {
             } catch (InterruptedException | ExecutionException e) {
                 this.addStepError(e.getMessage());
                 nopolExecution.cancel(true);
+            }
+
+            try {
+                Runtime.getRuntime().exec(CMD_KILL_GZOLTAR_AGENT);
+            } catch (IOException e) {
+                this.getLogger().error("Error while killing gzoltar agent using following command: "+CMD_KILL_GZOLTAR_AGENT);
+                this.getLogger().error(e.getMessage());
             }
 
             long afterNopol = new Date().getTime();
