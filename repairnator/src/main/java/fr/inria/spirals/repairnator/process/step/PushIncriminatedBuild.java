@@ -18,12 +18,15 @@ import java.text.SimpleDateFormat;
  * Created by urli on 05/01/2017.
  */
 public class PushIncriminatedBuild extends AbstractStep {
-    private static final String REMOTE_REPO_ROOT = "https://github.com/Spirals-Team/librepair-experiments";
-    private static final String REMOTE_REPO = REMOTE_REPO_ROOT+".git";
-    private static final String REMOTE_REPO_TREE = REMOTE_REPO_ROOT+"/tree/";
+    public static final String REMOTE_REPO_REPAIR = "https://github.com/Spirals-Team/librepair-experiments";
+    public static final String REMOTE_REPO_BEAR = "https://github.com/Spirals-Team/bears-benchmark";
+
+    private static final String REMOTE_REPO_EXT = ".git";
+    private static final String REMOTE_REPO_TREE_EXT = "/tree/";
     private static final String NB_COMMITS_TO_KEEP = "10";
 
     private String branchName;
+    private String remoteRepoUrl;
 
     public PushIncriminatedBuild(ProjectInspector inspector) {
         super(inspector);
@@ -34,13 +37,22 @@ public class PushIncriminatedBuild extends AbstractStep {
         this.branchName = inspector.getRepoSlug().replace('/','-')+'-'+inspector.getBuild().getId()+'-'+formattedDate;
     }
 
+    public void setRemoteRepoUrl(String remoteRepoUrl) {
+        this.remoteRepoUrl = remoteRepoUrl;
+    }
+
     public String getRemoteLocation() {
-        return REMOTE_REPO_TREE+this.branchName;
+        return this.remoteRepoUrl+REMOTE_REPO_TREE_EXT+this.branchName;
     }
 
     @Override
     protected void businessExecute() {
-        this.getLogger().debug("Start to push failing state in the remote repository: "+REMOTE_REPO+" branch: "+branchName);
+        if (this.remoteRepoUrl == null) {
+            throw new RuntimeException("Remote repo URL should be set.");
+        }
+
+        String remoteRepo = this.remoteRepoUrl+REMOTE_REPO_EXT;
+        this.getLogger().debug("Start to push failing state in the remote repository: "+remoteRepo+" branch: "+branchName);
         if (System.getenv("GITHUB_OAUTH") == null) {
             this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
             return;
@@ -68,7 +80,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             RemoteAddCommand remoteAdd = git.remoteAdd();
             remoteAdd.setName("saveFail");
-            remoteAdd.setUri(new URIish(REMOTE_REPO));
+            remoteAdd.setUri(new URIish(remoteRepo));
             remoteAdd.call();
 
             git.fetch().setRemote("saveFail").call();
@@ -92,7 +104,7 @@ public class PushIncriminatedBuild extends AbstractStep {
             this.getLogger().error("Error while reading git directory at the following location: "+inspector.getRepoLocalPath()+" : "+e);
             this.addStepError(e.getMessage());
         } catch (URISyntaxException e) {
-            this.getLogger().error("Error while setting remote repository with following URL: "+REMOTE_REPO+" : "+e);
+            this.getLogger().error("Error while setting remote repository with following URL: "+remoteRepo+" : "+e);
             this.addStepError(e.getMessage());
         } catch (GitAPIException e) {
             this.getLogger().error("Error while executing a JGit operation: "+e);

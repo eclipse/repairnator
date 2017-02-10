@@ -38,8 +38,8 @@ public class ProjectInspector {
     private String nopolSolverPath;
     Map<String, Integer> stepsDurationsInSeconds;
     protected GatherTestInformation testInformations;
-    private PushIncriminatedBuild pushBuild;
-    private NopolRepair nopolRepair;
+    protected PushIncriminatedBuild pushBuild;
+    protected NopolRepair nopolRepair;
     private boolean push;
     private Map<String, List<String>> stepErrors;
     private boolean autoclean;
@@ -148,6 +148,8 @@ public class ProjectInspector {
 
         this.testInformations = new GatherTestInformation(this);
         this.pushBuild = new PushIncriminatedBuild(this);
+        this.pushBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_REPAIR);
+
         this.nopolRepair = new NopolRepair(this);
 
         if (mode != RepairMode.NOPOLONLY) {
@@ -216,5 +218,9 @@ public class ProjectInspector {
 
     public String toString() {
         return this.getRepoLocalPath()+" : "+this.getState();
+    }
+
+    public boolean getPushMode() {
+        return this.push;
     }
 }

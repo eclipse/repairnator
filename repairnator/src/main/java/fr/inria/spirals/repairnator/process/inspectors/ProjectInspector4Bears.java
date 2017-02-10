@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import java.util.List;
 
 import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,13 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep buildRepo = new BuildProject(this);
         AbstractStep testProject = new TestProject(this);
         cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
+
+        if (this.getPushMode()) {
+            pushBuild = new PushIncriminatedBuild(this);
+            pushBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
+            this.testInformations.setNextStep(pushBuild);
+        }
+
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.serializers);
 
