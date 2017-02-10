@@ -37,6 +37,7 @@ public class ProjectScanner {
     private int totalRepoNumber;
     private int totalRepoUsingTravis;
     private int totalScannedBuilds;
+    private int totalPRBuilds;
     private int totalPassingBuilds;
     private int totalBuildInJava;
     private int totalBuildInJavaFailing;
@@ -56,6 +57,10 @@ public class ProjectScanner {
         Calendar limitCal = Calendar.getInstance();
         limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
         this.limitDate = limitCal.getTime();
+    }
+
+    public int getTotalPRBuilds() {
+        return totalPRBuilds;
     }
 
     public int getTotalBuildInJava() {
@@ -197,35 +202,42 @@ public class ProjectScanner {
 
     
     private boolean testBuild(Build build, boolean targetFailing) {
+        if (build.isPullRequest()) {
+            this.totalPRBuilds++;
+        }
+
         Repository repo = build.getRepository();
         if (build.getConfig().getLanguage().equals("java")) {
             this.totalBuildInJava++;
 
-            // TODO: get number of build due to PR by project by day
             this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
-            if (targetFailing && build.getBuildStatus() == BuildStatus.FAILED) {
+            if (build.getBuildStatus() == BuildStatus.FAILED) {
                 this.totalBuildInJavaFailing++;
-                for (Job job : build.getJobs()) {
-                    Log jobLog = job.getLog();
 
-                    if (jobLog != null) {
-                        TestsInformation testInfo = jobLog.getTestsInformation();
+                if (targetFailing) {
+                    for (Job job : build.getJobs()) {
+                        Log jobLog = job.getLog();
 
-                        if (testInfo.getFailing() > 0) {
-                            this.slugs.add(repo.getSlug());
-                            this.repositories.add(repo);
-                            return true;
+                        if (jobLog != null) {
+                            TestsInformation testInfo = jobLog.getTestsInformation();
+
+                            if (testInfo.getFailing() > 0) {
+                                this.slugs.add(repo.getSlug());
+                                this.repositories.add(repo);
+                                return true;
+                            }
+                        } else {
+                            logger.error("Error while getting a job log: (jobId: "+job.getId()+")");
                         }
-                    } else {
-                        logger.error("Error while getting a job log: (jobId: "+job.getId()+")");
                     }
-
                 }
-            } else if (!targetFailing && build.getBuildStatus() == BuildStatus.PASSED) {
+            } else if (build.getBuildStatus() == BuildStatus.PASSED) {
                 this.totalPassingBuilds++;
-				this.slugs.add(repo.getSlug());
-				this.repositories.add(repo);
-                return true;
+                if (!targetFailing) {
+                    this.slugs.add(repo.getSlug());
+                    this.repositories.add(repo);
+                    return true;
+                }
             }
         } else {
             this.logger.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());
@@ -292,7 +304,6 @@ public class ProjectScanner {
                 result.add(build);
             }
         }
-
 
         return result;
     }
