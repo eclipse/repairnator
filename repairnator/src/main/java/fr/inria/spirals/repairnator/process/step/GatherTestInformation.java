@@ -112,6 +112,7 @@ public class GatherTestInformation extends AbstractStep {
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
                             if (testCase.hasFailure()) {
+                                this.failureNames.add(testCase.getFailureType());
                                 FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureDetail(), testCase.isError());
                                 FailureLocation failureLocation = null;
 
