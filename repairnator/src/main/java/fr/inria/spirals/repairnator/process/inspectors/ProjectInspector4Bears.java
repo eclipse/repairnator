@@ -12,7 +12,6 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.TestPreviousBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 
@@ -39,12 +38,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep testProject = new TestProject(this);
         cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
         
-        if (!this.isAboutAPreviousBuild()) {
-        	AbstractStep testPreviousBuild = new TestPreviousBuild(this);
-        	this.testInformations.setNextStep(testPreviousBuild);
-        	// Push build step will enter here
-        }
-        
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.serializers);
 
@@ -57,6 +50,10 @@ public class ProjectInspector4Bears extends ProjectInspector {
             this.logger.debug("Exception catch while executing steps: ",e);
         }
     }
+	
+	public void proceed() {
+		// Push build step will enter here, and other possible steps...
+	}
 	
 	public boolean isAboutAPreviousBuild() {
 		return previousBuild;

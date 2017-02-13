@@ -27,6 +27,7 @@ public abstract class AbstractStep {
     protected ProjectState state;
 
     protected boolean shouldStop;
+    protected boolean shouldPause;
     private AbstractStep nextStep;
     private long dateBegin;
     private long dateEnd;
@@ -38,6 +39,7 @@ public abstract class AbstractStep {
         this.name = this.getClass().getName();
         this.inspector = inspector;
         this.shouldStop = false;
+        this.shouldPause = false;
         this.state = ProjectState.NONE;
         this.pomLocationTested = false;
         this.serializers = new ArrayList<AbstractDataSerializer>();
@@ -95,7 +97,9 @@ public abstract class AbstractStep {
             this.nextStep.execute();
         } else {
             this.inspector.setState(this.state);
-            this.serializeData();
+            if (!shouldPause) {
+            	this.serializeData();
+            }
             this.cleanMavenArtifacts();
         }
     }
@@ -177,7 +181,9 @@ public abstract class AbstractStep {
         } else {
             this.cleanMavenArtifacts();
             this.inspector.setState(this.state);
-            this.serializeData();
+            if (!shouldPause) {
+            	this.serializeData();
+            }
         }
     }
 

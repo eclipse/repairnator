@@ -162,6 +162,7 @@ public class GatherTestInformation extends AbstractStep {
         
         if (this.inspector instanceof ProjectInspector4Bears && !((ProjectInspector4Bears)this.inspector).isAboutAPreviousBuild()) {
         	this.shouldStop = !this.shouldStop;
+        	this.shouldPause = !this.shouldStop;
         }
     }
 }

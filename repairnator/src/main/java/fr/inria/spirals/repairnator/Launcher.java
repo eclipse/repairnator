@@ -8,9 +8,12 @@ import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.BuildStatus;
+import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
+import fr.inria.spirals.repairnator.process.ProjectState;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
@@ -249,7 +252,8 @@ public class Launcher {
             System.exit(-1);
         }
         this.checkToolsLoaded();
-        if (RepairMode.valueOf(arguments.getString("mode").toUpperCase()) != RepairMode.FORBEARS) {
+        mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
+        if (mode != RepairMode.FORBEARS) {
         	this.checkNopolSolverPath();
         }
         if (arguments.success() && checkEnvironmentVariables()) {
@@ -264,7 +268,6 @@ public class Launcher {
         lookupDays = arguments.getInt("lookup");
         output = arguments.getString("output");
         debug = arguments.getBoolean("debug");
-        mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
         clean = arguments.getBoolean("clean");
         push = arguments.getBoolean("push");
         googleSecretPath = arguments.getString("googleSecretPath");
@@ -397,6 +400,24 @@ public class Launcher {
             inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, mode, false);
             inspector.setAutoclean(clean);
             inspector.run();
+            if (inspector.getState() == ProjectState.NOTFAILING) {
+            	// Test previous build
+            	Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
+        		
+        		if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
+        			ProjectInspector4Bears inspector4previousBuild = new ProjectInspector4Bears(previousBuild, workspace, null, null, false, mode, true);
+        			inspector4previousBuild.setAutoclean(clean);
+        			inspector4previousBuild.run();
+                    
+                    if (inspector4previousBuild.getState() == ProjectState.HASTESTFAILURE) {
+                    	// So, 1) the current passing build can be reproduced and 2) its previous build is a failing build with failing tests and it can also be reproduced
+                    	inspector.setState(ProjectState.FIXERBUILD);
+                    	inspector.proceed(); // The next step will be to push both builds.
+                    }
+        		} else {
+        			// Another inspection case will enter here
+        		}
+            }
         }
     }
 
