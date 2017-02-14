@@ -133,5 +133,17 @@ public class BuildHelperTest {
         assertTrue(obtainedBuild != null);
         assertEquals(expectedBuildId, obtainedBuild.getId());
     }
+    
+    @Test
+    public void testGetLastBuildJustBeforeGivenBuild() {
+        int buildId = 191511078;
+        Build passingBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        int expectedBuildId = 191412122;
+        Build obtainedBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(passingBuild, null);
+
+        assertTrue(obtainedBuild != null);
+        assertEquals(expectedBuildId, obtainedBuild.getId());
+    }
 
 }
