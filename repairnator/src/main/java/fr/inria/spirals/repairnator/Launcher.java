@@ -152,7 +152,6 @@ public class Launcher {
         opt2 = new FlaggedOption("z3Path");
         opt2.setShortFlag('z');
         opt2.setLongFlag("z3Path");
-        opt2.setRequired(true);
         opt2.setHelp("Specify the solver path used by Nopol");
         opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
@@ -211,12 +210,19 @@ public class Launcher {
     }
 
     private void checkNopolSolverPath() {
-        File file = new File(this.arguments.getString("z3Path"));
-
-        if (!file.exists()) {
-            System.err.println("The Nopol solver path should be an existing file: "+file.getPath()+" does not exist.");
+    	solverPath = arguments.getString("z3Path");
+    	
+    	if (solverPath != null) {
+	        File file = new File(this.arguments.getString("z3Path"));
+	
+	        if (!file.exists()) {
+	            System.err.println("The Nopol solver path should be an existing file: "+file.getPath()+" does not exist.");
+	            System.exit(-1);
+	        }
+    	} else {
+    		System.err.println("The Nopol solver path should be provided.");
             System.exit(-1);
-        }
+    	}
     }
 
     private void run(String[] args) throws JSAPException, IOException {
@@ -243,7 +249,10 @@ public class Launcher {
             System.exit(-1);
         }
         this.checkToolsLoaded();
-        this.checkNopolSolverPath();
+        mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
+        if (mode != RepairMode.FORBEARS) {
+        	this.checkNopolSolverPath();
+        }
         if (arguments.success() && checkEnvironmentVariables()) {
             System.out.println(arguments.toString());
             mainProcess();
@@ -256,7 +265,6 @@ public class Launcher {
         lookupDays = arguments.getInt("lookup");
         output = arguments.getString("output");
         debug = arguments.getBoolean("debug");
-        mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
         clean = arguments.getBoolean("clean");
         push = arguments.getBoolean("push");
         solverPath = arguments.getString("z3Path");
