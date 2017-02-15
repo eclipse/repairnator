@@ -64,9 +64,6 @@ public class PushIncriminatedBuild extends AbstractStep {
 
         try {
             Git git = Git.open(new File(inspector.getRepoLocalPath()));
-            git.add().addFilepattern("repairnator.*").call();
-            PersonIdent personIdent = new PersonIdent("Luc Esape","luc.esape@gmail.com");
-            git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent).call();
 
             git.checkout().setCreateBranch(true).setName("detached").call();
             ObjectId id = git.getRepository().resolve("HEAD~"+NB_COMMITS_TO_KEEP);
@@ -82,9 +79,9 @@ public class PushIncriminatedBuild extends AbstractStep {
                 this.getLogger().debug("The repository contains less than "+NB_COMMITS_TO_KEEP+": push all the repo.");
             }
 
-
-
-
+            git.add().addFilepattern("repairnator.*").call();
+            PersonIdent personIdent = new PersonIdent("Luc Esape","luc.esape@gmail.com");
+            git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent).setAuthor(personIdent).call();
 
             RemoteAddCommand remoteAdd = git.remoteAdd();
             remoteAdd.setName("saveFail");
