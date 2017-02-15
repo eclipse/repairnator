@@ -12,6 +12,7 @@ import fr.inria.spirals.jtravis.entities.Log;
 import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
@@ -256,6 +257,27 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("errors", serialize(inspector.getStepErrors()));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
+    
+    private void outputFixerBuildInspector(ProjectInspector inspector) {
+        if (inspector instanceof ProjectInspector4Bears) {
+	    	JsonObject result = new JsonObject();
+	        result.addProperty("slug", inspector.getRepoSlug());
+	        
+	        Build build = inspector.getBuild();
+	        result.addProperty("buildId", build.getId());
+	        result.add("buildDate",serialize(build.getFinishedAt()));
+	        
+	        Build previousBuild = ((ProjectInspector4Bears)inspector).getPreviousBuild();
+	        if (previousBuild != null) {
+	        	result.addProperty("previousBuildId", previousBuild.getId());
+		        result.add("previousBuildDate",serialize(previousBuild.getFinishedAt()));
+	        }
+	        
+	        result.addProperty("localRepo", inspector.getRepoLocalPath());
+	        
+	        this.inspectors.get(inspector.getState().name()).add(result);
+        }
+    }
 
     public void createOutput() throws IOException {
         this.dateFinish = new Date();
@@ -314,6 +336,10 @@ public class JsonSerializer extends AbstractDataSerializer {
 
             case PATCHED:
                 outputHasBeenPatchedInspector(inspector);
+                break;
+                
+            case FIXERBUILD:
+            	outputFixerBuildInspector(inspector);
                 break;
         }
     }

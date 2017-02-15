@@ -179,7 +179,7 @@ public class CloneRepository extends AbstractStep {
      * @param oldCommitSha
      * @return oldCommitSha if the commit exists in the repo, a new commit SHA if the commit has been retrieved from GitHub and applied back, or null if the retrieve failed.
      */
-    private String testCommitExistence(Git git, String oldCommitSha) {
+    protected String testCommitExistence(Git git, String oldCommitSha) {
         try {
             ObjectId commitObject = git.getRepository().resolve(oldCommitSha);
             git.getRepository().open(commitObject);

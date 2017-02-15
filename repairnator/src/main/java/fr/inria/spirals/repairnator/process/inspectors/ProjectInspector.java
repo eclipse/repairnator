@@ -138,6 +138,10 @@ public class ProjectInspector {
     public PushIncriminatedBuild getPushBuild() {
         return pushBuild;
     }
+    
+    public void setPushBuild(PushIncriminatedBuild pushBuild) {
+    	this.pushBuild = pushBuild;
+    }
 
     public NopolRepair getNopolRepair() {
         return nopolRepair;
