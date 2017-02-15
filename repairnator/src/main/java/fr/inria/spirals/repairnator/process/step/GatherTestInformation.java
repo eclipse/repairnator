@@ -168,18 +168,5 @@ public class GatherTestInformation extends AbstractStep {
         } else {
         	this.shouldStop = true;
         }
-        
-        if (this.inspector instanceof ProjectInspector4Bears) {
-        	if (!((ProjectInspector4Bears)this.inspector).isAboutAPreviousBuild()) {
-        		this.shouldStop = !this.shouldStop;
-        	} else {
-        		if (this.getState() == ProjectState.HASTESTFAILURE) {
-        	    	// So, 1) the current passing build can be reproduced and 2) its previous build is a failing build with failing tests and it can also be reproduced
-        	    	this.setState(ProjectState.FIXERBUILD);
-        	    } else {
-        	    	this.shouldStop = true;
-        	    }
-        	}
-        }
     }
 }

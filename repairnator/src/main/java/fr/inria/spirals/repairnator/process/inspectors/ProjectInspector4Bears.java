@@ -11,8 +11,10 @@ import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.GatherTestInformation4Bears;
 import fr.inria.spirals.repairnator.process.step.InspectPreviousBuild;
+import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.TestPreviousBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 
@@ -33,10 +35,24 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep cloneRepo = new CloneRepository(this);
         AbstractStep buildRepo = new BuildProject(this);
         AbstractStep testProject = new TestProject(this);
-        this.testInformations = new GatherTestInformation(this);
+        this.testInformations = new GatherTestInformation4Bears(this);
         AbstractStep inspectPreviousBuild = new InspectPreviousBuild(this);
-        cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations).setNextStep(inspectPreviousBuild);
-
+        AbstractStep testPreviousBuild = new TestPreviousBuild(this);
+		AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
+        AbstractStep testProjectForPreviousBuild = new TestProject(this);
+        AbstractStep gatherTestInformation = new GatherTestInformation4Bears(this);
+		
+        cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+        	.setNextStep(inspectPreviousBuild).setNextStep(testPreviousBuild)
+        	.setNextStep(buildRepoForPreviousBuild).setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
+        
+		if (this.getPushMode()) {
+			PushIncriminatedBuild pushIncriminatedBuild = new PushIncriminatedBuild(this);
+			pushIncriminatedBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
+            this.setPushBuild(pushIncriminatedBuild);
+            gatherTestInformation.setNextStep(pushIncriminatedBuild);
+		}
+        
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.serializers);
 

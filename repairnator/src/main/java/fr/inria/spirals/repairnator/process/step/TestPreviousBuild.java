@@ -8,26 +8,28 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 
 /**
  * Created by fermadeiral.
  */
-public class TestPreviousFailingBuild extends CloneRepository {
+public class TestPreviousBuild extends CloneRepository {
 
-	private Build previousFailingBuild;
+	private Build previousBuild;
 	
-	public TestPreviousFailingBuild(ProjectInspector inspector, Build previousFailingBuild) {
+	public TestPreviousBuild(ProjectInspector inspector) {
 		super(inspector);
-		this.previousFailingBuild = previousFailingBuild;
 	}
 
-	protected void businessExecute() {
-		this.getLogger().debug("Testing previous failing build...");
+	protected void businessExecute() {		
+		this.getLogger().debug("Testing previous build...");
+		
+		this.previousBuild = ((ProjectInspector4Bears)this.inspector).getPreviousBuild();
 		
 		Git git;
 		try {
 			git = Git.open(new File(inspector.getRepoLocalPath()));
-			String commitCheckout = previousFailingBuild.getCommit().getSha();
+			String commitCheckout = previousBuild.getCommit().getSha();
 	        commitCheckout = this.testCommitExistence(git, commitCheckout);
 	        if (commitCheckout != null) {
 	            this.getLogger().debug("Get the commit "+commitCheckout+" for repo "+this.inspector.getRepoSlug());
@@ -41,4 +43,5 @@ public class TestPreviousFailingBuild extends CloneRepository {
 			e.printStackTrace();
 		}
 	}
+
 }
