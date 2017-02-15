@@ -8,20 +8,17 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by urli on 09/01/2017.
  */
-public class MavenFilterOutputHandler implements InvocationOutputHandler  {
-
-    private final Logger logger = LoggerFactory.getLogger(MavenFilterOutputHandler.class);
-    private ProjectInspector inspector;
-    private String name;
+public class MavenFilterOutputHandler extends MavenOutputHandler  {
 
     public MavenFilterOutputHandler(ProjectInspector inspector, String name) {
-        this.inspector = inspector;
-        this.name = name;
+        super(inspector, name);
     }
 
     @Override
     public void consumeLine(String s) {
-        this.logger.debug(s);
+        super.consumeLine(s);
+
+        this.getLogger().debug(s);
         if (s.contains("[ERROR]")) {
             this.inspector.addStepError(name, s);
         }

@@ -56,7 +56,7 @@ public class MavenHelper {
             this.errorHandler = new MavenErrorHandler(this.inspector, this.name);
             this.outputHandler = new MavenFilterOutputHandler(this.inspector, this.name);
         } else {
-            this.outputHandler = new MavenMuteOutputHandler();
+            this.outputHandler = new MavenMuteOutputHandler(this.inspector, this.name);
         }
     }
 

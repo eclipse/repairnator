@@ -16,7 +16,7 @@ public class TestProject extends AbstractStep {
     protected void businessExecute() {
         this.getLogger().debug("Start launching tests with maven.");
 
-        MavenHelper helper = new MavenHelper(this.getPom(), "test", null, this.getClass().getName(), this.inspector, false);
+        MavenHelper helper = new MavenHelper(this.getPom(), "test", null, this.getClass().getSimpleName(), this.inspector, false);
 
         MavenFilterTestOutputHandler outputTestFilter = new MavenFilterTestOutputHandler(this.inspector, this.getClass().getName());
         helper.setOutputHandler(outputTestFilter);

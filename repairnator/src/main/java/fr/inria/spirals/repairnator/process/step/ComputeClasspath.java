@@ -61,7 +61,7 @@ public class ComputeClasspath extends AbstractStep {
         String goal = "dependency:build-classpath";
         String pomModule = incriminatedModule+ File.separator+"pom.xml";
 
-        MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getName(), this.inspector, true);
+        MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(), this.inspector, true);
 
         int result = helper.run();
 

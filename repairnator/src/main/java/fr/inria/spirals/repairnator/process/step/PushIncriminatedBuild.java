@@ -63,6 +63,9 @@ public class PushIncriminatedBuild extends AbstractStep {
 
         try {
             Git git = Git.open(new File(inspector.getRepoLocalPath()));
+            git.add().addFilepattern("repairnator.*").call();
+            git.commit().call();
+
             git.checkout().setCreateBranch(true).setName("detached").call();
             ObjectId id = git.getRepository().resolve("HEAD~"+NB_COMMITS_TO_KEEP);
             if (id != null) {
