@@ -50,7 +50,8 @@ public class ProjectInspector {
     private File[] repairSourceDir;
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
-
+    protected Build previousBuild;
+	protected boolean previousBuildFlag;
 
     public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, RepairMode mode) {
         this.build = failingBuild;
@@ -245,4 +246,21 @@ public class ProjectInspector {
             this.logger.debug("Exception catch while executing steps: ",e);
         }
     }
+    
+    public Build getPreviousBuild() {
+		return this.previousBuild;
+	}
+	
+	public void setPreviousBuild(Build previousBuild) {
+		this.previousBuild = previousBuild;
+	}
+	
+	public boolean isAboutAPreviousBuild() {
+		return previousBuildFlag;
+	}
+	
+	public void setPreviousBuildFlag(boolean previousBuildFlag) {
+		this.previousBuildFlag = previousBuildFlag;
+	}
+
 }
