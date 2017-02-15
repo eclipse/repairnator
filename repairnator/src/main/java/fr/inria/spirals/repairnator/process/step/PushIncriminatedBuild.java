@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -79,7 +80,14 @@ public class PushIncriminatedBuild extends AbstractStep {
                 this.getLogger().debug("The repository contains less than "+NB_COMMITS_TO_KEEP+": push all the repo.");
             }
 
-            git.add().addFilepattern("repairnator.*").call();
+            AddCommand addCommand = git.add();
+            for (File file : new File(this.inspector.getRepoLocalPath()).listFiles()) {
+                if (file.getName().contains("repairnator")) {
+                    addCommand.addFilepattern(file.getName());
+                }
+            }
+
+            addCommand.call();
             PersonIdent personIdent = new PersonIdent("Luc Esape","luc.esape@gmail.com");
             git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent).setAuthor(personIdent).call();
 

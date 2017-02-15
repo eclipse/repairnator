@@ -35,7 +35,7 @@ public abstract class AbstractStep {
     private Properties properties;
 
     public AbstractStep(ProjectInspector inspector) {
-        this.name = this.getClass().getName();
+        this.name = this.getClass().getSimpleName();
         this.inspector = inspector;
         this.shouldStop = false;
         this.state = ProjectState.NONE;

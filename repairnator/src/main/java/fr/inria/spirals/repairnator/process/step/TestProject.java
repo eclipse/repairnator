@@ -18,7 +18,7 @@ public class TestProject extends AbstractStep {
 
         MavenHelper helper = new MavenHelper(this.getPom(), "test", null, this.getClass().getSimpleName(), this.inspector, false);
 
-        MavenFilterTestOutputHandler outputTestFilter = new MavenFilterTestOutputHandler(this.inspector, this.getClass().getName());
+        MavenFilterTestOutputHandler outputTestFilter = new MavenFilterTestOutputHandler(this.inspector, this.getClass().getSimpleName());
         helper.setOutputHandler(outputTestFilter);
 
         int result = helper.run();

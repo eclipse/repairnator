@@ -53,6 +53,6 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
 
     @Override
     public void consumeLine(String s) {
-        this.writeToFile(s);
+        this.writeToFile(s+"\n");
     }
 }
