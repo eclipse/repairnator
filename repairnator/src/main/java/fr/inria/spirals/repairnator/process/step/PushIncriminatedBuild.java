@@ -6,6 +6,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -64,7 +65,8 @@ public class PushIncriminatedBuild extends AbstractStep {
         try {
             Git git = Git.open(new File(inspector.getRepoLocalPath()));
             git.add().addFilepattern("repairnator.*").call();
-            git.commit().call();
+            PersonIdent personIdent = new PersonIdent("Luc Esape","luc.esape@gmail.com");
+            git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent).call();
 
             git.checkout().setCreateBranch(true).setName("detached").call();
             ObjectId id = git.getRepository().resolve("HEAD~"+NB_COMMITS_TO_KEEP);
