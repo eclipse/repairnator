@@ -211,9 +211,18 @@ public class CloneRepository extends AbstractStep {
 
             this.writeProperty("workspace", this.inspector.getWorkspace());
             this.writeProperty("buildid",this.build.getId()+"");
+            this.writeProperty("repo",this.build.getRepository().getSlug());
 
             if (this.build.isPullRequest()) {
+                this.writeProperty("is-pr","true");
+
                 PRInformation prInformation = this.build.getPRInformation();
+
+                this.writeProperty("pr-remote-repo",this.build.getPRInformation().getOtherRepo().getSlug());
+                this.writeProperty("pr-head-commit-id",this.build.getPRInformation().getHead().getSha());
+                this.writeProperty("pr-base-commit-id",this.build.getPRInformation().getBase().getSha());
+                this.writeProperty("pr-id",this.build.getPullRequestNumber()+"");
+
 
                 this.getLogger().debug("Reproduce the PR for "+repository+" by fetching remote branch and merging.");
                 String remoteBranchPath = GITHUB_ROOT_REPO+prInformation.getOtherRepo().getSlug()+".git";

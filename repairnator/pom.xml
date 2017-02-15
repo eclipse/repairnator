@@ -69,6 +69,11 @@
             <artifactId>google-oauth-client-jetty</artifactId>
             <version>1.22.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
     </dependencies>
 
     <build>

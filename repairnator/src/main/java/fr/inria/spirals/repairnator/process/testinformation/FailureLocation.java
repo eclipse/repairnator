@@ -61,4 +61,9 @@ public class FailureLocation {
     public int hashCode() {
         return className != null ? className.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "Test case: "+className+" (Fail: "+nbFailures+"; Error: "+nbErrors+")";
+    }
 }

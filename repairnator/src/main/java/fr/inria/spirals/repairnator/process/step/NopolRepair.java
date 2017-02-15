@@ -92,7 +92,7 @@ public class NopolRepair extends AbstractStep {
                     new Callable() {
                         @Override
                         public Object call() throws Exception {
-                            return nopol.build(projectReference.testClasses());
+                            return nopol.build();
                         }
                     });
 

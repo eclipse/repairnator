@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
 import org.apache.maven.plugins.surefire.report.ReportTestSuite;
 import org.apache.maven.plugins.surefire.report.SurefireReportParser;
@@ -152,6 +153,9 @@ public class GatherTestInformation extends AbstractStep {
                 this.addStepError(e.getMessage());
             }
         }
+
+        this.writeProperty("error-types", StringUtils.join(this.failureNames,","));
+        this.writeProperty("failing-test-cases",StringUtils.join(this.failureLocations,","));
 
         if (this.getState() == ProjectState.HASTESTFAILURE) {
         	this.shouldStop = false;

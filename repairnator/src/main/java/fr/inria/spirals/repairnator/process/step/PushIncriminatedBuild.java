@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -50,6 +51,8 @@ public class PushIncriminatedBuild extends AbstractStep {
         if (this.remoteRepoUrl == null) {
             throw new RuntimeException("Remote repo URL should be set.");
         }
+
+        this.writeProperty("step-durations", StringUtils.join(this.inspector.getStepsDurationsInSeconds().entrySet()));
 
         String remoteRepo = this.remoteRepoUrl+REMOTE_REPO_EXT;
         this.getLogger().debug("Start to push failing state in the remote repository: "+remoteRepo+" branch: "+branchName);
