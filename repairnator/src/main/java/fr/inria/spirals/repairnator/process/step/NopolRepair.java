@@ -8,6 +8,8 @@ import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
+import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
@@ -36,20 +38,21 @@ public class NopolRepair extends AbstractStep {
     private static final int MIN_TIMEOUT = 2;
     private static final String CMD_KILL_GZOLTAR_AGENT = "ps -ef | grep gzoltar | grep -v grep | awk '{print $2}' |xargs kill";
 
-    private Map<String,List<Patch>> patches;
-
+    private List<NopolInformation> nopolInformations;
 
     public NopolRepair(ProjectInspector inspector) {
         super(inspector);
+        this.nopolInformations = new ArrayList<>();
     }
 
-    public Map<String,List<Patch>> getPatches() {
-        return patches;
+    public List<NopolInformation> getNopolInformations() {
+        return nopolInformations;
     }
 
     @Override
     protected void businessExecute() {
         this.getLogger().debug("Start to use nopol to repair...");
+
         List<URL> classPath = this.inspector.getRepairClassPath();
         File[] sources = this.inspector.getRepairSourceDir();
 
@@ -57,16 +60,22 @@ public class NopolRepair extends AbstractStep {
         List<FailureLocation> failureLocationList = new ArrayList<>(infoStep.getFailureLocations());
         Collections.sort(failureLocationList, new ComparatorFailureLocation());
 
-        this.patches = new HashMap<String,List<Patch>>();
         boolean patchCreated = false;
         int passingTime = 0;
 
         for (FailureLocation failureLocation : failureLocationList) {
+            NopolInformation nopolInformation = new NopolInformation(failureLocation);
+            this.nopolInformations.add(nopolInformation);
+
+            nopolInformation.setStatus(NopolStatus.RUNNING);
+
             String testClass = failureLocation.getClassName();
             int timeout = (TOTAL_MAX_TIME-passingTime)/2;
             if (timeout < MIN_TIMEOUT) {
                 timeout = MIN_TIMEOUT;
             }
+
+            nopolInformation.setAllocatedTime(timeout);
 
             this.getLogger().debug("Launching repair with Nopol for following test class: "+testClass+" (should timeout in "+timeout+" minutes)");
 
@@ -79,6 +88,8 @@ public class NopolRepair extends AbstractStep {
             config.setSolverPath(this.inspector.getNopolSolverPath());
             config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
             config.setType(StatementType.PRE_THEN_COND);
+
+            nopolInformation.setConfig(config);
 
             SolverFactory.setSolver(config.getSolver(), config.getSolverPath());
 
@@ -99,12 +110,25 @@ public class NopolRepair extends AbstractStep {
             try {
                 executor.shutdown();
                 patch = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+
+                if (patch != null && !patch.isEmpty()) {
+                    nopolInformation.setPatches(patch);
+                    nopolInformation.setStatus(NopolStatus.PATCH);
+                    patchCreated = true;
+                } else {
+                    nopolInformation.setStatus(NopolStatus.NOPATCH);
+                }
             } catch (TimeoutException exception) {
                 this.addStepError("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
                 nopolExecution.cancel(true);
+                executor.shutdownNow();
+                nopolInformation.setStatus(NopolStatus.TIMEOUT);
             } catch (InterruptedException | ExecutionException e) {
                 this.addStepError(e.getMessage());
                 nopolExecution.cancel(true);
+                executor.shutdownNow();
+                nopolInformation.setStatus(NopolStatus.EXCEPTION);
+                nopolInformation.setExceptionDetail(e.getMessage());
             }
 
             try {
@@ -116,12 +140,12 @@ public class NopolRepair extends AbstractStep {
 
             long afterNopol = new Date().getTime();
 
-            passingTime += Math.round((afterNopol-beforeNopol)/60000);
+            nopolInformation.setDateEnd();
 
-            if (patch != null && !patch.isEmpty()) {
-                this.patches.put(testClass, patch);
-                patchCreated = true;
-            }
+            int localPassingTime = Math.round((afterNopol-beforeNopol)/60000);
+            nopolInformation.setPassingTime(localPassingTime);
+
+            passingTime += localPassingTime;
         }
 
         if (!patchCreated) {

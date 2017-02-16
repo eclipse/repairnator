@@ -36,7 +36,7 @@ public class ProjectInspector {
     private ProjectState state;
     private String workspace;
     private String nopolSolverPath;
-    Map<String, Integer> stepsDurationsInSeconds;
+    private Map<String, Integer> stepsDurationsInSeconds;
     protected GatherTestInformation testInformations;
     protected PushIncriminatedBuild pushBuild;
     protected NopolRepair nopolRepair;
@@ -127,6 +127,50 @@ public class ProjectInspector {
         return repoLocalPath;
     }
 
+    public Map<String, Integer> getStepsDurationsInSeconds() {
+        return this.stepsDurationsInSeconds;
+    }
+
+    public GatherTestInformation getTestInformations() {
+        return testInformations;
+    }
+
+    public PushIncriminatedBuild getPushBuild() {
+        return pushBuild;
+    }
+
+    public NopolRepair getNopolRepair() {
+        return nopolRepair;
+    }
+
+    public RepairMode getMode() {
+        return mode;
+    }
+
+    public String toString() {
+        return this.getRepoLocalPath()+" : "+this.getState();
+    }
+
+    public boolean getPushMode() {
+        return this.push;
+    }
+
+    public boolean isReproducedAsFail() {
+        return isReproducedAsFail;
+    }
+
+    public void setReproducedAsFail(boolean reproducedAsFail) {
+        isReproducedAsFail = reproducedAsFail;
+    }
+
+    public boolean isReproducedAsError() {
+        return isReproducedAsError;
+    }
+
+    public void setReproducedAsError(boolean reproducedAsError) {
+        isReproducedAsError = reproducedAsError;
+    }
+
     public void addStepError(String step, String error) {
         if (!stepErrors.containsKey(step)) {
             stepErrors.put(step, new ArrayList<String>());
@@ -196,49 +240,5 @@ public class ProjectInspector {
             this.addStepError("Unknown", e.getMessage());
             this.logger.debug("Exception catch while executing steps: ",e);
         }
-    }
-
-    public Map<String, Integer> getStepsDurationsInSeconds() {
-        return this.stepsDurationsInSeconds;
-    }
-
-    public GatherTestInformation getTestInformations() {
-        return testInformations;
-    }
-
-    public PushIncriminatedBuild getPushBuild() {
-        return pushBuild;
-    }
-
-    public NopolRepair getNopolRepair() {
-        return nopolRepair;
-    }
-    
-    public RepairMode getMode() {
-    	return mode;
-    }
-
-    public String toString() {
-        return this.getRepoLocalPath()+" : "+this.getState();
-    }
-
-    public boolean getPushMode() {
-        return this.push;
-    }
-
-    public boolean isReproducedAsFail() {
-        return isReproducedAsFail;
-    }
-
-    public void setReproducedAsFail(boolean reproducedAsFail) {
-        isReproducedAsFail = reproducedAsFail;
-    }
-
-    public boolean isReproducedAsError() {
-        return isReproducedAsError;
-    }
-
-    public void setReproducedAsError(boolean reproducedAsError) {
-        isReproducedAsError = reproducedAsError;
     }
 }

@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.serializer.gsheet;
+package fr.inria.spirals.repairnator.serializer.gsheet.inspectors;
 
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
@@ -7,6 +7,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.SerializerUtils;
+import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

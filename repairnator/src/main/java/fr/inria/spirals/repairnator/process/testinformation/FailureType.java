@@ -48,4 +48,9 @@ public class FailureType {
         result = 31 * result + (isError ? 1 : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return failureName;
+    }
 }
