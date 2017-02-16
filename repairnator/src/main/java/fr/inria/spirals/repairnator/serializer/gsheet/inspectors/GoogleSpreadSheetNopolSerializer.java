@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetNopolSerializer.class);
-    private static final String RANGE = "Nopol Stats!A1:O1";
+    private static final String RANGE = "Nopol Stats!A1:P1";
 
     private Sheets sheets;
 

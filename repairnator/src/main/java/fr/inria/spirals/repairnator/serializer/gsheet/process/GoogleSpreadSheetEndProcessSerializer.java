@@ -51,7 +51,7 @@ public class GoogleSpreadSheetEndProcessSerializer {
         dataCol.add(SerializerUtils.formatOnlyDay(this.beginDate));
         dataCol.add(SerializerUtils.formatCompleteDate(this.beginDate));
         dataCol.add(SerializerUtils.formatCompleteDate(now));
-        dataCol.add(duration);
+        dataCol.add(duration.toString());
         dataCol.add(scanner.getTotalBuildInJavaFailingWithFailingTests());
         dataCol.add(reproducedFailures);
         dataCol.add(reproducedErrors);
