@@ -36,7 +36,9 @@ fi
 cd ../..
 
 git clone https://github.com/surli/maven-surefire.git
-cd maven-surefire/surefire-report-parser
+cd maven-surefire
+git checkout surefire-parser-feature-error-status
+cd surefire-report-parser
 
 mvn clean install
 
