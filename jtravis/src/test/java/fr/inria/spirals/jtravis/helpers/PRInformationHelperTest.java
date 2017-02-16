@@ -67,7 +67,7 @@ public class PRInformationHelperTest {
         headCommit.setCommitterName("Lionel Seinturier");
         headCommit.setCommitterEmail("Lionel.Seinturier@univ-lille1.fr");
         headCommit.setMessage("Typo and wording fixes");
-        headCommit.setCommittedAt(TestUtils.getDate(2016, 12, 27,18,59,07));
+        headCommit.setCommittedAt(TestUtils.getDate(2016, 12, 27,17,59,07));
         headCommit.setCompareUrl("https://github.com/seintur/spoon/commit/567bbabd0c21214107dd8eb23edaf1e31c6ef1b3");
         prInfo.setHead(headCommit);
 
@@ -77,7 +77,7 @@ public class PRInformationHelperTest {
         baseCommit.setCommitterName("Дмитрий");
         baseCommit.setCommitterEmail("dm1998@list.ru");
         baseCommit.setMessage("Typo: fixes a typo in doc/gradle.md");
-        baseCommit.setCommittedAt(TestUtils.getDate(2016, 12, 27,15,46,43));
+        baseCommit.setCommittedAt(TestUtils.getDate(2016, 12, 27,14,46,43));
         baseCommit.setCompareUrl("https://github.com/INRIA/spoon/commit/2b13f0f7e82f805b2480f6ff759b2d2e8debb493");
         prInfo.setBase(baseCommit);
 

@@ -103,7 +103,7 @@ public abstract class AbstractHelper {
     }
 
     protected static Gson createGson() {
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
     }
 
 }

@@ -11,7 +11,7 @@ public class TestUtils {
 
     public static Date getDate(int year, int month, int day, int hour, int minute, int second) {
         Calendar date = Calendar.getInstance();
-        date.setTimeZone(TimeZone.getTimeZone("GMT+01"));
+        date.setTimeZone(TimeZone.getTimeZone("GMT+00"));
         date.setTimeInMillis(0);
         date.set(year, month-1, day, hour, minute, second);
         return date.getTime();
