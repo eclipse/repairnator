@@ -4,6 +4,9 @@ sudo: true
 
 jdk: oraclejdk8
 
+before_install:
+  - chmod +x -R scripts/
+
 install: "./travis/travis-install.sh"
 script: "./travis/travis-run.sh"
 
