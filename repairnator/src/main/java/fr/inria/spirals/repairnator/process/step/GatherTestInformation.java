@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.Launcher;
 import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.ProjectState;
@@ -167,7 +168,5 @@ public class GatherTestInformation extends AbstractStep {
         } else {
         	this.shouldStop = true;
         }
-        
-        this.shouldStop = (inspector.getMode() == RepairMode.FORBEARS) ? !this.shouldStop : this.shouldStop;
     }
 }

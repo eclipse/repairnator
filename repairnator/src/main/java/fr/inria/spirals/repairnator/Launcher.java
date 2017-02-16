@@ -13,9 +13,10 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4RepairNator;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTimeSerializer;
@@ -279,7 +280,12 @@ public class Launcher {
         }
         
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
-        CSVSerializer csvSerializer = new CSVSerializer(output);
+        AbstractDataSerializer csvSerializer;
+        if (mode == RepairMode.FORBEARS) {
+        	csvSerializer = new CSVSerializer4Bears(output);
+        } else {
+        	csvSerializer = new CSVSerializer4RepairNator(output);
+        }
         GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
         GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
 
