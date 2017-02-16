@@ -24,6 +24,7 @@ public class NopolInformation {
     public NopolInformation(FailureLocation location) {
         this.status = NopolStatus.NOTLAUNCHED;
         this.patches = new ArrayList<>();
+        this.location = location;
     }
 
     public NopolStatus getStatus() {
