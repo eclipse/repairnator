@@ -45,13 +45,14 @@ public class GoogleSpreadSheetEndProcessSerializer {
     public void serialize() {
         Date now = new Date();
         Duration duration = Duration.between(this.beginDate.toInstant(), now.toInstant());
+        String humanDuration = duration.toHours()+":"+duration.toMinutes();
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(SerializerUtils.getHostname());
         dataCol.add(SerializerUtils.formatOnlyDay(this.beginDate));
         dataCol.add(SerializerUtils.formatCompleteDate(this.beginDate));
         dataCol.add(SerializerUtils.formatCompleteDate(now));
-        dataCol.add(duration.toString());
+        dataCol.add(humanDuration);
         dataCol.add(scanner.getTotalBuildInJavaFailingWithFailingTests());
         dataCol.add(reproducedFailures);
         dataCol.add(reproducedErrors);
