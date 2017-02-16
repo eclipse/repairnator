@@ -14,9 +14,9 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 /**
  * Created by fermadeiral.
  */
-public class TestPreviousBuild extends CloneRepository {
+public class CheckoutPreviousBuild extends CloneRepository {
 
-	public TestPreviousBuild(ProjectInspector inspector) {
+	public CheckoutPreviousBuild(ProjectInspector inspector) {
 		super(inspector);
 	}
 

@@ -27,5 +27,5 @@ public class GatherTestInformation4Bears extends GatherTestInformation {
 			}
 		}
 	}
-	
+
 }
