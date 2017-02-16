@@ -358,6 +358,8 @@ public class Launcher {
                 }
 
                 if (this.endProcessSerializer != null) {
+        		    this.endProcessSerializer.setReproducedFailures(this.nbReproducedFails);
+        		    this.endProcessSerializer.setReproducedErrors(this.nbReproducedErrors);
         		    this.endProcessSerializer.serialize();
                 }
         	} else {
