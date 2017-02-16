@@ -1,4 +1,4 @@
-# LibRepair
+# LibRepair  [![Build Status](https://travis-ci.org/Spirals-Team/librepair.svg?branch=master)](https://travis-ci.org/Spirals-Team/librepair)
 
 This repository contain all source code for the Project LibRepair.
 This project is founded by [INRIA](http://www.inria.fr) and it aims at repairing automatically software bugs on several repositories.
