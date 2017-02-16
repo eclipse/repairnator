@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.process.ProjectScanner;
 import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetEndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetInspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetInspectorTimeSerializer;
@@ -57,6 +58,9 @@ public class Launcher {
     private boolean push;
     private String solverPath;
     private String googleSecretPath;
+    private GoogleSpreadSheetEndProcessSerializer endProcessSerializer;
+    private int nbReproducedFails;
+    private int nbReproducedErrors;
 
     public Launcher() {
         this.serializers = new ArrayList<AbstractDataSerializer>();
@@ -115,7 +119,6 @@ public class Launcher {
         opt2.setLongFlag("mode");
         opt2.setStringParser(EnumeratedStringParser.getParser(modeValues));
         opt2.setRequired(true);
-        opt2.setDefault(RepairMode.SLUG.name());
         opt2.setHelp("Specify if the input contains project names (SLUG), build ids (BUILD), path to repair (NOPOLONLY), or if it is to inspect passing builds (FORBEARS).");
         jsap.registerParameter(opt2);
 
@@ -277,7 +280,6 @@ public class Launcher {
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         CSVSerializer csvSerializer = new CSVSerializer(output);
         GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
-
         GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
 
         this.serializers.add(jsonSerializer);
@@ -294,6 +296,10 @@ public class Launcher {
         Launcher.LOGGER.debug("Start to scan projects in travis...");
 
         ProjectScanner scanner = new ProjectScanner(lookupDays);
+
+        if (mode == RepairMode.SLUG) {
+            this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, googleSecretPath);
+        }
 
         jsonSerializer.setScanner(scanner);
 
@@ -340,9 +346,22 @@ public class Launcher {
 
         if (completeWorkspace != null) {
         	if (mode != RepairMode.FORBEARS) {
-        		cloneAndRepair(buildList, completeWorkspace);
+        		List<ProjectInspector> inspectors = cloneAndRepair(buildList, completeWorkspace);
+
+        		for (ProjectInspector inspector : inspectors) {
+        		    if (inspector.isReproducedAsFail()) {
+        		        this.nbReproducedFails++;
+                    }
+                    if (inspector.isReproducedAsError()) {
+        		        this.nbReproducedErrors++;
+                    }
+                }
+
+                if (this.endProcessSerializer != null) {
+        		    this.endProcessSerializer.serialize();
+                }
         	} else {
-        		inspectBuildsForBears(buildList, completeWorkspace);
+         		inspectBuildsForBears(buildList, completeWorkspace);
         	}
 
             Launcher.LOGGER.debug("Start writing a JSON output...");

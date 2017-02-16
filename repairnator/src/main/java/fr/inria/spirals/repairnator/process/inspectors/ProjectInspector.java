@@ -48,6 +48,8 @@ public class ProjectInspector {
     private RepairMode mode;
     private List<URL> repairClassPath;
     private File[] repairSourceDir;
+    private boolean isReproducedAsFail;
+    private boolean isReproducedAsError;
 
 
     public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, RepairMode mode) {
@@ -222,5 +224,21 @@ public class ProjectInspector {
 
     public boolean getPushMode() {
         return this.push;
+    }
+
+    public boolean isReproducedAsFail() {
+        return isReproducedAsFail;
+    }
+
+    public void setReproducedAsFail(boolean reproducedAsFail) {
+        isReproducedAsFail = reproducedAsFail;
+    }
+
+    public boolean isReproducedAsError() {
+        return isReproducedAsError;
+    }
+
+    public void setReproducedAsError(boolean reproducedAsError) {
+        isReproducedAsError = reproducedAsError;
     }
 }

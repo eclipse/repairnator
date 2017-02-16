@@ -159,9 +159,11 @@ public class GatherTestInformation extends AbstractStep {
 
         if (this.getState() == ProjectState.HASTESTFAILURE) {
         	this.shouldStop = false;
+        	this.inspector.setReproducedAsFail(true);
         } else if (this.getState() == ProjectState.HASTESTERRORS) {
             this.addStepError("Only get test errors, no failing tests. It will try to repair it.");
             this.shouldStop = false;
+            this.inspector.setReproducedAsError(true);
         } else {
         	this.shouldStop = true;
         }
