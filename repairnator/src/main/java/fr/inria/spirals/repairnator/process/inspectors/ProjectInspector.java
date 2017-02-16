@@ -30,7 +30,7 @@ import java.util.Properties;
  * Created by urli on 26/12/2016.
  */
 public class ProjectInspector {
-	private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
+    private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
     private Build build;
     private String repoLocalPath;
     private ProjectState state;
@@ -51,15 +51,15 @@ public class ProjectInspector {
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
     protected Build previousBuild;
-	protected boolean previousBuildFlag;
+    protected boolean previousBuildFlag;
 
     public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, RepairMode mode) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
         this.nopolSolverPath = nopolSolverPath;
-        this.repoLocalPath = workspace+File.separator+getRepoSlug()+File.separator+build.getId();
-        this.m2LocalPath = new File(this.repoLocalPath+File.separator+".m2").getAbsolutePath();
+        this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + build.getId();
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.stepsDurationsInSeconds = new HashMap<String, Integer>();
         this.push = push;
         this.stepErrors = new HashMap<String, List<String>>();
@@ -139,9 +139,9 @@ public class ProjectInspector {
     public PushIncriminatedBuild getPushBuild() {
         return pushBuild;
     }
-    
+
     public void setPushBuild(PushIncriminatedBuild pushBuild) {
-    	this.pushBuild = pushBuild;
+        this.pushBuild = pushBuild;
     }
 
     public NopolRepair getNopolRepair() {
@@ -153,7 +153,7 @@ public class ProjectInspector {
     }
 
     public String toString() {
-        return this.getRepoLocalPath()+" : "+this.getState();
+        return this.getRepoLocalPath() + " : " + this.getState();
     }
 
     public boolean getPushMode() {
@@ -212,11 +212,10 @@ public class ProjectInspector {
         }
 
 
-
         if (mode == RepairMode.NOPOLONLY) {
             firstStep = this.testInformations;
             try {
-                Properties properties = ProjectScanner.getPropertiesFromFile(this.getRepoLocalPath()+File.separator+AbstractStep.PROPERTY_FILENAME);
+                Properties properties = ProjectScanner.getPropertiesFromFile(this.getRepoLocalPath() + File.separator + AbstractStep.PROPERTY_FILENAME);
                 firstStep.setProperties(properties);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -226,9 +225,9 @@ public class ProjectInspector {
 
         if (push) {
             this.testInformations.setNextStep(this.pushBuild)
-                                .setNextStep(new ComputeClasspath(this))
-                                .setNextStep(new ComputeSourceDir(this))
-                                .setNextStep(this.nopolRepair);
+                    .setNextStep(new ComputeClasspath(this))
+                    .setNextStep(new ComputeSourceDir(this))
+                    .setNextStep(this.nopolRepair);
         } else {
             this.logger.debug("Push boolean is set to false the failing builds won't be pushed.");
             this.testInformations
@@ -243,24 +242,24 @@ public class ProjectInspector {
             firstStep.execute();
         } catch (Exception e) {
             this.addStepError("Unknown", e.getMessage());
-            this.logger.debug("Exception catch while executing steps: ",e);
+            this.logger.debug("Exception catch while executing steps: ", e);
         }
     }
-    
+
     public Build getPreviousBuild() {
-		return this.previousBuild;
-	}
-	
-	public void setPreviousBuild(Build previousBuild) {
-		this.previousBuild = previousBuild;
-	}
-	
-	public boolean isAboutAPreviousBuild() {
-		return previousBuildFlag;
-	}
-	
-	public void setPreviousBuildFlag(boolean previousBuildFlag) {
-		this.previousBuildFlag = previousBuildFlag;
-	}
+        return this.previousBuild;
+    }
+
+    public void setPreviousBuild(Build previousBuild) {
+        this.previousBuild = previousBuild;
+    }
+
+    public boolean isAboutAPreviousBuild() {
+        return previousBuildFlag;
+    }
+
+    public void setPreviousBuildFlag(boolean previousBuildFlag) {
+        this.previousBuildFlag = previousBuildFlag;
+    }
 
 }

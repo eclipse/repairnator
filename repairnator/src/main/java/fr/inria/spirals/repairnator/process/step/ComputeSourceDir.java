@@ -34,8 +34,7 @@ public class ComputeSourceDir extends AbstractStep {
         this.getLogger().debug("The default source directory ("+defaultSourceDir.getPath()+") does not exists. Try to read pom.xml to get informations.");
         File pomIncriminatedModule = new File(incriminatedModulePath+"/pom.xml");
 
-        try
-        {
+        try {
             Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
 
             Build buildSection = model.getBuild();
@@ -84,8 +83,7 @@ public class ComputeSourceDir extends AbstractStep {
                 }
             }
 
-        }
-        catch ( ModelBuildingException e ) {
+        } catch ( ModelBuildingException e ) {
             this.addStepError("Error while building pom.xml model: "+e);
         }
         return null;

@@ -60,8 +60,9 @@ class RepositoryModelResolver implements ModelResolver {
     private void download(File localRepoFile) throws IOException {
         for (Repository repository1 : repositories) {
             String repository1Url = repository1.getUrl();
-            if (repository1Url.endsWith("/"))
+            if (repository1Url.endsWith("/")) {
                 repository1Url = repository1Url.substring(0, repository1Url.length() - 1);
+            }
             URL url = new URL(repository1Url + localRepoFile.getAbsolutePath().substring(this.localRepository.getAbsolutePath().length()));
 
             logger.debug("Downloading " + url);
@@ -117,8 +118,9 @@ class RepositoryModelResolver implements ModelResolver {
     @Override
     public void addRepository(Repository repository, boolean b) throws InvalidRepositoryException {
         for (Repository existingRepository : repositories) {
-            if (existingRepository.getId().equals(repository.getId()) && !b)
+            if (existingRepository.getId().equals(repository.getId()) && !b) {
                 return;
+            }
         }
 
         repositories.add(repository);

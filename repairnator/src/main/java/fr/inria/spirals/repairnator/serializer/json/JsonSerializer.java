@@ -74,8 +74,8 @@ public class JsonSerializer extends AbstractDataSerializer {
         if (outputFile.isDirectory()) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             String formattedDate = dateFormat.format(new Date());
-            String filename = "librepair_"+mode.name().toLowerCase()+"_"+formattedDate+".json";
-            outputFile = new File(outputFile.getPath()+File.separator+filename);
+            String filename = "librepair_" + mode.name().toLowerCase() + "_" + formattedDate + ".json";
+            outputFile = new File(outputFile.getPath() + File.separator + filename);
         }
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
@@ -88,7 +88,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("buildDate", serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         if (build.isPullRequest()) {
             result.add("commit", serialize(build.getPRInformation()));
@@ -104,7 +104,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("buildDate", serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
         if (build.isPullRequest()) {
@@ -113,7 +113,7 @@ public class JsonSerializer extends AbstractDataSerializer {
             result.add("commit", serialize(build.getCommit()));
         }
         result.add("errors", serialize(inspector.getStepErrors()));
-        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer, TestsInformation>();
         for (Job job : build.getJobs()) {
             Log jobLog = job.getLog();
             TestsInformation testInfo = jobLog.getTestsInformation();
@@ -123,7 +123,7 @@ public class JsonSerializer extends AbstractDataSerializer {
             }
         }
 
-        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
+        result.add("testInformationPerJobId", serialize(testInformationPerJobId));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
@@ -132,7 +132,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("buildDate", serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
         if (build.isPullRequest()) {
@@ -141,7 +141,7 @@ public class JsonSerializer extends AbstractDataSerializer {
             result.add("commit", serialize(build.getCommit()));
         }
         result.add("errors", serialize(inspector.getStepErrors()));
-        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer, TestsInformation>();
         for (Job job : build.getJobs()) {
             Log jobLog = job.getLog();
             TestsInformation testInfo = jobLog.getTestsInformation();
@@ -151,7 +151,7 @@ public class JsonSerializer extends AbstractDataSerializer {
             }
         }
 
-        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
+        result.add("testInformationPerJobId", serialize(testInformationPerJobId));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
@@ -160,7 +160,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("buildDate", serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
         if (build.isPullRequest()) {
@@ -169,7 +169,7 @@ public class JsonSerializer extends AbstractDataSerializer {
             result.add("commit", serialize(build.getCommit()));
         }
         result.add("errors", serialize(inspector.getStepErrors()));
-        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer, TestsInformation>();
         for (Job job : build.getJobs()) {
             Log jobLog = job.getLog();
             TestsInformation testInfo = jobLog.getTestsInformation();
@@ -179,7 +179,7 @@ public class JsonSerializer extends AbstractDataSerializer {
             }
         }
 
-        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
+        result.add("testInformationPerJobId", serialize(testInformationPerJobId));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
@@ -188,7 +188,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("buildDate", serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
@@ -199,9 +199,9 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
         result.addProperty("nbTests", testInformation.getNbTotalTests());
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
-        result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
+        result.addProperty("nbFailingtests", testInformation.getNbFailingTests());
         result.addProperty("nbErroringTests", testInformation.getNbErroringTests());
-        result.add("failureLocations",serialize(testInformation.getFailureLocations()));
+        result.add("failureLocations", serialize(testInformation.getFailureLocations()));
         result.add("errors", serialize(inspector.getStepErrors()));
 
 
@@ -213,7 +213,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("buildDate", serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
@@ -222,7 +222,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
         result.add("errors", serialize(inspector.getStepErrors()));
 
-        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer,TestsInformation>();
+        Map<Integer, TestsInformation> testInformationPerJobId = new HashMap<Integer, TestsInformation>();
         for (Job job : build.getJobs()) {
             Log jobLog = job.getLog();
             TestsInformation testInfo = jobLog.getTestsInformation();
@@ -232,7 +232,7 @@ public class JsonSerializer extends AbstractDataSerializer {
             }
         }
 
-        result.add("testInformationPerJobId",serialize(testInformationPerJobId));
+        result.add("testInformationPerJobId", serialize(testInformationPerJobId));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
@@ -241,7 +241,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("slug", inspector.getRepoSlug());
         Build build = inspector.getBuild();
         result.addProperty("buildId", build.getId());
-        result.add("buildDate",serialize(build.getFinishedAt()));
+        result.add("buildDate", serialize(build.getFinishedAt()));
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
@@ -252,30 +252,30 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
         result.addProperty("nbTests", testInformation.getNbTotalTests());
         result.addProperty("nbSkippingTests", testInformation.getNbSkippingTests());
-        result.addProperty("nbFailingtests",testInformation.getNbFailingTests());
-        result.add("failureLocations",serialize(testInformation.getFailureLocations()));
+        result.addProperty("nbFailingtests", testInformation.getNbFailingTests());
+        result.add("failureLocations", serialize(testInformation.getFailureLocations()));
         result.add("errors", serialize(inspector.getStepErrors()));
         this.inspectors.get(inspector.getState().name()).add(result);
     }
-    
+
     private void outputFixerBuildInspector(ProjectInspector inspector) {
         if (inspector instanceof ProjectInspector4Bears) {
-	    	JsonObject result = new JsonObject();
-	        result.addProperty("slug", inspector.getRepoSlug());
-	        
-	        Build build = inspector.getBuild();
-	        result.addProperty("buildId", build.getId());
-	        result.add("buildDate",serialize(build.getFinishedAt()));
-	        
-	        Build previousBuild = ((ProjectInspector4Bears)inspector).getPreviousBuild();
-	        if (previousBuild != null) {
-	        	result.addProperty("previousBuildId", previousBuild.getId());
-		        result.add("previousBuildDate",serialize(previousBuild.getFinishedAt()));
-	        }
-	        
-	        result.addProperty("localRepo", inspector.getRepoLocalPath());
-	        
-	        this.inspectors.get(inspector.getState().name()).add(result);
+            JsonObject result = new JsonObject();
+            result.addProperty("slug", inspector.getRepoSlug());
+
+            Build build = inspector.getBuild();
+            result.addProperty("buildId", build.getId());
+            result.add("buildDate", serialize(build.getFinishedAt()));
+
+            Build previousBuild = ((ProjectInspector4Bears) inspector).getPreviousBuild();
+            if (previousBuild != null) {
+                result.addProperty("previousBuildId", previousBuild.getId());
+                result.add("previousBuildDate", serialize(previousBuild.getFinishedAt()));
+            }
+
+            result.addProperty("localRepo", inspector.getRepoLocalPath());
+
+            this.inspectors.get(inspector.getState().name()).add(result);
         }
     }
 
@@ -303,7 +303,7 @@ public class JsonSerializer extends AbstractDataSerializer {
     public void serializeData(ProjectInspector inspector) {
         switch (inspector.getState()) {
             default:
-                this.logger.warn("Project inspector with not defined state: "+inspector);
+                this.logger.warn("Project inspector with not defined state: " + inspector);
                 break;
 
             case INIT:
@@ -337,9 +337,9 @@ public class JsonSerializer extends AbstractDataSerializer {
             case PATCHED:
                 outputHasBeenPatchedInspector(inspector);
                 break;
-                
+
             case FIXERBUILD:
-            	outputFixerBuildInspector(inspector);
+                outputFixerBuildInspector(inspector);
                 break;
         }
     }

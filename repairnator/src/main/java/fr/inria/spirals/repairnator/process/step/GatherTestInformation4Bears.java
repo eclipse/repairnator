@@ -5,27 +5,27 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 public class GatherTestInformation4Bears extends GatherTestInformation {
 
-	public GatherTestInformation4Bears(ProjectInspector inspector) {
-		super(inspector);
-	}
+    public GatherTestInformation4Bears(ProjectInspector inspector) {
+        super(inspector);
+    }
 
-	@Override
-	protected void businessExecute() {
-		super.businessExecute();
+    @Override
+    protected void businessExecute() {
+        super.businessExecute();
 
-		if (!this.inspector.isAboutAPreviousBuild()) {
-			this.shouldStop = !this.shouldStop;
-		} else {
-			if (this.getState() == ProjectState.HASTESTFAILURE) {
-				// So, 1) the current passing build can be reproduced and 2) its
-				// previous build is a failing build with failing tests and it
-				// can also be reproduced
-				this.setState(ProjectState.FIXERBUILD);
-				this.shouldStop = false;
-			} else {
-				this.shouldStop = true;
-			}
-		}
-	}
+        if (!this.inspector.isAboutAPreviousBuild()) {
+            this.shouldStop = !this.shouldStop;
+        } else {
+            if (this.getState() == ProjectState.HASTESTFAILURE) {
+                // So, 1) the current passing build can be reproduced and 2) its
+                // previous build is a failing build with failing tests and it
+                // can also be reproduced
+                this.setState(ProjectState.FIXERBUILD);
+                this.shouldStop = false;
+            } else {
+                this.shouldStop = true;
+            }
+        }
+    }
 
 }

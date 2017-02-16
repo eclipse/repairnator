@@ -1,9 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.Launcher;
-import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
@@ -94,7 +91,7 @@ public class GatherTestInformation extends AbstractStep {
                 }
             });
         } catch (IOException e) {
-            this.getLogger().warn("Error while traversing files to get surefire reports: "+e);
+            this.getLogger().warn("Error while traversing files to get surefire reports: " + e);
             this.addStepError(e.getMessage());
         }
 
@@ -106,7 +103,7 @@ public class GatherTestInformation extends AbstractStep {
                     if (testSuite.getNumberOfFailures() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
                         this.failingModulePath = failingModule.getCanonicalPath();
-                        this.writeProperty("failingModule",this.failingModulePath);
+                        this.writeProperty("failingModule", this.failingModulePath);
                     }
 
                     this.nbTotalTests += testSuite.getNumberOfTests();
@@ -147,26 +144,26 @@ public class GatherTestInformation extends AbstractStep {
                     this.setState(ProjectState.NOTFAILING);
                 }
             } catch (MavenReportException e) {
-                this.getLogger().warn("Error while parsing files to get test information: "+e);
+                this.getLogger().warn("Error while parsing files to get test information: " + e);
                 this.addStepError(e.getMessage());
             } catch (IOException e) {
-                this.getLogger().warn("Error while getting the failing module path: "+e);
+                this.getLogger().warn("Error while getting the failing module path: " + e);
                 this.addStepError(e.getMessage());
             }
         }
 
-        this.writeProperty("error-types", StringUtils.join(this.failureNames,","));
-        this.writeProperty("failing-test-cases",StringUtils.join(this.failureLocations,","));
+        this.writeProperty("error-types", StringUtils.join(this.failureNames, ","));
+        this.writeProperty("failing-test-cases", StringUtils.join(this.failureLocations, ","));
 
         if (this.getState() == ProjectState.HASTESTFAILURE) {
-        	this.shouldStop = false;
-        	this.inspector.setReproducedAsFail(true);
+            this.shouldStop = false;
+            this.inspector.setReproducedAsFail(true);
         } else if (this.getState() == ProjectState.HASTESTERRORS) {
             this.addStepError("Only get test errors, no failing tests. It will try to repair it.");
             this.shouldStop = false;
             this.inspector.setReproducedAsError(true);
         } else {
-        	this.shouldStop = true;
+            this.shouldStop = true;
         }
     }
 }

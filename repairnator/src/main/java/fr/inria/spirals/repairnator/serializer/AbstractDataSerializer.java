@@ -11,10 +11,11 @@ public abstract class AbstractDataSerializer {
 
     private static final String TRAVIS_URL = "http://travis-ci.org/";
 
-    public AbstractDataSerializer() {}
+    public AbstractDataSerializer() {
+    }
 
     protected String getTravisUrl(int buildId, String slug) {
-        return TRAVIS_URL+slug+"/builds/"+buildId;
+        return TRAVIS_URL + slug + "/builds/" + buildId;
     }
 
     protected String getPrettyPrintState(ProjectState state, GatherTestInformation gatherTestInformation) {
@@ -43,7 +44,7 @@ public abstract class AbstractDataSerializer {
                 return "not failing";
 
             case PATCHED:
-                return  "PATCHED";
+                return "PATCHED";
 
             case SOURCEDIRCOMPUTED:
             case CLASSPATHCOMPUTED:
@@ -52,12 +53,12 @@ public abstract class AbstractDataSerializer {
                 } else {
                     return "test errors";
                 }
-                
+
             case FIXERBUILD:
-            	return "FIXERBUILD";
+                return "FIXERBUILD";
 
             default:
-                return  "unknown";
+                return "unknown";
         }
     }
 

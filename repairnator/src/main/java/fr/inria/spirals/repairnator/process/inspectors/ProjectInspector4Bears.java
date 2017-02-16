@@ -21,47 +21,47 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
  * Created by fermadeiral.
  */
 public class ProjectInspector4Bears extends ProjectInspector {
-	private final Logger logger = LoggerFactory.getLogger(ProjectInspector4Bears.class);
+    private final Logger logger = LoggerFactory.getLogger(ProjectInspector4Bears.class);
 
-	public ProjectInspector4Bears(Build build, String workspace, List<AbstractDataSerializer> serializers,
-			String nopolSolverPath, boolean push, RepairMode mode) {
-		super(build, workspace, serializers, null, push, mode);
-		this.previousBuildFlag = false;
-	}
+    public ProjectInspector4Bears(Build build, String workspace, List<AbstractDataSerializer> serializers,
+                                  String nopolSolverPath, boolean push, RepairMode mode) {
+        super(build, workspace, serializers, null, push, mode);
+        this.previousBuildFlag = false;
+    }
 
-	public void run() {
-		AbstractStep firstStep = null;
+    public void run() {
+        AbstractStep firstStep = null;
 
-		AbstractStep cloneRepo = new CloneRepository(this);
-		AbstractStep buildRepo = new BuildProject(this);
-		AbstractStep testProject = new TestProject(this);
-		this.testInformations = new GatherTestInformation4Bears(this);
-		AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
-		AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
-		AbstractStep testProjectForPreviousBuild = new TestProject(this);
-		AbstractStep gatherTestInformation = new GatherTestInformation4Bears(this);
+        AbstractStep cloneRepo = new CloneRepository(this);
+        AbstractStep buildRepo = new BuildProject(this);
+        AbstractStep testProject = new TestProject(this);
+        this.testInformations = new GatherTestInformation4Bears(this);
+        AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
+        AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
+        AbstractStep testProjectForPreviousBuild = new TestProject(this);
+        AbstractStep gatherTestInformation = new GatherTestInformation4Bears(this);
 
-		cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
-				.setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
-				.setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
+        cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+                .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
+                .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
 
-		if (this.getPushMode()) {
-			PushIncriminatedBuild pushIncriminatedBuild = new PushIncriminatedBuild(this);
-			pushIncriminatedBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
-			this.setPushBuild(pushIncriminatedBuild);
-			gatherTestInformation.setNextStep(pushIncriminatedBuild);
-		}
+        if (this.getPushMode()) {
+            PushIncriminatedBuild pushIncriminatedBuild = new PushIncriminatedBuild(this);
+            pushIncriminatedBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
+            this.setPushBuild(pushIncriminatedBuild);
+            gatherTestInformation.setNextStep(pushIncriminatedBuild);
+        }
 
-		firstStep = cloneRepo;
-		firstStep.setDataSerializer(this.serializers);
+        firstStep = cloneRepo;
+        firstStep.setDataSerializer(this.serializers);
 
-		firstStep.setState(ProjectState.INIT);
+        firstStep.setState(ProjectState.INIT);
 
-		try {
-			firstStep.execute();
-		} catch (Exception e) {
-			this.addStepError("Unknown", e.getMessage());
-			this.logger.debug("Exception catch while executing steps: ", e);
-		}
-	}
+        try {
+            firstStep.execute();
+        } catch (Exception e) {
+            this.addStepError("Unknown", e.getMessage());
+            this.logger.debug("Exception catch while executing steps: ", e);
+        }
+    }
 }

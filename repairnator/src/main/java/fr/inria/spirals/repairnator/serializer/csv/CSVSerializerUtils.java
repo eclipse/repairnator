@@ -12,43 +12,43 @@ import org.slf4j.LoggerFactory;
  * Created by urli on 15/01/2017.
  */
 public class CSVSerializerUtils {
-	private final static Logger logger = LoggerFactory.getLogger(CSVSerializerUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(CSVSerializerUtils.class);
 
-	public final static char SEPARATOR = ',';
-	private final static String FILENAME = "all_data_builds.csv";
+    public static final char SEPARATOR = ',';
+    private static final String FILENAME = "all_data_builds.csv";
 
-	public static BufferedWriter openFile(String outputPath, String firstLine) {
-		File outputFile = new File(outputPath);
+    public static BufferedWriter openFile(String outputPath, String firstLine) {
+        File outputFile = new File(outputPath);
 
-		if (!outputFile.isDirectory()) {
-			outputFile = outputFile.getParentFile();
-		}
+        if (!outputFile.isDirectory()) {
+            outputFile = outputFile.getParentFile();
+        }
 
-		outputFile = new File(outputFile.getPath() + File.separator + FILENAME);
+        outputFile = new File(outputFile.getPath() + File.separator + FILENAME);
 
-		boolean fileExists = outputFile.exists();
-		BufferedWriter stream;
-		try {
-			stream = new BufferedWriter(new FileWriter(outputFile, true));
-			if (!fileExists) {
-				writeNewLine(stream, firstLine);
-			}
-		} catch (IOException e) {
-			logger.error("Error while creating file writer for: " + outputFile.getPath() + " : " + e);
-			stream = null;
-		}
-		return stream;
-	}
+        boolean fileExists = outputFile.exists();
+        BufferedWriter stream;
+        try {
+            stream = new BufferedWriter(new FileWriter(outputFile, true));
+            if (!fileExists) {
+                writeNewLine(stream, firstLine);
+            }
+        } catch (IOException e) {
+            logger.error("Error while creating file writer for: " + outputFile.getPath() + " : " + e);
+            stream = null;
+        }
+        return stream;
+    }
 
-	public static void writeNewLine(BufferedWriter stream, String line) {
-		if (stream != null) {
-			try {
-				stream.write(line);
-				stream.newLine();
-				stream.flush();
-			} catch (IOException e) {
-				logger.error("Error while writing in file: " + e);
-			}
-		}
-	}
+    public static void writeNewLine(BufferedWriter stream, String line) {
+        if (stream != null) {
+            try {
+                stream.write(line);
+                stream.newLine();
+                stream.flush();
+            } catch (IOException e) {
+                logger.error("Error while writing in file: " + e);
+            }
+        }
+    }
 }

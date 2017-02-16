@@ -117,13 +117,13 @@ public class ProjectScanner {
             try {
                 buildId = Integer.parseInt(s);
             } catch (NumberFormatException e) {
-                this.logger.error("Error while reading build ids from input: "+e.getMessage());
+                this.logger.error("Error while reading build ids from input: " + e.getMessage());
                 continue;
             }
 
             Build build = BuildHelper.getBuildFromId(buildId, null);
             if (build == null) {
-                this.logger.warn("The following build cannot be retrieved: "+buildId);
+                this.logger.warn("The following build cannot be retrieved: " + buildId);
                 continue;
             }
             if (testBuild(build, true)) {
@@ -150,11 +150,11 @@ public class ProjectScanner {
     public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
         return getListOfBuildsFromProjectsByBuildStatus(path, true);
     }
-    
+
     public List<Build> getListOfPassingBuildsFromProjects(String path) throws IOException {
-    	return getListOfBuildsFromProjectsByBuildStatus(path, false);
-	}
-    
+        return getListOfBuildsFromProjectsByBuildStatus(path, false);
+    }
+
     private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing) throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
@@ -181,18 +181,18 @@ public class ProjectScanner {
         List<Repository> result = new ArrayList<Repository>();
 
         for (String slug : allSlugs) {
-            this.logger.debug("Get repo "+slug);
+            this.logger.debug("Get repo " + slug);
             Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
             if (repo != null) {
                 Build lastBuild = repo.getLastBuild();
                 if (lastBuild != null) {
                     result.add(repo);
                 } else {
-                    this.logger.info("It seems that the repo "+slug+" does not have any Travis build.");
+                    this.logger.info("It seems that the repo " + slug + " does not have any Travis build.");
                 }
 
             } else {
-                this.logger.warn("Can't examine repo : "+slug);
+                this.logger.warn("Can't examine repo : " + slug);
             }
         }
 
@@ -200,7 +200,7 @@ public class ProjectScanner {
         return result;
     }
 
-    
+
     private boolean testBuild(Build build, boolean targetFailing) {
         if (build.isPullRequest()) {
             this.totalPRBuilds++;
@@ -210,7 +210,7 @@ public class ProjectScanner {
         if (build.getConfig().getLanguage().equals("java")) {
             this.totalBuildInJava++;
 
-            this.logger.debug("Repo "+repo.getSlug()+" with java language - build "+build.getId()+" - Status : "+build.getBuildStatus().name());
+            this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : " + build.getBuildStatus().name());
             if (build.getBuildStatus() == BuildStatus.FAILED) {
                 this.totalBuildInJavaFailing++;
 
@@ -227,7 +227,7 @@ public class ProjectScanner {
                                 return true;
                             }
                         } else {
-                            logger.error("Error while getting a job log: (jobId: "+job.getId()+")");
+                            logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
                         }
                     }
                 }
@@ -240,7 +240,7 @@ public class ProjectScanner {
                 }
             }
         } else {
-            this.logger.warn("Examine repo "+repo.getSlug()+" Careful the following build "+build.getId()+" is not in java but language: "+build.getConfig().getLanguage());
+            this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId() + " is not in java but language: " + build.getConfig().getLanguage());
         }
         return false;
     }
@@ -262,9 +262,9 @@ public class ProjectScanner {
         }
 
         if (targetFailing) {
-        	this.totalBuildInJavaFailingWithFailingTests = result.size();
+            this.totalBuildInJavaFailingWithFailingTests = result.size();
         } else {
-        	this.totalPassingBuilds = result.size();
+            this.totalPassingBuilds = result.size();
         }
         return result;
     }
@@ -280,11 +280,11 @@ public class ProjectScanner {
         List<String> content = getFileContent(input);
 
         if (content.isEmpty()) {
-            throw new IOException("File "+input+" is empty.");
+            throw new IOException("File " + input + " is empty.");
         }
 
         String propertyFileDir = content.get(0);
-        String propFilePath = propertyFileDir+File.separator+AbstractStep.PROPERTY_FILENAME;
+        String propFilePath = propertyFileDir + File.separator + AbstractStep.PROPERTY_FILENAME;
         return getPropertiesFromFile(propFilePath);
     }
 

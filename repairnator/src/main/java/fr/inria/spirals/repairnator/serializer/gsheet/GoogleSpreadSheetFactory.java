@@ -51,9 +51,9 @@ public class GoogleSpreadSheetFactory {
             this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
             this.dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
         } catch (GeneralSecurityException e) {
-            this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ",e);
+            this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ", e);
         } catch (IOException e) {
-            this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ",e);
+            this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ", e);
         }
 
         this.jsonFactory = JacksonFactory.getDefaultInstance();
@@ -71,9 +71,9 @@ public class GoogleSpreadSheetFactory {
     }
 
     private void initSheets(String googleSecretPath) throws IOException {
-    	GOOGLE_SECRET_PATH = googleSecretPath;
-        
-    	File secretFile = new File(GOOGLE_SECRET_PATH);
+        GOOGLE_SECRET_PATH = googleSecretPath;
+
+        File secretFile = new File(GOOGLE_SECRET_PATH);
         if (!secretFile.exists()) {
             throw new IOException("File containing the token information to access Google API does not exist.");
         }

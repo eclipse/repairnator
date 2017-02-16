@@ -1,7 +1,5 @@
 package fr.inria.spirals.repairnator.process.testinformation;
 
-import java.util.Arrays;
-
 /**
  * Created by urli on 08/02/2017.
  */

@@ -42,14 +42,14 @@ import java.util.concurrent.TimeUnit;
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
-    private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN","GITHUB_OAUTH"};
+    private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN", "GITHUB_OAUTH"};
     private static final long TIMEOUT_PER_JOB = 1; // in hours
     private static final int NB_THREADS = 4;
 
     private JSAP jsap;
     private JSAPResult arguments;
     private List<AbstractDataSerializer> serializers;
-    
+
     private String input;
     private String workspace;
     private int lookupDays;
@@ -111,9 +111,9 @@ public class Launcher {
 
         String modeValues = "";
         for (RepairMode mode : RepairMode.values()) {
-            modeValues += mode.name()+";";
+            modeValues += mode.name() + ";";
         }
-        modeValues.substring(0, modeValues.length()-2);
+        modeValues.substring(0, modeValues.length() - 2);
 
         // Tab size
         opt2 = new FlaggedOption("mode");
@@ -160,7 +160,7 @@ public class Launcher {
         opt2.setHelp("Specify the solver path used by Nopol");
         opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
-        
+
         // Google secret path
         opt2 = new FlaggedOption("googleSecretPath");
         opt2.setShortFlag('g');
@@ -181,7 +181,7 @@ public class Launcher {
         Logger repairnator = (Logger) LoggerFactory.getLogger("fr.inria.spirals.repairnator");
         repairnator.setLevel(Level.DEBUG);
 
-        Logger jgit = (Logger)LoggerFactory.getLogger("org.eclipse.jgit");
+        Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
         jgit.setLevel(Level.WARN);
     }
 
@@ -189,7 +189,7 @@ public class Launcher {
         File file = new File(path);
 
         if (file.exists()) {
-            throw new IOException("The following directory already exists: "+path+". Please choose an empty directory.");
+            throw new IOException("The following directory already exists: " + path + ". Please choose an empty directory.");
         }
     }
 
@@ -209,25 +209,25 @@ public class Launcher {
             loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
-            System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
+            System.err.println("Tools.jar must be loaded, here the classpath given for your app: " + System.getProperty("java.class.path"));
             System.exit(-1);
         }
     }
 
     private void checkNopolSolverPath() {
-    	solverPath = arguments.getString("z3Path");
-    	
-    	if (solverPath != null) {
-	        File file = new File(this.arguments.getString("z3Path"));
-	
-	        if (!file.exists()) {
-	            System.err.println("The Nopol solver path should be an existing file: "+file.getPath()+" does not exist.");
-	            System.exit(-1);
-	        }
-    	} else {
-    		System.err.println("The Nopol solver path should be provided.");
+        solverPath = arguments.getString("z3Path");
+
+        if (solverPath != null) {
+            File file = new File(this.arguments.getString("z3Path"));
+
+            if (!file.exists()) {
+                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
+                System.exit(-1);
+            }
+        } else {
+            System.err.println("The Nopol solver path should be provided.");
             System.exit(-1);
-    	}
+        }
     }
 
     private void run(String[] args) throws JSAPException, IOException {
@@ -236,7 +236,7 @@ public class Launcher {
 
         if (!arguments.success()) {
             // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
+            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext(); ) {
                 System.err.println("Error: " + errs.next());
             }
         }
@@ -248,7 +248,7 @@ public class Launcher {
             System.err.println(jsap.getHelp());
             System.err.println("Please note that the following environment variables must be set: ");
             for (String env : Launcher.ENVIRONMENT_VARIABLES) {
-                System.err.println(" - "+env);
+                System.err.println(" - " + env);
             }
             System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
             System.exit(-1);
@@ -256,7 +256,7 @@ public class Launcher {
         this.checkToolsLoaded();
         mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
         if (mode != RepairMode.FORBEARS) {
-        	this.checkNopolSolverPath();
+            this.checkNopolSolverPath();
         }
         if (arguments.success() && checkEnvironmentVariables()) {
             System.out.println(arguments.toString());
@@ -278,13 +278,13 @@ public class Launcher {
         if (debug) {
             setLevel(Level.DEBUG);
         }
-        
+
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         AbstractDataSerializer csvSerializer;
         if (mode == RepairMode.FORBEARS) {
-        	csvSerializer = new CSVSerializer4Bears(output);
+            csvSerializer = new CSVSerializer4Bears(output);
         } else {
-        	csvSerializer = new CSVSerializer4RepairNator(output);
+            csvSerializer = new CSVSerializer4RepairNator(output);
         }
         GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
         GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
@@ -329,10 +329,10 @@ public class Launcher {
                 completeWorkspace = scanner.readWorkspaceFromInput(input);
                 buildList = scanner.readBuildFromInput(input);
                 break;
-                
+
             case FORBEARS:
-            	buildList = scanner.getListOfPassingBuildsFromProjects(input);
-            	break;
+                buildList = scanner.getListOfPassingBuildsFromProjects(input);
+                break;
         }
 
         if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
@@ -342,38 +342,38 @@ public class Launcher {
 
         if (buildList != null) {
             for (Build build : buildList) {
-                System.out.println("Incriminated project : "+build.getRepository().getSlug()+":"+build.getId());
+                System.out.println("Incriminated project : " + build.getRepository().getSlug() + ":" + build.getId());
             }
         }
 
         if (mode != RepairMode.NOPOLONLY) {
             Launcher.LOGGER.debug("Start cloning and compiling projects...");
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
-            completeWorkspace = workspace+File.separator+dateFormat.format(new Date());
+            completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
         }
 
 
         if (completeWorkspace != null) {
-        	if (mode != RepairMode.FORBEARS) {
-        		List<ProjectInspector> inspectors = cloneAndRepair(buildList, completeWorkspace);
+            if (mode != RepairMode.FORBEARS) {
+                List<ProjectInspector> inspectors = cloneAndRepair(buildList, completeWorkspace);
 
-        		for (ProjectInspector inspector : inspectors) {
-        		    if (inspector.isReproducedAsFail()) {
-        		        this.nbReproducedFails++;
+                for (ProjectInspector inspector : inspectors) {
+                    if (inspector.isReproducedAsFail()) {
+                        this.nbReproducedFails++;
                     }
                     if (inspector.isReproducedAsError()) {
-        		        this.nbReproducedErrors++;
+                        this.nbReproducedErrors++;
                     }
                 }
 
                 if (this.endProcessSerializer != null) {
-        		    this.endProcessSerializer.setReproducedFailures(this.nbReproducedFails);
-        		    this.endProcessSerializer.setReproducedErrors(this.nbReproducedErrors);
-        		    this.endProcessSerializer.serialize();
+                    this.endProcessSerializer.setReproducedFailures(this.nbReproducedFails);
+                    this.endProcessSerializer.setReproducedErrors(this.nbReproducedErrors);
+                    this.endProcessSerializer.serialize();
                 }
-        	} else {
-         		inspectBuildsForBears(buildList, completeWorkspace);
-        	}
+            } else {
+                inspectBuildsForBears(buildList, completeWorkspace);
+            }
 
             Launcher.LOGGER.debug("Start writing a JSON output...");
 
@@ -420,12 +420,12 @@ public class Launcher {
         }
         return projectInspectors;
     }
-    
+
     private void inspectBuildsForBears(List<Build> buildList, String workspace) throws IOException {
-    	initWorkspace(workspace);
-    	
-    	ProjectInspector4Bears inspector;
-    	for (Build build : buildList) {
+        initWorkspace(workspace);
+
+        ProjectInspector4Bears inspector;
+        for (Build build : buildList) {
             inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, mode);
             inspector.setAutoclean(clean);
             inspector.run();
