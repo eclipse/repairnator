@@ -10,12 +10,10 @@ import java.lang.reflect.Modifier;
  */
 public class CustomExclusionStrategy implements ExclusionStrategy {
     public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-        return (
-                fieldAttributes.getName().equals("lastBuild") ||
-                fieldAttributes.getName().equals("logger") ||
-                fieldAttributes.getDeclaredClass().equals(Class.class) ||
-                fieldAttributes.hasModifier(Modifier.PROTECTED)
-        );
+        return fieldAttributes.getName().equals("lastBuild") ||
+            fieldAttributes.getName().equals("logger") ||
+            fieldAttributes.getDeclaredClass().equals(Class.class) ||
+            fieldAttributes.hasModifier(Modifier.PROTECTED);
     }
 
     public boolean shouldSkipClass(Class<?> aClass) {
