@@ -56,6 +56,13 @@ public class NopolRepair extends AbstractStep {
         List<URL> classPath = this.inspector.getRepairClassPath();
         File[] sources = this.inspector.getRepairSourceDir();
 
+        String[] sourcesStr = new String[sources.length];
+
+        int i = 0;
+        for (File f : sources) {
+            sourcesStr[i++] = f.getAbsolutePath();
+        }
+
         GatherTestInformation infoStep = inspector.getTestInformations();
         List<FailureLocation> failureLocationList = new ArrayList<>(infoStep.getFailureLocations());
         Collections.sort(failureLocationList, new ComparatorFailureLocation());
@@ -88,6 +95,7 @@ public class NopolRepair extends AbstractStep {
             config.setSolverPath(this.inspector.getNopolSolverPath());
             config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
             config.setType(StatementType.PRE_THEN_COND);
+            config.setProjectSourcePath(sourcesStr);
 
             nopolInformation.setConfig(config);
 

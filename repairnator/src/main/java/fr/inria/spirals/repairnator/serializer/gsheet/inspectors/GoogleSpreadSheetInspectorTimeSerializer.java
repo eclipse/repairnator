@@ -41,12 +41,12 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
     public void serializeData(ProjectInspector inspector) {
         Map<String, Integer> durations = inspector.getStepsDurationsInSeconds();
         int total = 0;
-        int clonage = durations.getOrDefault(CloneRepository.class.getCanonicalName(), 0);
-        int buildtime = durations.getOrDefault(BuildProject.class.getCanonicalName(), 0);
-        int test = durations.getOrDefault(TestProject.class.getCanonicalName(), 0);
-        int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getCanonicalName(), 0);
-        int push = durations.getOrDefault(PushIncriminatedBuild.class.getCanonicalName(), 0);
-        int repair = durations.getOrDefault(NopolRepair.class.getCanonicalName(), 0);
+        int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
+        int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
+        int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
+        int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
+        int push = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
+        int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
 
         total = clonage+buildtime+test+gatherTestInfo+push+repair;
         Build build = inspector.getBuild();
