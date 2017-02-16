@@ -45,6 +45,7 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
         dataCol.add(nopolInformation.getLocation().getClassName());
         dataCol.add(StringUtils.join(nopolInformation.getLocation().getFailures(),","));
         dataCol.add(nopolInformation.getAllocatedTime());
+        dataCol.add(nopolInformation.getPassingTime());
         dataCol.add(nopolInformation.getStatus().name());
 
         if (nopolInformation.getStatus() == NopolStatus.EXCEPTION) {
