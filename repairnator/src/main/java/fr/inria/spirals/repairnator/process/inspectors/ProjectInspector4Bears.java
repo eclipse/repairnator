@@ -6,13 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.BuildStatus;
+import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.BuildShouldFail;
+import fr.inria.spirals.repairnator.process.step.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.CheckoutPreviousBuild;
+import fr.inria.spirals.repairnator.process.step.CheckoutSourceCodeForPreviousBuild;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.GatherTestInformation4Bears;
+import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -29,39 +34,81 @@ public class ProjectInspector4Bears extends ProjectInspector {
         this.previousBuildFlag = false;
     }
 
-    public void run() {
-        AbstractStep firstStep = null;
+	public void run() {
+		// First of all, here it is checked if the current passing build has a
+		// previous build---if doesn't, nothing is made as this build is not
+		// useful for Bears
+		Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(this.getBuild(), null);
 
-        AbstractStep cloneRepo = new CloneRepository(this);
-        AbstractStep buildRepo = new BuildProject(this);
-        AbstractStep testProject = new TestProject(this);
-        this.testInformations = new GatherTestInformation4Bears(this);
-        AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
-        AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
-        AbstractStep testProjectForPreviousBuild = new TestProject(this);
-        AbstractStep gatherTestInformation = new GatherTestInformation4Bears(this);
+		if (previousBuild != null) {
 
-        cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
-                .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
-                .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
+			this.logger.debug("Build: " + this.getBuild().getId());
+			this.logger.debug("Previous build: " + previousBuild.getId());
 
-        if (this.getPushMode()) {
-            PushIncriminatedBuild pushIncriminatedBuild = new PushIncriminatedBuild(this);
-            pushIncriminatedBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
-            this.setPushBuild(pushIncriminatedBuild);
-            gatherTestInformation.setNextStep(pushIncriminatedBuild);
-        }
+			if (previousBuild.getBuildStatus() == BuildStatus.FAILED
+					|| previousBuild.getBuildStatus() == BuildStatus.PASSED) {
 
-        firstStep = cloneRepo;
-        firstStep.setDataSerializer(this.serializers);
+				this.setPreviousBuild(previousBuild);
 
-        firstStep.setState(ProjectState.INIT);
+				AbstractStep firstStep = null;
+				AbstractStep lastStep = null;
 
-        try {
-            firstStep.execute();
-        } catch (Exception e) {
-            this.addStepError("Unknown", e.getMessage());
-            this.logger.debug("Exception catch while executing steps: ", e);
-        }
-    }
+				// Clone, build, test and gather test information for the
+				// current passing build to ensure it is reproducible
+				AbstractStep cloneRepo = new CloneRepository(this);
+				AbstractStep buildRepo = new BuildProject(this);
+				AbstractStep testProject = new TestProject(this);
+				this.testInformations = new GatherTestInformation(this, new BuildShouldPass());
+
+				AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
+				AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
+				AbstractStep testProjectForPreviousBuild = new TestProject(this);
+				if (this.getPreviousBuild().getBuildStatus() == BuildStatus.FAILED) {
+					AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
+
+					cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+							.setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
+							.setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
+
+					lastStep = gatherTestInformation;
+				} else {
+					AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
+					AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutSourceCodeForPreviousBuild(this);
+					AbstractStep buildRepoForPreviousBuild2 = new BuildProject(this);
+					AbstractStep testProjectForPreviousBuild2 = new TestProject(this);
+					AbstractStep gatherTestInformation2 = new GatherTestInformation(this, new BuildShouldFail());
+
+					cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+							.setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
+							.setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
+							.setNextStep(checkoutSourceCodeForPreviousBuild).setNextStep(buildRepoForPreviousBuild2)
+							.setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2);
+
+					lastStep = gatherTestInformation2;
+				}
+
+				if (this.getPushMode()) {
+					PushIncriminatedBuild pushIncriminatedBuild = new PushIncriminatedBuild(this);
+					pushIncriminatedBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
+					this.setPushBuild(pushIncriminatedBuild);
+					lastStep.setNextStep(pushIncriminatedBuild);
+				}
+
+				firstStep = cloneRepo;
+				firstStep.setState(ProjectState.INIT);
+				firstStep.setDataSerializer(this.serializers);
+
+				try {
+					firstStep.execute();
+				} catch (Exception e) {
+					this.addStepError("Unknown", e.getMessage());
+					this.logger.debug("Exception catch while executing steps: ", e);
+				}
+			} else {
+				this.setState(ProjectState.PREVIOUSVERSIONISNOTINTERESTING);
+			}
+		} else {
+			this.setState(ProjectState.DOESNOTHAVEPREVIOUSVERSION);
+		}
+	}
 }

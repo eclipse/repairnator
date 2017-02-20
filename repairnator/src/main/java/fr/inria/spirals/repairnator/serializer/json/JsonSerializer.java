@@ -325,9 +325,10 @@ public class JsonSerializer extends AbstractDataSerializer {
             case PATCHED:
                 outputHasBeenPatchedInspector(inspector);
                 break;
-
-            case FIXERBUILD:
-                outputFixerBuildInspector(inspector);
+    
+            case FIXERBUILD_CASE1:
+            case FIXERBUILD_CASE2:
+            	outputFixerBuildInspector(inspector);
                 break;
         }
     }

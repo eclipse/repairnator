@@ -43,7 +43,7 @@ public class CloneRepository extends AbstractStep {
     public static final String GITHUB_ROOT_REPO = "https://github.com/";
     private static final String GITHUB_PATCH_ACCEPT = "application/vnd.github.v3.patch";
 
-    private Build build;
+    protected Build build;
 
     public CloneRepository(ProjectInspector inspector) {
         super(inspector);

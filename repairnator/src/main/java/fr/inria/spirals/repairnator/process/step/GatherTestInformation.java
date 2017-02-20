@@ -1,15 +1,5 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.ProjectState;
-import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
-import fr.inria.spirals.repairnator.process.testinformation.FailureType;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.plugins.surefire.report.ReportTestCase;
-import org.apache.maven.plugins.surefire.report.ReportTestSuite;
-import org.apache.maven.plugins.surefire.report.SurefireReportParser;
-import org.apache.maven.reporting.MavenReportException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -23,6 +13,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.plugins.surefire.report.ReportTestCase;
+import org.apache.maven.plugins.surefire.report.ReportTestSuite;
+import org.apache.maven.plugins.surefire.report.SurefireReportParser;
+import org.apache.maven.reporting.MavenReportException;
+
+import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 
 /**
  * Created by urli on 05/01/2017.
@@ -38,11 +39,14 @@ public class GatherTestInformation extends AbstractStep {
     private Set<FailureLocation> failureLocations;
     private Set<String> failureNames;
     private String failingModulePath;
+    
+    private ContractForGatherTestInformation contract;
 
-    public GatherTestInformation(ProjectInspector inspector) {
+    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract) {
         super(inspector);
         this.failureLocations = new HashSet<>();
         this.failureNames = new HashSet<>();
+        this.contract = contract;
     }
 
     public Set<FailureLocation> getFailureLocations() {
@@ -155,15 +159,6 @@ public class GatherTestInformation extends AbstractStep {
         this.writeProperty("error-types", StringUtils.join(this.failureNames, ","));
         this.writeProperty("failing-test-cases", StringUtils.join(this.failureLocations, ","));
 
-        if (this.getState() == ProjectState.HASTESTFAILURE) {
-            this.shouldStop = false;
-            this.inspector.setReproducedAsFail(true);
-        } else if (this.getState() == ProjectState.HASTESTERRORS) {
-            this.addStepError("Only get test errors, no failing tests. It will try to repair it.");
-            this.shouldStop = false;
-            this.inspector.setReproducedAsError(true);
-        } else {
-            this.shouldStop = true;
-        }
+        contract.makeADecision(this);
     }
 }

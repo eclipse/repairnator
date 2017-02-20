@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;
@@ -197,7 +198,7 @@ public class ProjectInspector {
 
         AbstractStep firstStep = null;
 
-        this.testInformations = new GatherTestInformation(this);
+        this.testInformations = new GatherTestInformation(this, new BuildShouldFail());
         this.pushBuild = new PushIncriminatedBuild(this);
         this.pushBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_REPAIR);
 

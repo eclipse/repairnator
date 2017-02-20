@@ -54,8 +54,11 @@ public abstract class AbstractDataSerializer {
                     return "test errors";
                 }
 
-            case FIXERBUILD:
-                return "FIXERBUILD";
+            case FIXERBUILD_CASE1:
+            	return "FIXERBUILD_CASE1";
+            	
+            case FIXERBUILD_CASE2:
+            	return "FIXERBUILD_CASE2";
 
             default:
                 return "unknown";

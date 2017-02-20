@@ -38,7 +38,7 @@ public class GoogleSpreadSheetScannerSerializer {
         dataCol.add(this.scanner.getTotalRepoUsingTravis());
         dataCol.add(this.scanner.getTotalScannedBuilds());
         dataCol.add(this.scanner.getTotalBuildInJava());
-        dataCol.add(this.scanner.getTotalPassingBuilds());
+        dataCol.add(this.scanner.getTotalJavaPassingBuilds());
         dataCol.add(this.scanner.getTotalBuildInJavaFailing());
         dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
         dataCol.add(this.scanner.getTotalPRBuilds());
