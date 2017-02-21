@@ -1,5 +1,7 @@
 package fr.inria.spirals.repairnator.serializer;
 
+import org.apache.commons.lang.time.DurationFormatUtils;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -28,5 +30,9 @@ public class SerializerUtils {
         } catch (UnknownHostException e) {
             return "unknown host";
         }
+    }
+
+    public static String getDuration(Date dateBegin, Date dateEnd) {
+        return DurationFormatUtils.formatDuration(dateEnd.getTime()-dateBegin.getTime(), "HH:mm", true);
     }
 }

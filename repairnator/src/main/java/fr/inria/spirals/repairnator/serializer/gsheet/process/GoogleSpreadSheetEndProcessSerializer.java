@@ -44,8 +44,7 @@ public class GoogleSpreadSheetEndProcessSerializer {
 
     public void serialize() {
         Date now = new Date();
-        Duration duration = Duration.between(this.beginDate.toInstant(), now.toInstant());
-        String humanDuration = duration.toHours()+":"+duration.toMinutes();
+        String humanDuration = SerializerUtils.getDuration(this.beginDate, now);
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(SerializerUtils.getHostname());

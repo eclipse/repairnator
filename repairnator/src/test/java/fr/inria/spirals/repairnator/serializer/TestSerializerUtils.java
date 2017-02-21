@@ -1,8 +1,11 @@
 package fr.inria.spirals.repairnator.serializer;
 
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.junit.Test;
 
+import java.time.Duration;
 import java.util.Calendar;
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -34,4 +37,19 @@ public class TestSerializerUtils {
         assertThat(obtainedStr, is(expectedStr));
     }
 
+    @Test
+    public void testDuration() {
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(2017, 2, 21, 15, 35);
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(2017, 2, 21, 18, 56);
+
+        Date date1 = calendar1.getTime();
+        Date date2 = calendar2.getTime();
+
+        String humanString = SerializerUtils.getDuration(date1, date2);
+
+        assertThat(humanString, is("03:21"));
+    }
 }
