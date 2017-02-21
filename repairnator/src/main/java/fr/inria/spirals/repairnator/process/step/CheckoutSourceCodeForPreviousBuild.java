@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
+import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
@@ -29,11 +30,12 @@ public class CheckoutSourceCodeForPreviousBuild extends CloneRepository {
 				this.getLogger().debug(
 						"Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
 				git.checkout().setName(commitCheckout).call();
-				
 				git.checkout().setStartPoint(inspector.getPreviousBuild().getCommit().getSha()).addPath("src/main/java").call();
+				this.state = ProjectState.PREVIOUSBUILDCODECHECKEDOUT;
 			} else {
 				this.addStepError("Error while getting the commit to checkout from the repo.");
 				this.shouldStop = true;
+				this.state = ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT;
 				return;
 			}
 		} catch (IOException | GitAPIException e) {

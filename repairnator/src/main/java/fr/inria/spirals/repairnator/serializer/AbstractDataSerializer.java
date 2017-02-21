@@ -53,7 +53,25 @@ public abstract class AbstractDataSerializer {
                 } else {
                     return "test errors";
                 }
-
+                
+            case DOESNOTHAVEPREVIOUSVERSION:
+            	return "does not have previous build";
+            	
+            case PREVIOUSVERSIONISNOTINTERESTING:
+            	return "previous build is not interesting";
+            	
+            case PREVIOUSBUILDCHECKEDOUT:
+            	return "previous build checked out";
+            	
+            case PREVIOUSBUILDNOTCHECKEDOUT:
+            	return "previous build not checked out";
+            	
+            case PREVIOUSBUILDCODECHECKEDOUT:
+            	return "previous build code checked out";
+            	
+            case PREVIOUSBUILDCODENOTCHECKEDOUT:
+            	return "previous build code not checked out";
+                
             case FIXERBUILD_CASE1:
             	return "FIXERBUILD_CASE1";
             	

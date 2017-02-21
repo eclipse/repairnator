@@ -11,8 +11,6 @@ public class BuildShouldPass implements ContractForGatherTestInformation {
 	public void makeADecision(GatherTestInformation gatherTestInformation) {
 		if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE || gatherTestInformation.getState() == ProjectState.HASTESTERRORS) {
 			gatherTestInformation.shouldStop = true;
-		} else {
-			gatherTestInformation.shouldStop = false;
 		}
 	}
 
