@@ -138,7 +138,7 @@ public abstract class AbstractStep {
                     return pathname.isDirectory();
                 }
             });
-          
+
             if (dirs != null) {
                 for (File dir : dirs) {
                     File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
