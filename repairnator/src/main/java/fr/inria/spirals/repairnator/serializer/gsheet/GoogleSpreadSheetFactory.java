@@ -15,7 +15,6 @@ import com.google.api.client.json.JsonFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,7 +31,8 @@ public class GoogleSpreadSheetFactory {
 
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetFactory.class);
     private static final String APPLICATION_NAME = "RepairNator Bot";
-    private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"), ".credentials/sheets.googleapis.com-repairnator");
+    private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"),
+            ".credentials/sheets.googleapis.com-repairnator");
     private static String GOOGLE_SECRET_PATH;
     public static final String REPAIR_SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
     public static final String BEAR_SPREADSHEET_ID = "1MnRwoZGCxxbmkiswc0O6Rg43wJFTBc3bIyrNdTiBhQ4";
@@ -82,15 +82,13 @@ public class GoogleSpreadSheetFactory {
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(this.jsonFactory, new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow =
-                new GoogleAuthorizationCodeFlow.Builder(
-                        this.httpTransport, this.jsonFactory, clientSecrets, this.scopes)
-                        .setDataStoreFactory(this.dataStoreFactory)
-                        .build();
+        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(this.httpTransport, this.jsonFactory,
+                clientSecrets, this.scopes).setDataStoreFactory(this.dataStoreFactory).build();
         Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
         this.logger.debug("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
 
-        this.sheets = new Sheets.Builder(this.httpTransport, this.jsonFactory, credential).setApplicationName(APPLICATION_NAME).build();
+        this.sheets = new Sheets.Builder(this.httpTransport, this.jsonFactory, credential)
+                .setApplicationName(APPLICATION_NAME).build();
     }
 
     public static Sheets getSheets(String googleSecretPath) throws IOException {

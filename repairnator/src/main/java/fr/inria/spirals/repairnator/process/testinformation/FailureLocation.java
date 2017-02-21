@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent the location of a failure for Repair Tools.
- * For now only Nopol is using and it's repairing Test Classes, so we only consider that information
+ * Represent the location of a failure for Repair Tools. For now only Nopol is
+ * using and it's repairing Test Classes, so we only consider that information
  */
 public class FailureLocation {
     private String className;
@@ -49,8 +49,12 @@ public class FailureLocation {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         FailureLocation that = (FailureLocation) o;
 
@@ -64,6 +68,6 @@ public class FailureLocation {
 
     @Override
     public String toString() {
-        return "Test case: "+className+" (Fail: "+nbFailures+"; Error: "+nbErrors+")";
+        return "Test case: " + className + " (Fail: " + nbFailures + "; Error: " + nbErrors + ")";
     }
 }

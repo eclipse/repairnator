@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +54,7 @@ public class GoogleSpreadSheetEndProcessSerializer {
         dataCol.add(scanner.getTotalBuildInJavaFailingWithFailingTests());
         dataCol.add(reproducedFailures);
         dataCol.add(reproducedErrors);
-        dataCol.add(reproducedErrors+reproducedFailures);
+        dataCol.add(reproducedErrors + reproducedFailures);
 
         List<List<Object>> dataRow = new ArrayList<List<Object>>();
         dataRow.add(dataCol);
@@ -64,12 +63,14 @@ public class GoogleSpreadSheetEndProcessSerializer {
         valueRange.setValues(dataRow);
 
         try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+            AppendValuesResponse response = this.sheets.spreadsheets().values()
+                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                 this.logger.debug("Scanner data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.",e);
+            this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.", e);
         }
     }
 }

@@ -19,6 +19,7 @@ import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4RepairNator;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
@@ -42,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
-    private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN", "GITHUB_OAUTH"};
+    private static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_LOGIN", "GITHUB_OAUTH" };
     private static final int NB_THREADS = 4;
 
     private JSAP jsap;
@@ -107,7 +108,6 @@ public class Launcher {
         opt2.setHelp("Specify where to find the list of projects or builds to scan.");
         jsap.registerParameter(opt2);
 
-
         String modeValues = "";
         for (RepairMode mode : RepairMode.values()) {
             modeValues += mode.name() + ";";
@@ -120,7 +120,8 @@ public class Launcher {
         opt2.setLongFlag("mode");
         opt2.setStringParser(EnumeratedStringParser.getParser(modeValues));
         opt2.setRequired(true);
-        opt2.setHelp("Specify if the input contains project names (SLUG), build ids (BUILD), path to repair (NOPOLONLY), or if it is to inspect passing builds (FORBEARS).");
+        opt2.setHelp(
+                "Specify if the input contains project names (SLUG), build ids (BUILD), path to repair (NOPOLONLY), or if it is to inspect passing builds (FORBEARS).");
         jsap.registerParameter(opt2);
 
         // output directory
@@ -188,7 +189,8 @@ public class Launcher {
         File file = new File(path);
 
         if (file.exists()) {
-            throw new IOException("The following directory already exists: " + path + ". Please choose an empty directory.");
+            throw new IOException(
+                    "The following directory already exists: " + path + ". Please choose an empty directory.");
         }
     }
 
@@ -208,7 +210,8 @@ public class Launcher {
             loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
-            System.err.println("Tools.jar must be loaded, here the classpath given for your app: " + System.getProperty("java.class.path"));
+            System.err.println("Tools.jar must be loaded, here the classpath given for your app: "
+                    + System.getProperty("java.class.path"));
             System.exit(-1);
         }
     }
@@ -220,7 +223,8 @@ public class Launcher {
             File file = new File(this.arguments.getString("z3Path"));
 
             if (!file.exists()) {
-                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
+                System.err.println(
+                        "The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
                 System.exit(-1);
             }
         } else {
@@ -235,7 +239,7 @@ public class Launcher {
 
         if (!arguments.success()) {
             // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext(); ) {
+            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
                 System.err.println("Error: " + errs.next());
             }
         }
@@ -280,13 +284,16 @@ public class Launcher {
 
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         AbstractDataSerializer csvSerializer;
+        AbstractDataSerializer googleSpreadSheetInspectorSerializer;
         if (mode == RepairMode.FORBEARS) {
             csvSerializer = new CSVSerializer4Bears(output);
+            googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer4Bears(googleSecretPath);
         } else {
             csvSerializer = new CSVSerializer4RepairNator(output);
+            googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
         }
-        GoogleSpreadSheetInspectorSerializer googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
-        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
+        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(
+                googleSecretPath);
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
@@ -299,7 +306,6 @@ public class Launcher {
         }
 
         this.serializers.add(googleSpreadSheetInspectorSerializer);
-
 
         Launcher.LOGGER.debug("Start to scan projects in travis...");
 
@@ -335,7 +341,8 @@ public class Launcher {
         }
 
         if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
-            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
+            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner,
+                    googleSecretPath);
             scannerSerializer.serialize();
         }
 
@@ -350,7 +357,6 @@ public class Launcher {
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
         }
-
 
         if (completeWorkspace != null) {
             if (mode != RepairMode.FORBEARS) {
@@ -392,7 +398,8 @@ public class Launcher {
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (Build build : results) {
-            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push, mode);
+            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push,
+                    mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
         }
@@ -435,4 +442,5 @@ public class Launcher {
         Launcher launcher = new Launcher();
         launcher.run(args);
     }
+
 }

@@ -15,10 +15,13 @@ import fr.inria.spirals.repairnator.serializer.SerializerUtils;
  * Created by fermadeiral.
  */
 public class CSVSerializer4Bears extends AbstractDataSerializer {
+
     private static final String FIRST_LINE = "BuildId" + CSVSerializerUtils.SEPARATOR + "PreviousBuildId"
             + CSVSerializerUtils.SEPARATOR + "Slug" + CSVSerializerUtils.SEPARATOR + "Status"
-            + CSVSerializerUtils.SEPARATOR + "PRNumber" + CSVSerializerUtils.SEPARATOR + "Build Timestamp"
-            + CSVSerializerUtils.SEPARATOR + "Build Date" + CSVSerializerUtils.SEPARATOR + "Collection Timestamp";
+            + CSVSerializerUtils.SEPARATOR + "PRNumber" + CSVSerializerUtils.SEPARATOR + "BuildTimestamp"
+            + CSVSerializerUtils.SEPARATOR + "BuildDate" + CSVSerializerUtils.SEPARATOR + "HostName"
+            + CSVSerializerUtils.SEPARATOR + "CollectionTimestamp" + CSVSerializerUtils.SEPARATOR + "BuildTravisUrl"
+            + CSVSerializerUtils.SEPARATOR + "PreviousBuildTravisUrl";
 
     private final Logger logger = LoggerFactory.getLogger(CSVSerializer4Bears.class);
 
@@ -29,13 +32,17 @@ public class CSVSerializer4Bears extends AbstractDataSerializer {
         stream = CSVSerializerUtils.openFile(outputPath, FIRST_LINE);
     }
 
-    private void writeData(String buildId, String previousBuildId, String slug, String state, int prNumber, Date date) {
+    private void writeData(int buildId, int previousBuildId, String slug, String state, int prNumber, Date date,
+            String hostName, String buildTravisUrl, String previousBuildTravisUrl) {
+        String buildIdStr = buildId + "";
+        String previousBuildIdStr = previousBuildId + "";
         String prNumberStr = prNumber + "";
-        String line = buildId + CSVSerializerUtils.SEPARATOR + previousBuildId + CSVSerializerUtils.SEPARATOR + slug
-                + CSVSerializerUtils.SEPARATOR + state + CSVSerializerUtils.SEPARATOR + prNumberStr
+        String line = buildIdStr + CSVSerializerUtils.SEPARATOR + previousBuildIdStr + CSVSerializerUtils.SEPARATOR
+                + slug + CSVSerializerUtils.SEPARATOR + state + CSVSerializerUtils.SEPARATOR + prNumberStr
                 + CSVSerializerUtils.SEPARATOR + SerializerUtils.formatCompleteDate(date) + CSVSerializerUtils.SEPARATOR
-                + SerializerUtils.formatOnlyDay(date) + CSVSerializerUtils.SEPARATOR
-                + SerializerUtils.formatCompleteDate(new Date());
+                + SerializerUtils.formatOnlyDay(date) + CSVSerializerUtils.SEPARATOR + hostName
+                + CSVSerializerUtils.SEPARATOR + SerializerUtils.formatCompleteDate(new Date())
+                + CSVSerializerUtils.SEPARATOR + buildTravisUrl + CSVSerializerUtils.SEPARATOR + previousBuildTravisUrl;
         CSVSerializerUtils.writeNewLine(stream, line);
     }
 
@@ -44,11 +51,16 @@ public class CSVSerializer4Bears extends AbstractDataSerializer {
         Build build = inspector.getBuild();
 
         Build previousBuild = inspector.getPreviousBuild();
-        String previousBuildId = (previousBuild != null) ? previousBuild.getId() + "" : "";
+        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
         String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
 
-        this.writeData(build.getId() + "", previousBuildId, build.getRepository().getSlug(), state,
-                build.getPullRequestNumber(), build.getFinishedAt());
+        String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
+
+        this.writeData(build.getId(), previousBuildId, build.getRepository().getSlug(), state,
+                build.getPullRequestNumber(), build.getFinishedAt(), SerializerUtils.getHostname(),
+                this.getTravisUrl(build.getId(), build.getRepository().getSlug()),
+                this.getTravisUrl(previousBuildId, previousBuildSlug));
     }
+
 }

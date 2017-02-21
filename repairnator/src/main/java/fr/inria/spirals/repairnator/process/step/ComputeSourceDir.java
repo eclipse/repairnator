@@ -24,15 +24,16 @@ public class ComputeSourceDir extends AbstractStep {
 
     private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
         List<File> result = new ArrayList<File>();
-        File defaultSourceDir = new File(incriminatedModulePath+DEFAULT_SRC_DIR);
+        File defaultSourceDir = new File(incriminatedModulePath + DEFAULT_SRC_DIR);
 
         if (defaultSourceDir.exists()) {
             result.add(defaultSourceDir);
             return result.toArray(new File[result.size()]);
         }
 
-        this.getLogger().debug("The default source directory ("+defaultSourceDir.getPath()+") does not exists. Try to read pom.xml to get informations.");
-        File pomIncriminatedModule = new File(incriminatedModulePath+"/pom.xml");
+        this.getLogger().debug("The default source directory (" + defaultSourceDir.getPath()
+                + ") does not exists. Try to read pom.xml to get informations.");
+        File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
         try {
             Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
@@ -49,9 +50,11 @@ public class ComputeSourceDir extends AbstractStep {
                     return result.toArray(new File[result.size()]);
                 }
 
-                this.getLogger().debug("The source directory given in pom.xml ("+pathSrcDirFromPom+") does not exists. Try to get source dir from all modules if multimodule.");
+                this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
+                        + ") does not exists. Try to get source dir from all modules if multimodule.");
             } else {
-                this.getLogger().debug("Build section does not exists in this pom.xml. Try to get source dir from all modules.");
+                this.getLogger().debug(
+                        "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
             }
 
             if (model.getParent() != null && rootCall) {
@@ -61,12 +64,13 @@ public class ComputeSourceDir extends AbstractStep {
                     relativePath = model.getParent().getRelativePath();
                 }
 
-                File parentPomXml = new File(incriminatedModulePath+File.separator+relativePath);
+                File parentPomXml = new File(incriminatedModulePath + File.separator + relativePath);
 
                 model = MavenHelper.readPomXml(parentPomXml, this.inspector.getM2LocalPath());
 
                 for (String module : model.getModules()) {
-                    File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent()+File.separator+module, false);
+                    File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent() + File.separator + module,
+                            false);
                     if (srcDir != null) {
                         result.addAll(Arrays.asList(srcDir));
                     }
@@ -79,12 +83,13 @@ public class ComputeSourceDir extends AbstractStep {
                 }
             } else {
                 if (rootCall) {
-                    this.addStepError("Source directory is not at default location or specified in build section and no parent can be found.");
+                    this.addStepError(
+                            "Source directory is not at default location or specified in build section and no parent can be found.");
                 }
             }
 
-        } catch ( ModelBuildingException e ) {
-            this.addStepError("Error while building pom.xml model: "+e);
+        } catch (ModelBuildingException e) {
+            this.addStepError("Error while building pom.xml model: " + e);
         }
         return null;
     }

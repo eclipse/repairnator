@@ -32,7 +32,8 @@ import java.util.concurrent.TimeoutException;
  * Created by urli on 05/01/2017.
  */
 public class NopolRepair extends AbstractStep {
-    private static final int TOTAL_MAX_TIME = 60*4; // We expect it to run 4 hours top.
+    private static final int TOTAL_MAX_TIME = 60 * 4; // We expect it to run 4
+                                                      // hours top.
     private static final int MIN_TIMEOUT = 2;
     private static final String CMD_KILL_GZOLTAR_AGENT = "ps -ef | grep gzoltar | grep -v grep | awk '{print $2}' |xargs kill";
 
@@ -75,16 +76,18 @@ public class NopolRepair extends AbstractStep {
             nopolInformation.setStatus(NopolStatus.RUNNING);
 
             String testClass = failureLocation.getClassName();
-            int timeout = (TOTAL_MAX_TIME-passingTime)/2;
+            int timeout = (TOTAL_MAX_TIME - passingTime) / 2;
             if (timeout < MIN_TIMEOUT) {
                 timeout = MIN_TIMEOUT;
             }
 
             nopolInformation.setAllocatedTime(timeout);
 
-            this.getLogger().debug("Launching repair with Nopol for following test class: "+testClass+" (should timeout in "+timeout+" minutes)");
+            this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
+                    + " (should timeout in " + timeout + " minutes)");
 
-            final ProjectReference projectReference = new ProjectReference(sources, classPath.toArray(new URL[classPath.size()]), new String[] {testClass});
+            final ProjectReference projectReference = new ProjectReference(sources,
+                    classPath.toArray(new URL[classPath.size()]), new String[] { testClass });
             Config config = new Config();
             config.setComplianceLevel(8);
             config.setTimeoutTestExecution(60);
@@ -105,13 +108,12 @@ public class NopolRepair extends AbstractStep {
             List<Patch> patch = null;
 
             final ExecutorService executor = Executors.newSingleThreadExecutor();
-            final Future nopolExecution = executor.submit(
-                    new Callable() {
-                        @Override
-                        public Object call() throws Exception {
-                            return nopol.build();
-                        }
-                    });
+            final Future nopolExecution = executor.submit(new Callable() {
+                @Override
+                public Object call() throws Exception {
+                    return nopol.build();
+                }
+            });
 
             try {
                 executor.shutdown();
@@ -140,7 +142,8 @@ public class NopolRepair extends AbstractStep {
             try {
                 Runtime.getRuntime().exec(CMD_KILL_GZOLTAR_AGENT);
             } catch (IOException e) {
-                this.getLogger().error("Error while killing gzoltar agent using following command: "+CMD_KILL_GZOLTAR_AGENT);
+                this.getLogger()
+                        .error("Error while killing gzoltar agent using following command: " + CMD_KILL_GZOLTAR_AGENT);
                 this.getLogger().error(e.getMessage());
             }
 
@@ -148,7 +151,7 @@ public class NopolRepair extends AbstractStep {
 
             nopolInformation.setDateEnd();
 
-            int localPassingTime = Math.round((afterNopol-beforeNopol)/60000);
+            int localPassingTime = Math.round((afterNopol - beforeNopol) / 60000);
             nopolInformation.setPassingTime(localPassingTime);
 
             passingTime += localPassingTime;
@@ -161,6 +164,5 @@ public class NopolRepair extends AbstractStep {
         this.setState(ProjectState.PATCHED);
 
     }
-
 
 }

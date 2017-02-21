@@ -34,7 +34,8 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
     }
 
-    private List<Object> serializeNopolInfo(Build build, NopolInformation nopolInformation, Patch patch, int patchNumber) {
+    private List<Object> serializeNopolInfo(Build build, NopolInformation nopolInformation, Patch patch,
+            int patchNumber) {
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(SerializerUtils.getHostname());
         dataCol.add(SerializerUtils.formatCompleteDate(nopolInformation.getDateEnd()));
@@ -43,7 +44,7 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
         dataCol.add(build.getRepository().getSlug());
 
         dataCol.add(nopolInformation.getLocation().getClassName());
-        dataCol.add(StringUtils.join(nopolInformation.getLocation().getFailures(),","));
+        dataCol.add(StringUtils.join(nopolInformation.getLocation().getFailures(), ","));
         dataCol.add(nopolInformation.getAllocatedTime());
         dataCol.add(nopolInformation.getPassingTime());
         dataCol.add(nopolInformation.getStatus().name());
@@ -54,21 +55,21 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
             dataCol.add("N/A");
         }
 
-
         if (patch == null) {
             dataCol.add("N/A");
             dataCol.add("N/A");
             dataCol.add("N/A");
             dataCol.add("N/A");
         } else {
-            dataCol.add(patchNumber+"/"+nopolInformation.getPatches().size());
+            dataCol.add(patchNumber + "/" + nopolInformation.getPatches().size());
             dataCol.add(patch.getType().name());
             dataCol.add(patch.asString());
-            dataCol.add(patch.getRootClassName()+":"+patch.getLineNumber());
+            dataCol.add(patch.getRootClassName() + ":" + patch.getLineNumber());
         }
 
         Config config = nopolInformation.getConfig();
-        dataCol.add("localizer: "+config.getLocalizer().name()+";solver: "+config.getSolver().name()+";synthetizer: "+config.getSynthesis().name()+";type: "+config.getType().name());
+        dataCol.add("localizer: " + config.getLocalizer().name() + ";solver: " + config.getSolver().name()
+                + ";synthetizer: " + config.getSynthesis().name() + ";type: " + config.getType().name());
 
         return dataCol;
     }
@@ -101,18 +102,20 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
                 valueRange.setValues(dataRow);
 
                 try {
-                    AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+                    AppendValuesResponse response = this.sheets.spreadsheets().values()
+                            .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                            .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
                     if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                         this.logger.debug("Data have been inserted in Google Spreadsheet.");
                     }
                 } catch (IOException e) {
-                    this.logger.error("An error occured while inserting data in Google Spreadsheet.",e);
+                    this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
                 }
             }
         } else {
-            this.logger.warn("NopolRepair step seems not defined in inspector. Maybe you should not use this serializer.");
+            this.logger
+                    .warn("NopolRepair step seems not defined in inspector. Maybe you should not use this serializer.");
         }
-
 
     }
 }
