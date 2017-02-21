@@ -51,6 +51,10 @@ public abstract class AbstractStep {
         }
     }
 
+    protected Properties getProperties() {
+        return properties;
+    }
+
     public String getName() {
         return name;
     }
@@ -77,7 +81,12 @@ public abstract class AbstractStep {
     }
 
     public void setState(ProjectState state) {
-        this.state = state;
+        if (state != null) {
+            this.state = state;
+            if (this.nextStep != null) {
+                this.nextStep.setState(state);
+            }
+        }
     }
 
     protected Logger getLogger() {
@@ -126,13 +135,15 @@ public abstract class AbstractStep {
                 }
             });
 
-            for (File dir : dirs) {
-                File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
+            if (dirs != null) {
+                for (File dir : dirs) {
+                    File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
 
-                if (pomFile.exists()) {
-                    this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
-                    this.inspector.setRepoLocalPath(dir.getPath());
-                    return;
+                    if (pomFile.exists()) {
+                        this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
+                        this.inspector.setRepoLocalPath(dir.getPath());
+                        return;
+                    }
                 }
             }
 
