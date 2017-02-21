@@ -9,11 +9,10 @@ public class BuildShouldPass implements ContractForGatherTestInformation {
 
     @Override
     public boolean shouldBeStopped(GatherTestInformation gatherTestInformation) {
-        if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE
-                || gatherTestInformation.getState() == ProjectState.HASTESTERRORS) {
-            return true;
+        if (gatherTestInformation.getState() == ProjectState.NOTFAILING) {
+            return false;
         }
-        return false;
+        return true;
     }
 
 }
