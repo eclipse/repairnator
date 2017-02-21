@@ -110,7 +110,7 @@ public abstract class AbstractStep {
 
     private void testPomLocation() {
         this.pomLocationTested = true;
-        File defaultPomFile = new File(this.inspector.getRepoLocalPath()+File.separator+"pom.xml");
+        File defaultPomFile = new File(this.inspector.getRepoLocalPath() + File.separator + "pom.xml");
 
         if (defaultPomFile.exists()) {
             return;
@@ -127,10 +127,10 @@ public abstract class AbstractStep {
             });
 
             for (File dir : dirs) {
-                File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
+                File pomFile = new File(dir.getPath() + File.separator + "pom.xml");
 
                 if (pomFile.exists()) {
-                    this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
+                    this.getLogger().info("Found a pom.xml in the following directory: " + dir.getPath());
                     this.inspector.setRepoLocalPath(dir.getPath());
                     return;
                 }
@@ -145,22 +145,24 @@ public abstract class AbstractStep {
         if (!pomLocationTested) {
             testPomLocation();
         }
-        return this.inspector.getRepoLocalPath()+File.separator+"pom.xml";
+        return this.inspector.getRepoLocalPath() + File.separator + "pom.xml";
     }
 
     protected void cleanMavenArtifacts() {
-        this.writeProperty("lastStep",this.getName());
+        this.writeProperty("lastStep", this.getName());
         try {
             FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
         } catch (IOException e) {
-            getLogger().warn("Error while deleting the M2 local directory ("+this.inspector.getM2LocalPath()+"): "+e);
+            getLogger().warn(
+                    "Error while deleting the M2 local directory (" + this.inspector.getM2LocalPath() + "): " + e);
         }
 
         if (this.inspector.isAutoclean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
             } catch (IOException e) {
-                getLogger().warn("Error while deleting the workspace directory ("+this.inspector.getRepoLocalPath()+"): "+e);
+                getLogger().warn("Error while deleting the workspace directory (" + this.inspector.getRepoLocalPath()
+                        + "): " + e);
             }
         }
     }
@@ -185,13 +187,13 @@ public abstract class AbstractStep {
         if (dateEnd == 0 || dateBegin == 0) {
             return 0;
         }
-        return Math.round((dateEnd-dateBegin) / 1000);
+        return Math.round((dateEnd - dateBegin) / 1000);
     }
 
     protected void writeProperty(String property, String value) {
         this.properties.setProperty(property, value);
 
-        String filePath = this.inspector.getRepoLocalPath()+File.separator+PROPERTY_FILENAME;
+        String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
         File file = new File(filePath);
 
         try {
@@ -202,7 +204,7 @@ public abstract class AbstractStep {
 
             this.properties.store(outputStream, "Repairnator properties");
         } catch (IOException e) {
-            this.getLogger().error("Cannot write property to the following file: "+filePath, e);
+            this.getLogger().error("Cannot write property to the following file: " + filePath, e);
         }
     }
 

@@ -18,17 +18,18 @@ public class BuildProject extends AbstractStep {
     protected void businessExecute() {
         this.getLogger().debug("Start building project with maven (skip tests).");
         Properties properties = new Properties();
-        properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY,"true");
+        properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
 
         this.getLogger().debug("Start to install artifacts without test execution.");
-        MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getSimpleName(), this.inspector, true);
+        MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getSimpleName(),
+                this.inspector, true);
 
         int result = helper.run();
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
             this.state = ProjectState.BUILDABLE;
         } else {
-            this.getLogger().info("Repository "+this.inspector.getRepoSlug()+" cannot be built.");
+            this.getLogger().info("Repository " + this.inspector.getRepoSlug() + " cannot be built.");
             this.shouldStop = true;
         }
     }

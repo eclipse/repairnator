@@ -54,7 +54,8 @@ public class ProjectInspector {
     protected Build previousBuild;
     protected boolean previousBuildFlag;
 
-    public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers, String nopolSolverPath, boolean push, RepairMode mode) {
+    public ProjectInspector(Build failingBuild, String workspace, List<AbstractDataSerializer> serializers,
+            String nopolSolverPath, boolean push, RepairMode mode) {
         this.build = failingBuild;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -212,11 +213,11 @@ public class ProjectInspector {
             firstStep = cloneRepo;
         }
 
-
         if (mode == RepairMode.NOPOLONLY) {
             firstStep = this.testInformations;
             try {
-                Properties properties = ProjectScanner.getPropertiesFromFile(this.getRepoLocalPath() + File.separator + AbstractStep.PROPERTY_FILENAME);
+                Properties properties = ProjectScanner.getPropertiesFromFile(
+                        this.getRepoLocalPath() + File.separator + AbstractStep.PROPERTY_FILENAME);
                 firstStep.setProperties(properties);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -225,15 +226,11 @@ public class ProjectInspector {
         firstStep.setDataSerializer(this.serializers);
 
         if (push) {
-            this.testInformations.setNextStep(this.pushBuild)
-                    .setNextStep(new ComputeClasspath(this))
-                    .setNextStep(new ComputeSourceDir(this))
-                    .setNextStep(this.nopolRepair);
+            this.testInformations.setNextStep(this.pushBuild).setNextStep(new ComputeClasspath(this))
+                    .setNextStep(new ComputeSourceDir(this)).setNextStep(this.nopolRepair);
         } else {
             this.logger.debug("Push boolean is set to false the failing builds won't be pushed.");
-            this.testInformations
-                    .setNextStep(new ComputeClasspath(this))
-                    .setNextStep(new ComputeSourceDir(this))
+            this.testInformations.setNextStep(new ComputeClasspath(this)).setNextStep(new ComputeSourceDir(this))
                     .setNextStep(this.nopolRepair);
         }
 

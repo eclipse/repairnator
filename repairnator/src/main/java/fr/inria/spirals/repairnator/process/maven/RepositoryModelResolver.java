@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by urli on 19/01/2017.
- * Inspired by code from: https://github.com/rickardoberg/neomvn/
+ * Created by urli on 19/01/2017. Inspired by code from:
+ * https://github.com/rickardoberg/neomvn/
  */
 
 class RepositoryModelResolver implements ModelResolver {
@@ -63,7 +63,8 @@ class RepositoryModelResolver implements ModelResolver {
             if (repository1Url.endsWith("/")) {
                 repository1Url = repository1Url.substring(0, repository1Url.length() - 1);
             }
-            URL url = new URL(repository1Url + localRepoFile.getAbsolutePath().substring(this.localRepository.getAbsolutePath().length()));
+            URL url = new URL(repository1Url
+                    + localRepoFile.getAbsolutePath().substring(this.localRepository.getAbsolutePath().length()));
 
             logger.debug("Downloading " + url);
 
@@ -91,7 +92,8 @@ class RepositoryModelResolver implements ModelResolver {
     }
 
     @Override
-    public ModelSource resolveModel(String groupId, String artifactId, String versionId) throws UnresolvableModelException {
+    public ModelSource resolveModel(String groupId, String artifactId, String versionId)
+            throws UnresolvableModelException {
         File pom = getLocalFile(groupId, artifactId, versionId);
 
         if (!pom.exists()) {
@@ -131,4 +133,3 @@ class RepositoryModelResolver implements ModelResolver {
         return new RepositoryModelResolver(this.localRepository.getAbsolutePath());
     }
 }
-

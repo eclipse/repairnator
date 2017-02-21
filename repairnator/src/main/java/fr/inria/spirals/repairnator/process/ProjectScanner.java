@@ -34,281 +34,281 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
  * @author Simon Urli
  */
 public class ProjectScanner {
-	private final Logger logger = LoggerFactory.getLogger(ProjectScanner.class);
-	private int totalRepoNumber;
-	private int totalRepoUsingTravis;
-	private int totalScannedBuilds;
-	private int totalPRBuilds;
-	private int totalBuildInJava;
-	private int totalJavaPassingBuilds;
-	private int totalBuildInJavaFailing;
-	private int totalBuildInJavaFailingWithFailingTests;
-	private Date dateStart;
-	private Date dateFinish;
+    private final Logger logger = LoggerFactory.getLogger(ProjectScanner.class);
+    private int totalRepoNumber;
+    private int totalRepoUsingTravis;
+    private int totalScannedBuilds;
+    private int totalPRBuilds;
+    private int totalBuildInJava;
+    private int totalJavaPassingBuilds;
+    private int totalBuildInJavaFailing;
+    private int totalBuildInJavaFailingWithFailingTests;
+    private Date dateStart;
+    private Date dateFinish;
 
-	private Collection<String> slugs;
-	private Collection<Repository> repositories;
-	private Collection<Integer> buildsId;
-	private Date limitDate;
+    private Collection<String> slugs;
+    private Collection<Repository> repositories;
+    private Collection<Integer> buildsId;
+    private Date limitDate;
 
-	public ProjectScanner(int lookupHours) {
-		this.slugs = new HashSet<String>();
-		this.repositories = new HashSet<Repository>();
+    public ProjectScanner(int lookupHours) {
+        this.slugs = new HashSet<String>();
+        this.repositories = new HashSet<Repository>();
 
-		Calendar limitCal = Calendar.getInstance();
-		limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
-		this.limitDate = limitCal.getTime();
-	}
+        Calendar limitCal = Calendar.getInstance();
+        limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
+        this.limitDate = limitCal.getTime();
+    }
 
-	public int getTotalPRBuilds() {
-		return totalPRBuilds;
-	}
+    public int getTotalPRBuilds() {
+        return totalPRBuilds;
+    }
 
-	public int getTotalBuildInJava() {
-		return totalBuildInJava;
-	}
+    public int getTotalBuildInJava() {
+        return totalBuildInJava;
+    }
 
-	public int getTotalBuildInJavaFailing() {
-		return totalBuildInJavaFailing;
-	}
+    public int getTotalBuildInJavaFailing() {
+        return totalBuildInJavaFailing;
+    }
 
-	public Date getLimitDate() {
-		return limitDate;
-	}
+    public Date getLimitDate() {
+        return limitDate;
+    }
 
-	public int getTotalJavaPassingBuilds() {
-		return totalJavaPassingBuilds;
-	}
+    public int getTotalJavaPassingBuilds() {
+        return totalJavaPassingBuilds;
+    }
 
-	public int getTotalRepoNumber() {
-		return totalRepoNumber;
-	}
+    public int getTotalRepoNumber() {
+        return totalRepoNumber;
+    }
 
-	public int getTotalRepoUsingTravis() {
-		return totalRepoUsingTravis;
-	}
+    public int getTotalRepoUsingTravis() {
+        return totalRepoUsingTravis;
+    }
 
-	public int getTotalBuildInJavaFailingWithFailingTests() {
-		return totalBuildInJavaFailingWithFailingTests;
-	}
+    public int getTotalBuildInJavaFailingWithFailingTests() {
+        return totalBuildInJavaFailingWithFailingTests;
+    }
 
-	public int getTotalScannedBuilds() {
-		return totalScannedBuilds;
-	}
+    public int getTotalScannedBuilds() {
+        return totalScannedBuilds;
+    }
 
-	public Collection<String> getSlugs() {
-		return slugs;
-	}
+    public Collection<String> getSlugs() {
+        return slugs;
+    }
 
-	public Collection<Repository> getRepositories() {
-		return repositories;
-	}
-	
-	public List<Build> getListOfFailingBuildFromGivenBuildIds(String path) throws IOException {
-		this.dateStart = new Date();
-		List<String> buildsIds = getFileContent(path);
-		this.totalScannedBuilds = buildsIds.size();
+    public Collection<Repository> getRepositories() {
+        return repositories;
+    }
 
-		this.buildsId = new ArrayList<Integer>();
+    public List<Build> getListOfFailingBuildFromGivenBuildIds(String path) throws IOException {
+        this.dateStart = new Date();
+        List<String> buildsIds = getFileContent(path);
+        this.totalScannedBuilds = buildsIds.size();
 
-		List<Build> result = new ArrayList<Build>();
+        this.buildsId = new ArrayList<Integer>();
 
-		for (String s : buildsIds) {
-			int buildId;
-			try {
-				buildId = Integer.parseInt(s);
-			} catch (NumberFormatException e) {
-				this.logger.error("Error while reading build ids from input: " + e.getMessage());
-				continue;
-			}
+        List<Build> result = new ArrayList<Build>();
 
-			Build build = BuildHelper.getBuildFromId(buildId, null);
-			if (build == null) {
-				this.logger.warn("The following build cannot be retrieved: " + buildId);
-				continue;
-			}
-			if (testBuild(build, true)) {
-				result.add(build);
-				this.buildsId.add(build.getId());
-			}
-		}
+        for (String s : buildsIds) {
+            int buildId;
+            try {
+                buildId = Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                this.logger.error("Error while reading build ids from input: " + e.getMessage());
+                continue;
+            }
 
-		this.totalRepoNumber = this.repositories.size();
-		this.totalRepoUsingTravis = this.repositories.size();
-		this.totalBuildInJavaFailingWithFailingTests = result.size();
-		this.dateFinish = new Date();
+            Build build = BuildHelper.getBuildFromId(buildId, null);
+            if (build == null) {
+                this.logger.warn("The following build cannot be retrieved: " + buildId);
+                continue;
+            }
+            if (testBuild(build, true)) {
+                result.add(build);
+                this.buildsId.add(build.getId());
+            }
+        }
 
-		return result;
-	}
+        this.totalRepoNumber = this.repositories.size();
+        this.totalRepoUsingTravis = this.repositories.size();
+        this.totalBuildInJavaFailingWithFailingTests = result.size();
+        this.dateFinish = new Date();
 
-	/**
-	 * Take a filepath as input containing a list of projects to scan. Check
-	 * last build of each project. And finally returns the list of failing
-	 * builds.
-	 *
-	 * @param path
-	 *            A path to a file formatted to contain a slug name of project
-	 *            per line (ex: INRIA/spoon)
-	 * @return a list of failing builds
-	 * @throws IOException
-	 */
-	public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
-		return getListOfBuildsFromProjectsByBuildStatus(path, true);
-	}
+        return result;
+    }
 
-	public List<Build> getListOfPassingBuildsFromProjects(String path) throws IOException {
-		return getListOfBuildsFromProjectsByBuildStatus(path, false);
-	}
+    /**
+     * Take a filepath as input containing a list of projects to scan. Check
+     * last build of each project. And finally returns the list of failing
+     * builds.
+     *
+     * @param path
+     *            A path to a file formatted to contain a slug name of project
+     *            per line (ex: INRIA/spoon)
+     * @return a list of failing builds
+     * @throws IOException
+     */
+    public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
+        return getListOfBuildsFromProjectsByBuildStatus(path, true);
+    }
 
-	private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing)
-			throws IOException {
-		this.dateStart = new Date();
-		List<String> slugs = getFileContent(path);
-		this.totalRepoNumber = slugs.size();
+    public List<Build> getListOfPassingBuildsFromProjects(String path) throws IOException {
+        return getListOfBuildsFromProjectsByBuildStatus(path, false);
+    }
 
-		List<Repository> repos = getListOfValidRepository(slugs);
-		List<Build> builds = getListOfBuildsFromRepo(repos, targetFailing);
+    private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing)
+            throws IOException {
+        this.dateStart = new Date();
+        List<String> slugs = getFileContent(path);
+        this.totalRepoNumber = slugs.size();
 
-		this.dateFinish = new Date();
-		return builds;
-	}
+        List<Repository> repos = getListOfValidRepository(slugs);
+        List<Build> builds = getListOfBuildsFromRepo(repos, targetFailing);
 
-	private List<String> getFileContent(String path) throws IOException {
-		List<String> result = new ArrayList<String>();
-		File file = new File(path);
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		while (reader.ready()) {
-			result.add(reader.readLine().trim());
-		}
-		return result;
-	}
+        this.dateFinish = new Date();
+        return builds;
+    }
 
-	private List<Repository> getListOfValidRepository(List<String> allSlugs) {
-		List<Repository> result = new ArrayList<Repository>();
+    private List<String> getFileContent(String path) throws IOException {
+        List<String> result = new ArrayList<String>();
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        while (reader.ready()) {
+            result.add(reader.readLine().trim());
+        }
+        return result;
+    }
 
-		for (String slug : allSlugs) {
-			this.logger.debug("Get repo " + slug);
-			Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
-			if (repo != null) {
-				Build lastBuild = repo.getLastBuild();
-				if (lastBuild != null) {
-					result.add(repo);
-				} else {
-					this.logger.info("It seems that the repo " + slug + " does not have any Travis build.");
-				}
+    private List<Repository> getListOfValidRepository(List<String> allSlugs) {
+        List<Repository> result = new ArrayList<Repository>();
 
-			} else {
-				this.logger.warn("Can't examine repo : " + slug);
-			}
-		}
+        for (String slug : allSlugs) {
+            this.logger.debug("Get repo " + slug);
+            Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
+            if (repo != null) {
+                Build lastBuild = repo.getLastBuild();
+                if (lastBuild != null) {
+                    result.add(repo);
+                } else {
+                    this.logger.info("It seems that the repo " + slug + " does not have any Travis build.");
+                }
 
-		this.totalRepoUsingTravis = result.size();
-		return result;
-	}
+            } else {
+                this.logger.warn("Can't examine repo : " + slug);
+            }
+        }
 
-	private boolean testBuild(Build build, boolean targetFailing) {
-		if (build.isPullRequest()) {
-			this.totalPRBuilds++;
-		}
+        this.totalRepoUsingTravis = result.size();
+        return result;
+    }
 
-		Repository repo = build.getRepository();
-		if (build.getConfig().getLanguage().equals("java")) {
-			this.totalBuildInJava++;
+    private boolean testBuild(Build build, boolean targetFailing) {
+        if (build.isPullRequest()) {
+            this.totalPRBuilds++;
+        }
 
-			this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
-					+ build.getBuildStatus().name());
-			if (build.getBuildStatus() == BuildStatus.FAILED) {
-				this.totalBuildInJavaFailing++;
+        Repository repo = build.getRepository();
+        if (build.getConfig().getLanguage().equals("java")) {
+            this.totalBuildInJava++;
 
-				for (Job job : build.getJobs()) {
-					Log jobLog = job.getLog();
+            this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
+                    + build.getBuildStatus().name());
+            if (build.getBuildStatus() == BuildStatus.FAILED) {
+                this.totalBuildInJavaFailing++;
 
-					if (jobLog != null) {
-						TestsInformation testInfo = jobLog.getTestsInformation();
+                for (Job job : build.getJobs()) {
+                    Log jobLog = job.getLog();
 
-						if (testInfo.getFailing() > 0) {
-							this.totalBuildInJavaFailingWithFailingTests++;
-							if (targetFailing) {
-								this.slugs.add(repo.getSlug());
-								this.repositories.add(repo);
-								return true;
-							}
-						}
-					} else {
-						logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
-					}
-				}
-			} else if (build.getBuildStatus() == BuildStatus.PASSED) {
-				this.totalJavaPassingBuilds++;
-				if (!targetFailing) {
-					this.slugs.add(repo.getSlug());
-					this.repositories.add(repo);
-					return true;
-				}
-			}
-		} else {
-			this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId()
-					+ " is not in java but language: " + build.getConfig().getLanguage());
-		}
-		return false;
-	}
+                    if (jobLog != null) {
+                        TestsInformation testInfo = jobLog.getTestsInformation();
 
-	private List<Build> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
-		List<Build> result = new ArrayList<Build>();
+                        if (testInfo.getFailing() > 0) {
+                            this.totalBuildInJavaFailingWithFailingTests++;
+                            if (targetFailing) {
+                                this.slugs.add(repo.getSlug());
+                                this.repositories.add(repo);
+                                return true;
+                            }
+                        }
+                    } else {
+                        logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
+                    }
+                }
+            } else if (build.getBuildStatus() == BuildStatus.PASSED) {
+                this.totalJavaPassingBuilds++;
+                if (!targetFailing) {
+                    this.slugs.add(repo.getSlug());
+                    this.repositories.add(repo);
+                    return true;
+                }
+            }
+        } else {
+            this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId()
+                    + " is not in java but language: " + build.getConfig().getLanguage());
+        }
+        return false;
+    }
 
-		this.buildsId = new ArrayList<Integer>();
-		for (Repository repo : repos) {
-			List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
+    private List<Build> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
+        List<Build> result = new ArrayList<Build>();
 
-			for (Build build : repoBuilds) {
-				this.totalScannedBuilds++;
-				if (testBuild(build, targetFailing)) {
-					result.add(build);
-					this.buildsId.add(build.getId());
-				}
-			}
-		}
+        this.buildsId = new ArrayList<Integer>();
+        for (Repository repo : repos) {
+            List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
 
-		return result;
-	}
+            for (Build build : repoBuilds) {
+                this.totalScannedBuilds++;
+                if (testBuild(build, targetFailing)) {
+                    result.add(build);
+                    this.buildsId.add(build.getId());
+                }
+            }
+        }
 
-	public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
-		InputStream inputStream = new FileInputStream(propertyFile);
-		Properties properties = new Properties();
-		properties.load(inputStream);
-		return properties;
-	}
+        return result;
+    }
 
-	private Properties getPropertiesFromInput(String input) throws IOException {
-		List<String> content = getFileContent(input);
+    public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
+        InputStream inputStream = new FileInputStream(propertyFile);
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        return properties;
+    }
 
-		if (content.isEmpty()) {
-			throw new IOException("File " + input + " is empty.");
-		}
+    private Properties getPropertiesFromInput(String input) throws IOException {
+        List<String> content = getFileContent(input);
 
-		String propertyFileDir = content.get(0);
-		String propFilePath = propertyFileDir + File.separator + AbstractStep.PROPERTY_FILENAME;
-		return getPropertiesFromFile(propFilePath);
-	}
+        if (content.isEmpty()) {
+            throw new IOException("File " + input + " is empty.");
+        }
 
-	public String readWorkspaceFromInput(String input) throws IOException {
-		Properties properties = getPropertiesFromInput(input);
-		return properties.getProperty("workspace");
-	}
+        String propertyFileDir = content.get(0);
+        String propFilePath = propertyFileDir + File.separator + AbstractStep.PROPERTY_FILENAME;
+        return getPropertiesFromFile(propFilePath);
+    }
 
-	public List<Build> readBuildFromInput(String input) throws IOException {
-		List<Build> result = new ArrayList<Build>();
+    public String readWorkspaceFromInput(String input) throws IOException {
+        Properties properties = getPropertiesFromInput(input);
+        return properties.getProperty("workspace");
+    }
 
-		Properties properties = getPropertiesFromInput(input);
-		String buildId = properties.getProperty("buildid");
-		if (buildId != null) {
-			Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
-			if (build != null) {
-				result.add(build);
-			}
-		}
+    public List<Build> readBuildFromInput(String input) throws IOException {
+        List<Build> result = new ArrayList<Build>();
 
-		return result;
-	}
+        Properties properties = getPropertiesFromInput(input);
+        String buildId = properties.getProperty("buildid");
+        if (buildId != null) {
+            Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
+            if (build != null) {
+                result.add(build);
+            }
+        }
+
+        return result;
+    }
 
 }

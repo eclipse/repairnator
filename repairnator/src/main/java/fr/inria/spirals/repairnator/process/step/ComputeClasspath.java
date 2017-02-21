@@ -35,10 +35,11 @@ public class ComputeClasspath extends AbstractStep {
                 this.classPath.add(file.toURI().toURL());
             } catch (MalformedURLException e) {
                 this.addStepError(e.getMessage());
-                this.getLogger().error("Error while putting the following file in classpath: "+file.getAbsolutePath()+" : "+e.getMessage(),e);
+                this.getLogger().error("Error while putting the following file in classpath: " + file.getAbsolutePath()
+                        + " : " + e.getMessage(), e);
             }
         } else {
-            this.addStepError("The file does not exist: "+file.getAbsolutePath());
+            this.addStepError("The file does not exist: " + file.getAbsolutePath());
         }
     }
 
@@ -49,19 +50,21 @@ public class ComputeClasspath extends AbstractStep {
         GatherTestInformation infoStep = inspector.getTestInformations();
         String incriminatedModule = infoStep.getFailingModulePath();
 
-        File defaultClassDir = new File(incriminatedModule+File.separator+DEFAULT_CLASSES_DIR+File.separator);
+        File defaultClassDir = new File(incriminatedModule + File.separator + DEFAULT_CLASSES_DIR + File.separator);
         this.addFileToClassPath(defaultClassDir);
 
-        File defaultTestClassDir = new File(incriminatedModule+File.separator+DEFAULT_TEST_CLASSES_DIR+File.separator);
+        File defaultTestClassDir = new File(
+                incriminatedModule + File.separator + DEFAULT_TEST_CLASSES_DIR + File.separator);
         this.addFileToClassPath(defaultTestClassDir);
 
         Properties properties = new Properties();
-        properties.setProperty("mdep.outputFile",CLASSPATH_FILENAME);
+        properties.setProperty("mdep.outputFile", CLASSPATH_FILENAME);
 
         String goal = "dependency:build-classpath";
-        String pomModule = incriminatedModule+ File.separator+"pom.xml";
+        String pomModule = incriminatedModule + File.separator + "pom.xml";
 
-        MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(), this.inspector, true);
+        MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(),
+                this.inspector, true);
 
         int result = helper.run();
 
@@ -71,7 +74,7 @@ public class ComputeClasspath extends AbstractStep {
             return;
         }
 
-        String classpathPath = incriminatedModule+File.separator+CLASSPATH_FILENAME;
+        String classpathPath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(new File(classpathPath)));
@@ -83,7 +86,7 @@ public class ComputeClasspath extends AbstractStep {
                 this.addFileToClassPath(f);
             }
         } catch (IOException e) {
-            this.addStepError("Problem while getting classpath: "+e);
+            this.addStepError("Problem while getting classpath: " + e);
             this.shouldStop = true;
         }
 
@@ -96,7 +99,8 @@ public class ComputeClasspath extends AbstractStep {
         }
 
         if (!containJunit) {
-            this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
+            this.addStepError(
+                    "The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
         }
 
         this.inspector.setRepairClassPath(this.classPath);

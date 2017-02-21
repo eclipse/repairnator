@@ -32,31 +32,30 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
     }
 
-
     @Override
     public void serializeData(ProjectInspector inspector) {
-		Build build = inspector.getBuild();
+        Build build = inspector.getBuild();
 
-		Build previousBuild = inspector.getPreviousBuild();
-		int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
+        Build previousBuild = inspector.getPreviousBuild();
+        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
-		String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
-		
-		String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
+        String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
+
+        String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
         List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(build.getId()+"");
-        dataCol.add(previousBuildId+"");
+        dataCol.add(build.getId() + "");
+        dataCol.add(previousBuildId + "");
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(state);
-        dataCol.add(build.getPullRequestNumber()+"");
+        dataCol.add(build.getPullRequestNumber() + "");
         dataCol.add(SerializerUtils.formatCompleteDate(build.getFinishedAt()));
         dataCol.add(SerializerUtils.formatOnlyDay(build.getFinishedAt()));
         dataCol.add(SerializerUtils.getHostname());
         dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
         dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         dataCol.add(this.getTravisUrl(previousBuildId, previousBuildSlug));
-        
+
         List<List<Object>> dataRow = new ArrayList<List<Object>>();
         dataRow.add(dataCol);
 
@@ -64,12 +63,14 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
         valueRange.setValues(dataRow);
 
         try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+            AppendValuesResponse response = this.sheets.spreadsheets().values()
+                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                 this.logger.debug("Data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting data in Google Spreadsheet.",e);
+            this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
         }
     }
 }

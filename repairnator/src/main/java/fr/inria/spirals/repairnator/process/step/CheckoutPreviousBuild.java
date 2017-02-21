@@ -14,34 +14,34 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
  */
 public class CheckoutPreviousBuild extends CloneRepository {
 
-	public CheckoutPreviousBuild(ProjectInspector inspector) {
-		super(inspector);
-	}
+    public CheckoutPreviousBuild(ProjectInspector inspector) {
+        super(inspector);
+    }
 
-	protected void businessExecute() {
-		this.getLogger().debug("Checking out previous build...");
+    protected void businessExecute() {
+        this.getLogger().debug("Checking out previous build...");
 
-		this.inspector.setPreviousBuildFlag(true);
+        this.inspector.setPreviousBuildFlag(true);
 
-		Git git;
-		try {
-			git = Git.open(new File(inspector.getRepoLocalPath()));
-			String commitCheckout = inspector.getPreviousBuild().getCommit().getSha();
-			commitCheckout = this.testCommitExistence(git, commitCheckout);
-			if (commitCheckout != null) {
-				this.getLogger()
-						.debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
-				git.checkout().setName(commitCheckout).call();
-				this.state = ProjectState.PREVIOUSBUILDCHECKEDOUT;
-			} else {
-				this.addStepError("Error while getting the commit to checkout from the repo.");
-				this.shouldStop = true;
-				this.state = ProjectState.PREVIOUSBUILDNOTCHECKEDOUT;
-				return;
-			}
-		} catch (IOException | GitAPIException e) {
-			e.printStackTrace();
-		}
-	}
+        Git git;
+        try {
+            git = Git.open(new File(inspector.getRepoLocalPath()));
+            String commitCheckout = inspector.getPreviousBuild().getCommit().getSha();
+            commitCheckout = this.testCommitExistence(git, commitCheckout);
+            if (commitCheckout != null) {
+                this.getLogger()
+                        .debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
+                git.checkout().setName(commitCheckout).call();
+                this.state = ProjectState.PREVIOUSBUILDCHECKEDOUT;
+            } else {
+                this.addStepError("Error while getting the commit to checkout from the repo.");
+                this.shouldStop = true;
+                this.state = ProjectState.PREVIOUSBUILDNOTCHECKEDOUT;
+                return;
+            }
+        } catch (IOException | GitAPIException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

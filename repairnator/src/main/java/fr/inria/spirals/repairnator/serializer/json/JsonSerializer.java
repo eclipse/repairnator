@@ -49,7 +49,8 @@ public class JsonSerializer extends AbstractDataSerializer {
         this.dateStart = new Date();
         this.outputPath = outputPath;
 
-        this.serializer = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new CustomExclusionStrategy()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        this.serializer = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new CustomExclusionStrategy())
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
         this.mode = mode;
         this.inspectors = new HashMap<String, JsonArray>();
@@ -204,7 +205,6 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("failureLocations", serialize(testInformation.getFailureLocations()));
         result.add("errors", serialize(inspector.getStepErrors()));
 
-
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
@@ -325,10 +325,10 @@ public class JsonSerializer extends AbstractDataSerializer {
             case PATCHED:
                 outputHasBeenPatchedInspector(inspector);
                 break;
-    
+
             case FIXERBUILD_CASE1:
             case FIXERBUILD_CASE2:
-            	outputFixerBuildInspector(inspector);
+                outputFixerBuildInspector(inspector);
                 break;
         }
     }

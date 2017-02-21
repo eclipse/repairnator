@@ -39,7 +39,7 @@ public class GatherTestInformation extends AbstractStep {
     private Set<FailureLocation> failureLocations;
     private Set<String> failureNames;
     private String failingModulePath;
-    
+
     private ContractForGatherTestInformation contract;
 
     public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract) {
@@ -100,7 +100,8 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         for (File surefireDir : surefireDirs) {
-            SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[]{surefireDir}), Locale.ENGLISH, null);
+            SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[] { surefireDir }),
+                    Locale.ENGLISH, null);
             try {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
@@ -116,7 +117,8 @@ public class GatherTestInformation extends AbstractStep {
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
                             if (testCase.hasFailure()) {
                                 this.failureNames.add(testCase.getFailureType());
-                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureDetail(), testCase.isError());
+                                FailureType typeTof = new FailureType(testCase.getFailureType(),
+                                        testCase.getFailureDetail(), testCase.isError());
                                 FailureLocation failureLocation = null;
 
                                 for (FailureLocation location : this.failureLocations) {

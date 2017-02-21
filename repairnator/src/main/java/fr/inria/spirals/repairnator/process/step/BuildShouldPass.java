@@ -7,11 +7,12 @@ import fr.inria.spirals.repairnator.process.ProjectState;
  */
 public class BuildShouldPass implements ContractForGatherTestInformation {
 
-	@Override
-	public void makeADecision(GatherTestInformation gatherTestInformation) {
-		if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE || gatherTestInformation.getState() == ProjectState.HASTESTERRORS) {
-			gatherTestInformation.shouldStop = true;
-		}
-	}
+    @Override
+    public void makeADecision(GatherTestInformation gatherTestInformation) {
+        if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE
+                || gatherTestInformation.getState() == ProjectState.HASTESTERRORS) {
+            gatherTestInformation.shouldStop = true;
+        }
+    }
 
 }

@@ -29,13 +29,21 @@ public class FailureType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         FailureType that = (FailureType) o;
 
-        if (isError != that.isError) return false;
-        if (failureName != null ? !failureName.equals(that.failureName) : that.failureName != null) return false;
+        if (isError != that.isError) {
+            return false;
+        }
+        if (failureName != null ? !failureName.equals(that.failureName) : that.failureName != null) {
+            return false;
+        }
         return failureDetail != null ? failureDetail.equals(that.failureDetail) : that.failureDetail == null;
     }
 

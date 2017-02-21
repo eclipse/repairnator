@@ -31,7 +31,6 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
     }
 
-
     @Override
     public void serializeData(ProjectInspector inspector) {
         Build build = inspector.getBuild();
@@ -43,15 +42,14 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
         Set<String> failures = inspector.getTestInformations().getFailureNames();
 
         for (String failure : failures) {
-            typeOfFailures += failure+",";
+            typeOfFailures += failure + ",";
         }
 
-
         List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(build.getId()+"");
+        dataCol.add(build.getId() + "");
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(state);
-        dataCol.add(build.getPullRequestNumber()+"");
+        dataCol.add(build.getPullRequestNumber() + "");
         dataCol.add(SerializerUtils.formatCompleteDate(build.getFinishedAt()));
         dataCol.add(SerializerUtils.formatOnlyDay(build.getFinishedAt()));
         dataCol.add(realState);
@@ -67,12 +65,14 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
         valueRange.setValues(dataRow);
 
         try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+            AppendValuesResponse response = this.sheets.spreadsheets().values()
+                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                 this.logger.debug("Data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting data in Google Spreadsheet.",e);
+            this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
         }
     }
 }
