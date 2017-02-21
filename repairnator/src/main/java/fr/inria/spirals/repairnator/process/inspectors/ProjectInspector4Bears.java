@@ -45,10 +45,10 @@ public class ProjectInspector4Bears extends ProjectInspector {
             this.logger.debug("Build: " + this.getBuild().getId());
             this.logger.debug("Previous build: " + previousBuild.getId());
 
+            this.setPreviousBuild(previousBuild);
+
             if (previousBuild.getBuildStatus() == BuildStatus.FAILED
                     || previousBuild.getBuildStatus() == BuildStatus.PASSED) {
-
-                this.setPreviousBuild(previousBuild);
 
                 AbstractStep firstStep = null;
                 AbstractStep lastStep = null;
@@ -106,9 +106,19 @@ public class ProjectInspector4Bears extends ProjectInspector {
                 }
             } else {
                 this.setState(ProjectState.PREVIOUSVERSIONISNOTINTERESTING);
+                if (serializers != null) {
+                    for (AbstractDataSerializer serializer : this.serializers) {
+                        serializer.serializeData(this);
+                    }
+                }
             }
         } else {
             this.setState(ProjectState.DOESNOTHAVEPREVIOUSVERSION);
+            if (serializers != null) {
+                for (AbstractDataSerializer serializer : this.serializers) {
+                    serializer.serializeData(this);
+                }
+            }
         }
     }
 }

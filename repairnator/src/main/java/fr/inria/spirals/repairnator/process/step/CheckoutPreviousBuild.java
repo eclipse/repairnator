@@ -40,7 +40,8 @@ public class CheckoutPreviousBuild extends CloneRepository {
                 return;
             }
         } catch (IOException | GitAPIException e) {
-            e.printStackTrace();
+            this.addStepError("Error while getting the commit to checkout from the repo.");
+            this.shouldStop = true;
         }
     }
 

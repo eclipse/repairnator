@@ -161,6 +161,6 @@ public class GatherTestInformation extends AbstractStep {
         this.writeProperty("error-types", StringUtils.join(this.failureNames, ","));
         this.writeProperty("failing-test-cases", StringUtils.join(this.failureLocations, ","));
 
-        contract.makeADecision(this);
+        this.shouldStop = contract.shouldBeStopped(this);
     }
 }

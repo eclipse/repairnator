@@ -246,6 +246,19 @@ public class JsonSerializer extends AbstractDataSerializer {
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
+    private void outputBuildWithoutPreviousBuildInspector(ProjectInspector inspector) {
+        JsonObject result = new JsonObject();
+        result.addProperty("slug", inspector.getRepoSlug());
+
+        Build build = inspector.getBuild();
+        result.addProperty("buildId", build.getId());
+        result.add("buildDate", serialize(build.getFinishedAt()));
+
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
+
+        this.inspectors.get(inspector.getState().name()).add(result);
+    }
+
     private void outputFixerBuildInspector(ProjectInspector inspector) {
         if (inspector instanceof ProjectInspector4Bears) {
             JsonObject result = new JsonObject();
@@ -324,6 +337,15 @@ public class JsonSerializer extends AbstractDataSerializer {
 
             case PATCHED:
                 outputHasBeenPatchedInspector(inspector);
+                break;
+
+            case DOESNOTHAVEPREVIOUSVERSION:
+            case PREVIOUSVERSIONISNOTINTERESTING:
+            case PREVIOUSBUILDCHECKEDOUT:
+            case PREVIOUSBUILDNOTCHECKEDOUT:
+            case PREVIOUSBUILDCODECHECKEDOUT:
+            case PREVIOUSBUILDCODENOTCHECKEDOUT:
+                outputBuildWithoutPreviousBuildInspector(inspector);
                 break;
 
             case FIXERBUILD_CASE1:

@@ -64,6 +64,10 @@ public abstract class AbstractStep {
         }
     }
 
+    public ProjectInspector getInspector() {
+        return inspector;
+    }
+
     public AbstractStep setNextStep(AbstractStep nextStep) {
         this.nextStep = nextStep;
         nextStep.setDataSerializer(this.serializers);

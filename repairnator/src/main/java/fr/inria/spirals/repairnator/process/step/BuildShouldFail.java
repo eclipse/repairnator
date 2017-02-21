@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
  * Created by fermadeiral.
@@ -9,12 +10,12 @@ import fr.inria.spirals.repairnator.process.ProjectState;
 public class BuildShouldFail implements ContractForGatherTestInformation {
 
     @Override
-    public void shouldBeStopped(GatherTestInformation gatherTestInformation) {
+    public boolean shouldBeStopped(GatherTestInformation gatherTestInformation) {
+        ProjectInspector inspector = gatherTestInformation.getInspector();
         if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE) {
-            gatherTestInformation.shouldStop = false;
-            gatherTestInformation.inspector.setReproducedAsFail(true);
-            if (gatherTestInformation.inspector.isAboutAPreviousBuild()) {
-                if (gatherTestInformation.inspector.getPreviousBuild().getBuildStatus() == BuildStatus.FAILED) {
+            inspector.setReproducedAsFail(true);
+            if (inspector.isAboutAPreviousBuild()) {
+                if (inspector.getPreviousBuild().getBuildStatus() == BuildStatus.FAILED) {
                     // So, 1) the current passing build can be reproduced and 2)
                     // its previous build is a failing build with failing tests
                     // and it can also be reproduced
@@ -26,18 +27,19 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
                     gatherTestInformation.setState(ProjectState.FIXERBUILD_CASE2);
                 }
             }
+            return false;
         } else {
             if (gatherTestInformation.getState() == ProjectState.HASTESTERRORS) {
-                if (gatherTestInformation.inspector.isAboutAPreviousBuild()) {
-                    gatherTestInformation.shouldStop = true;
+                if (inspector.isAboutAPreviousBuild()) {
+                    return true;
                 } else {
                     gatherTestInformation
                             .addStepError("Only get test errors, no failing tests. It will try to repair it.");
-                    gatherTestInformation.shouldStop = false;
-                    gatherTestInformation.inspector.setReproducedAsError(true);
+                    inspector.setReproducedAsError(true);
+                    return false;
                 }
             } else {
-                gatherTestInformation.shouldStop = true;
+                return true;
             }
         }
     }
