@@ -43,7 +43,6 @@ public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
     private static final String[] ENVIRONMENT_VARIABLES = new String[]{"M2_HOME", "GITHUB_LOGIN", "GITHUB_OAUTH"};
-    private static final long TIMEOUT_PER_JOB = 1; // in hours
     private static final int NB_THREADS = 4;
 
     private JSAP jsap;
@@ -397,7 +396,7 @@ public class Launcher {
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
         }
-        final ExecutorService pool = Executors.newWorkStealingPool();
+        final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
 
         for (final ProjectInspector inspector : projectInspectors) {
             pool.submit(new Runnable() {

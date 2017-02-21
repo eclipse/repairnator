@@ -40,26 +40,25 @@ public class GoogleSpreadSheetFactory {
     private static String spreadsheetID = REPAIR_SPREADSHEET_ID;
     private static GoogleSpreadSheetFactory instance;
     private FileDataStoreFactory dataStoreFactory;
-    private final JsonFactory jsonFactory;
+    private JsonFactory jsonFactory;
     private HttpTransport httpTransport;
     private List<String> scopes;
     private Sheets sheets;
 
-    private GoogleSpreadSheetFactory(String googleSecretPath) throws IOException {
+    private GoogleSpreadSheetFactory(String googleSecretPath) {
         super();
         try {
             this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
             this.dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-        } catch (GeneralSecurityException e) {
-            this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ", e);
-        } catch (IOException e) {
+
+            this.jsonFactory = JacksonFactory.getDefaultInstance();
+            this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
+
+            this.initSheets(googleSecretPath);
+
+        } catch (GeneralSecurityException | IOException e) {
             this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ", e);
         }
-
-        this.jsonFactory = JacksonFactory.getDefaultInstance();
-        this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
-
-        this.initSheets(googleSecretPath);
     }
 
     public static void setSpreadsheetId(String spreadsheetID) {
