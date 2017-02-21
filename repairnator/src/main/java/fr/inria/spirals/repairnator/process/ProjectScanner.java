@@ -28,7 +28,8 @@ import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 
 /**
- * This class aims to provide utility methods to scan the projects and get failing builds
+ * This class aims to provide utility methods to scan the projects and get
+ * failing builds
  *
  * @author Simon Urli
  */
@@ -38,8 +39,8 @@ public class ProjectScanner {
     private int totalRepoUsingTravis;
     private int totalScannedBuilds;
     private int totalPRBuilds;
-    private int totalPassingBuilds;
     private int totalBuildInJava;
+    private int totalJavaPassingBuilds;
     private int totalBuildInJavaFailing;
     private int totalBuildInJavaFailingWithFailingTests;
     private Date dateStart;
@@ -75,8 +76,8 @@ public class ProjectScanner {
         return limitDate;
     }
 
-    public int getTotalPassingBuilds() {
-        return totalPassingBuilds;
+    public int getTotalJavaPassingBuilds() {
+        return totalJavaPassingBuilds;
     }
 
     public int getTotalRepoNumber() {
@@ -141,9 +142,13 @@ public class ProjectScanner {
     }
 
     /**
-     * Take a filepath as input containing a list of projects to scan. Check last build of each project. And finally returns the list of failing builds.
+     * Take a filepath as input containing a list of projects to scan. Check
+     * last build of each project. And finally returns the list of failing
+     * builds.
      *
-     * @param path A path to a file formatted to contain a slug name of project per line (ex: INRIA/spoon)
+     * @param path
+     *            A path to a file formatted to contain a slug name of project
+     *            per line (ex: INRIA/spoon)
      * @return a list of failing builds
      * @throws IOException
      */
@@ -155,7 +160,8 @@ public class ProjectScanner {
         return getListOfBuildsFromProjectsByBuildStatus(path, false);
     }
 
-    private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing) throws IOException {
+    private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing)
+            throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
@@ -200,7 +206,6 @@ public class ProjectScanner {
         return result;
     }
 
-
     private boolean testBuild(Build build, boolean targetFailing) {
         if (build.isPullRequest()) {
             this.totalPRBuilds++;
@@ -210,29 +215,31 @@ public class ProjectScanner {
         if (build.getConfig().getLanguage().equals("java")) {
             this.totalBuildInJava++;
 
-            this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : " + build.getBuildStatus().name());
+            this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
+                    + build.getBuildStatus().name());
             if (build.getBuildStatus() == BuildStatus.FAILED) {
                 this.totalBuildInJavaFailing++;
 
-                if (targetFailing) {
-                    for (Job job : build.getJobs()) {
-                        Log jobLog = job.getLog();
+                for (Job job : build.getJobs()) {
+                    Log jobLog = job.getLog();
 
-                        if (jobLog != null) {
-                            TestsInformation testInfo = jobLog.getTestsInformation();
+                    if (jobLog != null) {
+                        TestsInformation testInfo = jobLog.getTestsInformation();
 
-                            if (testInfo.getFailing() > 0) {
+                        if (testInfo.getFailing() > 0) {
+                            this.totalBuildInJavaFailingWithFailingTests++;
+                            if (targetFailing) {
                                 this.slugs.add(repo.getSlug());
                                 this.repositories.add(repo);
                                 return true;
                             }
-                        } else {
-                            logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
                         }
+                    } else {
+                        logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
                     }
                 }
             } else if (build.getBuildStatus() == BuildStatus.PASSED) {
-                this.totalPassingBuilds++;
+                this.totalJavaPassingBuilds++;
                 if (!targetFailing) {
                     this.slugs.add(repo.getSlug());
                     this.repositories.add(repo);
@@ -240,7 +247,8 @@ public class ProjectScanner {
                 }
             }
         } else {
-            this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId() + " is not in java but language: " + build.getConfig().getLanguage());
+            this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId()
+                    + " is not in java but language: " + build.getConfig().getLanguage());
         }
         return false;
     }
@@ -261,11 +269,6 @@ public class ProjectScanner {
             }
         }
 
-        if (targetFailing) {
-            this.totalBuildInJavaFailingWithFailingTests = result.size();
-        } else {
-            this.totalPassingBuilds = result.size();
-        }
         return result;
     }
 
@@ -307,4 +310,5 @@ public class ProjectScanner {
 
         return result;
     }
+
 }

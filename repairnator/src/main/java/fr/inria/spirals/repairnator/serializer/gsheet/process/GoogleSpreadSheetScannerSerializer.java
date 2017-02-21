@@ -38,7 +38,7 @@ public class GoogleSpreadSheetScannerSerializer {
         dataCol.add(this.scanner.getTotalRepoUsingTravis());
         dataCol.add(this.scanner.getTotalScannedBuilds());
         dataCol.add(this.scanner.getTotalBuildInJava());
-        dataCol.add(this.scanner.getTotalPassingBuilds());
+        dataCol.add(this.scanner.getTotalJavaPassingBuilds());
         dataCol.add(this.scanner.getTotalBuildInJavaFailing());
         dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
         dataCol.add(this.scanner.getTotalPRBuilds());
@@ -51,12 +51,14 @@ public class GoogleSpreadSheetScannerSerializer {
         valueRange.setValues(dataRow);
 
         try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+            AppendValuesResponse response = this.sheets.spreadsheets().values()
+                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                 this.logger.debug("Scanner data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.",e);
+            this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.", e);
         }
     }
 }

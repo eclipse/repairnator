@@ -48,11 +48,11 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
         int push = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
         int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
 
-        total = clonage+buildtime+test+gatherTestInfo+push+repair;
+        total = clonage + buildtime + test + gatherTestInfo + push + repair;
         Build build = inspector.getBuild();
 
         List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(build.getId()+"");
+        dataCol.add(build.getId() + "");
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
         dataCol.add(total);
@@ -71,12 +71,14 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
         valueRange.setValues(dataRow);
 
         try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values().append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange).setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+            AppendValuesResponse response = this.sheets.spreadsheets().values()
+                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
             if (response != null && response.getUpdates().getUpdatedCells() > 0) {
                 this.logger.debug("Time data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting time data in Google Spreadsheet.",e);
+            this.logger.error("An error occured while inserting time data in Google Spreadsheet.", e);
         }
     }
 }

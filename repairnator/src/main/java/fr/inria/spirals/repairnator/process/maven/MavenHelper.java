@@ -45,7 +45,8 @@ public class MavenHelper {
     private InvocationOutputHandler errorHandler;
     private InvocationOutputHandler outputHandler;
 
-    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers) {
+    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector,
+            boolean enableHandlers) {
         this.goal = goal;
         this.pomFile = pomFile;
         this.properties = properties;
@@ -72,28 +73,27 @@ public class MavenHelper {
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
         req.setProcessPlugins(false);
         req.setPomFile(pomXml);
-        req.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL );
+        req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
         req.setModelResolver(new RepositoryModelResolver(localMavenRepository));
-
 
         return new DefaultModelBuilderFactory().newInstance().build(req).getEffectiveModel();
     }
 
     public int run() {
         InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile( new File( this.pomFile ) );
-        request.setGoals( Arrays.asList( this.goal ) );
+        request.setPomFile(new File(this.pomFile));
+        request.setGoals(Arrays.asList(this.goal));
 
         if (properties == null) {
             properties = new Properties();
         }
 
-        properties.setProperty("maven.repo.local",this.inspector.getM2LocalPath());
-        properties.setProperty("enforcer.skip","true");
-        properties.setProperty("checkstyle.skip","true");
-        properties.setProperty("cobertura.skip","true");
-        properties.setProperty("skipITs","true");
-        properties.setProperty("rat.skip","true");
+        properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
+        properties.setProperty("enforcer.skip", "true");
+        properties.setProperty("checkstyle.skip", "true");
+        properties.setProperty("cobertura.skip", "true");
+        properties.setProperty("skipITs", "true");
+        properties.setProperty("rat.skip", "true");
         request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
@@ -104,10 +104,11 @@ public class MavenHelper {
         invoker.setOutputHandler(this.outputHandler);
 
         try {
-            InvocationResult result = invoker.execute( request );
+            InvocationResult result = invoker.execute(request);
             return result.getExitCode();
         } catch (MavenInvocationException e) {
-            this.logger.error("Error while executing goal :"+this.goal+" on the following pom file: "+this.pomFile+". Properties: "+this.properties);
+            this.logger.error("Error while executing goal :" + this.goal + " on the following pom file: " + this.pomFile
+                    + ". Properties: " + this.properties);
             this.logger.debug(e.getMessage());
             this.inspector.addStepError(name, e.getMessage());
             return MAVEN_ERROR;

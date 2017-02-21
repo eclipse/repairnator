@@ -29,13 +29,13 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
     }
 
     private void initFileWriter() {
-        String filename = "repairnator.maven."+name.toLowerCase()+".log";
-        String filePath = inspector.getRepoLocalPath()+"/"+filename;
+        String filename = "repairnator.maven." + name.toLowerCase() + ".log";
+        String filePath = inspector.getRepoLocalPath() + "/" + filename;
 
         try {
             this.fileWriter = new FileWriter(filePath);
         } catch (IOException e) {
-            this.getLogger().error("Cannot create filewriter",e);
+            this.getLogger().error("Cannot create filewriter", e);
         }
     }
 
@@ -45,7 +45,7 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
                 this.fileWriter.write(s);
                 this.fileWriter.flush();
             } catch (IOException e) {
-                this.getLogger().error("Error while writing to maven log",e);
+                this.getLogger().error("Error while writing to maven log", e);
             }
 
         }
@@ -53,6 +53,6 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
 
     @Override
     public void consumeLine(String s) {
-        this.writeToFile(s+"\n");
+        this.writeToFile(s + "\n");
     }
 }

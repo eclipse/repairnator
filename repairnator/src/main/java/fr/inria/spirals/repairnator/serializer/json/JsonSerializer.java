@@ -49,7 +49,8 @@ public class JsonSerializer extends AbstractDataSerializer {
         this.dateStart = new Date();
         this.outputPath = outputPath;
 
-        this.serializer = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new CustomExclusionStrategy()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        this.serializer = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new CustomExclusionStrategy())
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
         this.mode = mode;
         this.inspectors = new HashMap<String, JsonArray>();
@@ -204,7 +205,6 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("failureLocations", serialize(testInformation.getFailureLocations()));
         result.add("errors", serialize(inspector.getStepErrors()));
 
-
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
@@ -243,6 +243,19 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.addProperty("nbFailingtests", testInformation.getNbFailingTests());
         result.add("failureLocations", serialize(testInformation.getFailureLocations()));
         result.add("errors", serialize(inspector.getStepErrors()));
+        this.inspectors.get(inspector.getState().name()).add(result);
+    }
+
+    private void outputBuildWithoutPreviousBuildInspector(ProjectInspector inspector) {
+        JsonObject result = new JsonObject();
+        result.addProperty("slug", inspector.getRepoSlug());
+
+        Build build = inspector.getBuild();
+        result.addProperty("buildId", build.getId());
+        result.add("buildDate", serialize(build.getFinishedAt()));
+
+        result.addProperty("localRepo", inspector.getRepoLocalPath());
+
         this.inspectors.get(inspector.getState().name()).add(result);
     }
 
@@ -326,7 +339,17 @@ public class JsonSerializer extends AbstractDataSerializer {
                 outputHasBeenPatchedInspector(inspector);
                 break;
 
-            case FIXERBUILD:
+            case DOESNOTHAVEPREVIOUSVERSION:
+            case PREVIOUSVERSIONISNOTINTERESTING:
+            case PREVIOUSBUILDCHECKEDOUT:
+            case PREVIOUSBUILDNOTCHECKEDOUT:
+            case PREVIOUSBUILDCODECHECKEDOUT:
+            case PREVIOUSBUILDCODENOTCHECKEDOUT:
+                outputBuildWithoutPreviousBuildInspector(inspector);
+                break;
+
+            case FIXERBUILD_CASE1:
+            case FIXERBUILD_CASE2:
                 outputFixerBuildInspector(inspector);
                 break;
         }

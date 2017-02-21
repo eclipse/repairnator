@@ -12,36 +12,35 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 /**
  * Created by fermadeiral.
  */
-public class CheckoutPreviousBuild extends CloneRepository {
+public class CheckoutSourceCodeForPreviousBuild extends CloneRepository {
 
-    public CheckoutPreviousBuild(ProjectInspector inspector) {
+    public CheckoutSourceCodeForPreviousBuild(ProjectInspector inspector) {
         super(inspector);
     }
 
     protected void businessExecute() {
-        this.getLogger().debug("Checking out previous build...");
-
-        this.inspector.setPreviousBuildFlag(true);
+        this.getLogger().debug("Checking out the source code folder for previous build...");
 
         Git git;
         try {
             git = Git.open(new File(inspector.getRepoLocalPath()));
-            String commitCheckout = inspector.getPreviousBuild().getCommit().getSha();
+            String commitCheckout = build.getCommit().getSha();
             commitCheckout = this.testCommitExistence(git, commitCheckout);
             if (commitCheckout != null) {
                 this.getLogger()
                         .debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
                 git.checkout().setName(commitCheckout).call();
-                this.state = ProjectState.PREVIOUSBUILDCHECKEDOUT;
+                git.checkout().setStartPoint(inspector.getPreviousBuild().getCommit().getSha()).addPath("src/main/java")
+                        .call();
+                this.state = ProjectState.PREVIOUSBUILDCODECHECKEDOUT;
             } else {
                 this.addStepError("Error while getting the commit to checkout from the repo.");
                 this.shouldStop = true;
-                this.state = ProjectState.PREVIOUSBUILDNOTCHECKEDOUT;
+                this.state = ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT;
                 return;
             }
         } catch (IOException | GitAPIException e) {
-            this.addStepError("Error while getting the commit to checkout from the repo.");
-            this.shouldStop = true;
+            e.printStackTrace();
         }
     }
 
