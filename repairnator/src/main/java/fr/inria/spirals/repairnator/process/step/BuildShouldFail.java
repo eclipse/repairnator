@@ -9,7 +9,7 @@ import fr.inria.spirals.repairnator.process.ProjectState;
 public class BuildShouldFail implements ContractForGatherTestInformation {
 
     @Override
-    public void makeADecision(GatherTestInformation gatherTestInformation) {
+    public void shouldBeStopped(GatherTestInformation gatherTestInformation) {
         if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE) {
             gatherTestInformation.shouldStop = false;
             gatherTestInformation.inspector.setReproducedAsFail(true);

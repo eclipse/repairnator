@@ -5,6 +5,6 @@ package fr.inria.spirals.repairnator.process.step;
  */
 public interface ContractForGatherTestInformation {
 
-    void makeADecision(GatherTestInformation gatherTestInformation);
+    void shouldBeStopped(GatherTestInformation gatherTestInformation);
 
 }
