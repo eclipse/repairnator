@@ -9,6 +9,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -70,6 +71,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             git.checkout().setCreateBranch(true).setName("detached").call();
             ObjectId id = git.getRepository().resolve("HEAD~" + NB_COMMITS_TO_KEEP);
+
             if (id != null) {
                 this.getLogger().debug("Get only the last " + NB_COMMITS_TO_KEEP + " commits before push.");
                 ProcessBuilder processBuilder = new ProcessBuilder("git", "rebase-last-x", NB_COMMITS_TO_KEEP)
@@ -99,7 +101,9 @@ public class PushIncriminatedBuild extends AbstractStep {
             remoteAdd.setUri(new URIish(remoteRepo));
             remoteAdd.call();
 
-            git.fetch().setRemote("saveFail").call();
+            CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
+
+            git.fetch().setRemote("saveFail").setCredentialsProvider(credentialsProvider).call();
 
             Ref theRef = git.getRepository().findRef("refs/remotes/saveFail/" + branchName);
 
@@ -111,9 +115,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             Ref branch = git.branchCreate().setName(branchName).call();
 
-            git.push().setRemote("saveFail").add(branch)
-                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), ""))
-                    .call();
+            git.push().setRemote("saveFail").add(branch).setCredentialsProvider(credentialsProvider).call();
 
         } catch (IOException e) {
             this.getLogger().error("Error while reading git directory at the following location: "
