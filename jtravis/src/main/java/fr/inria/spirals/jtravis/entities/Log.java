@@ -14,6 +14,7 @@ import fr.inria.spirals.jtravis.pojos.LogPojo;
 public class Log extends LogPojo {
 
     private TestsInformation testsInformation;
+    private BuildTool buildTool;
 
     @Override
     public String getBody() {
@@ -35,5 +36,16 @@ public class Log extends LogPojo {
         }
 
         return this.testsInformation;
+    }
+
+    public BuildTool getBuildTool() {
+        if (buildTool == null) {
+            String body = getBody();
+
+            LogParser logParser = new LogParser(body);
+            buildTool = logParser.getBuildTool();
+        }
+
+        return buildTool;
     }
 }

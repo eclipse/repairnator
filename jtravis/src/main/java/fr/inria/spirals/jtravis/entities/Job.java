@@ -12,6 +12,7 @@ import fr.inria.spirals.jtravis.pojos.JobPojo;
 public class Job extends JobPojo {
     private Config config;
     private Log log;
+    private BuildTool buildTool;
 
     public Config getConfig() {
         return config;
@@ -34,6 +35,18 @@ public class Job extends JobPojo {
             this.log = LogHelper.getLogFromId(this.getLogId());
         }
         return this.log;
+    }
+
+    public BuildTool getBuildTool() {
+        if (buildTool == null) {
+            if (this.getLog() != null) {
+                buildTool = this.getLog().getBuildTool();
+            } else {
+                buildTool = BuildTool.UNKNOWN;
+            }
+        }
+
+        return buildTool;
     }
 
     @Override

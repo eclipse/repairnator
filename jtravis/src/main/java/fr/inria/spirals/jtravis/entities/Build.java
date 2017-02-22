@@ -3,6 +3,7 @@ package fr.inria.spirals.jtravis.entities;
 import fr.inria.spirals.jtravis.helpers.JobHelper;
 import fr.inria.spirals.jtravis.helpers.PRInformationHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
+import fr.inria.spirals.jtravis.parsers.LogParser;
 import fr.inria.spirals.jtravis.pojos.BuildPojo;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Build extends BuildPojo {
     private Config config;
     private List<Job> jobs;
     private String completeLog;
+    private BuildTool buildTool;
 
     public Build() {
         super();
@@ -107,6 +109,19 @@ public class Build extends BuildPojo {
             prInformation = PRInformationHelper.getPRInformationFromBuild(this);
         }
         return prInformation;
+    }
+
+    public BuildTool getBuildTool() {
+        if (buildTool == null) {
+            if (!this.getJobs().isEmpty()) {
+                Job firstJob = this.getJobs().get(0);
+                buildTool = firstJob.getBuildTool();
+            } else {
+                buildTool = BuildTool.UNKNOWN;
+            }
+        }
+
+        return buildTool;
     }
 
     @Override

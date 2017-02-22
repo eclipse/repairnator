@@ -1,6 +1,7 @@
 package fr.inria.spirals.jtravis.helpers;
 
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.BuildTool;
 import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Commit;
@@ -89,6 +90,14 @@ public class BuildHelperTest {
         Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
 
         assertEquals(expectedBuild, obtainedBuild);
+    }
+
+    @Test
+    public void testGetBuildToolFromBuildRecognizeTool() {
+        int buildId = 185719843;
+        Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        assertEquals(BuildTool.MAVEN, obtainedBuild.getBuildTool());
     }
 
     @Test
