@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.parsers;
 
+import fr.inria.spirals.jtravis.TestUtils;
 import fr.inria.spirals.jtravis.entities.TestsInformation;
 import org.junit.Test;
 
@@ -14,23 +15,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class MavenLogParserTest {
 
-    private static String readFile(String path) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(path));
-
-        String result = "";
-
-        while (reader.ready()) {
-            result += reader.readLine()+"\n";
-        }
-        return result;
-    }
-
     @Test
-    public void testParsingJavaEE7Log() throws IOException {
-        String path = "./src/test/resources/javaee7log.txt";
+    public void testParsingJavaEE7LogReturnsRightInfoTest() throws IOException {
+        String path = "./src/test/resources/maven-logs/javaee7log.txt";
 
-        String fileContent = readFile(path);
-        MavenLogParser parser = new MavenLogParser(fileContent);
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
         TestsInformation infoTest = parser.getTestsInformation();
 
         assertEquals(0, infoTest.getFailing());
@@ -42,11 +32,11 @@ public class MavenLogParserTest {
     }
 
     @Test
-    public void testParsingSpoonLog() throws IOException {
-        String path = "./src/test/resources/spoon_build_log.txt";
+    public void testParsingSpoonLogReturnsRightInfoTest() throws IOException {
+        String path = "./src/test/resources/maven-logs/spoon_build_log.txt";
 
-        String fileContent = readFile(path);
-        MavenLogParser parser = new MavenLogParser(fileContent);
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
         TestsInformation infoTest = parser.getTestsInformation();
 
         assertEquals(2, infoTest.getFailing());
