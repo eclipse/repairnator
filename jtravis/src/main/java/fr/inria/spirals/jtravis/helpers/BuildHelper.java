@@ -232,7 +232,15 @@ public class BuildHelper extends AbstractHelper {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1);
         Date limitDate = calendar.getTime();
-        int after_number = Integer.parseInt(build.getNumber());
+
+        int after_number = 0;
+        try {
+            after_number = Integer.parseInt(build.getNumber());
+        } catch (NumberFormatException e) {
+            getInstance().getLogger().error("Error while parsing build number for build id: "+build.getId(),e);
+            return null;
+        }
+
         int limitNumber = 1;
         List<String> eventTypes = new ArrayList<String>();
         int prNumber;
