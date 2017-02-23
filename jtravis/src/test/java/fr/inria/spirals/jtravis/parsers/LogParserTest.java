@@ -34,6 +34,16 @@ public class LogParserTest {
     }
 
     @Test
+    public void testLogParserRecognizeAnotherLogAsMavenLog() throws IOException {
+        String path = "./src/test/resources/maven-logs/maven-log.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
     public void testLogParserRecognizeGradleErrorLogAsGradleLog() throws IOException {
         String path = "./src/test/resources/gradle-logs/multipleErrorsAndFailures.txt";
 
@@ -46,6 +56,16 @@ public class LogParserTest {
     @Test
     public void testLogParserRecognizeGradlePassingLogAsGradleLog() throws IOException {
         String path = "./src/test/resources/gradle-logs/passingLog.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.GRADLE, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeGradleRootLogAsGradleLog() throws IOException {
+        String path = "./src/test/resources/gradle-logs/gradle-log.txt";
 
         String fileContent = TestUtils.readFile(path);
         LogParser parser = new LogParser(fileContent);

@@ -1,0 +1,3279 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: i-00fde9b-precise-production-2-worker-org-docker.travisci.net:7a50d1a4-e788-4635-bd08-57bf800044fc
+version: v2.5.0 https://github.com/travis-ci/worker/tree/da3a43228dffc0fcca5a46569ca786b22991979f
+instance: 05cc1bb:travis:java
+startup: 1.178377479s
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: precise
+Build id: 204277598
+Job id: 204277599
+travis-build version: 2b04abe3b
+[34m[1mBuild image provisioning date and time[0m
+Thu Feb  5 15:09:33 UTC 2015
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 12.04.5 LTS
+Release:	12.04
+Codename:	precise
+[34m[1mLinux Version[0m
+3.13.0-29-generic
+[34m[1mCookbooks Version[0m
+a68419e https://github.com/travis-ci/travis-cookbooks/tree/a68419e
+[34m[1mGCC version[0m
+gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mLLVM version[0m
+clang version 3.4 (tags/RELEASE_34/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mPre-installed Ruby versions[0m
+ruby-1.9.3-p551
+[34m[1mPre-installed Node.js versions[0m
+v0.10.36
+[34m[1mPre-installed Go versions[0m
+1.4.1
+[34m[1mRedis version[0m
+redis-server 2.8.19
+[34m[1mriak version[0m
+2.0.2
+[34m[1mMongoDB version[0m
+MongoDB 2.4.12
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mNeo4j version[0m
+1.9.4
+[34m[1mRabbitMQ Version[0m
+3.4.3
+[34m[1mElasticSearch version[0m
+1.4.0
+[34m[1mInstalled Sphinx versions[0m
+2.0.10
+2.1.9
+2.2.6
+[34m[1mDefault Sphinx version[0m
+2.2.6
+[34m[1mInstalled Firefox version[0m
+firefox 31.0esr
+[34m[1mPhantomJS version[0m
+1.9.8
+[34m[1mant -version[0m
+Apache Ant(TM) version 1.8.2 compiled on December 3 2011
+[34m[1mmvn -version[0m
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.7.0_76, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-7-oracle/jre
+Default locale: en_US, platform encoding: ANSI_X3.4-1968
+OS name: "linux", version: "3.13.0-29-generic", arch: "amd64", family: "unix"
+travis_fold:end:system_info[0K
+travis_fold:start:fix.CVE-2015-7547[0K$ export DEBIAN_FRONTEND=noninteractive
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  libc-bin libc-dev-bin libc6-dev
+Suggested packages:
+  glibc-doc
+The following packages will be upgraded:
+  libc-bin libc-dev-bin libc6 libc6-dev
+4 upgraded, 0 newly installed, 0 to remove and 271 not upgraded.
+Need to get 8,840 kB of archives.
+After this operation, 14.3 kB disk space will be freed.
+Get:1 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6-dev amd64 2.15-0ubuntu10.15 [2,943 kB]
+Get:2 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-dev-bin amd64 2.15-0ubuntu10.15 [84.7 kB]
+Get:3 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-bin amd64 2.15-0ubuntu10.15 [1,177 kB]
+Get:4 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6 amd64 2.15-0ubuntu10.15 [4,636 kB]
+Fetched 8,840 kB in 0s (34.7 MB/s)
+Preconfiguring packages ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72019 files and directories currently installed.)
+Preparing to replace libc6-dev 2.15-0ubuntu10.10 (using .../libc6-dev_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc6-dev ...
+Preparing to replace libc-dev-bin 2.15-0ubuntu10.10 (using .../libc-dev-bin_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc-dev-bin ...
+Preparing to replace libc-bin 2.15-0ubuntu10.10 (using .../libc-bin_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc-bin ...
+Processing triggers for man-db ...
+Setting up libc-bin (2.15-0ubuntu10.15) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72018 files and directories currently installed.)
+Preparing to replace libc6 2.15-0ubuntu10.10 (using .../libc6_2.15-0ubuntu10.15_amd64.deb) ...
+Unpacking replacement libc6 ...
+Setting up libc6 (2.15-0ubuntu10.15) ...
+Setting up libc-dev-bin (2.15-0ubuntu10.15) ...
+Setting up libc6-dev (2.15-0ubuntu10.15) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+travis_fold:end:fix.CVE-2015-7547[0K$ jdk_switcher use oraclejdk7
+Switching to Oracle JDK7 (java-7-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-7-oracle
+travis_fold:start:git.checkout[0Ktravis_time:start:0fa90b60[0K$ git clone --depth=50 --branch=2.x https://github.com/ReactiveX/RxJava.git ReactiveX/RxJava
+Cloning into 'ReactiveX/RxJava'...
+remote: Counting objects: 2917, done.[K
+remote: Compressing objects:   0% (1/1225)   [Kremote: Compressing objects:   1% (13/1225)   [Kremote: Compressing objects:   2% (25/1225)   [Kremote: Compressing objects:   3% (37/1225)   [Kremote: Compressing objects:   4% (49/1225)   [Kremote: Compressing objects:   5% (62/1225)   [Kremote: Compressing objects:   6% (74/1225)   [Kremote: Compressing objects:   7% (86/1225)   [Kremote: Compressing objects:   8% (98/1225)   [Kremote: Compressing objects:   9% (111/1225)   [Kremote: Compressing objects:  10% (123/1225)   [Kremote: Compressing objects:  11% (135/1225)   [Kremote: Compressing objects:  12% (147/1225)   [Kremote: Compressing objects:  13% (160/1225)   [Kremote: Compressing objects:  14% (172/1225)   [Kremote: Compressing objects:  15% (184/1225)   [Kremote: Compressing objects:  16% (196/1225)   [Kremote: Compressing objects:  17% (209/1225)   [Kremote: Compressing objects:  18% (221/1225)   [Kremote: Compressing objects:  19% (233/1225)   [Kremote: Compressing objects:  20% (245/1225)   [Kremote: Compressing objects:  21% (258/1225)   [Kremote: Compressing objects:  22% (270/1225)   [Kremote: Compressing objects:  23% (282/1225)   [Kremote: Compressing objects:  24% (294/1225)   [Kremote: Compressing objects:  25% (307/1225)   [Kremote: Compressing objects:  26% (319/1225)   [Kremote: Compressing objects:  27% (331/1225)   [Kremote: Compressing objects:  28% (343/1225)   [Kremote: Compressing objects:  29% (356/1225)   [Kremote: Compressing objects:  30% (368/1225)   [Kremote: Compressing objects:  31% (380/1225)   [Kremote: Compressing objects:  32% (392/1225)   [Kremote: Compressing objects:  33% (405/1225)   [Kremote: Compressing objects:  34% (417/1225)   [Kremote: Compressing objects:  35% (429/1225)   [Kremote: Compressing objects:  36% (441/1225)   [Kremote: Compressing objects:  37% (454/1225)   [Kremote: Compressing objects:  38% (466/1225)   [Kremote: Compressing objects:  39% (478/1225)   [Kremote: Compressing objects:  40% (490/1225)   [Kremote: Compressing objects:  41% (503/1225)   [Kremote: Compressing objects:  42% (515/1225)   [Kremote: Compressing objects:  43% (527/1225)   [Kremote: Compressing objects:  44% (539/1225)   [Kremote: Compressing objects:  45% (552/1225)   [Kremote: Compressing objects:  46% (564/1225)   [Kremote: Compressing objects:  47% (576/1225)   [Kremote: Compressing objects:  48% (588/1225)   [Kremote: Compressing objects:  49% (601/1225)   [Kremote: Compressing objects:  50% (613/1225)   [Kremote: Compressing objects:  51% (625/1225)   [Kremote: Compressing objects:  52% (637/1225)   [Kremote: Compressing objects:  53% (650/1225)   [Kremote: Compressing objects:  54% (662/1225)   [Kremote: Compressing objects:  55% (674/1225)   [Kremote: Compressing objects:  56% (686/1225)   [Kremote: Compressing objects:  57% (699/1225)   [Kremote: Compressing objects:  58% (711/1225)   [Kremote: Compressing objects:  59% (723/1225)   [Kremote: Compressing objects:  60% (735/1225)   [Kremote: Compressing objects:  61% (748/1225)   [Kremote: Compressing objects:  62% (760/1225)   [Kremote: Compressing objects:  63% (772/1225)   [Kremote: Compressing objects:  64% (784/1225)   [Kremote: Compressing objects:  65% (797/1225)   [Kremote: Compressing objects:  66% (809/1225)   [Kremote: Compressing objects:  67% (821/1225)   [Kremote: Compressing objects:  68% (833/1225)   [Kremote: Compressing objects:  69% (846/1225)   [Kremote: Compressing objects:  70% (858/1225)   [Kremote: Compressing objects:  71% (870/1225)   [Kremote: Compressing objects:  72% (882/1225)   [Kremote: Compressing objects:  73% (895/1225)   [Kremote: Compressing objects:  74% (907/1225)   [Kremote: Compressing objects:  75% (919/1225)   [Kremote: Compressing objects:  76% (931/1225)   [Kremote: Compressing objects:  77% (944/1225)   [Kremote: Compressing objects:  78% (956/1225)   [Kremote: Compressing objects:  79% (968/1225)   [Kremote: Compressing objects:  80% (980/1225)   [Kremote: Compressing objects:  81% (993/1225)   [Kremote: Compressing objects:  82% (1005/1225)   [Kremote: Compressing objects:  83% (1017/1225)   [Kremote: Compressing objects:  84% (1029/1225)   [Kremote: Compressing objects:  85% (1042/1225)   [Kremote: Compressing objects:  86% (1054/1225)   [Kremote: Compressing objects:  87% (1066/1225)   [Kremote: Compressing objects:  88% (1078/1225)   [Kremote: Compressing objects:  89% (1091/1225)   [Kremote: Compressing objects:  90% (1103/1225)   [Kremote: Compressing objects:  91% (1115/1225)   [Kremote: Compressing objects:  92% (1127/1225)   [Kremote: Compressing objects:  93% (1140/1225)   [Kremote: Compressing objects:  94% (1152/1225)   [Kremote: Compressing objects:  95% (1164/1225)   [Kremote: Compressing objects:  96% (1176/1225)   [Kremote: Compressing objects:  97% (1189/1225)   [Kremote: Compressing objects:  98% (1201/1225)   [Kremote: Compressing objects:  99% (1213/1225)   [Kremote: Compressing objects: 100% (1225/1225)   [Kremote: Compressing objects: 100% (1225/1225), done.[K
+Receiving objects:   0% (1/2917)   Receiving objects:   1% (30/2917)   Receiving objects:   2% (59/2917)   Receiving objects:   3% (88/2917)   Receiving objects:   4% (117/2917)   Receiving objects:   5% (146/2917)   Receiving objects:   6% (176/2917)   Receiving objects:   7% (205/2917)   Receiving objects:   8% (234/2917)   Receiving objects:   9% (263/2917)   Receiving objects:  10% (292/2917)   Receiving objects:  11% (321/2917)   Receiving objects:  12% (351/2917)   Receiving objects:  13% (380/2917)   Receiving objects:  14% (409/2917)   Receiving objects:  15% (438/2917)   Receiving objects:  16% (467/2917)   Receiving objects:  17% (496/2917)   Receiving objects:  18% (526/2917)   Receiving objects:  19% (555/2917)   Receiving objects:  20% (584/2917)   Receiving objects:  21% (613/2917)   Receiving objects:  22% (642/2917)   Receiving objects:  23% (671/2917)   Receiving objects:  24% (701/2917)   Receiving objects:  25% (730/2917)   Receiving objects:  26% (759/2917)   Receiving objects:  27% (788/2917)   Receiving objects:  28% (817/2917)   Receiving objects:  29% (846/2917)   Receiving objects:  30% (876/2917)   Receiving objects:  31% (905/2917)   Receiving objects:  32% (934/2917)   Receiving objects:  33% (963/2917)   Receiving objects:  34% (992/2917)   Receiving objects:  35% (1021/2917)   Receiving objects:  36% (1051/2917)   Receiving objects:  37% (1080/2917)   Receiving objects:  38% (1109/2917)   Receiving objects:  39% (1138/2917)   Receiving objects:  40% (1167/2917)   Receiving objects:  41% (1196/2917)   Receiving objects:  42% (1226/2917)   Receiving objects:  43% (1255/2917)   Receiving objects:  44% (1284/2917)   Receiving objects:  45% (1313/2917)   Receiving objects:  46% (1342/2917)   Receiving objects:  47% (1371/2917)   Receiving objects:  48% (1401/2917)   Receiving objects:  49% (1430/2917)   Receiving objects:  50% (1459/2917)   Receiving objects:  51% (1488/2917)   Receiving objects:  52% (1517/2917)   Receiving objects:  53% (1547/2917)   Receiving objects:  54% (1576/2917)   Receiving objects:  55% (1605/2917)   Receiving objects:  56% (1634/2917)   Receiving objects:  57% (1663/2917)   Receiving objects:  58% (1692/2917)   Receiving objects:  59% (1722/2917)   Receiving objects:  60% (1751/2917)   Receiving objects:  61% (1780/2917)   Receiving objects:  62% (1809/2917)   Receiving objects:  63% (1838/2917)   Receiving objects:  64% (1867/2917)   Receiving objects:  65% (1897/2917)   Receiving objects:  66% (1926/2917)   Receiving objects:  67% (1955/2917)   Receiving objects:  68% (1984/2917)   Receiving objects:  69% (2013/2917)   Receiving objects:  70% (2042/2917)   Receiving objects:  71% (2072/2917)   Receiving objects:  72% (2101/2917)   Receiving objects:  73% (2130/2917)   Receiving objects:  74% (2159/2917)   Receiving objects:  75% (2188/2917)   Receiving objects:  76% (2217/2917)   Receiving objects:  77% (2247/2917)   Receiving objects:  78% (2276/2917)   Receiving objects:  79% (2305/2917)   Receiving objects:  80% (2334/2917)   Receiving objects:  81% (2363/2917)   Receiving objects:  82% (2392/2917)   Receiving objects:  83% (2422/2917)   Receiving objects:  84% (2451/2917)   Receiving objects:  85% (2480/2917)   Receiving objects:  86% (2509/2917)   Receiving objects:  87% (2538/2917)   Receiving objects:  88% (2567/2917)   Receiving objects:  89% (2597/2917)   Receiving objects:  90% (2626/2917)   Receiving objects:  91% (2655/2917)   Receiving objects:  92% (2684/2917)   Receiving objects:  93% (2713/2917)   Receiving objects:  94% (2742/2917)   Receiving objects:  95% (2772/2917)   Receiving objects:  96% (2801/2917)   Receiving objects:  97% (2830/2917)   remote: Total 2917 (delta 2205), reused 1910 (delta 1490), pack-reused 0[K
+Receiving objects:  98% (2859/2917)   Receiving objects:  99% (2888/2917)   Receiving objects: 100% (2917/2917)   Receiving objects: 100% (2917/2917), 1.87 MiB | 0 bytes/s, done.
+Resolving deltas:   0% (0/2205)   Resolving deltas:   1% (28/2205)   Resolving deltas:   2% (47/2205)   Resolving deltas:   3% (67/2205)   Resolving deltas:   4% (90/2205)   Resolving deltas:   5% (113/2205)   Resolving deltas:   6% (135/2205)   Resolving deltas:   7% (158/2205)   Resolving deltas:   8% (184/2205)   Resolving deltas:   9% (200/2205)   Resolving deltas:  10% (222/2205)   Resolving deltas:  11% (247/2205)   Resolving deltas:  12% (266/2205)   Resolving deltas:  13% (289/2205)   Resolving deltas:  14% (309/2205)   Resolving deltas:  15% (335/2205)   Resolving deltas:  16% (366/2205)   Resolving deltas:  17% (380/2205)   Resolving deltas:  18% (417/2205)   Resolving deltas:  19% (430/2205)   Resolving deltas:  20% (442/2205)   Resolving deltas:  21% (476/2205)   Resolving deltas:  22% (486/2205)   Resolving deltas:  23% (516/2205)   Resolving deltas:  24% (545/2205)   Resolving deltas:  27% (600/2205)   Resolving deltas:  28% (621/2205)   Resolving deltas:  29% (650/2205)   Resolving deltas:  30% (667/2205)   Resolving deltas:  31% (695/2205)   Resolving deltas:  32% (707/2205)   Resolving deltas:  33% (731/2205)   Resolving deltas:  34% (755/2205)   Resolving deltas:  35% (785/2205)   Resolving deltas:  37% (820/2205)   Resolving deltas:  38% (849/2205)   Resolving deltas:  39% (860/2205)   Resolving deltas:  41% (920/2205)   Resolving deltas:  42% (948/2205)   Resolving deltas:  43% (963/2205)   Resolving deltas:  44% (977/2205)   Resolving deltas:  45% (994/2205)   Resolving deltas:  46% (1035/2205)   Resolving deltas:  47% (1041/2205)   Resolving deltas:  48% (1060/2205)   Resolving deltas:  50% (1107/2205)   Resolving deltas:  51% (1125/2205)   Resolving deltas:  52% (1151/2205)   Resolving deltas:  53% (1175/2205)   Resolving deltas:  54% (1198/2205)   Resolving deltas:  56% (1254/2205)   Resolving deltas:  57% (1257/2205)   Resolving deltas:  58% (1283/2205)   Resolving deltas:  59% (1301/2205)   Resolving deltas:  60% (1323/2205)   Resolving deltas:  61% (1347/2205)   Resolving deltas:  62% (1368/2205)   Resolving deltas:  63% (1402/2205)   Resolving deltas:  64% (1413/2205)   Resolving deltas:  65% (1445/2205)   Resolving deltas:  66% (1476/2205)   Resolving deltas:  67% (1489/2205)   Resolving deltas:  68% (1501/2205)   Resolving deltas:  72% (1591/2205)   Resolving deltas:  73% (1617/2205)   Resolving deltas:  79% (1742/2205)   Resolving deltas:  80% (1769/2205)   Resolving deltas:  81% (1795/2205)   Resolving deltas:  82% (1829/2205)   Resolving deltas:  85% (1889/2205)   Resolving deltas:  87% (1933/2205)   Resolving deltas:  88% (1943/2205)   Resolving deltas:  89% (1968/2205)   Resolving deltas:  90% (1985/2205)   Resolving deltas:  91% (2016/2205)   Resolving deltas:  92% (2031/2205)   Resolving deltas:  93% (2059/2205)   Resolving deltas:  94% (2084/2205)   Resolving deltas:  95% (2099/2205)   Resolving deltas:  96% (2123/2205)   Resolving deltas:  97% (2141/2205)   Resolving deltas:  98% (2162/2205)   Resolving deltas:  99% (2188/2205)   Resolving deltas: 100% (2205/2205)   Resolving deltas: 100% (2205/2205), done.
+Checking connectivity... done.
+
+travis_time:end:0fa90b60:start=1487783548883754810,finish=1487783550924043295,duration=2040288485[0K$ cd ReactiveX/RxJava
+$ git checkout -qf 7494a2c05cf2f02142fc3193682141826974661a
+travis_fold:end:git.checkout[0K
+[33;1mThis job is running on container-based infrastructure, which does not allow use of 'sudo', setuid and setguid executables.[0m
+[33;1mIf you require sudo, add 'sudo: required' to your .travis.yml[0m
+[33;1mSee https://docs.travis-ci.com/user/workers/container-based-infrastructure/ for details.[0m
+
+[33;1mSetting environment variables from .travis.yml[0m
+$ export sonatypePassword=[secure]
+$ export bintrayUser=[secure]
+$ export sonatypeUsername=[secure]
+$ export bintrayKey=[secure]
+
+$ export TERM=dumb
+travis_fold:start:cache.1[0KSetting up build cache
+$ export CASHER_DIR=$HOME/.casher
+travis_time:start:1e12ba48[0K$ Installing caching utilities
+
+travis_time:end:1e12ba48:start=1487783554080015623,finish=1487783554110717920,duration=30702297[0Ktravis_time:start:00646e67[0K
+travis_time:end:00646e67:start=1487783554116780844,finish=1487783554120854111,duration=4073267[0Ktravis_time:start:00734567[0K[32;1mattempting to download cache archive[0m
+[32;1mfetching 2.x/cache-linux-precise-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855--jdk-oraclejdk7.tgz[0m
+[32;1mfound cache[0m
+
+travis_time:end:00734567:start=1487783554125534168,finish=1487783556505020323,duration=2379486155[0Ktravis_time:start:238e26e8[0K
+travis_time:end:238e26e8:start=1487783556510718781,finish=1487783556515352936,duration=4634155[0Ktravis_time:start:108ebaa0[0K[32;1madding /home/travis/.m2 to cache[0m
+[32;1madding /home/travis/.gradle to cache[0m
+[32;1mcreating directory /home/travis/.gradle[0m
+
+travis_time:end:108ebaa0:start=1487783556520620021,finish=1487783559466231463,duration=2945611442[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
+java version "1.7.0_76"
+Java(TM) SE Runtime Environment (build 1.7.0_76-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 24.76-b04, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.7.0_76
+travis_fold:start:install[0Ktravis_time:start:07101198[0K$ true
+
+travis_time:end:07101198:start=1487783560048829243,finish=1487783560053346597,duration=4517354[0Ktravis_fold:end:install[0Ktravis_time:start:12122e2c[0K$ gradle/buildViaTravis.sh
+Build Branch with Snapshot => Branch [2.x]
+[buildinfo] Not using buildInfo properties file for this build.
+:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
+1 warning
+
+:processResources UP-TO-DATE
+:classes
+:writeManifestProperties
+:jar
+:compilePerfJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
+1 warning
+
+:processPerfResources UP-TO-DATE
+:perfClasses
+:shadowJar
+:assemble
+:compileExamplesJava UP-TO-DATE
+:processExamplesResources UP-TO-DATE
+:examplesClasses UP-TO-DATE
+:animalsnifferExamples UP-TO-DATE
+:animalsnifferMain
+:animalsnifferPerf
+:compileTestJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
+1 warning
+
+:processTestResources UP-TO-DATE
+:testClasses
+:animalsnifferTest
+:checkstyleExamples UP-TO-DATE
+:checkstyleMain[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8220: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8221: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8252: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8253: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8288: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8289: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8324: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8325: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8363: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8364: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8414: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8415: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8457: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8458: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8504: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8505: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8540: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8541: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8580: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8581: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8623: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8624: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8670: Line has trailing spaces. [RegexpSinglelineJava]
+[ant:checkstyle] [WARN] /home/travis/build/ReactiveX/RxJava/src/main/java/io/reactivex/Flowable.java:8671: Line has trailing spaces. [RegexpSinglelineJava]
+
+:checkstylePerf
+:checkstyleTest
+:writeLicenseHeader
+:licenseExamples UP-TO-DATE
+:licenseMain UP-TO-DATE
+:licensePerf UP-TO-DATE
+:licenseTest UP-TO-DATE
+:license UP-TO-DATE
+:test
+
+io.reactivex.completable.CompletableTest > safeOnErrorThrowsRegularSubscriber SKIPPED
+
+io.reactivex.completable.CompletableTest > safeOnErrorThrows SKIPPED
+
+io.reactivex.completable.CompletableTest > testHookUnsafeSubscribeStart SKIPPED
+
+io.reactivex.completable.CompletableTest > safeOnCompleteThrows SKIPPED
+
+io.reactivex.completable.CompletableTest > safeOnCompleteThrowsRegularSubscriber SKIPPED
+
+io.reactivex.completable.CompletableTest > onStartCalledUnsafeSafe SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnErrorThrowableAddValueAsLastCause SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnCompleteFailedExceptionMessageAndNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnErrorFailedExceptionMessageAndNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnErrorNotImplementedExceptionNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testUnsubscribeFailedExceptionNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnErrorThrowableFrom SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testUnsubscribeFailedExceptionMessageAndNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnCompleteFailedExceptionNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnErrorNotImplementedExceptionMessageAndNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsNullTest > testOnErrorFailedExceptionNull SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrownFromSubscribe SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrownFromUnsafeSubscribe SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrownFromOnNext SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrown SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > constructorShouldBePrivate SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrownFromSingleDoOnSuccess SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrownFromGroupBy SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnCompletedExceptionIsThrown SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrownFromSingleUnsafeSubscribe SKIPPED
+
+io.reactivex.exceptions.ExceptionsTest > testOnErrorExceptionIsThrownFromSingleSubscribe SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderInteger SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > addOnNextValueExceptionNotAddedWithBadString SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > addOnNextValueExceptionAdded SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderCharacter SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderByte SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderLong SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderVoid SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderBoolean SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderDouble SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderFloat SKIPPED
+
+io.reactivex.exceptions.OnNextValueTest > testRenderShort SKIPPED
+
+io.reactivex.flowable.FlowableBackpressureTests > testFlatMapAsync SKIPPED
+
+io.reactivex.flowable.FlowableCombineLatestTests > testNullEmitting SKIPPED
+
+io.reactivex.flowable.FlowableNotificationTest > testOnErrorNullNotificationDoesNotEqualIntegerNotification SKIPPED
+
+io.reactivex.flowable.FlowableNotificationTest > testOnErrorIntegerNotificationDoesNotEqualNullNotification SKIPPED
+
+io.reactivex.flowable.FlowableSubscriberTest > testNegativeRequestThrowsIllegalArgumentException SKIPPED
+
+io.reactivex.flowable.FlowableTests > testErrorThrownWithoutErrorHandlerSynchronous SKIPPED
+
+io.reactivex.flowable.FlowableTests > testContainsWithNullFlowable SKIPPED
+
+io.reactivex.flowable.FlowableTests > testErrorThrownWithoutErrorHandlerAsynchronous SKIPPED
+
+io.reactivex.flowable.FlowableTests > testOnSubscribeFails SKIPPED
+
+io.reactivex.flowable.FlowableTests > testContainsWithNull SKIPPED
+
+io.reactivex.internal.util.BackpressureHelperTest > constructorShouldBePrivate SKIPPED
+
+io.reactivex.internal.operators.flowable.BlockingFlowableLatestTest > constructorshouldbeprivate SKIPPED
+
+io.reactivex.internal.operators.flowable.BlockingFlowableMostRecentTest > constructorshouldbeprivate SKIPPED
+
+io.reactivex.internal.operators.flowable.BlockingFlowableNextTest > constructorshouldbeprivate SKIPPED
+
+io.reactivex.internal.operators.flowable.BlockingFlowableToFutureTest > constructorShouldBePrivate SKIPPED
+
+io.reactivex.internal.operators.flowable.BlockingFlowableToFutureTest > testGetWithASingleNullItem SKIPPED
+
+io.reactivex.internal.operators.flowable.BlockingFlowableToIteratorTest > constructorShouldBePrivate SKIPPED
+
+io.reactivex.internal.operators.flowable.BlockingFlowableToIteratorTest > testExceptionThrownFromOnSubscribe SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableAllTest > testBackpressureIfNoneRequestedNoneShouldBeDelivered SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableAmbTest > ambMany SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableAmbTest > ambManyComplete SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableAmbTest > ambManyError SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableAnyTest > testBackpressureIfNoneRequestedNoneShouldBeDelivered SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableCacheTest > unsafeChildThrows SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableZipTest > testEmitNull SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableCombineLatestTest > testCombineManyNulls SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableConcatMapEagerTest > many SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableConcatMapEagerTest > testInnerNull SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableConcatTest > startWith SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableConcatTest > concatMany SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableDefaultIfEmptyTest > testEmptyButClientThrows SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableDistinctTest > testDistinctOfSourceWithExceptionsFromKeySelector SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableDistinctTest > testDistinctOfSourceWithNulls SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableDistinctUntilChangedTest > testDistinctUntilChangedOfSourceWithNulls SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableDistinctUntilChangedTest > testDistinctUntilChangedOfSourceWithExceptionsFromKeySelector SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMapTest > verifyExceptionIsThrownIfThereIsNoExceptionHandler SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMapTest > testShouldNotSwallowOnErrorNotImplementedException SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableDoOnEachTest > testFatalError SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableDoOnRequestTest > dontRequestIfDownstreamRequestsLate SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableFilterTest > testFatalError SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableFlatMapTest > flatMapRangeAsyncLoop SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeDelayErrorTest > testMergeSourceWhichDoesntPropagateExceptionBack SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeDelayErrorTest > mergeMany SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeDelayErrorTest > mergeManyError SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeTest > mergeJustNull SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeTest > mergeWithNullValues SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeTest > mergeWithTerminalEventAfterUnsubscribe SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeTest > mergingNullFlowable SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeTest > testThrownErrorHandling SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableMergeTest > mergeMany SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableOnErrorResumeNextViaFlowableTest > testResumeNextWithFailureOnSubscribe SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableOnErrorResumeNextViaFlowableTest > testResumeNextWithFailureOnSubscribeAsync SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableOnErrorResumeNextViaFunctionTest > testOnErrorResumeReceivesErrorFromPreviousNonProtectedOperatorOnNext SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableOnErrorResumeNextViaFunctionTest > testOnErrorResumeReceivesErrorFromPreviousNonProtectedOperator SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableScanTest > testInitialValueEmittedWithProducer SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableScanTest > testInitialValueEmittedNoProducer SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableSequenceEqualTest > testWithNull1Flowable SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableSequenceEqualTest > testWithNull1 SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableSequenceEqualTest > testWithNull2 SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableSequenceEqualTest > testWithNull2Flowable SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableSkipLastTest > testSkipLastWithNull SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableSubscribeOnTest > testThrownErrorHandling SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableSwitchTest > testSecondaryRequestsAdditivelyAreMoreThanLongMaxValueInducesMaxValueRequestFromUpstream SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableTakeLastTest > testTakeLastWithNull SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableTakeTest > testTakeZeroDoesntLeakError SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableTimeoutTests > shouldUnsubscribeFromUnderlyingSubscriptionOnImmediatelyComplete SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableTimeoutTests > shouldUnsubscribeFromUnderlyingSubscriptionOnImmediatelyErrored SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToListTest > testListWithNullValueFlowable SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToListTest > testBackpressureHonored SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToListTest > testAsyncRequestedFlowable SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToListTest > testAsyncRequested SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToListTest > testListWithNullValue SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToSortedListTest > testBackpressureHonored SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToSortedListTest > testAsyncRequestedFlowable SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableToSortedListTest > testAsyncRequested SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableUsingTest > testUsingWithFlowableFactoryErrorInOnSubscribeDisposeEagerly SKIPPED
+
+io.reactivex.internal.operators.flowable.FlowableUsingTest > testUsingWithFlowableFactoryErrorInOnSubscribe SKIPPED
+
+io.reactivex.internal.operators.observable.BlockingObservableToFutureTest > constructorShouldBePrivate SKIPPED
+
+io.reactivex.internal.operators.observable.BlockingObservableToFutureTest > testGetWithASingleNullItem SKIPPED
+
+io.reactivex.internal.operators.observable.BlockingObservableToIteratorTest > testExceptionThrownFromOnSubscribe SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableCacheTest > unsafeChildThrows SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > testMaxConcurrent5 SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > testBackpressure SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > normalBackpressured SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > many SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > testInnerNull SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > normalDelayEndBackpressured SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > normalDelayBoundaryBackpressured SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableConcatMapEagerTest > testPrefetchIsBounded SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDefaultIfEmptyTest > testEmptyButClientThrows SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDetachTest > backpressured SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDetachTest > deferredUpstreamProducer SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDistinctTest > testDistinctOfSourceWithExceptionsFromKeySelector SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDistinctTest > testDistinctOfSourceWithNulls SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDistinctUntilChangedTest > testDistinctUntilChangedOfSourceWithNulls SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDistinctUntilChangedTest > testDistinctUntilChangedOfSourceWithExceptionsFromKeySelector SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDoOnEachTest > fusedAsyncConditional2 SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDoOnEachTest > fusedAsyncConditional SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDoOnEachTest > fused SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDoOnEachTest > fusedOnErrorCrash SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDoOnEachTest > fusedOnErrorCrashConditional SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDoOnEachTest > fusedConditional SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableDoOnEachTest > fusedAsync SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableFlatMapTest > flatMapRangeAsyncLoop SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableMergeDelayErrorTest > testMergeSourceWhichDoesntPropagateExceptionBack SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableMergeTest > mergeWithNullValues SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableMergeTest > mergeWithTerminalEventAfterUnsubscribe SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableMergeTest > mergingNullObservable SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableMergeTest > testThrownErrorHandling SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableOnErrorResumeNextViaFunctionTest > testOnErrorResumeReceivesErrorFromPreviousNonProtectedOperatorOnNext SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableOnErrorResumeNextViaFunctionTest > testOnErrorResumeReceivesErrorFromPreviousNonProtectedOperator SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableOnErrorResumeNextViaObservableTest > testResumeNextWithFailureOnSubscribe SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableOnErrorResumeNextViaObservableTest > testResumeNextWithFailureOnSubscribeAsync SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableReplayTest > unsafeChildThrows SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableSequenceEqualTest > testWithNull2Observable SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableSequenceEqualTest > testWithNull1 SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableSequenceEqualTest > testWithNull2 SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableSequenceEqualTest > testWithNull1Observable SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableSkipLastTest > testSkipLastWithNull SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableSubscribeOnTest > testThrownErrorHandling SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableTakeLastTest > testTakeLastWithNull SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableTakeTest > testTakeZeroDoesntLeakError SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableTimeoutTests > shouldUnsubscribeFromUnderlyingSubscriptionOnImmediatelyComplete SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableTimeoutTests > shouldUnsubscribeFromUnderlyingSubscriptionOnImmediatelyErrored SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableToListTest > testListWithNullValueObservable SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableToListTest > testListWithNullValue SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableUsingTest > testUsingWithObservableFactoryErrorInOnSubscribe SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableUsingTest > testUsingWithObservableFactoryErrorInOnSubscribeDisposeEagerly SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableWithLatestFromTest > backpressureWithSignal SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableWithLatestFromTest > backpressureNoSignal SKIPPED
+
+io.reactivex.internal.operators.observable.ObservableZipTest > testEmitNull SKIPPED
+
+io.reactivex.observable.ObservableCombineLatestTests > testNullEmitting SKIPPED
+
+io.reactivex.observable.ObservableTest > testErrorThrownWithoutErrorHandlerSynchronous SKIPPED
+
+io.reactivex.observable.ObservableTest > testErrorThrownWithoutErrorHandlerAsynchronous SKIPPED
+
+io.reactivex.observable.ObservableTest > testOnSubscribeFails SKIPPED
+
+io.reactivex.observable.ObservableTest > testContainsWithNull SKIPPED
+
+io.reactivex.observable.ObservableTest > testContainsWithNullObservable SKIPPED
+
+io.reactivex.observers.SafeObserverTest > onErrorFailureWithUnsubscribeFailure SKIPPED
+
+io.reactivex.observers.SafeObserverTest > onErrorSuccessWithUnsubscribeFailure SKIPPED
+
+io.reactivex.observers.SafeObserverTest > onErrorFailureSafe SKIPPED
+
+io.reactivex.observers.SafeObserverTest > onNextOnErrorFailureSafe SKIPPED
+
+io.reactivex.observers.SafeObserverTest > onCompleteSuccessWithUnsubscribeFailure SKIPPED
+
+io.reactivex.observers.SafeObserverTest > onErrorNotImplementedFailureSafe SKIPPED
+
+io.reactivex.observers.SafeObserverTest > testOnCompletedThrows SKIPPED
+
+io.reactivex.observers.SafeObserverTest > onErrorNotImplementedFailureWithUnsubscribeFailure SKIPPED
+
+io.reactivex.observers.SerializedObserverTest > testSerializeReentrantNullAndError SKIPPED
+
+io.reactivex.observers.SerializedObserverTest > testSerializeNull SKIPPED
+
+io.reactivex.observers.SerializedObserverTest > testSerializeDrainPhaseThrows SKIPPED
+
+io.reactivex.observers.SerializedObserverTest > testSerializeReentrantNullAndComplete SKIPPED
+
+io.reactivex.observers.SerializedObserverTest > testSerializeAllowsOnError SKIPPED
+
+io.reactivex.observers.SerializedObserverTest > testNotificationDelay SKIPPED
+
+io.reactivex.observers.SerializedObserverTest > testThreadStarvation SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > onXLift SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > onPluginsXError SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > clear SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > onPluginsXLift SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > assemblyTrackingObservable SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > assemblyTrackingSingle SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > assemblyTrackingCompletable SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > onXError SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > observableReturn SKIPPED
+
+io.reactivex.plugins.RxJavaPluginsTest > singleReturn SKIPPED
+
+io.reactivex.processors.AsyncProcessorTest > testNull SKIPPED
+
+io.reactivex.schedulers.CachedThreadSchedulerTest > testUnhandledErrorIsDeliveredToThreadHandler SKIPPED
+
+io.reactivex.schedulers.ComputationSchedulerTests > testUnhandledErrorIsDeliveredToThreadHandler SKIPPED
+
+io.reactivex.schedulers.ExecutorSchedulerTest > testUnhandledErrorIsDeliveredToThreadHandler SKIPPED
+
+io.reactivex.schedulers.NewThreadSchedulerTest > testUnhandledErrorIsDeliveredToThreadHandler SKIPPED
+
+io.reactivex.subjects.AsyncSubjectTest > testNull SKIPPED
+
+io.reactivex.subjects.PublishSubjectTest > backpressureOverflow SKIPPED
+
+io.reactivex.subjects.PublishSubjectTest > requestValidation SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > onErrorFailureWithUnsubscribeFailure SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > onErrorSuccessWithUnsubscribeFailure SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > onErrorFailureSafe SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > onNextOnErrorFailureSafe SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > onCompleteSuccessWithUnsubscribeFailure SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > onErrorNotImplementedFailureSafe SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > testOnCompletedThrows SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberTest > onErrorNotImplementedFailureWithUnsubscribeFailure SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginException SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginExceptionWhileOnErrorThrowsNotImplAndUnsubscribeThrows SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginExceptionWhenUnsubscribing2 SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginExceptionWhileOnErrorUnsubscribeThrows SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginExceptionWhileOnErrorThrowsAndUnsubscribeThrows SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginExceptionWhileOnErrorThrows SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginErrorHandlerReceivesExceptionFromFailingUnsubscribeAfterCompletionThrows SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testPluginErrorHandlerReceivesExceptionWhenUnsubscribeAfterCompletionThrows SKIPPED
+
+io.reactivex.subscribers.SafeSubscriberWithPluginTest > testOnCompletedThrows SKIPPED
+
+io.reactivex.subscribers.SerializedSubscriberTest > testSerializeReentrantNullAndError SKIPPED
+
+io.reactivex.subscribers.SerializedSubscriberTest > testSerializeNull SKIPPED
+
+io.reactivex.subscribers.SerializedSubscriberTest > testSerializeDrainPhaseThrows SKIPPED
+
+io.reactivex.subscribers.SerializedSubscriberTest > testSerializeReentrantNullAndComplete SKIPPED
+
+io.reactivex.subscribers.SerializedSubscriberTest > testSerializeAllowsOnError SKIPPED
+
+io.reactivex.subscribers.SerializedSubscriberTest > testNotificationDelay SKIPPED
+
+io.reactivex.subscribers.SerializedSubscriberTest > testThreadStarvation SKIPPED
+:testng
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AllTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AmbTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.AnyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.BufferExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CacheTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CollectTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CombineLatestIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatArrayEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatIterableEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherEagerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatPublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ConcatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.CreateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DefaultIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DeferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelaySubscriptionTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DelayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DistinctUntilChangedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoAfterNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoFinallyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.DoOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ElementAtTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.EmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FilterTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FirstTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FlatMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromArrayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromCallableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromFutureTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.FromIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GenerateTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.GroupByTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.HideTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IgnoreElementsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalRangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.IsEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.JustTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.LastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergePublisherTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.MergeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ObserveOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnBackpressureBufferTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorResumeNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.OnErrorReturnItemTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishSelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.PublishTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RangeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RebatchRequestsTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReduceWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RepeatTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplaySelectorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ReplayTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.RetryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ScanTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SequenceEqualTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ShareTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SingleTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SkipWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SortedTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchIfEmptyTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapDelayErrorTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.SwitchOnNextTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeLastTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeUntilTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TakeWhileTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeIntervalTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimeoutTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimerTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.TimestampTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToMultimapTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ToSortedListTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UnsubscribeOnTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.UsingTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowBoundaryTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WindowExactSizeTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.WithLatestFromTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithIterableTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+
+Gradle suite > Gradle test > io.reactivex.tck.ZipWithTckTest. SKIPPED
+:check
+:GCandMem
+Memory usage: 133.23667144775390625
+:jacocoTestReport
+:build
+:releaseCheck
+:snapshot
+:prepare UP-TO-DATE
+:generatePomFileForNebulaPublication
+:javadoc
+:javadocJar
+:sourceJar
+:artifactoryPublish
+Deploying artifact: https://oss.jfrog.org/oss-snapshot-local/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT-javadoc.jar
+Deploying artifact: https://oss.jfrog.org/oss-snapshot-local/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT-sources.jar
+Deploying artifact: https://oss.jfrog.org/oss-snapshot-local/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT.jar
+Deploying artifact: https://oss.jfrog.org/oss-snapshot-local/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT.pom
+Deploying build descriptor to: https://oss.jfrog.org/api/build
+Build successfully deployed. Browse it in Artifactory under https://oss.jfrog.org/webapp/builds/rxjava/1487783573552
+:publishNebulaPublicationToMavenLocal
+:bintrayUpload SKIPPED
+:release
+
+BUILD SUCCESSFUL
+
+Total time: 13 mins 0.535 secs
+
+travis_time:end:12122e2c:start=1487783560058795979,finish=1487784341443823649,duration=781385027670[0K
+[32;1mThe command "gradle/buildViaTravis.sh" exited with 0.[0m
+travis_fold:start:cache.2[0Kstore build cache
+travis_time:start:11033043[0K
+travis_time:end:11033043:start=1487784341452775234,finish=1487784341456970496,duration=4195262[0Ktravis_time:start:0477dfe0[0K[32;1mchange detected (content changed, file is created, or file is deleted):
+/home/travis/.gradle/caches/modules-2/modules-2.lock
+/home/travis/.m2/repository/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT.jar
+/home/travis/.m2/repository/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT-javadoc.jar
+/home/travis/.m2/repository/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT.pom
+/home/travis/.m2/repository/io/reactivex/rxjava2/rxjava/2.0.0-DP0-SNAPSHOT/rxjava-2.0.0-DP0-SNAPSHOT-sources.jar
+/home/travis/.m2/repository/io/reactivex/rxjava2/rxjava/maven-metadata-local.xml
+
+[0m
+[32;1mchanges detected, packing new archive[0m
+.
+[32;1muploading archive[0m
+
+travis_time:end:0477dfe0:start=1487784341462585043,finish=1487784353946919403,duration=12484334360[0Ktravis_fold:end:cache.2[0Ktravis_fold:start:after_success[0Ktravis_time:start:1dabfeaa[0K$ bash <(curl -s https://codecov.io/bash)
+
+  _____          _
+ / ____|        | |
+| |     ___   __| | ___  ___ _____   __
+| |    / _ \ / _` |/ _ \/ __/ _ \ \ / /
+| |___| (_) | (_| |  __/ (_| (_) \ V /
+ \_____\___/ \__,_|\___|\___\___/ \_/
+                              Bash-8e92d33
+
+
+[0;90m==>[0m Travis CI detected.
+    [0;90mproject root:[0m .
+    [0;90mYaml found at:[0m codecov.yml
+[0;90m==>[0m Running gcov in . [0;90m(disable via -X gcov)[0m
+[0;90m==>[0m Python coveragepy not found
+[0;90m==>[0m Searching for coverage reports in:
+    [0;32m+[0m .
+    [0;90m->[0m Found 1 reports
+[0;90m==>[0m Detecting git/mercurial file structure
+[0;90m==>[0m Appending build variables
+    [0;32m+[0m TRAVIS_OS_NAME
+    [0;32m+[0m TRAVIS_JDK_VERSION
+[0;90m==>[0m Reading reports
+    [0;32m+[0m ./build/reports/jacoco/test/jacocoTestReport.xml [0;90mbytes=5005794[0m
+[0;90m==>[0m Appending adjustments
+    [0;36mhttp://docs.codecov.io/docs/fixing-reports[0m
+    [0;32m+[0m Found 2 adjustments
+[0;90m==>[0m Uploading reports
+    [0;90murl:[0m https://codecov.io
+    [0;90mquery:[0m branch=2.x&commit=7494a2c05cf2f02142fc3193682141826974661a&build=4307.1&build_url=&name=&tag=&slug=ReactiveX%2FRxJava&yaml=codecov.yml&service=travis&flags=&pr=false&job=204277599
+    [0;90m->[0m Pinging Codecov
+    [0;90m->[0m Uploading to S3 https://codecov.s3.amazonaws.com
+    [0;32m->[0m View reports at [0;36mhttps://codecov.io/github/ReactiveX/RxJava/commit/7494a2c05cf2f02142fc3193682141826974661a[0m
+
+travis_time:end:1dabfeaa:start=1487784353952512620,finish=1487784356731810179,duration=2779297559[0Ktravis_fold:end:after_success[0K
+Done. Your build exited with 0.

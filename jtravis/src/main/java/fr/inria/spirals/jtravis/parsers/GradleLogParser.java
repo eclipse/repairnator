@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Created by urli on 22/02/2017.
  */
 public class GradleLogParser extends JavaLogParser {
-    protected static final String GRADLE_LINE_PARSER = "^:[\\w-]+:test[\\w-]*$";
+    protected static final String GRADLE_LINE_PARSER = "^(:[\\w-]+)?:test[\\w-]*$";
     private static final String GRADLE_TEST_FAIL = "^(\\d+) tests completed, (\\d+) failed(, (\\d+) skipped)?$";
 
     @Override
