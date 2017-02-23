@@ -30,7 +30,7 @@ public class Log extends LogPojo {
     public TestsInformation getTestsInformation() {
         if (testsInformation == null) {
             String body = getBody();
-            LogParser logParser = new LogParser(body);
+            LogParser logParser = new LogParser(body, this.getId());
 
             this.testsInformation = logParser.getTestsInformation();
         }
@@ -42,7 +42,7 @@ public class Log extends LogPojo {
         if (buildTool == null) {
             String body = getBody();
 
-            LogParser logParser = new LogParser(body);
+            LogParser logParser = new LogParser(body, this.getId());
             buildTool = logParser.getBuildTool();
         }
 

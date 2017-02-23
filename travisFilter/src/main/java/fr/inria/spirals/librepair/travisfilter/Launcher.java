@@ -5,11 +5,12 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.BuildTool;
 import fr.inria.spirals.jtravis.entities.Repository;
+import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 
-import javax.xml.bind.annotation.XmlType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -23,9 +24,6 @@ import java.util.List;
  */
 public class Launcher {
 
-    private static final String DEFAULT_LANGUAGE = "java";
-    private static final String DEFAULT_TOOL = "unknown";
-
     private static List<String> getFileContent(String path) throws IOException {
         List<String> result = new ArrayList<String>();
         File file = new File(path);
@@ -36,16 +34,38 @@ public class Launcher {
         return result;
     }
 
+    private static boolean checkBuildValidityOnTool(Build build, BuildTool tool) {
+        return (build.getBuildTool() == tool);
+    }
+
     private static List<Repository> getListOfValidRepository(List<String> allSlugs, String language, BuildTool tool) {
         List<Repository> result = new ArrayList<Repository>();
 
         for (String slug : allSlugs) {
             Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
             if (repo != null) {
-                Build lastBuild = repo.getLastBuild();
-                if (lastBuild != null && lastBuild.getConfig().getLanguage().equals(language)) {
-                    if (tool == null || lastBuild.getBuildTool() == tool) {
+                Build lastBuild = repo.getLastBuild(true);
+                if (lastBuild != null) {
+                    if (tool == null && language == null) {
                         result.add(repo);
+                    } else if (tool == null && lastBuild.getConfig().getLanguage().equals(language)) {
+                        result.add(repo);
+                    } else if (tool != null && (language == null || lastBuild.getConfig().getLanguage().equals(language))){
+                        if (lastBuild.getBuildStatus() == BuildStatus.PASSED) {
+                            if (checkBuildValidityOnTool(lastBuild, tool)) {
+                                result.add(repo);
+                            }
+                        } else {
+                            Build lastPassingBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(lastBuild, BuildStatus.PASSED);
+                            if (lastPassingBuild == null) {
+                                lastBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(lastBuild, BuildStatus.FAILED);
+                            } else {
+                                lastBuild = lastPassingBuild;
+                            }
+                            if (lastBuild != null && checkBuildValidityOnTool(lastBuild, tool)) {
+                                result.add(repo);
+                            }
+                        }
                     }
                 }
             }
@@ -88,7 +108,6 @@ public class Launcher {
         opt2.setLongFlag("language");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setRequired(false);
-        opt2.setDefault(DEFAULT_LANGUAGE);
         opt2.setHelp("Specify the language to filter.");
         jsap.registerParameter(opt2);
 
@@ -104,7 +123,6 @@ public class Launcher {
         opt2.setLongFlag("tool");
         opt2.setStringParser(EnumeratedStringParser.getParser(toolValues));
         opt2.setRequired(false);
-        opt2.setDefault(DEFAULT_TOOL);
         opt2.setHelp("Specify the tool to filter");
         jsap.registerParameter(opt2);
 
@@ -126,7 +144,7 @@ public class Launcher {
         }
 
         BuildTool toolMode = null;
-        if (!arguments.getString("tool").equals(DEFAULT_TOOL)) {
+        if (arguments.getString("tool") != null) {
             toolMode = BuildTool.valueOf(arguments.getString("tool").toUpperCase());
         }
 
