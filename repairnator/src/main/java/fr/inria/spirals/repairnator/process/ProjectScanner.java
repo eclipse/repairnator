@@ -190,7 +190,7 @@ public class ProjectScanner {
             this.logger.debug("Get repo " + slug);
             Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
             if (repo != null) {
-                Build lastBuild = repo.getLastBuild();
+                Build lastBuild = repo.getLastBuild(false);
                 if (lastBuild != null) {
                     result.add(repo);
                 } else {
