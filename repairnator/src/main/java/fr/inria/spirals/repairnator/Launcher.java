@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
-    private static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_LOGIN", "GITHUB_OAUTH" };
+    private static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH" };
     private static final int NB_THREADS = 4;
 
     private JSAP jsap;
