@@ -36,8 +36,13 @@ public class LogParser {
         this.logId = logId;
         this.folds = new ArrayList<TravisFold>();
 
-        this.analyzeLogToCreateFolds();
-        this.analyzeLogToCreateParser();
+        if (log != null) {
+            this.analyzeLogToCreateFolds();
+            this.analyzeLogToCreateParser();
+        } else {
+            logger.warn("The log content is not available.");
+            this.buildTool = BuildTool.UNKNOWN;
+        }
     }
 
     private void analyzeLogToCreateFolds() {
