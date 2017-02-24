@@ -430,11 +430,11 @@ public class Launcher {
     private void inspectBuildsForBears(List<Build> buildList, String workspace) throws IOException {
         initWorkspace(workspace);
 
-        ProjectInspector4Bears inspector;
+
         final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
 
         for (Build build : buildList) {
-            inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, mode);
+            final ProjectInspector4Bears inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, mode);
             pool.submit(new Runnable() {
                 @Override
                 public void run() {
