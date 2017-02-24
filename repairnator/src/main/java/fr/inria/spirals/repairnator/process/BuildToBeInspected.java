@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.process;
 
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.BuildStatus;
 
 /**
  * Created by fernanda on 24/02/17.
@@ -11,15 +10,15 @@ public class BuildToBeInspected {
     private Build build;
     private Build previousBuild;
     // For RepairNator, the status is about the build, and for Bears it is about the previous build
-    private BuildStatus status;
+    private ScannedBuildStatus status;
 
-    BuildToBeInspected(Build build, BuildStatus status) {
+    BuildToBeInspected(Build build, ScannedBuildStatus status) {
         this.build = build;
         this.previousBuild = null;
         this.status = status;
     }
 
-    BuildToBeInspected(Build build, Build previousBuild, BuildStatus status) {
+    BuildToBeInspected(Build build, Build previousBuild, ScannedBuildStatus status) {
         this.build = build;
         this.previousBuild = previousBuild;
         this.status = status;
@@ -33,7 +32,7 @@ public class BuildToBeInspected {
         return previousBuild;
     }
 
-    public BuildStatus getStatus() {
+    public ScannedBuildStatus getStatus() {
         return status;
     }
 }

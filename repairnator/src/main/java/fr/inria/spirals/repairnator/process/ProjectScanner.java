@@ -109,7 +109,7 @@ public class ProjectScanner {
                 continue;
             }
             if (testBuild(build, true)) {
-                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, build.getBuildStatus());
+                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
                 buildsToBeInspected.add(buildToBeInspected);
             }
         }
@@ -253,14 +253,18 @@ public class ProjectScanner {
                             this.logger.debug("Build: " + build.getId());
                             this.logger.debug("Previous build: " + previousBuild.getId());
 
-                            if (previousBuild.getBuildStatus() == BuildStatus.FAILED
-                                    || previousBuild.getBuildStatus() == BuildStatus.PASSED) {
-                                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, previousBuild.getBuildStatus());
+                            if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
+                                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.ONLY_FAIL);
                                 buildsToBeInspected.add(buildToBeInspected);
+                            } else {
+                                if (previousBuild.getBuildStatus() == BuildStatus.PASSED) {
+                                    BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASS);
+                                    buildsToBeInspected.add(buildToBeInspected);
+                                }
                             }
                         }
                     } else {
-                        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, build.getBuildStatus());
+                        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
                         buildsToBeInspected.add(buildToBeInspected);
                     }
                 }
@@ -302,7 +306,7 @@ public class ProjectScanner {
         if (buildId != null) {
             Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
             if (build != null) {
-                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, build.getBuildStatus());
+                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.UNKNOWN);
                 buildsToBeInspected.add(buildToBeInspected);
             }
         }
