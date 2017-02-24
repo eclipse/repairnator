@@ -16,24 +16,27 @@ public class GradleLogParser extends JavaLogParser {
     public TestsInformation parseLog(TravisFold outOfFolds) {
         Pattern pattern = Pattern.compile(GRADLE_TEST_FAIL, Pattern.MULTILINE);
 
-        Matcher matcher = pattern.matcher(outOfFolds.getWholeContent());
+        for (String content : outOfFolds.getContent()) {
+            Matcher matcher = pattern.matcher(content);
 
-        if (matcher.find()) {
-            for (String s : outOfFolds.getContent()) {
-                matcher = pattern.matcher(s);
+            if (matcher.matches()) {
+                for (String s : outOfFolds.getContent()) {
+                    matcher = pattern.matcher(s);
 
-                if (matcher.matches()) {
-                    this.runningTests += Integer.parseInt(matcher.group(1));
-                    this.failingTests += Integer.parseInt(matcher.group(2));
+                    if (matcher.matches()) {
+                        this.runningTests += Integer.parseInt(matcher.group(1));
+                        this.failingTests += Integer.parseInt(matcher.group(2));
 
-                    String skipped = matcher.group(4);
-                    if (skipped != null) {
-                        this.skippingTests += Integer.parseInt(skipped);
+                        String skipped = matcher.group(4);
+                        if (skipped != null) {
+                            this.skippingTests += Integer.parseInt(skipped);
+                        }
                     }
                 }
+                this.passingTests = this.runningTests - (this.failingTests+this.skippingTests);
             }
-            this.passingTests = this.runningTests - (this.failingTests+this.skippingTests);
         }
+
         return this.createTestInformation();
     }
 }
