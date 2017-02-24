@@ -30,35 +30,39 @@ public class GoogleSpreadSheetScannerSerializer {
     }
 
     public void serialize() {
-        List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(SerializerUtils.getHostname());
-        dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
-        dataCol.add(SerializerUtils.formatCompleteDate(this.scanner.getLimitDate()));
-        dataCol.add(this.scanner.getTotalRepoNumber());
-        dataCol.add(this.scanner.getTotalRepoUsingTravis());
-        dataCol.add(this.scanner.getTotalScannedBuilds());
-        dataCol.add(this.scanner.getTotalBuildInJava());
-        dataCol.add(this.scanner.getTotalJavaPassingBuilds());
-        dataCol.add(this.scanner.getTotalBuildInJavaFailing());
-        dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
-        dataCol.add(this.scanner.getTotalPRBuilds());
-        dataCol.add(SerializerUtils.formatOnlyDay(this.scanner.getLimitDate()));
+        if (this.sheets != null) {
+            List<Object> dataCol = new ArrayList<Object>();
+            dataCol.add(SerializerUtils.getHostname());
+            dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
+            dataCol.add(SerializerUtils.formatCompleteDate(this.scanner.getLimitDate()));
+            dataCol.add(this.scanner.getTotalRepoNumber());
+            dataCol.add(this.scanner.getTotalRepoUsingTravis());
+            dataCol.add(this.scanner.getTotalScannedBuilds());
+            dataCol.add(this.scanner.getTotalBuildInJava());
+            dataCol.add(this.scanner.getTotalJavaPassingBuilds());
+            dataCol.add(this.scanner.getTotalBuildInJavaFailing());
+            dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
+            dataCol.add(this.scanner.getTotalPRBuilds());
+            dataCol.add(SerializerUtils.formatOnlyDay(this.scanner.getLimitDate()));
 
-        List<List<Object>> dataRow = new ArrayList<List<Object>>();
-        dataRow.add(dataCol);
+            List<List<Object>> dataRow = new ArrayList<List<Object>>();
+            dataRow.add(dataCol);
 
-        ValueRange valueRange = new ValueRange();
-        valueRange.setValues(dataRow);
+            ValueRange valueRange = new ValueRange();
+            valueRange.setValues(dataRow);
 
-        try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values()
-                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
-                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-            if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                this.logger.debug("Scanner data have been inserted in Google Spreadsheet.");
+            try {
+                AppendValuesResponse response = this.sheets.spreadsheets().values()
+                        .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                        .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+                if (response != null && response.getUpdates().getUpdatedCells() > 0) {
+                    this.logger.debug("Scanner data have been inserted in Google Spreadsheet.");
+                }
+            } catch (IOException e) {
+                this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.", e);
             }
-        } catch (IOException e) {
-            this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.", e);
+        } else {
+            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }
     }
 }

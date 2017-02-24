@@ -39,46 +39,50 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
 
     @Override
     public void serializeData(ProjectInspector inspector) {
-        Map<String, Integer> durations = inspector.getStepsDurationsInSeconds();
-        int total = 0;
-        int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
-        int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
-        int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
-        int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
-        int push = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
-        int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
+        if (this.sheets != null) {
+            Map<String, Integer> durations = inspector.getStepsDurationsInSeconds();
+            int total = 0;
+            int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
+            int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
+            int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
+            int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
+            int push = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
+            int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
 
-        total = clonage + buildtime + test + gatherTestInfo + push + repair;
-        Build build = inspector.getBuild();
+            total = clonage + buildtime + test + gatherTestInfo + push + repair;
+            Build build = inspector.getBuild();
 
-        List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(build.getId() + "");
-        dataCol.add(build.getRepository().getSlug());
-        dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
-        dataCol.add(total);
-        dataCol.add(clonage);
-        dataCol.add(buildtime);
-        dataCol.add(test);
-        dataCol.add(gatherTestInfo);
-        dataCol.add(push);
-        dataCol.add(repair);
-        dataCol.add(SerializerUtils.getHostname());
+            List<Object> dataCol = new ArrayList<Object>();
+            dataCol.add(build.getId() + "");
+            dataCol.add(build.getRepository().getSlug());
+            dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
+            dataCol.add(total);
+            dataCol.add(clonage);
+            dataCol.add(buildtime);
+            dataCol.add(test);
+            dataCol.add(gatherTestInfo);
+            dataCol.add(push);
+            dataCol.add(repair);
+            dataCol.add(SerializerUtils.getHostname());
 
-        List<List<Object>> dataRow = new ArrayList<List<Object>>();
-        dataRow.add(dataCol);
+            List<List<Object>> dataRow = new ArrayList<List<Object>>();
+            dataRow.add(dataCol);
 
-        ValueRange valueRange = new ValueRange();
-        valueRange.setValues(dataRow);
+            ValueRange valueRange = new ValueRange();
+            valueRange.setValues(dataRow);
 
-        try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values()
-                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
-                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-            if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                this.logger.debug("Time data have been inserted in Google Spreadsheet.");
+            try {
+                AppendValuesResponse response = this.sheets.spreadsheets().values()
+                        .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                        .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+                if (response != null && response.getUpdates().getUpdatedCells() > 0) {
+                    this.logger.debug("Time data have been inserted in Google Spreadsheet.");
+                }
+            } catch (IOException e) {
+                this.logger.error("An error occured while inserting time data in Google Spreadsheet.", e);
             }
-        } catch (IOException e) {
-            this.logger.error("An error occured while inserting time data in Google Spreadsheet.", e);
+        } else {
+            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }
     }
 }

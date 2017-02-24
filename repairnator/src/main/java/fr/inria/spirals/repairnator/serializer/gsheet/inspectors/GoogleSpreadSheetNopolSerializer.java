@@ -75,47 +75,50 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
     }
 
     @Override
-    public void serializeData(ProjectInspector inspector) {
-        if (inspector.getNopolRepair() != null) {
-            Build build = inspector.getBuild();
+    public void serializeData(ProjectInspector inspector){
+        if (this.sheets != null) {
+            if (inspector.getNopolRepair() != null) {
+                Build build = inspector.getBuild();
 
-            List<List<Object>> dataRow = new ArrayList<List<Object>>();
+                List<List<Object>> dataRow = new ArrayList<List<Object>>();
 
-            for (NopolInformation nopolInformation : inspector.getNopolRepair().getNopolInformations()) {
-                List<Object> dataCol;
+                for (NopolInformation nopolInformation : inspector.getNopolRepair().getNopolInformations()) {
+                    List<Object> dataCol;
 
-                if (nopolInformation.getPatches().isEmpty()) {
-                    dataCol = this.serializeNopolInfo(build, nopolInformation, null, 0);
-                    dataRow.add(dataCol);
-                } else {
-                    int patchNumber = 1;
-
-                    for (Patch patch : nopolInformation.getPatches()) {
-                        dataCol = this.serializeNopolInfo(build, nopolInformation, patch, patchNumber++);
+                    if (nopolInformation.getPatches().isEmpty()) {
+                        dataCol = this.serializeNopolInfo(build, nopolInformation, null, 0);
                         dataRow.add(dataCol);
+                    } else {
+                        int patchNumber = 1;
+
+                        for (Patch patch : nopolInformation.getPatches()) {
+                            dataCol = this.serializeNopolInfo(build, nopolInformation, patch, patchNumber++);
+                            dataRow.add(dataCol);
+                        }
                     }
                 }
-            }
 
-            if (!dataRow.isEmpty()) {
-                ValueRange valueRange = new ValueRange();
-                valueRange.setValues(dataRow);
+                if (!dataRow.isEmpty()) {
+                    ValueRange valueRange = new ValueRange();
+                    valueRange.setValues(dataRow);
 
-                try {
-                    AppendValuesResponse response = this.sheets.spreadsheets().values()
-                            .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
-                            .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-                    if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                        this.logger.debug("Data have been inserted in Google Spreadsheet.");
+                    try {
+                        AppendValuesResponse response = this.sheets.spreadsheets().values()
+                                .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                                .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+                        if (response != null && response.getUpdates().getUpdatedCells() > 0) {
+                            this.logger.debug("Data have been inserted in Google Spreadsheet.");
+                        }
+                    } catch (IOException e) {
+                        this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
                     }
-                } catch (IOException e) {
-                    this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
                 }
+            } else {
+                this.logger
+                        .warn("NopolRepair step seems not defined in inspector. Maybe you should not use this serializer.");
             }
         } else {
-            this.logger
-                    .warn("NopolRepair step seems not defined in inspector. Maybe you should not use this serializer.");
+            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }
-
     }
 }

@@ -42,35 +42,40 @@ public class GoogleSpreadSheetEndProcessSerializer {
     }
 
     public void serialize() {
-        Date now = new Date();
-        String humanDuration = SerializerUtils.getDuration(this.beginDate, now);
+        if (this.sheets != null) {
+            Date now = new Date();
+            String humanDuration = SerializerUtils.getDuration(this.beginDate, now);
 
-        List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(SerializerUtils.getHostname());
-        dataCol.add(SerializerUtils.formatOnlyDay(this.beginDate));
-        dataCol.add(SerializerUtils.formatCompleteDate(this.beginDate));
-        dataCol.add(SerializerUtils.formatCompleteDate(now));
-        dataCol.add(humanDuration);
-        dataCol.add(scanner.getTotalBuildInJavaFailingWithFailingTests());
-        dataCol.add(reproducedFailures);
-        dataCol.add(reproducedErrors);
-        dataCol.add(reproducedErrors + reproducedFailures);
+            List<Object> dataCol = new ArrayList<Object>();
+            dataCol.add(SerializerUtils.getHostname());
+            dataCol.add(SerializerUtils.formatOnlyDay(this.beginDate));
+            dataCol.add(SerializerUtils.formatCompleteDate(this.beginDate));
+            dataCol.add(SerializerUtils.formatCompleteDate(now));
+            dataCol.add(humanDuration);
+            dataCol.add(scanner.getTotalBuildInJavaFailingWithFailingTests());
+            dataCol.add(reproducedFailures);
+            dataCol.add(reproducedErrors);
+            dataCol.add(reproducedErrors + reproducedFailures);
 
-        List<List<Object>> dataRow = new ArrayList<List<Object>>();
-        dataRow.add(dataCol);
+            List<List<Object>> dataRow = new ArrayList<List<Object>>();
+            dataRow.add(dataCol);
 
-        ValueRange valueRange = new ValueRange();
-        valueRange.setValues(dataRow);
+            ValueRange valueRange = new ValueRange();
+            valueRange.setValues(dataRow);
 
-        try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values()
-                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
-                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-            if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                this.logger.debug("Scanner data have been inserted in Google Spreadsheet.");
+            try {
+                AppendValuesResponse response = this.sheets.spreadsheets().values()
+                        .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                        .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+                if (response != null && response.getUpdates().getUpdatedCells() > 0) {
+                    this.logger.debug("Scanner data have been inserted in Google Spreadsheet.");
+                }
+            } catch (IOException e) {
+                this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.", e);
             }
-        } catch (IOException e) {
-            this.logger.error("An error occured while inserting scanner data in Google Spreadsheet.", e);
+        } else {
+            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }
+
     }
 }

@@ -33,46 +33,50 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
 
     @Override
     public void serializeData(ProjectInspector inspector) {
-        Build build = inspector.getBuild();
+        if (this.sheets != null) {
+            Build build = inspector.getBuild();
 
-        String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
+            String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
 
-        String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
-        String typeOfFailures = "";
-        Set<String> failures = inspector.getTestInformations().getFailureNames();
+            String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
+            String typeOfFailures = "";
+            Set<String> failures = inspector.getTestInformations().getFailureNames();
 
-        for (String failure : failures) {
-            typeOfFailures += failure + ",";
-        }
-
-        List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(build.getId() + "");
-        dataCol.add(build.getRepository().getSlug());
-        dataCol.add(state);
-        dataCol.add(build.getPullRequestNumber() + "");
-        dataCol.add(SerializerUtils.formatCompleteDate(build.getFinishedAt()));
-        dataCol.add(SerializerUtils.formatOnlyDay(build.getFinishedAt()));
-        dataCol.add(realState);
-        dataCol.add(SerializerUtils.getHostname());
-        dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
-        dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
-        dataCol.add(typeOfFailures);
-
-        List<List<Object>> dataRow = new ArrayList<List<Object>>();
-        dataRow.add(dataCol);
-
-        ValueRange valueRange = new ValueRange();
-        valueRange.setValues(dataRow);
-
-        try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values()
-                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
-                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-            if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                this.logger.debug("Data have been inserted in Google Spreadsheet.");
+            for (String failure : failures) {
+                typeOfFailures += failure + ",";
             }
-        } catch (IOException e) {
-            this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
+
+            List<Object> dataCol = new ArrayList<Object>();
+            dataCol.add(build.getId() + "");
+            dataCol.add(build.getRepository().getSlug());
+            dataCol.add(state);
+            dataCol.add(build.getPullRequestNumber() + "");
+            dataCol.add(SerializerUtils.formatCompleteDate(build.getFinishedAt()));
+            dataCol.add(SerializerUtils.formatOnlyDay(build.getFinishedAt()));
+            dataCol.add(realState);
+            dataCol.add(SerializerUtils.getHostname());
+            dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
+            dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+            dataCol.add(typeOfFailures);
+
+            List<List<Object>> dataRow = new ArrayList<List<Object>>();
+            dataRow.add(dataCol);
+
+            ValueRange valueRange = new ValueRange();
+            valueRange.setValues(dataRow);
+
+            try {
+                AppendValuesResponse response = this.sheets.spreadsheets().values()
+                        .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
+                        .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
+                if (response != null && response.getUpdates().getUpdatedCells() > 0) {
+                    this.logger.debug("Data have been inserted in Google Spreadsheet.");
+                }
+            } catch (IOException e) {
+                this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
+            }
+        } else {
+            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }
     }
 }
