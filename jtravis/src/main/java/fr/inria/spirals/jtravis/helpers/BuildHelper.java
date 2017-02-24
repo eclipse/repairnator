@@ -235,7 +235,10 @@ public class BuildHelper extends AbstractHelper {
 
         int after_number = 0;
         try {
-            after_number = Integer.parseInt(build.getNumber());
+            String numberStr = build.getNumber();
+            if (numberStr != null) {
+                after_number = Integer.parseInt(numberStr);
+            }
         } catch (NumberFormatException e) {
             getInstance().getLogger().error("Error while parsing build number for build id: "+build.getId(),e);
             return null;
