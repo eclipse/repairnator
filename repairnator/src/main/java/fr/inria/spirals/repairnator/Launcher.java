@@ -431,10 +431,27 @@ public class Launcher {
         initWorkspace(workspace);
 
         ProjectInspector4Bears inspector;
+        final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
+
         for (Build build : buildList) {
             inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, mode);
-            inspector.setAutoclean(clean);
-            inspector.run();
+            pool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    inspector.run();
+                }
+            });
+        }
+
+        try {
+            pool.shutdown();
+            if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
+                pool.shutdownNow();
+                LOGGER.error("Shutdown pool of threads.");
+            }
+        } catch (InterruptedException e) {
+            pool.shutdownNow();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
