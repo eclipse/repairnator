@@ -1,31 +1,15 @@
 package fr.inria.spirals.repairnator.process;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-
+import fr.inria.spirals.jtravis.entities.*;
+import fr.inria.spirals.jtravis.helpers.BuildHelper;
+import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
+import fr.inria.spirals.repairnator.RepairMode;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.BuildStatus;
-import fr.inria.spirals.jtravis.entities.Job;
-import fr.inria.spirals.jtravis.entities.Log;
-import fr.inria.spirals.jtravis.entities.Repository;
-import fr.inria.spirals.jtravis.entities.TestsInformation;
-import fr.inria.spirals.jtravis.helpers.BuildHelper;
-import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import java.io.*;
+import java.util.*;
 
 /**
  * This class aims to provide utility methods to scan the projects and get
@@ -48,7 +32,6 @@ public class ProjectScanner {
 
     private Collection<String> slugs;
     private Collection<Repository> repositories;
-    private Collection<Integer> buildsId;
     private Date limitDate;
 
     public ProjectScanner(int lookupHours) {
@@ -104,14 +87,12 @@ public class ProjectScanner {
         return repositories;
     }
 
-    public List<Build> getListOfFailingBuildFromGivenBuildIds(String path) throws IOException {
+    public List<BuildToBeInspected> getListOfFailingBuildFromGivenBuildIds(String path) throws IOException {
         this.dateStart = new Date();
         List<String> buildsIds = getFileContent(path);
         this.totalScannedBuilds = buildsIds.size();
 
-        this.buildsId = new ArrayList<Integer>();
-
-        List<Build> result = new ArrayList<Build>();
+        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
         for (String s : buildsIds) {
             int buildId;
@@ -128,17 +109,17 @@ public class ProjectScanner {
                 continue;
             }
             if (testBuild(build, true)) {
-                result.add(build);
-                this.buildsId.add(build.getId());
+                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+                buildsToBeInspected.add(buildToBeInspected);
             }
         }
 
         this.totalRepoNumber = this.repositories.size();
         this.totalRepoUsingTravis = this.repositories.size();
-        this.totalBuildInJavaFailingWithFailingTests = result.size();
+        this.totalBuildInJavaFailingWithFailingTests = buildsToBeInspected.size();
         this.dateFinish = new Date();
 
-        return result;
+        return buildsToBeInspected;
     }
 
     /**
@@ -152,22 +133,22 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    public List<Build> getListOfFailingBuildFromProjects(String path) throws IOException {
-        return getListOfBuildsFromProjectsByBuildStatus(path, true);
+    public List<BuildToBeInspected> getListOfFailingBuildFromProjects(String path, RepairMode mode) throws IOException {
+        return getListOfBuildsFromProjectsByBuildStatus(path, mode, true);
     }
 
-    public List<Build> getListOfPassingBuildsFromProjects(String path) throws IOException {
-        return getListOfBuildsFromProjectsByBuildStatus(path, false);
+    public List<BuildToBeInspected> getListOfPassingBuildsFromProjects(String path, RepairMode mode) throws IOException {
+        return getListOfBuildsFromProjectsByBuildStatus(path, mode, false);
     }
 
-    private List<Build> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing)
+    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, RepairMode mode, boolean targetFailing)
             throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
-        List<Build> builds = getListOfBuildsFromRepo(repos, targetFailing);
+        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos, mode, targetFailing);
 
         this.dateFinish = new Date();
         return builds;
@@ -254,23 +235,43 @@ public class ProjectScanner {
         return false;
     }
 
-    private List<Build> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
-        List<Build> result = new ArrayList<Build>();
+    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, RepairMode mode, boolean targetFailing) {
+        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
-        this.buildsId = new ArrayList<Integer>();
         for (Repository repo : repos) {
             List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;
                 if (testBuild(build, targetFailing)) {
-                    result.add(build);
-                    this.buildsId.add(build.getId());
+                    if (mode == RepairMode.FORBEARS) {
+                        // First of all, here it is checked if the current passing build has a
+                        // previous build---if doesn't, nothing is made as this build is not
+                        // useful for Bears
+                        Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
+                        if (previousBuild != null) {
+                            this.logger.debug("Build: " + build.getId());
+                            this.logger.debug("Previous build: " + previousBuild.getId());
+
+                            if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
+                                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_FAIL);
+                                buildsToBeInspected.add(buildToBeInspected);
+                            } else {
+                                if (previousBuild.getBuildStatus() == BuildStatus.PASSED) {
+                                    BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING);
+                                    buildsToBeInspected.add(buildToBeInspected);
+                                }
+                            }
+                        }
+                    } else {
+                        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+                        buildsToBeInspected.add(buildToBeInspected);
+                    }
                 }
             }
         }
 
-        return result;
+        return buildsToBeInspected;
     }
 
     public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
@@ -297,19 +298,20 @@ public class ProjectScanner {
         return properties.getProperty("workspace");
     }
 
-    public List<Build> readBuildFromInput(String input) throws IOException {
-        List<Build> result = new ArrayList<Build>();
+    public List<BuildToBeInspected> readBuildFromInput(String input) throws IOException {
+        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
         Properties properties = getPropertiesFromInput(input);
         String buildId = properties.getProperty("buildid");
         if (buildId != null) {
             Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
-            if (build != null) {
-                result.add(build);
+            if (build != null && build.getBuildStatus() == BuildStatus.FAILED) {
+                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+                buildsToBeInspected.add(buildToBeInspected);
             }
         }
 
-        return result;
+        return buildsToBeInspected;
     }
 
 }

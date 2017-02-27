@@ -1,26 +1,22 @@
 package fr.inria.spirals.repairnator;
 
 import ch.qos.logback.classic.Level;
-import com.martiansoftware.jsap.FlaggedOption;
-import com.martiansoftware.jsap.JSAP;
-import com.martiansoftware.jsap.JSAPException;
-import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.Switch;
+import ch.qos.logback.classic.Logger;
+import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
-import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.process.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.process.ProjectScanner;
-import ch.qos.logback.classic.Logger;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4RepairNator;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTimeSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
 import org.codehaus.plexus.util.FileUtils;
@@ -317,26 +313,26 @@ public class Launcher {
 
         jsonSerializer.setScanner(scanner);
 
-        List<Build> buildList = null;
+        List<BuildToBeInspected> buildsToBeInspected = null;
 
         String completeWorkspace = null;
 
         switch (mode) {
             case BUILD:
-                buildList = scanner.getListOfFailingBuildFromGivenBuildIds(input);
+                buildsToBeInspected = scanner.getListOfFailingBuildFromGivenBuildIds(input);
                 break;
 
             case SLUG:
-                buildList = scanner.getListOfFailingBuildFromProjects(input);
+                buildsToBeInspected = scanner.getListOfFailingBuildFromProjects(input, mode);
                 break;
 
             case NOPOLONLY:
                 completeWorkspace = scanner.readWorkspaceFromInput(input);
-                buildList = scanner.readBuildFromInput(input);
+                buildsToBeInspected = scanner.readBuildFromInput(input);
                 break;
 
             case FORBEARS:
-                buildList = scanner.getListOfPassingBuildsFromProjects(input);
+                buildsToBeInspected = scanner.getListOfPassingBuildsFromProjects(input, mode);
                 break;
         }
 
@@ -346,9 +342,9 @@ public class Launcher {
             scannerSerializer.serialize();
         }
 
-        if (buildList != null) {
-            for (Build build : buildList) {
-                System.out.println("Incriminated project : " + build.getRepository().getSlug() + ":" + build.getId());
+        if (buildsToBeInspected != null) {
+            for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
+                System.out.println("Incriminated project : " + buildToBeInspected.getBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuild().getId());
             }
         }
 
@@ -360,7 +356,7 @@ public class Launcher {
 
         if (completeWorkspace != null) {
             if (mode != RepairMode.FORBEARS) {
-                List<ProjectInspector> inspectors = cloneAndRepair(buildList, completeWorkspace);
+                List<ProjectInspector> inspectors = cloneAndRepair(buildsToBeInspected, completeWorkspace);
 
                 for (ProjectInspector inspector : inspectors) {
                     if (inspector.isReproducedAsFail()) {
@@ -377,7 +373,7 @@ public class Launcher {
                     this.endProcessSerializer.serialize();
                 }
             } else {
-                inspectBuildsForBears(buildList, completeWorkspace);
+                inspectBuildsForBears(buildsToBeInspected, completeWorkspace);
             }
 
             Launcher.LOGGER.debug("Start writing a JSON output...");
@@ -391,14 +387,14 @@ public class Launcher {
         }
     }
 
-    private List<ProjectInspector> cloneAndRepair(List<Build> results, String workspace) throws IOException {
+    private List<ProjectInspector> cloneAndRepair(List<BuildToBeInspected> buildsToBeInspected, String workspace) throws IOException {
         if (mode != RepairMode.NOPOLONLY) {
             initWorkspace(workspace);
         }
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
-        for (Build build : results) {
-            ProjectInspector inspector = new ProjectInspector(build, workspace, this.serializers, solverPath, push,
+        for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
+            ProjectInspector inspector = new ProjectInspector(buildToBeInspected, workspace, this.serializers, solverPath, push,
                     mode);
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
@@ -427,14 +423,15 @@ public class Launcher {
         return projectInspectors;
     }
 
-    private void inspectBuildsForBears(List<Build> buildList, String workspace) throws IOException {
+    private void inspectBuildsForBears(List<BuildToBeInspected> buildsToBeInspected, String workspace) throws IOException {
         initWorkspace(workspace);
 
 
         final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
 
-        for (Build build : buildList) {
-            final ProjectInspector4Bears inspector = new ProjectInspector4Bears(build, workspace, this.serializers, null, push, mode);
+        for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
+            final ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, workspace, this.serializers, null, push, mode);
+            inspector.setAutoclean(clean);
             pool.submit(new Runnable() {
                 @Override
                 public void run() {
