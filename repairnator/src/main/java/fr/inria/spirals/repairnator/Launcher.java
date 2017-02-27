@@ -17,6 +17,7 @@ import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadShe
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
 import org.codehaus.plexus.util.FileUtils;
@@ -59,6 +60,8 @@ public class Launcher {
     private GoogleSpreadSheetEndProcessSerializer endProcessSerializer;
     private int nbReproducedFails;
     private int nbReproducedErrors;
+    private int nbFixerBuildCase1;
+    private int nbFixerBuildCase2;
 
     public Launcher() {
         this.serializers = new ArrayList<AbstractDataSerializer>();
@@ -310,6 +313,10 @@ public class Launcher {
         if (mode == RepairMode.SLUG) {
             this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, googleSecretPath);
         }
+        GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = null;
+        if (mode == RepairMode.FORBEARS) {
+            googleSpreadSheetEndProcessSerializer4Bears = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, googleSecretPath);
+        }
 
         jsonSerializer.setScanner(scanner);
 
@@ -373,7 +380,22 @@ public class Launcher {
                     this.endProcessSerializer.serialize();
                 }
             } else {
-                inspectBuildsForBears(buildsToBeInspected, completeWorkspace);
+                List<ProjectInspector4Bears> inspectors = inspectBuildsForBears(buildsToBeInspected, completeWorkspace);
+
+                for (ProjectInspector4Bears inspector : inspectors) {
+                    if (inspector.isFixerBuildCase1()) {
+                        this.nbFixerBuildCase1++;
+                    }
+                    if (inspector.isFixerBuildCase2()) {
+                        this.nbFixerBuildCase2++;
+                    }
+                }
+
+                if (googleSpreadSheetEndProcessSerializer4Bears != null) {
+                    googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase1(this.nbFixerBuildCase1);
+                    googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase2(this.nbFixerBuildCase2);
+                    googleSpreadSheetEndProcessSerializer4Bears.serialize();
+                }
             }
 
             Launcher.LOGGER.debug("Start writing a JSON output...");
@@ -423,15 +445,18 @@ public class Launcher {
         return projectInspectors;
     }
 
-    private void inspectBuildsForBears(List<BuildToBeInspected> buildsToBeInspected, String workspace) throws IOException {
+    private List<ProjectInspector4Bears> inspectBuildsForBears(List<BuildToBeInspected> buildsToBeInspected, String workspace) throws IOException {
         initWorkspace(workspace);
 
-
+        List<ProjectInspector4Bears> projectInspectors = new ArrayList<ProjectInspector4Bears>();
+        for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
+            ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, workspace, this.serializers, null, push, mode);
+            inspector.setAutoclean(clean);
+            projectInspectors.add(inspector);
+        }
         final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
 
-        for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-            final ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, workspace, this.serializers, null, push, mode);
-            inspector.setAutoclean(clean);
+        for (final ProjectInspector4Bears inspector : projectInspectors) {
             pool.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -450,6 +475,7 @@ public class Launcher {
             pool.shutdownNow();
             LOGGER.error(e.getMessage(), e);
         }
+        return projectInspectors;
     }
 
     public static void main(String[] args) throws Exception {

@@ -17,10 +17,15 @@ import java.util.List;
 public class ProjectInspector4Bears extends ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector4Bears.class);
 
+    private boolean isFixerBuild_Case1;
+    private boolean isFixerBuild_Case2;
+
     public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers,
                                   String nopolSolverPath, boolean push, RepairMode mode) {
         super(buildToBeInspected, workspace, serializers, null, push, mode);
         this.previousBuildFlag = false;
+        this.isFixerBuild_Case1 = false;
+        this.isFixerBuild_Case2 = false;
     }
 
     public void run() {
@@ -84,4 +89,19 @@ public class ProjectInspector4Bears extends ProjectInspector {
         }
     }
 
+    public boolean isFixerBuildCase1() {
+        return this.isFixerBuild_Case1;
+    }
+
+    public void setFixerBuildCase1(boolean fixerBuildCase1) {
+        this.isFixerBuild_Case1 = fixerBuildCase1;
+    }
+
+    public boolean isFixerBuildCase2() {
+        return this.isFixerBuild_Case2;
+    }
+
+    public void setFixerBuildCase2(boolean fixerBuildCase2) {
+        this.isFixerBuild_Case2 = fixerBuildCase2;
+    }
 }
