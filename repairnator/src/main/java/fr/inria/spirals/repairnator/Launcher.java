@@ -60,8 +60,6 @@ public class Launcher {
     private GoogleSpreadSheetEndProcessSerializer endProcessSerializer;
     private int nbReproducedFails;
     private int nbReproducedErrors;
-    private int nbFixerBuildCase1;
-    private int nbFixerBuildCase2;
 
     public Launcher() {
         this.serializers = new ArrayList<AbstractDataSerializer>();
@@ -382,18 +380,21 @@ public class Launcher {
             } else {
                 List<ProjectInspector4Bears> inspectors = inspectBuildsForBears(buildsToBeInspected, completeWorkspace);
 
+                int nbFixerBuildCase1 = 0;
+                int nbFixerBuildCase2 = 0;
+
                 for (ProjectInspector4Bears inspector : inspectors) {
                     if (inspector.isFixerBuildCase1()) {
-                        this.nbFixerBuildCase1++;
+                        nbFixerBuildCase1++;
                     }
                     if (inspector.isFixerBuildCase2()) {
-                        this.nbFixerBuildCase2++;
+                        nbFixerBuildCase2++;
                     }
                 }
 
                 if (googleSpreadSheetEndProcessSerializer4Bears != null) {
-                    googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase1(this.nbFixerBuildCase1);
-                    googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase2(this.nbFixerBuildCase2);
+                    googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase1(nbFixerBuildCase1);
+                    googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase2(nbFixerBuildCase2);
                     googleSpreadSheetEndProcessSerializer4Bears.serialize();
                 }
             }
