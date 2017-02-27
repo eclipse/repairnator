@@ -1,9 +1,9 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
         AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
         AbstractStep testProjectForPreviousBuild = new TestProject(this);
-        if (this.getPreviousBuild().getBuildStatus() == BuildStatus.FAILED) {
+        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_FAIL) {
             AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
 
             cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
@@ -46,19 +46,23 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
             lastStep = gatherTestInformation;
         } else {
-            AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
-            AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutSourceCodeForPreviousBuild(this);
-            AbstractStep buildRepoForPreviousBuild2 = new BuildProject(this);
-            AbstractStep testProjectForPreviousBuild2 = new TestProject(this);
-            AbstractStep gatherTestInformation2 = new GatherTestInformation(this, new BuildShouldFail());
+            if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_PASSING) {
+                AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
+                AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutSourceCodeForPreviousBuild(this);
+                AbstractStep buildRepoForPreviousBuild2 = new BuildProject(this);
+                AbstractStep testProjectForPreviousBuild2 = new TestProject(this);
+                AbstractStep gatherTestInformation2 = new GatherTestInformation(this, new BuildShouldFail());
 
-            cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
-                    .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
-                    .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
-                    .setNextStep(checkoutSourceCodeForPreviousBuild).setNextStep(buildRepoForPreviousBuild2)
-                    .setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2);
+                cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+                        .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
+                        .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
+                        .setNextStep(checkoutSourceCodeForPreviousBuild).setNextStep(buildRepoForPreviousBuild2)
+                        .setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2);
 
-            lastStep = gatherTestInformation2;
+                lastStep = gatherTestInformation2;
+            } else {
+                this.logger.debug("The pair of scanned builds is not interesting.");
+            }
         }
 
         if (this.getPushMode()) {

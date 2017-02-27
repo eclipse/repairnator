@@ -254,11 +254,11 @@ public class ProjectScanner {
                             this.logger.debug("Previous build: " + previousBuild.getId());
 
                             if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
-                                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.ONLY_FAIL);
+                                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_FAIL);
                                 buildsToBeInspected.add(buildToBeInspected);
                             } else {
                                 if (previousBuild.getBuildStatus() == BuildStatus.PASSED) {
-                                    BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASS);
+                                    BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING);
                                     buildsToBeInspected.add(buildToBeInspected);
                                 }
                             }
@@ -305,8 +305,8 @@ public class ProjectScanner {
         String buildId = properties.getProperty("buildid");
         if (buildId != null) {
             Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
-            if (build != null) {
-                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.UNKNOWN);
+            if (build != null && build.getBuildStatus() == BuildStatus.FAILED) {
+                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
                 buildsToBeInspected.add(buildToBeInspected);
             }
         }

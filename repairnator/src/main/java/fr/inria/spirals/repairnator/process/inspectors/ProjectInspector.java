@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.BuildShouldFail;
@@ -33,7 +34,7 @@ import java.util.Properties;
  */
 public class ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
-    private BuildToBeInspected buildToBeInspected;
+    protected BuildToBeInspected buildToBeInspected;
     private String repoLocalPath;
     private ProjectState state;
     private String workspace;
@@ -200,51 +201,54 @@ public class ProjectInspector {
     }
 
     public void run() {
+        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.ONLY_FAIL) {
+            AbstractStep firstStep = null;
 
-        AbstractStep firstStep = null;
+            this.testInformations = new GatherTestInformation(this, new BuildShouldFail());
+            this.pushBuild = new PushIncriminatedBuild(this);
+            this.pushBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_REPAIR);
 
-        this.testInformations = new GatherTestInformation(this, new BuildShouldFail());
-        this.pushBuild = new PushIncriminatedBuild(this);
-        this.pushBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_REPAIR);
+            this.nopolRepair = new NopolRepair(this);
 
-        this.nopolRepair = new NopolRepair(this);
-
-        if (mode != RepairMode.NOPOLONLY) {
-            AbstractStep cloneRepo = new CloneRepository(this);
-            AbstractStep buildRepo = new BuildProject(this);
-            AbstractStep testProject = new TestProject(this);
-            cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
-            firstStep = cloneRepo;
-        }
-
-        if (mode == RepairMode.NOPOLONLY) {
-            firstStep = this.testInformations;
-            try {
-                Properties properties = ProjectScanner.getPropertiesFromFile(
-                        this.getRepoLocalPath() + File.separator + AbstractStep.PROPERTY_FILENAME);
-                firstStep.setProperties(properties);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (mode != RepairMode.NOPOLONLY) {
+                AbstractStep cloneRepo = new CloneRepository(this);
+                AbstractStep buildRepo = new BuildProject(this);
+                AbstractStep testProject = new TestProject(this);
+                cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
+                firstStep = cloneRepo;
             }
-        }
-        firstStep.setDataSerializer(this.serializers);
 
-        if (push) {
-            this.testInformations.setNextStep(this.pushBuild).setNextStep(new ComputeClasspath(this))
-                    .setNextStep(new ComputeSourceDir(this)).setNextStep(this.nopolRepair);
+            if (mode == RepairMode.NOPOLONLY) {
+                firstStep = this.testInformations;
+                try {
+                    Properties properties = ProjectScanner.getPropertiesFromFile(
+                            this.getRepoLocalPath() + File.separator + AbstractStep.PROPERTY_FILENAME);
+                    firstStep.setProperties(properties);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            firstStep.setDataSerializer(this.serializers);
+
+            if (push) {
+                this.testInformations.setNextStep(this.pushBuild).setNextStep(new ComputeClasspath(this))
+                        .setNextStep(new ComputeSourceDir(this)).setNextStep(this.nopolRepair);
+            } else {
+                this.logger.debug("Push boolean is set to false the failing builds won't be pushed.");
+                this.testInformations.setNextStep(new ComputeClasspath(this)).setNextStep(new ComputeSourceDir(this))
+                        .setNextStep(this.nopolRepair);
+            }
+
+            firstStep.setState(ProjectState.INIT);
+
+            try {
+                firstStep.execute();
+            } catch (Exception e) {
+                this.addStepError("Unknown", e.getMessage());
+                this.logger.debug("Exception catch while executing steps: ", e);
+            }
         } else {
-            this.logger.debug("Push boolean is set to false the failing builds won't be pushed.");
-            this.testInformations.setNextStep(new ComputeClasspath(this)).setNextStep(new ComputeSourceDir(this))
-                    .setNextStep(this.nopolRepair);
-        }
-
-        firstStep.setState(ProjectState.INIT);
-
-        try {
-            firstStep.execute();
-        } catch (Exception e) {
-            this.addStepError("Unknown", e.getMessage());
-            this.logger.debug("Exception catch while executing steps: ", e);
+            this.logger.debug("Scanned build is not a failing build.");
         }
     }
 
