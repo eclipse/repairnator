@@ -1,11 +1,11 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
-import fr.inria.lille.repair.ProjectReference;
-import fr.inria.lille.repair.common.config.Config;
+import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
+import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
@@ -86,25 +86,22 @@ public class NopolRepair extends AbstractStep {
             this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
                     + " (should timeout in " + timeout + " minutes)");
 
-            final ProjectReference projectReference = new ProjectReference(sources,
-                    classPath.toArray(new URL[classPath.size()]), new String[] { testClass });
-            Config config = new Config();
-            config.setComplianceLevel(8);
-            config.setTimeoutTestExecution(60);
-            config.setMaxTimeInMinutes(timeout);
-            config.setLocalizer(Config.NopolLocalizer.GZOLTAR);
-            config.setSolverPath(this.inspector.getNopolSolverPath());
-            config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
-            config.setType(StatementType.PRE_THEN_COND);
-            config.setProjectSourcePath(sourcesStr);
+            NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[] { testClass });
+            nopolContext.setComplianceLevel(8);
+            nopolContext.setTimeoutTestExecution(60);
+            nopolContext.setMaxTimeInMinutes(timeout);
+            nopolContext.setLocalizer(NopolContext.NopolLocalizer.GZOLTAR);
+            nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
+            nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
+            nopolContext.setType(StatementType.PRE_THEN_COND);
 
-            nopolInformation.setConfig(config);
+            nopolInformation.setNopolContext(nopolContext);
 
-            SolverFactory.setSolver(config.getSolver(), config.getSolverPath());
+            SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
 
             long beforeNopol = new Date().getTime();
 
-            final NoPol nopol = new NoPol(projectReference, config);
+            final NoPol nopol = new NoPol(nopolContext);
             List<Patch> patch = null;
 
             final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -117,8 +114,11 @@ public class NopolRepair extends AbstractStep {
 
             try {
                 executor.shutdown();
-                patch = (List<Patch>) nopolExecution.get(config.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+                NopolResult result = (NopolResult) nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
 
+                nopolInformation.setNbStatements(result.getNbStatements());
+                nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
+                patch = result.getPatches();
                 if (patch != null && !patch.isEmpty()) {
                     nopolInformation.setPatches(patch);
                     nopolInformation.setStatus(NopolStatus.PATCH);
@@ -127,7 +127,7 @@ public class NopolRepair extends AbstractStep {
                     nopolInformation.setStatus(NopolStatus.NOPATCH);
                 }
             } catch (TimeoutException exception) {
-                this.addStepError("Timeout: execution time > " + config.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+                this.addStepError("Timeout: execution time > " + nopolContext.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
                 nopolExecution.cancel(true);
                 executor.shutdownNow();
                 nopolInformation.setStatus(NopolStatus.TIMEOUT);

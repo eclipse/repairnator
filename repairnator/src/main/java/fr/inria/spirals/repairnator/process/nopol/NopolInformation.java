@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.nopol;
 
-import fr.inria.lille.repair.common.config.Config;
+import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
@@ -18,8 +18,10 @@ public class NopolInformation {
     private int allocatedTime;
     private int passingTime;
     private List<Patch> patches;
-    private Config config;
+    private NopolContext nopolContext;
     private String exceptionDetail;
+    private int nbStatements;
+    private int nbAngelicValues;
 
     public NopolInformation(FailureLocation location) {
         this.status = NopolStatus.NOTLAUNCHED;
@@ -59,14 +61,6 @@ public class NopolInformation {
         this.passingTime = passingTime;
     }
 
-    public Config getConfig() {
-        return config;
-    }
-
-    public void setConfig(Config config) {
-        this.config = config;
-    }
-
     public String getExceptionDetail() {
         return exceptionDetail;
     }
@@ -85,5 +79,29 @@ public class NopolInformation {
 
     public FailureLocation getLocation() {
         return location;
+    }
+
+    public NopolContext getNopolContext() {
+        return nopolContext;
+    }
+
+    public void setNopolContext(NopolContext nopolContext) {
+        this.nopolContext = nopolContext;
+    }
+
+    public int getNbStatements() {
+        return nbStatements;
+    }
+
+    public void setNbStatements(int nbStatements) {
+        this.nbStatements = nbStatements;
+    }
+
+    public int getNbAngelicValues() {
+        return nbAngelicValues;
+    }
+
+    public void setNbAngelicValues(int nbAngelicValues) {
+        this.nbAngelicValues = nbAngelicValues;
     }
 }
