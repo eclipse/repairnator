@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.serializer.gsheet.inspectors;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import fr.inria.lille.repair.common.config.Config;
+import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -67,9 +67,9 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
             dataCol.add(patch.getRootClassName() + ":" + patch.getLineNumber());
         }
 
-        Config config = nopolInformation.getConfig();
-        dataCol.add("localizer: " + config.getLocalizer().name() + ";solver: " + config.getSolver().name()
-                + ";synthetizer: " + config.getSynthesis().name() + ";type: " + config.getType().name());
+        NopolContext nopolContext = nopolInformation.getNopolContext();
+        dataCol.add("localizer: " + nopolContext.getLocalizer().name() + ";solver: " + nopolContext.getSolver().name()
+                + ";synthetizer: " + nopolContext.getSynthesis().name() + ";type: " + nopolContext.getType().name());
 
         return dataCol;
     }
