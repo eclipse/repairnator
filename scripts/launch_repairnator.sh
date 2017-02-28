@@ -1,16 +1,24 @@
 #!/bin/bash
 
-export GITHUB_LOGIN=
+RUNNING_REPAIR=`ps aux |grep "[r]epairnator.jar" |wc -l`
+if [[ $RUNNING_REPAIR == 0 ]]
+then
+   /home/repairnator/scripts/build_repairnator.sh
+fi
+
+export M2_HOME=/opt/apache-maven-3.3.9
 export GITHUB_OAUTH=
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre"
-export M2_HOME="/usr/share/maven"
-cd /opt/repairnator
-# launch repairnator with following args:
-# -d : debug mode
-# -l 6 : get failing builds of the 6 last hours
-# -i project_list.txt : consider project_list.txt as input for project names
-# -o /var/... : output the json at the following location
-# -p : push failing builds
-# -w : specify the workspace path
-# -z : specify the path for the solver used by Nopol
-java -Xmx1024m -cp $JAVA_HOME/../lib/tools.jar:repairnator.jar fr.inria.spirals.repairnator.Launcher --clean -d -p -l 4 -i project_list.txt -w /media/experimentations/repairnator/bot -z /opt/repairnator/nopol/lib/z3/z3_for_linux -o /var/www/html/repairnator/ &> /var/log/repairnator/output_bot_`date "+%Y-%m-%d_%H%M"`.log
+TOOLS_PATH=/usr/lib/jvm/java-8-oracle/lib/tools.jar
+REPAIR_JAR=/home/repairnator/scripts/repairnator.jar
+
+LOG_FILE=/home/repairnator/logs/output_`date "+%Y-%m-%d_%H%M"`.log
+NB_HOURS=4
+Z3_PATH=/home/repairnator/github/nopol/nopol/lib/z3/z3_for_linux
+WORKSPACE_PATH=/home/repairnator/workspace/
+OUTPUT_PATH=/var/www/html/repair/
+PROJECT_LIST_PATH=/home/repairnator/scripts/project_list.txt
+
+REPAIR_ARGS="-m slug -i $PROJECT_LIST_PATH -o $OUTPUT_PATH -w $WORKSPACE_PATH -z $Z3_PATH -p -l $NB_HOURS --clean"
+
+cd $WORKSPACE_PATH
+java -Xmx1g -Xms1g -cp $TOOLS_PATH:$REPAIR_JAR fr.inria.spirals.repairnator.Launcher $REPAIR_ARGS &> $LOG_FILE
