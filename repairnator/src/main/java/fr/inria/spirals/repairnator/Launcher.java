@@ -60,8 +60,6 @@ public class Launcher {
     private GoogleSpreadSheetEndProcessSerializer endProcessSerializer;
     private int nbReproducedFails;
     private int nbReproducedErrors;
-    private int nbFixerBuildCase1;
-    private int nbFixerBuildCase2;
 
     public Launcher() {
         this.serializers = new ArrayList<AbstractDataSerializer>();
