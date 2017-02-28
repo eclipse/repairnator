@@ -354,7 +354,7 @@ public class Launcher {
         }
 
         if (mode != RepairMode.NOPOLONLY) {
-            Launcher.LOGGER.debug("Start cloning and compiling projects...");
+            Launcher.LOGGER.info("Start cloning and compiling projects...");
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
         }
@@ -399,14 +399,17 @@ public class Launcher {
                 }
             }
 
-            Launcher.LOGGER.debug("Start writing a JSON output...");
+            Launcher.LOGGER.info("Start writing a JSON output...");
 
             jsonSerializer.createOutput();
 
             if (clean && completeWorkspace != null) {
-                Launcher.LOGGER.debug("Clean the workspace now...");
+                Launcher.LOGGER.info("Clean the workspace now...");
                 FileUtils.deleteDirectory(completeWorkspace);
             }
+
+            // to be sure the process is finished
+            System.exit(0);
         }
     }
 
