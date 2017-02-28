@@ -70,7 +70,8 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
         NopolContext nopolContext = nopolInformation.getNopolContext();
         dataCol.add("localizer: " + nopolContext.getLocalizer().name() + ";solver: " + nopolContext.getSolver().name()
                 + ";synthetizer: " + nopolContext.getSynthesis().name() + ";type: " + nopolContext.getType().name());
-
+        dataCol.add(nopolInformation.getNbAngelicValues());
+        dataCol.add(nopolInformation.getNbStatements());
         return dataCol;
     }
 
