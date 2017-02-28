@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
-import fr.inria.spirals.repairnator.process.step.BuildShouldFail;
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;

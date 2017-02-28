@@ -98,7 +98,7 @@ public abstract class AbstractStep {
         return LoggerFactory.getLogger(this.getClass());
     }
 
-    protected void addStepError(String error) {
+    public void addStepError(String error) {
         getLogger().error(error);
         this.inspector.addStepError(this.name, error);
     }

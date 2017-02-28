@@ -1,9 +1,10 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.gatherinfocontract;
 
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
+import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 
 /**
  * Created by fermadeiral.

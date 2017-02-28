@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.ContractForGatherTestInformation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
 import org.apache.maven.plugins.surefire.report.ReportTestSuite;
