@@ -53,7 +53,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
             lastStep = gatherTestInformation;
         } else {
-            if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_PASSING) {
+            if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
                 AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutSourceCodeForPreviousBuild(this);
                 AbstractStep buildRepoForPreviousBuild2 = new BuildProject(this);

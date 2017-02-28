@@ -1,13 +1,12 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import java.io.File;
-import java.io.IOException;
-
+import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import fr.inria.spirals.repairnator.process.ProjectState;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by fermadeiral.
@@ -24,7 +23,7 @@ public class CheckoutSourceCodeForPreviousBuild extends CloneRepository {
         Git git;
         try {
             git = Git.open(new File(inspector.getRepoLocalPath()));
-            String commitCheckout = build.getCommit().getSha();
+            String commitCheckout = inspector.getBuild().getCommit().getSha();
             commitCheckout = this.testCommitExistence(git, commitCheckout);
             if (commitCheckout != null) {
                 this.getLogger()

@@ -119,6 +119,10 @@ public class ProjectInspector {
         this.state = state;
     }
 
+    public BuildToBeInspected getBuildToBeInspected() {
+        return this.buildToBeInspected;
+    }
+
     public Build getBuild() {
         return this.buildToBeInspected.getBuild();
     }
