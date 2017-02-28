@@ -60,6 +60,8 @@ public class Launcher {
     private GoogleSpreadSheetEndProcessSerializer endProcessSerializer;
     private int nbReproducedFails;
     private int nbReproducedErrors;
+    private int nbFixerBuildCase1;
+    private int nbFixerBuildCase2;
 
     public Launcher() {
         this.serializers = new ArrayList<AbstractDataSerializer>();
@@ -450,6 +452,7 @@ public class Launcher {
         initWorkspace(workspace);
 
         List<ProjectInspector4Bears> projectInspectors = new ArrayList<ProjectInspector4Bears>();
+
         for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
             ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, workspace, this.serializers, null, push, mode);
             inspector.setAutoclean(clean);

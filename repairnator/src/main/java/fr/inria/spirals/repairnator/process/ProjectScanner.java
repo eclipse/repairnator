@@ -5,6 +5,7 @@ import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import org.kohsuke.github.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -257,9 +258,11 @@ public class ProjectScanner {
                                 BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_FAIL);
                                 buildsToBeInspected.add(buildToBeInspected);
                             } else {
-                                if (previousBuild.getBuildStatus() == BuildStatus.PASSED) {
-                                    BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING);
+                                if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnTests(build, previousBuild)) {
+                                    BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
                                     buildsToBeInspected.add(buildToBeInspected);
+                                } else {
+                                    this.logger.debug("The pair of builds is not interesting.");
                                 }
                             }
                         }
@@ -312,6 +315,29 @@ public class ProjectScanner {
         }
 
         return buildsToBeInspected;
+    }
+
+    public boolean thereIsDiffOnTests(Build build, Build previousBuild) {
+        try {
+            GitHub gh = GitHubBuilder.fromEnvironment().build();
+            GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
+
+            GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
+            GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
+
+            GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
+
+            GHCommit.File[] modifiedFiles = compare.getFiles();
+            for (GHCommit.File file : modifiedFiles) {
+                if (file.getFileName().contains("src/test/java")) {
+                    return true;
+                }
+            }
+
+        } catch (IOException e) {
+            this.logger.warn("Error while getting commit from Github: " + e);
+        }
+        return false;
     }
 
 }
