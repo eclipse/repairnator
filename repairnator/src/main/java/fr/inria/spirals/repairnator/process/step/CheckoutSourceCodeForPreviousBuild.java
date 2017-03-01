@@ -1,6 +1,8 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.ProjectState;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -23,14 +25,13 @@ public class CheckoutSourceCodeForPreviousBuild extends CloneRepository {
         Git git;
         try {
             git = Git.open(new File(inspector.getRepoLocalPath()));
-            String commitCheckout = inspector.getBuild().getCommit().getSha();
-            commitCheckout = this.testCommitExistence(git, commitCheckout);
+            Build build = inspector.getBuild();
+            String commitCheckout = build.getCommit().getSha();
+            commitCheckout = GitHelper.testCommitExistence(git, commitCheckout, this, build);
             if (commitCheckout != null) {
-                this.getLogger()
-                        .debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
+                this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
                 git.checkout().setName(commitCheckout).call();
-                git.checkout().setStartPoint(inspector.getPreviousBuild().getCommit().getSha()).addPath("src/main/java")
-                        .call();
+                git.checkout().setStartPoint(inspector.getPreviousBuild().getCommit().getSha()).addPath("src/main/java").call();
                 this.state = ProjectState.PREVIOUSBUILDCODECHECKEDOUT;
             } else {
                 this.addStepError("Error while getting the commit to checkout from the repo.");

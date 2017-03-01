@@ -2,15 +2,10 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.PRInformation;
-import fr.inria.spirals.repairnator.helpers.GitHelper;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeCommand;
-import org.eclipse.jgit.api.RemoteAddCommand;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.URIish;
 
 import java.io.File;
 
@@ -53,44 +48,12 @@ public class CloneRepository extends AbstractStep {
                 this.writeProperty("pr-base-commit-id", this.build.getPRInformation().getBase().getSha());
                 this.writeProperty("pr-id", this.build.getPullRequestNumber() + "");
 
-                this.getLogger()
-                        .debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
-                String remoteBranchPath = GITHUB_ROOT_REPO + prInformation.getOtherRepo().getSlug() + ".git";
+                this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
-                RemoteAddCommand remoteBranchCommand = git.remoteAdd();
-                remoteBranchCommand.setName("PR");
-                remoteBranchCommand.setUri(new URIish(remoteBranchPath));
-                remoteBranchCommand.call();
-
-                git.fetch().setRemote("PR").call();
-
-                String commitHeadSha = GitHelper.testCommitExistence(git, prInformation.getHead().getSha(), this, build);
-                String commitBaseSha = GitHelper.testCommitExistence(git, prInformation.getBase().getSha(), this, build);
-
-                if (commitHeadSha == null) {
-                    this.addStepError("Commit head ref cannot be retrieved in the repository: "
-                            + prInformation.getHead().getSha() + ". Operation aborted.");
-                    this.getLogger().debug(prInformation.getHead().toString());
+                boolean successfulMerge = GitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this);
+                if (!successfulMerge) {
                     this.shouldStop = true;
-                    return;
                 }
-
-                if (commitBaseSha == null) {
-                    this.addStepError("Commit base ref cannot be retrieved in the repository: "
-                            + prInformation.getBase().getSha() + ". Operation aborted.");
-                    this.getLogger().debug(prInformation.getBase().toString());
-                    this.shouldStop = true;
-                    return;
-                }
-
-                this.getLogger().debug("Get the commit " + commitHeadSha + " for repo " + repository);
-                git.checkout().setName(commitHeadSha).call();
-
-                RevWalk revwalk = new RevWalk(git.getRepository());
-                RevCommit revCommitBase = revwalk.lookupCommit(git.getRepository().resolve(commitBaseSha));
-
-                this.getLogger().debug("Do the merge with the PR commit for repo " + repository);
-                git.merge().include(revCommitBase).setFastForward(MergeCommand.FastForwardMode.NO_FF).call();
             } else {
                 String commitCheckout = this.build.getCommit().getSha();
 
