@@ -94,7 +94,7 @@ public abstract class AbstractStep {
         }
     }
 
-    protected Logger getLogger() {
+    public Logger getLogger() {
         return LoggerFactory.getLogger(this.getClass());
     }
 
