@@ -52,6 +52,7 @@ public class CloneRepository extends AbstractStep {
 
                 boolean successfulMerge = GitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this);
                 if (!successfulMerge) {
+                    this.getLogger().debug("Error while merging two commits to reproduce the PR.");
                     this.shouldStop = true;
                 }
             } else {

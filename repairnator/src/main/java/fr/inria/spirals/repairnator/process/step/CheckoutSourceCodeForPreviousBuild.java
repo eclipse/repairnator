@@ -31,16 +31,29 @@ public class CheckoutSourceCodeForPreviousBuild extends CloneRepository {
             if (commitCheckout != null) {
                 this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
                 git.checkout().setName(commitCheckout).call();
-                git.checkout().setStartPoint(inspector.getPreviousBuild().getCommit().getSha()).addPath("src/main/java").call();
-                this.state = ProjectState.PREVIOUSBUILDCODECHECKEDOUT;
+                Build previousBuild = inspector.getPreviousBuild();
+                commitCheckout = previousBuild.getCommit().getSha();
+                commitCheckout = GitHelper.testCommitExistence(git, commitCheckout, this, previousBuild);
+                if (commitCheckout != null) {
+                    this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
+                    git.checkout().setStartPoint(inspector.getPreviousBuild().getCommit().getSha()).addPath("src/main/java").call();
+                    this.state = ProjectState.PREVIOUSBUILDCODECHECKEDOUT;
+                } else {
+                    this.addStepError("Error while getting the commit " + commitCheckout + " to checkout from the repo.");
+                    this.shouldStop = true;
+                    this.state = ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT;
+                    return;
+                }
             } else {
-                this.addStepError("Error while getting the commit to checkout from the repo.");
+                this.addStepError("Error while getting the commit " + commitCheckout + " to checkout from the repo.");
                 this.shouldStop = true;
                 this.state = ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT;
                 return;
             }
         } catch (IOException | GitAPIException e) {
-            e.printStackTrace();
+            this.addStepError("Error while getting the commit to checkout from the repo.");
+            this.shouldStop = true;
+            this.state = ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT;
         }
     }
 
