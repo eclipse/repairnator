@@ -60,6 +60,12 @@ public abstract class AbstractDataSerializer {
             case PREVIOUSVERSIONISNOTINTERESTING:
                 return "previous build is not interesting";
 
+            case BUILDCHECKEDOUT:
+                return "build checked out";
+
+            case BUILDNOTCHECKEDOUT:
+                return "build not checked out";
+
             case PREVIOUSBUILDCHECKEDOUT:
                 return "previous build checked out";
 
