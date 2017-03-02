@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by fernanda on 02/03/17.
  */
-public class CheckoutRepository extends AbstractStep {
+public abstract class CheckoutRepository extends AbstractStep {
 
     private CheckoutType checkoutType;
 

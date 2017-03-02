@@ -276,9 +276,11 @@ public class JsonSerializer extends AbstractDataSerializer {
                 break;
 
             case CLONABLE:
+            case BUILDCHECKEDOUT:
                 outputNotBuildableInspector(inspector);
                 break;
 
+            case BUILDNOTCHECKEDOUT:
             case NOTTESTABLE:
             case BUILDABLE:
                 outputNotTestableInspector(inspector);
