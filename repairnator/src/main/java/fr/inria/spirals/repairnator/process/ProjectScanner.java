@@ -209,7 +209,7 @@ public class ProjectScanner {
                         TestsInformation testInfo = jobLog.getTestsInformation();
 
                         // testInfo can be null if the build tool is unknown
-                        if (testInfo != null && testInfo.getFailing() > 0) {
+                        if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
                             this.totalBuildInJavaFailingWithFailingTests++;
                             if (targetFailing) {
                                 this.slugs.add(repo.getSlug());

@@ -106,7 +106,7 @@ public class GatherTestInformation extends AbstractStep {
             try {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
-                    if (testSuite.getNumberOfFailures() > 0) {
+                    if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
                         this.failingModulePath = failingModule.getCanonicalPath();
                         this.writeProperty("failingModule", this.failingModulePath);

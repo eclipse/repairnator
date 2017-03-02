@@ -88,7 +88,8 @@ public class NopolRepair extends AbstractStep {
 
             NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[] { testClass });
             nopolContext.setComplianceLevel(8);
-            nopolContext.setTimeoutTestExecution(60);
+            nopolContext.setTimeoutTestExecution(300);
+            nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
             nopolContext.setMaxTimeInMinutes(timeout);
             nopolContext.setLocalizer(NopolContext.NopolLocalizer.GZOLTAR);
             nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
