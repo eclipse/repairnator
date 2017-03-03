@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTimeSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTrackTreatedBuilds;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer4Bears;
@@ -289,8 +290,7 @@ public class Launcher {
             csvSerializer = new CSVSerializer4RepairNator(output);
             googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
         }
-        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(
-                googleSecretPath);
+        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
@@ -342,8 +342,7 @@ public class Launcher {
         }
 
         if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
-            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner,
-                    googleSecretPath);
+            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
             scannerSerializer.serialize();
         }
 
@@ -351,17 +350,21 @@ public class Launcher {
             for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
                 System.out.println("Incriminated project : " + buildToBeInspected.getBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuild().getId());
             }
+
+            if (mode == RepairMode.SLUG) {
+                GoogleSpreadSheetInspectorTrackTreatedBuilds googleSpreadSheetInspectorTrackTreatedBuilds = new GoogleSpreadSheetInspectorTrackTreatedBuilds(buildsToBeInspected, googleSecretPath);
+                this.serializers.add(googleSpreadSheetInspectorTrackTreatedBuilds);
+            }
         }
 
         if (mode != RepairMode.NOPOLONLY) {
-            Launcher.LOGGER.info("Start cloning and compiling projects...");
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
         }
 
         if (completeWorkspace != null) {
             if (mode != RepairMode.FORBEARS) {
-                List<ProjectInspector> inspectors = cloneAndRepair(buildsToBeInspected, completeWorkspace);
+                List<ProjectInspector> inspectors = runInspectors(buildsToBeInspected, completeWorkspace, false);
 
                 for (ProjectInspector inspector : inspectors) {
                     if (inspector.isReproducedAsFail()) {
@@ -378,16 +381,17 @@ public class Launcher {
                     this.endProcessSerializer.serialize();
                 }
             } else {
-                List<ProjectInspector4Bears> inspectors = inspectBuildsForBears(buildsToBeInspected, completeWorkspace);
+                List<ProjectInspector> inspectors = runInspectors(buildsToBeInspected, completeWorkspace, true);
 
                 int nbFixerBuildCase1 = 0;
                 int nbFixerBuildCase2 = 0;
 
-                for (ProjectInspector4Bears inspector : inspectors) {
-                    if (inspector.isFixerBuildCase1()) {
+                for (ProjectInspector inspector : inspectors) {
+                    ProjectInspector4Bears inspector4Bears = (ProjectInspector4Bears)inspector;
+                    if (inspector4Bears.isFixerBuildCase1()) {
                         nbFixerBuildCase1++;
                     }
-                    if (inspector.isFixerBuildCase2()) {
+                    if (inspector4Bears.isFixerBuildCase2()) {
                         nbFixerBuildCase2++;
                     }
                 }
@@ -413,55 +417,28 @@ public class Launcher {
         }
     }
 
-    private List<ProjectInspector> cloneAndRepair(List<BuildToBeInspected> buildsToBeInspected, String workspace) throws IOException {
+    private List<ProjectInspector> runInspectors(List<BuildToBeInspected> buildsToBeInspected, String workspace, boolean forBear) throws IOException {
         if (mode != RepairMode.NOPOLONLY) {
             initWorkspace(workspace);
         }
+        Launcher.LOGGER.info("Start cloning and compiling projects...");
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();
         for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-            ProjectInspector inspector = new ProjectInspector(buildToBeInspected, workspace, this.serializers, solverPath, push,
-                    mode);
+            ProjectInspector inspector;
+
+            if (forBear) {
+                inspector = new ProjectInspector4Bears(buildToBeInspected, workspace, this.serializers, null, push, mode);
+            } else {
+                inspector = new ProjectInspector(buildToBeInspected, workspace, this.serializers, solverPath, push, mode);
+            }
+
             inspector.setAutoclean(clean);
             projectInspectors.add(inspector);
         }
         final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
 
         for (final ProjectInspector inspector : projectInspectors) {
-            pool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    inspector.run();
-                }
-            });
-        }
-
-        try {
-            pool.shutdown();
-            if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
-                pool.shutdownNow();
-                LOGGER.error("Shutdown pool of threads.");
-            }
-        } catch (InterruptedException e) {
-            pool.shutdownNow();
-            LOGGER.error(e.getMessage(), e);
-        }
-        return projectInspectors;
-    }
-
-    private List<ProjectInspector4Bears> inspectBuildsForBears(List<BuildToBeInspected> buildsToBeInspected, String workspace) throws IOException {
-        initWorkspace(workspace);
-
-        List<ProjectInspector4Bears> projectInspectors = new ArrayList<ProjectInspector4Bears>();
-
-        for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-            ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, workspace, this.serializers, null, push, mode);
-            inspector.setAutoclean(clean);
-            projectInspectors.add(inspector);
-        }
-        final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
-
-        for (final ProjectInspector4Bears inspector : projectInspectors) {
             pool.submit(new Runnable() {
                 @Override
                 public void run() {
