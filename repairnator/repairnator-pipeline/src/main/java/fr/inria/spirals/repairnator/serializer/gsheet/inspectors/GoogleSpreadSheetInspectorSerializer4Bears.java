@@ -1,29 +1,28 @@
 package fr.inria.spirals.repairnator.serializer.gsheet.inspectors;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.SerializerUtils;
 import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by fermadeiral.
  */
 public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorSerializer4Bears.class);
-    private static final String RANGE = "All data!A1:K1";
+    private static final String RANGE = "All data!A1:L1";
 
     private Sheets sheets;
 
@@ -56,6 +55,10 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
             dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
             dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
             dataCol.add(this.getTravisUrl(previousBuildId, previousBuildSlug));
+            if (inspector.getState() == ProjectState.FIXERBUILD_CASE1 || inspector.getState() == ProjectState.FIXERBUILD_CASE2) {
+                String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+                dataCol.add(committerEmail);
+            }
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);
