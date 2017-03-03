@@ -1,5 +1,7 @@
 #!/bin/bash
 
+REPAIRNATOR_JARFILE="./repairnator-scanner/target/repairnator-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar"
+
 export M2_HOME=/opt/apache-maven-3.3.9
 export PATH=$PATH:$M2_HOME/bin
 
@@ -20,7 +22,7 @@ mvn clean install
 
 if [[ $? == 0 ]]
 then
-   cp -f ./target/repairnator-1.0-SNAPSHOT-jar-with-dependencies.jar $HOME_REPAIR/scripts/repairnator.jar
+   cp -f $REPAIRNATOR_JARFILE $HOME_REPAIR/scripts/repairnator.jar
 else
    echo "Error while building a new version of repairnator"
 fi
