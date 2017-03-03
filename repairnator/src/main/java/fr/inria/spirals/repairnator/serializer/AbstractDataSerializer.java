@@ -1,8 +1,9 @@
 package fr.inria.spirals.repairnator.serializer;
 
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.ProjectState;
+
+import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+
 
 /**
  * Created by urli on 20/01/2017.

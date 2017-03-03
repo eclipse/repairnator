@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.serializer;
+package fr.inria.spirals.repairnator;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 

@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process;
+package fr.inria.spirals.repairnator.scanner;
 
 import fr.inria.spirals.jtravis.entities.*;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;

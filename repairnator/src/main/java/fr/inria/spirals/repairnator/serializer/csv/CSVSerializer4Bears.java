@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.SerializerUtils;
+import fr.inria.spirals.repairnator.SerializerUtils;
 
 /**
  * Created by fermadeiral.

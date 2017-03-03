@@ -1,14 +1,11 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.RepairMode;
-import fr.inria.spirals.repairnator.process.BuildToBeInspected;
-import fr.inria.spirals.repairnator.process.ProjectScanner;
-import fr.inria.spirals.repairnator.process.ProjectState;
-import fr.inria.spirals.repairnator.process.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

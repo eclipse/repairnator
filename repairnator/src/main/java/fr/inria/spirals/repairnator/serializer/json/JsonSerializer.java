@@ -10,7 +10,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.process.ProjectScanner;
+import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.ProjectState;

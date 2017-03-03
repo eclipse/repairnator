@@ -1,9 +1,8 @@
 package fr.inria.spirals.repairnator.serializer;
 
-import org.apache.commons.lang.time.DurationFormatUtils;
+import fr.inria.spirals.repairnator.SerializerUtils;
 import org.junit.Test;
 
-import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
 
