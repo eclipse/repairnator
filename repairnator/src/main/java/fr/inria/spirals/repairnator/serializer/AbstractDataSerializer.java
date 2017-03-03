@@ -25,7 +25,7 @@ public abstract class AbstractDataSerializer {
                 return "not clonable";
 
             case CLONABLE:
-                return "not buildable";
+                return "error in check out";
 
             case NOTTESTABLE:
             case BUILDABLE:
@@ -67,7 +67,7 @@ public abstract class AbstractDataSerializer {
                 return "build not checked out";
 
             case PREVIOUSBUILDCHECKEDOUT:
-                return "previous build checked out";
+                return "not buildable";
 
             case PREVIOUSBUILDNOTCHECKEDOUT:
                 return "previous build not checked out";
