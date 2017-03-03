@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.ContractForGatherTestInformation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
@@ -21,7 +22,6 @@ import org.apache.maven.plugins.surefire.report.ReportTestSuite;
 import org.apache.maven.plugins.surefire.report.SurefireReportParser;
 import org.apache.maven.reporting.MavenReportException;
 
-import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;

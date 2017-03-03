@@ -4,13 +4,14 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.RepairMode;
+import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -208,7 +209,8 @@ public class ProjectInspector {
                 firstStep = cloneRepo;
             }
 
-            if (mode == RepairMode.NOPOLONLY) {
+            // TODO: remove NopolOnly
+            /*if (mode == RepairMode.NOPOLONLY) {
                 firstStep = this.testInformations;
                 try {
                     Properties properties = ProjectScanner.getPropertiesFromFile(
@@ -217,7 +219,7 @@ public class ProjectInspector {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
             firstStep.setDataSerializer(this.serializers);
 
             if (push) {
