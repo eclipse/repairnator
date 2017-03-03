@@ -91,7 +91,7 @@ public class NopolRepair extends AbstractStep {
             nopolContext.setTimeoutTestExecution(300);
             nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
             nopolContext.setMaxTimeInMinutes(timeout);
-            nopolContext.setLocalizer(NopolContext.NopolLocalizer.GZOLTAR);
+            nopolContext.setLocalizer(NopolContext.NopolLocalizer.OCHIAI);
             nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
             nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
             nopolContext.setType(StatementType.PRE_THEN_COND);
@@ -106,16 +106,22 @@ public class NopolRepair extends AbstractStep {
             List<Patch> patch = null;
 
             final ExecutorService executor = Executors.newSingleThreadExecutor();
-            final Future nopolExecution = executor.submit(new Callable() {
+            final Future<NopolResult> nopolExecution = executor.submit(new Callable() {
                 @Override
                 public Object call() throws Exception {
-                    return nopol.build();
+                    NopolResult result = null;
+                    try {
+                        result = nopol.build();
+                    } catch (RuntimeException e) {
+                        e.printStackTrace();
+                    }
+                    return result;
                 }
             });
 
             try {
                 executor.shutdown();
-                NopolResult result = (NopolResult) nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+                NopolResult result = nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
 
                 nopolInformation.setNbStatements(result.getNbStatements());
                 nopolInformation.setNbAngelicValues(result.getNbAngelicValues());

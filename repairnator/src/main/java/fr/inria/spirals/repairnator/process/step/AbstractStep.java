@@ -116,6 +116,7 @@ public abstract class AbstractStep {
 
     private void serializeData() {
         if (serializers != null) {
+            this.getLogger().info("Serialize all data for build: "+this.getInspector().getBuild().getId());
             for (AbstractDataSerializer serializer : this.serializers) {
                 serializer.serializeData(this.inspector);
             }
