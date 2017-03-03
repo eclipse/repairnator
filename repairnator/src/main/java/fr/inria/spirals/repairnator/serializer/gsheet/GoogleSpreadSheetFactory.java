@@ -34,10 +34,7 @@ public class GoogleSpreadSheetFactory {
     private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"),
             ".credentials/sheets.googleapis.com-repairnator");
     private static String GOOGLE_SECRET_PATH;
-    public static final String REPAIR_SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
-    public static final String BEAR_SPREADSHEET_ID = "1MnRwoZGCxxbmkiswc0O6Rg43wJFTBc3bIyrNdTiBhQ4";
-
-    private static String spreadsheetID = REPAIR_SPREADSHEET_ID;
+    private static String SPREADSHEET_ID;
     private static GoogleSpreadSheetFactory instance;
     private FileDataStoreFactory dataStoreFactory;
     private JsonFactory jsonFactory;
@@ -45,7 +42,7 @@ public class GoogleSpreadSheetFactory {
     private List<String> scopes;
     private Sheets sheets;
 
-    private GoogleSpreadSheetFactory(String googleSecretPath) {
+    private GoogleSpreadSheetFactory(String googleSpreadsheetId, String googleSecretPath) {
         super();
         try {
             this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -54,22 +51,19 @@ public class GoogleSpreadSheetFactory {
             this.jsonFactory = JacksonFactory.getDefaultInstance();
             this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
 
-            this.initSheets(googleSecretPath);
+            this.initSheets(googleSpreadsheetId, googleSecretPath);
 
         } catch (GeneralSecurityException | IOException e) {
             this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ", e);
         }
     }
 
-    public static void setSpreadsheetId(String spreadsheetID) {
-        GoogleSpreadSheetFactory.spreadsheetID = spreadsheetID;
-    }
-
     public static String getSpreadsheetID() {
-        return GoogleSpreadSheetFactory.spreadsheetID;
+        return GoogleSpreadSheetFactory.SPREADSHEET_ID;
     }
 
-    private void initSheets(String googleSecretPath) throws IOException {
+    private void initSheets(String googleSpreadsheetId, String googleSecretPath) throws IOException {
+        SPREADSHEET_ID = googleSpreadsheetId;
         GOOGLE_SECRET_PATH = googleSecretPath;
 
         File secretFile = new File(GOOGLE_SECRET_PATH);
@@ -91,9 +85,9 @@ public class GoogleSpreadSheetFactory {
                 .setApplicationName(APPLICATION_NAME).build();
     }
 
-    public static Sheets getSheets(String googleSecretPath) throws IOException {
+    public static Sheets getSheets(String googleSpreadsheetId, String googleSecretPath) throws IOException {
         if (instance == null) {
-            instance = new GoogleSpreadSheetFactory(googleSecretPath);
+            instance = new GoogleSpreadSheetFactory(googleSpreadsheetId, googleSecretPath);
         }
         return instance.sheets;
     }

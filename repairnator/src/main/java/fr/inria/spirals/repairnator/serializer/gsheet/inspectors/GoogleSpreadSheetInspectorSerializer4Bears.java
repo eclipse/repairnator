@@ -1,22 +1,20 @@
 package fr.inria.spirals.repairnator.serializer.gsheet.inspectors;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.SerializerUtils;
 import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by fermadeiral.
@@ -27,9 +25,9 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
 
     private Sheets sheets;
 
-    public GoogleSpreadSheetInspectorSerializer4Bears(String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetInspectorSerializer4Bears(String googleSpreadsheetId, String googleSecretPath) throws IOException {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSpreadsheetId, googleSecretPath);
     }
 
     @Override

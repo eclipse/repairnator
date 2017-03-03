@@ -11,12 +11,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4RepairNator;
-import fr.inria.spirals.repairnator.serializer.gsheet.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTimeSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTrackTreatedBuilds;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.*;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
@@ -57,6 +52,7 @@ public class Launcher {
     private boolean clean;
     private boolean push;
     private String solverPath;
+    private String googleSpreadsheetId;
     private String googleSecretPath;
     private GoogleSpreadSheetEndProcessSerializer endProcessSerializer;
     private int nbReproducedFails;
@@ -159,9 +155,18 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
 
+        // Google spreadsheet id
+        opt2 = new FlaggedOption("googleSpreadsheetId");
+        opt2.setShortFlag('g');
+        opt2.setLongFlag("googleSpreadsheetId");
+        opt2.setRequired(true);
+        opt2.setHelp("Specify the google spreadsheet id");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        jsap.registerParameter(opt2);
+
         // Google secret path
         opt2 = new FlaggedOption("googleSecretPath");
-        opt2.setShortFlag('g');
+        opt2.setShortFlag('s');
         opt2.setLongFlag("googleSecretPath");
         opt2.setHelp("Specify the path of the google client secret file");
         opt2.setDefault("./client_secret.json");
@@ -274,6 +279,7 @@ public class Launcher {
         clean = arguments.getBoolean("clean");
         push = arguments.getBoolean("push");
         solverPath = arguments.getString("z3Path");
+        googleSpreadsheetId = arguments.getString("googleSpreadsheetId");
         googleSecretPath = arguments.getString("googleSecretPath");
 
         if (debug) {
@@ -285,21 +291,19 @@ public class Launcher {
         AbstractDataSerializer googleSpreadSheetInspectorSerializer;
         if (mode == RepairMode.FORBEARS) {
             csvSerializer = new CSVSerializer4Bears(output);
-            googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer4Bears(googleSecretPath);
+            googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer4Bears(googleSpreadsheetId, googleSecretPath);
         } else {
             csvSerializer = new CSVSerializer4RepairNator(output);
-            googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSecretPath);
+            googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(googleSpreadsheetId, googleSecretPath);
         }
-        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSecretPath);
+        GoogleSpreadSheetInspectorTimeSerializer googleSpreadSheetInspectorTimeSerializer = new GoogleSpreadSheetInspectorTimeSerializer(googleSpreadsheetId, googleSecretPath);
 
         this.serializers.add(jsonSerializer);
         this.serializers.add(csvSerializer);
         this.serializers.add(googleSpreadSheetInspectorTimeSerializer);
 
-        if (mode == RepairMode.FORBEARS) {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
-        } else {
-            this.serializers.add(new GoogleSpreadSheetNopolSerializer(googleSecretPath));
+        if (mode != RepairMode.FORBEARS) {
+            this.serializers.add(new GoogleSpreadSheetNopolSerializer(googleSpreadsheetId, googleSecretPath));
         }
 
         this.serializers.add(googleSpreadSheetInspectorSerializer);
@@ -309,11 +313,11 @@ public class Launcher {
         ProjectScanner scanner = new ProjectScanner(lookupDays);
 
         if (mode == RepairMode.SLUG) {
-            this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, googleSecretPath);
+            this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, googleSpreadsheetId, googleSecretPath);
         }
         GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = null;
         if (mode == RepairMode.FORBEARS) {
-            googleSpreadSheetEndProcessSerializer4Bears = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, googleSecretPath);
+            googleSpreadSheetEndProcessSerializer4Bears = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, googleSpreadsheetId, googleSecretPath);
         }
 
         jsonSerializer.setScanner(scanner);
@@ -342,7 +346,7 @@ public class Launcher {
         }
 
         if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
-            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
+            GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSpreadsheetId, googleSecretPath);
             scannerSerializer.serialize();
         }
 
@@ -352,7 +356,7 @@ public class Launcher {
             }
 
             if (mode == RepairMode.SLUG) {
-                GoogleSpreadSheetInspectorTrackTreatedBuilds googleSpreadSheetInspectorTrackTreatedBuilds = new GoogleSpreadSheetInspectorTrackTreatedBuilds(buildsToBeInspected, googleSecretPath);
+                GoogleSpreadSheetInspectorTrackTreatedBuilds googleSpreadSheetInspectorTrackTreatedBuilds = new GoogleSpreadSheetInspectorTrackTreatedBuilds(buildsToBeInspected, googleSpreadsheetId, googleSecretPath);
                 this.serializers.add(googleSpreadSheetInspectorTrackTreatedBuilds);
             }
         }

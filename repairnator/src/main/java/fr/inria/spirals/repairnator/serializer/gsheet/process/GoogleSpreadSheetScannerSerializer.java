@@ -24,8 +24,8 @@ public class GoogleSpreadSheetScannerSerializer {
     private Sheets sheets;
     private ProjectScanner scanner;
 
-    public GoogleSpreadSheetScannerSerializer(ProjectScanner scanner, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetScannerSerializer(ProjectScanner scanner, String googleSpreadsheetId, String googleSecretPath) throws IOException {
+        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSpreadsheetId, googleSecretPath);
         this.scanner = scanner;
     }
 
