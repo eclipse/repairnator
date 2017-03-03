@@ -113,7 +113,7 @@ public class NopolRepair extends AbstractStep {
                     try {
                         result = nopol.build();
                     } catch (RuntimeException e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
                     return result;
                 }
