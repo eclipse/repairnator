@@ -1,6 +1,8 @@
 #!/bin/bash
 
-HOME_REPAIR=/media/experimentations/repairnator
+export GITHUB_LOGIN=
+export GITHUB_OAUTH=
+HOME_REPAIR=
 
 REPAIRNATOR_JARFILE="./repairnator-scanner/target/repairnator-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar"
 REPAIR_JAR=$HOME_REPAIR/bin/`date "+%Y-%m-%d_%H%M"`_repairnator.jar
@@ -23,14 +25,13 @@ mvn clean install
 
 if [[ $? == 0 ]]
 then
-   mkdir $HOME_REPAIR/
-   cp -f $REPAIRNATOR_JARFILE $REPAIRNATOR_DESTFILE
+   cp -f $REPAIRNATOR_JARFILE $REPAIR_JAR
 else
    echo "Error while building a new version of repairnator"
 fi
 
 export M2_HOME=/opt/apache-maven-3.3.9
-export GITHUB_OAUTH=
+
 TOOLS_PATH=/usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar
 
 LOG_FILE=$HOME_REPAIR/logs/output_`date "+%Y-%m-%d_%H%M"`.log
