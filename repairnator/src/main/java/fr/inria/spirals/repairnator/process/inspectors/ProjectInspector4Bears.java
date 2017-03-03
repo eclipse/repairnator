@@ -37,6 +37,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
         // Clone, build, test and gather test information for the
         // current passing build to ensure it is reproducible
         AbstractStep cloneRepo = new CloneRepository(this);
+        AbstractStep checkoutBuild = new CheckoutBuild(this);
         AbstractStep buildRepo = new BuildProject(this);
         AbstractStep testProject = new TestProject(this);
         this.testInformations = new GatherTestInformation(this, new BuildShouldPass());
@@ -47,7 +48,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
         if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_FAIL) {
             AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
 
-            cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+            cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
                     .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
                     .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
 
@@ -55,12 +56,12 @@ public class ProjectInspector4Bears extends ProjectInspector {
         } else {
             if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
-                AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutSourceCodeForPreviousBuild(this);
+                AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutPreviousBuildSourceCode(this);
                 AbstractStep buildRepoForPreviousBuild2 = new BuildProject(this);
                 AbstractStep testProjectForPreviousBuild2 = new TestProject(this);
                 AbstractStep gatherTestInformation2 = new GatherTestInformation(this, new BuildShouldFail());
 
-                cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+                cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
                         .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
                         .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
                         .setNextStep(checkoutSourceCodeForPreviousBuild).setNextStep(buildRepoForPreviousBuild2)

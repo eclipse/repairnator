@@ -6,16 +6,8 @@ import fr.inria.spirals.repairnator.process.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.ProjectScanner;
 import fr.inria.spirals.repairnator.process.ProjectState;
 import fr.inria.spirals.repairnator.process.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
-import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
-import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.NopolRepair;
-import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by urli on 26/12/2016.
@@ -216,9 +204,10 @@ public class ProjectInspector {
 
             if (mode != RepairMode.NOPOLONLY) {
                 AbstractStep cloneRepo = new CloneRepository(this);
+                AbstractStep checkoutBuild = new CheckoutBuild(this);
                 AbstractStep buildRepo = new BuildProject(this);
                 AbstractStep testProject = new TestProject(this);
-                cloneRepo.setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
+                cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
                 firstStep = cloneRepo;
             }
 
