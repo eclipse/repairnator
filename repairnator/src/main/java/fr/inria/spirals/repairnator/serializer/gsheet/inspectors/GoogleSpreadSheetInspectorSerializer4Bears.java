@@ -26,9 +26,9 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
 
     private Sheets sheets;
 
-    public GoogleSpreadSheetInspectorSerializer4Bears(String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetInspectorSerializer4Bears(String googleSpreadsheetId, String googleSecretPath) throws IOException {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSpreadsheetId, googleSecretPath);
     }
 
     @Override

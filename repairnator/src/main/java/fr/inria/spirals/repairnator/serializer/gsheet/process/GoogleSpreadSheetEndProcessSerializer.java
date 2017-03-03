@@ -27,8 +27,8 @@ public class GoogleSpreadSheetEndProcessSerializer {
     private int reproducedFailures;
     private int reproducedErrors;
 
-    public GoogleSpreadSheetEndProcessSerializer(ProjectScanner scanner, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetEndProcessSerializer(ProjectScanner scanner, String googleSpreadsheetId, String googleSecretPath) throws IOException {
+        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSpreadsheetId, googleSecretPath);
         this.scanner = scanner;
         this.beginDate = new Date();
     }
