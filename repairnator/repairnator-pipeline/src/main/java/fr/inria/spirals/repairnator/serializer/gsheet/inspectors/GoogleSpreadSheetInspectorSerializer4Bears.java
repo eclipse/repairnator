@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorSerializer4Bears.class);
-    private static final String RANGE = "All data!A1:L1";
+    private static final String RANGE = "All data!A1:M1";
 
     private Sheets sheets;
 
@@ -46,8 +46,9 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
             List<Object> dataCol = new ArrayList<Object>();
             dataCol.add(build.getId() + "");
             dataCol.add(previousBuildId + "");
-            dataCol.add(build.getRepository().getSlug());
+            dataCol.add(inspector.getBuildToBeInspected().getStatus().toString());
             dataCol.add(state);
+            dataCol.add(build.getRepository().getSlug());
             dataCol.add(build.getPullRequestNumber() + "");
             dataCol.add(SerializerUtils.formatCompleteDate(build.getFinishedAt()));
             dataCol.add(SerializerUtils.formatOnlyDay(build.getFinishedAt()));

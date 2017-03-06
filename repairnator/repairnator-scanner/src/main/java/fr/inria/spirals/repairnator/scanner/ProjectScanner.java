@@ -225,7 +225,7 @@ public class ProjectScanner {
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaSourceCode(build, previousBuild)) {
-                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_FAIL);
+                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
                     } else {
                         if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaSourceCode(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
                             return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);

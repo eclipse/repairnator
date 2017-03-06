@@ -45,7 +45,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
         AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
         AbstractStep testProjectForPreviousBuild = new TestProject(this);
-        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_FAIL) {
+        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
             AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
 
             cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
