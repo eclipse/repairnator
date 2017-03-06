@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Simon Urli
  */
-public class Build extends BuildPojo {
+public class Build extends BuildPojo implements Comparable<Build> {
     private Repository repository;
     private PRInformation prInformation;
     private Commit commit;
@@ -161,5 +161,10 @@ public class Build extends BuildPojo {
                 ", jobs=" + jobs +
                 ", completeLog='" + completeLog + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Build o) {
+        return this.getId()-o.getId();
     }
 }

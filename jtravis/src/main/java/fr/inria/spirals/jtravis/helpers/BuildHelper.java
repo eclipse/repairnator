@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -166,6 +167,7 @@ public class BuildHelper extends AbstractHelper {
                         result.add(build);
                     }
 
+                    // if we reach the limitNumber we can break the loop, and consider the date is reached
                     if (limitNumber != 0 && result.size() >= limitNumber) {
                         dateReached = true;
                         break;
@@ -175,6 +177,8 @@ public class BuildHelper extends AbstractHelper {
                     break;
                 }
             }
+
+
 
             if (buildArray.size() == 0) {
                 dateReached = true;
@@ -257,7 +261,10 @@ public class BuildHelper extends AbstractHelper {
         getBuildsFromSlugRecursively(slug, results, limitDate, after_number, eventTypes, limitNumber, status, prNumber, true);
 
         if (results.size() > 0) {
-            return results.get(0);
+            if (results.size() > 1) {
+                Collections.sort(results);
+            }
+            return results.get(results.size()-1);
         } else {
             return null;
         }
