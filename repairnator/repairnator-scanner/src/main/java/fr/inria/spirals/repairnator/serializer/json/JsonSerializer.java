@@ -7,8 +7,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
@@ -38,10 +38,10 @@ public class JsonSerializer extends AbstractDataSerializer {
     private Date dateFinish;
     private ProjectScanner scanner;
     private String outputPath;
-    private RepairMode mode;
+    private LauncherMode mode;
     Map<String, JsonArray> inspectors;
 
-    public JsonSerializer(String outputPath, RepairMode mode) {
+    public JsonSerializer(String outputPath, LauncherMode mode) {
         super();
         this.dateStart = new Date();
         this.outputPath = outputPath;

@@ -2,8 +2,8 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.RepairMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
@@ -34,7 +34,7 @@ public class ProjectInspector {
     private boolean autoclean;
     private String m2LocalPath;
     protected List<AbstractDataSerializer> serializers;
-    private RepairMode mode;
+    private LauncherMode mode;
     private List<URL> repairClassPath;
     private File[] repairSourceDir;
     private boolean isReproducedAsFail;
@@ -42,7 +42,7 @@ public class ProjectInspector {
     protected boolean previousBuildFlag;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers,
-                            String nopolSolverPath, boolean push, RepairMode mode) {
+                            String nopolSolverPath, boolean push, LauncherMode mode) {
         this.buildToBeInspected = buildToBeInspected;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -145,7 +145,7 @@ public class ProjectInspector {
         return nopolRepair;
     }
 
-    public RepairMode getMode() {
+    public LauncherMode getMode() {
         return mode;
     }
 
@@ -200,7 +200,7 @@ public class ProjectInspector {
 
             this.nopolRepair = new NopolRepair(this);
 
-            if (mode != RepairMode.NOPOLONLY) {
+            if (mode != LauncherMode.NOPOLONLY) {
                 AbstractStep cloneRepo = new CloneRepository(this);
                 AbstractStep checkoutBuild = new CheckoutBuild(this);
                 AbstractStep buildRepo = new BuildProject(this);
@@ -210,7 +210,7 @@ public class ProjectInspector {
             }
 
             // TODO: remove NopolOnly
-            /*if (mode == RepairMode.NOPOLONLY) {
+            /*if (mode == LauncherMode.NOPOLONLY) {
                 firstStep = this.testInformations;
                 try {
                     Properties properties = ProjectScanner.getPropertiesFromFile(

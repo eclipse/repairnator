@@ -51,7 +51,7 @@ public class Launcher {
     private int lookupDays;
     private String output;
     private boolean debug;
-    private RepairMode mode;
+    private LauncherMode mode;
     private boolean clean;
     private boolean push;
     private String solverPath;
@@ -105,7 +105,7 @@ public class Launcher {
         jsap.registerParameter(opt2);
 
         String modeValues = "";
-        for (RepairMode mode : RepairMode.values()) {
+        for (LauncherMode mode : LauncherMode.values()) {
             modeValues += mode.name() + ";";
         }
         modeValues.substring(0, modeValues.length() - 2);
@@ -253,8 +253,8 @@ public class Launcher {
             System.exit(-1);
         }
         this.checkToolsLoaded();
-        mode = RepairMode.valueOf(arguments.getString("mode").toUpperCase());
-        if (mode != RepairMode.FORBEARS) {
+        mode = LauncherMode.valueOf(arguments.getString("mode").toUpperCase());
+        if (mode != LauncherMode.SLUGFORBEARS && mode != LauncherMode.BUILDFORBEARS) {
             this.checkNopolSolverPath();
         }
         if (arguments.success() && checkEnvironmentVariables()) {
@@ -281,7 +281,7 @@ public class Launcher {
         JsonSerializer jsonSerializer = new JsonSerializer(output, mode);
         AbstractDataSerializer csvSerializer;
         AbstractDataSerializer googleSpreadSheetInspectorSerializer;
-        if (mode == RepairMode.FORBEARS) {
+        if (mode == LauncherMode.SLUGFORBEARS || mode == LauncherMode.BUILDFORBEARS) {
             csvSerializer = new CSVSerializer4Bears(output);
             googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer4Bears(googleSecretPath);
         } else {
@@ -294,7 +294,7 @@ public class Launcher {
         this.serializers.add(csvSerializer);
         this.serializers.add(googleSpreadSheetInspectorTimeSerializer);
 
-        if (mode == RepairMode.FORBEARS) {
+        if (mode == LauncherMode.SLUGFORBEARS || mode == LauncherMode.BUILDFORBEARS) {
             GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
         } else {
             this.serializers.add(new GoogleSpreadSheetNopolSerializer(googleSecretPath));
@@ -306,11 +306,11 @@ public class Launcher {
 
         ProjectScanner scanner = new ProjectScanner(lookupDays);
 
-        if (mode == RepairMode.SLUG) {
+        if (mode == LauncherMode.SLUG) {
             this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, googleSecretPath);
         }
         GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = null;
-        if (mode == RepairMode.FORBEARS) {
+        if (mode == LauncherMode.SLUGFORBEARS || mode == LauncherMode.BUILDFORBEARS) {
             googleSpreadSheetEndProcessSerializer4Bears = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, googleSecretPath);
         }
 
@@ -322,11 +322,11 @@ public class Launcher {
 
         switch (mode) {
             case BUILD:
-                buildsToBeInspected = scanner.getListOfFailingBuildFromGivenBuildIds(input);
+                buildsToBeInspected = scanner.getListOfFailingBuildsFromGivenBuildIds(input, mode);
                 break;
 
             case SLUG:
-                buildsToBeInspected = scanner.getListOfFailingBuildFromProjects(input, mode);
+                buildsToBeInspected = scanner.getListOfFailingBuildsFromProjects(input, mode);
                 break;
 
             case NOPOLONLY:
@@ -334,12 +334,16 @@ public class Launcher {
                 buildsToBeInspected = scanner.readBuildFromInput(input);
                 break;
 
-            case FORBEARS:
+            case SLUGFORBEARS:
                 buildsToBeInspected = scanner.getListOfPassingBuildsFromProjects(input, mode);
+                break;
+
+            case BUILDFORBEARS:
+                buildsToBeInspected = scanner.getListOfPassingBuildsFromGivenBuildIds(input, mode);
                 break;
         }
 
-        if (mode == RepairMode.SLUG || mode == RepairMode.FORBEARS) {
+        if (mode == LauncherMode.SLUG || mode == LauncherMode.SLUGFORBEARS) {
             GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
             scannerSerializer.serialize();
         }
@@ -349,19 +353,19 @@ public class Launcher {
                 System.out.println("Incriminated project : " + buildToBeInspected.getBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuild().getId());
             }
 
-            if (mode == RepairMode.SLUG) {
+            if (mode == LauncherMode.SLUG || mode == LauncherMode.SLUGFORBEARS) {
                 GoogleSpreadSheetInspectorTrackTreatedBuilds googleSpreadSheetInspectorTrackTreatedBuilds = new GoogleSpreadSheetInspectorTrackTreatedBuilds(buildsToBeInspected, googleSecretPath);
                 this.serializers.add(googleSpreadSheetInspectorTrackTreatedBuilds);
             }
         }
 
-        if (mode != RepairMode.NOPOLONLY) {
+        if (mode != LauncherMode.NOPOLONLY) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
         }
 
         if (completeWorkspace != null) {
-            if (mode != RepairMode.FORBEARS) {
+            if (mode != LauncherMode.SLUGFORBEARS && mode != LauncherMode.BUILDFORBEARS) {
                 List<ProjectInspector> inspectors = runInspectors(buildsToBeInspected, completeWorkspace, false);
 
                 for (ProjectInspector inspector : inspectors) {
@@ -416,7 +420,7 @@ public class Launcher {
     }
 
     private List<ProjectInspector> runInspectors(List<BuildToBeInspected> buildsToBeInspected, String workspace, boolean forBear) throws IOException {
-        if (mode != RepairMode.NOPOLONLY) {
+        if (mode != LauncherMode.NOPOLONLY) {
             initWorkspace(workspace);
         }
         Launcher.LOGGER.info("Start cloning and compiling projects...");
