@@ -4,7 +4,7 @@ import fr.inria.spirals.jtravis.entities.*;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.RepairMode;
+import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.kohsuke.github.*;
@@ -46,26 +46,6 @@ public class ProjectScanner {
         this.limitDate = limitCal.getTime();
     }
 
-    public int getTotalPRBuilds() {
-        return totalPRBuilds;
-    }
-
-    public int getTotalBuildInJava() {
-        return totalBuildInJava;
-    }
-
-    public int getTotalBuildInJavaFailing() {
-        return totalBuildInJavaFailing;
-    }
-
-    public Date getLimitDate() {
-        return limitDate;
-    }
-
-    public int getTotalJavaPassingBuilds() {
-        return totalJavaPassingBuilds;
-    }
-
     public int getTotalRepoNumber() {
         return totalRepoNumber;
     }
@@ -74,12 +54,28 @@ public class ProjectScanner {
         return totalRepoUsingTravis;
     }
 
-    public int getTotalBuildInJavaFailingWithFailingTests() {
-        return totalBuildInJavaFailingWithFailingTests;
-    }
-
     public int getTotalScannedBuilds() {
         return totalScannedBuilds;
+    }
+
+    public int getTotalPRBuilds() {
+        return totalPRBuilds;
+    }
+
+    public int getTotalBuildInJava() {
+        return totalBuildInJava;
+    }
+
+    public int getTotalJavaPassingBuilds() {
+        return totalJavaPassingBuilds;
+    }
+
+    public int getTotalBuildInJavaFailing() {
+        return totalBuildInJavaFailing;
+    }
+
+    public int getTotalBuildInJavaFailingWithFailingTests() {
+        return totalBuildInJavaFailingWithFailingTests;
     }
 
     public Collection<String> getSlugs() {
@@ -90,17 +86,29 @@ public class ProjectScanner {
         return repositories;
     }
 
-    public List<BuildToBeInspected> getListOfFailingBuildFromGivenBuildIds(String path) throws IOException {
+    public Date getLimitDate() {
+        return limitDate;
+    }
+
+    public List<BuildToBeInspected> getListOfFailingBuildsFromGivenBuildIds(String path, LauncherMode mode) throws IOException {
+        return getListOfBuildsFromGivenBuildIds(path, mode, true);
+    }
+
+    public List<BuildToBeInspected> getListOfPassingBuildsFromGivenBuildIds(String path, LauncherMode mode) throws IOException {
+        return getListOfBuildsFromGivenBuildIds(path, mode, false);
+    }
+
+    public List<BuildToBeInspected> getListOfBuildsFromGivenBuildIds(String path, LauncherMode mode, boolean targetFailing) throws IOException {
         this.dateStart = new Date();
         List<String> buildsIds = getFileContent(path);
         this.totalScannedBuilds = buildsIds.size();
 
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
-        for (String s : buildsIds) {
+        for (String buildIdStr : buildsIds) {
             int buildId;
             try {
-                buildId = Integer.parseInt(s);
+                buildId = Integer.parseInt(buildIdStr);
             } catch (NumberFormatException e) {
                 this.logger.error("Error while reading build ids from input: " + e.getMessage());
                 continue;
@@ -111,18 +119,28 @@ public class ProjectScanner {
                 this.logger.warn("The following build cannot be retrieved: " + buildId);
                 continue;
             }
-            if (testBuild(build, true)) {
-                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+
+            BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, mode, targetFailing);
+            if (buildToBeInspected != null) {
                 buildsToBeInspected.add(buildToBeInspected);
             }
         }
 
         this.totalRepoNumber = this.repositories.size();
         this.totalRepoUsingTravis = this.repositories.size();
-        this.totalBuildInJavaFailingWithFailingTests = buildsToBeInspected.size();
         this.dateFinish = new Date();
 
         return buildsToBeInspected;
+    }
+
+    private List<String> getFileContent(String path) throws IOException {
+        List<String> result = new ArrayList<String>();
+        File file = new File(path);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        while (reader.ready()) {
+            result.add(reader.readLine().trim());
+        }
+        return result;
     }
 
     /**
@@ -136,15 +154,15 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    public List<BuildToBeInspected> getListOfFailingBuildFromProjects(String path, RepairMode mode) throws IOException {
+    public List<BuildToBeInspected> getListOfFailingBuildsFromProjects(String path, LauncherMode mode) throws IOException {
         return getListOfBuildsFromProjectsByBuildStatus(path, mode, true);
     }
 
-    public List<BuildToBeInspected> getListOfPassingBuildsFromProjects(String path, RepairMode mode) throws IOException {
+    public List<BuildToBeInspected> getListOfPassingBuildsFromProjects(String path, LauncherMode mode) throws IOException {
         return getListOfBuildsFromProjectsByBuildStatus(path, mode, false);
     }
 
-    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, RepairMode mode, boolean targetFailing)
+    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, LauncherMode mode, boolean targetFailing)
             throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
@@ -155,16 +173,6 @@ public class ProjectScanner {
 
         this.dateFinish = new Date();
         return builds;
-    }
-
-    private List<String> getFileContent(String path) throws IOException {
-        List<String> result = new ArrayList<String>();
-        File file = new File(path);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        while (reader.ready()) {
-            result.add(reader.readLine().trim());
-        }
-        return result;
     }
 
     private List<Repository> getListOfValidRepository(List<String> allSlugs) {
@@ -188,6 +196,49 @@ public class ProjectScanner {
 
         this.totalRepoUsingTravis = result.size();
         return result;
+    }
+
+    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, LauncherMode mode, boolean targetFailing) {
+        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
+
+        for (Repository repo : repos) {
+            List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
+
+            for (Build build : repoBuilds) {
+                this.totalScannedBuilds++;
+                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, mode, targetFailing);
+                if (buildToBeInspected != null) {
+                    buildsToBeInspected.add(buildToBeInspected);
+                }
+            }
+        }
+
+        return buildsToBeInspected;
+    }
+
+    public BuildToBeInspected getBuildToBeInspected(Build build, LauncherMode mode, boolean targetFailing) {
+        if (testBuild(build, targetFailing)) {
+            if (mode == LauncherMode.SLUGFORBEARS || mode == LauncherMode.BUILDFORBEARS) {
+                Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
+                if (previousBuild != null) {
+                    this.logger.debug("Build: " + build.getId());
+                    this.logger.debug("Previous build: " + previousBuild.getId());
+
+                    if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaSourceCode(build, previousBuild)) {
+                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_FAIL);
+                    } else {
+                        if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaSourceCode(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
+                            return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
+                        } else {
+                            this.logger.debug("The pair of builds is not interesting.");
+                        }
+                    }
+                }
+            } else {
+                return new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+            }
+        }
+        return null;
     }
 
     private boolean testBuild(Build build, boolean targetFailing) {
@@ -238,66 +289,6 @@ public class ProjectScanner {
         return false;
     }
 
-    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, RepairMode mode, boolean targetFailing) {
-        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
-
-        for (Repository repo : repos) {
-            List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
-
-            for (Build build : repoBuilds) {
-                this.totalScannedBuilds++;
-                if (testBuild(build, targetFailing)) {
-                    if (mode == RepairMode.FORBEARS) {
-                        // First of all, here it is checked if the current passing build has a
-                        // previous build---if doesn't, nothing is made as this build is not
-                        // useful for Bears
-                        Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
-                        if (previousBuild != null) {
-                            this.logger.debug("Build: " + build.getId());
-                            this.logger.debug("Previous build: " + previousBuild.getId());
-
-                            if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
-                                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_FAIL);
-                                buildsToBeInspected.add(buildToBeInspected);
-                            } else {
-                                if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnTests(build, previousBuild)) {
-                                    BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
-                                    buildsToBeInspected.add(buildToBeInspected);
-                                } else {
-                                    this.logger.debug("The pair of builds is not interesting.");
-                                }
-                            }
-                        }
-                    } else {
-                        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
-                        buildsToBeInspected.add(buildToBeInspected);
-                    }
-                }
-            }
-        }
-
-        return buildsToBeInspected;
-    }
-
-    public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
-        InputStream inputStream = new FileInputStream(propertyFile);
-        Properties properties = new Properties();
-        properties.load(inputStream);
-        return properties;
-    }
-
-    private Properties getPropertiesFromInput(String input) throws IOException {
-        List<String> content = getFileContent(input);
-
-        if (content.isEmpty()) {
-            throw new IOException("File " + input + " is empty.");
-        }
-
-        String propertyFileDir = content.get(0);
-        String propFilePath = propertyFileDir + File.separator + AbstractStep.PROPERTY_FILENAME;
-        return getPropertiesFromFile(propFilePath);
-    }
-
     public String readWorkspaceFromInput(String input) throws IOException {
         Properties properties = getPropertiesFromInput(input);
         return properties.getProperty("workspace");
@@ -319,19 +310,57 @@ public class ProjectScanner {
         return buildsToBeInspected;
     }
 
+    private Properties getPropertiesFromInput(String input) throws IOException {
+        List<String> content = getFileContent(input);
+
+        if (content.isEmpty()) {
+            throw new IOException("File " + input + " is empty.");
+        }
+
+        String propertyFileDir = content.get(0);
+        String propFilePath = propertyFileDir + File.separator + AbstractStep.PROPERTY_FILENAME;
+        return getPropertiesFromFile(propFilePath);
+    }
+
+    public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
+        InputStream inputStream = new FileInputStream(propertyFile);
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        return properties;
+    }
+
+    public boolean thereIsDiffOnJavaSourceCode(Build build, Build previousBuild) {
+        try {
+            GitHub gh = GitHubBuilder.fromEnvironment().build();
+            GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
+            GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
+            GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
+            GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
+            GHCommit.File[] modifiedFiles = compare.getFiles();
+            for (GHCommit.File file : modifiedFiles) {
+                if (file.getFileName().endsWith(".java")) {
+                    logger.error("SC File: " + file.getFileName());
+                    return true;
+                }
+            }
+
+        } catch (IOException e) {
+            this.logger.warn("Error while getting commit from Github: " + e);
+        }
+        return false;
+    }
+
     public boolean thereIsDiffOnTests(Build build, Build previousBuild) {
         try {
             GitHub gh = GitHubBuilder.fromEnvironment().build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
-
             GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
             GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
-
             GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
-
             GHCommit.File[] modifiedFiles = compare.getFiles();
             for (GHCommit.File file : modifiedFiles) {
                 if (file.getFileName().contains("src/test/java")) {
+                    logger.error("TC File: " + file.getFileName());
                     return true;
                 }
             }
