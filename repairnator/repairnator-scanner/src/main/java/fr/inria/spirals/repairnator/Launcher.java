@@ -329,11 +329,6 @@ public class Launcher {
                 buildsToBeInspected = scanner.getListOfFailingBuildsFromProjects(input, mode);
                 break;
 
-            case NOPOLONLY:
-                completeWorkspace = scanner.readWorkspaceFromInput(input);
-                buildsToBeInspected = scanner.readBuildFromInput(input);
-                break;
-
             case SLUGFORBEARS:
                 buildsToBeInspected = scanner.getListOfPassingBuildsFromProjects(input, mode);
                 break;
@@ -359,10 +354,8 @@ public class Launcher {
             }
         }
 
-        if (mode != LauncherMode.NOPOLONLY) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
-            completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
+        completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
 
         if (completeWorkspace != null) {
             if (mode != LauncherMode.SLUGFORBEARS && mode != LauncherMode.BUILDFORBEARS) {
@@ -420,9 +413,8 @@ public class Launcher {
     }
 
     private List<ProjectInspector> runInspectors(List<BuildToBeInspected> buildsToBeInspected, String workspace, boolean forBear) throws IOException {
-        if (mode != LauncherMode.NOPOLONLY) {
-            initWorkspace(workspace);
-        }
+        initWorkspace(workspace);
+
         Launcher.LOGGER.info("Start cloning and compiling projects...");
 
         List<ProjectInspector> projectInspectors = new ArrayList<ProjectInspector>();

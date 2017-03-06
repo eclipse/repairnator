@@ -6,7 +6,6 @@ import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.kohsuke.github.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -287,46 +286,6 @@ public class ProjectScanner {
                     + " is not in java but language: " + build.getConfig().getLanguage());
         }
         return false;
-    }
-
-    public String readWorkspaceFromInput(String input) throws IOException {
-        Properties properties = getPropertiesFromInput(input);
-        return properties.getProperty("workspace");
-    }
-
-    public List<BuildToBeInspected> readBuildFromInput(String input) throws IOException {
-        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
-
-        Properties properties = getPropertiesFromInput(input);
-        String buildId = properties.getProperty("buildid");
-        if (buildId != null) {
-            Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
-            if (build != null && build.getBuildStatus() == BuildStatus.FAILED) {
-                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
-                buildsToBeInspected.add(buildToBeInspected);
-            }
-        }
-
-        return buildsToBeInspected;
-    }
-
-    private Properties getPropertiesFromInput(String input) throws IOException {
-        List<String> content = getFileContent(input);
-
-        if (content.isEmpty()) {
-            throw new IOException("File " + input + " is empty.");
-        }
-
-        String propertyFileDir = content.get(0);
-        String propFilePath = propertyFileDir + File.separator + AbstractStep.PROPERTY_FILENAME;
-        return getPropertiesFromFile(propFilePath);
-    }
-
-    public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
-        InputStream inputStream = new FileInputStream(propertyFile);
-        Properties properties = new Properties();
-        properties.load(inputStream);
-        return properties;
     }
 
     public boolean thereIsDiffOnJavaSourceCode(Build build, Build previousBuild) {

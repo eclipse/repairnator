@@ -200,26 +200,13 @@ public class ProjectInspector {
 
             this.nopolRepair = new NopolRepair(this);
 
-            if (mode != LauncherMode.NOPOLONLY) {
-                AbstractStep cloneRepo = new CloneRepository(this);
-                AbstractStep checkoutBuild = new CheckoutBuild(this);
-                AbstractStep buildRepo = new BuildProject(this);
-                AbstractStep testProject = new TestProject(this);
-                cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
-                firstStep = cloneRepo;
-            }
+            AbstractStep cloneRepo = new CloneRepository(this);
+            AbstractStep checkoutBuild = new CheckoutBuild(this);
+            AbstractStep buildRepo = new BuildProject(this);
+            AbstractStep testProject = new TestProject(this);
+            cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations);
+            firstStep = cloneRepo;
 
-            // TODO: remove NopolOnly
-            /*if (mode == LauncherMode.NOPOLONLY) {
-                firstStep = this.testInformations;
-                try {
-                    Properties properties = ProjectScanner.getPropertiesFromFile(
-                            this.getRepoLocalPath() + File.separator + AbstractStep.PROPERTY_FILENAME);
-                    firstStep.setProperties(properties);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }*/
             firstStep.setDataSerializer(this.serializers);
 
             if (push) {
