@@ -94,7 +94,8 @@ public class NopolRepair extends AbstractStep {
             nopolContext.setLocalizer(NopolContext.NopolLocalizer.OCHIAI);
             nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
             nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
-            nopolContext.setType(StatementType.PRE_THEN_COND);
+            nopolContext.setType(StatementType.COND_THEN_PRE);
+            nopolContext.setOnlyOneSynthesisResult(false);
 
             nopolInformation.setNopolContext(nopolContext);
 
