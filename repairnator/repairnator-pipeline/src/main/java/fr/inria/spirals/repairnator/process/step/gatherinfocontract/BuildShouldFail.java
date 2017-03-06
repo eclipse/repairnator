@@ -17,7 +17,7 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
         if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE) {
             inspector.setReproducedAsFail(true);
             if (inspector.isAboutAPreviousBuild()) {
-                if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_FAIL) {
+                if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                     // So, 1) the current passing build can be reproduced and 2)
                     // its previous build is a failing build with failing tests
                     // and it can also be reproduced
