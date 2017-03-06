@@ -9,29 +9,28 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Ref;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by urli on 21/02/2017.
+ * Created by urli on 06/03/2017.
  */
-public class TestCloneRepositoryStep {
+public class TestCheckoutBuild {
 
     @Test
-    public void testCloneMasterBuild() throws IOException, GitAPIException {
+    public void testCheckoutBuild() throws IOException, GitAPIException {
         int buildId = 207924136; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
@@ -51,32 +50,19 @@ public class TestCloneRepositoryStep {
         when(inspector.getBuild()).thenReturn(build);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
+        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+
+        cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.CLONABLE);
-        assertThat(cloneStep.getState(), is(ProjectState.CLONABLE));
-        assertThat(cloneStep.shouldStop, is(false));
+        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
+        verify(inspector, times(1)).setState(ProjectState.BUILDCHECKEDOUT);
+
+        assertThat(checkoutBuild.shouldStop, is(false));
 
         Git gitDir = Git.open(tmpDir);
-        Ref ref = gitDir.getRepository().exactRef("HEAD");
-
-        assertThat(ref.isSymbolic(), is(true));
-
-        ref = ref.getTarget();
-
-        assertThat(ref.getObjectId().getName(), not(build.getCommit().getSha())); // no check out yet
-
         Status status = gitDir.status().call();
-        assertThat(status.getUntracked().size(), is(1));
+
         assertThat(status.getAdded().isEmpty(), is(true));
-        assertThat(status.getChanged().isEmpty(), is(true));
-        assertThat(status.getModified().isEmpty(), is(true));
-        assertThat(status.getRemoved().isEmpty(), is(true));
-
-        Set<String> addedFile = status.getUntracked();
-
-        String[] propertyFile = addedFile.toArray(new String[addedFile.size()]);
-
-        assertThat(propertyFile[0], is("repairnator.properties"));
     }
 }
