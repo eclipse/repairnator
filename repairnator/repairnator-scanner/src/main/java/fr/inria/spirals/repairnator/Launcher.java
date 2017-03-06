@@ -18,6 +18,7 @@ import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadShe
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
+import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.LoggerFactory;
@@ -338,8 +339,12 @@ public class Launcher {
                 break;
         }
 
-        if (mode == LauncherMode.SLUG || mode == LauncherMode.SLUGFORBEARS) {
+        if (mode == LauncherMode.SLUG) {
             GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
+            scannerSerializer.serialize();
+        }
+        if (mode == LauncherMode.SLUGFORBEARS) {
+            GoogleSpreadSheetScannerSerializer4Bears scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(scanner, googleSecretPath);
             scannerSerializer.serialize();
         }
 

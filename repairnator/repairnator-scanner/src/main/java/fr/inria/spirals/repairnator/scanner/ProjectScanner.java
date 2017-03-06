@@ -29,6 +29,8 @@ public class ProjectScanner {
     private int totalJavaPassingBuilds;
     private int totalBuildInJavaFailing;
     private int totalBuildInJavaFailingWithFailingTests;
+    private int totalNumberOfFailingAndPassingBuildPairs;
+    private int totalNumberOfPassingAndPassingBuildPairs;
     private Date dateStart;
     private Date dateFinish;
 
@@ -75,6 +77,14 @@ public class ProjectScanner {
 
     public int getTotalBuildInJavaFailingWithFailingTests() {
         return totalBuildInJavaFailingWithFailingTests;
+    }
+
+    public int getTotalNumberOfFailingAndPassingBuildPairs() {
+        return totalNumberOfFailingAndPassingBuildPairs;
+    }
+
+    public int getTotalNumberOfPassingAndPassingBuildPairs() {
+        return totalNumberOfPassingAndPassingBuildPairs;
     }
 
     public Collection<String> getSlugs() {
@@ -224,9 +234,11 @@ public class ProjectScanner {
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaSourceCode(build, previousBuild)) {
+                        this.totalNumberOfFailingAndPassingBuildPairs++;
                         return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
                     } else {
                         if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaSourceCode(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
+                            this.totalNumberOfPassingAndPassingBuildPairs++;
                             return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
                         } else {
                             this.logger.debug("The pair of builds is not interesting.");
