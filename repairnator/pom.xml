@@ -15,6 +15,7 @@
     </modules>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven-jacoco-plugin.version>0.7.5.201505241946</maven-jacoco-plugin.version>
@@ -140,8 +141,6 @@
                 <version>2.19.1</version>
                 <configuration>
                     <argLine>${argLine}</argLine>
-                    <parallel>methods</parallel>
-                    <threadCount>10</threadCount>
                 </configuration>
             </plugin>
         </plugins>
