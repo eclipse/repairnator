@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.*;
@@ -34,7 +33,6 @@ public class ProjectInspector {
     private boolean autoclean;
     private String m2LocalPath;
     protected List<AbstractDataSerializer> serializers;
-    private LauncherMode mode;
     private List<URL> repairClassPath;
     private File[] repairSourceDir;
     private boolean isReproducedAsFail;
@@ -42,7 +40,7 @@ public class ProjectInspector {
     protected boolean previousBuildFlag;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers,
-                            String nopolSolverPath, boolean push, LauncherMode mode) {
+                            String nopolSolverPath, boolean push) {
         this.buildToBeInspected = buildToBeInspected;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
@@ -54,7 +52,6 @@ public class ProjectInspector {
         this.stepErrors = new HashMap<String, List<String>>();
         this.autoclean = false;
         this.serializers = serializers;
-        this.mode = mode;
     }
 
     public List<URL> getRepairClassPath() {
@@ -143,10 +140,6 @@ public class ProjectInspector {
 
     public NopolRepair getNopolRepair() {
         return nopolRepair;
-    }
-
-    public LauncherMode getMode() {
-        return mode;
     }
 
     public String toString() {
