@@ -81,6 +81,8 @@ public class GatherTestInformation extends AbstractStep {
     @Override
     protected void businessExecute() {
         this.getLogger().debug("Start gathering test information...");
+        this.inspector.setTestInformations(this);
+
         File rootRepo = new File(this.inspector.getRepoLocalPath());
         final List<File> surefireDirs = new ArrayList<File>();
 
