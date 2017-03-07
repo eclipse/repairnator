@@ -9,12 +9,14 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -61,8 +63,12 @@ public class TestCheckoutBuild {
         assertThat(checkoutBuild.shouldStop, is(false));
 
         Git gitDir = Git.open(tmpDir);
-        Status status = gitDir.status().call();
+        Iterable<RevCommit> logs = gitDir.log().call();
 
-        assertThat(status.getAdded().isEmpty(), is(true));
+        Iterator<RevCommit> iterator = logs.iterator();
+
+        assertThat(iterator.hasNext(), is(true));
+
+        assertThat(iterator.next().getName(), is(build.getCommit().getSha()));
     }
 }

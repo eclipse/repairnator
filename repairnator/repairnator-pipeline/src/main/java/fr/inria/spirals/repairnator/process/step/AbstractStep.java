@@ -168,11 +168,14 @@ public abstract class AbstractStep {
 
     protected void cleanMavenArtifacts() {
         this.writeProperty("lastStep", this.getName());
-        try {
-            FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
-        } catch (IOException e) {
-            getLogger().warn(
-                    "Error while deleting the M2 local directory (" + this.inspector.getM2LocalPath() + "): " + e);
+
+        if (this.inspector.getM2LocalPath() != null) {
+            try {
+                FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
+            } catch (IOException e) {
+                getLogger().warn(
+                        "Error while deleting the M2 local directory (" + this.inspector.getM2LocalPath() + "): " + e);
+            }
         }
 
         if (this.inspector.isAutoclean()) {
