@@ -102,7 +102,7 @@ public class Launcher {
         opt2.setLongFlag("launcherMode");
         opt2.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
         opt2.setRequired(true);
-        opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIRNATOR) or for collecting fixer builds (BEARS).");
+        opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).");
         jsap.registerParameter(opt2);
 
         String fileModeValues = "";
@@ -134,7 +134,7 @@ public class Launcher {
         opt2.setShortFlag('w');
         opt2.setLongFlag("workspace");
         opt2.setRequired(true);
-        opt2.setHelp("Specify where to clone failing repository.");
+        opt2.setHelp("Specify where to clone repositories during inspection.");
         opt2.setDefault("./workspace");
         opt2.setStringParser(JSAP.STRING_PARSER);
         jsap.registerParameter(opt2);
@@ -153,7 +153,7 @@ public class Launcher {
         sw1 = new Switch("push");
         sw1.setShortFlag('p');
         sw1.setLongFlag("push");
-        sw1.setHelp("If set this flag push failing builds (bypass push even in conjunction with steps option).");
+        sw1.setHelp("If set this flag push builds considered interesting depending on the launcher mode (bypass push even in conjunction with steps option).");
         jsap.registerParameter(sw1);
 
         // cleaning

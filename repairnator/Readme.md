@@ -33,34 +33,33 @@ Options :
 
   - [-h|--help] Display the usage
 
-  - [-d|--debug] Show debug informations from RepairNator and JTravis
+  - [-d|--debug] Show debug information from RepairNator and JTravis
 
-  - [-p|--push] If set this flag push repository content (limited to 10 commits) in case of reproduced failing builds
+  - (-i|--input) <input> Specify where to find the list of projects or build ids to scan.
+
+  - (-m|--launcherMode) <launcherMode> Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).
+
+  - (-f|--fileMode) <fileMode> Specify if the input contains project names (SLUG) or build ids (BUILD).
+
+  - (-o|--output) <output> Specify where to place JSON output.
+
+  - (-w|--workspace) <workspace> Specify where to clone repositories during inspection. (default: ./workspace)
+
+  - (-l|--lookupHours) <lookupHours> Specify the number of hours to lookup in past for builds. (default: 1)
+
+  - [-p|--push] If set this flag push builds considered interesting depending on the launcher mode (bypass push even in conjunction with steps option).
 
   - [--clean] Clean workspace after each finished process.
 
-  - (-i|--input) <input> Specify where to find the list of projects or builds to scan.
+  - [(-g|--googleSecretPath) <googleSecretPath>] Specify the path of the google client secret file. (default: ./client_secret.json)
 
-  - (-m|--mode) <mode> Specify if the input contains project names (SLUG), build ids (BUILD),
-        path to repair (NOPOLONLY), or if it is to inspect passing builds
-        (FORBEARS).
+  - [(-z|--z3Path) <z3Path>] Specify the solver path used by Nopol.
 
-  - (-o|--output) <output> Specify where to place JSON/CSV output.
-
-  - (-w|--workspace) <workspace> Specify where to clone failing repository (default: ./workspace)
-
-  - (-l|--lookup) <lookup> Specify the number of hours to lookup in past for builds (default: 1)
-
-  - [(-z|--z3Path) <z3Path>] Specify the solver path used by Nopol (mandatory in all modes except FORBEARS)
-
-  - [(-g|--googleSecretPath) <googleSecretPath>] Specify the path of the google client secret file (default:
-        ./client_secret.json)
-        
 Note that some environment variable must also be set:
 
   - M2_HOME: path to maven installation
   - GITHUB_LOGIN: login github
-  - GITHUB_OAUTH: token github (those information are used to push but also to get information from GitHub API)
+  - GITHUB_OAUTH: token github (those information are used to push and also to get information from GitHub API)
 
 ## Why "RepairNator"?
 Because if the main objective of Terminator was "Seek and Destroy", the main goal of RepairNator is "Scan and Repair".
