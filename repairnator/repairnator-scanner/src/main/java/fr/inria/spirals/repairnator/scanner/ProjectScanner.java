@@ -4,9 +4,9 @@ import fr.inria.spirals.jtravis.entities.*;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.FileMode;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.kohsuke.github.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,8 @@ public class ProjectScanner {
     private int totalJavaPassingBuilds;
     private int totalBuildInJavaFailing;
     private int totalBuildInJavaFailingWithFailingTests;
+    private int totalNumberOfFailingAndPassingBuildPairs;
+    private int totalNumberOfPassingAndPassingBuildPairs;
     private Date dateStart;
     private Date dateFinish;
 
@@ -37,7 +39,13 @@ public class ProjectScanner {
     private Collection<Repository> repositories;
     private Date limitDate;
 
-    public ProjectScanner(int lookupHours) {
+    private LauncherMode launcherMode;
+    private FileMode fileMode;
+
+    public ProjectScanner(int lookupHours, LauncherMode launcherMode, FileMode fileMode) {
+        this.launcherMode = launcherMode;
+        this.fileMode = fileMode;
+
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
 
@@ -78,6 +86,14 @@ public class ProjectScanner {
         return totalBuildInJavaFailingWithFailingTests;
     }
 
+    public int getTotalNumberOfFailingAndPassingBuildPairs() {
+        return totalNumberOfFailingAndPassingBuildPairs;
+    }
+
+    public int getTotalNumberOfPassingAndPassingBuildPairs() {
+        return totalNumberOfPassingAndPassingBuildPairs;
+    }
+
     public Collection<String> getSlugs() {
         return slugs;
     }
@@ -90,15 +106,23 @@ public class ProjectScanner {
         return limitDate;
     }
 
-    public List<BuildToBeInspected> getListOfFailingBuildsFromGivenBuildIds(String path, LauncherMode mode) throws IOException {
-        return getListOfBuildsFromGivenBuildIds(path, mode, true);
+    public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
+        if (this.launcherMode == LauncherMode.REPAIR) {
+            if (this.fileMode == FileMode.SLUG) {
+                return getListOfBuildsFromProjectsByBuildStatus(path, true);
+            } else {
+                return getListOfBuildsFromGivenBuildIds(path, true);
+            }
+        } else {
+            if (this.fileMode == FileMode.SLUG) {
+                return getListOfBuildsFromProjectsByBuildStatus(path, false);
+            } else {
+                return getListOfBuildsFromGivenBuildIds(path, false);
+            }
+        }
     }
 
-    public List<BuildToBeInspected> getListOfPassingBuildsFromGivenBuildIds(String path, LauncherMode mode) throws IOException {
-        return getListOfBuildsFromGivenBuildIds(path, mode, false);
-    }
-
-    public List<BuildToBeInspected> getListOfBuildsFromGivenBuildIds(String path, LauncherMode mode, boolean targetFailing) throws IOException {
+    public List<BuildToBeInspected> getListOfBuildsFromGivenBuildIds(String path, boolean targetFailing) throws IOException {
         this.dateStart = new Date();
         List<String> buildsIds = getFileContent(path);
         this.totalScannedBuilds = buildsIds.size();
@@ -120,7 +144,7 @@ public class ProjectScanner {
                 continue;
             }
 
-            BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, mode, targetFailing);
+            BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, targetFailing);
             if (buildToBeInspected != null) {
                 buildsToBeInspected.add(buildToBeInspected);
             }
@@ -154,22 +178,14 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    public List<BuildToBeInspected> getListOfFailingBuildsFromProjects(String path, LauncherMode mode) throws IOException {
-        return getListOfBuildsFromProjectsByBuildStatus(path, mode, true);
-    }
-
-    public List<BuildToBeInspected> getListOfPassingBuildsFromProjects(String path, LauncherMode mode) throws IOException {
-        return getListOfBuildsFromProjectsByBuildStatus(path, mode, false);
-    }
-
-    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, LauncherMode mode, boolean targetFailing)
+    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing)
             throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
-        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos, mode, targetFailing);
+        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos, targetFailing);
 
         this.dateFinish = new Date();
         return builds;
@@ -198,7 +214,7 @@ public class ProjectScanner {
         return result;
     }
 
-    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, LauncherMode mode, boolean targetFailing) {
+    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
         for (Repository repo : repos) {
@@ -206,7 +222,7 @@ public class ProjectScanner {
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;
-                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, mode, targetFailing);
+                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, targetFailing);
                 if (buildToBeInspected != null) {
                     buildsToBeInspected.add(buildToBeInspected);
                 }
@@ -216,26 +232,28 @@ public class ProjectScanner {
         return buildsToBeInspected;
     }
 
-    public BuildToBeInspected getBuildToBeInspected(Build build, LauncherMode mode, boolean targetFailing) {
+    public BuildToBeInspected getBuildToBeInspected(Build build, boolean targetFailing) {
         if (testBuild(build, targetFailing)) {
-            if (mode == LauncherMode.SLUGFORBEARS || mode == LauncherMode.BUILDFORBEARS) {
+            if (this.launcherMode == LauncherMode.REPAIR) {
+                return new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+            } else {
                 Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
                 if (previousBuild != null) {
                     this.logger.debug("Build: " + build.getId());
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaSourceCode(build, previousBuild)) {
-                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_FAIL);
+                        this.totalNumberOfFailingAndPassingBuildPairs++;
+                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
                     } else {
                         if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaSourceCode(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
+                            this.totalNumberOfPassingAndPassingBuildPairs++;
                             return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
                         } else {
                             this.logger.debug("The pair of builds is not interesting.");
                         }
                     }
                 }
-            } else {
-                return new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
             }
         }
         return null;
@@ -287,46 +305,6 @@ public class ProjectScanner {
                     + " is not in java but language: " + build.getConfig().getLanguage());
         }
         return false;
-    }
-
-    public String readWorkspaceFromInput(String input) throws IOException {
-        Properties properties = getPropertiesFromInput(input);
-        return properties.getProperty("workspace");
-    }
-
-    public List<BuildToBeInspected> readBuildFromInput(String input) throws IOException {
-        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
-
-        Properties properties = getPropertiesFromInput(input);
-        String buildId = properties.getProperty("buildid");
-        if (buildId != null) {
-            Build build = BuildHelper.getBuildFromId(Integer.parseInt(buildId), null);
-            if (build != null && build.getBuildStatus() == BuildStatus.FAILED) {
-                BuildToBeInspected buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
-                buildsToBeInspected.add(buildToBeInspected);
-            }
-        }
-
-        return buildsToBeInspected;
-    }
-
-    private Properties getPropertiesFromInput(String input) throws IOException {
-        List<String> content = getFileContent(input);
-
-        if (content.isEmpty()) {
-            throw new IOException("File " + input + " is empty.");
-        }
-
-        String propertyFileDir = content.get(0);
-        String propFilePath = propertyFileDir + File.separator + AbstractStep.PROPERTY_FILENAME;
-        return getPropertiesFromFile(propFilePath);
-    }
-
-    public static Properties getPropertiesFromFile(String propertyFile) throws IOException {
-        InputStream inputStream = new FileInputStream(propertyFile);
-        Properties properties = new Properties();
-        properties.load(inputStream);
-        return properties;
     }
 
     public boolean thereIsDiffOnJavaSourceCode(Build build, Build previousBuild) {

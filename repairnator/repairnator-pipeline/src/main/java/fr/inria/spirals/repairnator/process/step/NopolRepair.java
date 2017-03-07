@@ -84,7 +84,7 @@ public class NopolRepair extends AbstractStep {
                 this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
                         + " (should timeout in " + timeout + " minutes)");
 
-                NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[]{testClass});
+                NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[] { testClass });
                 nopolContext.setComplianceLevel(8);
                 nopolContext.setTimeoutTestExecution(300);
                 nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
@@ -92,7 +92,8 @@ public class NopolRepair extends AbstractStep {
                 nopolContext.setLocalizer(NopolContext.NopolLocalizer.OCHIAI);
                 nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
                 nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
-                nopolContext.setType(StatementType.PRE_THEN_COND);
+                nopolContext.setType(StatementType.COND_THEN_PRE);
+                nopolContext.setOnlyOneSynthesisResult(false);
 
                 nopolInformation.setNopolContext(nopolContext);
 
