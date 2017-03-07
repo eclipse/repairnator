@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.FileMode;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -38,10 +39,11 @@ public class JsonSerializer extends AbstractDataSerializer {
     private Date dateFinish;
     private ProjectScanner scanner;
     private String outputPath;
-    private LauncherMode mode;
+    private LauncherMode launcherMode;
+    private FileMode fileMode;
     Map<String, JsonArray> inspectors;
 
-    public JsonSerializer(String outputPath, LauncherMode mode) {
+    public JsonSerializer(String outputPath, LauncherMode launcherMode, FileMode fileMode) {
         super();
         this.dateStart = new Date();
         this.outputPath = outputPath;
@@ -49,7 +51,8 @@ public class JsonSerializer extends AbstractDataSerializer {
         this.serializer = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new CustomExclusionStrategy())
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
-        this.mode = mode;
+        this.launcherMode = launcherMode;
+        this.fileMode = fileMode;
         this.inspectors = new HashMap<String, JsonArray>();
 
         for (ProjectState state : ProjectState.values()) {
@@ -72,7 +75,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         if (outputFile.isDirectory()) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
             String formattedDate = dateFormat.format(new Date());
-            String filename = "librepair_" + mode.name().toLowerCase() + "_" + formattedDate + ".json";
+            String filename = "librepair_" + this.launcherMode.name().toLowerCase() + "_" + this.fileMode.name().toLowerCase() + "_" + formattedDate + ".json";
             outputFile = new File(outputFile.getPath() + File.separator + filename);
         }
 

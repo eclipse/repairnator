@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.step.*;
@@ -23,8 +22,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
     private boolean isFixerBuild_Case2;
 
     public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers,
-                                  String nopolSolverPath, boolean push, LauncherMode mode) {
-        super(buildToBeInspected, workspace, serializers, null, push, mode);
+                                  String nopolSolverPath, boolean push) {
+        super(buildToBeInspected, workspace, serializers, null, push);
         this.previousBuildFlag = false;
         this.isFixerBuild_Case1 = false;
         this.isFixerBuild_Case2 = false;
