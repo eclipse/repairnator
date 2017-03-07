@@ -22,7 +22,7 @@ public class CloneRepository extends AbstractStep {
     }
 
     protected void businessExecute() {
-        String repository = this.inspector.getRepoSlug();
+        String repository = this.build.getRepository().getSlug();
         String repoRemotePath = GITHUB_ROOT_REPO + repository + ".git";
         String repoLocalPath = this.inspector.getRepoLocalPath();
 

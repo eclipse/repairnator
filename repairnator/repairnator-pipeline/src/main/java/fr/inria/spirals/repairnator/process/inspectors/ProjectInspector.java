@@ -232,4 +232,8 @@ public class ProjectInspector {
         this.previousBuildFlag = previousBuildFlag;
     }
 
+    public void setTestInformations(GatherTestInformation testInformations) {
+        this.testInformations = testInformations;
+    }
+
 }
