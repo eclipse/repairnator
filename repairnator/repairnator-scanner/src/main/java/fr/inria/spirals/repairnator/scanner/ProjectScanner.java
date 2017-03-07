@@ -4,6 +4,7 @@ import fr.inria.spirals.jtravis.entities.*;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.FileMode;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import org.kohsuke.github.*;
@@ -38,7 +39,13 @@ public class ProjectScanner {
     private Collection<Repository> repositories;
     private Date limitDate;
 
-    public ProjectScanner(int lookupHours) {
+    private LauncherMode launcherMode;
+    private FileMode fileMode;
+
+    public ProjectScanner(int lookupHours, LauncherMode launcherMode, FileMode fileMode) {
+        this.launcherMode = launcherMode;
+        this.fileMode = fileMode;
+
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
 
@@ -99,15 +106,23 @@ public class ProjectScanner {
         return limitDate;
     }
 
-    public List<BuildToBeInspected> getListOfFailingBuildsFromGivenBuildIds(String path, LauncherMode launcherMode) throws IOException {
-        return getListOfBuildsFromGivenBuildIds(path, launcherMode, true);
+    public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
+        if (this.launcherMode == LauncherMode.REPAIR) {
+            if (this.fileMode == FileMode.SLUG) {
+                return getListOfBuildsFromProjectsByBuildStatus(path, true);
+            } else {
+                return getListOfBuildsFromGivenBuildIds(path, true);
+            }
+        } else {
+            if (this.fileMode == FileMode.SLUG) {
+                return getListOfBuildsFromProjectsByBuildStatus(path, false);
+            } else {
+                return getListOfBuildsFromGivenBuildIds(path, false);
+            }
+        }
     }
 
-    public List<BuildToBeInspected> getListOfPassingBuildsFromGivenBuildIds(String path, LauncherMode launcherMode) throws IOException {
-        return getListOfBuildsFromGivenBuildIds(path, launcherMode, false);
-    }
-
-    public List<BuildToBeInspected> getListOfBuildsFromGivenBuildIds(String path, LauncherMode launcherMode, boolean targetFailing) throws IOException {
+    public List<BuildToBeInspected> getListOfBuildsFromGivenBuildIds(String path, boolean targetFailing) throws IOException {
         this.dateStart = new Date();
         List<String> buildsIds = getFileContent(path);
         this.totalScannedBuilds = buildsIds.size();
@@ -129,7 +144,7 @@ public class ProjectScanner {
                 continue;
             }
 
-            BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, launcherMode, targetFailing);
+            BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, targetFailing);
             if (buildToBeInspected != null) {
                 buildsToBeInspected.add(buildToBeInspected);
             }
@@ -163,22 +178,14 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    public List<BuildToBeInspected> getListOfFailingBuildsFromProjects(String path, LauncherMode launcherMode) throws IOException {
-        return getListOfBuildsFromProjectsByBuildStatus(path, launcherMode, true);
-    }
-
-    public List<BuildToBeInspected> getListOfPassingBuildsFromProjects(String path, LauncherMode launcherMode) throws IOException {
-        return getListOfBuildsFromProjectsByBuildStatus(path, launcherMode, false);
-    }
-
-    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, LauncherMode launcherMode, boolean targetFailing)
+    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing)
             throws IOException {
         this.dateStart = new Date();
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
-        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos, launcherMode, targetFailing);
+        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos, targetFailing);
 
         this.dateFinish = new Date();
         return builds;
@@ -207,7 +214,7 @@ public class ProjectScanner {
         return result;
     }
 
-    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, LauncherMode launcherMode, boolean targetFailing) {
+    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
         for (Repository repo : repos) {
@@ -215,7 +222,7 @@ public class ProjectScanner {
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;
-                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, launcherMode, targetFailing);
+                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, targetFailing);
                 if (buildToBeInspected != null) {
                     buildsToBeInspected.add(buildToBeInspected);
                 }
@@ -225,9 +232,9 @@ public class ProjectScanner {
         return buildsToBeInspected;
     }
 
-    public BuildToBeInspected getBuildToBeInspected(Build build, LauncherMode launcherMode, boolean targetFailing) {
+    public BuildToBeInspected getBuildToBeInspected(Build build, boolean targetFailing) {
         if (testBuild(build, targetFailing)) {
-            if (launcherMode == LauncherMode.REPAIRNATOR) {
+            if (this.launcherMode == LauncherMode.REPAIR) {
                 return new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
             } else {
                 Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);

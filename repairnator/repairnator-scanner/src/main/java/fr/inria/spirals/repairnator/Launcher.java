@@ -265,7 +265,7 @@ public class Launcher {
         }
         this.checkToolsLoaded();
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
-        if (this.launcherMode == LauncherMode.REPAIRNATOR) {
+        if (this.launcherMode == LauncherMode.REPAIR) {
             this.checkNopolSolverPath();
         }
         if (this.arguments.success() && checkEnvironmentVariables()) {
@@ -291,7 +291,7 @@ public class Launcher {
 
         Launcher.LOGGER.debug("Start to scan projects in travis...");
 
-        ProjectScanner scanner = new ProjectScanner(this.lookupHours);
+        ProjectScanner scanner = new ProjectScanner(this.lookupHours, this.launcherMode, this.fileMode);
 
         JsonSerializer jsonSerializer = new JsonSerializer(this.output, this.launcherMode, this.fileMode);
         jsonSerializer.setScanner(scanner);
@@ -300,7 +300,7 @@ public class Launcher {
         AbstractDataSerializer googleSpreadSheetInspectorSerializer;
         GoogleSpreadSheetEndProcessSerializer googleSpreadSheetEndProcessSerializer = null;
         GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = null;
-        if (this.launcherMode == LauncherMode.REPAIRNATOR) {
+        if (this.launcherMode == LauncherMode.REPAIR) {
             csvSerializer = new CSVSerializer4RepairNator(this.output);
             googleSpreadSheetInspectorSerializer = new GoogleSpreadSheetInspectorSerializer(this.googleSecretPath);
             if (this.fileMode == FileMode.SLUG) {
@@ -326,21 +326,9 @@ public class Launcher {
 
         String completeWorkspace = null;
 
-        if (this.launcherMode == LauncherMode.REPAIRNATOR) {
-            if (this.fileMode == FileMode.SLUG) {
-                buildsToBeInspected = scanner.getListOfFailingBuildsFromProjects(this.input, this.launcherMode);
-            } else {
-                buildsToBeInspected = scanner.getListOfFailingBuildsFromGivenBuildIds(this.input, this.launcherMode);
-            }
-        } else {
-            if (this.fileMode == FileMode.SLUG) {
-                buildsToBeInspected = scanner.getListOfPassingBuildsFromProjects(this.input, this.launcherMode);
-            } else {
-                buildsToBeInspected = scanner.getListOfPassingBuildsFromGivenBuildIds(this.input, this.launcherMode);
-            }
-        }
+        buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.input);
 
-        if (this.launcherMode == LauncherMode.REPAIRNATOR && this.fileMode == FileMode.SLUG) {
+        if (this.launcherMode == LauncherMode.REPAIR && this.fileMode == FileMode.SLUG) {
             GoogleSpreadSheetScannerSerializer scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, this.googleSecretPath);
             scannerSerializer.serialize();
         }
@@ -364,7 +352,7 @@ public class Launcher {
         completeWorkspace = workspace + File.separator + dateFormat.format(new Date());
 
         if (completeWorkspace != null) {
-            if (this.launcherMode == LauncherMode.REPAIRNATOR) {
+            if (this.launcherMode == LauncherMode.REPAIR) {
                 List<ProjectInspector> inspectors = runInspectors(buildsToBeInspected, completeWorkspace, false);
 
                 int nbReproducedFails = 0;
