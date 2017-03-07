@@ -39,7 +39,7 @@ public class TestCheckoutBuild {
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_clone");
+        Path tmpDirPath = Files.createTempDirectory("test_checkout");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 

@@ -34,7 +34,7 @@ public class TestBuildProject {
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_clone");
+        Path tmpDirPath = Files.createTempDirectory("test_build");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 

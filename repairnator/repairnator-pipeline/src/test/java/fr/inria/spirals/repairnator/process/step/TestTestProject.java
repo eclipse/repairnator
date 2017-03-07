@@ -28,13 +28,13 @@ public class TestTestProject {
 
     @Test
     public void testTestProjectWhenFailing() throws IOException {
-        int buildId = 207924136; // surli/failingProject build
+        int buildId = 207890790; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_clone");
+        Path tmpDirPath = Files.createTempDirectory("test_testproject");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
