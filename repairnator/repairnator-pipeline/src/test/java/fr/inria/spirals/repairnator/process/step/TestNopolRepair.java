@@ -3,7 +3,6 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -56,7 +55,7 @@ public class TestNopolRepair {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
 
-        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, solverPath, false, LauncherMode.BUILD);
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, solverPath, false);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         NopolRepair nopolRepair = new NopolRepair(inspector);
