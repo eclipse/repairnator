@@ -12,7 +12,7 @@ fi
 cd ..
 
 cd repairnator
-mvn clean install
+mvn clean install jacoco:report coveralls:report
 
 if [[ $? != 0 ]]
 then

@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLoc
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
