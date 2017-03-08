@@ -158,7 +158,7 @@ public class BuildHelperTest {
     @Test
     public void testGetLastBuildWorksOnMaster() {
         int buildId = 207455891;
-        Build currentBuild = BuildHelper.getBuildFromId(207455891, null);
+        Build currentBuild = BuildHelper.getBuildFromId(buildId, null);
 
         int expectedBuildId = 207113449;
         Build obtainedBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(currentBuild, null);
@@ -166,5 +166,17 @@ public class BuildHelperTest {
         assertTrue(obtainedBuild != null);
         assertEquals(expectedBuildId, obtainedBuild.getId());
     }
-    
+
+    @Test
+    public void testGetLastBuildJustBeforeGivenBuildOnTheSameBranch() {
+        int buildId = 208181440;
+        Build currentBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        int expectedBuildId = 208116073;
+        Build obtainedBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(currentBuild, null);
+
+        assertTrue(obtainedBuild != null);
+        assertEquals(expectedBuildId, obtainedBuild.getId());
+    }
+
 }
