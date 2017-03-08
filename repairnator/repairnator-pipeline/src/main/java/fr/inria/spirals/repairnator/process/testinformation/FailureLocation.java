@@ -91,10 +91,8 @@ public class FailureLocation {
         if (nbFailures != that.nbFailures) return false;
         if (nbErrors != that.nbErrors) return false;
         if (className != null ? !className.equals(that.className) : that.className != null) return false;
-        if (failingMethods != null ? !failingMethods.equals(that.failingMethods) : that.failingMethods != null)
-            return false;
-        if (erroringMethods != null ? !erroringMethods.equals(that.erroringMethods) : that.erroringMethods != null)
-            return false;
+        if (failingMethods != null ? !failingMethods.equals(that.failingMethods) : that.failingMethods != null) return false;
+        if (erroringMethods != null ? !erroringMethods.equals(that.erroringMethods) : that.erroringMethods != null) return false;
         return failures != null ? failures.equals(that.failures) : that.failures == null;
     }
 
