@@ -57,6 +57,10 @@ public class FailureType {
 
     @Override
     public String toString() {
-        return failureName;
+        return "FailureType{" +
+                "failureName='" + failureName + '\'' +
+                ", failureDetail='" + failureDetail + '\'' +
+                ", isError=" + isError +
+                '}';
     }
 }
