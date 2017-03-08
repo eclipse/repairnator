@@ -72,6 +72,7 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
                 + ";synthetizer: " + nopolContext.getSynthesis().name() + ";type: " + nopolContext.getType().name());
         dataCol.add(nopolInformation.getNbAngelicValues());
         dataCol.add(nopolInformation.getNbStatements());
+        dataCol.add(nopolInformation.getIgnoreStatus().name());
         return dataCol;
     }
 

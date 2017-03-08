@@ -22,11 +22,17 @@ public class NopolInformation {
     private String exceptionDetail;
     private int nbStatements;
     private int nbAngelicValues;
+    private IgnoreStatus ignoreStatus;
 
-    public NopolInformation(FailureLocation location) {
+    public NopolInformation(FailureLocation location, IgnoreStatus ignoreStatus) {
         this.status = NopolStatus.NOTLAUNCHED;
         this.patches = new ArrayList<>();
         this.location = location;
+        this.ignoreStatus = ignoreStatus;
+    }
+
+    public IgnoreStatus getIgnoreStatus() {
+        return ignoreStatus;
     }
 
     public NopolStatus getStatus() {

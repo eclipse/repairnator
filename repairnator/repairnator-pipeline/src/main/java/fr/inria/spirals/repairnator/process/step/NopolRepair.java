@@ -8,6 +8,7 @@ import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLocation;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -68,90 +70,121 @@ public class NopolRepair extends AbstractStep {
             int passingTime = 0;
 
             for (FailureLocation failureLocation : failureLocationList) {
-                NopolInformation nopolInformation = new NopolInformation(failureLocation);
-                this.nopolInformations.add(nopolInformation);
 
-                nopolInformation.setStatus(NopolStatus.RUNNING);
 
-                String testClass = failureLocation.getClassName();
-                int timeout = (TOTAL_MAX_TIME - passingTime) / 2;
-                if (timeout < MIN_TIMEOUT) {
-                    timeout = MIN_TIMEOUT;
+                Set<String> erroringTests = failureLocation.getErroringMethods();
+                Set<String> failingTests = failureLocation.getFailingMethods();
+
+                // this one is used to loop on Nopol over tests to ignore. It can be a list containing an empty list.
+                List<List<String>> listOfTestToIgnore = new ArrayList<>();
+
+                boolean ignoreError = false;
+                // in that case: no tests to ignore
+                if (erroringTests.isEmpty() || failingTests.isEmpty()) {
+                    listOfTestToIgnore.add(new ArrayList<>());
+                // then we will first try to ignore erroring tests, then to ignore failing tests
+                } else {
+                    listOfTestToIgnore.add(new ArrayList<>(erroringTests));
+                    listOfTestToIgnore.add(new ArrayList<>(failingTests));
+
+                    ignoreError = true;
                 }
 
-                nopolInformation.setAllocatedTime(timeout);
-
-                this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
-                        + " (should timeout in " + timeout + " minutes)");
-
-                NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[] { testClass });
-                nopolContext.setComplianceLevel(8);
-                nopolContext.setTimeoutTestExecution(300);
-                nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
-                nopolContext.setMaxTimeInMinutes(timeout);
-                nopolContext.setLocalizer(NopolContext.NopolLocalizer.OCHIAI);
-                nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
-                nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
-                nopolContext.setType(StatementType.COND_THEN_PRE);
-                nopolContext.setOnlyOneSynthesisResult(false);
-
-                nopolInformation.setNopolContext(nopolContext);
-
-                SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
-
-                long beforeNopol = new Date().getTime();
-
-                final NoPol nopol = new NoPol(nopolContext);
-                List<Patch> patch = null;
-
-                final ExecutorService executor = Executors.newSingleThreadExecutor();
-                final Future<NopolResult> nopolExecution = executor.submit(new Callable() {
-                    @Override
-                    public Object call() throws Exception {
-                        NopolResult result = null;
-                        try {
-                            result = nopol.build();
-                        } catch (RuntimeException e) {
-                            //e.printStackTrace();
-                        }
-                        return result;
-                    }
-                });
-
-                try {
-                    executor.shutdown();
-                    NopolResult result = nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
-
-                    nopolInformation.setNbStatements(result.getNbStatements());
-                    nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
-                    patch = result.getPatches();
-                    if (patch != null && !patch.isEmpty()) {
-                        nopolInformation.setPatches(patch);
-                        nopolInformation.setStatus(NopolStatus.PATCH);
-                        patchCreated = true;
+                for (List<String> testsToIgnore : listOfTestToIgnore) {
+                    NopolInformation nopolInformation;
+                    if (testsToIgnore.isEmpty()) {
+                        nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.NOTHING_TO_IGNORE);
                     } else {
-                        nopolInformation.setStatus(NopolStatus.NOPATCH);
+                        if (ignoreError) {
+                            nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.IGNORE_ERRORING);
+                            ignoreError = false;
+                        } else {
+                            nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.IGNORE_FAILING);
+                        }
                     }
-                } catch (TimeoutException exception) {
-                    this.addStepError("Timeout: execution time > " + nopolContext.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
-                    nopolExecution.cancel(true);
-                    executor.shutdownNow();
-                    nopolInformation.setStatus(NopolStatus.TIMEOUT);
-                } catch (InterruptedException | ExecutionException e) {
-                    this.addStepError(e.getMessage());
-                    nopolExecution.cancel(true);
-                    executor.shutdownNow();
-                    nopolInformation.setStatus(NopolStatus.EXCEPTION);
-                    nopolInformation.setExceptionDetail(e.getMessage());
+                    this.nopolInformations.add(nopolInformation);
+                    nopolInformation.setStatus(NopolStatus.RUNNING);
+
+                    String testClass = failureLocation.getClassName();
+                    int timeout = (TOTAL_MAX_TIME - passingTime) / 2;
+                    if (timeout < MIN_TIMEOUT) {
+                        timeout = MIN_TIMEOUT;
+                    }
+
+                    nopolInformation.setAllocatedTime(timeout);
+
+                    this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
+                            + " (should timeout in " + timeout + " minutes)");
+
+                    NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[] { testClass }, testsToIgnore);
+                    nopolContext.setComplianceLevel(8);
+                    nopolContext.setTimeoutTestExecution(300);
+                    nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
+                    nopolContext.setMaxTimeInMinutes(timeout);
+                    nopolContext.setLocalizer(NopolContext.NopolLocalizer.OCHIAI);
+                    nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
+                    nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
+                    nopolContext.setType(StatementType.COND_THEN_PRE);
+                    nopolContext.setOnlyOneSynthesisResult(false);
+
+                    nopolInformation.setNopolContext(nopolContext);
+
+                    SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
+
+                    long beforeNopol = new Date().getTime();
+
+                    final NoPol nopol = new NoPol(nopolContext);
+                    List<Patch> patch = null;
+
+                    final ExecutorService executor = Executors.newSingleThreadExecutor();
+                    final Future<NopolResult> nopolExecution = executor.submit(new Callable() {
+                        @Override
+                        public Object call() throws Exception {
+                            NopolResult result = null;
+                            try {
+                                result = nopol.build();
+                            } catch (RuntimeException e) {
+                                //e.printStackTrace();
+                            }
+                            return result;
+                        }
+                    });
+
+                    try {
+                        executor.shutdown();
+                        NopolResult result = nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+
+                        nopolInformation.setNbStatements(result.getNbStatements());
+                        nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
+                        patch = result.getPatches();
+                        if (patch != null && !patch.isEmpty()) {
+                            nopolInformation.setPatches(patch);
+                            nopolInformation.setStatus(NopolStatus.PATCH);
+                            patchCreated = true;
+                        } else {
+                            nopolInformation.setStatus(NopolStatus.NOPATCH);
+                        }
+                    } catch (TimeoutException exception) {
+                        this.addStepError("Timeout: execution time > " + nopolContext.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+                        nopolExecution.cancel(true);
+                        executor.shutdownNow();
+                        nopolInformation.setStatus(NopolStatus.TIMEOUT);
+                    } catch (InterruptedException | ExecutionException e) {
+                        this.addStepError(e.getMessage());
+                        nopolExecution.cancel(true);
+                        executor.shutdownNow();
+                        nopolInformation.setStatus(NopolStatus.EXCEPTION);
+                        nopolInformation.setExceptionDetail(e.getMessage());
+                    }
+                    long afterNopol = new Date().getTime();
+
+                    nopolInformation.setDateEnd();
+
+                    int localPassingTime = Math.round((afterNopol - beforeNopol) / 60000);
+                    nopolInformation.setPassingTime(localPassingTime);
+
+                    passingTime += localPassingTime;
                 }
-                long afterNopol = new Date().getTime();
-
-                nopolInformation.setDateEnd();
-
-                int localPassingTime = Math.round((afterNopol - beforeNopol) / 60000);
-                nopolInformation.setPassingTime(localPassingTime);
-
-                passingTime += localPassingTime;
             }
 
             if (!patchCreated) {

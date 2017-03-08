@@ -120,8 +120,7 @@ public class GatherTestInformation extends AbstractStep {
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
                             if (testCase.hasFailure()) {
                                 this.failureNames.add(testCase.getFailureType());
-                                FailureType typeTof = new FailureType(testCase.getFailureType(),
-                                        testCase.getFailureDetail(), testCase.isError());
+                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.isError());
                                 FailureLocation failureLocation = null;
 
                                 for (FailureLocation location : this.failureLocations) {
@@ -131,12 +130,16 @@ public class GatherTestInformation extends AbstractStep {
                                     }
                                 }
 
-                                if (failureLocation != null) {
-                                    failureLocation.addFailure(typeTof);
-                                } else {
+                                if (failureLocation == null) {
                                     failureLocation = new FailureLocation(testCase.getFullClassName());
-                                    failureLocation.addFailure(typeTof);
                                     this.failureLocations.add(failureLocation);
+                                }
+                                failureLocation.addFailure(typeTof);
+
+                                if (testCase.isError()) {
+                                    failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
+                                } else {
+                                    failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
                                 }
                             }
                         }

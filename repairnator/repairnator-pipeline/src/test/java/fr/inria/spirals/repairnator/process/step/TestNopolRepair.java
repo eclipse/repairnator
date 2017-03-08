@@ -71,6 +71,6 @@ public class TestNopolRepair {
 
         assertThat(nopolRepair.shouldStop, is(false));
         assertThat(nopolRepair.getState(), is(ProjectState.PATCHED));
-        assertThat(nopolRepair.getNopolInformations().size(), is(10));
+        assertThat(nopolRepair.getNopolInformations().size(), is(11));
     }
 }
