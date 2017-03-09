@@ -160,8 +160,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
-        NopolRepair nopolRepair = inspector.getNopolRepair();
-        result.add("nopolInformations", serialize(nopolRepair.getNopolInformations()));
+        result.add("nopolInformations", serialize(inspector.getNopolInformations()));
 
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
@@ -200,8 +199,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
-        NopolRepair nopolRepair = inspector.getNopolRepair();
-        result.add("nopolInformations", serialize(nopolRepair.getNopolInformations()));
+        result.add("nopolInformations", serialize(inspector.getNopolInformations()));
 
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
