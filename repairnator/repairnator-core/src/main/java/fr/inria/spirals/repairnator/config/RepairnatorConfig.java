@@ -18,6 +18,7 @@ public class RepairnatorConfig {
     private String jsonOutputPath;
     private String googleSecretPath;
     private String inputFile;
+    private String pushRemoteRepo;
 
     private static RepairnatorConfig instance;
 
@@ -120,6 +121,14 @@ public class RepairnatorConfig {
         this.inputFile = inputFile;
     }
 
+    public String getPushRemoteRepo() {
+        return pushRemoteRepo;
+    }
+
+    public void setPushRemoteRepo(String pushRemoteRepo) {
+        this.pushRemoteRepo = pushRemoteRepo;
+    }
+
     @Override
     public String toString() {
         return "RepairnatorConfig{" +
@@ -134,6 +143,7 @@ public class RepairnatorConfig {
                 ", jsonOutputPath='" + jsonOutputPath + '\'' +
                 ", googleSecretPath='" + googleSecretPath + '\'' +
                 ", inputFile='" + inputFile + '\'' +
+                ", pushRemoteRepo='" + pushRemoteRepo + '\'' +
                 '}';
     }
 }
