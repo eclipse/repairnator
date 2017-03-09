@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,8 +159,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
-        NopolRepair nopolRepair = inspector.getNopolRepair();
-        result.add("nopolInformations", serialize(nopolRepair.getNopolInformations()));
+        result.add("nopolInformations", serialize(inspector.getNopolInformations()));
 
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());
@@ -200,8 +198,7 @@ public class JsonSerializer extends AbstractDataSerializer {
         result.add("stepsDuration", serialize(inspector.getStepsDurationsInSeconds()));
         result.addProperty("localRepo", inspector.getRepoLocalPath());
 
-        NopolRepair nopolRepair = inspector.getNopolRepair();
-        result.add("nopolInformations", serialize(nopolRepair.getNopolInformations()));
+        result.add("nopolInformations", serialize(inspector.getNopolInformations()));
 
         GatherTestInformation testInformation = inspector.getTestInformations();
         result.addProperty("failingModulePath", testInformation.getFailingModulePath());

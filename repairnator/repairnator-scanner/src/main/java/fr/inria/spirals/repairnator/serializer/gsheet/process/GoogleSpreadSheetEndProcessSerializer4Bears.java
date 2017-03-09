@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.serializer.gsheet.process;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import fr.inria.spirals.repairnator.ProcessSerializer;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.SerializerUtils;
 import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * Created by fernanda on 27/02/17.
  */
-public class GoogleSpreadSheetEndProcessSerializer4Bears {
+public class GoogleSpreadSheetEndProcessSerializer4Bears implements ProcessSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetEndProcessSerializer4Bears.class);
     private static final String RANGE = "End Process!A1:I1";
 

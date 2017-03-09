@@ -21,10 +21,9 @@ public class ProjectInspector4Bears extends ProjectInspector {
     private boolean isFixerBuild_Case1;
     private boolean isFixerBuild_Case2;
 
-    public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers,
-                                  String nopolSolverPath, boolean push) {
-        super(buildToBeInspected, workspace, serializers, null, push);
-        this.previousBuildFlag = false;
+    public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers) {
+        super(buildToBeInspected, workspace, serializers);
+        super.setPreviousBuildFlag(false);
         this.isFixerBuild_Case1 = false;
         this.isFixerBuild_Case2 = false;
     }
@@ -39,49 +38,41 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep checkoutBuild = new CheckoutBuild(this);
         AbstractStep buildRepo = new BuildProject(this);
         AbstractStep testProject = new TestProject(this);
-        this.testInformations = new GatherTestInformation(this, new BuildShouldPass());
+        this.setTestInformations(new GatherTestInformation(this, new BuildShouldPass()));
 
         AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
         AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
         AbstractStep testProjectForPreviousBuild = new TestProject(this);
-        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
+        if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
             AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
 
-            cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+            cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.getTestInformations())
                     .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
-                    .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
+                    .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
+                    .setNextStep(new PushIncriminatedBuild(this));
 
-            lastStep = gatherTestInformation;
         } else {
-            if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
+            if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
                 AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutPreviousBuildSourceCode(this);
                 AbstractStep buildRepoForPreviousBuild2 = new BuildProject(this);
                 AbstractStep testProjectForPreviousBuild2 = new TestProject(this);
                 AbstractStep gatherTestInformation2 = new GatherTestInformation(this, new BuildShouldFail());
 
-                cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.testInformations)
+                cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.getTestInformations())
                         .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
                         .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
                         .setNextStep(checkoutSourceCodeForPreviousBuild).setNextStep(buildRepoForPreviousBuild2)
-                        .setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2);
-
-                lastStep = gatherTestInformation2;
+                        .setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2)
+                        .setNextStep(new PushIncriminatedBuild(this));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
             }
         }
 
-        if (this.getPushMode()) {
-            PushIncriminatedBuild pushIncriminatedBuild = new PushIncriminatedBuild(this);
-            pushIncriminatedBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
-            this.setPushBuild(pushIncriminatedBuild);
-            lastStep.setNextStep(pushIncriminatedBuild);
-        }
-
         firstStep = cloneRepo;
         firstStep.setState(ProjectState.INIT);
-        firstStep.setDataSerializer(this.serializers);
+        firstStep.setDataSerializer(this.getSerializers());
 
         try {
             firstStep.execute();
