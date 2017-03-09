@@ -40,8 +40,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(fr.inria.spirals.repairnator.pipeline.Launcher.class);
-
-    private static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH", "GITHUB_LOGIN" };
     private static final int NB_THREADS = 4;
 
     private JSAP jsap;
@@ -99,7 +97,7 @@ public class Launcher {
         System.err.println();
         System.err.println(jsap.getHelp());
         System.err.println("Please note that the following environment variables must be set: ");
-        for (String env : Launcher.ENVIRONMENT_VARIABLES) {
+        for (String env : Utils.ENVIRONMENT_VARIABLES) {
             System.err.println(" - " + env);
         }
         System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
@@ -107,8 +105,9 @@ public class Launcher {
     }
 
     private void checkEnvironmentVariables() {
-        for (String envVar : Launcher.ENVIRONMENT_VARIABLES) {
+        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
             if (System.getenv(envVar) == null) {
+                System.err.println("You must set the following environment variable: "+envVar);
                 this.printUsage();
             }
         }
