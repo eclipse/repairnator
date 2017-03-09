@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator;
 
-import fr.inria.spirals.repairnator.SerializerUtils;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -19,7 +18,7 @@ public class TestSerializerUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017, 8, 27, 14, 15, 18);
 
-        String obtainedStr = SerializerUtils.formatCompleteDate(calendar.getTime());
+        String obtainedStr = Utils.formatCompleteDate(calendar.getTime());
         String expectedStr = "27/09/17 14:15";
 
         assertThat(obtainedStr, is(expectedStr));
@@ -30,7 +29,7 @@ public class TestSerializerUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2017, 8, 27, 14, 15, 18);
 
-        String obtainedStr = SerializerUtils.formatOnlyDay(calendar.getTime());
+        String obtainedStr = Utils.formatOnlyDay(calendar.getTime());
         String expectedStr = "27/09/2017";
 
         assertThat(obtainedStr, is(expectedStr));
@@ -47,7 +46,7 @@ public class TestSerializerUtils {
         Date date1 = calendar1.getTime();
         Date date2 = calendar2.getTime();
 
-        String humanString = SerializerUtils.getDuration(date1, date2);
+        String humanString = Utils.getDuration(date1, date2);
 
         assertThat(humanString, is("03:21"));
     }

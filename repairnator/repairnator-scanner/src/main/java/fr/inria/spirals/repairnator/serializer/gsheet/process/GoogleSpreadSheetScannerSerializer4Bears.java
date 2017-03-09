@@ -5,7 +5,7 @@ import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.repairnator.ProcessSerializer;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
-import fr.inria.spirals.repairnator.SerializerUtils;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,9 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
     public void serialize() {
         if (this.sheets != null) {
             List<Object> dataCol = new ArrayList<Object>();
-            dataCol.add(SerializerUtils.getHostname());
-            dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
-            dataCol.add(SerializerUtils.formatCompleteDate(this.scanner.getLimitDate()));
+            dataCol.add(Utils.getHostname());
+            dataCol.add(Utils.formatCompleteDate(new Date()));
+            dataCol.add(Utils.formatCompleteDate(this.scanner.getLimitDate()));
             dataCol.add(this.scanner.getTotalRepoNumber());
             dataCol.add(this.scanner.getTotalRepoUsingTravis());
             dataCol.add(this.scanner.getTotalScannedBuilds());
@@ -47,7 +47,7 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
             dataCol.add(this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
             dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
             dataCol.add(this.scanner.getTotalPRBuilds());
-            dataCol.add(SerializerUtils.formatOnlyDay(this.scanner.getLimitDate()));
+            dataCol.add(Utils.formatOnlyDay(this.scanner.getLimitDate()));
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);

@@ -12,7 +12,7 @@ import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.SerializerUtils;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
             List<Object> dataCol = new ArrayList<Object>();
             dataCol.add(build.getId() + "");
             dataCol.add(build.getRepository().getSlug());
-            dataCol.add(SerializerUtils.formatCompleteDate(new Date()));
+            dataCol.add(Utils.formatCompleteDate(new Date()));
             dataCol.add(total);
             dataCol.add(clonage);
             dataCol.add(buildtime);
@@ -63,7 +63,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
             dataCol.add(gatherTestInfo);
             dataCol.add(push);
             dataCol.add(repair);
-            dataCol.add(SerializerUtils.getHostname());
+            dataCol.add(Utils.getHostname());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);

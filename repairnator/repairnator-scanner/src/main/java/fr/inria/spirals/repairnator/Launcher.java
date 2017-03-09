@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * Created by urli on 23/12/2016.
  */
 public class Launcher {
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(fr.inria.spirals.repairnator.pipeline.Launcher.class);
 
     private static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH", "GITHUB_LOGIN" };
     private static final int NB_THREADS = 4;
@@ -72,9 +72,9 @@ public class Launcher {
         }
 
         if (this.arguments.getBoolean("debug")) {
-            this.setLevel(Level.DEBUG);
+            Utils.setLoggersLevel(Level.DEBUG);
         } else {
-            this.setLevel(Level.INFO);
+            Utils.setLoggersLevel(Level.INFO);
         }
     }
 
@@ -155,20 +155,6 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).");
         this.jsap.registerParameter(opt2);
-    }
-
-    private static void setLevel(Level level) {
-        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria.spirals.jtravis.helpers");
-        jtravis.setLevel(level);
-
-        Logger nopol = (Logger) LoggerFactory.getLogger("fr.inria.lille.repair.nopol");
-        nopol.setLevel(level);
-
-        Logger repairnator = (Logger) LoggerFactory.getLogger("fr.inria.spirals.repairnator");
-        repairnator.setLevel(level);
-
-        Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
-        jgit.setLevel(Level.WARN);
     }
 
     private void checkToolsLoaded() {

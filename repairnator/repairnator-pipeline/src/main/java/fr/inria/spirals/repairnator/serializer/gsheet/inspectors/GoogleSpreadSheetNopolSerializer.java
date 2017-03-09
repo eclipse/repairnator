@@ -10,7 +10,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.SerializerUtils;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,9 +37,9 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
     private List<Object> serializeNopolInfo(Build build, NopolInformation nopolInformation, Patch patch,
             int patchNumber) {
         List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(SerializerUtils.getHostname());
-        dataCol.add(SerializerUtils.formatCompleteDate(nopolInformation.getDateEnd()));
-        dataCol.add(SerializerUtils.formatOnlyDay(nopolInformation.getDateEnd()));
+        dataCol.add(Utils.getHostname());
+        dataCol.add(Utils.formatCompleteDate(nopolInformation.getDateEnd()));
+        dataCol.add(Utils.formatOnlyDay(nopolInformation.getDateEnd()));
         dataCol.add(build.getId());
         dataCol.add(build.getRepository().getSlug());
 

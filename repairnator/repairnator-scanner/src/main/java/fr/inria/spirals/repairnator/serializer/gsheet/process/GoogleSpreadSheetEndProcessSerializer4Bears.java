@@ -5,7 +5,7 @@ import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.repairnator.ProcessSerializer;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
-import fr.inria.spirals.repairnator.SerializerUtils;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +45,13 @@ public class GoogleSpreadSheetEndProcessSerializer4Bears implements ProcessSeria
     public void serialize() {
         if (this.sheets != null) {
             Date now = new Date();
-            String humanDuration = SerializerUtils.getDuration(this.beginDate, now);
+            String humanDuration = Utils.getDuration(this.beginDate, now);
 
             List<Object> dataCol = new ArrayList<Object>();
-            dataCol.add(SerializerUtils.getHostname());
-            dataCol.add(SerializerUtils.formatOnlyDay(this.beginDate));
-            dataCol.add(SerializerUtils.formatCompleteDate(this.beginDate));
-            dataCol.add(SerializerUtils.formatCompleteDate(now));
+            dataCol.add(Utils.getHostname());
+            dataCol.add(Utils.formatOnlyDay(this.beginDate));
+            dataCol.add(Utils.formatCompleteDate(this.beginDate));
+            dataCol.add(Utils.formatCompleteDate(now));
             dataCol.add(humanDuration);
             dataCol.add(scanner.getTotalJavaPassingBuilds());
             dataCol.add(nbFixerBuildCase1);
