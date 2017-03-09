@@ -41,6 +41,7 @@ public class NopolRepair extends AbstractStep {
     public NopolRepair(ProjectInspector inspector) {
         super(inspector);
         this.nopolInformations = new ArrayList<>();
+        inspector.setNopolInformations(this.nopolInformations);
     }
 
     public List<NopolInformation> getNopolInformations() {

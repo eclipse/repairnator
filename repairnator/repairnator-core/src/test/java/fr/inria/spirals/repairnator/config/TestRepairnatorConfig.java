@@ -49,7 +49,7 @@ public class TestRepairnatorConfig {
         Path tempUserDir = Files.createTempDirectory("temp-user-dir");
 
         File resourceConfig = new File("src/test/resources/example_config.ini");
-        File dest = new File(tempUserDir.toFile().getAbsolutePath()+"/config.ini");
+        File dest = new File(tempUserDir.toFile().getAbsolutePath()+"/"+RepairnatorConfigReader.FILENAME);
         Files.copy(resourceConfig.toPath(), dest.toPath());
 
         System.setProperty("user.dir", tempUserDir.toFile().getAbsolutePath());

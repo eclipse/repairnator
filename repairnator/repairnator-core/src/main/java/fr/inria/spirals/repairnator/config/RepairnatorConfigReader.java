@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class RepairnatorConfigReader {
     private Logger logger = LoggerFactory.getLogger(RepairnatorConfigReader.class);
-    private static final String FILENAME = "config.ini";
+    protected static final String FILENAME = "repairconfig.ini";
 
     public void readConfigFile(RepairnatorConfig config) throws RepairnatorConfigException {
         String currentDir = System.getProperty("user.dir");

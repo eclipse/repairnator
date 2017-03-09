@@ -48,9 +48,9 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
             cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.getTestInformations())
                     .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
-                    .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation);
+                    .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
+                    .setNextStep(new PushIncriminatedBuild(this));
 
-            lastStep = gatherTestInformation;
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
@@ -63,19 +63,11 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
                         .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
                         .setNextStep(checkoutSourceCodeForPreviousBuild).setNextStep(buildRepoForPreviousBuild2)
-                        .setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2);
-
-                lastStep = gatherTestInformation2;
+                        .setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2)
+                        .setNextStep(new PushIncriminatedBuild(this));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
             }
-        }
-
-        if (this.getPushMode()) {
-            PushIncriminatedBuild pushIncriminatedBuild = new PushIncriminatedBuild(this);
-            pushIncriminatedBuild.setRemoteRepoUrl(PushIncriminatedBuild.REMOTE_REPO_BEAR);
-            this.setPushBuild(pushIncriminatedBuild);
-            lastStep.setNextStep(pushIncriminatedBuild);
         }
 
         firstStep = cloneRepo;

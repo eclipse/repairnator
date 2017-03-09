@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
+import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -30,15 +31,13 @@ public class ProjectInspector {
     private String nopolSolverPath;
     private Map<String, Integer> stepsDurationsInSeconds;
     private GatherTestInformation testInformations;
-    private PushIncriminatedBuild pushBuild;
-    private NopolRepair nopolRepair;
-    private boolean push;
     private Map<String, List<String>> stepErrors;
     private boolean autoclean;
     private String m2LocalPath;
     private List<AbstractDataSerializer> serializers;
     private List<URL> repairClassPath;
     private File[] repairSourceDir;
+    private List<NopolInformation> nopolInformations;
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
     private boolean previousBuildFlag;
@@ -57,7 +56,6 @@ public class ProjectInspector {
         this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuild().getId();
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.stepsDurationsInSeconds = new HashMap<String, Integer>();
-        this.push = this.config.isPush();
         this.stepErrors = new HashMap<String, List<String>>();
         this.autoclean = this.config.isClean();
         this.serializers = serializers;
@@ -139,20 +137,8 @@ public class ProjectInspector {
         return testInformations;
     }
 
-    public void setPushBuild(PushIncriminatedBuild pushBuild) {
-        this.pushBuild = pushBuild;
-    }
-
-    public NopolRepair getNopolRepair() {
-        return nopolRepair;
-    }
-
     public String toString() {
         return this.getRepoLocalPath() + " : " + this.getState();
-    }
-
-    public boolean getPushMode() {
-        return this.push;
     }
 
     public boolean isReproducedAsFail() {
@@ -169,6 +155,14 @@ public class ProjectInspector {
 
     public void setReproducedAsError(boolean reproducedAsError) {
         isReproducedAsError = reproducedAsError;
+    }
+
+    public List<NopolInformation> getNopolInformations() {
+        return nopolInformations;
+    }
+
+    public void setNopolInformations(List<NopolInformation> nopolInformations) {
+        this.nopolInformations = nopolInformations;
     }
 
     public void addStepError(String step, String error) {
