@@ -25,10 +25,10 @@ public class RepairnatorConfigReader {
         try {
             inputStream = new FileInputStream(currentDir+File.separator+FILENAME);
         } catch (FileNotFoundException e) {
-            logger.info("Cannot find config.ini file in current directory. It will use the default one.");
+            logger.info("Cannot find "+FILENAME+" file in current directory. It will use the default one.");
             inputStream = getClass().getClassLoader().getResourceAsStream(FILENAME);
             if (inputStream == null) {
-                throw new RepairnatorConfigException("Cannot load default config.ini from resources.");
+                throw new RepairnatorConfigException("Cannot load default "+FILENAME+" from resources.");
             }
         }
 
@@ -37,7 +37,7 @@ public class RepairnatorConfigReader {
             setConfigurationFromProperties(properties, config);
         } catch (IOException e) {
             logger.error("Error while reading the config.ini file. ",e);
-            throw new RepairnatorConfigException("Error while reading the config.ini file", e);
+            throw new RepairnatorConfigException("Error while reading the "+FILENAME+" file", e);
         }
     }
 
