@@ -184,8 +184,6 @@ public class ProjectInspector {
 
     public void run() {
         if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.ONLY_FAIL) {
-
-            AbstractStep firstStep = null;
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo.setNextStep(new CheckoutBuild(this))
                     .setNextStep(new BuildProject(this))
@@ -196,7 +194,7 @@ public class ProjectInspector {
                     .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this));
 
-            firstStep.setDataSerializer(this.serializers);
+            cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setState(ProjectState.INIT);
 
             try {

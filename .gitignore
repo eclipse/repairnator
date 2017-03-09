@@ -26,3 +26,4 @@ repairnator/nopol
 *.log
 *.jar
 .project
+repairnator/repairconfig.ini

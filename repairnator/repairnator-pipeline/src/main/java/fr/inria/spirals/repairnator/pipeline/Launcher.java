@@ -137,6 +137,7 @@ public class Launcher {
         opt2.setShortFlag('p');
         opt2.setLongFlag("previousBuild");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("-1");
         opt2.setHelp("Specify the previous build id to use, if needed.");
         this.jsap.registerParameter(opt2);
 
@@ -212,7 +213,7 @@ public class Launcher {
     }
 
     private void mainProcess() throws IOException {
-        LOGGER.info("Start by getting the build (buildId: "+this.buildId+")");
+        LOGGER.info("Start by getting the build (buildId: "+this.buildId+") with the following config: "+this.config);
         this.getBuildToBeInspected();
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
