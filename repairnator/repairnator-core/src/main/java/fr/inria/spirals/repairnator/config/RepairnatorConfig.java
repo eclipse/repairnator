@@ -17,16 +17,17 @@ public class RepairnatorConfig {
     private boolean serializeJson;
     private String jsonOutputPath;
     private String googleSecretPath;
+    private String inputFile;
 
     private static RepairnatorConfig instance;
 
-    private RepairnatorConfig() {
+    private RepairnatorConfig() {}
 
-    }
-
-    public static RepairnatorConfig getInstance() {
+    public static RepairnatorConfig getInstance() throws RepairnatorConfigException {
         if (instance == null) {
             instance = new RepairnatorConfig();
+            RepairnatorConfigReader configReader = new RepairnatorConfigReader();
+            configReader.readConfigFile(instance);
         }
         return instance;
     }
@@ -109,5 +110,30 @@ public class RepairnatorConfig {
 
     public void setGoogleSecretPath(String googleSecretPath) {
         this.googleSecretPath = googleSecretPath;
+    }
+
+    public String getInputFile() {
+        return inputFile;
+    }
+
+    public void setInputFile(String inputFile) {
+        this.inputFile = inputFile;
+    }
+
+    @Override
+    public String toString() {
+        return "RepairnatorConfig{" +
+                "fileMode=" + fileMode +
+                ", launcherMode=" + launcherMode +
+                ", lookupHours=" + lookupHours +
+                ", clean=" + clean +
+                ", push=" + push +
+                ", workspacePath='" + workspacePath + '\'' +
+                ", z3solverPath='" + z3solverPath + '\'' +
+                ", serializeJson=" + serializeJson +
+                ", jsonOutputPath='" + jsonOutputPath + '\'' +
+                ", googleSecretPath='" + googleSecretPath + '\'' +
+                ", inputFile='" + inputFile + '\'' +
+                '}';
     }
 }

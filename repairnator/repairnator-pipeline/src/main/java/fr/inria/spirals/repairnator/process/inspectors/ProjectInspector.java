@@ -4,6 +4,8 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -19,39 +21,50 @@ import java.util.*;
  */
 public class ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
-    protected BuildToBeInspected buildToBeInspected;
+
+    private RepairnatorConfig config;
+    private BuildToBeInspected buildToBeInspected;
     private String repoLocalPath;
     private ProjectState state;
     private String workspace;
     private String nopolSolverPath;
     private Map<String, Integer> stepsDurationsInSeconds;
-    protected GatherTestInformation testInformations;
-    protected PushIncriminatedBuild pushBuild;
-    protected NopolRepair nopolRepair;
+    private GatherTestInformation testInformations;
+    private PushIncriminatedBuild pushBuild;
+    private NopolRepair nopolRepair;
     private boolean push;
     private Map<String, List<String>> stepErrors;
     private boolean autoclean;
     private String m2LocalPath;
-    protected List<AbstractDataSerializer> serializers;
+    private List<AbstractDataSerializer> serializers;
     private List<URL> repairClassPath;
     private File[] repairSourceDir;
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
-    protected boolean previousBuildFlag;
+    private boolean previousBuildFlag;
 
-    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers,
-                            String nopolSolverPath, boolean push) {
+    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers) {
+        try {
+            this.config = RepairnatorConfig.getInstance();
+        } catch (RepairnatorConfigException e) {
+            throw new RuntimeException(e);
+        }
+
         this.buildToBeInspected = buildToBeInspected;
         this.state = ProjectState.NONE;
         this.workspace = workspace;
-        this.nopolSolverPath = nopolSolverPath;
+        this.nopolSolverPath = config.getZ3solverPath();
         this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuild().getId();
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.stepsDurationsInSeconds = new HashMap<String, Integer>();
-        this.push = push;
+        this.push = this.config.isPush();
         this.stepErrors = new HashMap<String, List<String>>();
-        this.autoclean = false;
+        this.autoclean = this.config.isClean();
         this.serializers = serializers;
+    }
+
+    public List<AbstractDataSerializer> getSerializers() {
+        return serializers;
     }
 
     public List<URL> getRepairClassPath() {
