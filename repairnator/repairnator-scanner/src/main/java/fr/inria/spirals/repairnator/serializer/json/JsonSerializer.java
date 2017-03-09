@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
