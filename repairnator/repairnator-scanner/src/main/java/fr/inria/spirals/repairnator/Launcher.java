@@ -10,6 +10,7 @@ import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4RepairNator;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
@@ -47,6 +48,7 @@ public class Launcher {
     private RepairnatorConfig config;
     private ProjectScanner scanner;
     private List<ProjectInspector> projectInspectors;
+    private ProcessSerializer endProcessSerializer;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -206,8 +208,10 @@ public class Launcher {
 
             if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
                 scannerSerializer = new GoogleSpreadSheetScannerSerializer(this.scanner, this.config.getGoogleSecretPath());
+                this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, this.config.getGoogleSecretPath());
             } else {
                 scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(this.scanner, this.config.getGoogleSecretPath());
+                this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, this.config.getGoogleSecretPath());
             }
 
             scannerSerializer.serialize();
@@ -338,7 +342,7 @@ public class Launcher {
                     }
                 }
 
-                GoogleSpreadSheetEndProcessSerializer googleSpreadSheetEndProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, this.config.getGoogleSecretPath());
+                GoogleSpreadSheetEndProcessSerializer googleSpreadSheetEndProcessSerializer = (GoogleSpreadSheetEndProcessSerializer)this.endProcessSerializer;
                 googleSpreadSheetEndProcessSerializer.setReproducedFailures(nbReproducedFails);
                 googleSpreadSheetEndProcessSerializer.setReproducedErrors(nbReproducedErrors);
                 googleSpreadSheetEndProcessSerializer.serialize();
@@ -356,7 +360,7 @@ public class Launcher {
                     }
                 }
 
-                GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, this.config.getGoogleSecretPath());
+                GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = (GoogleSpreadSheetEndProcessSerializer4Bears)this.endProcessSerializer;
                 googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase1(nbFixerBuildCase1);
                 googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase2(nbFixerBuildCase2);
                 googleSpreadSheetEndProcessSerializer4Bears.serialize();
