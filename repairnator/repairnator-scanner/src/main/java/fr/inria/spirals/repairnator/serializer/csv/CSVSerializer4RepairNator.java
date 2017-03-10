@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.SerializerUtils;
+import fr.inria.spirals.repairnator.Utils;
 
 public class CSVSerializer4RepairNator extends AbstractDataSerializer {
     private static final String FIRST_LINE = "BuildId" + CSVSerializerUtils.SEPARATOR + "Slug"
@@ -31,9 +31,9 @@ public class CSVSerializer4RepairNator extends AbstractDataSerializer {
         String prNumberStr = prNumber + "";
         String line = buildId + CSVSerializerUtils.SEPARATOR + slug + CSVSerializerUtils.SEPARATOR + state
                 + CSVSerializerUtils.SEPARATOR + prNumberStr + CSVSerializerUtils.SEPARATOR
-                + SerializerUtils.formatCompleteDate(date) + CSVSerializerUtils.SEPARATOR
-                + SerializerUtils.formatOnlyDay(date) + CSVSerializerUtils.SEPARATOR + realState
-                + CSVSerializerUtils.SEPARATOR + SerializerUtils.formatCompleteDate(new Date());
+                + Utils.formatCompleteDate(date) + CSVSerializerUtils.SEPARATOR
+                + Utils.formatOnlyDay(date) + CSVSerializerUtils.SEPARATOR + realState
+                + CSVSerializerUtils.SEPARATOR + Utils.formatCompleteDate(new Date());
         CSVSerializerUtils.writeNewLine(stream, line);
     }
 

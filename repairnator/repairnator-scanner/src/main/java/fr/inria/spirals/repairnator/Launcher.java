@@ -10,6 +10,7 @@ import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4RepairNator;
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
@@ -39,9 +40,7 @@ import java.util.concurrent.TimeUnit;
  * Created by urli on 23/12/2016.
  */
 public class Launcher {
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
-
-    private static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH", "GITHUB_LOGIN" };
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(fr.inria.spirals.repairnator.pipeline.Launcher.class);
     private static final int NB_THREADS = 4;
 
     private JSAP jsap;
@@ -49,6 +48,7 @@ public class Launcher {
     private RepairnatorConfig config;
     private ProjectScanner scanner;
     private List<ProjectInspector> projectInspectors;
+    private ProcessSerializer endProcessSerializer;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -72,9 +72,9 @@ public class Launcher {
         }
 
         if (this.arguments.getBoolean("debug")) {
-            this.setLevel(Level.DEBUG);
+            Utils.setLoggersLevel(Level.DEBUG);
         } else {
-            this.setLevel(Level.INFO);
+            Utils.setLoggersLevel(Level.INFO);
         }
     }
 
@@ -99,7 +99,7 @@ public class Launcher {
         System.err.println();
         System.err.println(jsap.getHelp());
         System.err.println("Please note that the following environment variables must be set: ");
-        for (String env : Launcher.ENVIRONMENT_VARIABLES) {
+        for (String env : Utils.ENVIRONMENT_VARIABLES) {
             System.err.println(" - " + env);
         }
         System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
@@ -107,8 +107,9 @@ public class Launcher {
     }
 
     private void checkEnvironmentVariables() {
-        for (String envVar : Launcher.ENVIRONMENT_VARIABLES) {
+        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
             if (System.getenv(envVar) == null) {
+                System.err.println("You must set the following environment variable: "+envVar);
                 this.printUsage();
             }
         }
@@ -155,20 +156,6 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).");
         this.jsap.registerParameter(opt2);
-    }
-
-    private static void setLevel(Level level) {
-        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria.spirals.jtravis.helpers");
-        jtravis.setLevel(level);
-
-        Logger nopol = (Logger) LoggerFactory.getLogger("fr.inria.lille.repair.nopol");
-        nopol.setLevel(level);
-
-        Logger repairnator = (Logger) LoggerFactory.getLogger("fr.inria.spirals.repairnator");
-        repairnator.setLevel(level);
-
-        Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
-        jgit.setLevel(Level.WARN);
     }
 
     private void checkToolsLoaded() {
@@ -221,8 +208,10 @@ public class Launcher {
 
             if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
                 scannerSerializer = new GoogleSpreadSheetScannerSerializer(this.scanner, this.config.getGoogleSecretPath());
+                this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, this.config.getGoogleSecretPath());
             } else {
                 scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(this.scanner, this.config.getGoogleSecretPath());
+                this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, this.config.getGoogleSecretPath());
             }
 
             scannerSerializer.serialize();
@@ -353,7 +342,7 @@ public class Launcher {
                     }
                 }
 
-                GoogleSpreadSheetEndProcessSerializer googleSpreadSheetEndProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, this.config.getGoogleSecretPath());
+                GoogleSpreadSheetEndProcessSerializer googleSpreadSheetEndProcessSerializer = (GoogleSpreadSheetEndProcessSerializer)this.endProcessSerializer;
                 googleSpreadSheetEndProcessSerializer.setReproducedFailures(nbReproducedFails);
                 googleSpreadSheetEndProcessSerializer.setReproducedErrors(nbReproducedErrors);
                 googleSpreadSheetEndProcessSerializer.serialize();
@@ -371,7 +360,7 @@ public class Launcher {
                     }
                 }
 
-                GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, this.config.getGoogleSecretPath());
+                GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = (GoogleSpreadSheetEndProcessSerializer4Bears)this.endProcessSerializer;
                 googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase1(nbFixerBuildCase1);
                 googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase2(nbFixerBuildCase2);
                 googleSpreadSheetEndProcessSerializer4Bears.serialize();

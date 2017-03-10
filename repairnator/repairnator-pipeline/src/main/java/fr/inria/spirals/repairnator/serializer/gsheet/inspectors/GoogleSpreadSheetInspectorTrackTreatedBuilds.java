@@ -7,8 +7,8 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.SerializerUtils;
-import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,10 +64,10 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
                 dataCol.add(runid);
                 dataCol.add(build.getId());
                 dataCol.add(build.getRepository().getSlug());
-                dataCol.add(SerializerUtils.formatCompleteDate(date));
-                dataCol.add(SerializerUtils.formatOnlyDay(date));
+                dataCol.add(Utils.formatCompleteDate(date));
+                dataCol.add(Utils.formatOnlyDay(date));
                 dataCol.add("DETECTED");
-                dataCol.add(SerializerUtils.getHostname());
+                dataCol.add(Utils.getHostname());
 
                 dataRows.add(dataCol);
             }
@@ -90,10 +90,10 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
             dataCol.add(runid);
             dataCol.add(build.getId());
             dataCol.add(build.getRepository().getSlug());
-            dataCol.add(SerializerUtils.formatCompleteDate(date));
-            dataCol.add(SerializerUtils.formatOnlyDay(date));
+            dataCol.add(Utils.formatCompleteDate(date));
+            dataCol.add(Utils.formatOnlyDay(date));
             dataCol.add("TREATED");
-            dataCol.add(SerializerUtils.getHostname());
+            dataCol.add(Utils.getHostname());
 
             dataRows.add(dataCol);
 
