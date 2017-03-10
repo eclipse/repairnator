@@ -13,7 +13,7 @@ import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

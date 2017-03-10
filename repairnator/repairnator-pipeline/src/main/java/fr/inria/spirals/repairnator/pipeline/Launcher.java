@@ -11,7 +11,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;

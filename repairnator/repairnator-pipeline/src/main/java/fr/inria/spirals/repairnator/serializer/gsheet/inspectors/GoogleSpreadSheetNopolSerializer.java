@@ -11,7 +11,7 @@ import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

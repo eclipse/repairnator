@@ -6,7 +6,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.repairnator.ProcessSerializer;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
