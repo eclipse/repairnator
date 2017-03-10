@@ -26,3 +26,6 @@ repairnator/nopol
 *.log
 *.jar
 .project
+dockerImage/.credentials
+dockerImage/client_secret.json
+dockerImage/repairnator-pipeline.jar
