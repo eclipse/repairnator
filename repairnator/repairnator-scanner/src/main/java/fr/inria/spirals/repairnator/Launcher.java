@@ -23,7 +23,6 @@ public class Launcher {
 
     private JSAP jsap;
     private JSAPResult arguments;
-    private ProjectScanner scanner;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -52,16 +51,11 @@ public class Launcher {
     }
 
     private void printUsage() {
-        System.err.println("Usage: java <repairnator name> [option(s)]");
+        System.err.println("Usage: java <repairnator-scanner> [option(s)]");
         System.err.println();
         System.err.println("Options : ");
         System.err.println();
         System.err.println(jsap.getHelp());
-        System.err.println("Please note that the following environment variables must be set: ");
-        for (String env : Utils.ENVIRONMENT_VARIABLES) {
-            System.err.println(" - " + env);
-        }
-        System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
         System.exit(-1);
     }
 
@@ -134,21 +128,24 @@ public class Launcher {
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
 
-        LauncherMode launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode"));
-        String googleSecretPath = this.arguments.getString("googleSecretPath");
+        LauncherMode launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
+        String googleSecretPath = this.arguments.getFile("googleSecretPath").getPath();
 
-        this.scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
-        List<BuildToBeInspected> buildsToBeInspected = this.scanner.getListOfBuildsToBeInspected(this.arguments.getString("input"));
+        ProjectScanner scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
+        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
             ProcessSerializer scannerSerializer;
 
         if (launcherMode == LauncherMode.REPAIR) {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer(this.scanner, googleSecretPath);
+            scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
         } else {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(this.scanner, googleSecretPath);
+            scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(scanner, googleSecretPath);
         }
 
         scannerSerializer.serialize();
 
+        if (buildsToBeInspected.isEmpty()) {
+            Launcher.LOGGER.info("No build has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
+        }
         return buildsToBeInspected;
     }
 
@@ -160,7 +157,7 @@ public class Launcher {
             for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
                 Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuild().getId());
             }
-
+            
             this.processOutput(buildsToBeInspected);
         } else {
             Launcher.LOGGER.warn("Builds inspected has null value.");
