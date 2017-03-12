@@ -4,72 +4,31 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
+import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.csv.CSVSerializer4RepairNator;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorTrackTreatedBuilds;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
-import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URLClassLoader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by urli on 23/12/2016.
  */
 public class Launcher {
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(fr.inria.spirals.repairnator.pipeline.Launcher.class);
-    private static final int NB_THREADS = 4;
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(fr.inria.spirals.repairnator.Launcher.class);
 
     private JSAP jsap;
     private JSAPResult arguments;
-    private RepairnatorConfig config;
     private ProjectScanner scanner;
-    private List<ProjectInspector> projectInspectors;
-    private ProcessSerializer endProcessSerializer;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
         this.checkArguments();
-        this.checkEnvironmentVariables();
-        try {
-            this.config = RepairnatorConfig.getInstance();
-        } catch (RepairnatorConfigException e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.getCause());
-            this.printUsage();
-        }
-
-        this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
-        this.config.setInputFile(this.arguments.getString("input"));
-
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            this.checkToolsLoaded();
-            this.checkNopolSolverPath();
-        }
 
         if (this.arguments.getBoolean("debug")) {
             Utils.setLoggersLevel(Level.DEBUG);
@@ -106,15 +65,6 @@ public class Launcher {
         System.exit(-1);
     }
 
-    private void checkEnvironmentVariables() {
-        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
-            if (System.getenv(envVar) == null) {
-                System.err.println("You must set the following environment variable: "+envVar);
-                this.printUsage();
-            }
-        }
-    }
-
     private void defineArgs() throws JSAPException {
         // Verbose output
         this.jsap = new JSAP();
@@ -137,16 +87,23 @@ public class Launcher {
         FlaggedOption opt2 = new FlaggedOption("input");
         opt2.setShortFlag('i');
         opt2.setLongFlag("input");
-        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
         opt2.setRequired(true);
-        opt2.setHelp("Specify where to find the list of projects or build ids to scan.");
+        opt2.setHelp("Specify where to find the list of projects to scan.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("output");
+        opt2.setShortFlag('o');
+        opt2.setLongFlag("output");
+        opt2.setStringParser(FileStringParser.getParser());
+        opt2.setHelp("Specify where to write the list of build ids (default: stdout)");
         this.jsap.registerParameter(opt2);
 
         String launcherModeValues = "";
         for (LauncherMode mode : LauncherMode.values()) {
             launcherModeValues += mode.name() + ";";
         }
-        launcherModeValues.substring(0, launcherModeValues.length() - 2);
+        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 2);
 
         // Launcher mode
         opt2 = new FlaggedOption("launcherMode");
@@ -154,81 +111,48 @@ public class Launcher {
         opt2.setLongFlag("launcherMode");
         opt2.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
         opt2.setRequired(true);
-        opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).");
+        opt2.setHelp("Specify if the scanner intends to get failing build (REPAIR) or fixer builds (BEARS).");
         this.jsap.registerParameter(opt2);
-    }
 
-    private void checkToolsLoaded() {
-        URLClassLoader loader;
+        opt2 = new FlaggedOption("lookupHours");
+        opt2.setShortFlag('l');
+        opt2.setLongFlag("lookupHours");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("4");
+        opt2.setHelp("Specify the hour number to lookup to get builds");
+        this.jsap.registerParameter(opt2);
 
-        try {
-            loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            loader.loadClass("com.sun.jdi.AbsentInformationException");
-        } catch (ClassNotFoundException e) {
-            System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
-            this.printUsage();
-            System.exit(-1);
-        }
-    }
-
-    private void checkNopolSolverPath() {
-        String solverPath = this.config.getZ3solverPath();
-
-        if (solverPath != null) {
-            File file = new File(solverPath);
-
-            if (!file.exists()) {
-                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
-                this.printUsage();
-                System.exit(-1);
-            }
-        } else {
-            System.err.println("The Nopol solver path should be provided.");
-            this.printUsage();
-            System.exit(-1);
-        }
-    }
-
-    private static void initWorkspace(String path) throws IOException {
-        File file = new File(path);
-
-        if (file.exists()) {
-            throw new IOException("The following directory already exists: " + path + ". Please choose an empty directory.");
-        }
+        opt2 = new FlaggedOption("googleSecretPath");
+        opt2.setShortFlag('g');
+        opt2.setLongFlag("googleSecretPath");
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        opt2.setDefault("./client_secret.json");
+        opt2.setHelp("Specify the path to the JSON google secret for serializing.");
+        this.jsap.registerParameter(opt2);
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
 
-        this.scanner = new ProjectScanner(this.config.getLookupHours(), this.config.getLauncherMode(), this.config.getFileMode());
-        List<BuildToBeInspected> buildsToBeInspected = this.scanner.getListOfBuildsToBeInspected(this.config.getInputFile());
+        LauncherMode launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode"));
+        String googleSecretPath = this.arguments.getString("googleSecretPath");
 
-        if (this.config.getFileMode() == FileMode.SLUG) {
+        this.scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
+        List<BuildToBeInspected> buildsToBeInspected = this.scanner.getListOfBuildsToBeInspected(this.arguments.getString("input"));
             ProcessSerializer scannerSerializer;
 
-            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                scannerSerializer = new GoogleSpreadSheetScannerSerializer(this.scanner, this.config.getGoogleSecretPath());
-                this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer(scanner, this.config.getGoogleSecretPath());
-            } else {
-                scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(this.scanner, this.config.getGoogleSecretPath());
-                this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, this.config.getGoogleSecretPath());
-            }
-
-            scannerSerializer.serialize();
+        if (launcherMode == LauncherMode.REPAIR) {
+            scannerSerializer = new GoogleSpreadSheetScannerSerializer(this.scanner, googleSecretPath);
+        } else {
+            scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(this.scanner, googleSecretPath);
         }
+
+        scannerSerializer.serialize();
 
         return buildsToBeInspected;
     }
 
     private void mainProcess() throws IOException {
-
-        Launcher.LOGGER.info("Launching with the following configuration: "+this.config);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd_HHmmss");
-        String completeWorkspace = this.config.getWorkspacePath() + File.separator + dateFormat.format(new Date());
-        this.initWorkspace(completeWorkspace);
-
-        this.config.setWorkspacePath(completeWorkspace);
 
         List<BuildToBeInspected> buildsToBeInspected = this.runScanner();
 
@@ -237,134 +161,35 @@ public class Launcher {
                 Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuild().getId());
             }
 
-            this.runInspectors(buildsToBeInspected);
+            this.processOutput(buildsToBeInspected);
         } else {
             Launcher.LOGGER.warn("Builds inspected has null value.");
             System.exit(-1);
         }
     }
 
-    private void runInspectors(List<BuildToBeInspected> buildsToBeInspected) throws IOException {
-        // init serializers
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
+    private void processOutput(List<BuildToBeInspected> listOfBuilds) {
 
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
+        String outputPath = this.arguments.getString("output");
+        if (outputPath != null) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
-            serializers.add(new CSVSerializer4RepairNator(this.config.getJsonOutputPath()));
-            serializers.add(new GoogleSpreadSheetInspectorSerializer(this.config.getGoogleSecretPath()));
-            serializers.add(new GoogleSpreadSheetNopolSerializer(this.config.getGoogleSecretPath()));
-        } else {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
-
-            serializers.add(new CSVSerializer4Bears(this.config.getJsonOutputPath()));
-            serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears(this.config.getGoogleSecretPath()));
-        }
-
-        JsonSerializer jsonSerializer = new JsonSerializer(this.config.getJsonOutputPath(), this.config.getLauncherMode(), this.config.getFileMode());
-
-        if (this.config.isSerializeJson()) {
-            serializers.add(jsonSerializer);
-        }
-
-        if (this.config.getFileMode() == FileMode.SLUG) {
-            serializers.add(new GoogleSpreadSheetInspectorTrackTreatedBuilds(buildsToBeInspected, this.config.getGoogleSecretPath()));
-        }
-
-        Launcher.LOGGER.info("Start cloning and compiling projects...");
-
-        this.projectInspectors = new ArrayList<ProjectInspector>();
-
-        for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-            ProjectInspector inspector;
-
-            if (config.getLauncherMode() == LauncherMode.BEARS) {
-                inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers);
-            } else {
-                inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers);
-            }
-            projectInspectors.add(inspector);
-        }
-
-        final ExecutorService pool = Executors.newFixedThreadPool(NB_THREADS);
-
-        for (final ProjectInspector inspector : projectInspectors) {
-            pool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    inspector.run();
-                }
-            });
-        }
-
-        try {
-            pool.shutdown();
-            if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
-                pool.shutdownNow();
-                LOGGER.error("Shutdown pool of threads.");
-            }
-        } catch (InterruptedException e) {
-            pool.shutdownNow();
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        this.serializeEndProcess();
-
-        if (this.config.isSerializeJson()) {
-            Launcher.LOGGER.info("Start writing a JSON output...");
-            jsonSerializer.setScanner(scanner);
-            jsonSerializer.createOutput();
-        }
-
-
-        if (this.config.isClean()) {
-            Launcher.LOGGER.info("Clean the workspace now...");
-            FileUtils.deleteDirectory(this.config.getWorkspacePath());
-        }
-
-        // to be sure the process is finished
-        System.exit(0);
-    }
-
-    private void serializeEndProcess() throws IOException {
-        if (this.config.getFileMode() == FileMode.SLUG) {
-            Launcher.LOGGER.info("Serialize end process...");
-            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                int nbReproducedFails = 0;
-                int nbReproducedErrors = 0;
-
-                for (ProjectInspector inspector : this.projectInspectors) {
-                    if (inspector.isReproducedAsFail()) {
-                        nbReproducedFails++;
-                    }
-                    if (inspector.isReproducedAsError()) {
-                        nbReproducedErrors++;
-                    }
+                for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
+                    writer.write(buildToBeInspected.getBuild().getId()+"");
+                    writer.newLine();
+                    writer.flush();
                 }
 
-                GoogleSpreadSheetEndProcessSerializer googleSpreadSheetEndProcessSerializer = (GoogleSpreadSheetEndProcessSerializer)this.endProcessSerializer;
-                googleSpreadSheetEndProcessSerializer.setReproducedFailures(nbReproducedFails);
-                googleSpreadSheetEndProcessSerializer.setReproducedErrors(nbReproducedErrors);
-                googleSpreadSheetEndProcessSerializer.serialize();
-            } else {
-                int nbFixerBuildCase1 = 0;
-                int nbFixerBuildCase2 = 0;
-
-                for (ProjectInspector inspector : projectInspectors) {
-                    ProjectInspector4Bears inspector4Bears = (ProjectInspector4Bears)inspector;
-                    if (inspector4Bears.isFixerBuildCase1()) {
-                        nbFixerBuildCase1++;
-                    }
-                    if (inspector4Bears.isFixerBuildCase2()) {
-                        nbFixerBuildCase2++;
-                    }
-                }
-
-                GoogleSpreadSheetEndProcessSerializer4Bears googleSpreadSheetEndProcessSerializer4Bears = (GoogleSpreadSheetEndProcessSerializer4Bears)this.endProcessSerializer;
-                googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase1(nbFixerBuildCase1);
-                googleSpreadSheetEndProcessSerializer4Bears.setNbFixerBuildCase2(nbFixerBuildCase2);
-                googleSpreadSheetEndProcessSerializer4Bears.serialize();
+                writer.close();
+                return;
+            } catch (IOException e) {
+                LOGGER.error("Error while writing file "+outputPath+". The content will be printed in the standard output.",e);
             }
+        }
+
+        for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
+            System.out.println(buildToBeInspected.getBuild().getId());
         }
     }
 
