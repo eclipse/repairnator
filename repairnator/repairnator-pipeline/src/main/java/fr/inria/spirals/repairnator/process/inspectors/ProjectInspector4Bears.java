@@ -35,40 +35,40 @@ public class ProjectInspector4Bears extends ProjectInspector {
         // Clone, build, test and gather test information for the
         // current passing build to ensure it is reproducible
         AbstractStep cloneRepo = new CloneRepository(this);
-        AbstractStep checkoutBuild = new CheckoutBuild(this);
-        AbstractStep buildRepo = new BuildProject(this);
-        AbstractStep testProject = new TestProject(this);
-        this.setTestInformations(new GatherTestInformation(this, new BuildShouldPass()));
+        GatherTestInformation gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
 
-        AbstractStep checkoutPreviousBuild = new CheckoutPreviousBuild(this);
-        AbstractStep buildRepoForPreviousBuild = new BuildProject(this);
-        AbstractStep testProjectForPreviousBuild = new TestProject(this);
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
-            AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
-
-            cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.getTestInformations())
-                    .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
-                    .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
+            cloneRepo.setNextStep(new CheckoutBuild(this))
+                    .setNextStep(new BuildProject(this))
+                    .setNextStep(new TestProject(this))
+                    .setNextStep(gatherTestInformation)
+                    .setNextStep(new CheckoutPreviousBuild(this))
+                    .setNextStep(new BuildProject(this))
+                    .setNextStep(new TestProject(this))
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldFail()))
                     .setNextStep(new PushIncriminatedBuild(this));
 
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-                AbstractStep gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
-                AbstractStep checkoutSourceCodeForPreviousBuild = new CheckoutPreviousBuildSourceCode(this);
-                AbstractStep buildRepoForPreviousBuild2 = new BuildProject(this);
-                AbstractStep testProjectForPreviousBuild2 = new TestProject(this);
-                AbstractStep gatherTestInformation2 = new GatherTestInformation(this, new BuildShouldFail());
-
-                cloneRepo.setNextStep(checkoutBuild).setNextStep(buildRepo).setNextStep(testProject).setNextStep(this.getTestInformations())
-                        .setNextStep(checkoutPreviousBuild).setNextStep(buildRepoForPreviousBuild)
-                        .setNextStep(testProjectForPreviousBuild).setNextStep(gatherTestInformation)
-                        .setNextStep(checkoutSourceCodeForPreviousBuild).setNextStep(buildRepoForPreviousBuild2)
-                        .setNextStep(testProjectForPreviousBuild2).setNextStep(gatherTestInformation2)
+                cloneRepo.setNextStep(new CheckoutBuild(this))
+                        .setNextStep(new BuildProject(this))
+                        .setNextStep(new TestProject(this))
+                        .setNextStep(gatherTestInformation)
+                        .setNextStep(new CheckoutPreviousBuild(this))
+                        .setNextStep(new BuildProject(this))
+                        .setNextStep(new TestProject(this))
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass()))
+                        .setNextStep(new CheckoutPreviousBuildSourceCode(this))
+                        .setNextStep(new BuildProject(this))
+                        .setNextStep(new TestProject(this))
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldFail()))
                         .setNextStep(new PushIncriminatedBuild(this));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
             }
         }
+
+        this.setTestInformations(gatherTestInformation);
 
         firstStep = cloneRepo;
         firstStep.setState(ProjectState.INIT);
