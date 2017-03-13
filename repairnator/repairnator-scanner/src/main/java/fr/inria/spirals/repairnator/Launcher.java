@@ -69,6 +69,9 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded();
             this.checkNopolSolverPath();
+            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
+        } else {
+            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
         }
 
         if (this.arguments.getBoolean("debug")) {
@@ -249,14 +252,10 @@ public class Launcher {
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
-
             serializers.add(new CSVSerializer4RepairNator(this.config.getJsonOutputPath()));
             serializers.add(new GoogleSpreadSheetInspectorSerializer(this.config.getGoogleSecretPath()));
             serializers.add(new GoogleSpreadSheetNopolSerializer(this.config.getGoogleSecretPath()));
         } else {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
-
             serializers.add(new CSVSerializer4Bears(this.config.getJsonOutputPath()));
             serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears(this.config.getGoogleSecretPath()));
         }
