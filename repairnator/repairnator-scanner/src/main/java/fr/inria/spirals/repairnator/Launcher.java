@@ -19,6 +19,7 @@ import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadShe
 import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetEndProcessSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.json.JsonSerializer;
@@ -215,6 +216,8 @@ public class Launcher {
             } else {
                 scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(this.scanner, this.config.getGoogleSecretPath());
                 this.endProcessSerializer = new GoogleSpreadSheetEndProcessSerializer4Bears(scanner, this.config.getGoogleSecretPath());
+                GoogleSpreadSheetScannerDetailedDataSerializer scannerDetailedDataSerializer = new GoogleSpreadSheetScannerDetailedDataSerializer(buildsToBeInspected, this.config.getGoogleSecretPath());
+                scannerDetailedDataSerializer.serialize();
             }
 
             scannerSerializer.serialize();
