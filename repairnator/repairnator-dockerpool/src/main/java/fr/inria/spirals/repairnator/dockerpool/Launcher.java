@@ -140,15 +140,15 @@ public class Launcher {
         try {
             this.docker = DefaultDockerClient.fromEnv().build();
 
-           List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.allImages());
+            List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.allImages());
 
-           String imageId = null;
-           for (Image image : allImages) {
-               if (image.repoTags().contains(this.arguments.getString("imageName"))) {
-                   imageId = image.id();
-                   break;
-               }
-           }
+            String imageId = null;
+            for (Image image : allImages) {
+                if (image.repoTags().contains(this.arguments.getString("imageName"))) {
+                    imageId = image.id();
+                    break;
+                }
+            }
 
             if (imageId == null) {
                 throw new RuntimeException("There was a problem when looking for the docker image with argument \""+this.arguments.getString("imageName")+"\": no image has been found.");
