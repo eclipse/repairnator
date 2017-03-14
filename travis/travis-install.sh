@@ -38,7 +38,7 @@ then
     exit 1
 fi
 
-cd ../..
+cd ../../..
 
 cd repairnator/scripts
 chmod +x install_git_rebase_last.sh
