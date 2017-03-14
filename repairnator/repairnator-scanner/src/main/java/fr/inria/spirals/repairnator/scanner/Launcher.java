@@ -146,7 +146,7 @@ public class Launcher {
 
         ProjectScanner scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
-            ProcessSerializer scannerSerializer;
+        ProcessSerializer scannerSerializer;
 
         if (launcherMode == LauncherMode.REPAIR) {
             scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
