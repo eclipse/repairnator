@@ -32,6 +32,7 @@ public class Launcher {
     private JSAP jsap;
     private JSAPResult arguments;
     public static List<String> runningDockerContainer = new ArrayList<>();
+    public static DockerClient docker;
 
     private void defineArgs() throws JSAPException {
         // Verbose output
@@ -137,7 +138,7 @@ public class Launcher {
 
     private String findDockerImage() {
         try {
-            DockerClient docker = DefaultDockerClient.fromEnv().build();
+            this.docker = DefaultDockerClient.fromEnv().build();
 
             List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.byName(this.arguments.getString("imageName")));
 
@@ -146,8 +147,6 @@ public class Launcher {
             }
 
             String imageId = allImages.get(0).id();
-            docker.close();
-
             return imageId;
         } catch (DockerCertificateException|InterruptedException|DockerException e) {
             throw new RuntimeException("Error while looking for the docker image",e);
@@ -159,6 +158,7 @@ public class Launcher {
             DockerClient docker = DefaultDockerClient.fromEnv().build();
             for (String dockerContainerId : runningDockerContainer) {
                 docker.killContainer(dockerContainerId);
+                docker.removeContainer(dockerContainerId);
             }
             docker.close();
         } catch (DockerCertificateException|InterruptedException|DockerException e) {
@@ -186,15 +186,18 @@ public class Launcher {
         try {
             if (executorService.awaitTermination(1, TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
+                docker.close();
             } else {
                 LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+runningDockerContainer.size()+" docker container(s).");
-                this.killDockerContainers();
                 executorService.shutdownNow();
+                this.killDockerContainers();
+                docker.close();
             }
         } catch (InterruptedException e) {
             LOGGER.error("Error while await termination. Force stopped "+runningDockerContainer.size()+" docker container(s).", e);
-            this.killDockerContainers();
             executorService.shutdownNow();
+            this.killDockerContainers();
+            docker.close();
         }
     }
 

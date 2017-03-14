@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.dockerpool;
 
-import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
@@ -36,11 +35,10 @@ public class RunnablePipelineContainer implements Runnable {
     public void run() {
         try {
             LOGGER.info("Start to build and run container for build id "+buildId);
-            DockerClient docker = DefaultDockerClient.fromEnv().build();
+            DockerClient docker = Launcher.docker;
 
             String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
-            String logFileName = containerName+".log";
-            String[] envValues = new String[] { "BUILD_ID="+this.buildId, "LOG_FILENAME="+logFileName, "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"), "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH")};
+            String[] envValues = new String[] { "BUILD_ID="+this.buildId, "LOG_FILENAME="+containerName, "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"), "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH")};
 
             Map<String,String> labels = new HashMap<>();
             labels.put("name",containerName);
@@ -65,8 +63,7 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
             docker.removeContainer(container.id());
             Launcher.runningDockerContainer.remove(container.id());
-            docker.close();
-        } catch (DockerCertificateException|InterruptedException|DockerException e) {
+        } catch (InterruptedException|DockerException e) {
             LOGGER.error("Error while creating/running the container for build id "+buildId, e);
         }
 

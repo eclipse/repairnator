@@ -12,6 +12,9 @@ REPAIRNATOR_DOCKER_DIR=$REPAIRNATOR_RUN_DIR/dockerImage
 REPAIRNATOR_SCANNER_JAR="./repairnator-scanner/target/repairnator-scanner-*-jar-with-dependencies.jar"
 REPAIRNATOR_SCANNER_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-scanner.jar
 
+REPAIRNATOR_DOCKERPOOL_JAR="./repairnator-dockerpool/target/repairnator-dockerpool-*-jar-with-dependencies.jar"
+REPAIRNATOR_DOCKERPOOL_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-dockerpool.jar
+
 REPAIRNATOR_PIPELINE_JAR="./repairnator-pipeline/target/repairnator-pipeline-*-jar-with-dependencies.jar"
 REPAIRNATOR_PIPELINE_DEST_JAR=$REPAIRNATOR_DOCKER_DIR/repairnator-pipeline.jar
 
@@ -34,7 +37,7 @@ mkdir $REPAIRNATOR_DOCKER_DIR
 cp $REPAIRNATOR_PIPELINE_JAR $REPAIRNATOR_PIPELINE_DEST_JAR
 cp -r $REPAIR_DOCKER_IMG_DIR/* $REPAIRNATOR_DOCKER_DIR
 
-echo "Start to scan projects for builds..."
+echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
 java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m repair -g $GOOGLE_SECRET_PATH -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST
 
 NB_LINES=`wc -l $REPAIRNATOR_BUILD_LIST`
@@ -45,14 +48,11 @@ then
    exit 0
 fi
 
-echo "Build the docker machine..."
+echo "Build the docker machine (tag: $DOCKER_TAG)..."
 docker build -t $DOCKER_TAG --label version=$DOCKER_VERSION $REPAIRNATOR_DOCKER_DIR
 
-i=0
+echo "Launch docker pool..."
+java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR &> $LOG_DIR/dockerpool.log
 
-REPAIR_ARGS="-m repair -f slug -i $PROJECT_LIST_PATH -o $OUTPUT_PATH -w $WORKSPACE_PATH -l $NB_HOURS -p --clean -z $Z3_PATH"
-
-cd $WORKSPACE_PATH
-java -Xmx1g -Xms1g -cp $TOOLS_PATH:$REPAIR_JAR fr.inria.spirals.repairnator.Launcher $REPAIR_ARGS &> $LOG_FILE
-
-rm $REPAIR_JAR
+echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
+rm -rf $REPAIRNATOR_RUN_DIR
