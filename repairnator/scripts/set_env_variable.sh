@@ -13,5 +13,5 @@ mkdir $LOG_DIR
 
 export REPAIR_PROJECT_LIST_PATH=$HOME_REPAIR/scripts/project_list.txt
 export REPAIR_OUTPUT_PATH=/var/www/html/repairnator/
-export REPAIR_DOCKER_IMG_DIR=./dockerImage/
-export GOOGLE_SECRET_PATH=./client_secret.json
+export REPAIR_DOCKER_IMG_DIR=$HOME_REPAIR/dockerImage/
+export GOOGLE_SECRET_PATH=$HOME_REPAIR/client_secret.json

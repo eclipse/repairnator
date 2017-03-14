@@ -3,7 +3,10 @@
 export M2_HOME=/opt/apache-maven-3.3.9
 export PATH=$PATH:$M2_HOME/bin
 
-HOME_REPAIR=/media/experimentations/repairnator
+if [ -z "$HOME_REPAIR" ]; then
+    echo "The variable HOME_REPAIR must be set."
+    exit -1
+fi
 
 cd $HOME_REPAIR/github/nopol/nopol
 git pull
