@@ -34,7 +34,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.inria.spirals.repairnator.Launcher</mainClass>
+                            <mainClass>fr.inria.spirals.repairnator.scanner.Launcher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -14,7 +14,6 @@ import java.util.Date;
  * Created by urli on 02/02/2017.
  */
 public class Utils {
-
     public static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH", "GITHUB_LOGIN" };
     private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");

@@ -1,11 +1,14 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.scanner;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
-import fr.inria.spirals.repairnator.scanner.ProjectScanner;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.LauncherMode;
+import fr.inria.spirals.repairnator.ProcessSerializer;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
@@ -20,7 +23,7 @@ import java.util.List;
  * Created by urli on 23/12/2016.
  */
 public class Launcher {
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(fr.inria.spirals.repairnator.Launcher.class);
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
 
     private JSAP jsap;
     private JSAPResult arguments;
@@ -176,7 +179,7 @@ public class Launcher {
     }
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
-        String outputPath = this.arguments.getString("output");
+        String outputPath = this.arguments.getFile("output").getAbsolutePath();
         if (outputPath != null) {
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));

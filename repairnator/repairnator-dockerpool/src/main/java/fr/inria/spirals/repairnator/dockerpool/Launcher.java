@@ -7,33 +7,31 @@ import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.LogStream;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.ContainerCreation;
-import com.spotify.docker.client.messages.ContainerExit;
-import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by urli on 13/03/2017.
  */
 public class Launcher {
-
-    private static final String ENTRY_CMD="java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar fr.inria.spirals.repairnator.pipeline.Launcher -m repair -d -b ";
-
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
+    public static List<String> runningDockerContainer = new ArrayList<>();
 
     private void defineArgs() throws JSAPException {
         // Verbose output
@@ -61,12 +59,12 @@ public class Launcher {
         opt2.setHelp("Specify the docker image name to use.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("buildId");
-        opt2.setShortFlag('b');
-        opt2.setLongFlag("buildId");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2 = new FlaggedOption("input");
+        opt2.setShortFlag('i');
+        opt2.setLongFlag("input");
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
         opt2.setRequired(true);
-        opt2.setHelp("Specify the buildId to run.");
+        opt2.setHelp("Specify the input file containing the list of build ids.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("logDirectory");
@@ -75,6 +73,14 @@ public class Launcher {
         opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
         opt2.setDefault("/var/log/repairnator");
         opt2.setHelp("Specify where to put logs created by docker machines.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("threads");
+        opt2.setShortFlag('t');
+        opt2.setLongFlag("threads");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("4");
+        opt2.setHelp("Specify the number of threads to run in parallel");
         this.jsap.registerParameter(opt2);
     }
 
@@ -92,6 +98,15 @@ public class Launcher {
         }
     }
 
+    private void checkEnvironmentVariables() {
+        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
+            if (System.getenv(envVar) == null) {
+                System.err.println("You must set the following environment variable: "+envVar);
+                this.printUsage();
+            }
+        }
+    }
+
     private void printUsage() {
         System.err.println("Usage: java <repairnator-dockerpool name> [option(s)]");
         System.err.println();
@@ -101,60 +116,99 @@ public class Launcher {
         System.exit(-1);
     }
 
-    private void managePoolOfThreads() throws DockerCertificateException, DockerException, InterruptedException {
-        final DockerClient docker = DefaultDockerClient.fromEnv().build();
+    private List<Integer> readListOfBuildIds() {
+        List<Integer> result = new ArrayList<>();
+        File inputFile = this.arguments.getFile("input");
 
-        List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.byName(this.arguments.getString("imageName")));
-        String imageId = null;
-
-        for (Image image : allImages) {
-            if (image.repoTags().contains(this.arguments.getString("imageName"))) {
-                imageId = image.id();
-                break;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            while (reader.ready()) {
+                String line = reader.readLine().trim();
+                result.add(Integer.parseInt(line));
             }
+
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Error while reading build ids from file: "+inputFile.getPath(),e);
         }
 
-        if (imageId != null) {
-
-            String containerName = "repairnator-pipeline_"+Utils.formatFilenameDate(new Date())+"_"+this.arguments.getInt("buildId");
-            String logFileName = containerName+".log";
-            String[] envValues = new String[] { "BUILD_ID="+this.arguments.getInt("buildId"), "LOG_FILENAME="+logFileName};
-
-            Map<String,String> labels = new HashMap<>();
-            labels.put("name",containerName);
-            HostConfig hostConfig = HostConfig.builder().appendBinds(this.arguments.getFile("logDirectory").getAbsolutePath()+":/var/log").build();
-            ContainerConfig containerConfig = ContainerConfig.builder()
-                                                        .image(imageId)
-                                                        .env(envValues)
-                                                        .hostname(Utils.getHostname())
-                                                        .hostConfig(hostConfig)
-                                                        .labels(labels)
-                                                        .build();
-
-            LOGGER.info("Create the container: "+containerName);
-            ContainerCreation container = docker.createContainer(containerConfig);
-            LOGGER.info("Start the container: "+containerName);
-            docker.startContainer(container.id());
-
-            ContainerExit exitStatus = docker.waitContainer(container.id());
-
-            LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
-            docker.removeContainer(container.id());
-            docker.close();
-        } else {
-            docker.close();
-        }
-
+        return result;
     }
+
+    private String findDockerImage() {
+        try {
+            DockerClient docker = DefaultDockerClient.fromEnv().build();
+
+            List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.byName(this.arguments.getString("imageName")));
+
+            if (allImages.size() != 1) {
+                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+this.arguments.getString("imageName")+"\": "+allImages.size()+" image(s) has been found (only 1 should be find).");
+            }
+
+            String imageId = allImages.get(0).id();
+            docker.close();
+
+            return imageId;
+        } catch (DockerCertificateException|InterruptedException|DockerException e) {
+            throw new RuntimeException("Error while looking for the docker image",e);
+        }
+    }
+
+    private void killDockerContainers() {
+        try {
+            DockerClient docker = DefaultDockerClient.fromEnv().build();
+            for (String dockerContainerId : runningDockerContainer) {
+                docker.killContainer(dockerContainerId);
+            }
+            docker.close();
+        } catch (DockerCertificateException|InterruptedException|DockerException e) {
+           LOGGER.error("Error while killing docker containers",e);
+        }
+    }
+
+    private void runPool() {
+        List<Integer> buildIds = this.readListOfBuildIds();
+        LOGGER.info("Find "+buildIds.size()+" builds to run.");
+
+        String imageId = this.findDockerImage();
+        LOGGER.info("Found the following docker image id: "+imageId);
+
+        String logFile = this.arguments.getFile("logDirectory").getAbsolutePath();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
+
+        for (Integer builId : buildIds) {
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile);
+            executorService.submit(runnablePipelineContainer);
+        }
+
+        executorService.shutdown();
+        try {
+            if (executorService.awaitTermination(1, TimeUnit.DAYS)) {
+                LOGGER.info("Job finished within time.");
+            } else {
+                LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+runningDockerContainer.size()+" docker container(s).");
+                this.killDockerContainers();
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            LOGGER.error("Error while await termination. Force stopped "+runningDockerContainer.size()+" docker container(s).", e);
+            this.killDockerContainers();
+            executorService.shutdownNow();
+        }
+    }
+
+
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
         this.checkArguments();
+        this.checkEnvironmentVariables();
     }
 
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
-        launcher.managePoolOfThreads();
+        launcher.runPool();
     }
 }
