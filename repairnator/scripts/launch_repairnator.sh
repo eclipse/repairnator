@@ -1,27 +1,15 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+
 echo "Set environment variables"
-./set_env_variable.sh
+source $SCRIPT_DIR/set_env_variable.sh
 
-DOCKER_VERSION=`date "+%Y-%m-%d_%H%M"`
-DOCKER_TAG=repairnator/pipeline:$DOCKER_VERSION
-
-REPAIRNATOR_RUN_DIR=$HOME_REPAIR/bin/`date "+%Y-%m-%d_%H%M"`
-REPAIRNATOR_DOCKER_DIR=$REPAIRNATOR_RUN_DIR/dockerImage
-
-REPAIRNATOR_SCANNER_JAR="./repairnator-scanner/target/repairnator-scanner-*-jar-with-dependencies.jar"
-REPAIRNATOR_SCANNER_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-scanner.jar
-
-REPAIRNATOR_DOCKERPOOL_JAR="./repairnator-dockerpool/target/repairnator-dockerpool-*-jar-with-dependencies.jar"
-REPAIRNATOR_DOCKERPOOL_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-dockerpool.jar
-
-REPAIRNATOR_PIPELINE_JAR="./repairnator-pipeline/target/repairnator-pipeline-*-jar-with-dependencies.jar"
-REPAIRNATOR_PIPELINE_DEST_JAR=$REPAIRNATOR_DOCKER_DIR/repairnator-pipeline.jar
-
-REPAIRNATOR_BUILD_LIST=$REPAIRNATOR_RUN_DIR/list_build.txt
+echo "Create log directory: $LOG_DIR"
+mkdir $LOG_DIR
 
 echo "Start building a new version of repairnator"
-./build_repairnator.sh
+$SCRIPT_DIR/build_repairnator.sh
 
 if [[ $? != 0 ]]
 then

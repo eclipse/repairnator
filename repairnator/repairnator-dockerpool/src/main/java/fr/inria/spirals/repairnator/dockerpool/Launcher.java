@@ -162,7 +162,7 @@ public class Launcher {
             }
             docker.close();
         } catch (DockerCertificateException|InterruptedException|DockerException e) {
-           LOGGER.error("Error while killing docker containers",e);
+            LOGGER.error("Error while killing docker containers",e);
         }
     }
 

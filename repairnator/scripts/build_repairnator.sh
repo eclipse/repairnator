@@ -10,13 +10,13 @@ fi
 
 cd $HOME_REPAIR/github/nopol/nopol
 git pull
-mvn clean install
+mvn clean install -DskipTests=true
 
 cd $HOME_REPAIR/github/librepair
 git pull
 
 cd jtravis
-mvn clean install
+mvn clean install -DskipTests=true
 
 cd ../repairnator
-mvn clean install
+mvn clean install -DskipTests=true
