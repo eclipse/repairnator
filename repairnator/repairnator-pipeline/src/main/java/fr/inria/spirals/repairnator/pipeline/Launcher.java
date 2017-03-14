@@ -133,14 +133,6 @@ public class Launcher {
         opt2.setHelp("Specify the build id to use.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("previousBuild");
-        opt2.setShortFlag('p');
-        opt2.setLongFlag("previousBuild");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault("-1");
-        opt2.setHelp("Specify the previous build id to use, if needed.");
-        this.jsap.registerParameter(opt2);
-
         String launcherModeValues = "";
         for (LauncherMode mode : LauncherMode.values()) {
             launcherModeValues += mode.name() + ";";
@@ -199,7 +191,7 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
         } else {
-            Build previousBuild = BuildHelper.getBuildFromId(this.previousBuildId, null);
+            Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
             if (previousBuild != null) {
                 if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
                     this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
