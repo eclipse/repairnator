@@ -62,7 +62,8 @@ public class PushIncriminatedBuild extends AbstractStep {
 
         if (this.config.isPush()) {
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
-                throw new RuntimeException("Remote repo URL should be set.");
+                this.getLogger().error("Remote repo should be set !");
+                return;
             }
 
             this.writeProperty("step-durations", StringUtils.join(this.inspector.getStepsDurationsInSeconds().entrySet()));

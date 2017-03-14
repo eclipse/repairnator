@@ -52,6 +52,7 @@ public class RepairnatorConfigReader {
             config.setSerializeJson(Boolean.parseBoolean(properties.getProperty("json")));
             config.setJsonOutputPath(properties.getProperty("jsonOutputPath"));
             config.setGoogleSecretPath(properties.getProperty("googleSecretPath"));
+            config.setPushRemoteRepo(properties.getProperty("pushRemoteRepo"));
         } catch (Exception e) {
             logger.error("Error while setting config values from properties.");
             throw new RepairnatorConfigException("Error while setting config values from properties.", e);

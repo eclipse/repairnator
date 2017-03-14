@@ -54,25 +54,26 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
 
     private void serializeBuildsToBeInspected(Collection<BuildToBeInspected> buildToBeInspecteds) {
         if (this.sheets != null) {
-            List<List<Object>> dataRows = new ArrayList<List<Object>>();
-            Date date = new Date();
+            if (buildToBeInspecteds.size() > 0) {
+                List<List<Object>> dataRows = new ArrayList<List<Object>>();
+                Date date = new Date();
 
-            for (BuildToBeInspected buildToBeInspected : buildToBeInspecteds) {
-                List<Object> dataCol = new ArrayList<Object>();
-                Build build = buildToBeInspected.getBuild();
+                for (BuildToBeInspected buildToBeInspected : buildToBeInspecteds) {
+                    List<Object> dataCol = new ArrayList<Object>();
+                    Build build = buildToBeInspected.getBuild();
 
-                dataCol.add(runid);
-                dataCol.add(build.getId());
-                dataCol.add(build.getRepository().getSlug());
-                dataCol.add(Utils.formatCompleteDate(date));
-                dataCol.add(Utils.formatOnlyDay(date));
-                dataCol.add("DETECTED");
-                dataCol.add(Utils.getHostname());
+                    dataCol.add(runid);
+                    dataCol.add(build.getId());
+                    dataCol.add(build.getRepository().getSlug());
+                    dataCol.add(Utils.formatCompleteDate(date));
+                    dataCol.add(Utils.formatOnlyDay(date));
+                    dataCol.add("DETECTED");
+                    dataCol.add(Utils.getHostname());
 
-                dataRows.add(dataCol);
+                    dataRows.add(dataCol);
+                }
+                this.insertData(dataRows);
             }
-            this.insertData(dataRows);
-
         } else {
             this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }

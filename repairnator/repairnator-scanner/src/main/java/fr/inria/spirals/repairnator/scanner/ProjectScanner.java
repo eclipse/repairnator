@@ -184,11 +184,11 @@ public class ProjectScanner {
                     this.logger.debug("Build: " + build.getId());
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
-                    if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaSourceCode(build, previousBuild)) {
+                    if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
                         this.totalNumberOfFailingAndPassingBuildPairs++;
                         return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
                     } else {
-                        if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaSourceCode(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
+                        if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaFile(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
                             this.totalNumberOfPassingAndPassingBuildPairs++;
                             return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
                         } else {
@@ -249,7 +249,7 @@ public class ProjectScanner {
         return false;
     }
 
-    public boolean thereIsDiffOnJavaSourceCode(Build build, Build previousBuild) {
+    private boolean thereIsDiffOnJavaFile(Build build, Build previousBuild) {
         try {
             GitHub gh = GitHubBuilder.fromEnvironment().build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
@@ -259,7 +259,7 @@ public class ProjectScanner {
             GHCommit.File[] modifiedFiles = compare.getFiles();
             for (GHCommit.File file : modifiedFiles) {
                 if (file.getFileName().endsWith(".java")) {
-                    logger.error("SC File: " + file.getFileName());
+                    this.logger.debug("First java file found: " + file.getFileName());
                     return true;
                 }
             }
@@ -270,7 +270,7 @@ public class ProjectScanner {
         return false;
     }
 
-    public boolean thereIsDiffOnTests(Build build, Build previousBuild) {
+    private boolean thereIsDiffOnTests(Build build, Build previousBuild) {
         try {
             GitHub gh = GitHubBuilder.fromEnvironment().build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
@@ -279,8 +279,8 @@ public class ProjectScanner {
             GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
             GHCommit.File[] modifiedFiles = compare.getFiles();
             for (GHCommit.File file : modifiedFiles) {
-                if (file.getFileName().contains("src/test/java")) {
-                    logger.error("TC File: " + file.getFileName());
+                if (file.getFileName().toLowerCase().contains("test")) {
+                    this.logger.debug("First probable test file found: " + file.getFileName());
                     return true;
                 }
             }

@@ -6,6 +6,7 @@ import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
 import org.slf4j.LoggerFactory;
@@ -23,11 +24,20 @@ public class Launcher {
 
     private JSAP jsap;
     private JSAPResult arguments;
+    private LauncherMode launcherMode;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
         this.checkArguments();
+
+        this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
+
+        if (this.launcherMode == LauncherMode.REPAIR) {
+            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
+        } else {
+            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
+        }
 
         if (this.arguments.getBoolean("debug")) {
             Utils.setLoggersLevel(Level.DEBUG);
@@ -128,7 +138,7 @@ public class Launcher {
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
 
-        LauncherMode launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
+
         String googleSecretPath = this.arguments.getFile("googleSecretPath").getPath();
 
         ProjectScanner scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
@@ -166,7 +176,6 @@ public class Launcher {
     }
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
-
         String outputPath = this.arguments.getString("output");
         if (outputPath != null) {
             try {
