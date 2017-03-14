@@ -10,6 +10,7 @@ import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
 import org.slf4j.LoggerFactory;
@@ -90,6 +91,12 @@ public class Launcher {
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
 
+        sw1 = new Switch("scanOnly");
+        sw1.setLongFlag("scan-only");
+        sw1.setDefault("false");
+        sw1.setHelp("Use it when the scanner is not used to launch the pipeline to gather more datas in spreadsheet.");
+        this.jsap.registerParameter(sw1);
+
         // Tab size
         FlaggedOption opt2 = new FlaggedOption("input");
         opt2.setShortFlag('i');
@@ -152,6 +159,11 @@ public class Launcher {
             scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
         } else {
             scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(scanner, googleSecretPath);
+
+            if (this.arguments.getBoolean("scanOnly")) {
+                GoogleSpreadSheetScannerDetailedDataSerializer scannerDetailedDataSerializer = new GoogleSpreadSheetScannerDetailedDataSerializer(buildsToBeInspected, googleSecretPath);
+                scannerDetailedDataSerializer.serialize();
+            }
         }
 
         scannerSerializer.serialize();
