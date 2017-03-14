@@ -42,7 +42,6 @@ public class Launcher {
     private JSAPResult arguments;
     private RepairnatorConfig config;
     private int buildId;
-    private int previousBuildId;
     private BuildToBeInspected buildToBeInspected;
 
     public Launcher(String[] args) throws JSAPException {
@@ -72,7 +71,6 @@ public class Launcher {
         }
 
         this.buildId = this.arguments.getInt("build");
-        this.previousBuildId = this.arguments.getInt("previousBuild");
     }
 
     private void checkNopolSolverPath() {
@@ -199,7 +197,7 @@ public class Launcher {
                     this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
                 }
             } else {
-                throw new RuntimeException("There was an error getting the previous build (id: "+this.previousBuildId+")");
+                throw new RuntimeException("There was an error getting the previous build");
             }
         }
     }
