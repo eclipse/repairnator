@@ -117,7 +117,7 @@ public class Launcher {
         for (LauncherMode mode : LauncherMode.values()) {
             launcherModeValues += mode.name() + ";";
         }
-        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 2);
+        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 1);
 
         // Launcher mode
         opt2 = new FlaggedOption("launcherMode");
