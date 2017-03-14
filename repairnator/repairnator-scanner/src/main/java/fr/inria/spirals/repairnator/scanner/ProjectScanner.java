@@ -4,7 +4,6 @@ import fr.inria.spirals.jtravis.entities.*;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.FileMode;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import org.kohsuke.github.*;
@@ -32,19 +31,15 @@ public class ProjectScanner {
     private int totalBuildInJavaFailingWithFailingTests;
     private int totalNumberOfFailingAndPassingBuildPairs;
     private int totalNumberOfPassingAndPassingBuildPairs;
-    private Date dateStart;
-    private Date dateFinish;
 
     private Collection<String> slugs;
     private Collection<Repository> repositories;
     private Date limitDate;
 
     private LauncherMode launcherMode;
-    private FileMode fileMode;
 
-    public ProjectScanner(int lookupHours, LauncherMode launcherMode, FileMode fileMode) {
+    public ProjectScanner(int lookupHours, LauncherMode launcherMode) {
         this.launcherMode = launcherMode;
-        this.fileMode = fileMode;
 
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
@@ -94,67 +89,16 @@ public class ProjectScanner {
         return totalNumberOfPassingAndPassingBuildPairs;
     }
 
-    public Collection<String> getSlugs() {
-        return slugs;
-    }
-
-    public Collection<Repository> getRepositories() {
-        return repositories;
-    }
-
     public Date getLimitDate() {
         return limitDate;
     }
 
     public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
         if (this.launcherMode == LauncherMode.REPAIR) {
-            if (this.fileMode == FileMode.SLUG) {
-                return getListOfBuildsFromProjectsByBuildStatus(path, true);
-            } else {
-                return getListOfBuildsFromGivenBuildIds(path, true);
-            }
+            return getListOfBuildsFromProjectsByBuildStatus(path, true);
         } else {
-            if (this.fileMode == FileMode.SLUG) {
-                return getListOfBuildsFromProjectsByBuildStatus(path, false);
-            } else {
-                return getListOfBuildsFromGivenBuildIds(path, false);
-            }
+            return getListOfBuildsFromProjectsByBuildStatus(path, false);
         }
-    }
-
-    public List<BuildToBeInspected> getListOfBuildsFromGivenBuildIds(String path, boolean targetFailing) throws IOException {
-        this.dateStart = new Date();
-        List<String> buildsIds = getFileContent(path);
-        this.totalScannedBuilds = buildsIds.size();
-
-        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
-
-        for (String buildIdStr : buildsIds) {
-            int buildId;
-            try {
-                buildId = Integer.parseInt(buildIdStr);
-            } catch (NumberFormatException e) {
-                this.logger.error("Error while reading build ids from input: " + e.getMessage());
-                continue;
-            }
-
-            Build build = BuildHelper.getBuildFromId(buildId, null);
-            if (build == null) {
-                this.logger.warn("The following build cannot be retrieved: " + buildId);
-                continue;
-            }
-
-            BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, targetFailing);
-            if (buildToBeInspected != null) {
-                buildsToBeInspected.add(buildToBeInspected);
-            }
-        }
-
-        this.totalRepoNumber = this.repositories.size();
-        this.totalRepoUsingTravis = this.repositories.size();
-        this.dateFinish = new Date();
-
-        return buildsToBeInspected;
     }
 
     private List<String> getFileContent(String path) throws IOException {
@@ -178,16 +122,13 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing)
-            throws IOException {
-        this.dateStart = new Date();
+    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing) throws IOException {
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
         List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos, targetFailing);
 
-        this.dateFinish = new Date();
         return builds;
     }
 

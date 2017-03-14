@@ -1,2 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 client_secret.json
+dockerImage/.credentials
+dockerImage/repairnator-pipeline.jar
+dockerImage/client_secret.json

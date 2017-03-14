@@ -12,6 +12,7 @@
         <module>repairnator-pipeline</module>
         <module>repairnator-core</module>
         <module>repairnator-scanner</module>
+        <module>repairnator-dockerpool</module>
     </modules>
 
     <properties>
@@ -25,6 +26,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>fr.inria.spirals</groupId>
             <artifactId>jtravis</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -35,34 +42,9 @@
             <version>2.1</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>4.6.0.201612231935-r</version>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.1.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-invoker</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-report-parser</artifactId>
-            <version>2.19.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.inria.lille.adam</groupId>
-            <artifactId>nopol</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model-builder</artifactId>
-            <version>3.3.9</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>

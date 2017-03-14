@@ -17,11 +17,6 @@
             <artifactId>repairnator-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>fr.inria.spirals</groupId>
-            <artifactId>repairnator-pipeline</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -39,7 +34,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.inria.spirals.repairnator.Launcher</mainClass>
+                            <mainClass>fr.inria.spirals.repairnator.scanner.Launcher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

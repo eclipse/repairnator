@@ -15,8 +15,10 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 
@@ -71,7 +73,7 @@ public class PushIncriminatedBuild extends AbstractStep {
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
             this.getLogger().debug(
                     "Start to push failing state in the remote repository: " + remoteRepo + " branch: " + branchName);
-            if (System.getenv("GITHUB_OAUTH") == null) {
+            if (System.getenv("GITHUB_OAUTH") == null || System.getenv("GITHUB_OAUTH").equals("")) {
                 this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
                 return;
             }
@@ -90,10 +92,10 @@ public class PushIncriminatedBuild extends AbstractStep {
                     Process p = processBuilder.start();
                     p.waitFor();
                 } else {
-                    this.getLogger()
-                            .debug("The repository contains less than " + NB_COMMITS_TO_KEEP + ": push all the repo.");
+                    this.getLogger().debug("The repository contains less than " + NB_COMMITS_TO_KEEP + ": push all the repo.");
                 }
 
+                this.getLogger().debug("Commit the logs and properties files");
                 AddCommand addCommand = git.add();
                 for (File file : new File(this.inspector.getRepoLocalPath()).listFiles()) {
                     if (file.getName().contains("repairnator")) {
@@ -106,6 +108,8 @@ public class PushIncriminatedBuild extends AbstractStep {
                 git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent)
                         .setAuthor(personIdent).call();
 
+                this.getLogger().debug("Add the remote repository to push the current state");
+
                 RemoteAddCommand remoteAdd = git.remoteAdd();
                 remoteAdd.setName("saveFail");
                 remoteAdd.setUri(new URIish(remoteRepo));
@@ -113,16 +117,28 @@ public class PushIncriminatedBuild extends AbstractStep {
 
                 CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
 
-                git.fetch().setRemote("saveFail").setCredentialsProvider(credentialsProvider).call();
+                this.getLogger().debug("Check if a branch already exists in the remote repository");
+                ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh","-c","git remote show saveFail | grep "+branchName)
+                        .directory(new File(this.inspector.getRepoLocalPath()));
 
-                Ref theRef = git.getRepository().findRef("refs/remotes/saveFail/" + branchName);
+                Process p = processBuilder.start();
+                BufferedReader stdin = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                p.waitFor();
 
-                if (theRef != null) {
-                    this.getLogger()
-                            .warn("A branch already exist in the remote repo with the following name: " + branchName);
+                this.getLogger().debug("Get result from grep process...");
+                String processReturn = "";
+                String line;
+                while (stdin.ready() && (line = stdin.readLine()) != null) {
+                    processReturn += line;
+                }
+
+                if (!processReturn .equals("")) {
+                    this.getLogger().warn("A branch already exist in the remote repo with the following name: " + branchName);
+                    this.getLogger().debug("Here the grep return: "+processReturn);
                     return;
                 }
 
+                this.getLogger().debug("Prepare the branch and push");
                 Ref branch = git.branchCreate().setName(branchName).call();
 
                 git.push().setRemote("saveFail").add(branch).setCredentialsProvider(credentialsProvider).call();

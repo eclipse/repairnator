@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-cd scripts
-chmod +x install_git_rebase_last.sh
-./install_git_rebase_last.sh
-
-if [[ $? != 0 ]]
-then
-    echo "Error while installing git aliases"
-    exit 1
-fi
-
 git clone https://github.com/SpoonLabs/CoCoSpoon.git
 cd CoCoSpoon
 mvn clean install
@@ -47,3 +37,17 @@ then
     echo "Error while installing surefire-report-parser"
     exit 1
 fi
+
+cd ../..
+
+cd repairnator/scripts
+chmod +x install_git_rebase_last.sh
+./install_git_rebase_last.sh
+
+if [[ $? != 0 ]]
+then
+    echo "Error while installing git aliases"
+    exit 1
+fi
+
+cd ../..
