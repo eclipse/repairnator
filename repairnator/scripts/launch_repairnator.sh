@@ -38,7 +38,7 @@ then
 fi
 
 echo "Build the docker machine (tag: $DOCKER_TAG)..."
-docker build -t $DOCKER_TAG --label version=$DOCKER_VERSION $REPAIRNATOR_DOCKER_DIR
+docker build -t $DOCKER_TAG $REPAIRNATOR_DOCKER_DIR
 
 echo "Launch docker pool..."
 java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR &> $LOG_DIR/dockerpool.log
