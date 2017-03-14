@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export M2_HOME=
 export GITHUB_LOGIN=
 export GITHUB_OAUTH=
 export HOME_REPAIR=

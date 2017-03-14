@@ -6,12 +6,12 @@ VOLUME ["/var/log/"]
 
 RUN mkdir /root/.credentials
 ADD .credentials /root/.credentials
-ADD client_secret.json /root
-ADD repairconfig.ini /root
-ADD repairnator-pipeline.jar /root
-ADD z3_for_linux /root
-ADD logback.xml /root
-ADD configure_git.sh /root
+COPY client_secret.json /root
+COPY repairconfig.ini /root
+COPY repairnator-pipeline.jar /root
+COPY z3_for_linux /root
+COPY logback.xml /root
+COPY configure_git.sh /root
 
 RUN chmod +x /root/configure_git.sh
 RUN /root/configure_git.sh
