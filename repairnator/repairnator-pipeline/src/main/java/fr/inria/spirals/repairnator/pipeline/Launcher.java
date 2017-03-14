@@ -159,7 +159,7 @@ public class Launcher {
 
     private void checkEnvironmentVariables() {
         for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
-            if (System.getenv(envVar) == null) {
+            if (System.getenv(envVar) == null || System.getenv(envVar).equals("")) {
                 System.err.println("You must set the following environment variable: "+envVar);
                 this.printUsage();
             }

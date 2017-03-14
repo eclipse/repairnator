@@ -11,6 +11,10 @@ ADD repairconfig.ini /root
 ADD repairnator-pipeline.jar /root
 ADD z3_for_linux /root
 ADD logback.xml /root
+ADD configure_git.sh /root
+
+RUN chmod +x /root/configure_git.sh
+RUN /root/configure_git.sh
 
 ENV M2_HOME=$MAVEN_HOME
 ENV GITHUB_LOGIN=
