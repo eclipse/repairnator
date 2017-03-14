@@ -18,6 +18,7 @@ public class Utils {
     public static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH", "GITHUB_LOGIN" };
     private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
+    private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
 
     public static String formatCompleteDate(Date date) {
         return tsvCompleteDateFormat.format(date);
@@ -25,6 +26,10 @@ public class Utils {
 
     public static String formatOnlyDay(Date date) {
         return csvOnlyDayFormat.format(date);
+    }
+
+    public static String formatFilenameDate(Date date) {
+        return fileDateFormat.format(date);
     }
 
     public static String getHostname() {
