@@ -16,13 +16,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by fermadeiral.
  */
 public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorSerializer4Bears.class);
-    private static final String RANGE = "All data!A1:M1";
+    private static final String RANGE = "All data!A1:N1";
 
     private Sheets sheets;
 
@@ -41,6 +42,12 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
 
             String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
 
+            String typeOfFailures = "";
+            Set<String> failures = inspector.getTestInformations().getFailureNames();
+            for (String failure : failures) {
+                typeOfFailures += failure + ",";
+            }
+
             String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
             List<Object> dataCol = new ArrayList<Object>();
@@ -48,6 +55,7 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
             dataCol.add(previousBuildId + "");
             dataCol.add(inspector.getBuildToBeInspected().getStatus().toString());
             dataCol.add(state);
+            dataCol.add(typeOfFailures);
             dataCol.add(build.getRepository().getSlug());
             dataCol.add(build.getPullRequestNumber() + "");
             dataCol.add(Utils.formatCompleteDate(build.getFinishedAt()));
