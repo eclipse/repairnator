@@ -27,8 +27,7 @@ import java.text.SimpleDateFormat;
  */
 public class PushIncriminatedBuild extends AbstractStep {
     private static final String REMOTE_REPO_EXT = ".git";
-    private static final String REMOTE_REPO_TREE_EXT = "/tree/";
-    private static final String NB_COMMITS_TO_KEEP = "10";
+    private static final String NB_COMMITS_TO_KEEP = "12";
 
     private String branchName;
     private String remoteRepoUrl;
@@ -49,14 +48,6 @@ public class PushIncriminatedBuild extends AbstractStep {
 
         this.branchName = inspector.getRepoSlug().replace('/', '-') + '-' + inspector.getBuild().getId() + '-'
                 + formattedDate;
-    }
-
-    public void setRemoteRepoUrl(String remoteRepoUrl) {
-        this.remoteRepoUrl = remoteRepoUrl;
-    }
-
-    public String getRemoteLocation() {
-        return this.remoteRepoUrl + REMOTE_REPO_TREE_EXT + this.branchName;
     }
 
     @Override
@@ -81,6 +72,19 @@ public class PushIncriminatedBuild extends AbstractStep {
             try {
                 Git git = Git.open(new File(inspector.getRepoLocalPath()));
 
+                this.getLogger().debug("Commit the logs and properties files");
+                AddCommand addCommand = git.add();
+                for (File file : new File(this.inspector.getRepoLocalPath()).listFiles()) {
+                    if (file.getName().contains("repairnator")) {
+                        addCommand.addFilepattern(file.getName());
+                    }
+                }
+
+                addCommand.call();
+                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
+                git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent)
+                        .setAuthor(personIdent).call();
+
                 git.checkout().setCreateBranch(true).setName("detached").call();
                 ObjectId id = git.getRepository().resolve("HEAD~" + NB_COMMITS_TO_KEEP);
 
@@ -94,19 +98,6 @@ public class PushIncriminatedBuild extends AbstractStep {
                 } else {
                     this.getLogger().debug("The repository contains less than " + NB_COMMITS_TO_KEEP + ": push all the repo.");
                 }
-
-                this.getLogger().debug("Commit the logs and properties files");
-                AddCommand addCommand = git.add();
-                for (File file : new File(this.inspector.getRepoLocalPath()).listFiles()) {
-                    if (file.getName().contains("repairnator")) {
-                        addCommand.addFilepattern(file.getName());
-                    }
-                }
-
-                addCommand.call();
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent)
-                        .setAuthor(personIdent).call();
 
                 this.getLogger().debug("Add the remote repository to push the current state");
 

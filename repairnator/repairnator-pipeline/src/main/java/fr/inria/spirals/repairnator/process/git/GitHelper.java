@@ -9,9 +9,11 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.RemoteAddCommand;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.PatchApplyException;
 import org.eclipse.jgit.api.errors.PatchFormatException;
@@ -19,6 +21,7 @@ import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
@@ -91,6 +94,24 @@ public class GitHelper {
      */
     private static String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
+            Status gitStatus = git.status().call();
+            if (!gitStatus.isClean()) {
+                GitHelper.getInstance().getLogger().debug("Commit the logs and properties files");
+                AddCommand addCommand = git.add();
+
+                String path = git.getRepository().getDirectory().getParent();
+                for (File file : new File(path).listFiles()) {
+                    if (file.getName().contains("repairnator")) {
+                        addCommand.addFilepattern(file.getName());
+                    }
+                }
+
+                addCommand.call();
+                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
+                git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent)
+                        .setAuthor(personIdent).call();
+            }
+
             GitHub gh = GitHubBuilder.fromEnvironment().build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
 
