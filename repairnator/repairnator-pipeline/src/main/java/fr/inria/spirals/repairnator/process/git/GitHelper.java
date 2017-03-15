@@ -98,7 +98,9 @@ public class GitHelper {
             if (!gitStatus.isClean()) {
                 GitHelper.getInstance().getLogger().debug("Commit the logs and properties files");
                 AddCommand addCommand = git.add();
-                for (File file : new File(git.getRepository().getDirectory().getPath()).listFiles()) {
+
+                String path = git.getRepository().getDirectory().getParent();
+                for (File file : new File(path).listFiles()) {
                     if (file.getName().contains("repairnator")) {
                         addCommand.addFilepattern(file.getName());
                     }
