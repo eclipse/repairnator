@@ -227,6 +227,8 @@ public class ProjectScanner {
                                 this.slugs.add(repo.getSlug());
                                 this.repositories.add(repo);
                                 return true;
+                            } else {
+                                return false;
                             }
                         }
                     } else {
