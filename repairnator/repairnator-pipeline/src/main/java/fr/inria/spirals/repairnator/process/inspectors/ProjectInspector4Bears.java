@@ -30,30 +30,31 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
     public void run() {
         AbstractStep firstStep = null;
-        AbstractStep lastStep = null;
 
-        // Clone, build, test and gather test information for the
-        // current passing build to ensure it is reproducible
         AbstractStep cloneRepo = new CloneRepository(this);
-        GatherTestInformation gatherTestInformation = new GatherTestInformation(this, new BuildShouldPass());
+        GatherTestInformation gatherTestInformation;
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
+            gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
+
             cloneRepo.setNextStep(new CheckoutBuild(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
-                    .setNextStep(gatherTestInformation)
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass()))
                     .setNextStep(new CheckoutPreviousBuild(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldFail()))
+                    .setNextStep(gatherTestInformation)
                     .setNextStep(new PushIncriminatedBuild(this));
 
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
+                gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
+
                 cloneRepo.setNextStep(new CheckoutBuild(this))
                         .setNextStep(new BuildProject(this))
                         .setNextStep(new TestProject(this))
-                        .setNextStep(gatherTestInformation)
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass()))
                         .setNextStep(new CheckoutPreviousBuild(this))
                         .setNextStep(new BuildProject(this))
                         .setNextStep(new TestProject(this))
@@ -61,10 +62,11 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new CheckoutPreviousBuildSourceCode(this))
                         .setNextStep(new BuildProject(this))
                         .setNextStep(new TestProject(this))
-                        .setNextStep(new GatherTestInformation(this, new BuildShouldFail()))
+                        .setNextStep(gatherTestInformation)
                         .setNextStep(new PushIncriminatedBuild(this));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
+                return;
             }
         }
 
