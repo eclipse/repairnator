@@ -3,7 +3,7 @@ FROM maven:3.3.9-jdk-8
 LABEL Description="Repairnator Pipeline docker image" Vendor="Spirals" Version="0.0.0"
 
 VOLUME ["/var/log/"]
-
+RUN echo "Europe/Paris" > /etc/timezone
 RUN mkdir /root/.credentials
 ADD .credentials /root/.credentials
 COPY client_secret.json /root/
