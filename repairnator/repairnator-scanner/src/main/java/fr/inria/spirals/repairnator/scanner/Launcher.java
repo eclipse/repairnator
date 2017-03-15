@@ -148,7 +148,6 @@ public class Launcher {
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
 
-
         String googleSecretPath = this.arguments.getFile("googleSecretPath").getPath();
 
         ProjectScanner scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
@@ -191,21 +190,23 @@ public class Launcher {
     }
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
-        String outputPath = this.arguments.getFile("output").getAbsolutePath();
-        if (outputPath != null) {
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+        if (this.arguments.getFile("output") != null) {
+            String outputPath = this.arguments.getFile("output").getAbsolutePath();
+            if (outputPath != null) {
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
-                for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-                    writer.write(buildToBeInspected.getBuild().getId()+"");
-                    writer.newLine();
-                    writer.flush();
+                    for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
+                        writer.write(buildToBeInspected.getBuild().getId() + "");
+                        writer.newLine();
+                        writer.flush();
+                    }
+
+                    writer.close();
+                    return;
+                } catch (IOException e) {
+                    LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
                 }
-
-                writer.close();
-                return;
-            } catch (IOException e) {
-                LOGGER.error("Error while writing file "+outputPath+". The content will be printed in the standard output.",e);
             }
         }
 
