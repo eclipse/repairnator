@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -284,18 +285,26 @@ public class ProjectScanner {
     private boolean thereIsDiffOnJavaFile(Build build, Build previousBuild) {
         try {
             GitHub gh = GitHubBuilder.fromEnvironment().build();
-            GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
-            GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
-            GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
-            GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
-            GHCommit.File[] modifiedFiles = compare.getFiles();
-            for (GHCommit.File file : modifiedFiles) {
-                if (file.getFileName().endsWith(".java")) {
-                    this.logger.debug("First java file found: " + file.getFileName());
-                    return true;
-                }
-            }
 
+            GHRateLimit rateLimit = gh.getRateLimit();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+            this.logger.debug("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
+
+            if (rateLimit.remaining > 2) {
+                GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
+                GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
+                GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
+                GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
+                GHCommit.File[] modifiedFiles = compare.getFiles();
+                for (GHCommit.File file : modifiedFiles) {
+                    if (file.getFileName().endsWith(".java")) {
+                        this.logger.debug("First java file found: " + file.getFileName());
+                        return true;
+                    }
+                }
+            } else {
+                this.logger.warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
+            }
         } catch (IOException e) {
             this.logger.warn("Error while getting commit from Github: " + e);
         }
@@ -305,18 +314,26 @@ public class ProjectScanner {
     private boolean thereIsDiffOnTests(Build build, Build previousBuild) {
         try {
             GitHub gh = GitHubBuilder.fromEnvironment().build();
-            GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
-            GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
-            GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
-            GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
-            GHCommit.File[] modifiedFiles = compare.getFiles();
-            for (GHCommit.File file : modifiedFiles) {
-                if (file.getFileName().toLowerCase().contains("test")) {
-                    this.logger.debug("First probable test file found: " + file.getFileName());
-                    return true;
-                }
-            }
 
+            GHRateLimit rateLimit = gh.getRateLimit();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+            this.logger.debug("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
+
+            if (rateLimit.remaining > 2) {
+                GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
+                GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
+                GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
+                GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
+                GHCommit.File[] modifiedFiles = compare.getFiles();
+                for (GHCommit.File file : modifiedFiles) {
+                    if (file.getFileName().toLowerCase().contains("test")) {
+                        this.logger.debug("First probable test file found: " + file.getFileName());
+                        return true;
+                    }
+                }
+            } else {
+                this.logger.warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
+            }
         } catch (IOException e) {
             this.logger.warn("Error while getting commit from Github: " + e);
         }
