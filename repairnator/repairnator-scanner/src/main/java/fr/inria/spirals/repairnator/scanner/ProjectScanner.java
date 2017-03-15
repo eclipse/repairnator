@@ -36,17 +36,17 @@ public class ProjectScanner {
     private Collection<Repository> repositories;
     private Date limitDate;
 
+    private Date beginDate;
+    private Date endDate;
+    private int lookupHours;
     private LauncherMode launcherMode;
 
     public ProjectScanner(int lookupHours, LauncherMode launcherMode) {
+        this.lookupHours = lookupHours;
         this.launcherMode = launcherMode;
 
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
-
-        Calendar limitCal = Calendar.getInstance();
-        limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
-        this.limitDate = limitCal.getTime();
     }
 
     public int getTotalRepoNumber() {
@@ -93,12 +93,43 @@ public class ProjectScanner {
         return limitDate;
     }
 
-    public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
-        if (this.launcherMode == LauncherMode.REPAIR) {
-            return getListOfBuildsFromProjectsByBuildStatus(path, true);
-        } else {
-            return getListOfBuildsFromProjectsByBuildStatus(path, false);
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public String getDuration() {
+        if (this.beginDate == null || this.endDate == null) {
+            return "";
         }
+        double diffInMilliseconds = this.endDate.getTime() - this.beginDate.getTime();
+        int minutes = (int) (diffInMilliseconds / 1000) / 60;
+        int seconds = (int) (diffInMilliseconds / 1000) % 60;
+        int hours = minutes / 60;
+        minutes = minutes % 60;
+        return hours + ":" + minutes + ":" + seconds;
+    }
+
+    public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
+        this.beginDate = new Date();
+
+        Calendar limitCal = Calendar.getInstance();
+        limitCal.add(Calendar.HOUR_OF_DAY, -this.lookupHours);
+        this.limitDate = limitCal.getTime();
+
+        List<BuildToBeInspected> buildsToBeInspected;
+        if (this.launcherMode == LauncherMode.REPAIR) {
+            buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path, true);
+        } else {
+            buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path, false);
+        }
+
+        this.endDate = new Date();
+
+        return buildsToBeInspected;
     }
 
     private List<String> getFileContent(String path) throws IOException {

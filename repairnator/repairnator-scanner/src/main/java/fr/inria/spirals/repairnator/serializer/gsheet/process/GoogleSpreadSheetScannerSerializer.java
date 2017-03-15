@@ -4,15 +4,14 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.repairnator.ProcessSerializer;
-import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class GoogleSpreadSheetScannerSerializer  implements ProcessSerializer {
         if (this.sheets != null) {
             List<Object> dataCol = new ArrayList<Object>();
             dataCol.add(Utils.getHostname());
-            dataCol.add(Utils.formatCompleteDate(new Date()));
+            dataCol.add(Utils.formatCompleteDate(this.scanner.getBeginDate()));
             dataCol.add(Utils.formatCompleteDate(this.scanner.getLimitDate()));
             dataCol.add(this.scanner.getTotalRepoNumber());
             dataCol.add(this.scanner.getTotalRepoUsingTravis());
@@ -45,6 +44,7 @@ public class GoogleSpreadSheetScannerSerializer  implements ProcessSerializer {
             dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
             dataCol.add(this.scanner.getTotalPRBuilds());
             dataCol.add(Utils.formatOnlyDay(this.scanner.getLimitDate()));
+            dataCol.add(this.scanner.getDuration());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);
