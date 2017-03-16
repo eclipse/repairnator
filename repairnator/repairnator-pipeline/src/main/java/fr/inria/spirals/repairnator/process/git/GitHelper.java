@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,6 +83,52 @@ public class GitHelper {
         return null;
     }
 
+    public static boolean addAndCommitRepairnatorLogAndProperties(Git git, String commitMsg) {
+        try {
+            Status gitStatus = git.status().call();
+            if (!gitStatus.isClean()) {
+                GitHelper.getInstance().getLogger().debug("Commit the logs and properties files");
+
+                List<String> filesChanged = new ArrayList<>();
+                filesChanged.addAll(gitStatus.getUncommittedChanges());
+                filesChanged.addAll(gitStatus.getUntracked());
+                filesChanged.addAll(gitStatus.getUntrackedFolders());
+
+                List<String> filesToAdd = new ArrayList<>();
+                String path = git.getRepository().getDirectory().getParent();
+                for (File file : new File(path).listFiles()) {
+                    if (file.getName().contains("repairnator") && filesChanged.contains(file.getName())) {
+                        filesToAdd.add(file.getName());
+                    }
+                }
+
+                if (filesToAdd.isEmpty()) {
+                    GitHelper.getInstance().getLogger().info("No repairnator properties or log file to commit.");
+                    return false;
+                }
+
+
+
+                GitHelper.getInstance().getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
+                AddCommand addCommand = git.add();
+                for (String file : filesToAdd) {
+                    addCommand.addFilepattern(file);
+                }
+                addCommand.call();
+                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
+                git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
+                        .setAuthor(personIdent).call();
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (GitAPIException e) {
+            GitHelper.getInstance().getLogger().error("Error while committing repairnator properties/log files ",e);
+            return false;
+        }
+    }
+
     /**
      * When a commit has been force deleted it still can be retrieved from
      * GitHub API. This function intend to retrieve a patch from the Github API
@@ -94,24 +141,7 @@ public class GitHelper {
      */
     private static String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
-            Status gitStatus = git.status().call();
-            if (!gitStatus.isClean()) {
-                GitHelper.getInstance().getLogger().debug("Commit the logs and properties files");
-                AddCommand addCommand = git.add();
-
-                String path = git.getRepository().getDirectory().getParent();
-                for (File file : new File(path).listFiles()) {
-                    if (file.getName().contains("repairnator")) {
-                        addCommand.addFilepattern(file.getName());
-                    }
-                }
-
-                addCommand.call();
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent)
-                        .setAuthor(personIdent).call();
-            }
-
+            addAndCommitRepairnatorLogAndProperties(git, "Commit done before retrieving a commit from GH API.");
             GitHub gh = GitHubBuilder.fromEnvironment().build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
 

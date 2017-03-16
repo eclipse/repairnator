@@ -65,18 +65,5 @@ public class TestCloneRepositoryStep {
         ref = ref.getTarget();
 
         assertThat(ref.getObjectId().getName(), not(build.getCommit().getSha())); // no check out yet
-
-        Status status = gitDir.status().call();
-        assertThat(status.getUntracked().size(), is(1));
-        assertThat(status.getAdded().isEmpty(), is(true));
-        assertThat(status.getChanged().isEmpty(), is(true));
-        assertThat(status.getModified().isEmpty(), is(true));
-        assertThat(status.getRemoved().isEmpty(), is(true));
-
-        Set<String> addedFile = status.getUntracked();
-
-        String[] propertyFile = addedFile.toArray(new String[addedFile.size()]);
-
-        assertThat(propertyFile[0], is("repairnator.properties"));
     }
 }
