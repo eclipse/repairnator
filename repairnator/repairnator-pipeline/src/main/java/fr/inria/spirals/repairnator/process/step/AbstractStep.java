@@ -1,9 +1,17 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.codehaus.plexus.util.FileUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -194,6 +202,7 @@ public abstract class AbstractStep {
         this.dateEnd = new Date().getTime();
 
         this.inspector.addStepDuration(this.name, getDuration());
+        this.pushNewInformationIfNeeded();
 
         if (!shouldStop) {
             this.executeNextStep();
@@ -202,6 +211,23 @@ public abstract class AbstractStep {
             this.inspector.setState(this.state);
             this.serializeData();
         }
+    }
+
+    private void pushNewInformationIfNeeded() {
+        try {
+            Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
+
+            boolean createNewCommit = GitHelper.addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
+
+            if (createNewCommit && this.inspector.isHasBeenPushed()) {
+                CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
+
+                git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
+            }
+        } catch (IOException | GitAPIException  e) {
+            this.getLogger().error("Error while committing (and/or pushing) new repairnator information. ", e);
+        }
+
     }
 
     private int getDuration() {

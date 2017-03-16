@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -41,6 +42,7 @@ public class ProjectInspector {
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
     private boolean previousBuildFlag;
+    private boolean hasBeenPushed;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers) {
         try {
@@ -59,6 +61,7 @@ public class ProjectInspector {
         this.stepErrors = new HashMap<String, List<String>>();
         this.autoclean = this.config.isClean();
         this.serializers = serializers;
+        this.hasBeenPushed = false;
     }
 
     public List<AbstractDataSerializer> getSerializers() {
@@ -161,6 +164,13 @@ public class ProjectInspector {
         return nopolInformations;
     }
 
+    public String getRemoteBranchName() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
+        String formattedDate = dateFormat.format(this.getBuild().getFinishedAt());
+
+        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuild().getId() + '-' + formattedDate;
+    }
+
     public void setNopolInformations(List<NopolInformation> nopolInformations) {
         this.nopolInformations = nopolInformations;
     }
@@ -180,6 +190,14 @@ public class ProjectInspector {
 
     public void addStepDuration(String step, int duration) {
         this.stepsDurationsInSeconds.put(step, duration);
+    }
+
+    public boolean isHasBeenPushed() {
+        return hasBeenPushed;
+    }
+
+    public void setHasBeenPushed(boolean hasBeenPushed) {
+        this.hasBeenPushed = hasBeenPushed;
     }
 
     public void run() {

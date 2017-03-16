@@ -110,4 +110,21 @@ public class NopolInformation {
     public void setNbAngelicValues(int nbAngelicValues) {
         this.nbAngelicValues = nbAngelicValues;
     }
+
+    @Override
+    public String toString() {
+        return "NopolInformation{" +
+                "location=" + location +
+                ", status=" + status +
+                ", dateEnd=" + dateEnd +
+                ", allocatedTime=" + allocatedTime +
+                ", passingTime=" + passingTime +
+                ", nbPatches=" + patches.size() +
+                ", nopolContext=" + nopolContext +
+                ", exceptionDetail='" + exceptionDetail + '\'' +
+                ", nbStatements=" + nbStatements +
+                ", nbAngelicValues=" + nbAngelicValues +
+                ", ignoreStatus=" + ignoreStatus +
+                '}';
+    }
 }

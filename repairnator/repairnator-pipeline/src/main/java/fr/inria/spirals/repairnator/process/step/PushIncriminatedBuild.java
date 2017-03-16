@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.AddCommand;
@@ -29,6 +30,8 @@ public class PushIncriminatedBuild extends AbstractStep {
     private static final String REMOTE_REPO_EXT = ".git";
     private static final String NB_COMMITS_TO_KEEP = "12";
 
+    public static final String REMOTE_NAME = "saveFail";
+
     private String branchName;
     private String remoteRepoUrl;
     private RepairnatorConfig config;
@@ -43,11 +46,9 @@ public class PushIncriminatedBuild extends AbstractStep {
 
         this.remoteRepoUrl = config.getPushRemoteRepo();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
-        String formattedDate = dateFormat.format(this.inspector.getBuild().getFinishedAt());
 
-        this.branchName = inspector.getRepoSlug().replace('/', '-') + '-' + inspector.getBuild().getId() + '-'
-                + formattedDate;
+
+        this.branchName = this.inspector.getRemoteBranchName();
     }
 
     @Override
@@ -73,17 +74,8 @@ public class PushIncriminatedBuild extends AbstractStep {
                 Git git = Git.open(new File(inspector.getRepoLocalPath()));
 
                 this.getLogger().debug("Commit the logs and properties files");
-                AddCommand addCommand = git.add();
-                for (File file : new File(this.inspector.getRepoLocalPath()).listFiles()) {
-                    if (file.getName().contains("repairnator")) {
-                        addCommand.addFilepattern(file.getName());
-                    }
-                }
 
-                addCommand.call();
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("repairnator: add log and properties").setCommitter(personIdent)
-                        .setAuthor(personIdent).call();
+                GitHelper.addAndCommitRepairnatorLogAndProperties(git, "Commit done before pushing to a new branch.");
 
                 git.checkout().setCreateBranch(true).setName("detached").call();
                 ObjectId id = git.getRepository().resolve("HEAD~" + NB_COMMITS_TO_KEEP);
@@ -102,14 +94,14 @@ public class PushIncriminatedBuild extends AbstractStep {
                 this.getLogger().debug("Add the remote repository to push the current state");
 
                 RemoteAddCommand remoteAdd = git.remoteAdd();
-                remoteAdd.setName("saveFail");
+                remoteAdd.setName(REMOTE_NAME);
                 remoteAdd.setUri(new URIish(remoteRepo));
                 remoteAdd.call();
 
                 CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
 
                 this.getLogger().debug("Check if a branch already exists in the remote repository");
-                ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh","-c","git remote show saveFail | grep "+branchName)
+                ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh","-c","git remote show "+REMOTE_NAME+" | grep "+branchName)
                         .directory(new File(this.inspector.getRepoLocalPath()));
 
                 Process p = processBuilder.start();
@@ -130,9 +122,11 @@ public class PushIncriminatedBuild extends AbstractStep {
                 }
 
                 this.getLogger().debug("Prepare the branch and push");
-                Ref branch = git.branchCreate().setName(branchName).call();
+                Ref branch = git.checkout().setCreateBranch(true).setName(branchName).call();
 
-                git.push().setRemote("saveFail").add(branch).setCredentialsProvider(credentialsProvider).call();
+                git.push().setRemote(REMOTE_NAME).add(branch).setCredentialsProvider(credentialsProvider).call();
+
+                this.getInspector().setHasBeenPushed(true);
 
             } catch (IOException e) {
                 this.getLogger().error("Error while reading git directory at the following location: "
