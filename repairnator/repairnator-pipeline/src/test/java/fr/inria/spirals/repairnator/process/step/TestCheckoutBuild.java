@@ -130,9 +130,10 @@ public class TestCheckoutBuild {
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
-        verify(inspector, times(1)).setState(ProjectState.BUILDCHECKEDOUT);
+        // cannot get the PR information so it stop now
+        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
+        verify(inspector, times(1)).setState(ProjectState.BUILDNOTCHECKEDOUT);
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuild.shouldStop, is(true));
     }
 }
