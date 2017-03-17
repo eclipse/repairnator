@@ -26,7 +26,6 @@ public abstract class CheckoutRepository extends AbstractStep {
         Git git;
         try {
             git = Git.open(new File(inspector.getRepoLocalPath()));
-
             Build build;
             if (checkoutType == CheckoutType.CHECKOUT_BUILD) {
                 build = inspector.getBuild();
@@ -44,6 +43,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                     this.writeProperty("pr-base-commit-id", prInformation.getBase().getSha());
                     this.writeProperty("pr-id", build.getPullRequestNumber() + "");
                 }
+
+                GitHelper.addAndCommitRepairnatorLogAndProperties(git, "After getting PR information");
 
                 String repository = this.inspector.getRepoSlug();
                 this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
