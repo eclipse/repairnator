@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.82</version>
+            <version>1.85</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
