@@ -51,6 +51,10 @@ public class PRInformationHelper extends AbstractHelper {
 
                     GHRepository headRepo = head.getRepository();
 
+                    if (headRepo == null) {
+                        getInstance().getLogger().warn("The head repository is null: maybe it has been deleted from GitHub");
+                        return null;
+                    }
                     Repository repoPR = new Repository();
                     repoPR.setId(headRepo.getId());
                     repoPR.setDescription(headRepo.getDescription());

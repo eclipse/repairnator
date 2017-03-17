@@ -103,4 +103,36 @@ public class TestCheckoutBuild {
 
         assertThat(checkoutBuild.shouldStop, is(false));
     }
+
+    @Test
+    public void testCheckoutBuildFromPROtherRepo() throws IOException, GitAPIException {
+        int buildId = 196568333; // surli/failingProject build
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuild()).thenReturn(build);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+
+        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.execute();
+
+        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
+        verify(inspector, times(1)).setState(ProjectState.BUILDCHECKEDOUT);
+
+        assertThat(checkoutBuild.shouldStop, is(false));
+    }
 }
