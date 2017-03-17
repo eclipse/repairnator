@@ -22,6 +22,7 @@ import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
@@ -299,9 +300,8 @@ public class GitHelper {
             getInstance().getLogger().debug("Step " + step.getName() + " - Do the merge with the PR commit for repo " + repository);
             git.merge().include(revCommitBase).setFastForward(MergeCommand.FastForwardMode.NO_FF).call();
         } catch (Exception e) {
-            getInstance().getLogger().warn("Step " + step.getName() + " - Repository " + repository + " cannot be cloned.");
-            getInstance().getLogger().debug("Step " + step.getName() + " - " + e.toString());
             step.addStepError(e.getMessage());
+            getInstance().getLogger().error("Step " + step.getName() + " - Repository " + repository + " cannot be cloned.",e);
             return false;
         }
         return true;
