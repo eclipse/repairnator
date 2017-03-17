@@ -299,9 +299,8 @@ public class GitHelper {
             getInstance().getLogger().debug("Step " + step.getName() + " - Do the merge with the PR commit for repo " + repository);
             git.merge().include(revCommitBase).setFastForward(MergeCommand.FastForwardMode.NO_FF).call();
         } catch (Exception e) {
-            getInstance().getLogger().warn("Step " + step.getName() + " - Repository " + repository + " cannot be cloned.");
-            getInstance().getLogger().debug("Step " + step.getName() + " - " + e.toString());
             step.addStepError(e.getMessage());
+            getInstance().getLogger().error("Step " + step.getName() + " - Repository " + repository + " cannot be cloned.",e);
             return false;
         }
         return true;
