@@ -10,6 +10,7 @@ export REPAIR_PROJECT_LIST_PATH=$HOME_REPAIR/scripts/project_list.txt
 export REPAIR_OUTPUT_PATH=/var/www/html/repairnator/
 export SCANNER_NB_HOURS=4
 export SCANNER_MODE=repair
+export DAY_TIMEOUT=1
 
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator
 export REPAIR_DOCKER_IMG_DIR=$HOME_REPAIR/dockerImage/
