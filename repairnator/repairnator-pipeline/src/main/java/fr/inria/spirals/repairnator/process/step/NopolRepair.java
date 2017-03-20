@@ -55,6 +55,8 @@ public class NopolRepair extends AbstractStep {
     protected void businessExecute() {
         this.getLogger().debug("Start to use nopol to repair...");
 
+        this.setState(ProjectState.NOTPATCHED);
+
         List<URL> classPath = this.inspector.getRepairClassPath();
         File[] sources = this.inspector.getRepairSourceDir();
 

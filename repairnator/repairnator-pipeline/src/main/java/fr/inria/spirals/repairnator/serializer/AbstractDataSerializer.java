@@ -24,66 +24,55 @@ public abstract class AbstractDataSerializer {
         switch (state) {
             case NONE:
             case INIT:
+            case NOTCLONABLE:
                 return "not clonable";
 
             case CLONABLE:
+            case BUILDNOTCHECKEDOUT:
+            case PREVIOUSBUILDNOTCHECKEDOUT:
+            case PREVIOUSBUILDCODENOTCHECKEDOUT:
                 return "error in check out";
 
-            case NOTTESTABLE:
+            case BUILDCHECKEDOUT:
+            case PREVIOUSBUILDCHECKEDOUT:
+            case PREVIOUSBUILDCODECHECKEDOUT:
+            case NOTBUILDABLE:
+                return "not buildable";
+
             case BUILDABLE:
+            case NOTTESTABLE:
                 return "not testable";
 
             case TESTABLE:
                 return "testable";
 
-            case HASTESTERRORS:
-                return "test errors";
+            case NOTFAILING:
+                return "not failing";
 
             case HASTESTFAILURE:
                 return "test failure";
 
-            case NOTFAILING:
-                return "not failing";
+            case HASTESTERRORS:
+                return "test errors";
 
-            case PATCHED:
-                return "PATCHED";
-
-            case SOURCEDIRCOMPUTED:
             case CLASSPATHCOMPUTED:
+            case SOURCEDIRCOMPUTED:
+            case CLASSPATHNOTCOMPUTED:
+            case SOURCEDIRNOTCOMPUTED:
+            case NOTPATCHED:
                 if (gatherTestInformation.getNbFailingTests() > 0) {
                     return "test failure";
                 } else {
                     return "test errors";
                 }
 
-            case DOESNOTHAVEPREVIOUSVERSION:
-                return "does not have previous build";
+            case PATCHED:
+                return "PATCHED";
 
-            case PREVIOUSVERSIONISNOTINTERESTING:
-                return "previous build is not interesting";
-
-            case BUILDCHECKEDOUT:
-                return "build checked out";
-
-            case BUILDNOTCHECKEDOUT:
-                return "build not checked out";
-
-            case PREVIOUSBUILDCHECKEDOUT:
-                return "not buildable";
-
-            case PREVIOUSBUILDNOTCHECKEDOUT:
-                return "previous build not checked out";
-
-            case PREVIOUSBUILDCODECHECKEDOUT:
-                return "previous build code checked out";
-
-            case PREVIOUSBUILDCODENOTCHECKEDOUT:
-                return "previous build code not checked out";
-
-            case FIXERBUILD_CASE1:
+            case FIXERBUILDCASE1:
                 return "FIXERBUILD_CASE1";
 
-            case FIXERBUILD_CASE2:
+            case FIXERBUILDCASE2:
                 return "FIXERBUILD_CASE2";
 
             default:

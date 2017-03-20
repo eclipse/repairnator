@@ -45,7 +45,7 @@ public class ComputeClasspath extends AbstractStep {
 
     @Override
     protected void businessExecute() {
-        this.getLogger().debug("Compute classpath from incriminated module...");
+        this.getLogger().debug("Computing classpath from incriminated module...");
 
         GatherTestInformation infoStep = inspector.getTestInformations();
         String incriminatedModule = infoStep.getFailingModulePath();
@@ -70,6 +70,7 @@ public class ComputeClasspath extends AbstractStep {
 
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");
+            this.setState(ProjectState.CLASSPATHNOTCOMPUTED);
             this.shouldStop = true;
             return;
         }
@@ -87,7 +88,9 @@ public class ComputeClasspath extends AbstractStep {
             }
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath: " + e);
+            this.setState(ProjectState.CLASSPATHNOTCOMPUTED);
             this.shouldStop = true;
+            //return ?
         }
 
         boolean containJunit = false;
@@ -99,8 +102,7 @@ public class ComputeClasspath extends AbstractStep {
         }
 
         if (!containJunit) {
-            this.addStepError(
-                    "The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
+            this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
         }
 
         this.inspector.setRepairClassPath(this.classPath);

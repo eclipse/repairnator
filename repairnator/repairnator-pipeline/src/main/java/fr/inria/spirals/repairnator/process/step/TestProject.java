@@ -14,7 +14,7 @@ public class TestProject extends AbstractStep {
     }
 
     protected void businessExecute() {
-        this.getLogger().debug("Start launching tests with maven.");
+        this.getLogger().debug("Launching tests with maven...");
 
         MavenHelper helper = new MavenHelper(this.getPom(), "test", null, this.getClass().getSimpleName(),
                 this.inspector, false);
@@ -25,25 +25,23 @@ public class TestProject extends AbstractStep {
 
         int result = helper.run();
 
-        // in both case we want to gather test information, then we process to
-        // the next step.
         if (result == MavenHelper.MAVEN_SUCCESS) {
             if (outputTestFilter.getRunningTests() > 0) {
-                this.getLogger()
-                        .debug(outputTestFilter.getRunningTests() + " tests has been launched but none failed.");
+                this.getLogger().debug(outputTestFilter.getRunningTests() + " tests has been launched but none failed.");
             } else {
                 this.addStepError("No test recorded.");
             }
-            this.state = ProjectState.NOTFAILING;
+            this.setState(ProjectState.NOTFAILING);
         } else {
             if (outputTestFilter.isFailingWithTest()) {
                 this.getLogger().debug(outputTestFilter.getFailingTests() + " tests failed, go to next step.");
-                this.state = ProjectState.TESTABLE;
+                this.setState(ProjectState.TESTABLE);
             } else {
                 this.addStepError("Error while testing the project.");
+                this.setState(ProjectState.NOTTESTABLE);
                 this.shouldStop = true;
-                this.state = ProjectState.NOTTESTABLE;
             }
         }
     }
+
 }

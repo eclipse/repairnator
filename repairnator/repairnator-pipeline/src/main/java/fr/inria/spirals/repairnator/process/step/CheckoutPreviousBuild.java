@@ -2,6 +2,8 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutRepository;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 
 /**
  * Created by fermadeiral.
@@ -21,7 +23,7 @@ public class CheckoutPreviousBuild extends CheckoutRepository {
 
         super.businessExecute();
 
-        this.state = (this.shouldStop) ? ProjectState.PREVIOUSBUILDNOTCHECKEDOUT : ProjectState.PREVIOUSBUILDCHECKEDOUT;
+        this.setState((this.shouldStop) ? ProjectState.PREVIOUSBUILDNOTCHECKEDOUT : ProjectState.PREVIOUSBUILDCHECKEDOUT);
     }
 
 }

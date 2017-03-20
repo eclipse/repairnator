@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorSerializer4Bears.class);
-    private static final String RANGE = "All data!A1:N1";
+    private static final String RANGE = "All data!A1:O1";
 
     private Sheets sheets;
 
@@ -42,6 +42,8 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
 
             String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
 
+            String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
+
             String typeOfFailures = "";
             Set<String> failures = inspector.getTestInformations().getFailureNames();
             for (String failure : failures) {
@@ -55,6 +57,7 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
             dataCol.add(previousBuildId + "");
             dataCol.add(inspector.getBuildToBeInspected().getStatus().toString());
             dataCol.add(state);
+            dataCol.add(realState);
             dataCol.add(typeOfFailures);
             dataCol.add(build.getRepository().getSlug());
             dataCol.add(build.getPullRequestNumber() + "");
@@ -64,7 +67,7 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
             dataCol.add(Utils.formatCompleteDate(new Date()));
             dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
             dataCol.add(this.getTravisUrl(previousBuildId, previousBuildSlug));
-            if (inspector.getState() == ProjectState.FIXERBUILD_CASE1 || inspector.getState() == ProjectState.FIXERBUILD_CASE2) {
+            if (inspector.getState() == ProjectState.FIXERBUILDCASE1 || inspector.getState() == ProjectState.FIXERBUILDCASE2) {
                 String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
                 dataCol.add(committerEmail);
             }

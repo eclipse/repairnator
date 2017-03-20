@@ -21,7 +21,7 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
                     // So, 1) the current passing build can be reproduced and 2)
                     // its previous build is a failing build with failing tests
                     // and it can also be reproduced
-                    gatherTestInformation.setState(ProjectState.FIXERBUILD_CASE1);
+                    gatherTestInformation.setState(ProjectState.FIXERBUILDCASE1);
                     if (inspector instanceof ProjectInspector4Bears) {
                         ((ProjectInspector4Bears) inspector).setFixerBuildCase1(true);
                     }
@@ -30,7 +30,7 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
                         // So, 1) the current passing build can be reproduced and 2)
                         // its previous build is a passing build that fails when
                         // tested with new tests and it can also be reproduced
-                        gatherTestInformation.setState(ProjectState.FIXERBUILD_CASE2);
+                        gatherTestInformation.setState(ProjectState.FIXERBUILDCASE2);
                         if (inspector instanceof ProjectInspector4Bears) {
                             ((ProjectInspector4Bears) inspector).setFixerBuildCase2(true);
                         }

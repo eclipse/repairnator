@@ -44,7 +44,7 @@ public abstract class AbstractStep {
         this.name = this.getClass().getSimpleName();
         this.inspector = inspector;
         this.shouldStop = false;
-        this.state = ProjectState.NONE;
+        this.setState(ProjectState.NONE);
         this.pomLocationTested = false;
         this.serializers = new ArrayList<AbstractDataSerializer>();
         this.properties = new Properties();
