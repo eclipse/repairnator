@@ -227,6 +227,9 @@ public class Launcher {
             inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers);
         }
         inspector.run();
+
+        LOGGER.info("Inspector is finished. The process will now exit.");
+        System.exit(0);
     }
 
     public static void main(String[] args) throws IOException, JSAPException {
