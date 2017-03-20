@@ -29,7 +29,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
     }
 
     public void run() {
-        AbstractStep firstStep = null;
+        AbstractStep firstStep;
 
         AbstractStep cloneRepo = new CloneRepository(this);
         GatherTestInformation gatherTestInformation;
@@ -73,8 +73,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
         this.setTestInformations(gatherTestInformation);
 
         firstStep = cloneRepo;
-        firstStep.setState(ProjectState.INIT);
         firstStep.setDataSerializer(this.getSerializers());
+        firstStep.setState(ProjectState.INIT);
 
         try {
             firstStep.execute();

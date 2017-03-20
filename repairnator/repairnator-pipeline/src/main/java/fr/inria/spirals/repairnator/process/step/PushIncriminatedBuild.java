@@ -42,15 +42,11 @@ public class PushIncriminatedBuild extends AbstractStep {
         }
 
         this.remoteRepoUrl = config.getPushRemoteRepo();
-
-
-
         this.branchName = this.inspector.getRemoteBranchName();
     }
 
     @Override
     protected void businessExecute() {
-
         if (this.config.isPush()) {
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
                 this.getLogger().error("Remote repo should be set !");
@@ -60,8 +56,9 @@ public class PushIncriminatedBuild extends AbstractStep {
             this.writeProperty("step-durations", StringUtils.join(this.inspector.getStepsDurationsInSeconds().entrySet()));
 
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
-            this.getLogger().debug(
-                    "Start to push failing state in the remote repository: " + remoteRepo + " branch: " + branchName);
+
+            this.getLogger().debug("Start to push failing state in the remote repository: " + remoteRepo + " branch: " + branchName);
+
             if (System.getenv("GITHUB_OAUTH") == null || System.getenv("GITHUB_OAUTH").equals("")) {
                 this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
                 return;
@@ -124,7 +121,6 @@ public class PushIncriminatedBuild extends AbstractStep {
                 git.push().setRemote(REMOTE_NAME).add(branch).setCredentialsProvider(credentialsProvider).call();
 
                 this.getInspector().setHasBeenPushed(true);
-
             } catch (IOException e) {
                 this.getLogger().error("Error while reading git directory at the following location: "
                         + inspector.getRepoLocalPath() + " : " + e);
@@ -142,7 +138,6 @@ public class PushIncriminatedBuild extends AbstractStep {
         } else {
             this.getLogger().info("The push argument is set to false. Nothing will be pushed.");
         }
-
     }
 
 }

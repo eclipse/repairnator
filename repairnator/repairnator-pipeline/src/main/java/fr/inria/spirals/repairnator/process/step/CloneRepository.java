@@ -26,25 +26,26 @@ public class CloneRepository extends AbstractStep {
         String repoRemotePath = GITHUB_ROOT_REPO + repository + ".git";
         String repoLocalPath = this.inspector.getRepoLocalPath();
 
-        // start cloning
         try {
-            this.getLogger().debug("Cloning repository " + repository + " has in the following directory: " + repoLocalPath);
+            this.getLogger().debug("Cloning repository " + repository + " in the following directory: " + repoLocalPath);
+
             Git.cloneRepository().setURI(repoRemotePath).setDirectory(new File(repoLocalPath)).call();
 
             this.writeProperty("workspace", this.inspector.getWorkspace());
             this.writeProperty("buildid", this.build.getId() + "");
             this.writeProperty("repo", this.build.getRepository().getSlug());
+
+            this.setState(ProjectState.CLONABLE);
         } catch (Exception e) {
             this.getLogger().warn("Repository " + repository + " cannot be cloned.");
             this.getLogger().debug(e.toString());
             this.addStepError(e.getMessage());
+            this.setState(ProjectState.NOTCLONABLE);
             this.shouldStop = true;
-            return;
         }
-
-        this.state = ProjectState.CLONABLE;
     }
 
     protected void cleanMavenArtifacts() {
     }
+
 }

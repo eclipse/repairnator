@@ -1,5 +1,16 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.ContractForGatherTestInformation;
+import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.plugins.surefire.report.ReportTestCase;
+import org.apache.maven.plugins.surefire.report.ReportTestSuite;
+import org.apache.maven.plugins.surefire.report.SurefireReportParser;
+import org.apache.maven.reporting.MavenReportException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -7,24 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.process.step.gatherinfocontract.ContractForGatherTestInformation;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.plugins.surefire.report.ReportTestCase;
-import org.apache.maven.plugins.surefire.report.ReportTestSuite;
-import org.apache.maven.plugins.surefire.report.SurefireReportParser;
-import org.apache.maven.reporting.MavenReportException;
-
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
-import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import java.util.*;
 
 /**
  * Created by urli on 05/01/2017.
@@ -81,7 +75,7 @@ public class GatherTestInformation extends AbstractStep {
 
     @Override
     protected void businessExecute() {
-        this.getLogger().debug("Start gathering test information...");
+        this.getLogger().debug("Gathering test information...");
 
         File rootRepo = new File(this.inspector.getRepoLocalPath());
         final List<File> surefireDirs = new ArrayList<File>();
@@ -169,4 +163,5 @@ public class GatherTestInformation extends AbstractStep {
 
         this.shouldStop = contract.shouldBeStopped(this);
     }
+
 }

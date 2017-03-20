@@ -96,7 +96,7 @@ public class ComputeSourceDir extends AbstractStep {
 
     @Override
     protected void businessExecute() {
-        this.getLogger().debug("Compute the source directory ...");
+        this.getLogger().debug("Computing the source directory ...");
 
         GatherTestInformation infoStep = inspector.getTestInformations();
         String incriminatedModule = infoStep.getFailingModulePath();
@@ -105,10 +105,12 @@ public class ComputeSourceDir extends AbstractStep {
 
         if (sources == null) {
             this.addStepError("Fail to find the sources directory.");
+            this.setState(ProjectState.SOURCEDIRNOTCOMPUTED);
             this.shouldStop = true;
         } else {
             this.inspector.setRepairSourceDir(sources);
             this.setState(ProjectState.SOURCEDIRCOMPUTED);
         }
     }
+
 }
