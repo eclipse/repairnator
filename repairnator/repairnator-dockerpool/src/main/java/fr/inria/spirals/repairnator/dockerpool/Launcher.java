@@ -80,8 +80,16 @@ public class Launcher {
         opt2.setShortFlag('t');
         opt2.setLongFlag("threads");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault("4");
+        opt2.setDefault("2");
         opt2.setHelp("Specify the number of threads to run in parallel");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("globalTimeout");
+        opt2.setShortFlag('g');
+        opt2.setLongFlag("globalTimeout");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("1");
+        opt2.setHelp("Specify the number of day before killing the whole pool.");
         this.jsap.registerParameter(opt2);
     }
 
@@ -190,7 +198,7 @@ public class Launcher {
 
         executorService.shutdown();
         try {
-            if (executorService.awaitTermination(1, TimeUnit.DAYS)) {
+            if (executorService.awaitTermination(this.arguments.getInt("globalTimeout"), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
                 docker.close();
             } else {
