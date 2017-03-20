@@ -115,7 +115,7 @@ public class BuildHelper extends AbstractHelper {
      * @param prNumber Allow to only consider builds of that PR, if -1 given it takes all builds
      * @param onlyAfterNumber Consider only builds after the specified after_number: should be use in conjunction with a specified after_number.
      */
-    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, List<String> eventTypes, int limitNumber, BuildStatus status, int prNumber, boolean onlyAfterNumber, String previousBranch) {
+    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, int original_after_number, List<String> eventTypes, int limitNumber, BuildStatus status, int prNumber, boolean onlyAfterNumber, String previousBranch) {
         Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
         String resourceUrl = getInstance().getEndpoint()+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
@@ -185,29 +185,88 @@ public class BuildHelper extends AbstractHelper {
                 }
             }
 
-
-
             if (buildArray.size() == 0) {
                 dateReached = true;
             }
 
             if (limitDate != null && !dateReached) {
-                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
+                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, original_after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
             } else {
                 eventTypes.remove(0);
                 if (!onlyAfterNumber) {
                     after_number = 0;
+                } else {
+                    after_number = original_after_number;
                 }
-                getBuildsFromSlugRecursively(slug, result, limitDate, after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
+                getBuildsFromSlugRecursively(slug, result, limitDate, after_number, original_after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
             }
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
         }
     }
 
+    public static int getTheLastBuildNumberOfADate(String slug, Date date, int after_number, boolean onlyAfterNumber) {
+        Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
+
+        String resourceUrl = getInstance().getEndpoint()+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
+
+        if (after_number <= 0 && onlyAfterNumber) {
+            return -1;
+        }
+
+        if (after_number > 0) {
+            resourceUrl += "?after_number="+after_number;
+        }
+
+        boolean dateReached = false;
+
+        try {
+            String response = getInstance().get(resourceUrl);
+            JsonParser parser = new JsonParser();
+            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
+
+            JsonArray commitsArray = allAnswer.getAsJsonArray("commits");
+
+            for (JsonElement commitJson : commitsArray) {
+                Commit commit = createGson().fromJson(commitJson, Commit.class);
+                commits.put(commit.getId(), commit);
+            }
+
+            JsonArray buildArray = allAnswer.getAsJsonArray("builds");
+
+            int lastBuildNumber = Integer.MAX_VALUE;
+
+            for (JsonElement buildJson : buildArray) {
+                Build build = createGson().fromJson(buildJson, Build.class);
+
+                if (build.getNumber() != null) {
+                    int buildNumber = Integer.parseInt(build.getNumber());
+                    if (lastBuildNumber > buildNumber) {
+                        lastBuildNumber = buildNumber;
+                    }
+                }
+
+                if (build.getFinishedAt() != null && !build.getFinishedAt().after(date)) {
+                    dateReached = true;
+                    break;
+                }
+            }
+
+            if (date != null && !dateReached) {
+                return getTheLastBuildNumberOfADate(slug, date, lastBuildNumber, onlyAfterNumber);
+            } else {
+                return lastBuildNumber;
+            }
+        } catch (IOException e) {
+            getInstance().getLogger().warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
+        }
+
+        return -1;
+    }
+
     public static List<Build> getBuildsFromSlugWithLimitDate(String slug, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(slug, result, limitDate, 0, getEventTypes(), 0, null, -1, false, null);
+        getBuildsFromSlugRecursively(slug, result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
         return result;
     }
 
@@ -217,7 +276,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, getEventTypes(), 0, null, -1, false, null);
+        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
 
         for (Build b : result) {
             b.setRepository(repository);
@@ -265,7 +324,7 @@ public class BuildHelper extends AbstractHelper {
             prNumber = -1;
         }
 
-        getBuildsFromSlugRecursively(slug, results, limitDate, after_number, eventTypes, limitNumber, status, prNumber, true, build.getCommit().getBranch());
+        getBuildsFromSlugRecursively(slug, results, limitDate, after_number, after_number, eventTypes, limitNumber, status, prNumber, true, build.getCommit().getBranch());
 
         if (results.size() > 0) {
             if (results.size() > 1) {
@@ -291,12 +350,32 @@ public class BuildHelper extends AbstractHelper {
         eventTypes.add("push");
         int prNumber = -1;
 
-        getBuildsFromSlugRecursively(slug, results, limitDate, 0, eventTypes, limitNumber, null, prNumber, false, null);
+        getBuildsFromSlugRecursively(slug, results, limitDate, 0, 0, eventTypes, limitNumber, null, prNumber, false, null);
 
         if (results.size() > 0) {
             return results.get(0);
         } else {
             return null;
         }
+    }
+
+    public static List<Build> getBuildsFromRepositoryInTimeInterval(Repository repository, Date initialDate, Date finalDate) {
+        int lastBuildNumber = getTheLastBuildNumberOfADate(repository.getSlug(), finalDate, 0, false);
+        if (lastBuildNumber != -1) {
+            List<Build> results = new ArrayList<Build>();
+
+            int after_number = lastBuildNumber + 1;
+
+            getBuildsFromSlugRecursively(repository.getSlug(), results, initialDate, after_number, after_number, getEventTypes(), 0, null, -1, true, null);
+
+            for (Build b : results) {
+                b.setRepository(repository);
+            }
+            if (results.size() > 1) {
+                Collections.sort(results);
+            }
+            return results;
+        }
+        return null;
     }
 }

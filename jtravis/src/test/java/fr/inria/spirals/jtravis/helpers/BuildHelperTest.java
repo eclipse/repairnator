@@ -1,15 +1,12 @@
 package fr.inria.spirals.jtravis.helpers;
 
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.BuildTool;
-import fr.inria.spirals.jtravis.entities.Config;
-import fr.inria.spirals.jtravis.entities.BuildStatus;
-import fr.inria.spirals.jtravis.entities.Commit;
-import fr.inria.spirals.jtravis.entities.Job;
-import fr.inria.spirals.jtravis.entities.Repository;
+import fr.inria.spirals.jtravis.entities.*;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -177,6 +174,53 @@ public class BuildHelperTest {
 
         assertTrue(obtainedBuild != null);
         assertEquals(expectedBuildId, obtainedBuild.getId());
+    }
+
+    @Test
+    public void testGetTheLastBuildNumberOfADate() {
+        Date date = TestUtils.getDate(2017, 03, 16, 22, 59, 59);
+
+        String slug = "Spirals-Team/librepair";
+
+        int expectedBuildNumber = 215;
+
+        int obtainedBuildNumber = BuildHelper.getTheLastBuildNumberOfADate(slug, date, 0,false);
+
+        assertEquals(expectedBuildNumber, obtainedBuildNumber);
+    }
+
+    @Test
+    public void testGetTheLastBuildNumberOfADate2() {
+        Date date = TestUtils.getDate(2017, 03, 14, 22, 59, 59);
+
+        String slug = "Spirals-Team/librepair";
+
+        int expectedBuildNumber = 189;
+
+        int obtainedBuildNumber = BuildHelper.getTheLastBuildNumberOfADate(slug, date, 0,false);
+
+        assertEquals(expectedBuildNumber, obtainedBuildNumber);
+    }
+
+    @Test
+    public void testGetBuildsFromRepositoryInTimeInterval() {
+        Repository repo = new Repository();
+        repo.setSlug("Spirals-Team/librepair");
+
+        Date initialDate = TestUtils.getDate(2017, 03, 13, 23, 00, 00);
+
+        Date finalDate = TestUtils.getDate(2017, 03, 16, 22, 59, 59);
+        List<Build> builds = BuildHelper.getBuildsFromRepositoryInTimeInterval(repo, initialDate, finalDate);
+
+        assertTrue(builds != null);
+
+        if (builds.size() > 1) {
+            Collections.sort(builds);
+        }
+
+        assertEquals(60, builds.size());
+        assertEquals(156, Integer.parseInt(builds.get(0).getNumber()));
+        assertEquals(215, Integer.parseInt(builds.get(builds.size()-1).getNumber()));
     }
 
 }
