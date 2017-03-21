@@ -1,9 +1,6 @@
 package fr.inria.spirals.jtravis.entities;
 
-import fr.inria.spirals.jtravis.helpers.LogHelper;
 import fr.inria.spirals.jtravis.parsers.LogParser;
-import fr.inria.spirals.jtravis.parsers.MavenLogParser;
-import fr.inria.spirals.jtravis.pojos.LogPojo;
 
 /**
  * Business object to deal with log in Travis CI API
@@ -11,26 +8,34 @@ import fr.inria.spirals.jtravis.pojos.LogPojo;
  *
  * @author Simon Urli
  */
-public class Log extends LogPojo {
+public class Log {
 
+    private String body;
     private TestsInformation testsInformation;
     private BuildTool buildTool;
+    private int jobId;
 
-    @Override
+    public Log(int jobId, String body) {
+        this.jobId = jobId;
+        this.body = body;
+    }
+
     public String getBody() {
-        if (super.getBody() != null && !super.getBody().equals("")) {
-            return super.getBody();
-        } else {
-            String body = LogHelper.getRawLogFromEmptyLog(this);
-            this.setBody(body);
-            return body;
-        }
+        return this.body;
+    }
+
+    public int getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
     }
 
     public TestsInformation getTestsInformation() {
         if (testsInformation == null) {
             String body = getBody();
-            LogParser logParser = new LogParser(body, this.getId());
+            LogParser logParser = new LogParser(body);
 
             this.testsInformation = logParser.getTestsInformation();
         }
@@ -39,11 +44,11 @@ public class Log extends LogPojo {
     }
 
     public BuildTool getBuildTool() {
-        if (buildTool == null) {
+        if (this.buildTool == null) {
             String body = getBody();
 
-            LogParser logParser = new LogParser(body, this.getId());
-            buildTool = logParser.getBuildTool();
+            LogParser logParser = new LogParser(body);
+            this.buildTool = logParser.getBuildTool();
         }
 
         return buildTool;

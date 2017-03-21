@@ -12,7 +12,6 @@ public class JobPojo {
     private int repositoryId;
     private int buildId;
     private int commitId;
-    private int logId;
     private String state;
     private String number;
     private Date startedAt;
@@ -50,14 +49,6 @@ public class JobPojo {
 
     public void setCommitId(int commitId) {
         this.commitId = commitId;
-    }
-
-    public int getLogId() {
-        return logId;
-    }
-
-    public void setLogId(int logId) {
-        this.logId = logId;
     }
 
     public String getState() {
@@ -119,7 +110,6 @@ public class JobPojo {
         if (repositoryId != jobPojo.repositoryId) return false;
         if (buildId != jobPojo.buildId) return false;
         if (commitId != jobPojo.commitId) return false;
-        if (logId != jobPojo.logId) return false;
         if (allowFailure != jobPojo.allowFailure) return false;
         if (state != null ? !state.equals(jobPojo.state) : jobPojo.state != null) return false;
         if (number != null ? !number.equals(jobPojo.number) : jobPojo.number != null) return false;
@@ -134,7 +124,6 @@ public class JobPojo {
         result = 31 * result + repositoryId;
         result = 31 * result + buildId;
         result = 31 * result + commitId;
-        result = 31 * result + logId;
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
         result = 31 * result + (startedAt != null ? startedAt.hashCode() : 0);
@@ -151,7 +140,6 @@ public class JobPojo {
                 ", repositoryId=" + repositoryId +
                 ", buildId=" + buildId +
                 ", commitId=" + commitId +
-                ", logId=" + logId +
                 ", state='" + state + '\'' +
                 ", number='" + number + '\'' +
                 ", startedAt=" + startedAt +
