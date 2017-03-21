@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -175,7 +176,12 @@ public class Launcher {
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
             scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode);
         } else {
-            scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
+            int lookupHours = this.arguments.getInt("lookupHours");
+            Calendar limitCal = Calendar.getInstance();
+            limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
+            lookFromDate = limitCal.getTime();
+            lookToDate = new Date();
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode);
         }
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
         ProcessSerializer scannerSerializer;

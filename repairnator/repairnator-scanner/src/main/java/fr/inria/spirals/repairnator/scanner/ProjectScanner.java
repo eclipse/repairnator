@@ -36,7 +36,6 @@ public class ProjectScanner {
     private Collection<String> slugs;
     private Collection<Repository> repositories;
 
-    private int lookupHours;
     private Date lookFromDate;
     private Date lookToDate;
     private LauncherMode launcherMode;
@@ -44,22 +43,9 @@ public class ProjectScanner {
     private Date scannerRunningBeginDate;
     private Date scannerRunningEndDate;
 
-    public ProjectScanner(int lookupHours, LauncherMode launcherMode) {
-        this(launcherMode);
-        this.lookupHours = lookupHours;
-        Calendar limitCal = Calendar.getInstance();
-        limitCal.add(Calendar.HOUR_OF_DAY, -this.lookupHours);
-        this.lookFromDate = limitCal.getTime();
-        this.lookToDate = new Date();
-    }
-
     public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode) {
-        this(launcherMode);
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
-    }
-
-    public ProjectScanner(LauncherMode launcherMode) {
         this.launcherMode = launcherMode;
 
         this.slugs = new HashSet<String>();
