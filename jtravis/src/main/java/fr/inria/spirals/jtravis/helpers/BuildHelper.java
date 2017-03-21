@@ -119,13 +119,13 @@ public class BuildHelper extends AbstractHelper {
         return resourceUrl;
     }
 
-    private static void getBuildsAndCommits(String resourceUrl, JsonArray buildArray, Map<Integer, Commit> commits) {
+    private static JsonArray getBuildsAndCommits(String resourceUrl, Map<Integer, Commit> commits) {
         try {
             String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
 
-            buildArray = allAnswer.getAsJsonArray("builds");
+            JsonArray buildArray = allAnswer.getAsJsonArray("builds");
 
             JsonArray commitsArray = allAnswer.getAsJsonArray("commits");
 
@@ -133,9 +133,12 @@ public class BuildHelper extends AbstractHelper {
                 Commit commit = createGson().fromJson(commitJson, Commit.class);
                 commits.put(commit.getId(), commit);
             }
+
+            return buildArray;
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when trying to get builds and commits from "+resourceUrl+" : "+e.getMessage());
         }
+        return null;
     }
 
     /**
@@ -161,10 +164,9 @@ public class BuildHelper extends AbstractHelper {
 
         boolean dateReached = false;
 
-        JsonArray buildArray = null;
         Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
-        getBuildsAndCommits(resourceUrl, buildArray, commits);
+        JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits);
 
         int lastBuildNumber = Integer.MAX_VALUE;
 
@@ -218,7 +220,7 @@ public class BuildHelper extends AbstractHelper {
     }
 
     /**
-     * This is a recursive method allowing to get the number of the last build of a given date from a slug.
+     * This is a recursive method allowing to get the number of the last build before a given date from a slug.
      *
      * @param slug The slug where to get the build
      * @param date The date to get the last build
@@ -234,10 +236,9 @@ public class BuildHelper extends AbstractHelper {
 
         boolean dateReached = false;
 
-        JsonArray buildArray = null;
         Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
-        getBuildsAndCommits(resourceUrl, buildArray, commits);
+        JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits);
 
         int lastBuildNumber = Integer.MAX_VALUE;
 
