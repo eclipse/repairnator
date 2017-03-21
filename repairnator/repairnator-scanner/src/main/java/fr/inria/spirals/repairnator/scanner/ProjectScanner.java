@@ -35,15 +35,31 @@ public class ProjectScanner {
 
     private Collection<String> slugs;
     private Collection<Repository> repositories;
-    private Date limitDate;
 
-    private Date beginDate;
-    private Date endDate;
     private int lookupHours;
+    private Date lookFromDate;
+    private Date lookToDate;
     private LauncherMode launcherMode;
 
+    private Date scannerRunningBeginDate;
+    private Date scannerRunningEndDate;
+
     public ProjectScanner(int lookupHours, LauncherMode launcherMode) {
+        this(launcherMode);
         this.lookupHours = lookupHours;
+        Calendar limitCal = Calendar.getInstance();
+        limitCal.add(Calendar.HOUR_OF_DAY, -this.lookupHours);
+        this.lookFromDate = limitCal.getTime();
+        this.lookToDate = new Date();
+    }
+
+    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode) {
+        this(launcherMode);
+        this.lookFromDate = lookFromDate;
+        this.lookToDate = lookToDate;
+    }
+
+    public ProjectScanner(LauncherMode launcherMode) {
         this.launcherMode = launcherMode;
 
         this.slugs = new HashSet<String>();
@@ -90,23 +106,27 @@ public class ProjectScanner {
         return totalNumberOfPassingAndPassingBuildPairs;
     }
 
-    public Date getLimitDate() {
-        return limitDate;
+    public Date getLookFromDate() {
+        return lookFromDate;
     }
 
-    public Date getBeginDate() {
-        return beginDate;
+    public Date getLookToDate() {
+        return lookToDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getScannerRunningBeginDate() {
+        return scannerRunningBeginDate;
     }
 
-    public String getDuration() {
-        if (this.beginDate == null || this.endDate == null) {
+    public Date getScannerRunningEndDate() {
+        return scannerRunningEndDate;
+    }
+
+    public String getScannerDuration() {
+        if (this.scannerRunningBeginDate == null || this.scannerRunningEndDate == null) {
             return "";
         }
-        double diffInMilliseconds = this.endDate.getTime() - this.beginDate.getTime();
+        double diffInMilliseconds = this.scannerRunningEndDate.getTime() - this.scannerRunningBeginDate.getTime();
         int minutes = (int) (diffInMilliseconds / 1000) / 60;
         int seconds = (int) (diffInMilliseconds / 1000) % 60;
         int hours = minutes / 60;
@@ -115,11 +135,7 @@ public class ProjectScanner {
     }
 
     public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
-        this.beginDate = new Date();
-
-        Calendar limitCal = Calendar.getInstance();
-        limitCal.add(Calendar.HOUR_OF_DAY, -this.lookupHours);
-        this.limitDate = limitCal.getTime();
+        this.scannerRunningBeginDate = new Date();
 
         List<BuildToBeInspected> buildsToBeInspected;
         if (this.launcherMode == LauncherMode.REPAIR) {
@@ -128,7 +144,7 @@ public class ProjectScanner {
             buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path, false);
         }
 
-        this.endDate = new Date();
+        this.scannerRunningEndDate = new Date();
 
         return buildsToBeInspected;
     }
@@ -191,7 +207,7 @@ public class ProjectScanner {
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
         for (Repository repo : repos) {
-            List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, this.limitDate);
+            List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryInTimeInterval(repo, this.lookFromDate, this.lookToDate);
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;

@@ -33,8 +33,8 @@ public class GoogleSpreadSheetScannerSerializer  implements ProcessSerializer {
         if (this.sheets != null) {
             List<Object> dataCol = new ArrayList<Object>();
             dataCol.add(Utils.getHostname());
-            dataCol.add(Utils.formatCompleteDate(this.scanner.getBeginDate()));
-            dataCol.add(Utils.formatCompleteDate(this.scanner.getLimitDate()));
+            dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
+            dataCol.add(Utils.formatCompleteDate(this.scanner.getLookFromDate()));
             dataCol.add(this.scanner.getTotalRepoNumber());
             dataCol.add(this.scanner.getTotalRepoUsingTravis());
             dataCol.add(this.scanner.getTotalScannedBuilds());
@@ -43,8 +43,8 @@ public class GoogleSpreadSheetScannerSerializer  implements ProcessSerializer {
             dataCol.add(this.scanner.getTotalBuildInJavaFailing());
             dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
             dataCol.add(this.scanner.getTotalPRBuilds());
-            dataCol.add(Utils.formatOnlyDay(this.scanner.getLimitDate()));
-            dataCol.add(this.scanner.getDuration());
+            dataCol.add(Utils.formatOnlyDay(this.scanner.getLookFromDate()));
+            dataCol.add(this.scanner.getScannerDuration());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);
