@@ -54,7 +54,6 @@ public class BuildHelperTest {
         expectedJob.setAllowFailure(false);
         expectedJob.setBuildId(185719843);
         expectedJob.setFinishedAt(TestUtils.getDate(2016,12,21,9,56,41));
-        expectedJob.setLogId(135819715);
         expectedJob.setNumber("2373.1");
         expectedJob.setQueue("builds.gce");
         expectedJob.setState("passed");

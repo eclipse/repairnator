@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import fr.inria.spirals.jtravis.entities.Job;
 import fr.inria.spirals.jtravis.entities.Log;
 import org.junit.Test;
 
@@ -10,34 +11,69 @@ import static org.junit.Assert.assertEquals;
  * Created by urli on 23/12/2016.
  */
 public class LogHelperTest {
+    static String logBegin = "travis_fold:start:worker_info";
+
+    static String passingLogEnd = "Done. Your build exited with 0.";
+    static String failingLogEnd = "Done. Your build exited with 1.";
+    static String erroringLogEnd = "Your build has been stopped.";
 
     @Test
-    public void testGetLogFromId() {
-        Log expectedLog = new Log();
-        expectedLog.setId(135819715);
-        expectedLog.setJobId(185719844);
-        expectedLog.setType("Log");
-        expectedLog.setBody("");
+    public void testGetLogFromJobOtherThanPassingOrFailingReturnNull() {
+        Job job = new Job();
+        job.setId(185719844);
+        job.setState("started");
 
-        Log obtainedLog = LogHelper.getLogFromId(135819715);
-        assertEquals(expectedLog, obtainedLog);
+        Log obtainedLog = LogHelper.getLogFromJob(job);
+        assertTrue(obtainedLog == null);
     }
 
     @Test
-    public void testGetBodyFromArchivedLog() {
-        String begin = "travis_fold:start:worker_info";
+    public void testGetPassedLogFromId() {
+        Job job = new Job();
+        job.setId(185719844);
+        job.setState("passed");
 
-        String end = "Done. Your build exited with 0.";
+        int length = 1499916;
 
-        int length = 1499914;
+        Log obtainedLog = LogHelper.getLogFromJob(job);
+        assertEquals(185719844, obtainedLog.getJobId());
+        assertTrue(obtainedLog.getBody() != null);
+        assertEquals(length, obtainedLog.getBody().length());
+        assertTrue(obtainedLog.getBody().trim().startsWith(logBegin));
+        assertTrue(obtainedLog.getBody().trim().endsWith(passingLogEnd));
+    }
 
-        Log obtainedLog = LogHelper.getLogFromId(135819715);
-        String body = obtainedLog.getBody();
-        body = body.trim();
+    @Test
+    public void testGetFailingLogFromId() {
+        int jobId = 212676600;
+        Job job = new Job();
+        job.setId(jobId);
+        job.setState("failed");
 
-        assertTrue(body != null);
-        assertEquals(length, body.length());
-        assertTrue(body.startsWith(begin));
-        assertTrue(body.endsWith(end));
+        int length = 163775;
+
+        Log obtainedLog = LogHelper.getLogFromJob(job);
+        assertEquals(jobId, obtainedLog.getJobId());
+        assertTrue(obtainedLog.getBody() != null);
+        assertEquals(length, obtainedLog.getBody().length());
+        assertTrue(obtainedLog.getBody().trim().startsWith(logBegin));
+        assertTrue(obtainedLog.getBody().trim().endsWith(failingLogEnd));
+    }
+
+    @Test
+    public void testGetErroringLogFromId() {
+        int jobId = 210935305;
+        Job job = new Job();
+        job.setId(jobId);
+        job.setState("errored");
+
+        int length = 91188;
+
+        Log obtainedLog = LogHelper.getLogFromJob(job);
+        assertEquals(jobId, obtainedLog.getJobId());
+        assertTrue(obtainedLog.getBody() != null);
+        assertEquals(length, obtainedLog.getBody().length());
+        assertTrue(obtainedLog.getBody().trim().startsWith(logBegin));
+        assertTrue(obtainedLog.getBody().trim().endsWith(erroringLogEnd));
     }
 }

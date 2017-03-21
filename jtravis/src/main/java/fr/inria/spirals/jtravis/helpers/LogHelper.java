@@ -31,29 +31,18 @@ public class LogHelper extends AbstractHelper {
         return instance;
     }
 
-    public static Log getLogFromId(int logId) {
-        try {
-            String response = getInstance().get(getInstance().getEndpoint()+LOG_ENDPOINT+logId);
-            JsonParser parser = new JsonParser();
-            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
-            JsonObject logJson = allAnswer.getAsJsonObject("log");
-            return createGson().fromJson(logJson, Log.class);
-        } catch (IOException e) {
-            getInstance().getLogger().warn("Error when getting log id "+logId+" : "+e.getMessage());
-            return null;
-        }
-    }
-
-    public static String getRawLogFromEmptyLog(Log log) {
-        if (log.getJobId() != 0) {
-            Job job = JobHelper.getJobFromId(log.getJobId());
-            if (job.getBuildStatus() == BuildStatus.FAILED || job.getBuildStatus() == BuildStatus.PASSED) {
-                String logJobUrl = getInstance().getEndpoint()+JobHelper.JOB_ENDPOINT+log.getJobId()+LOG_JOB_ENDPOINT;
+    public static Log getLogFromJob(Job job) {
+        if (job.getId() != 0) {
+            if (job.getBuildStatus() == BuildStatus.FAILED || job.getBuildStatus() == BuildStatus.PASSED || job.getBuildStatus() == BuildStatus.ERRORED) {
+                String logJobUrl = getInstance().getEndpoint()+JobHelper.JOB_ENDPOINT+job.getId()+LOG_JOB_ENDPOINT;
                 try {
-                    return getInstance().rawGet(logJobUrl);
+                    String body = getInstance().rawGet(logJobUrl);
+                    return new Log(job.getId(), body);
                 } catch (IOException e) {
-                    getInstance().getLogger().warn("Error when getting raw log "+log.getId()+" : "+e.getMessage());
+                    getInstance().getLogger().warn("Error when getting log from job id "+job.getId()+" ",e);
                 }
+            } else {
+                getInstance().getLogger().warn("Error when getting log from job id "+job.getId()+" : build status is neither failed or passed: "+job.getBuildStatus().name());
             }
         }
         return null;

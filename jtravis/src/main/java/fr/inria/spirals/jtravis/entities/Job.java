@@ -31,8 +31,8 @@ public class Job extends JobPojo {
     }
 
     public Log getLog() {
-        if (log == null && this.getLogId() > 0) {
-            this.log = LogHelper.getLogFromId(this.getLogId());
+        if (log == null) {
+            this.log = LogHelper.getLogFromJob(this);
         }
         return this.log;
     }
