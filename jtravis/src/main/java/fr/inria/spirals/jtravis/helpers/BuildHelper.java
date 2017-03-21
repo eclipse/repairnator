@@ -102,44 +102,30 @@ public class BuildHelper extends AbstractHelper {
         return true;
     }
 
-    /**
-     * This is a recursive method allowing to get build from a slug.
-     *
-     * @param slug The slug where to get the builds
-     * @param result The list result to aggregate
-     * @param limitDate If given, the date limit to get builds: all builds *before* this date are considered
-     * @param after_number Used for pagination: multiple requests may have to be made to reach the final date
-     * @param eventTypes Travis support multiple event types for builds like Push, PR or CRON. Those are retrieved individually
-     * @param limitNumber Allow to finish early based on the number of builds selected. if 0 passed use only the date to stop searching
-     * @param status Allow to only select builds of that status, if null it takes all status
-     * @param prNumber Allow to only consider builds of that PR, if -1 given it takes all builds
-     * @param onlyAfterNumber Consider only builds after the specified after_number: should be use in conjunction with a specified after_number.
-     */
-    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, List<String> eventTypes, int limitNumber, BuildStatus status, int prNumber, boolean onlyAfterNumber, String previousBranch) {
-        Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
-
+    private static String getResourceUrl(String slug, String eventType, int after_number) {
         String resourceUrl = getInstance().getEndpoint()+RepositoryHelper.REPO_ENDPOINT+slug+"/"+BUILD_NAME;
 
-        if (after_number <= 0 && onlyAfterNumber) {
-            return;
+        if (eventType != null) {
+            resourceUrl += "?event_type=" + eventType;
         }
-
-        if (eventTypes.isEmpty()) {
-            return;
-        }
-        String evenType = eventTypes.get(0);
-        resourceUrl += "?event_type="+evenType;
-
         if (after_number > 0) {
-            resourceUrl += "&after_number="+after_number;
+            if (eventType != null) {
+                resourceUrl += "&after_number=" + after_number;
+            } else {
+                resourceUrl += "?after_number="+after_number;
+            }
         }
 
-        boolean dateReached = false;
+        return resourceUrl;
+    }
 
+    private static JsonArray getBuildsAndCommits(String resourceUrl, Map<Integer, Commit> commits) {
         try {
             String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
+
+            JsonArray buildArray = allAnswer.getAsJsonArray("builds");
 
             JsonArray commitsArray = allAnswer.getAsJsonArray("commits");
 
@@ -148,66 +134,140 @@ public class BuildHelper extends AbstractHelper {
                 commits.put(commit.getId(), commit);
             }
 
-            JsonArray buildArray = allAnswer.getAsJsonArray("builds");
+            return buildArray;
+        } catch (IOException e) {
+            getInstance().getLogger().warn("Error when trying to get builds and commits from "+resourceUrl+" : "+e.getMessage());
+        }
+        return null;
+    }
 
-            int lastBuildNumber = Integer.MAX_VALUE;
+    /**
+     * This is a recursive method allowing to get build from a slug.
+     *
+     * @param slug The slug where to get the builds
+     * @param result The list result to aggregate
+     * @param limitDate If given, the date limit to get builds: all builds *before* this date are considered
+     * @param after_number Used for pagination: multiple requests may have to be made to reach the final date
+     * @param original_after_number is used to set the value of after_number back to the original value before the first request to an event type be made, as after_number changes when more than one request is made for a same event type (pagination)
+     * @param eventTypes Travis support multiple event types for builds like Push, PR or CRON. Those are retrieved individually
+     * @param limitNumber Allow to finish early based on the number of builds selected. if 0 passed use only the date to stop searching
+     * @param status Allow to only select builds of that status, if null it takes all status
+     * @param prNumber Allow to only consider builds of that PR, if -1 given it takes all builds
+     * @param onlyAfterNumber Consider only builds after the specified after_number: should be use in conjunction with a specified after_number.
+     */
+    private static void getBuildsFromSlugRecursively(String slug, List<Build> result, Date limitDate, int after_number, int original_after_number, List<String> eventTypes, int limitNumber, BuildStatus status, int prNumber, boolean onlyAfterNumber, String previousBranch) {
+        if ((eventTypes.isEmpty()) || (after_number <= 0 && onlyAfterNumber)) {
+            return;
+        }
 
-            for (JsonElement buildJson : buildArray) {
-                Build build = createGson().fromJson(buildJson, Build.class);
+        String resourceUrl = getResourceUrl(slug, eventTypes.get(0), after_number);
 
-                if ((limitDate == null) || (build.getFinishedAt() == null) || (build.getFinishedAt().after(limitDate))) {
-                    int commitId = build.getCommitId();
+        boolean dateReached = false;
 
-                    if (commits.containsKey(commitId)) {
-                        build.setCommit(commits.get(commitId));
+        Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
+
+        JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits);
+
+        int lastBuildNumber = Integer.MAX_VALUE;
+
+        for (JsonElement buildJson : buildArray) {
+            Build build = createGson().fromJson(buildJson, Build.class);
+
+            if ((limitDate == null) || (build.getFinishedAt() == null) || (build.getFinishedAt().after(limitDate))) {
+                int commitId = build.getCommitId();
+
+                if (commits.containsKey(commitId)) {
+                    build.setCommit(commits.get(commitId));
+                }
+
+                if (build.getNumber() != null) {
+                    int buildNumber = Integer.parseInt(build.getNumber());
+                    if (lastBuildNumber > buildNumber) {
+                        lastBuildNumber = buildNumber;
                     }
+                }
 
+                if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
+                    result.add(build);
+                }
 
-                    if (build.getNumber() != null) {
-                        int buildNumber = Integer.parseInt(build.getNumber());
-                        if (lastBuildNumber > buildNumber) {
-                            lastBuildNumber = buildNumber;
-                        }
-                    }
-
-                    if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
-                        result.add(build);
-                    }
-
-                    // if we reach the limitNumber we can break the loop, and consider the date is reached
-                    if (limitNumber != 0 && result.size() >= limitNumber) {
-                        dateReached = true;
-                        break;
-                    }
-                } else {
+                // if we reach the limitNumber we can break the loop, and consider the date is reached
+                if (limitNumber != 0 && result.size() >= limitNumber) {
                     dateReached = true;
                     break;
                 }
-            }
-
-
-
-            if (buildArray.size() == 0) {
-                dateReached = true;
-            }
-
-            if (limitDate != null && !dateReached) {
-                getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
             } else {
-                eventTypes.remove(0);
-                if (!onlyAfterNumber) {
-                    after_number = 0;
-                }
-                getBuildsFromSlugRecursively(slug, result, limitDate, after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
+                dateReached = true;
+                break;
             }
-        } catch (IOException e) {
-            getInstance().getLogger().warn("Error when getting list of builds from slug "+slug+" : "+e.getMessage());
+        }
+
+        if (buildArray.size() == 0) {
+            dateReached = true;
+        }
+
+        if (limitDate != null && !dateReached) {
+            getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, original_after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
+        } else {
+            eventTypes.remove(0);
+            if (!onlyAfterNumber) {
+                after_number = 0;
+            } else {
+                after_number = original_after_number;
+            }
+            getBuildsFromSlugRecursively(slug, result, limitDate, after_number, original_after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
+        }
+    }
+
+    /**
+     * This is a recursive method allowing to get the number of the last build before a given date from a slug.
+     *
+     * @param slug The slug where to get the build
+     * @param date The date to get the last build
+     * @param after_number Used for pagination: multiple requests may have to be made to reach the interesting build
+     * @param onlyAfterNumber Consider only builds after the specified after_number: should be use in conjunction with a specified after_number
+     */
+    public static int getTheLastBuildNumberOfADate(String slug, Date date, int after_number, boolean onlyAfterNumber) {
+        if ((date == null) || (after_number <= 0 && onlyAfterNumber)) {
+            return -1;
+        }
+
+        String resourceUrl = getResourceUrl(slug, null, after_number);
+
+        boolean dateReached = false;
+
+        Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
+
+        JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits);
+
+        int lastBuildNumber = Integer.MAX_VALUE;
+
+        for (JsonElement buildJson : buildArray) {
+            Build build = createGson().fromJson(buildJson, Build.class);
+
+            if (build.getNumber() != null) {
+                int buildNumber = Integer.parseInt(build.getNumber());
+                if (lastBuildNumber > buildNumber) {
+                    lastBuildNumber = buildNumber;
+                }
+            }
+
+            if (build.getFinishedAt() != null && !build.getFinishedAt().after(date)) {
+                dateReached = true;
+                break;
+            }
+        }
+
+        if (!dateReached) {
+            return getTheLastBuildNumberOfADate(slug, date, lastBuildNumber, onlyAfterNumber);
+        } else {
+            return lastBuildNumber;
         }
     }
 
     public static List<Build> getBuildsFromSlugWithLimitDate(String slug, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(slug, result, limitDate, 0, getEventTypes(), 0, null, -1, false, null);
+        getBuildsFromSlugRecursively(slug, result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
         return result;
     }
 
@@ -217,7 +277,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, getEventTypes(), 0, null, -1, false, null);
+        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
 
         for (Build b : result) {
             b.setRepository(repository);
@@ -265,7 +325,7 @@ public class BuildHelper extends AbstractHelper {
             prNumber = -1;
         }
 
-        getBuildsFromSlugRecursively(slug, results, limitDate, after_number, eventTypes, limitNumber, status, prNumber, true, build.getCommit().getBranch());
+        getBuildsFromSlugRecursively(slug, results, limitDate, after_number, after_number, eventTypes, limitNumber, status, prNumber, true, build.getCommit().getBranch());
 
         if (results.size() > 0) {
             if (results.size() > 1) {
@@ -291,12 +351,32 @@ public class BuildHelper extends AbstractHelper {
         eventTypes.add("push");
         int prNumber = -1;
 
-        getBuildsFromSlugRecursively(slug, results, limitDate, 0, eventTypes, limitNumber, null, prNumber, false, null);
+        getBuildsFromSlugRecursively(slug, results, limitDate, 0, 0, eventTypes, limitNumber, null, prNumber, false, null);
 
         if (results.size() > 0) {
             return results.get(0);
         } else {
             return null;
         }
+    }
+
+    public static List<Build> getBuildsFromRepositoryInTimeInterval(Repository repository, Date initialDate, Date finalDate) {
+        int lastBuildNumber = getTheLastBuildNumberOfADate(repository.getSlug(), finalDate, 0, false);
+        if (lastBuildNumber != -1) {
+            List<Build> results = new ArrayList<Build>();
+
+            int after_number = lastBuildNumber + 1;
+
+            getBuildsFromSlugRecursively(repository.getSlug(), results, initialDate, after_number, after_number, getEventTypes(), 0, null, -1, true, null);
+
+            for (Build b : results) {
+                b.setRepository(repository);
+            }
+            if (results.size() > 1) {
+                Collections.sort(results);
+            }
+            return results;
+        }
+        return null;
     }
 }
