@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cd jtravis
-mvn clean install
+mvn clean install jacoco:report coveralls:report
 
 if [[ $? != 0 ]]
 then
