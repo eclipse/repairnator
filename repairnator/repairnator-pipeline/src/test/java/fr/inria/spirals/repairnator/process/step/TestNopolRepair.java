@@ -45,6 +45,8 @@ public class TestNopolRepair {
         } catch (RepairnatorConfigException e) {
             throw new RuntimeException(e);
         }
+
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     public static boolean isMac() {
@@ -56,7 +58,6 @@ public class TestNopolRepair {
     public void testNopolRepair() throws IOException {
         int buildId = 207890790; // surli/failingProject build
 
-        Utils.setLoggersLevel(Level.ERROR);
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
