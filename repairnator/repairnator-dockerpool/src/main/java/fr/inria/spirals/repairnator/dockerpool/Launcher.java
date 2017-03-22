@@ -198,7 +198,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile);
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"));
             executorService.submit(runnablePipelineContainer);
         }
 
