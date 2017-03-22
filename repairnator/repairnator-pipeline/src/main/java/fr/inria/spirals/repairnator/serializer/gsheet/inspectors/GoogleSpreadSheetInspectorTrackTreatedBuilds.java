@@ -30,11 +30,11 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
     private Sheets sheets;
     private String runid;
 
-    public GoogleSpreadSheetInspectorTrackTreatedBuilds(Collection<BuildToBeInspected> buildToBeInspecteds, String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetInspectorTrackTreatedBuilds(Collection<BuildToBeInspected> buildsToBeInspected, String googleSecretPath) throws IOException {
         super();
         this.runid = UUID.randomUUID().toString();
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
-        this.serializeBuildsToBeInspected(buildToBeInspecteds);
+        this.serializeBuildsToBeInspected(buildsToBeInspected);
     }
 
     private void insertData(List<List<Object>> dataRows) {
@@ -52,13 +52,13 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
         }
     }
 
-    private void serializeBuildsToBeInspected(Collection<BuildToBeInspected> buildToBeInspecteds) {
+    private void serializeBuildsToBeInspected(Collection<BuildToBeInspected> buildsToBeInspected) {
         if (this.sheets != null) {
-            if (buildToBeInspecteds.size() > 0) {
+            if (buildsToBeInspected.size() > 0) {
                 List<List<Object>> dataRows = new ArrayList<List<Object>>();
                 Date date = new Date();
 
-                for (BuildToBeInspected buildToBeInspected : buildToBeInspecteds) {
+                for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
                     List<Object> dataCol = new ArrayList<Object>();
                     Build build = buildToBeInspected.getBuild();
 

@@ -12,7 +12,11 @@ import java.util.Properties;
 public class BuildProject extends AbstractStep {
 
     public BuildProject(ProjectInspector inspector) {
-        super(inspector);
+        this(inspector, "");
+    }
+
+    public BuildProject(ProjectInspector inspector, String stepName) {
+        super(inspector, stepName);
     }
 
     protected void businessExecute() {

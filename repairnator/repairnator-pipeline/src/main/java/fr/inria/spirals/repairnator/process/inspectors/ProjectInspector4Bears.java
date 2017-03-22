@@ -35,33 +35,33 @@ public class ProjectInspector4Bears extends ProjectInspector {
         GatherTestInformation gatherTestInformation;
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
-            gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
+            gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail(), GatherTestInformation.class.getSimpleName()+"PreviousBuild");
 
             cloneRepo.setNextStep(new CheckoutBuild(this))
-                    .setNextStep(new BuildProject(this))
-                    .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass()))
+                    .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
+                    .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), GatherTestInformation.class.getSimpleName()+"Build"))
                     .setNextStep(new CheckoutPreviousBuild(this))
-                    .setNextStep(new BuildProject(this))
-                    .setNextStep(new TestProject(this))
+                    .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild"))
+                    .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(gatherTestInformation)
                     .setNextStep(new PushIncriminatedBuild(this));
 
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-                gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail());
+                gatherTestInformation = new GatherTestInformation(this, new BuildShouldFail(), GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode");
 
                 cloneRepo.setNextStep(new CheckoutBuild(this))
-                        .setNextStep(new BuildProject(this))
-                        .setNextStep(new TestProject(this))
-                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass()))
+                        .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
+                        .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), GatherTestInformation.class.getSimpleName()+"Build"))
                         .setNextStep(new CheckoutPreviousBuild(this))
-                        .setNextStep(new BuildProject(this))
-                        .setNextStep(new TestProject(this))
-                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass()))
+                        .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild"))
+                        .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild"))
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
                         .setNextStep(new CheckoutPreviousBuildSourceCode(this))
-                        .setNextStep(new BuildProject(this))
-                        .setNextStep(new TestProject(this))
+                        .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuildSourceCode"))
+                        .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(gatherTestInformation)
                         .setNextStep(new PushIncriminatedBuild(this));
             } else {

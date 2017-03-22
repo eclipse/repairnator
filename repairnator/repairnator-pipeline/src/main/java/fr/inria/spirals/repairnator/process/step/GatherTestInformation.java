@@ -38,7 +38,11 @@ public class GatherTestInformation extends AbstractStep {
     private ContractForGatherTestInformation contract;
 
     public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract) {
-        super(inspector);
+        this(inspector, contract, "");
+    }
+
+    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, String stepName) {
+        super(inspector, stepName);
         inspector.setTestInformations(this);
         this.failureLocations = new HashSet<>();
         this.failureNames = new HashSet<>();
