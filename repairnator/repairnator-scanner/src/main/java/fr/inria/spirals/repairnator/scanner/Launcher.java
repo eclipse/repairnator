@@ -164,7 +164,7 @@ public class Launcher {
         opt2.setHelp("Specify the path to the JSON google secret for serializing.");
         this.jsap.registerParameter(opt2);
 
-        new FlaggedOption("runId");
+        opt2 = new FlaggedOption("runId");
         opt2.setLongFlag("runId");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify run id for the scanner.");
