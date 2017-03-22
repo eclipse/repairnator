@@ -55,6 +55,8 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
+        File repoDir = new File(tmpDir, "repo");
+
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
 
         ProjectInspector inspector = mock(ProjectInspector.class);
@@ -75,7 +77,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTFAILURE));
         verify(inspector, times(1)).setState(ProjectState.HASTESTFAILURE);
 
-        assertThat(gatherTestInformation.getFailingModulePath(), is(tmpDir.getCanonicalPath()));
+        assertThat(gatherTestInformation.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(98));
         assertThat(gatherTestInformation.getNbFailingTests(), is(26));
         assertThat(gatherTestInformation.getNbErroringTests(), is(5));
@@ -101,6 +103,8 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
+        File repoDir = new File(tmpDir, "repo");
+
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
 
         ProjectInspector inspector = mock(ProjectInspector.class);
@@ -121,7 +125,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTERRORS));
         verify(inspector, times(1)).setState(ProjectState.HASTESTERRORS);
 
-        assertThat(gatherTestInformation.getFailingModulePath(), is(tmpDir.getCanonicalPath()));
+        assertThat(gatherTestInformation.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(8));
         assertThat(gatherTestInformation.getNbFailingTests(), is(0));
         assertThat(gatherTestInformation.getNbErroringTests(), is(1));
@@ -156,6 +160,8 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
+        File repoDir = new File(tmpDir, "repo");
+
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
 
         ProjectInspector inspector = mock(ProjectInspector.class);
@@ -176,7 +182,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTERRORS));
         verify(inspector, times(1)).setState(ProjectState.HASTESTERRORS);
 
-        assertThat(gatherTestInformation.getFailingModulePath(), is(tmpDir.getCanonicalPath()));
+        assertThat(gatherTestInformation.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(26));
         assertThat(gatherTestInformation.getNbFailingTests(), is(0));
         assertThat(gatherTestInformation.getNbErroringTests(), is(5));
@@ -201,6 +207,8 @@ public class TestGatherTestInformation {
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+
+        File repoDir = new File(tmpDir, "repo");
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
 

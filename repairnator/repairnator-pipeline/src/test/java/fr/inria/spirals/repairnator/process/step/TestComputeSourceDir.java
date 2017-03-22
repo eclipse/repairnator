@@ -34,7 +34,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDir() throws IOException {
-        int buildId = 201176013; // surli/failingProject build
+        int buildId = 207924136; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -43,6 +43,8 @@ public class TestComputeSourceDir {
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedir");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+
+        File repoDir = new File(tmpDir, "repo");
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
 
@@ -54,7 +56,7 @@ public class TestComputeSourceDir {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
 
         GatherTestInformation mockGathertest = mock(GatherTestInformation.class);
-        when(mockGathertest.getFailingModulePath()).thenReturn(tmpDir.getAbsolutePath());
+        when(mockGathertest.getFailingModulePath()).thenReturn(repoDir.getAbsolutePath());
 
         when(inspector.getTestInformations()).thenReturn(mockGathertest);
 
@@ -68,6 +70,6 @@ public class TestComputeSourceDir {
         assertThat(computeSourceDir.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
         verify(inspector, times(1)).setState(ProjectState.SOURCEDIRCOMPUTED);
 
-        verify(inspector, times(1)).setRepairSourceDir(new File[] {new File(tmpDir.getAbsolutePath()+"/src/main/java")});
+        verify(inspector, times(1)).setRepairSourceDir(new File[] {new File(repoDir.getAbsolutePath()+"/src/main/java")});
     }
 }

@@ -43,18 +43,18 @@ import java.util.List;
 public class GitHelper {
 
     private static GitHelper instance;
-    private static int nbCommits = 0;
+    private int nbCommits = 0;
 
     private GitHelper() {}
 
-    private static GitHelper getInstance() {
+    public static GitHelper getInstance() {
         if (instance == null) {
             instance = new GitHelper();
         }
         return instance;
     }
 
-    public static int getNbCommits() {
+    public int getNbCommits() {
         return nbCommits;
     }
 
@@ -85,10 +85,12 @@ public class GitHelper {
     }
 
     public static boolean addAndCommitRepairnatorLogAndProperties(Git git, String commitMsg) {
+        GitHelper gitHelper = GitHelper.getInstance();
+
         try {
             Status gitStatus = git.status().call();
             if (!gitStatus.isClean()) {
-                GitHelper.getInstance().getLogger().debug("Commit the logs and properties files");
+                gitHelper.getLogger().debug("Commit the logs and properties files");
 
                 List<String> filesChanged = new ArrayList<>();
                 filesChanged.addAll(gitStatus.getUncommittedChanges());
@@ -106,18 +108,18 @@ public class GitHelper {
                 }
 
                 if (!filesToCheckout.isEmpty()) {
-                    GitHelper.getInstance().getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
+                    gitHelper.getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
                     git.checkout().addPaths(filesToCheckout).call();
                 }
 
                 if (filesToAdd.isEmpty()) {
-                    GitHelper.getInstance().getLogger().info("No repairnator properties or log file to commit.");
+                    gitHelper.getLogger().info("No repairnator properties or log file to commit.");
                     return false;
                 }
 
 
 
-                GitHelper.getInstance().getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
+                gitHelper.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
                 AddCommand addCommand = git.add();
                 for (String file : filesToAdd) {
                     addCommand.addFilepattern(file);
@@ -127,14 +129,14 @@ public class GitHelper {
                 git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
                         .setAuthor(personIdent).call();
 
-                nbCommits++;
+                gitHelper.nbCommits++;
 
                 return true;
             } else {
                 return false;
             }
         } catch (GitAPIException e) {
-            GitHelper.getInstance().getLogger().error("Error while committing repairnator properties/log files ",e);
+            gitHelper.getLogger().error("Error while committing repairnator properties/log files ",e);
             return false;
         }
     }

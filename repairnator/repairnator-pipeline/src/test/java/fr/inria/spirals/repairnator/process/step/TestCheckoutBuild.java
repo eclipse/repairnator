@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -68,10 +69,14 @@ public class TestCheckoutBuild {
 
         assertThat(checkoutBuild.shouldStop, is(false));
 
-        Git gitDir = Git.open(tmpDir);
+        Git gitDir = Git.open(new File(tmpDir, "repo"));
         Iterable<RevCommit> logs = gitDir.log().call();
 
         Iterator<RevCommit> iterator = logs.iterator();
+
+        assertThat(iterator.hasNext(), is(true));
+
+        assertThat(iterator.next().getName(), not(build.getCommit().getSha())); // last commit is done for repairnator.properties
 
         assertThat(iterator.hasNext(), is(true));
 

@@ -48,6 +48,8 @@ public class TestComputeClasspath {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
+        File repoDir = new File(tmpDir, "repo");
+
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
 
         ProjectInspector inspector = mock(ProjectInspector.class);
@@ -58,7 +60,7 @@ public class TestComputeClasspath {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
 
         GatherTestInformation mockGathertest = mock(GatherTestInformation.class);
-        when(mockGathertest.getFailingModulePath()).thenReturn(tmpDir.getAbsolutePath());
+        when(mockGathertest.getFailingModulePath()).thenReturn(repoDir.getAbsolutePath());
 
         when(inspector.getTestInformations()).thenReturn(mockGathertest);
 
@@ -74,8 +76,8 @@ public class TestComputeClasspath {
 
         List<URL> expectedClasspath = new ArrayList<URL>();
 
-        URL classDir = new URL("file:"+tmpDir.getAbsolutePath()+"/target/classes/");
-        URL testDir = new URL("file:"+tmpDir.getAbsolutePath()+"/target/test-classes/");
+        URL classDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/classes/");
+        URL testDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/test-classes/");
         URL junit = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.11/junit-4.11.jar");
         URL hamcrest = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar");
 

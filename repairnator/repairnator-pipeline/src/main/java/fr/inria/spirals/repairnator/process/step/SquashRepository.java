@@ -86,7 +86,7 @@ public class SquashRepository extends AbstractStep {
             this.getLogger().debug("Commit the logs and properties files");
             GitHelper.addAndCommitRepairnatorLogAndProperties(git, "Commit done before squashing repository.");
 
-            int totalNbCommits = NB_COMMITS_TO_KEEP+GitHelper.getNbCommits();
+            int totalNbCommits = NB_COMMITS_TO_KEEP+GitHelper.getInstance().getNbCommits();
 
             boolean shouldBeSquashed = this.isRepositoryContainEnoughCommits(git, totalNbCommits);
 
