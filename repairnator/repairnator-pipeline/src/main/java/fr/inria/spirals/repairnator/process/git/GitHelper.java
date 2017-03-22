@@ -73,10 +73,6 @@ public class GitHelper {
             return oldCommitSha;
         } catch (MissingObjectException e) {
             return retrieveAndApplyCommitFromGithub(git, oldCommitSha, step, build);
-        } catch (IncorrectObjectTypeException e) {
-            step.addStepError("Error while testing commit: " + e);
-        } catch (AmbiguousObjectException e) {
-            step.addStepError("Error while testing commit: " + e);
         } catch (IOException e) {
             step.addStepError("Error while testing commit: " + e);
         }

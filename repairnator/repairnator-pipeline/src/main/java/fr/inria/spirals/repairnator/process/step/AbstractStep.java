@@ -116,6 +116,11 @@ public abstract class AbstractStep {
         this.inspector.addStepError(this.name, error);
     }
 
+    public void addStepError(String error, Throwable exception) {
+        getLogger().error(error, exception);
+        this.inspector.addStepError(this.name, error);
+    }
+
     protected void executeNextStep() {
         if (this.nextStep != null) {
             this.nextStep.setState(this.state);

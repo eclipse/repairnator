@@ -1,14 +1,10 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
@@ -25,29 +21,21 @@ import java.net.URISyntaxException;
  */
 public class PushIncriminatedBuild extends AbstractStep {
     private static final String REMOTE_REPO_EXT = ".git";
-    private static final String NB_COMMITS_TO_KEEP = "12";
 
     public static final String REMOTE_NAME = "saveFail";
 
     private String branchName;
     private String remoteRepoUrl;
-    private RepairnatorConfig config;
 
     public PushIncriminatedBuild(ProjectInspector inspector) {
         super(inspector);
-        try {
-            this.config = RepairnatorConfig.getInstance();
-        } catch (RepairnatorConfigException e) {
-            throw new RuntimeException(e);
-        }
-
-        this.remoteRepoUrl = config.getPushRemoteRepo();
+        this.remoteRepoUrl = this.getConfig().getPushRemoteRepo();
         this.branchName = this.inspector.getRemoteBranchName();
     }
 
     @Override
     protected void businessExecute() {
-        if (this.config.isPush()) {
+        if (this.getConfig().isPush()) {
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
                 this.getLogger().error("Remote repo should be set !");
                 return;
@@ -66,25 +54,6 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             try {
                 Git git = Git.open(new File(inspector.getRepoLocalPath()));
-
-                this.getLogger().debug("Commit the logs and properties files");
-
-                GitHelper.addAndCommitRepairnatorLogAndProperties(git, "Commit done before pushing to a new branch.");
-
-                git.checkout().setCreateBranch(true).setName("detached").call();
-                ObjectId id = git.getRepository().resolve("HEAD~" + NB_COMMITS_TO_KEEP);
-
-                if (id != null) {
-                    this.getLogger().debug("Get only the last " + NB_COMMITS_TO_KEEP + " commits before push.");
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "rebase-last-x", NB_COMMITS_TO_KEEP)
-                            .directory(new File(this.inspector.getRepoLocalPath())).inheritIO();
-
-                    Process p = processBuilder.start();
-                    p.waitFor();
-                } else {
-                    this.getLogger().debug("The repository contains less than " + NB_COMMITS_TO_KEEP + ": push all the repo.");
-                }
-
                 this.getLogger().debug("Add the remote repository to push the current state");
 
                 RemoteAddCommand remoteAdd = git.remoteAdd();
