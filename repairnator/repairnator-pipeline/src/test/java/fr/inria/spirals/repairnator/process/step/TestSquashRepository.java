@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
@@ -57,6 +58,7 @@ public class TestSquashRepository {
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
@@ -80,7 +82,7 @@ public class TestSquashRepository {
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_squash");
+        Path tmpDirPath = Files.createTempDirectory("test_squash2");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -92,6 +94,7 @@ public class TestSquashRepository {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
@@ -123,7 +126,7 @@ public class TestSquashRepository {
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_squash");
+        Path tmpDirPath = Files.createTempDirectory("test_squash3");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -135,6 +138,7 @@ public class TestSquashRepository {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);

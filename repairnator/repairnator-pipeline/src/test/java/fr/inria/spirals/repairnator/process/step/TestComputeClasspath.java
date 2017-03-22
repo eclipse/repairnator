@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldPass;
 import org.junit.Test;
@@ -58,6 +59,7 @@ public class TestComputeClasspath {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         GatherTestInformation mockGathertest = mock(GatherTestInformation.class);
         when(mockGathertest.getFailingModulePath()).thenReturn(repoDir.getAbsolutePath());

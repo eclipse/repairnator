@@ -230,7 +230,7 @@ public abstract class AbstractStep {
         try {
             Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
 
-            boolean createNewCommit = GitHelper.addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
+            boolean createNewCommit = this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
 
             if (createNewCommit && this.inspector.isHasBeenPushed()) {
                 CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");

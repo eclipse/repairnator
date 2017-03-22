@@ -39,18 +39,13 @@ import java.util.List;
  * Created by fernanda on 01/03/17.
  */
 public class GitHelper {
+    
+    private int nbCommits;
 
-    private static GitHelper instance;
-    private int nbCommits = 0;
-
-    private GitHelper() {}
-
-    public static GitHelper getInstance() {
-        if (instance == null) {
-            instance = new GitHelper();
-        }
-        return instance;
+    public GitHelper() {
+        this.nbCommits = 0;
     }
+
 
     public int getNbCommits() {
         return nbCommits;
@@ -69,7 +64,7 @@ public class GitHelper {
      *         if the commit has been retrieved from GitHub and applied back, or
      *         null if the retrieve failed.
      */
-    public static String testCommitExistence(Git git, String oldCommitSha, AbstractStep step, Build build) {
+    public String testCommitExistence(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
             ObjectId commitObject = git.getRepository().resolve(oldCommitSha);
             git.getRepository().open(commitObject);
@@ -82,13 +77,11 @@ public class GitHelper {
         return null;
     }
 
-    public static boolean addAndCommitRepairnatorLogAndProperties(Git git, String commitMsg) {
-        GitHelper gitHelper = GitHelper.getInstance();
-
+    public boolean addAndCommitRepairnatorLogAndProperties(Git git, String commitMsg) {
         try {
             Status gitStatus = git.status().call();
             if (!gitStatus.isClean()) {
-                gitHelper.getLogger().debug("Commit the logs and properties files");
+                this.getLogger().debug("Commit the logs and properties files");
 
                 List<String> filesChanged = new ArrayList<>();
                 filesChanged.addAll(gitStatus.getUncommittedChanges());
@@ -106,18 +99,18 @@ public class GitHelper {
                 }
 
                 if (!filesToCheckout.isEmpty()) {
-                    gitHelper.getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
+                    this.getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
                     git.checkout().addPaths(filesToCheckout).call();
                 }
 
                 if (filesToAdd.isEmpty()) {
-                    gitHelper.getLogger().info("No repairnator properties or log file to commit.");
+                    this.getLogger().info("No repairnator properties or log file to commit.");
                     return false;
                 }
 
 
 
-                gitHelper.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
+                this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
                 AddCommand addCommand = git.add();
                 for (String file : filesToAdd) {
                     addCommand.addFilepattern(file);
@@ -127,14 +120,14 @@ public class GitHelper {
                 git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
                         .setAuthor(personIdent).call();
 
-                gitHelper.nbCommits++;
+                this.nbCommits++;
 
                 return true;
             } else {
                 return false;
             }
         } catch (GitAPIException e) {
-            gitHelper.getLogger().error("Error while committing repairnator properties/log files ",e);
+            this.getLogger().error("Error while committing repairnator properties/log files ",e);
             return false;
         }
     }
@@ -149,7 +142,7 @@ public class GitHelper {
      * @return the SHA of the commit created after applying the patch or null if
      *         an error occured.
      */
-    private static String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
+    private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
             addAndCommitRepairnatorLogAndProperties(git, "Commit done before retrieving a commit from GH API.");
             GitHub gh = GitHubBuilder.fromEnvironment().build();
@@ -169,7 +162,7 @@ public class GitHelper {
 
             URL patchUrl = compare.getPatchUrl();
 
-            getInstance().getLogger().debug("Step " + step.getName() + " - Retrieve commit patch from the following URL: " + patchUrl);
+            this.getLogger().debug("Step " + step.getName() + " - Retrieve commit patch from the following URL: " + patchUrl);
 
             // retrieve it through a simple HTTP request
             // some errors occurs when applying patch from snippets contained in
@@ -190,7 +183,7 @@ public class GitHelper {
                 writer.flush();
                 writer.close();
 
-                getInstance().getLogger().info("Step " + step.getName() + " - Exec following command: git apply " + tempFile.getAbsolutePath());
+                this.getLogger().info("Step " + step.getName() + " - Exec following command: git apply " + tempFile.getAbsolutePath());
                 ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", tempFile.getAbsolutePath())
                         .directory(new File(step.getInspector().getRepoLocalPath())).inheritIO();
 
@@ -217,6 +210,8 @@ public class GitHelper {
                                     + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
                             .call();
 
+                    this.nbCommits++;
+
                     tempFile.delete();
 
                     return ref.getName();
@@ -237,7 +232,7 @@ public class GitHelper {
         return null;
     }
 
-    private static String getLastKnowParent(GitHub gh, GHRepository ghRepo, Git git, String oldCommitSha, AbstractStep step) throws IOException {
+    private String getLastKnowParent(GitHub gh, GHRepository ghRepo, Git git, String oldCommitSha, AbstractStep step) throws IOException {
         showGitHubRateInformation(gh, step);
         GHCommit commit = ghRepo.getCommit(oldCommitSha); // get the deleted
         // commit from GH
@@ -250,7 +245,7 @@ public class GitHelper {
         }
 
         if (commitParents.size() > 1) {
-            getInstance().getLogger().debug("Step " + step.getName() + " - The commit has more than one parent : " + commit.getHtmlUrl());
+            this.getLogger().debug("Step " + step.getName() + " - The commit has more than one parent : " + commit.getHtmlUrl());
         }
 
         String parent = commitParents.get(0);
@@ -265,14 +260,14 @@ public class GitHelper {
         }
     }
 
-    private static void showGitHubRateInformation(GitHub gh, AbstractStep step) throws IOException {
+    private void showGitHubRateInformation(GitHub gh, AbstractStep step) throws IOException {
         GHRateLimit rateLimit = gh.getRateLimit();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        getInstance().getLogger().info("Step " + step.getName() + " - GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining
+        this.getLogger().info("Step " + step.getName() + " - GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining
                 + " Reset hour: " + dateFormat.format(rateLimit.reset));
     }
 
-    public static boolean mergeTwoCommitsForPR(Git git, Build build, PRInformation prInformation, String repository, AbstractStep step) {
+    public boolean mergeTwoCommitsForPR(Git git, Build build, PRInformation prInformation, String repository, AbstractStep step) {
         try {
             String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getSlug() + ".git";
 
@@ -283,34 +278,35 @@ public class GitHelper {
 
             git.fetch().setRemote("PR").call();
 
-            String commitHeadSha = GitHelper.testCommitExistence(git, prInformation.getHead().getSha(), step, build);
-            String commitBaseSha = GitHelper.testCommitExistence(git, prInformation.getBase().getSha(), step, build);
+            String commitHeadSha = this.testCommitExistence(git, prInformation.getHead().getSha(), step, build);
+            String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSha(), step, build);
 
             if (commitHeadSha == null) {
                 step.addStepError("Commit head ref cannot be retrieved in the repository: "
                         + prInformation.getHead().getSha() + ". Operation aborted.");
-                getInstance().getLogger().debug("Step " + step.getName() + " - " + prInformation.getHead().toString());
+                this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getHead().toString());
                 return false;
             }
 
             if (commitBaseSha == null) {
                 step.addStepError("Commit base ref cannot be retrieved in the repository: "
                         + prInformation.getBase().getSha() + ". Operation aborted.");
-                getInstance().getLogger().debug("Step " + step.getName() + " - " + prInformation.getBase().toString());
+                this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getBase().toString());
                 return false;
             }
 
-            getInstance().getLogger().debug("Step " + step.getName() + " - Get the commit " + commitHeadSha + " for repo " + repository);
+            this.getLogger().debug("Step " + step.getName() + " - Get the commit " + commitHeadSha + " for repo " + repository);
             git.checkout().setName(commitHeadSha).call();
 
             RevWalk revwalk = new RevWalk(git.getRepository());
             RevCommit revCommitBase = revwalk.lookupCommit(git.getRepository().resolve(commitBaseSha));
 
-            getInstance().getLogger().debug("Step " + step.getName() + " - Do the merge with the PR commit for repo " + repository);
+            this.getLogger().debug("Step " + step.getName() + " - Do the merge with the PR commit for repo " + repository);
             git.merge().include(revCommitBase).setFastForward(MergeCommand.FastForwardMode.NO_FF).call();
+            this.nbCommits++;
         } catch (Exception e) {
             step.addStepError(e.getMessage());
-            getInstance().getLogger().error("Step " + step.getName() + " - Repository " + repository + " cannot be cloned.",e);
+            this.getLogger().error("Step " + step.getName() + " - Repository " + repository + " cannot be cloned.",e);
             return false;
         }
         return true;

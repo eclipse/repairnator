@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldPass;
@@ -65,6 +66,7 @@ public class TestGatherTestInformation {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -113,6 +115,7 @@ public class TestGatherTestInformation {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -170,6 +173,7 @@ public class TestGatherTestInformation {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -218,6 +222,7 @@ public class TestGatherTestInformation {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -261,6 +266,7 @@ public class TestGatherTestInformation {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldPass());
