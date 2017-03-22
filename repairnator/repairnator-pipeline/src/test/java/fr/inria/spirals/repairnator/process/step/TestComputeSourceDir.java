@@ -1,10 +1,12 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.junit.Test;
 
@@ -25,6 +27,10 @@ import static org.mockito.Mockito.when;
  * Created by urli on 07/03/2017.
  */
 public class TestComputeSourceDir {
+
+    static {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
 
     @Test
     public void testComputeSourceDir() throws IOException {

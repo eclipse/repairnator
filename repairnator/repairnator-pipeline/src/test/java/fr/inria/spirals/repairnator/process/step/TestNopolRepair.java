@@ -1,10 +1,12 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -54,6 +56,7 @@ public class TestNopolRepair {
     public void testNopolRepair() throws IOException {
         int buildId = 207890790; // surli/failingProject build
 
+        Utils.setLoggersLevel(Level.ERROR);
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));

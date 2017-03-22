@@ -1,10 +1,12 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
@@ -29,6 +31,10 @@ import static org.mockito.Mockito.when;
  * Created by urli on 21/02/2017.
  */
 public class TestCloneRepositoryStep {
+
+    static {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
 
     @Test
     public void testCloneMasterBuild() throws IOException, GitAPIException {
