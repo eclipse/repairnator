@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetScannerSerializer4Bears.class);
-    private static final String RANGE = "Scanner Data!A1:O1";
+    private static final String RANGE = "Scanner Data!A1:P1";
 
     private Sheets sheets;
     private ProjectScanner scanner;
@@ -49,6 +49,7 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
             dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
             dataCol.add(this.scanner.getTotalPRBuilds());
             dataCol.add(Utils.formatOnlyDay(this.scanner.getLookFromDate()));
+            dataCol.add(this.scanner.getRunId());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);

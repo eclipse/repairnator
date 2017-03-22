@@ -39,17 +39,23 @@ public class ProjectScanner {
     private Date lookFromDate;
     private Date lookToDate;
     private LauncherMode launcherMode;
+    private String runId;
 
     private Date scannerRunningBeginDate;
     private Date scannerRunningEndDate;
 
-    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode) {
+    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode, String runId) {
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
         this.launcherMode = launcherMode;
 
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
+        this.runId = runId;
+    }
+
+    public String getRunId() {
+        return runId;
     }
 
     public int getTotalRepoNumber() {
@@ -210,7 +216,7 @@ public class ProjectScanner {
     public BuildToBeInspected getBuildToBeInspected(Build build, boolean targetFailing) {
         if (testBuild(build, targetFailing)) {
             if (this.launcherMode == LauncherMode.REPAIR) {
-                return new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+                return new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, this.runId);
             } else {
                 Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
                 if (previousBuild != null) {

@@ -145,6 +145,12 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("runId");
+        opt2.setLongFlag("runId");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify the runId for this launch.");
+        this.jsap.registerParameter(opt2);
     }
 
     private void checkEnvironmentVariables() {
@@ -187,7 +193,7 @@ public class Launcher {
         Build build = BuildHelper.getBuildFromId(this.buildId, null);
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            this.buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+            this.buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, this.arguments.getString("runId"));
         } else {
             Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
             if (previousBuild != null) {

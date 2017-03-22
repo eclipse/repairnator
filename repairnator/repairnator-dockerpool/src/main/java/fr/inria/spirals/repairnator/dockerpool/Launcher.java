@@ -91,6 +91,12 @@ public class Launcher {
         opt2.setDefault("1");
         opt2.setHelp("Specify the number of day before killing the whole pool.");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("runId");
+        opt2.setLongFlag("runId");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify the run id for this launch.");
+        this.jsap.registerParameter(opt2);
     }
 
     private void checkArguments() {
@@ -192,7 +198,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile);
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"));
             executorService.submit(runnablePipelineContainer);
         }
 
