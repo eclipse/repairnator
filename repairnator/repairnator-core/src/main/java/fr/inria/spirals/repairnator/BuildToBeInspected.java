@@ -11,11 +11,13 @@ public class BuildToBeInspected {
     private Build previousBuild;
     // For RepairNator, the status is about the build, and for Bears it is about the previous build
     private ScannedBuildStatus status;
+    private String runId;
 
-    public BuildToBeInspected(Build build, ScannedBuildStatus status) {
+    public BuildToBeInspected(Build build, ScannedBuildStatus status, String runId) {
         this.build = build;
         this.previousBuild = null;
         this.status = status;
+        this.runId = runId;
     }
 
     public BuildToBeInspected(Build build, Build previousBuild, ScannedBuildStatus status) {
@@ -34,5 +36,9 @@ public class BuildToBeInspected {
 
     public ScannedBuildStatus getStatus() {
         return status;
+    }
+
+    public String getRunId() {
+        return runId;
     }
 }

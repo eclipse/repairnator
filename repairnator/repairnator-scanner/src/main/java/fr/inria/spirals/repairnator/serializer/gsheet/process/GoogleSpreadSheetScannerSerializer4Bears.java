@@ -49,6 +49,7 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
             dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
             dataCol.add(this.scanner.getTotalPRBuilds());
             dataCol.add(Utils.formatOnlyDay(this.scanner.getLimitDate()));
+            dataCol.add(this.scanner.getRunId());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);

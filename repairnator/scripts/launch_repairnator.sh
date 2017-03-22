@@ -19,6 +19,9 @@ if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1
 fi
 
+RUN_ID=$(uuidgen)
+echo "This will be run with the following RUN_ID: $RUN_ID"
+
 echo "Create log directory: $LOG_DIR"
 mkdir $LOG_DIR
 

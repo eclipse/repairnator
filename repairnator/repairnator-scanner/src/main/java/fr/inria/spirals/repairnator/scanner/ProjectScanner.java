@@ -41,13 +41,19 @@ public class ProjectScanner {
     private Date endDate;
     private int lookupHours;
     private LauncherMode launcherMode;
+    private String runId;
 
-    public ProjectScanner(int lookupHours, LauncherMode launcherMode) {
+    public ProjectScanner(int lookupHours, LauncherMode launcherMode, String runId) {
         this.lookupHours = lookupHours;
         this.launcherMode = launcherMode;
 
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
+        this.runId = runId;
+    }
+
+    public String getRunId() {
+        return runId;
     }
 
     public int getTotalRepoNumber() {

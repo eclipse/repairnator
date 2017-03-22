@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GoogleSpreadSheetScannerSerializer  implements ProcessSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetScannerSerializer.class);
-    private static final String RANGE = "Scanner Data!A1:L1";
+    private static final String RANGE = "Scanner Data!A1:M1";
 
     private Sheets sheets;
     private ProjectScanner scanner;
@@ -45,6 +45,7 @@ public class GoogleSpreadSheetScannerSerializer  implements ProcessSerializer {
             dataCol.add(this.scanner.getTotalPRBuilds());
             dataCol.add(Utils.formatOnlyDay(this.scanner.getLimitDate()));
             dataCol.add(this.scanner.getDuration());
+            dataCol.add(this.scanner.getRunId());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);

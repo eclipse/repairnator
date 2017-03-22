@@ -143,6 +143,12 @@ public class Launcher {
         opt2.setDefault("./client_secret.json");
         opt2.setHelp("Specify the path to the JSON google secret for serializing.");
         this.jsap.registerParameter(opt2);
+
+        new FlaggedOption("runId");
+        opt2.setLongFlag("runId");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify run id for the scanner.");
+        this.jsap.registerParameter(opt2);
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {
@@ -150,7 +156,7 @@ public class Launcher {
 
         String googleSecretPath = this.arguments.getFile("googleSecretPath").getPath();
 
-        ProjectScanner scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode);
+        ProjectScanner scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode, this.arguments.getString("runId"));
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
         ProcessSerializer scannerSerializer;
 
