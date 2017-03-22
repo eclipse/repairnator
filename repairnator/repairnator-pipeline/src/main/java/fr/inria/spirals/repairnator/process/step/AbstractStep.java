@@ -3,7 +3,6 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.codehaus.plexus.util.FileUtils;
