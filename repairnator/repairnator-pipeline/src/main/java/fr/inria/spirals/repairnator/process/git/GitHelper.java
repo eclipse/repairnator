@@ -43,6 +43,7 @@ import java.util.List;
 public class GitHelper {
 
     private static GitHelper instance;
+    private static int nbCommits = 0;
 
     private GitHelper() {}
 
@@ -51,6 +52,10 @@ public class GitHelper {
             instance = new GitHelper();
         }
         return instance;
+    }
+
+    public static int getNbCommits() {
+        return nbCommits;
     }
 
     private Logger getLogger() {
@@ -91,11 +96,17 @@ public class GitHelper {
                 filesChanged.addAll(gitStatus.getUntrackedFolders());
 
                 List<String> filesToAdd = new ArrayList<>();
-                String path = git.getRepository().getDirectory().getParent();
-                for (File file : new File(path).listFiles()) {
-                    if (file.getName().contains("repairnator") && filesChanged.contains(file.getName())) {
-                        filesToAdd.add(file.getName());
+                List<String> filesToCheckout = new ArrayList<>();
+                for (String fileName : filesChanged) {
+                    if (fileName.contains("repairnator")) {
+                        filesToAdd.add(fileName);
+                    } else {
+                        filesToCheckout.add(fileName);
                     }
+                }
+
+                if (!filesToCheckout.isEmpty()) {
+                    git.checkout().addPaths(filesToCheckout).call();
                 }
 
                 if (filesToAdd.isEmpty()) {
@@ -114,6 +125,8 @@ public class GitHelper {
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
                         .setAuthor(personIdent).call();
+
+                nbCommits++;
 
                 return true;
             } else {
