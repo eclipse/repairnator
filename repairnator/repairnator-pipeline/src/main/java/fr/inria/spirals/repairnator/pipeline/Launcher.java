@@ -214,6 +214,7 @@ public class Launcher {
             serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears(this.config.getGoogleSecretPath()));
             serializers.add(new GoogleSpreadSheetInspectorTimeSerializer4Bears(this.config.getGoogleSecretPath()));
         }
+        serializers.add(new GoogleSpreadSheetInspectorTrackTreatedBuilds(this.buildToBeInspected, this.config.getGoogleSecretPath()));
 
         ProjectInspector inspector;
 

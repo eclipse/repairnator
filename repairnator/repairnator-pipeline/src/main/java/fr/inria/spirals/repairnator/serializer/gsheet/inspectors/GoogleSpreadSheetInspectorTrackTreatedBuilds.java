@@ -5,16 +5,15 @@ import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -30,11 +29,11 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
     private Sheets sheets;
     private String runid;
 
-    public GoogleSpreadSheetInspectorTrackTreatedBuilds(Collection<BuildToBeInspected> buildsToBeInspected, String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetInspectorTrackTreatedBuilds(BuildToBeInspected buildToBeInspected, String googleSecretPath) throws IOException {
         super();
         this.runid = UUID.randomUUID().toString();
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
-        this.serializeBuildsToBeInspected(buildsToBeInspected);
+        this.serializeBuildToBeInspected(buildToBeInspected);
     }
 
     private void insertData(List<List<Object>> dataRows) {
@@ -48,32 +47,34 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
                 this.logger.debug("Data have been inserted in Google Spreadsheet.");
             }
         } catch (IOException e) {
-            this.logger.error("An error occured while inserting data in Google Spreadsheet.", e);
+            this.logger.error("An error occurred while inserting data in Google Spreadsheet.", e);
         }
     }
 
-    private void serializeBuildsToBeInspected(Collection<BuildToBeInspected> buildsToBeInspected) {
+    private List<Object> getDataColumn(Build build, String status) {
+        Date date = new Date();
+
+        List<Object> dataCol = new ArrayList<Object>();
+        dataCol.add(runid);
+        dataCol.add(build.getId());
+        dataCol.add(build.getRepository().getSlug());
+        dataCol.add(Utils.formatCompleteDate(date));
+        dataCol.add(Utils.formatOnlyDay(date));
+        dataCol.add(Utils.getHostname());
+        dataCol.add(status);
+
+        return dataCol;
+    }
+
+    private void serializeBuildToBeInspected(BuildToBeInspected buildToBeInspected) {
         if (this.sheets != null) {
-            if (buildsToBeInspected.size() > 0) {
-                List<List<Object>> dataRows = new ArrayList<List<Object>>();
-                Date date = new Date();
+            Build build = buildToBeInspected.getBuild();
 
-                for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-                    List<Object> dataCol = new ArrayList<Object>();
-                    Build build = buildToBeInspected.getBuild();
+            List<Object> dataCol = getDataColumn(build, "DETECTED");
 
-                    dataCol.add(runid);
-                    dataCol.add(build.getId());
-                    dataCol.add(build.getRepository().getSlug());
-                    dataCol.add(Utils.formatCompleteDate(date));
-                    dataCol.add(Utils.formatOnlyDay(date));
-                    dataCol.add("DETECTED");
-                    dataCol.add(Utils.getHostname());
-
-                    dataRows.add(dataCol);
-                }
-                this.insertData(dataRows);
-            }
+            List<List<Object>> dataRows = new ArrayList<List<Object>>();
+            dataRows.add(dataCol);
+            this.insertData(dataRows);
         } else {
             this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }
@@ -82,25 +83,16 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
     @Override
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
-            List<List<Object>> dataRows = new ArrayList<List<Object>>();
-            Date date = new Date();
-
-            List<Object> dataCol = new ArrayList<Object>();
             Build build = inspector.getBuild();
 
-            dataCol.add(runid);
-            dataCol.add(build.getId());
-            dataCol.add(build.getRepository().getSlug());
-            dataCol.add(Utils.formatCompleteDate(date));
-            dataCol.add(Utils.formatOnlyDay(date));
-            dataCol.add("TREATED");
-            dataCol.add(Utils.getHostname());
+            List<Object> dataCol = getDataColumn(build, "TREATED");
 
+            List<List<Object>> dataRows = new ArrayList<List<Object>>();
             dataRows.add(dataCol);
-
             this.insertData(dataRows);
         } else {
             this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
         }
     }
+
 }

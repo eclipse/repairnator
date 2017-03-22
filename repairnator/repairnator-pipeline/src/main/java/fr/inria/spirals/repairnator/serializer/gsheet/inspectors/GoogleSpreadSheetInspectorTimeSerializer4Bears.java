@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorTimeSerializer4Bears.class);
-    private static final String RANGE = "Duration Data!A1:R1";
+    private static final String RANGE = "Duration Data!A1:S1";
 
     private Sheets sheets;
 
