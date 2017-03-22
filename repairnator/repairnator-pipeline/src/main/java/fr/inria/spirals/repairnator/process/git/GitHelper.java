@@ -106,6 +106,7 @@ public class GitHelper {
                 }
 
                 if (!filesToCheckout.isEmpty()) {
+                    GitHelper.getInstance().getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
                     git.checkout().addPaths(filesToCheckout).call();
                 }
 

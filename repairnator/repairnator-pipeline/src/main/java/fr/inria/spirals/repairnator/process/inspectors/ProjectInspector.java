@@ -207,6 +207,7 @@ public class ProjectInspector {
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail()))
+                    .setNextStep(new SquashRepository(this))
                     .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))

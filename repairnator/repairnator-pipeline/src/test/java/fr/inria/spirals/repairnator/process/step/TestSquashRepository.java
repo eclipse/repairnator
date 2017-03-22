@@ -5,18 +5,19 @@ import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -27,19 +28,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by urli on 06/03/2017.
+ * Created by urli on 22/03/2017.
  */
-public class TestCheckoutBuild {
+public class TestSquashRepository {
 
     @Test
-    public void testCheckoutBuild() throws IOException, GitAPIException {
+    public void testSquashRepositoryOnSmallRepoWillNotSquashIt() throws IOException, GitAPIException {
         int buildId = 207924136; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        Path tmpDirPath = Files.createTempDirectory("test_squash");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -51,36 +52,29 @@ public class TestCheckoutBuild {
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
 
+        SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        cloneStep.setNextStep(squashStep);
 
-        cloneStep.setNextStep(checkoutBuild);
+        RepairnatorConfig config = cloneStep.getConfig();
+        config.setPush(true);
+
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
-        verify(inspector, times(1)).setState(ProjectState.BUILDCHECKEDOUT);
-
-        assertThat(checkoutBuild.shouldStop, is(false));
-
-        Git gitDir = Git.open(tmpDir);
-        Iterable<RevCommit> logs = gitDir.log().call();
-
-        Iterator<RevCommit> iterator = logs.iterator();
-
-        assertThat(iterator.hasNext(), is(true));
-
-        assertThat(iterator.next().getName(), is(build.getCommit().getSha()));
+        verify(inspector, times(1)).setState(ProjectState.NOT_SQUASHED_REPO);
+        Status status = Git.open(new File(tmpDir, "repo")).status().call();
+        assertThat(status.isClean(), is(true));
     }
 
     @Test
-    public void testCheckoutBuildFromPR() throws IOException, GitAPIException {
-        int buildId = 199527447; // surli/failingProject build
+    public void testSquashRepositoryOnProjectWhichChangeFileAtBuildWorks() throws IOException, GitAPIException {
+        int buildId = 212649623; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        Path tmpDirPath = Files.createTempDirectory("test_squash");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -91,28 +85,39 @@ public class TestCheckoutBuild {
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
 
+        SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new BuildProject(inspector)).setNextStep(squashStep);
 
-        cloneStep.setNextStep(checkoutBuild);
+        RepairnatorConfig config = cloneStep.getConfig();
+        config.setPush(true);
+
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
-        verify(inspector, times(1)).setState(ProjectState.BUILDCHECKEDOUT);
+        verify(inspector, times(1)).setState(ProjectState.SQUASHED_REPO);
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        File repo = new File(tmpDir, "repo");
+
+        List<String> listFiles = Arrays.asList(repo.list());
+
+        assertThat(listFiles.contains("repairnator.properties"), is(true));
+        assertThat(listFiles.contains("repairnator.maven.buildproject.log"), is(true));
+
+        Status status = Git.open(repo).status().call();
+        assertThat(status.isClean(), is(true));
     }
 
     @Test
-    public void testCheckoutBuildFromPROtherRepo() throws IOException, GitAPIException {
-        int buildId = 196568333; // surli/failingProject build
+    public void testSquashRepositoryOnProjectWithHundredCommits() throws IOException, GitAPIException {
+        int buildId = 209082903; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        Path tmpDirPath = Files.createTempDirectory("test_squash");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -123,17 +128,19 @@ public class TestCheckoutBuild {
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
 
+        SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        cloneStep.setNextStep(squashStep);
 
-        cloneStep.setNextStep(checkoutBuild);
+        RepairnatorConfig config = cloneStep.getConfig();
+        config.setPush(true);
+
         cloneStep.execute();
 
-        // cannot get the PR information so it stop now
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
-        verify(inspector, times(1)).setState(ProjectState.BUILDNOTCHECKEDOUT);
-
-        assertThat(checkoutBuild.shouldStop, is(true));
+        verify(inspector, times(1)).setState(ProjectState.SQUASHED_REPO);
+        Status status = Git.open(new File(tmpDir, "repo")).status().call();
+        assertThat(status.isClean(), is(true));
     }
 }

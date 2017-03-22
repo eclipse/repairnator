@@ -126,9 +126,7 @@ public abstract class AbstractStep {
             this.nextStep.setState(this.state);
             this.nextStep.execute();
         } else {
-            this.inspector.setState(this.state);
-            this.serializeData();
-            this.cleanMavenArtifacts();
+            this.terminatePipeline();
         }
     }
 
@@ -217,10 +215,15 @@ public abstract class AbstractStep {
         if (!shouldStop) {
             this.executeNextStep();
         } else {
-            this.cleanMavenArtifacts();
-            this.inspector.setState(this.state);
-            this.serializeData();
+            this.terminatePipeline();
         }
+    }
+
+    private void terminatePipeline() {
+        this.cleanMavenArtifacts();
+        this.inspector.setState(this.state);
+        this.serializeData();
+        this.pushNewInformationIfNeeded();
     }
 
     private void pushNewInformationIfNeeded() {

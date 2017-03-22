@@ -93,7 +93,7 @@ public class SquashRepository extends AbstractStep {
             if (shouldBeSquashed) {
                 boolean branchesCreated = this.createBranches(git);
 
-                if (branchesCreated) {
+                if (!branchesCreated) {
                     this.getLogger().debug("Branches are not created, the repository won't be squashed.");
                     this.setState(ProjectState.NOT_SQUASHED_REPO);
                     return;
@@ -111,6 +111,7 @@ public class SquashRepository extends AbstractStep {
                 }
             } else {
                 this.getLogger().debug("The repository contains less than " + totalNbCommits + ": push all the repo.");
+                this.setState(ProjectState.NOT_SQUASHED_REPO);
             }
         }
     }
