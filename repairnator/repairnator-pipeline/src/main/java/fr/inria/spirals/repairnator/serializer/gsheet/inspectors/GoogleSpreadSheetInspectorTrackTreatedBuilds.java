@@ -1,14 +1,13 @@
 package fr.inria.spirals.repairnator.serializer.gsheet.inspectors;
 
 import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.model.AppendValuesResponse;
-import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,6 @@ import java.util.UUID;
  * Created by urli on 03/03/2017.
  */
 public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSerializer {
-
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorTrackTreatedBuilds.class);
     private static final String RANGE = "Treated Build Tracking!A1:E1";
 
@@ -31,24 +29,9 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
 
     public GoogleSpreadSheetInspectorTrackTreatedBuilds(BuildToBeInspected buildToBeInspected, String googleSecretPath) throws IOException {
         super();
-        this.runid = UUID.randomUUID().toString();
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.runid = UUID.randomUUID().toString();
         this.serializeBuildToBeInspected(buildToBeInspected);
-    }
-
-    private void insertData(List<List<Object>> dataRows) {
-        ValueRange valueRange = new ValueRange();
-        valueRange.setValues(dataRows);
-        try {
-            AppendValuesResponse response = this.sheets.spreadsheets().values()
-                    .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
-                    .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-            if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                this.logger.debug("Data have been inserted in Google Spreadsheet.");
-            }
-        } catch (IOException e) {
-            this.logger.error("An error occurred while inserting data in Google Spreadsheet.", e);
-        }
     }
 
     private List<Object> getDataColumn(Build build, String status) {
@@ -74,9 +57,9 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
 
             List<List<Object>> dataRows = new ArrayList<List<Object>>();
             dataRows.add(dataCol);
-            this.insertData(dataRows);
+            GoogleSpreadSheetUtils.insertData(dataRows, this.sheets, RANGE, this.logger);
         } else {
-            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
+            GoogleSpreadSheetUtils.logWarningWhenSheetsIsNull(this.logger);
         }
     }
 
@@ -89,9 +72,9 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
 
             List<List<Object>> dataRows = new ArrayList<List<Object>>();
             dataRows.add(dataCol);
-            this.insertData(dataRows);
+            GoogleSpreadSheetUtils.insertData(dataRows, this.sheets, RANGE, this.logger);
         } else {
-            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
+            GoogleSpreadSheetUtils.logWarningWhenSheetsIsNull(this.logger);
         }
     }
 
