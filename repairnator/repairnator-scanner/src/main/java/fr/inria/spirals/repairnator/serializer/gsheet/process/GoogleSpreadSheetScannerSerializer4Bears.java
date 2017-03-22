@@ -33,10 +33,10 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
         if (this.sheets != null) {
             List<Object> dataCol = new ArrayList<Object>();
             dataCol.add(Utils.getHostname());
-            dataCol.add(Utils.formatCompleteDate(this.scanner.getBeginDate()));
-            dataCol.add(Utils.formatCompleteDate(this.scanner.getEndDate()));
-            dataCol.add(this.scanner.getDuration());
-            dataCol.add(Utils.formatCompleteDate(this.scanner.getLimitDate()));
+            dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
+            dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningEndDate()));
+            dataCol.add(this.scanner.getScannerDuration());
+            dataCol.add(Utils.formatCompleteDate(this.scanner.getLookFromDate()));
             dataCol.add(this.scanner.getTotalRepoNumber());
             dataCol.add(this.scanner.getTotalRepoUsingTravis());
             dataCol.add(this.scanner.getTotalScannedBuilds());
@@ -48,7 +48,7 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
             dataCol.add(this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
             dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
             dataCol.add(this.scanner.getTotalPRBuilds());
-            dataCol.add(Utils.formatOnlyDay(this.scanner.getLimitDate()));
+            dataCol.add(Utils.formatOnlyDay(this.scanner.getLookFromDate()));
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);
