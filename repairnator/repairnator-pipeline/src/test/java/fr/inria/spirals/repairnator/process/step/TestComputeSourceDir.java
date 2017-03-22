@@ -1,10 +1,13 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.junit.Test;
 
@@ -26,9 +29,13 @@ import static org.mockito.Mockito.when;
  */
 public class TestComputeSourceDir {
 
+    static {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
+
     @Test
     public void testComputeSourceDir() throws IOException {
-        int buildId = 201176013; // surli/failingProject build
+        int buildId = 207924136; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -38,17 +45,20 @@ public class TestComputeSourceDir {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
+        File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         GatherTestInformation mockGathertest = mock(GatherTestInformation.class);
-        when(mockGathertest.getFailingModulePath()).thenReturn(tmpDir.getAbsolutePath());
+        when(mockGathertest.getFailingModulePath()).thenReturn(repoDir.getAbsolutePath());
 
         when(inspector.getTestInformations()).thenReturn(mockGathertest);
 
@@ -62,6 +72,6 @@ public class TestComputeSourceDir {
         assertThat(computeSourceDir.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
         verify(inspector, times(1)).setState(ProjectState.SOURCEDIRCOMPUTED);
 
-        verify(inspector, times(1)).setRepairSourceDir(new File[] {new File(tmpDir.getAbsolutePath()+"/src/main/java")});
+        verify(inspector, times(1)).setRepairSourceDir(new File[] {new File(repoDir.getAbsolutePath()+"/src/main/java")});
     }
 }

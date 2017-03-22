@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
@@ -43,6 +44,7 @@ public class ProjectInspector {
     private boolean isReproducedAsError;
     private boolean previousBuildFlag;
     private boolean hasBeenPushed;
+    private GitHelper gitHelper;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers) {
         try {
@@ -62,6 +64,11 @@ public class ProjectInspector {
         this.autoclean = this.config.isClean();
         this.serializers = serializers;
         this.hasBeenPushed = false;
+        this.gitHelper = new GitHelper();
+    }
+
+    public GitHelper getGitHelper() {
+        return this.gitHelper;
     }
 
     public List<AbstractDataSerializer> getSerializers() {
@@ -207,6 +214,7 @@ public class ProjectInspector {
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail()))
+                    .setNextStep(new SquashRepository(this))
                     .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
