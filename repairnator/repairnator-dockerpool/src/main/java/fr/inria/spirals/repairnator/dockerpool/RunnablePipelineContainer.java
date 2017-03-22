@@ -40,11 +40,12 @@ public class RunnablePipelineContainer implements Runnable {
 
             String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
             String[] envValues = new String[] {
-                    "BUILD_ID="+this.buildId,
-                    "LOG_FILENAME="+containerName,
-                    "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
-                    "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
-                    "RUN_ID="+this.runId};
+                "BUILD_ID="+this.buildId,
+                "LOG_FILENAME="+containerName,
+                "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
+                "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
+                "RUN_ID="+this.runId
+            };
 
             Map<String,String> labels = new HashMap<>();
             labels.put("name",containerName);
