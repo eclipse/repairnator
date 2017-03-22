@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.scanner;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
+import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
@@ -18,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -136,6 +139,23 @@ public class Launcher {
         opt2.setHelp("Specify the hour number to lookup to get builds");
         this.jsap.registerParameter(opt2);
 
+        DateStringParser dateStringParser = DateStringParser.getParser();
+        dateStringParser.setProperty("format", "dd/MM/yyyy");
+
+        opt2 = new FlaggedOption("lookFromDate");
+        opt2.setShortFlag('f');
+        opt2.setLongFlag("lookFromDate");
+        opt2.setStringParser(dateStringParser);
+        opt2.setHelp("Specify the initial date to get builds");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("lookToDate");
+        opt2.setShortFlag('t');
+        opt2.setLongFlag("lookToDate");
+        opt2.setStringParser(dateStringParser);
+        opt2.setHelp("Specify the final date to get builds");
+        this.jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("googleSecretPath");
         opt2.setShortFlag('g');
         opt2.setLongFlag("googleSecretPath");
@@ -156,7 +176,20 @@ public class Launcher {
 
         String googleSecretPath = this.arguments.getFile("googleSecretPath").getPath();
 
-        ProjectScanner scanner = new ProjectScanner(this.arguments.getInt("lookupHours"), launcherMode, this.arguments.getString("runId"));
+        ProjectScanner scanner;
+        Date lookFromDate = this.arguments.getDate("lookFromDate");
+        Date lookToDate = this.arguments.getDate("lookToDate");
+        if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"));
+        } else {
+            int lookupHours = this.arguments.getInt("lookupHours");
+            Calendar limitCal = Calendar.getInstance();
+            limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
+            lookFromDate = limitCal.getTime();
+            lookToDate = new Date();
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"));
+        }
+
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
         ProcessSerializer scannerSerializer;
 
@@ -187,7 +220,7 @@ public class Launcher {
             for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
                 Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuild().getId());
             }
-            
+
             this.processOutput(buildsToBeInspected);
         } else {
             Launcher.LOGGER.warn("Builds inspected has null value.");
