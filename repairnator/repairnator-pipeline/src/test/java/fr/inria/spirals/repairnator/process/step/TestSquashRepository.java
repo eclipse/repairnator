@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -42,8 +43,11 @@ public class TestSquashRepository {
     }
 
     @Test
-    public void testSquashRepositoryOnSmallRepoWillNotSquashIt() throws IOException, GitAPIException {
+    public void testSquashRepositoryOnSmallRepoWillNotSquashIt() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 207924136; // surli/failingProject build
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -80,8 +84,11 @@ public class TestSquashRepository {
     }
 
     @Test
-    public void testSquashRepositoryOnProjectWhichChangeFileAtBuildWorks() throws IOException, GitAPIException {
+    public void testSquashRepositoryOnProjectWhichChangeFileAtBuildWorks() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 212649623; // surli/failingProject build
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -127,8 +134,11 @@ public class TestSquashRepository {
     }
 
     @Test
-    public void testSquashRepositoryOnProjectWithHundredCommits() throws IOException, GitAPIException {
+    public void testSquashRepositoryOnProjectWithHundredCommits() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 209082903; // surli/failingProject build
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());

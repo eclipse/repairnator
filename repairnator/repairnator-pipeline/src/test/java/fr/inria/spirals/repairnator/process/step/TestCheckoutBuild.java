@@ -7,6 +7,8 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -41,8 +43,11 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuild() throws IOException, GitAPIException {
+    public void testCheckoutBuild() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 207924136; // surli/failingProject build
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -79,14 +84,21 @@ public class TestCheckoutBuild {
         Iterable<RevCommit> logs = gitDir.log().call();
 
         Iterator<RevCommit> iterator = logs.iterator();
+        boolean foundRightCommitAfterRepairCommits = false;
+        boolean stopSearch = false;
 
-        assertThat(iterator.hasNext(), is(true));
+        while (iterator.hasNext() && !stopSearch) {
+            RevCommit revCommit = iterator.next();
 
-        assertThat(iterator.next().getName(), not(build.getCommit().getSha())); // last commit is done for repairnator.properties
+            if (revCommit.getName().equals(build.getCommit().getSha())) {
+                foundRightCommitAfterRepairCommits = true;
+                stopSearch = true;
+            } else if (!revCommit.getShortMessage().contains("repairnator")) {
+                stopSearch = true;
+            }
+        }
 
-        assertThat(iterator.hasNext(), is(true));
-
-        assertThat(iterator.next().getName(), is(build.getCommit().getSha()));
+        assertThat(foundRightCommitAfterRepairCommits, is(true));
     }
 
     @Test

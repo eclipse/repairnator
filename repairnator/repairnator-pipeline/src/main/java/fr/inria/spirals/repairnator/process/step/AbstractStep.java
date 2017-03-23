@@ -183,8 +183,6 @@ public abstract class AbstractStep {
     }
 
     protected void cleanMavenArtifacts() {
-        this.writeProperty("lastStep", this.getName());
-
         if (this.inspector.getM2LocalPath() != null) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
@@ -220,10 +218,11 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
-        this.cleanMavenArtifacts();
+        this.writeProperty("lastStep", this.getName());
         this.inspector.getJobStatus().setState(this.state);
         this.serializeData();
         this.pushNewInformationIfNeeded();
+        this.cleanMavenArtifacts();
     }
 
     private void pushNewInformationIfNeeded() {

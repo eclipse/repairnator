@@ -7,6 +7,8 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -69,7 +71,7 @@ public class TestCloneRepositoryStep {
         assertThat(cloneStep.getState(), is(ProjectState.CLONABLE));
         assertThat(cloneStep.shouldStop, is(false));
 
-        Git gitDir = Git.open(tmpDir);
+        Git gitDir = Git.open(new File(tmpDir, "repo"));
         Ref ref = gitDir.getRepository().exactRef("HEAD");
 
         assertThat(ref.isSymbolic(), is(true));

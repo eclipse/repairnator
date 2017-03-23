@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import ch.qos.logback.classic.Level;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.junit.Test;
 
@@ -72,6 +73,9 @@ public class TestAbstractStep {
         String localRepoPath = "./src/test/resources/test-abstractstep/simple-maven-project";
         when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
 
+        JobStatus jobStatus = new JobStatus(localRepoPath);
+        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+
         AbstractStep step1 = new AbstractStepNop(mockInspector);
 
         String expectedPomPath = localRepoPath+"/pom.xml";
@@ -85,6 +89,9 @@ public class TestAbstractStep {
 
         String localRepoPath = "./unkown-path";
         when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
+
+        JobStatus jobStatus = new JobStatus(localRepoPath);
+        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
 
         AbstractStep step1 = new AbstractStepNop(mockInspector);
 
@@ -102,12 +109,15 @@ public class TestAbstractStep {
         String localRepoPath = "./src/test/resources/test-abstractstep/complex-maven-project";
         when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
 
+        JobStatus jobStatus = new JobStatus(localRepoPath);
+        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+
         AbstractStep step1 = new AbstractStepNop(mockInspector);
 
         String expectedPomPath = localRepoPath+"/a-submodule";
 
         String obtainedPom = step1.getPom();
-        verify(mockInspector).setRepoLocalPath(expectedPomPath);
+        assertThat(jobStatus.getPomDirPath(), is(expectedPomPath));
     }
 
 }
