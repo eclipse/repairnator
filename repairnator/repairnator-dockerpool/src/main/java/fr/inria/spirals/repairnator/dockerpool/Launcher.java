@@ -1,4 +1,5 @@
 package fr.inria.spirals.repairnator.dockerpool;
+import com.google.api.client.auth.oauth2.Credential;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -11,6 +12,8 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.ManageGoogleAccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -31,6 +35,8 @@ public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
+    private String accessToken;
+
     public static List<String> runningDockerContainer = new ArrayList<>();
     public static DockerClient docker;
 
@@ -90,6 +96,14 @@ public class Launcher {
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault("1");
         opt2.setHelp("Specify the number of day before killing the whole pool.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("googleSecretPath");
+        opt2.setShortFlag('s');
+        opt2.setLongFlag("googleSecretPath");
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        opt2.setDefault("./client_secret.json");
+        opt2.setHelp("Specify the path to the JSON google secret for serializing.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("runId");
@@ -198,7 +212,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), this.accessToken);
             executorService.submit(runnablePipelineContainer);
         }
 
@@ -223,11 +237,24 @@ public class Launcher {
 
 
 
-    public Launcher(String[] args) throws JSAPException {
+    private Launcher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
         this.checkArguments();
         this.checkEnvironmentVariables();
+
+        try {
+            GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
+
+            ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
+            Credential credential = manageGoogleAccessToken.getCredential();
+
+            if (credential != null) {
+                this.accessToken = credential.getAccessToken();
+            }
+        } catch (IOException | GeneralSecurityException e) {
+            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+        }
     }
 
     public static void main(String[] args) throws Exception {

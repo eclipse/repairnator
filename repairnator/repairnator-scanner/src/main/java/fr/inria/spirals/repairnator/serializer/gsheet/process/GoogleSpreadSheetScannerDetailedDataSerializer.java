@@ -26,8 +26,8 @@ public class GoogleSpreadSheetScannerDetailedDataSerializer implements ProcessSe
     private Sheets sheets;
     private List<BuildToBeInspected> buildsToBeInspected;
 
-    public GoogleSpreadSheetScannerDetailedDataSerializer(List<BuildToBeInspected> buildsToBeInspected, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetScannerDetailedDataSerializer(List<BuildToBeInspected> buildsToBeInspected) {
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.buildsToBeInspected = buildsToBeInspected;
     }
 

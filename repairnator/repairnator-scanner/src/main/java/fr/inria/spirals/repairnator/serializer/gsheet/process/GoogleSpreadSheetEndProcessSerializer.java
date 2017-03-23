@@ -28,8 +28,8 @@ public class GoogleSpreadSheetEndProcessSerializer implements ProcessSerializer 
     private int reproducedFailures;
     private int reproducedErrors;
 
-    public GoogleSpreadSheetEndProcessSerializer(ProjectScanner scanner, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetEndProcessSerializer(ProjectScanner scanner) {
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.scanner = scanner;
         this.beginDate = new Date();
     }

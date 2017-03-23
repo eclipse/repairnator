@@ -24,8 +24,8 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
     private Sheets sheets;
     private ProjectScanner scanner;
 
-    public GoogleSpreadSheetScannerSerializer4Bears(ProjectScanner scanner, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetScannerSerializer4Bears(ProjectScanner scanner) {
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.scanner = scanner;
     }
 
