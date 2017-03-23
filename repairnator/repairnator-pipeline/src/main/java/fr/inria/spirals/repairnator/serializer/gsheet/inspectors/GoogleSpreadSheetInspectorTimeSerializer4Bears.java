@@ -26,7 +26,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractData
 
     public GoogleSpreadSheetInspectorTimeSerializer4Bears(String googleSecretPath) throws IOException {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
     }
 
     @Override
