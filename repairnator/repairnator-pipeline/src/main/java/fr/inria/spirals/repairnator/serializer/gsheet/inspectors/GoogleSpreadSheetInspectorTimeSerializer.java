@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorTimeSerializer.class);
-    private static final String RANGE = "Duration Data!A1:J1";
+    private static final String RANGE = "Duration Data!A1:O1";
 
     private Sheets sheets;
 
@@ -46,7 +46,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
             int computeSourceDir = durations.getOrDefault(ComputeSourceDir.class.getSimpleName(), 0);
             int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
 
-            int total = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
+            int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
                     computeClasspath + computeSourceDir + repair;
 
             Build build = inspector.getBuild();
@@ -56,7 +56,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
             dataCol.add(build.getRepository().getSlug());
             dataCol.add(Utils.formatCompleteDate(new Date()));
             dataCol.add(Utils.getHostname());
-            dataCol.add(total);
+            dataCol.add(totalDuration);
             dataCol.add(clonage);
             dataCol.add(checkoutBuild);
             dataCol.add(buildtime);
