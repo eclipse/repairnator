@@ -46,12 +46,16 @@ public class GatherTestInformation extends AbstractStep {
      * @param contract The contract to know in which case the step should stop the pipeline
      * @param skipSettingStatusInformation If set to true, the step won't push any information to the JobStatus of the inspector.
      */
-    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
-        super(inspector);
+    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation, String stepName) {
+        super(inspector, stepName);
         this.failureLocations = new HashSet<>();
         this.failureNames = new HashSet<>();
         this.contract = contract;
         this.skipSettingStatusInformation = skipSettingStatusInformation;
+    }
+
+    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
+        this(inspector, contract, skipSettingStatusInformation, "");
     }
 
     public int getNbFailingTests() {

@@ -1,17 +1,12 @@
 package fr.inria.spirals.repairnator.pipeline;
 
 import ch.qos.logback.classic.Level;
-import com.martiansoftware.jsap.FlaggedOption;
-import com.martiansoftware.jsap.JSAP;
-import com.martiansoftware.jsap.JSAPException;
-import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.Switch;
+import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -20,9 +15,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetInspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.GoogleSpreadSheetNopolSerializer;
+import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -218,12 +212,15 @@ public class Launcher {
             GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
 
             serializers.add(new GoogleSpreadSheetInspectorSerializer(this.config.getGoogleSecretPath()));
+            serializers.add(new GoogleSpreadSheetInspectorTimeSerializer(this.config.getGoogleSecretPath()));
             serializers.add(new GoogleSpreadSheetNopolSerializer(this.config.getGoogleSecretPath()));
         } else {
             GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
 
             serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears(this.config.getGoogleSecretPath()));
+            serializers.add(new GoogleSpreadSheetInspectorTimeSerializer4Bears(this.config.getGoogleSecretPath()));
         }
+        //serializers.add(new GoogleSpreadSheetInspectorTrackTreatedBuilds(this.buildToBeInspected, this.config.getGoogleSecretPath()));
 
         ProjectInspector inspector;
 

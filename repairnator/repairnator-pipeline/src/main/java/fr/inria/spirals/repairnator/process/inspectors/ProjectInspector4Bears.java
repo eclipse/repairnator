@@ -40,30 +40,30 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
             cloneRepo.setNextStep(new CheckoutBuild(this))
-                    .setNextStep(new BuildProject(this))
-                    .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true))
+                    .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
+                    .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
                     .setNextStep(new CheckoutPreviousBuild(this))
-                    .setNextStep(new BuildProject(this))
-                    .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false))
+                    .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild"))
+                    .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild"))
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new SquashRepository(this))
                     .setNextStep(new PushIncriminatedBuild(this));
 
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutBuild(this))
-                        .setNextStep(new BuildProject(this))
-                        .setNextStep(new TestProject(this))
-                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true))
+                        .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
+                        .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
                         .setNextStep(new CheckoutPreviousBuild(this))
-                        .setNextStep(new BuildProject(this))
-                        .setNextStep(new TestProject(this))
-                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true))
+                        .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild"))
+                        .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild"))
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
                         .setNextStep(new CheckoutPreviousBuildSourceCode(this))
-                        .setNextStep(new BuildProject(this))
-                        .setNextStep(new TestProject(this))
-                        .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false))
+                        .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuildSourceCode"))
+                        .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuildSourceCode"))
+                        .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new SquashRepository(this))
                         .setNextStep(new PushIncriminatedBuild(this));
             } else {
