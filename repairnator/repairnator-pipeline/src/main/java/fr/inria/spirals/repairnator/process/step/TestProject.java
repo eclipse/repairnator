@@ -9,8 +9,13 @@ import fr.inria.spirals.repairnator.process.maven.output.MavenFilterTestOutputHa
  * Created by urli on 03/01/2017.
  */
 public class TestProject extends AbstractStep {
+
     public TestProject(ProjectInspector inspector) {
-        super(inspector);
+        this(inspector, "");
+    }
+
+    public TestProject(ProjectInspector inspector, String stepName) {
+        super(inspector, stepName);
     }
 
     protected void businessExecute() {

@@ -1,8 +1,6 @@
 package fr.inria.spirals.repairnator.serializer.gsheet.process;
 
 import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.model.AppendValuesResponse;
-import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProcessSerializer;
@@ -34,8 +32,9 @@ public class GoogleSpreadSheetScannerDetailedDataSerializer implements ProcessSe
     public void serialize() {
         if (this.sheets != null) {
             if (this.buildsToBeInspected.size() > 0) {
-                List<List<Object>> dataRows = new ArrayList<List<Object>>();
                 Date date = new Date();
+
+                List<List<Object>> dataRows = new ArrayList<List<Object>>();
 
                 for (BuildToBeInspected buildToBeInspected : this.buildsToBeInspected) {
                     Build build = buildToBeInspected.getBuild();
@@ -60,21 +59,11 @@ public class GoogleSpreadSheetScannerDetailedDataSerializer implements ProcessSe
                     dataRows.add(dataCol);
                 }
 
-                ValueRange valueRange = new ValueRange();
-                valueRange.setValues(dataRows);
-                try {
-                    AppendValuesResponse response = this.sheets.spreadsheets().values()
-                            .append(GoogleSpreadSheetFactory.getSpreadsheetID(), RANGE, valueRange)
-                            .setInsertDataOption("INSERT_ROWS").setValueInputOption("USER_ENTERED").execute();
-                    if (response != null && response.getUpdates().getUpdatedCells() > 0) {
-                        this.logger.debug("Scanner detailed data have been inserted in Google Spreadsheet.");
-                    }
-                } catch (IOException e) {
-                    this.logger.error("An error occured while inserting scanner detailed data in Google Spreadsheet.", e);
-                }
+                GoogleSpreadSheetFactory.insertData(dataRows, this.sheets, RANGE, this.logger);
             }
         } else {
-            this.logger.warn("Cannot serialize data: the sheets is not initialized (certainly a credential error)");
+            GoogleSpreadSheetFactory.logWarningWhenSheetsIsNull(this.logger);
         }
     }
+
 }
