@@ -34,29 +34,39 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
             Map<String, Integer> durations = inspector.getStepsDurationsInSeconds();
-            int total = 0;
+
             int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
+            int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
             int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
             int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
             int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
+            int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
             int push = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
+            int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
+            int computeSourceDir = durations.getOrDefault(ComputeSourceDir.class.getSimpleName(), 0);
             int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
 
-            total = clonage + buildtime + test + gatherTestInfo + push + repair;
+            int total = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
+                    computeClasspath + computeSourceDir + repair;
+
             Build build = inspector.getBuild();
 
             List<Object> dataCol = new ArrayList<Object>();
             dataCol.add(build.getId() + "");
             dataCol.add(build.getRepository().getSlug());
             dataCol.add(Utils.formatCompleteDate(new Date()));
+            dataCol.add(Utils.getHostname());
             dataCol.add(total);
             dataCol.add(clonage);
+            dataCol.add(checkoutBuild);
             dataCol.add(buildtime);
             dataCol.add(test);
             dataCol.add(gatherTestInfo);
+            dataCol.add(squashRepository);
             dataCol.add(push);
+            dataCol.add(computeClasspath);
+            dataCol.add(computeSourceDir);
             dataCol.add(repair);
-            dataCol.add(Utils.getHostname());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);

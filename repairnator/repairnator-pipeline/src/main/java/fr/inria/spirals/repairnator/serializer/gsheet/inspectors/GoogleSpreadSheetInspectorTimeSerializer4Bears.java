@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorTimeSerializer4Bears.class);
-    private static final String RANGE = "Duration Data!A1:S1";
+    private static final String RANGE = "Duration Data!A1:T1";
 
     private Sheets sheets;
 
@@ -47,12 +47,13 @@ public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractData
             int buildProjectPreviousBuildSourceCode = durations.getOrDefault(BuildProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
             int testProjectPreviousBuildSourceCode = durations.getOrDefault(TestProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
             int gatherTestInformationPreviousBuildSourceCode = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode", 0);
+            int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
             int pushBuild = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
 
-            int totalDuration = 0;
-            totalDuration = cloneRepository + checkoutBuild + buildProjectBuild + testProjectBuild + gatherTestInformationBuild +
+            int totalDuration = cloneRepository + checkoutBuild + buildProjectBuild + testProjectBuild + gatherTestInformationBuild +
                     checkoutPreviousBuild + buildProjectPreviousBuild + testProjectPreviousBuild + gatherTestInformationPreviousBuild +
-                    checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode + gatherTestInformationPreviousBuildSourceCode + pushBuild;
+                    checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode +
+                    gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild;
 
             Build build = inspector.getBuild();
 
@@ -78,6 +79,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractData
             dataCol.add(buildProjectPreviousBuildSourceCode);
             dataCol.add(testProjectPreviousBuildSourceCode);
             dataCol.add(gatherTestInformationPreviousBuildSourceCode);
+            dataCol.add(squashRepository);
             dataCol.add(pushBuild);
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
