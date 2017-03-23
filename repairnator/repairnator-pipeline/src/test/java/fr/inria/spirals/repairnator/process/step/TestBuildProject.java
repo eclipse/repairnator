@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import org.junit.Test;
 
 import java.io.File;

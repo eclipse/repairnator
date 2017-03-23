@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.step;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
@@ -10,8 +9,10 @@ import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldPass;
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.junit.Test;
@@ -20,9 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;

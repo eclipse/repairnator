@@ -5,6 +5,7 @@ import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.Utils;
@@ -35,14 +36,15 @@ public class GoogleSpreadSheetInspectorSerializer extends AbstractDataSerializer
     @Override
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
+            JobStatus jobStatus = inspector.getJobStatus();
             BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
             Build build = inspector.getBuild();
 
-            String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
+            String state = this.getPrettyPrintState(jobStatus);
 
-            String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
+            String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
             String typeOfFailures = "";
-            Set<String> failures = inspector.getTestInformations().getFailureNames();
+            Set<String> failures = jobStatus.getFailureNames();
 
             for (String failure : failures) {
                 typeOfFailures += failure + ",";

@@ -17,7 +17,7 @@ public class MavenFilterOutputHandler extends MavenOutputHandler {
 
         this.getLogger().debug(s);
         if (s.contains("[ERROR]")) {
-            this.inspector.addStepError(name, s);
+            this.inspector.getJobStatus().addStepError(name, s);
         }
     }
 }

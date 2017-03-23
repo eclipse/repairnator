@@ -1,7 +1,8 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.gatherinfocontract;
 
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.ContractForGatherTestInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
@@ -34,23 +35,16 @@ public class GatherTestInformation extends AbstractStep {
     private Set<FailureLocation> failureLocations;
     private Set<String> failureNames;
     private String failingModulePath;
+    private boolean skipSettingStatusInformation;
 
     private ContractForGatherTestInformation contract;
 
-    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract) {
+    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
         super(inspector);
-        inspector.setTestInformations(this);
         this.failureLocations = new HashSet<>();
         this.failureNames = new HashSet<>();
         this.contract = contract;
-    }
-
-    public Set<FailureLocation> getFailureLocations() {
-        return failureLocations;
-    }
-
-    public Set<String> getFailureNames() {
-        return failureNames;
+        this.skipSettingStatusInformation = skipSettingStatusInformation;
     }
 
     public int getNbFailingTests() {
@@ -69,15 +63,11 @@ public class GatherTestInformation extends AbstractStep {
         return nbSkippingTests;
     }
 
-    public String getFailingModulePath() {
-        return failingModulePath;
-    }
-
     @Override
     protected void businessExecute() {
         this.getLogger().debug("Gathering test information...");
 
-        File rootRepo = new File(this.inspector.getRepoLocalPath());
+        File rootRepo = new File(this.inspector.getJobStatus().getPomDirPath());
         final List<File> surefireDirs = new ArrayList<File>();
 
         try {
@@ -102,38 +92,41 @@ public class GatherTestInformation extends AbstractStep {
             try {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
-                    if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
-                        File failingModule = surefireDir.getParentFile().getParentFile();
-                        this.failingModulePath = failingModule.getCanonicalPath();
-                        this.writeProperty("failingModule", this.failingModulePath);
-                    }
+                    if (!skipSettingStatusInformation) {
+                        if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
+                            File failingModule = surefireDir.getParentFile().getParentFile();
+                            this.failingModulePath = failingModule.getCanonicalPath();
+                            this.getInspector().getJobStatus().setFailingModulePath(this.failingModulePath);
+                            this.writeProperty("failingModule", this.failingModulePath);
+                        }
 
-                    this.nbTotalTests += testSuite.getNumberOfTests();
-                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
-                    if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
-                        for (ReportTestCase testCase : testSuite.getTestCases()) {
-                            if (testCase.hasFailure()) {
-                                this.failureNames.add(testCase.getFailureType());
-                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.isError());
-                                FailureLocation failureLocation = null;
+                        this.nbTotalTests += testSuite.getNumberOfTests();
+                        this.nbSkippingTests += testSuite.getNumberOfSkipped();
+                        if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
+                            for (ReportTestCase testCase : testSuite.getTestCases()) {
+                                if (testCase.hasFailure()) {
+                                    this.failureNames.add(testCase.getFailureType());
+                                    FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.isError());
+                                    FailureLocation failureLocation = null;
 
-                                for (FailureLocation location : this.failureLocations) {
-                                    if (location.getClassName().equals(testCase.getFullClassName())) {
-                                        failureLocation = location;
-                                        break;
+                                    for (FailureLocation location : this.failureLocations) {
+                                        if (location.getClassName().equals(testCase.getFullClassName())) {
+                                            failureLocation = location;
+                                            break;
+                                        }
                                     }
-                                }
 
-                                if (failureLocation == null) {
-                                    failureLocation = new FailureLocation(testCase.getFullClassName());
-                                    this.failureLocations.add(failureLocation);
-                                }
-                                failureLocation.addFailure(typeTof);
+                                    if (failureLocation == null) {
+                                        failureLocation = new FailureLocation(testCase.getFullClassName());
+                                        this.failureLocations.add(failureLocation);
+                                    }
+                                    failureLocation.addFailure(typeTof);
 
-                                if (testCase.isError()) {
-                                    failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
-                                } else {
-                                    failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
+                                    if (testCase.isError()) {
+                                        failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
+                                    } else {
+                                        failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
+                                    }
                                 }
                             }
                         }
@@ -150,16 +143,19 @@ public class GatherTestInformation extends AbstractStep {
                     this.setState(ProjectState.NOTFAILING);
                 }
             } catch (MavenReportException e) {
-                this.getLogger().warn("Error while parsing files to get test information: " + e);
-                this.addStepError(e.getMessage());
+                this.addStepError("Error while parsing files to get test information:",e);
             } catch (IOException e) {
-                this.getLogger().warn("Error while getting the failing module path: " + e);
-                this.addStepError(e.getMessage());
+                this.addStepError("Error while getting the failing module path: ",e);
             }
         }
 
-        this.writeProperty("error-types", StringUtils.join(this.failureNames, ","));
-        this.writeProperty("failing-test-cases", StringUtils.join(this.failureLocations, ","));
+        if (!this.skipSettingStatusInformation) {
+            this.writeProperty("error-types", StringUtils.join(this.failureNames, ","));
+            this.writeProperty("failing-test-cases", StringUtils.join(this.failureLocations, ","));
+            this.inspector.getJobStatus().setFailureLocations(this.failureLocations);
+            this.inspector.getJobStatus().setFailureNames(this.failureNames);
+        }
+
 
         this.shouldStop = contract.shouldBeStopped(this);
     }

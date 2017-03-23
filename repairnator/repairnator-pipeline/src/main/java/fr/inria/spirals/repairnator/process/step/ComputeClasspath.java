@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.GatherTestInformation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,8 +48,7 @@ public class ComputeClasspath extends AbstractStep {
     protected void businessExecute() {
         this.getLogger().debug("Computing classpath from incriminated module...");
 
-        GatherTestInformation infoStep = inspector.getTestInformations();
-        String incriminatedModule = infoStep.getFailingModulePath();
+        String incriminatedModule = this.getInspector().getJobStatus().getFailingModulePath();
 
         File defaultClassDir = new File(incriminatedModule + File.separator + DEFAULT_CLASSES_DIR + File.separator);
         this.addFileToClassPath(defaultClassDir);
@@ -105,7 +105,7 @@ public class ComputeClasspath extends AbstractStep {
             this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
         }
 
-        this.inspector.setRepairClassPath(this.classPath);
+        this.inspector.getJobStatus().setRepairClassPath(this.classPath);
         this.setState(ProjectState.CLASSPATHCOMPUTED);
     }
 }

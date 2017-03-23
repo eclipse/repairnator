@@ -41,8 +41,6 @@ public class PushIncriminatedBuild extends AbstractStep {
                 return;
             }
 
-            this.writeProperty("step-durations", StringUtils.join(this.inspector.getStepsDurationsInSeconds().entrySet()));
-
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
 
             this.getLogger().debug("Start to push failing state in the remote repository: " + remoteRepo + " branch: " + branchName);
@@ -89,7 +87,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
                 git.push().setRemote(REMOTE_NAME).add(branch).setCredentialsProvider(credentialsProvider).call();
 
-                this.getInspector().setHasBeenPushed(true);
+                this.getInspector().getJobStatus().setHasBeenPushed(true);
             } catch (IOException e) {
                 this.getLogger().error("Error while reading git directory at the following location: "
                         + inspector.getRepoLocalPath() + " : " + e);

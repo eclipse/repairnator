@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.GatherTestInformation;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingException;
@@ -97,9 +98,7 @@ public class ComputeSourceDir extends AbstractStep {
     @Override
     protected void businessExecute() {
         this.getLogger().debug("Computing the source directory ...");
-
-        GatherTestInformation infoStep = inspector.getTestInformations();
-        String incriminatedModule = infoStep.getFailingModulePath();
+        String incriminatedModule = this.inspector.getJobStatus().getFailingModulePath();
 
         File[] sources = this.searchForSourcesDirectory(incriminatedModule, true);
 
@@ -108,7 +107,7 @@ public class ComputeSourceDir extends AbstractStep {
             this.setState(ProjectState.SOURCEDIRNOTCOMPUTED);
             this.shouldStop = true;
         } else {
-            this.inspector.setRepairSourceDir(sources);
+            this.inspector.getJobStatus().setRepairSourceDir(sources);
             this.setState(ProjectState.SOURCEDIRCOMPUTED);
         }
     }

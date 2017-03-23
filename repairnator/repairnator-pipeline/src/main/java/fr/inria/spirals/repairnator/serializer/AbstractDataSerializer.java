@@ -2,8 +2,9 @@ package fr.inria.spirals.repairnator.serializer;
 
 
 import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.GatherTestInformation;
 
 
 /**
@@ -20,8 +21,8 @@ public abstract class AbstractDataSerializer {
         return TRAVIS_URL + slug + "/builds/" + buildId;
     }
 
-    protected String getPrettyPrintState(ProjectState state, GatherTestInformation gatherTestInformation) {
-        switch (state) {
+    protected String getPrettyPrintState(JobStatus jobStatus) {
+        switch (jobStatus.getState()) {
             case NONE:
             case INIT:
             case NOTCLONABLE:
@@ -60,7 +61,7 @@ public abstract class AbstractDataSerializer {
             case CLASSPATHNOTCOMPUTED:
             case SOURCEDIRNOTCOMPUTED:
             case NOTPATCHED:
-                if (gatherTestInformation.getNbFailingTests() > 0) {
+                if (jobStatus.isReproducedAsFail()) {
                     return "test failure";
                 } else {
                     return "test errors";

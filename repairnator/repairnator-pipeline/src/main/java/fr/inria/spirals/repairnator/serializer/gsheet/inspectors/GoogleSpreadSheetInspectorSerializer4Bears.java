@@ -6,6 +6,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.Utils;
@@ -36,18 +37,19 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
     @Override
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
+            JobStatus jobStatus = inspector.getJobStatus();
             BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
             Build build = inspector.getBuild();
 
             Build previousBuild = inspector.getPreviousBuild();
             int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
-            String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
+            String state = this.getPrettyPrintState(jobStatus);
 
-            String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
+            String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
 
             String typeOfFailures = "";
-            Set<String> failures = inspector.getTestInformations().getFailureNames();
+            Set<String> failures = jobStatus.getFailureNames();
             for (String failure : failures) {
                 typeOfFailures += failure + ",";
             }
@@ -69,7 +71,7 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
             dataCol.add(Utils.formatCompleteDate(new Date()));
             dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
             dataCol.add(this.getTravisUrl(previousBuildId, previousBuildSlug));
-            if (inspector.getState() == ProjectState.FIXERBUILDCASE1 || inspector.getState() == ProjectState.FIXERBUILDCASE2) {
+            if (jobStatus.getState() == ProjectState.FIXERBUILDCASE1 || jobStatus.getState() == ProjectState.FIXERBUILDCASE2) {
                 String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
                 dataCol.add(committerEmail);
             }

@@ -7,7 +7,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.gatherinfocontract.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
@@ -40,7 +40,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
     @Override
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
-            Map<String, Integer> durations = inspector.getStepsDurationsInSeconds();
+            Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
             int total = 0;
             int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
             int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
