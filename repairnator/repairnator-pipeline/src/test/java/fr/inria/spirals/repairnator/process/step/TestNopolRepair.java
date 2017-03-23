@@ -11,8 +11,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
-import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
-import fr.inria.spirals.repairnator.process.step.gatherinfocontract.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
+import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import org.junit.Test;
 
 import java.io.File;

@@ -1,10 +1,8 @@
 package fr.inria.spirals.repairnator.serializer;
 
 
-import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.gatherinfocontract.GatherTestInformation;
 
 
 /**
