@@ -27,21 +27,25 @@ public class GoogleSpreadSheetFactory {
 
     private GoogleSpreadSheetFactory() {}
 
-    public static void initWithAccessToken(String accessToken) throws GeneralSecurityException, IOException {
+    public static boolean initWithAccessToken(String accessToken) throws GeneralSecurityException, IOException {
         if (instance == null) {
             ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
             manageGoogleAccessToken.initializeCredentialFromAccessToken(accessToken);
             instance = new GoogleSpreadSheetFactory();
-            instance.initSheets(manageGoogleAccessToken);
+            return instance.initSheets(manageGoogleAccessToken);
+        } else {
+            return instance.sheets != null;
         }
     }
 
-    public static void initWithFileSecret(String googleSecretJson) throws IOException, GeneralSecurityException {
+    public static boolean initWithFileSecret(String googleSecretJson) throws IOException, GeneralSecurityException {
         if (instance == null) {
             ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
             manageGoogleAccessToken.initializeCredentialFromGoogleSecret(googleSecretJson);
             instance = new GoogleSpreadSheetFactory();
-            instance.initSheets(manageGoogleAccessToken);
+            return instance.initSheets(manageGoogleAccessToken);
+        } else {
+            return instance.sheets != null;
         }
     }
 
@@ -53,12 +57,14 @@ public class GoogleSpreadSheetFactory {
         return GoogleSpreadSheetFactory.spreadsheetID;
     }
 
-    private void initSheets(ManageGoogleAccessToken manageGoogleAccessToken) throws IOException {
+    private boolean initSheets(ManageGoogleAccessToken manageGoogleAccessToken) throws IOException {
         this.sheets = new Sheets.Builder(
                 manageGoogleAccessToken.getHttpTransport(),
                 manageGoogleAccessToken.getJsonFactory(),
                 manageGoogleAccessToken.getCredential()
         ).setApplicationName(ManageGoogleAccessToken.APPLICATION_NAME).build();
+
+        return this.sheets != null;
     }
 
     public static Sheets getSheets() {

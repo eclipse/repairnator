@@ -75,7 +75,9 @@ public class Launcher {
         }
 
         try {
-            GoogleSpreadSheetFactory.initWithAccessToken(this.arguments.getString("googleAccessToken"));
+            if (GoogleSpreadSheetFactory.initWithAccessToken(this.arguments.getString("googleAccessToken"))) {
+                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets");
+            }
         } catch (IOException | GeneralSecurityException e) {
             LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
         }
