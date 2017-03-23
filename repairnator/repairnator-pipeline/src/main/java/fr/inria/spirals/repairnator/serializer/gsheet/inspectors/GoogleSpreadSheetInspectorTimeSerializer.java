@@ -32,9 +32,9 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
 
     private Sheets sheets;
 
-    public GoogleSpreadSheetInspectorTimeSerializer(String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetInspectorTimeSerializer() {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
     }
 
     @Override

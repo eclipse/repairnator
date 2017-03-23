@@ -30,9 +30,9 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
 
     private Sheets sheets;
 
-    public GoogleSpreadSheetNopolSerializer(String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetNopolSerializer() {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
     }
 
     private List<Object> serializeNopolInfo(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, Patch patch, int patchNumber) {

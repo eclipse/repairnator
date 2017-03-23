@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class Launcher {
     private RepairnatorConfig config;
     private int buildId;
     private BuildToBeInspected buildToBeInspected;
+
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -71,6 +73,18 @@ public class Launcher {
         }
 
         this.buildId = this.arguments.getInt("build");
+
+        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
+        } else {
+            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
+        }
+
+        try {
+            GoogleSpreadSheetFactory.initWithAccessToken(this.arguments.getString("googleAccessToken"));
+        } catch (IOException | GeneralSecurityException e) {
+            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+        }
     }
 
     private void checkNopolSolverPath() {
@@ -151,6 +165,13 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify the runId for this launch.");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("googleAccessToken");
+        opt2.setShortFlag('g');
+        opt2.setLongFlag("googleAccessToken");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify the google access token to use for serializers.");
+        this.jsap.registerParameter(opt2);
     }
 
     private void checkEnvironmentVariables() {
@@ -217,12 +238,12 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
 
-            serializers.add(new GoogleSpreadSheetInspectorSerializer(this.config.getGoogleSecretPath()));
-            serializers.add(new GoogleSpreadSheetNopolSerializer(this.config.getGoogleSecretPath()));
+            serializers.add(new GoogleSpreadSheetInspectorSerializer());
+            serializers.add(new GoogleSpreadSheetNopolSerializer());
         } else {
             GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
 
-            serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears(this.config.getGoogleSecretPath()));
+            serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears());
         }
 
         ProjectInspector inspector;

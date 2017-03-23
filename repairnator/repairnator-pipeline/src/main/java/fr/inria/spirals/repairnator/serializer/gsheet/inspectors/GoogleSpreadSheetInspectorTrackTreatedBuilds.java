@@ -30,10 +30,10 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
     private Sheets sheets;
     private String runid;
 
-    public GoogleSpreadSheetInspectorTrackTreatedBuilds(Collection<BuildToBeInspected> buildToBeInspecteds, String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetInspectorTrackTreatedBuilds(Collection<BuildToBeInspected> buildToBeInspecteds) {
         super();
         this.runid = UUID.randomUUID().toString();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.serializeBuildsToBeInspected(buildToBeInspecteds);
     }
 
