@@ -163,6 +163,12 @@ public class Launcher {
         opt2.setDefault("./client_secret.json");
         opt2.setHelp("Specify the path to the JSON google secret for serializing.");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("runId");
+        opt2.setLongFlag("runId");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify run id for the scanner.");
+        this.jsap.registerParameter(opt2);
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {
@@ -174,15 +180,16 @@ public class Launcher {
         Date lookFromDate = this.arguments.getDate("lookFromDate");
         Date lookToDate = this.arguments.getDate("lookToDate");
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode);
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"));
         } else {
             int lookupHours = this.arguments.getInt("lookupHours");
             Calendar limitCal = Calendar.getInstance();
             limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
             lookFromDate = limitCal.getTime();
             lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode);
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"));
         }
+
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
         ProcessSerializer scannerSerializer;
 

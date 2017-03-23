@@ -1,10 +1,12 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -43,6 +45,8 @@ public class TestNopolRepair {
         } catch (RepairnatorConfigException e) {
             throw new RuntimeException(e);
         }
+
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     public static boolean isMac() {
@@ -62,7 +66,7 @@ public class TestNopolRepair {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null);
 

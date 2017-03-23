@@ -1,10 +1,13 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
@@ -30,6 +33,10 @@ import static org.mockito.Mockito.when;
  */
 public class TestCloneRepositoryStep {
 
+    static {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
+
     @Test
     public void testCloneMasterBuild() throws IOException, GitAPIException {
         int buildId = 207924136; // surli/failingProject build
@@ -42,13 +49,14 @@ public class TestCloneRepositoryStep {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.execute();

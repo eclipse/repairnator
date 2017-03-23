@@ -21,6 +21,7 @@ ENV GITHUB_LOGIN=
 ENV GITHUB_OAUTH=
 ENV BUILD_ID=
 ENV LOG_FILENAME=
+ENV RUN_ID=
 
 WORKDIR /root
-ENTRYPOINT java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -m repair -d -b $BUILD_ID
+ENTRYPOINT java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -m repair -d -b $BUILD_ID --runId $RUN_ID

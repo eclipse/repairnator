@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class GoogleSpreadSheetScannerDetailedDataSerializer implements ProcessSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetScannerDetailedDataSerializer.class);
-    private static final String RANGE = "Scanner Detailed Data!A1:J1";
+    private static final String RANGE = "Scanner Detailed Data!A1:K1";
 
     private Sheets sheets;
     private List<BuildToBeInspected> buildsToBeInspected;
@@ -56,7 +56,7 @@ public class GoogleSpreadSheetScannerDetailedDataSerializer implements ProcessSe
                     dataCol.add("http://travis-ci.org/" + build.getRepository().getSlug() + "/builds/" + previousBuildId);
                     String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
                     dataCol.add(committerEmail);
-
+                    dataCol.add(buildToBeInspected.getRunId());
                     dataRows.add(dataCol);
                 }
 

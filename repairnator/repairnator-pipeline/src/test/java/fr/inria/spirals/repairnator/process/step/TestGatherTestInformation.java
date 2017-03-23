@@ -1,11 +1,14 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.TestsInformation;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldPass;
@@ -37,6 +40,10 @@ import static org.mockito.Mockito.when;
  */
 public class TestGatherTestInformation {
 
+    static {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
+
     @Test
     public void testGatherTestInformationWhenFailing() throws IOException {
         int buildId = 207890790; // surli/failingProject build
@@ -49,14 +56,17 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -69,7 +79,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTFAILURE));
         verify(inspector, times(1)).setState(ProjectState.HASTESTFAILURE);
 
-        assertThat(gatherTestInformation.getFailingModulePath(), is(tmpDir.getCanonicalPath()));
+        assertThat(gatherTestInformation.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(98));
         assertThat(gatherTestInformation.getNbFailingTests(), is(26));
         assertThat(gatherTestInformation.getNbErroringTests(), is(5));
@@ -95,14 +105,17 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -115,7 +128,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTERRORS));
         verify(inspector, times(1)).setState(ProjectState.HASTESTERRORS);
 
-        assertThat(gatherTestInformation.getFailingModulePath(), is(tmpDir.getCanonicalPath()));
+        assertThat(gatherTestInformation.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(8));
         assertThat(gatherTestInformation.getNbFailingTests(), is(0));
         assertThat(gatherTestInformation.getNbErroringTests(), is(1));
@@ -150,14 +163,18 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+        File repoDir = new File(tmpDir, "repo");
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -170,7 +187,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTERRORS));
         verify(inspector, times(1)).setState(ProjectState.HASTESTERRORS);
 
-        assertThat(gatherTestInformation.getFailingModulePath(), is(tmpDir.getCanonicalPath()));
+        assertThat(gatherTestInformation.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(26));
         assertThat(gatherTestInformation.getNbFailingTests(), is(0));
         assertThat(gatherTestInformation.getNbErroringTests(), is(5));
@@ -196,14 +213,18 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+
+        File repoDir = new File(tmpDir, "repo");
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail());
@@ -239,14 +260,15 @@ public class TestGatherTestInformation {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldPass());

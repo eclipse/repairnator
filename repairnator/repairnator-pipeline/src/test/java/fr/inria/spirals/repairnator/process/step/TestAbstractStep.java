@@ -1,6 +1,8 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.junit.Test;
 
@@ -27,6 +29,10 @@ public class TestAbstractStep {
         protected void businessExecute() {
             // do nothing
         }
+    }
+
+    static {
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     @Test

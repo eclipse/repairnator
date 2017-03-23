@@ -1,10 +1,13 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldPass;
 import org.junit.Test;
@@ -30,6 +33,10 @@ import static org.mockito.Mockito.when;
  */
 public class TestComputeClasspath {
 
+    static {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
+
     @Test
     public void testComputeClasspath() throws IOException {
         int buildId = 201176013; // surli/failingProject build
@@ -42,17 +49,20 @@ public class TestComputeClasspath {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL);
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         GatherTestInformation mockGathertest = mock(GatherTestInformation.class);
-        when(mockGathertest.getFailingModulePath()).thenReturn(tmpDir.getAbsolutePath());
+        when(mockGathertest.getFailingModulePath()).thenReturn(repoDir.getAbsolutePath());
 
         when(inspector.getTestInformations()).thenReturn(mockGathertest);
 
@@ -68,8 +78,8 @@ public class TestComputeClasspath {
 
         List<URL> expectedClasspath = new ArrayList<URL>();
 
-        URL classDir = new URL("file:"+tmpDir.getAbsolutePath()+"/target/classes/");
-        URL testDir = new URL("file:"+tmpDir.getAbsolutePath()+"/target/test-classes/");
+        URL classDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/classes/");
+        URL testDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/test-classes/");
         URL junit = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.11/junit-4.11.jar");
         URL hamcrest = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar");
 

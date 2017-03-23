@@ -5,6 +5,7 @@ import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetNopolSerializer.class);
-    private static final String RANGE = "Nopol Stats!A1:P1";
+    private static final String RANGE = "Nopol Stats!A1:Q1";
 
     private Sheets sheets;
 
@@ -33,8 +34,9 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
     }
 
-    private List<Object> serializeNopolInfo(Build build, NopolInformation nopolInformation, Patch patch,
-            int patchNumber) {
+    private List<Object> serializeNopolInfo(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, Patch patch, int patchNumber) {
+
+        Build build = buildToBeInspected.getBuild();
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(Utils.getHostname());
         dataCol.add(Utils.formatCompleteDate(nopolInformation.getDateEnd()));
@@ -72,6 +74,7 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
         dataCol.add(nopolInformation.getNbAngelicValues());
         dataCol.add(nopolInformation.getNbStatements());
         dataCol.add(nopolInformation.getIgnoreStatus().name());
+        dataCol.add(buildToBeInspected.getRunId());
         return dataCol;
     }
 
@@ -79,7 +82,7 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
     public void serializeData(ProjectInspector inspector){
         if (this.sheets != null) {
             if (inspector.getNopolInformations() != null) {
-                Build build = inspector.getBuild();
+                BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
 
                 List<List<Object>> dataRow = new ArrayList<List<Object>>();
 
@@ -87,13 +90,13 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
                     List<Object> dataCol;
 
                     if (nopolInformation.getPatches().isEmpty()) {
-                        dataCol = this.serializeNopolInfo(build, nopolInformation, null, 0);
+                        dataCol = this.serializeNopolInfo(buildToBeInspected, nopolInformation, null, 0);
                         dataRow.add(dataCol);
                     } else {
                         int patchNumber = 1;
 
                         for (Patch patch : nopolInformation.getPatches()) {
-                            dataCol = this.serializeNopolInfo(build, nopolInformation, patch, patchNumber++);
+                            dataCol = this.serializeNopolInfo(buildToBeInspected, nopolInformation, patch, patchNumber++);
                             dataRow.add(dataCol);
                         }
                     }

@@ -140,7 +140,7 @@ public class NopolRepair extends AbstractStep {
                             try {
                                 result = nopol.build();
                             } catch (RuntimeException e) {
-                                //e.printStackTrace();
+                                addStepError("Got runtime exception while running Nopol", e);
                             }
                             return result;
                         }
@@ -150,6 +150,9 @@ public class NopolRepair extends AbstractStep {
                         executor.shutdown();
                         NopolResult result = nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
 
+                        if (result == null) {
+                            result = nopol.getNopolResult();
+                        }
                         nopolInformation.setNbStatements(result.getNbStatements());
                         nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
                         patch = result.getPatches();

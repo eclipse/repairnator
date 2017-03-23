@@ -1,7 +1,8 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.codehaus.plexus.util.FileUtils;
@@ -39,6 +40,7 @@ public abstract class AbstractStep {
     private boolean pomLocationTested;
     private List<AbstractDataSerializer> serializers;
     private Properties properties;
+    private RepairnatorConfig config;
 
     public AbstractStep(ProjectInspector inspector) {
         this(inspector, "");
@@ -53,6 +55,11 @@ public abstract class AbstractStep {
         this.pomLocationTested = false;
         this.serializers = new ArrayList<AbstractDataSerializer>();
         this.properties = new Properties();
+        try {
+            this.config = RepairnatorConfig.getInstance();
+        } catch (RepairnatorConfigException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setProperties(Properties properties) {
@@ -113,14 +120,17 @@ public abstract class AbstractStep {
         this.inspector.addStepError(this.name, error);
     }
 
+    public void addStepError(String error, Throwable exception) {
+        getLogger().error(error, exception);
+        this.inspector.addStepError(this.name, error);
+    }
+
     protected void executeNextStep() {
         if (this.nextStep != null) {
             this.nextStep.setState(this.state);
             this.nextStep.execute();
         } else {
-            this.inspector.setState(this.state);
-            this.serializeData();
-            this.cleanMavenArtifacts();
+            this.terminatePipeline();
         }
     }
 
@@ -209,17 +219,22 @@ public abstract class AbstractStep {
         if (!shouldStop) {
             this.executeNextStep();
         } else {
-            this.cleanMavenArtifacts();
-            this.inspector.setState(this.state);
-            this.serializeData();
+            this.terminatePipeline();
         }
+    }
+
+    private void terminatePipeline() {
+        this.cleanMavenArtifacts();
+        this.inspector.setState(this.state);
+        this.serializeData();
+        this.pushNewInformationIfNeeded();
     }
 
     private void pushNewInformationIfNeeded() {
         try {
             Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
 
-            boolean createNewCommit = GitHelper.addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
+            boolean createNewCommit = this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
 
             if (createNewCommit && this.inspector.isHasBeenPushed()) {
                 CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
@@ -255,6 +270,10 @@ public abstract class AbstractStep {
         } catch (IOException e) {
             this.getLogger().error("Cannot write property to the following file: " + filePath, e);
         }
+    }
+
+    public RepairnatorConfig getConfig() {
+        return config;
     }
 
     protected abstract void businessExecute();

@@ -26,6 +26,7 @@ public abstract class CheckoutRepository extends AbstractStep {
     protected void businessExecute() {
         Git git;
         try {
+            GitHelper gitHelper = this.getInspector().getGitHelper();
             git = Git.open(new File(inspector.getRepoLocalPath()));
             Build build;
             if (checkoutType == CheckoutType.CHECKOUT_BUILD) {
@@ -51,19 +52,19 @@ public abstract class CheckoutRepository extends AbstractStep {
                     return;
                 }
 
-                GitHelper.addAndCommitRepairnatorLogAndProperties(git, "After getting PR information");
+                gitHelper.addAndCommitRepairnatorLogAndProperties(git, "After getting PR information");
 
                 String repository = this.inspector.getRepoSlug();
                 this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
-                boolean successfulMerge = GitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this);
+                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this);
                 if (!successfulMerge) {
                     this.getLogger().debug("Error while merging two commits to reproduce the PR.");
                     this.shouldStop = true;
                 }
             } else {
                 String commitCheckout = build.getCommit().getSha();
-                commitCheckout = GitHelper.testCommitExistence(git, commitCheckout, this, build);
+                commitCheckout = gitHelper.testCommitExistence(git, commitCheckout, this, build);
                 if (commitCheckout != null) {
                     this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
                     if (checkoutType != CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE) {

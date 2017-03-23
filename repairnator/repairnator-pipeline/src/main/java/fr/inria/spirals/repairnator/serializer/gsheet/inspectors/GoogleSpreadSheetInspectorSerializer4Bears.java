@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.serializer.gsheet.inspectors;
 
 import com.google.api.services.sheets.v4.Sheets;
 import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -22,7 +23,7 @@ import java.util.Set;
  */
 public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetInspectorSerializer4Bears.class);
-    private static final String RANGE = "All data!A1:O1";
+    private static final String RANGE = "All data!A1:P1";
 
     private Sheets sheets;
 
@@ -34,6 +35,7 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
     @Override
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
+            BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
             Build build = inspector.getBuild();
 
             Build previousBuild = inspector.getPreviousBuild();
@@ -70,6 +72,7 @@ public class GoogleSpreadSheetInspectorSerializer4Bears extends AbstractDataSeri
                 String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
                 dataCol.add(committerEmail);
             }
+            dataCol.add(buildToBeInspected.getRunId());
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);
