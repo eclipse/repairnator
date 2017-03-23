@@ -11,7 +11,6 @@ import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,13 +102,13 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
                 }
 
                 if (!dataRow.isEmpty()) {
-                    GoogleSpreadSheetUtils.insertData(dataRow, this.sheets, RANGE, this.logger);
+                    GoogleSpreadSheetFactory.insertData(dataRow, this.sheets, RANGE, this.logger);
                 }
             } else {
                 this.logger.warn("NopolRepair step seems not defined in inspector. Maybe you should not use this serializer.");
             }
         } else {
-            GoogleSpreadSheetUtils.logWarningWhenSheetsIsNull(this.logger);
+            GoogleSpreadSheetFactory.logWarningWhenSheetsIsNull(this.logger);
         }
     }
 }

@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,9 +56,9 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
 
             List<List<Object>> dataRows = new ArrayList<List<Object>>();
             dataRows.add(dataCol);
-            GoogleSpreadSheetUtils.insertData(dataRows, this.sheets, RANGE, this.logger);
+            GoogleSpreadSheetFactory.insertData(dataRows, this.sheets, RANGE, this.logger);
         } else {
-            GoogleSpreadSheetUtils.logWarningWhenSheetsIsNull(this.logger);
+            GoogleSpreadSheetFactory.logWarningWhenSheetsIsNull(this.logger);
         }
     }
 
@@ -72,9 +71,9 @@ public class GoogleSpreadSheetInspectorTrackTreatedBuilds extends AbstractDataSe
 
             List<List<Object>> dataRows = new ArrayList<List<Object>>();
             dataRows.add(dataCol);
-            GoogleSpreadSheetUtils.insertData(dataRows, this.sheets, RANGE, this.logger);
+            GoogleSpreadSheetFactory.insertData(dataRows, this.sheets, RANGE, this.logger);
         } else {
-            GoogleSpreadSheetUtils.logWarningWhenSheetsIsNull(this.logger);
+            GoogleSpreadSheetFactory.logWarningWhenSheetsIsNull(this.logger);
         }
     }
 

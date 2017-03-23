@@ -5,7 +5,6 @@ import fr.inria.spirals.repairnator.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +51,9 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);
-            GoogleSpreadSheetUtils.insertData(dataRow, this.sheets, RANGE, this.logger);
+            GoogleSpreadSheetFactory.insertData(dataRow, this.sheets, RANGE, this.logger);
         } else {
-            GoogleSpreadSheetUtils.logWarningWhenSheetsIsNull(this.logger);
+            GoogleSpreadSheetFactory.logWarningWhenSheetsIsNull(this.logger);
         }
     }
 

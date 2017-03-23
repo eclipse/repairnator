@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,9 +82,9 @@ public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractData
 
             List<List<Object>> dataRow = new ArrayList<List<Object>>();
             dataRow.add(dataCol);
-            GoogleSpreadSheetUtils.insertData(dataRow, this.sheets, RANGE, this.logger);
+            GoogleSpreadSheetFactory.insertData(dataRow, this.sheets, RANGE, this.logger);
         } else {
-            GoogleSpreadSheetUtils.logWarningWhenSheetsIsNull(this.logger);
+            GoogleSpreadSheetFactory.logWarningWhenSheetsIsNull(this.logger);
         }
     }
 }
