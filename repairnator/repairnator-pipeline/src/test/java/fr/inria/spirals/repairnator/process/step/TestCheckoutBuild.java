@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import org.eclipse.jgit.api.Git;
@@ -60,6 +61,9 @@ public class TestCheckoutBuild {
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
 
@@ -67,7 +71,7 @@ public class TestCheckoutBuild {
         cloneStep.execute();
 
         assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
-        verify(inspector, times(1)).setState(ProjectState.BUILDCHECKEDOUT);
+        assertThat(jobStatus.getState(), is(ProjectState.BUILDCHECKEDOUT));
 
         assertThat(checkoutBuild.shouldStop, is(false));
 
@@ -106,6 +110,9 @@ public class TestCheckoutBuild {
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
 
@@ -113,7 +120,7 @@ public class TestCheckoutBuild {
         cloneStep.execute();
 
         assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
-        verify(inspector, times(1)).setState(ProjectState.BUILDCHECKEDOUT);
+        assertThat(jobStatus.getState(), is(ProjectState.BUILDCHECKEDOUT));
 
         assertThat(checkoutBuild.shouldStop, is(false));
     }
@@ -139,6 +146,9 @@ public class TestCheckoutBuild {
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
 
@@ -147,7 +157,7 @@ public class TestCheckoutBuild {
 
         // cannot get the PR information so it stop now
         assertThat(checkoutBuild.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
-        verify(inspector, times(1)).setState(ProjectState.BUILDNOTCHECKEDOUT);
+        assertThat(jobStatus.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
 
         assertThat(checkoutBuild.shouldStop, is(true));
     }

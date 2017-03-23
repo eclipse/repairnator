@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import org.eclipse.jgit.api.Git;
@@ -61,6 +62,9 @@ public class TestSquashRepository {
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.setNextStep(squashStep);
@@ -70,7 +74,7 @@ public class TestSquashRepository {
 
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.NOT_SQUASHED_REPO);
+        assertThat(jobStatus.getState(), is(ProjectState.NOT_SQUASHED_REPO));
         Status status = Git.open(new File(tmpDir, "repo")).status().call();
         assertThat(status.isClean(), is(true));
     }
@@ -97,6 +101,9 @@ public class TestSquashRepository {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new BuildProject(inspector)).setNextStep(squashStep);
@@ -106,7 +113,7 @@ public class TestSquashRepository {
 
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.SQUASHED_REPO);
+        assertThat(jobStatus.getState(), is(ProjectState.SQUASHED_REPO));
 
         File repo = new File(tmpDir, "repo");
 
@@ -141,6 +148,9 @@ public class TestSquashRepository {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.setNextStep(squashStep);
@@ -150,7 +160,7 @@ public class TestSquashRepository {
 
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.SQUASHED_REPO);
+        assertThat(jobStatus.getState(), is(ProjectState.SQUASHED_REPO));
         Status status = Git.open(new File(tmpDir, "repo")).status().call();
         assertThat(status.isClean(), is(true));
     }

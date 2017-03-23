@@ -78,7 +78,7 @@ public class TestNopolRepair {
 
         cloneStep.setNextStep(new CheckoutBuild(inspector))
                 .setNextStep(new TestProject(inspector))
-                .setNextStep(new GatherTestInformation(inspector, new BuildShouldFail()))
+                .setNextStep(new GatherTestInformation(inspector, new BuildShouldFail(), false))
                 .setNextStep(new ComputeClasspath(inspector))
                 .setNextStep(new ComputeSourceDir(inspector))
                 .setNextStep(nopolRepair);
