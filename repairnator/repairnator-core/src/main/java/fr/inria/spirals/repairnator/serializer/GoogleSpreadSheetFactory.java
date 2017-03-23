@@ -29,35 +29,33 @@ import java.util.List;
  */
 public class GoogleSpreadSheetFactory {
 
-    private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetFactory.class);
-    private static final String APPLICATION_NAME = "RepairNator Bot";
-    private static final File DATA_STORE_DIR = new File(System.getProperty("user.home"),
-            ".credentials/sheets.googleapis.com-repairnator");
-    private static String GOOGLE_SECRET_PATH;
+    private static Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetFactory.class);
+
     public static final String REPAIR_SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
     public static final String BEAR_SPREADSHEET_ID = "1MnRwoZGCxxbmkiswc0O6Rg43wJFTBc3bIyrNdTiBhQ4";
 
     private static String spreadsheetID = REPAIR_SPREADSHEET_ID;
     private static GoogleSpreadSheetFactory instance;
-    private FileDataStoreFactory dataStoreFactory;
-    private JsonFactory jsonFactory;
-    private HttpTransport httpTransport;
-    private List<String> scopes;
+
     private Sheets sheets;
 
-    private GoogleSpreadSheetFactory(String googleSecretPath) {
-        super();
-        try {
-            this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-            this.dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+    private GoogleSpreadSheetFactory() {}
 
-            this.jsonFactory = JacksonFactory.getDefaultInstance();
-            this.scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
+    public static void initWithAccessToken(String accessToken) throws GeneralSecurityException, IOException {
+        if (instance == null) {
+            ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
+            manageGoogleAccessToken.initializeCredentialFromAccessToken(accessToken);
+            instance = new GoogleSpreadSheetFactory();
+            instance.initSheets(manageGoogleAccessToken);
+        }
+    }
 
-            this.initSheets(googleSecretPath);
-
-        } catch (GeneralSecurityException | IOException e) {
-            this.logger.error("Error when initiliazing Google Spreadsheet Serializer: ", e);
+    public static void initWithFileSecret(String googleSecretJson) throws IOException, GeneralSecurityException {
+        if (instance == null) {
+            ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
+            manageGoogleAccessToken.initializeCredentialFromGoogleSecret(googleSecretJson);
+            instance = new GoogleSpreadSheetFactory();
+            instance.initSheets(manageGoogleAccessToken);
         }
     }
 
@@ -69,31 +67,18 @@ public class GoogleSpreadSheetFactory {
         return GoogleSpreadSheetFactory.spreadsheetID;
     }
 
-    private void initSheets(String googleSecretPath) throws IOException {
-        GOOGLE_SECRET_PATH = googleSecretPath;
-
-        File secretFile = new File(GOOGLE_SECRET_PATH);
-        if (!secretFile.exists()) {
-            throw new IOException("File containing the token information to access Google API does not exist.");
-        }
-
-        // Load client secrets.
-        InputStream in = new FileInputStream(secretFile);
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(this.jsonFactory, new InputStreamReader(in));
-
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(this.httpTransport, this.jsonFactory,
-                clientSecrets, this.scopes).setDataStoreFactory(this.dataStoreFactory).build();
-        Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-        this.logger.debug("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-
-        this.sheets = new Sheets.Builder(this.httpTransport, this.jsonFactory, credential)
-                .setApplicationName(APPLICATION_NAME).build();
+    private void initSheets(ManageGoogleAccessToken manageGoogleAccessToken) throws IOException {
+        this.sheets = new Sheets.Builder(
+                manageGoogleAccessToken.getHttpTransport(),
+                manageGoogleAccessToken.getJsonFactory(),
+                manageGoogleAccessToken.getCredential()
+        ).setApplicationName(ManageGoogleAccessToken.APPLICATION_NAME).build();
     }
 
-    public static Sheets getSheets(String googleSecretPath) throws IOException {
+    public static Sheets getSheets() {
         if (instance == null) {
-            instance = new GoogleSpreadSheetFactory(googleSecretPath);
+            logger.error("You first need to init the instance.");
+            return null;
         }
         return instance.sheets;
     }
