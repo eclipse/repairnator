@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.serializer;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -67,14 +68,24 @@ public class ManageGoogleAccessToken {
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(this.jsonFactory, new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(this.httpTransport, this.jsonFactory,
-                clientSecrets, this.scopes).setDataStoreFactory(this.dataStoreFactory).build();
+        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+            this.httpTransport,
+            this.jsonFactory,
+            clientSecrets,
+            this.scopes
+        ).setDataStoreFactory(this.dataStoreFactory)
+        .setAccessType("offline")
+        .build();
         this.credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+
         this.logger.info("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
     }
 
     public void initializeCredentialFromAccessToken(String accessToken) {
-        this.credential = new GoogleCredential().setAccessToken(accessToken);
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setAccessToken(accessToken);
+        tokenResponse.setTokenType("offline");
+        this.credential = new GoogleCredential().setFromTokenResponse(tokenResponse);
     }
 
     public JsonFactory getJsonFactory() {
