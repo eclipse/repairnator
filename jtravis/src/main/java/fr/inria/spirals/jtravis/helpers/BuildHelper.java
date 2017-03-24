@@ -138,7 +138,7 @@ public class BuildHelper extends AbstractHelper {
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when trying to get builds and commits from "+resourceUrl+" : "+e.getMessage());
         }
-        return null;
+        return new JsonArray();
     }
 
     /**
