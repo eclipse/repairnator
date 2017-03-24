@@ -1,10 +1,9 @@
-package fr.inria.spirals.repairnator.process.step.gatherinfocontract;
+package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
 
 /**
  * Created by fermadeiral.
@@ -15,7 +14,7 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
     public boolean shouldBeStopped(GatherTestInformation gatherTestInformation) {
         ProjectInspector inspector = gatherTestInformation.getInspector();
         if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE) {
-            inspector.setReproducedAsFail(true);
+            inspector.getJobStatus().setReproducedAsFail(true);
             if (inspector.isAboutAPreviousBuild()) {
                 if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                     // So, 1) the current passing build can be reproduced and 2)
@@ -46,7 +45,7 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
                     return true;
                 } else {
                     gatherTestInformation.addStepError("Only get test errors, no failing tests. It will try to repair it.");
-                    inspector.setReproducedAsError(true);
+                    inspector.getJobStatus().setReproducedAsError(true);
                     return false;
                 }
             } else {

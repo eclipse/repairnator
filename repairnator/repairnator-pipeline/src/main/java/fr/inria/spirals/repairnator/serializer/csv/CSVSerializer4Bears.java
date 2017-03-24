@@ -53,7 +53,7 @@ public class CSVSerializer4Bears extends AbstractDataSerializer {
         Build previousBuild = inspector.getPreviousBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
-        String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
+        String state = this.getPrettyPrintState(inspector.getJobStatus());
 
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 

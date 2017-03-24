@@ -8,8 +8,11 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -40,8 +43,11 @@ public class TestSquashRepository {
     }
 
     @Test
-    public void testSquashRepositoryOnSmallRepoWillNotSquashIt() throws IOException, GitAPIException {
+    public void testSquashRepositoryOnSmallRepoWillNotSquashIt() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 207924136; // surli/failingProject build
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -60,6 +66,9 @@ public class TestSquashRepository {
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.setNextStep(squashStep);
@@ -69,14 +78,17 @@ public class TestSquashRepository {
 
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.NOT_SQUASHED_REPO);
+        assertThat(jobStatus.getState(), is(ProjectState.NOT_SQUASHED_REPO));
         Status status = Git.open(new File(tmpDir, "repo")).status().call();
         assertThat(status.isClean(), is(true));
     }
 
     @Test
-    public void testSquashRepositoryOnProjectWhichChangeFileAtBuildWorks() throws IOException, GitAPIException {
+    public void testSquashRepositoryOnProjectWhichChangeFileAtBuildWorks() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 212649623; // surli/failingProject build
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -96,6 +108,9 @@ public class TestSquashRepository {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new BuildProject(inspector)).setNextStep(squashStep);
@@ -105,7 +120,7 @@ public class TestSquashRepository {
 
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.SQUASHED_REPO);
+        assertThat(jobStatus.getState(), is(ProjectState.SQUASHED_REPO));
 
         File repo = new File(tmpDir, "repo");
 
@@ -119,8 +134,11 @@ public class TestSquashRepository {
     }
 
     @Test
-    public void testSquashRepositoryOnProjectWithHundredCommits() throws IOException, GitAPIException {
+    public void testSquashRepositoryOnProjectWithHundredCommits() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 209082903; // surli/failingProject build
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -140,6 +158,9 @@ public class TestSquashRepository {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         SquashRepository squashStep = new SquashRepository(inspector);
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.setNextStep(squashStep);
@@ -149,7 +170,7 @@ public class TestSquashRepository {
 
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.SQUASHED_REPO);
+        assertThat(jobStatus.getState(), is(ProjectState.SQUASHED_REPO));
         Status status = Git.open(new File(tmpDir, "repo")).status().call();
         assertThat(status.isClean(), is(true));
     }

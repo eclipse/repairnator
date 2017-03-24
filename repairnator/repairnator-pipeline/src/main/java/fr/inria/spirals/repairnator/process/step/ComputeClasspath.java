@@ -47,8 +47,7 @@ public class ComputeClasspath extends AbstractStep {
     protected void businessExecute() {
         this.getLogger().debug("Computing classpath from incriminated module...");
 
-        GatherTestInformation infoStep = inspector.getTestInformations();
-        String incriminatedModule = infoStep.getFailingModulePath();
+        String incriminatedModule = this.getInspector().getJobStatus().getFailingModulePath();
 
         File defaultClassDir = new File(incriminatedModule + File.separator + DEFAULT_CLASSES_DIR + File.separator);
         this.addFileToClassPath(defaultClassDir);
@@ -105,7 +104,7 @@ public class ComputeClasspath extends AbstractStep {
             this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
         }
 
-        this.inspector.setRepairClassPath(this.classPath);
+        this.inspector.getJobStatus().setRepairClassPath(this.classPath);
         this.setState(ProjectState.CLASSPATHCOMPUTED);
     }
 }

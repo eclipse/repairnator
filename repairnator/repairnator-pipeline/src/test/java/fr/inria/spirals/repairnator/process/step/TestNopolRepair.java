@@ -10,7 +10,9 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldFail;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
+import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import org.junit.Test;
 
 import java.io.File;
@@ -76,7 +78,7 @@ public class TestNopolRepair {
 
         cloneStep.setNextStep(new CheckoutBuild(inspector))
                 .setNextStep(new TestProject(inspector))
-                .setNextStep(new GatherTestInformation(inspector, new BuildShouldFail()))
+                .setNextStep(new GatherTestInformation(inspector, new BuildShouldFail(), false))
                 .setNextStep(new ComputeClasspath(inspector))
                 .setNextStep(new ComputeSourceDir(inspector))
                 .setNextStep(nopolRepair);

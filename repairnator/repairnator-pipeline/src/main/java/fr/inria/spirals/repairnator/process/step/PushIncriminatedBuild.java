@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -40,8 +39,6 @@ public class PushIncriminatedBuild extends AbstractStep {
                 this.getLogger().error("Remote repo should be set !");
                 return;
             }
-
-            this.writeProperty("step-durations", StringUtils.join(this.inspector.getStepsDurationsInSeconds().entrySet()));
 
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
 
@@ -89,7 +86,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
                 git.push().setRemote(REMOTE_NAME).add(branch).setCredentialsProvider(credentialsProvider).call();
 
-                this.getInspector().setHasBeenPushed(true);
+                this.getInspector().getJobStatus().setHasBeenPushed(true);
             } catch (IOException e) {
                 this.getLogger().error("Error while reading git directory at the following location: "
                         + inspector.getRepoLocalPath() + " : " + e);

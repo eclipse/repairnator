@@ -1,9 +1,7 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutRepository;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 
 /**
  * Created by fernanda on 02/03/17.

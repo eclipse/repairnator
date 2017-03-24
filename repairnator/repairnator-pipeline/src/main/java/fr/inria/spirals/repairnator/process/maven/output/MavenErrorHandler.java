@@ -16,6 +16,6 @@ public class MavenErrorHandler extends MavenOutputHandler {
         super.consumeLine(s);
 
         this.getLogger().error(s);
-        this.inspector.addStepError(name, s);
+        this.inspector.getJobStatus().addStepError(name, s);
     }
 }

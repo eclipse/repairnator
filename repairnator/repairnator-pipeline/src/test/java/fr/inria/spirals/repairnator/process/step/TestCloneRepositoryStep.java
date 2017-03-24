@@ -7,7 +7,10 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
@@ -53,19 +56,22 @@ public class TestCloneRepositoryStep {
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.execute();
 
-        verify(inspector, times(1)).setState(ProjectState.CLONABLE);
+        assertThat(jobStatus.getState(), is(ProjectState.CLONABLE));
         assertThat(cloneStep.getState(), is(ProjectState.CLONABLE));
         assertThat(cloneStep.shouldStop, is(false));
 
-        Git gitDir = Git.open(tmpDir);
+        Git gitDir = Git.open(new File(tmpDir, "repo"));
         Ref ref = gitDir.getRepository().exactRef("HEAD");
 
         assertThat(ref.isSymbolic(), is(true));
