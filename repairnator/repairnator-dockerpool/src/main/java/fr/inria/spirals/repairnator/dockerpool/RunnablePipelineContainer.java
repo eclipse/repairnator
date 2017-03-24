@@ -7,6 +7,8 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +26,14 @@ public class RunnablePipelineContainer implements Runnable {
     private int buildId;
     private String logDirectory;
     private String runId;
+    private GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId) {
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking) {
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
         this.runId = runId;
+        this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
     }
 
     @Override
@@ -70,9 +74,13 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
             docker.removeContainer(container.id());
             Launcher.runningDockerContainer.remove(container.id());
+
+            googleSpreadSheetTreatedBuildTracking.setStatus("TREATED");
         } catch (InterruptedException|DockerException e) {
             LOGGER.error("Error while creating/running the container for build id "+buildId, e);
+            googleSpreadSheetTreatedBuildTracking.setStatus("INTERRUPTED");
         }
-
+        googleSpreadSheetTreatedBuildTracking.serialize();
     }
+
 }

@@ -11,6 +11,7 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,7 +187,7 @@ public class Launcher {
         }
     }
 
-    private void runPool() {
+    private void runPool() throws IOException {
         List<Integer> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
 
@@ -198,7 +199,9 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"));
+            //@fermadeiral: I put "./client_secret.json" as a temporary thing. I will fix that when your changes be merged.
+            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(builId, "./client_secret.json");
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), googleSpreadSheetTreatedBuildTracking);
             executorService.submit(runnablePipelineContainer);
         }
 
@@ -220,8 +223,6 @@ public class Launcher {
             docker.close();
         }
     }
-
-
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
