@@ -237,6 +237,7 @@ public class Launcher {
             serializers.add(new GoogleSpreadSheetNopolSerializer());
         } else {
             serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears());
+            serializers.add(new GoogleSpreadSheetInspectorTimeSerializer4Bears());
         }
         //serializers.add(new GoogleSpreadSheetInspectorTrackTreatedBuilds(this.buildToBeInspected, this.config.getGoogleSecretPath()));
 
