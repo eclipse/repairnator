@@ -18,20 +18,26 @@ import java.util.UUID;
  */
 public class GoogleSpreadSheetTreatedBuildTracking implements ProcessSerializer {
     private Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetTreatedBuildTracking.class);
-    private static final String RANGE = "Treated Build Tracking!A1:F1";
+    private static final String RANGE = "Treated Build Tracking!A1:G1";
 
     private Sheets sheets;
     private String runid;
     private Integer buildId;
+    private String containerId;
     private String status;
 
-    public GoogleSpreadSheetTreatedBuildTracking(Integer buildId, String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetTreatedBuildTracking(String runid, Integer buildId, String googleSecretPath) throws IOException {
         super();
         this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
-        this.runid = UUID.randomUUID().toString();
+        this.runid = runid;
         this.buildId = buildId;
+        this.containerId = "N/A";
         this.status = "DETECTED";
         this.serialize();
+    }
+
+    public void setContainerId(String containerId) {
+        this.containerId = containerId;
     }
 
     public void serialize() {
@@ -41,6 +47,7 @@ public class GoogleSpreadSheetTreatedBuildTracking implements ProcessSerializer 
             List<Object> dataCol = new ArrayList<Object>();
             dataCol.add(runid);
             dataCol.add(buildId);
+            dataCol.add(containerId);
             dataCol.add(Utils.formatCompleteDate(date));
             dataCol.add(Utils.formatOnlyDay(date));
             dataCol.add(Utils.getHostname());

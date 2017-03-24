@@ -38,9 +38,10 @@ public class RunnablePipelineContainer implements Runnable {
 
     @Override
     public void run() {
+        String containerId = null;
+        DockerClient docker = Launcher.docker;
         try {
             LOGGER.info("Start to build and run container for build id "+buildId);
-            DockerClient docker = Launcher.docker;
 
             String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
             String[] envValues = new String[] {
@@ -65,21 +66,41 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("Create the container: "+containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
-            Launcher.runningDockerContainer.add(container.id());
+            containerId = container.id();
+            googleSpreadSheetTreatedBuildTracking.setContainerId(containerId);
+
             LOGGER.info("Start the container: "+containerName);
             docker.startContainer(container.id());
 
-            ContainerExit exitStatus = docker.waitContainer(container.id());
+            ContainerExit exitStatus = docker.waitContainer(containerId);
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
-            docker.removeContainer(container.id());
-            Launcher.runningDockerContainer.remove(container.id());
+            docker.removeContainer(containerId);
 
-            googleSpreadSheetTreatedBuildTracking.setStatus("TREATED");
-        } catch (InterruptedException|DockerException e) {
-            LOGGER.error("Error while creating/running the container for build id "+buildId, e);
-            googleSpreadSheetTreatedBuildTracking.setStatus("INTERRUPTED");
+            serialize("TREATED");
+        } catch (InterruptedException e) {
+            LOGGER.error("Error while running the container for build id "+buildId, e);
+            killDockerContainer(docker, containerId);
+        } catch (DockerException e) {
+            LOGGER.error("Error while creating or running the container for build id "+buildId, e);
+            serialize("ERROR");
         }
+        Launcher.submittedRunnablePipelineContainers.remove(this);
+    }
+
+    private void killDockerContainer(DockerClient docker, String containerId) {
+        serialize("INTERRUPTED");
+        try {
+            docker.killContainer(containerId);
+            docker.removeContainer(containerId);
+        } catch (DockerException|InterruptedException e) {
+            LOGGER.error("Error while killing docker container "+containerId, e);
+        }
+
+    }
+
+    public void serialize(String msg) {
+        googleSpreadSheetTreatedBuildTracking.setStatus(msg);
         googleSpreadSheetTreatedBuildTracking.serialize();
     }
 

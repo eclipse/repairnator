@@ -21,6 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +33,7 @@ public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
-    public static List<String> runningDockerContainer = new ArrayList<>();
+    public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
 
     private void defineArgs() throws JSAPException {
@@ -182,19 +183,6 @@ public class Launcher {
         }
     }
 
-    private void killDockerContainers() {
-        try {
-            DockerClient docker = DefaultDockerClient.fromEnv().build();
-            for (String dockerContainerId : runningDockerContainer) {
-                docker.killContainer(dockerContainerId);
-                docker.removeContainer(dockerContainerId);
-            }
-            docker.close();
-        } catch (DockerCertificateException|InterruptedException|DockerException e) {
-            LOGGER.error("Error while killing docker containers",e);
-        }
-    }
-
     private void runPool() throws IOException {
         List<Integer> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
@@ -207,8 +195,9 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(builId, this.arguments.getFile("googleSecretPath").getPath());
+            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(this.arguments.getString("runId"), builId, this.arguments.getFile("googleSecretPath").getPath());
             RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), googleSpreadSheetTreatedBuildTracking);
+            submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
 
@@ -216,18 +205,22 @@ public class Launcher {
         try {
             if (executorService.awaitTermination(this.arguments.getInt("globalTimeout"), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
-                docker.close();
             } else {
-                LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+runningDockerContainer.size()+" docker container(s).");
+                LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");
                 executorService.shutdownNow();
-                this.killDockerContainers();
-                docker.close();
+                this.setStatusForUnexecutedJobs();
             }
         } catch (InterruptedException e) {
-            LOGGER.error("Error while await termination. Force stopped "+runningDockerContainer.size()+" docker container(s).", e);
+            LOGGER.error("Error while await termination. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).", e);
             executorService.shutdownNow();
-            this.killDockerContainers();
-            docker.close();
+            this.setStatusForUnexecutedJobs();
+        }
+        docker.close();
+    }
+
+    private void setStatusForUnexecutedJobs() {
+        for (RunnablePipelineContainer runnablePipelineContainer : submittedRunnablePipelineContainers) {
+            runnablePipelineContainer.serialize("ABORTED");
         }
     }
 
