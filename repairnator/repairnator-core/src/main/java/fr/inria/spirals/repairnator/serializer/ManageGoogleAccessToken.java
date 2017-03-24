@@ -69,13 +69,13 @@ public class ManageGoogleAccessToken {
 
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-            this.httpTransport,
-            this.jsonFactory,
-            clientSecrets,
-            this.scopes
+                this.httpTransport,
+                this.jsonFactory,
+                clientSecrets,
+                this.scopes
         ).setDataStoreFactory(this.dataStoreFactory)
-        .setAccessType("offline")
-        .build();
+                .setAccessType("offline")
+                .build();
         this.credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 
         this.logger.info("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());

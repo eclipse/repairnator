@@ -56,7 +56,7 @@ public class Launcher {
         try {
             GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
         } catch (IOException | GeneralSecurityException e) {
-           LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
         }
     }
 
