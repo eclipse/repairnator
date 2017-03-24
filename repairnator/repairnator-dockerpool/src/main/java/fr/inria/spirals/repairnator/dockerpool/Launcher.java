@@ -93,6 +93,14 @@ public class Launcher {
         opt2.setHelp("Specify the number of day before killing the whole pool.");
         this.jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("googleSecretPath");
+        opt2.setShortFlag('s');
+        opt2.setLongFlag("googleSecretPath");
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        opt2.setDefault("./client_secret.json");
+        opt2.setHelp("Specify the path to the JSON google secret for serializing.");
+        this.jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("runId");
         opt2.setLongFlag("runId");
         opt2.setStringParser(JSAP.STRING_PARSER);
@@ -199,8 +207,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            //@fermadeiral: I put "./client_secret.json" as a temporary thing. I will fix that when your changes be merged.
-            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(builId, "./client_secret.json");
+            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(builId, this.arguments.getFile("googleSecretPath").getPath());
             RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), googleSpreadSheetTreatedBuildTracking);
             executorService.submit(runnablePipelineContainer);
         }
