@@ -5,6 +5,10 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.*;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuildSourceCode;
+import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
@@ -31,7 +35,7 @@ public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractData
     @Override
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
-            Map<String, Integer> durations = inspector.getStepsDurationsInSeconds();
+            Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
             int cloneRepository = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
             int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);

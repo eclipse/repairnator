@@ -34,7 +34,7 @@ public class NopolRepair extends AbstractStep {
     public NopolRepair(ProjectInspector inspector) {
         super(inspector);
         this.nopolInformations = new ArrayList<>();
-        inspector.setNopolInformations(this.nopolInformations);
+        inspector.getJobStatus().setNopolInformations(this.nopolInformations);
     }
 
     public List<NopolInformation> getNopolInformations() {
@@ -47,8 +47,8 @@ public class NopolRepair extends AbstractStep {
 
         this.setState(ProjectState.NOTPATCHED);
 
-        List<URL> classPath = this.inspector.getRepairClassPath();
-        File[] sources = this.inspector.getRepairSourceDir();
+        List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
+        File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
 
         if (classPath != null && sources != null) {
             String[] sourcesStr = new String[sources.length];
@@ -58,8 +58,7 @@ public class NopolRepair extends AbstractStep {
                 sourcesStr[i++] = f.getAbsolutePath();
             }
 
-            GatherTestInformation infoStep = inspector.getTestInformations();
-            List<FailureLocation> failureLocationList = new ArrayList<>(infoStep.getFailureLocations());
+            List<FailureLocation> failureLocationList = new ArrayList<>(this.inspector.getJobStatus().getFailureLocations());
             Collections.sort(failureLocationList, new ComparatorFailureLocation());
 
             boolean patchCreated = false;
@@ -118,7 +117,7 @@ public class NopolRepair extends AbstractStep {
                     nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
                     nopolContext.setMaxTimeInMinutes(timeout);
                     nopolContext.setLocalizer(NopolContext.NopolLocalizer.OCHIAI);
-                    nopolContext.setSolverPath(this.inspector.getNopolSolverPath());
+                    nopolContext.setSolverPath(this.getConfig().getZ3solverPath());
                     nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
                     nopolContext.setType(StatementType.COND_THEN_PRE);
                     nopolContext.setOnlyOneSynthesisResult(false);

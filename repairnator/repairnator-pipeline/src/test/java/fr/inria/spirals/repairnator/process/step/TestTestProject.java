@@ -8,7 +8,9 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import org.junit.Test;
 
 import java.io.File;
@@ -55,6 +57,9 @@ public class TestTestProject {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         TestProject testProject = new TestProject(inspector);
 
@@ -64,7 +69,7 @@ public class TestTestProject {
 
         assertThat(testProject.shouldStop, is(false));
         assertThat(testProject.getState(), is(ProjectState.TESTABLE));
-        verify(inspector, times(1)).setState(ProjectState.TESTABLE);
+        assertThat(jobStatus.getState(), is(ProjectState.TESTABLE));
     }
 
     @Test
@@ -89,6 +94,9 @@ public class TestTestProject {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         TestProject testProject = new TestProject(inspector);
 
@@ -98,7 +106,7 @@ public class TestTestProject {
 
         assertThat(testProject.shouldStop, is(false));
         assertThat(testProject.getState(), is(ProjectState.TESTABLE));
-        verify(inspector, times(1)).setState(ProjectState.TESTABLE);
+        assertThat(jobStatus.getState(), is(ProjectState.TESTABLE));
     }
 
     @Test
@@ -123,6 +131,9 @@ public class TestTestProject {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         TestProject testProject = new TestProject(inspector);
 
@@ -132,6 +143,6 @@ public class TestTestProject {
 
         assertThat(testProject.shouldStop, is(false));
         assertThat(testProject.getState(), is(ProjectState.NOTFAILING));
-        verify(inspector, times(1)).setState(ProjectState.NOTFAILING);
+        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
     }
 }

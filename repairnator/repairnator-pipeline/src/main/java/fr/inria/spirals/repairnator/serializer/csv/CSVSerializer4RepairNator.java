@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.serializer.csv;
 import java.io.BufferedWriter;
 import java.util.Date;
 
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +41,11 @@ public class CSVSerializer4RepairNator extends AbstractDataSerializer {
     @Override
     public void serializeData(ProjectInspector inspector) {
         Build build = inspector.getBuild();
+        JobStatus jobStatus = inspector.getJobStatus();
 
-        String state = this.getPrettyPrintState(inspector.getState(), inspector.getTestInformations());
+        String state = this.getPrettyPrintState(jobStatus);
 
-        String realState = (inspector.getState() != null) ? inspector.getState().name() : "null";
+        String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
 
         this.writeData(build.getId(), build.getRepository().getSlug(), state, realState, build.getPullRequestNumber(),
                 build.getFinishedAt());

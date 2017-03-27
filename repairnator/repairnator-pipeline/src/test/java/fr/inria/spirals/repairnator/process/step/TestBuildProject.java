@@ -8,7 +8,9 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import org.junit.Test;
 
 import java.io.File;
@@ -55,6 +57,9 @@ public class TestBuildProject {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
         CloneRepository cloneStep = new CloneRepository(inspector);
         BuildProject buildStep = new BuildProject(inspector);
 
@@ -64,6 +69,6 @@ public class TestBuildProject {
 
         assertThat(buildStep.shouldStop, is(false));
         assertThat(buildStep.getState(), is(ProjectState.BUILDABLE));
-        verify(inspector, times(1)).setState(ProjectState.BUILDABLE);
+        assertThat(jobStatus.getState(), is(ProjectState.BUILDABLE));
     }
 }

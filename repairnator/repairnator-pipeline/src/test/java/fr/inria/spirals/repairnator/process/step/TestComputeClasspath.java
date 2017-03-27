@@ -8,8 +8,9 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.gatherinfocontract.BuildShouldPass;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import org.junit.Test;
 
 import java.io.File;
@@ -24,7 +25,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,10 +61,9 @@ public class TestComputeClasspath {
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
-        GatherTestInformation mockGathertest = mock(GatherTestInformation.class);
-        when(mockGathertest.getFailingModulePath()).thenReturn(repoDir.getAbsolutePath());
-
-        when(inspector.getTestInformations()).thenReturn(mockGathertest);
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector);
@@ -74,7 +73,7 @@ public class TestComputeClasspath {
 
         assertThat(computeClasspath.shouldStop, is(false));
         assertThat(computeClasspath.getState(), is(ProjectState.CLASSPATHCOMPUTED));
-        verify(inspector, times(1)).setState(ProjectState.CLASSPATHCOMPUTED);
+        assertThat(jobStatus.getState(), is(ProjectState.CLASSPATHCOMPUTED));
 
         List<URL> expectedClasspath = new ArrayList<URL>();
 
@@ -88,6 +87,6 @@ public class TestComputeClasspath {
         expectedClasspath.add(junit);
         expectedClasspath.add(hamcrest);
 
-        verify(inspector, times(1)).setRepairClassPath(expectedClasspath);
+        assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
     }
 }

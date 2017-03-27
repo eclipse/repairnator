@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -117,12 +118,12 @@ public abstract class AbstractStep {
 
     public void addStepError(String error) {
         getLogger().error(error);
-        this.inspector.addStepError(this.name, error);
+        this.inspector.getJobStatus().addStepError(this.name, error);
     }
 
     public void addStepError(String error, Throwable exception) {
         getLogger().error(error, exception);
-        this.inspector.addStepError(this.name, error);
+        this.inspector.getJobStatus().addStepError(this.name, error);
     }
 
     protected void executeNextStep() {
@@ -168,7 +169,7 @@ public abstract class AbstractStep {
 
                     if (pomFile.exists()) {
                         this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
-                        this.inspector.setRepoLocalPath(dir.getPath());
+                        this.inspector.getJobStatus().setPomDirPath(dir.getPath());
                         return;
                     }
                 }
@@ -187,8 +188,6 @@ public abstract class AbstractStep {
     }
 
     protected void cleanMavenArtifacts() {
-        this.writeProperty("lastStep", this.getName());
-
         if (this.inspector.getM2LocalPath() != null) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
@@ -198,7 +197,7 @@ public abstract class AbstractStep {
             }
         }
 
-        if (this.inspector.isAutoclean()) {
+        if (this.config.isClean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
             } catch (IOException e) {
@@ -213,7 +212,7 @@ public abstract class AbstractStep {
         this.businessExecute();
         this.dateEnd = new Date().getTime();
 
-        this.inspector.addStepDuration(this.name, getDuration());
+        this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
         this.pushNewInformationIfNeeded();
 
         if (!shouldStop) {
@@ -224,19 +223,22 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
-        this.cleanMavenArtifacts();
-        this.inspector.setState(this.state);
+        this.writeProperty("lastStep", this.getName());
+        this.inspector.getJobStatus().setState(this.state);
         this.serializeData();
         this.pushNewInformationIfNeeded();
+        this.cleanMavenArtifacts();
     }
 
     private void pushNewInformationIfNeeded() {
         try {
             Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
 
+            this.writeProperty("step-durations", StringUtils.join(this.inspector.getJobStatus().getStepsDurationsInSeconds().entrySet()));
+
             boolean createNewCommit = this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
 
-            if (createNewCommit && this.inspector.isHasBeenPushed()) {
+            if (createNewCommit && this.inspector.getJobStatus().isHasBeenPushed()) {
                 CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
 
                 git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();

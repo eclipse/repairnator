@@ -30,8 +30,6 @@ public class MavenHelper {
     public static final int MAVEN_SUCCESS = 0;
     public static final int MAVEN_ERROR = 1;
 
-    public static final String CLEAN_ARTIFACT_GOAL = "build-helper:remove-project-artifact";
-    public static final String CLEAN_DEPENDENCIES_GOAL = "dependency:purge-local-repository -DreResolve=false";
     public static final String SKIP_TEST_PROPERTY = "maven.test.skip.exec";
 
     private final Logger logger = LoggerFactory.getLogger(MavenHelper.class);
@@ -45,8 +43,7 @@ public class MavenHelper {
     private InvocationOutputHandler errorHandler;
     private InvocationOutputHandler outputHandler;
 
-    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector,
-            boolean enableHandlers) {
+    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers) {
         this.goal = goal;
         this.pomFile = pomFile;
         this.properties = properties;
@@ -110,7 +107,7 @@ public class MavenHelper {
             this.logger.error("Error while executing goal :" + this.goal + " on the following pom file: " + this.pomFile
                     + ". Properties: " + this.properties);
             this.logger.debug(e.getMessage());
-            this.inspector.addStepError(name, e.getMessage());
+            this.inspector.getJobStatus().addStepError(name, e.getMessage());
             return MAVEN_ERROR;
         }
     }

@@ -79,12 +79,12 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
     @Override
     public void serializeData(ProjectInspector inspector){
         if (this.sheets != null) {
-            if (inspector.getNopolInformations() != null) {
+            if (inspector.getJobStatus().getNopolInformations() != null) {
                 BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
 
                 List<List<Object>> dataRow = new ArrayList<List<Object>>();
 
-                for (NopolInformation nopolInformation : inspector.getNopolInformations()) {
+                for (NopolInformation nopolInformation : inspector.getJobStatus().getNopolInformations()) {
                     List<Object> dataCol;
 
                     if (nopolInformation.getPatches().isEmpty()) {

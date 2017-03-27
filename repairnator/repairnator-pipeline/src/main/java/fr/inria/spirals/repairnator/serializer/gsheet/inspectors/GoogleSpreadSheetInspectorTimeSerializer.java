@@ -4,7 +4,16 @@ import com.google.api.services.sheets.v4.Sheets;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.*;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.SquashRepository;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.NopolRepair;
+import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
@@ -32,8 +41,8 @@ public class GoogleSpreadSheetInspectorTimeSerializer extends AbstractDataSerial
     @Override
     public void serializeData(ProjectInspector inspector) {
         if (this.sheets != null) {
-            Map<String, Integer> durations = inspector.getStepsDurationsInSeconds();
-
+            Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
+            int total = 0;
             int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
             int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
             int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);

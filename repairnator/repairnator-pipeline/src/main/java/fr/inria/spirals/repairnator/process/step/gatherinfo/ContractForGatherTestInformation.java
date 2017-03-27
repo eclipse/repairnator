@@ -1,6 +1,4 @@
-package fr.inria.spirals.repairnator.process.step.gatherinfocontract;
-
-import fr.inria.spirals.repairnator.process.step.GatherTestInformation;
+package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
 /**
  * Created by fermadeiral.
