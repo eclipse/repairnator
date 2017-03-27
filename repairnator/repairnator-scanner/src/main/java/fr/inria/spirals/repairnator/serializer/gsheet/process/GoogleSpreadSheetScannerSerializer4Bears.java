@@ -8,7 +8,6 @@ import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +21,8 @@ public class GoogleSpreadSheetScannerSerializer4Bears implements ProcessSerializ
     private Sheets sheets;
     private ProjectScanner scanner;
 
-    public GoogleSpreadSheetScannerSerializer4Bears(ProjectScanner scanner, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetScannerSerializer4Bears(ProjectScanner scanner) {
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.scanner = scanner;
     }
 

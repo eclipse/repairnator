@@ -26,13 +26,16 @@ public class RunnablePipelineContainer implements Runnable {
     private int buildId;
     private String logDirectory;
     private String runId;
+    private String accessToken;
     private GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking) {
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking, String accessToken) {
+
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
         this.runId = runId;
+        this.accessToken = accessToken;
         this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
     }
 
@@ -49,7 +52,8 @@ public class RunnablePipelineContainer implements Runnable {
                 "LOG_FILENAME="+containerName,
                 "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
                 "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
-                "RUN_ID="+this.runId
+                "RUN_ID="+this.runId,
+                "GOOGLE_ACCESS_TOKEN="+this.accessToken
             };
 
             Map<String,String> labels = new HashMap<>();

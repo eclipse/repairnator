@@ -33,7 +33,6 @@ public class TestRepairnatorConfig {
         configReader.readConfigFile(config);
 
         assertThat(config.getFileMode(), is(FileMode.SLUG));
-        assertThat(config.getGoogleSecretPath(), is("./client_secret.json"));
         assertThat(config.getJsonOutputPath(), is("/tmp"));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(false));
@@ -59,7 +58,6 @@ public class TestRepairnatorConfig {
         configReader.readConfigFile(config);
 
         assertThat(config.getFileMode(), is(FileMode.BUILD));
-        assertThat(config.getGoogleSecretPath(), is("/var/google/secret.json"));
         assertThat(config.getJsonOutputPath(), is(""));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(true));

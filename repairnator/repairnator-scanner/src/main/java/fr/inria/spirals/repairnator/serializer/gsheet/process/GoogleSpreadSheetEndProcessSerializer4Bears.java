@@ -28,8 +28,8 @@ public class GoogleSpreadSheetEndProcessSerializer4Bears implements ProcessSeria
     private int nbFixerBuildCase1;
     private int nbFixerBuildCase2;
 
-    public GoogleSpreadSheetEndProcessSerializer4Bears(ProjectScanner scanner, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetEndProcessSerializer4Bears(ProjectScanner scanner) {
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.scanner = scanner;
         this.beginDate = new Date();
     }

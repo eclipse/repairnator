@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +27,9 @@ public class GoogleSpreadSheetNopolSerializer extends AbstractDataSerializer {
 
     private Sheets sheets;
 
-    public GoogleSpreadSheetNopolSerializer(String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetNopolSerializer() {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
     }
 
     private List<Object> serializeNopolInfo(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, Patch patch, int patchNumber) {

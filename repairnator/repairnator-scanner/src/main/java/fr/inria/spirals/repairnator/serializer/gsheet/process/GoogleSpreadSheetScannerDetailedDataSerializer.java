@@ -9,7 +9,6 @@ import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +23,8 @@ public class GoogleSpreadSheetScannerDetailedDataSerializer implements ProcessSe
     private Sheets sheets;
     private List<BuildToBeInspected> buildsToBeInspected;
 
-    public GoogleSpreadSheetScannerDetailedDataSerializer(List<BuildToBeInspected> buildsToBeInspected, String googleSecretPath) throws IOException {
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+    public GoogleSpreadSheetScannerDetailedDataSerializer(List<BuildToBeInspected> buildsToBeInspected) {
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.buildsToBeInspected = buildsToBeInspected;
     }
 

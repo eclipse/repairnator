@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,12 @@ public class Launcher {
         this.arguments = jsap.parse(args);
         this.checkArguments();
 
+        if (this.arguments.getBoolean("debug")) {
+            Utils.setLoggersLevel(Level.DEBUG);
+        } else {
+            Utils.setLoggersLevel(Level.INFO);
+        }
+
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
 
         if (this.launcherMode == LauncherMode.REPAIR) {
@@ -46,10 +53,10 @@ public class Launcher {
             GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
         }
 
-        if (this.arguments.getBoolean("debug")) {
-            Utils.setLoggersLevel(Level.DEBUG);
-        } else {
-            Utils.setLoggersLevel(Level.INFO);
+        try {
+            GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
+        } catch (IOException | GeneralSecurityException e) {
+            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
         }
     }
 
@@ -173,9 +180,6 @@ public class Launcher {
 
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
-
-        String googleSecretPath = this.arguments.getFile("googleSecretPath").getPath();
-
         ProjectScanner scanner;
         Date lookFromDate = this.arguments.getDate("lookFromDate");
         Date lookToDate = this.arguments.getDate("lookToDate");
@@ -194,12 +198,12 @@ public class Launcher {
         ProcessSerializer scannerSerializer;
 
         if (launcherMode == LauncherMode.REPAIR) {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner, googleSecretPath);
+            scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
         } else {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(scanner, googleSecretPath);
+            scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(scanner);
 
             if (this.arguments.getBoolean("scanOnly")) {
-                GoogleSpreadSheetScannerDetailedDataSerializer scannerDetailedDataSerializer = new GoogleSpreadSheetScannerDetailedDataSerializer(buildsToBeInspected, googleSecretPath);
+                GoogleSpreadSheetScannerDetailedDataSerializer scannerDetailedDataSerializer = new GoogleSpreadSheetScannerDetailedDataSerializer(buildsToBeInspected);
                 scannerDetailedDataSerializer.serialize();
             }
         }

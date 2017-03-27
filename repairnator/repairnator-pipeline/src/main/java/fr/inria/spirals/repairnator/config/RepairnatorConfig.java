@@ -16,8 +16,6 @@ public class RepairnatorConfig {
     private String z3solverPath;
     private boolean serializeJson;
     private String jsonOutputPath;
-    private String googleSecretPath;
-    private String inputFile;
     private String pushRemoteRepo;
 
     private static RepairnatorConfig instance;
@@ -105,22 +103,6 @@ public class RepairnatorConfig {
         this.jsonOutputPath = jsonOutputPath;
     }
 
-    public String getGoogleSecretPath() {
-        return googleSecretPath;
-    }
-
-    public void setGoogleSecretPath(String googleSecretPath) {
-        this.googleSecretPath = googleSecretPath;
-    }
-
-    public String getInputFile() {
-        return inputFile;
-    }
-
-    public void setInputFile(String inputFile) {
-        this.inputFile = inputFile;
-    }
-
     public String getPushRemoteRepo() {
         return pushRemoteRepo;
     }
@@ -141,8 +123,6 @@ public class RepairnatorConfig {
                 ", z3solverPath='" + z3solverPath + '\'' +
                 ", serializeJson=" + serializeJson +
                 ", jsonOutputPath='" + jsonOutputPath + '\'' +
-                ", googleSecretPath='" + googleSecretPath + '\'' +
-                ", inputFile='" + inputFile + '\'' +
                 ", pushRemoteRepo='" + pushRemoteRepo + '\'' +
                 '}';
     }

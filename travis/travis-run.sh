@@ -11,6 +11,9 @@ fi
 
 cd ..
 
+git config --global user.name "Luc Esape"
+git config --global user.email "luc.esape@gmail.com"
+
 cd repairnator
 mvn clean install
 

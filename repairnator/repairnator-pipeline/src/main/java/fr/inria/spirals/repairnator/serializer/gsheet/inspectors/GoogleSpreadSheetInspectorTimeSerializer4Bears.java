@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +27,9 @@ public class GoogleSpreadSheetInspectorTimeSerializer4Bears extends AbstractData
 
     private Sheets sheets;
 
-    public GoogleSpreadSheetInspectorTimeSerializer4Bears(String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetInspectorTimeSerializer4Bears() {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
     }
 
     @Override
