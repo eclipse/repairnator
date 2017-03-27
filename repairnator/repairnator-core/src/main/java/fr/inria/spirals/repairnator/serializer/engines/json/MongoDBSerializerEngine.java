@@ -1,7 +1,5 @@
 package fr.inria.spirals.repairnator.serializer.engines.json;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
