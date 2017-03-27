@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.serializer;
 /**
  * Created by urli on 27/03/2017.
  */
-public enum Serializers {
+public enum SerializerType {
     // pipeline serializers
     INSPECTOR("inspector","All data!A1:L1"),
     INSPECTOR4BEARS("inspector4bears","All data!A1:P1"),
@@ -24,7 +24,7 @@ public enum Serializers {
     private String filename;
     private String range;
 
-    Serializers(String filename, String range) {
+    SerializerType(String filename, String range) {
         this.filename = filename;
         this.range = range;
     }

@@ -4,7 +4,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.Serializers;
+import fr.inria.spirals.repairnator.serializer.SerializerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class GoogleSpreadsheetSerializerEngine implements SerializerEngine {
     }
 
     @Override
-    public void serialize(List<SerializedData> data, Serializers serializer) {
+    public void serialize(List<SerializedData> data, SerializerType serializer) {
         List<List<Object>> allRows = new ArrayList<>();
 
         for (SerializedData oneRow : data) {

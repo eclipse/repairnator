@@ -1,8 +1,6 @@
 package fr.inria.spirals.repairnator.serializer.engines.json;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import fr.inria.spirals.repairnator.serializer.Serializers;
+import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
@@ -48,7 +46,7 @@ public class JSONFileSerializerEngine implements SerializerEngine {
 
 
     @Override
-    public void serialize(List<SerializedData> data, Serializers serializer) {
+    public void serialize(List<SerializedData> data, SerializerType serializer) {
         String filename = serializer.getFilename()+FILE_EXTENSION;
         BufferedWriter writer = this.openFile(filename);
 

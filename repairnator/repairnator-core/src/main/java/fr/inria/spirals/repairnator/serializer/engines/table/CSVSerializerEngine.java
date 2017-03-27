@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.serializer.engines.table;
 
-import fr.inria.spirals.repairnator.serializer.Serializers;
+import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +59,7 @@ public class CSVSerializerEngine implements SerializerEngine {
     }
 
     @Override
-    public void serialize(List<SerializedData> data, Serializers serializer) {
+    public void serialize(List<SerializedData> data, SerializerType serializer) {
         String filename = serializer.getFilename()+FILE_EXTENSION;
 
         BufferedWriter writer = this.openFile(filename);

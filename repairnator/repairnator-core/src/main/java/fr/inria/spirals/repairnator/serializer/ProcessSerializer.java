@@ -1,9 +1,17 @@
 package fr.inria.spirals.repairnator.serializer;
 
-/**
- * Created by urli on 09/03/2017.
- */
-public interface ProcessSerializer {
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
-    void serialize();
+import java.util.List;
+
+/**
+ * Created by urli on 27/03/2017.
+ */
+public abstract class ProcessSerializer extends Serializer {
+
+    public ProcessSerializer(List<SerializerEngine> engines, SerializerType type) {
+        super(engines, type);
+    }
+
+    public abstract void serialize();
 }
