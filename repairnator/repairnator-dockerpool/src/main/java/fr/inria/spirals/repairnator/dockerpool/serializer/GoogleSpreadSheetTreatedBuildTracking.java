@@ -25,9 +25,9 @@ public class GoogleSpreadSheetTreatedBuildTracking implements ProcessSerializer 
     private String containerId;
     private String status;
 
-    public GoogleSpreadSheetTreatedBuildTracking(String runid, Integer buildId, String googleSecretPath) throws IOException {
+    public GoogleSpreadSheetTreatedBuildTracking(String runid, Integer buildId) throws IOException {
         super();
-        this.sheets = GoogleSpreadSheetFactory.getSheets(googleSecretPath);
+        this.sheets = GoogleSpreadSheetFactory.getSheets();
         this.runid = runid;
         this.buildId = buildId;
         this.containerId = "N/A";
