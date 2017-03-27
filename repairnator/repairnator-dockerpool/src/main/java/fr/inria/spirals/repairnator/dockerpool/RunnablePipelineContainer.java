@@ -7,6 +7,8 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,19 +26,22 @@ public class RunnablePipelineContainer implements Runnable {
     private int buildId;
     private String logDirectory;
     private String runId;
+    private GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId) {
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking) {
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
         this.runId = runId;
+        this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
     }
 
     @Override
     public void run() {
+        String containerId = null;
+        DockerClient docker = Launcher.docker;
         try {
             LOGGER.info("Start to build and run container for build id "+buildId);
-            DockerClient docker = Launcher.docker;
 
             String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
             String[] envValues = new String[] {
@@ -61,18 +66,42 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("Create the container: "+containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
-            Launcher.runningDockerContainer.add(container.id());
+            containerId = container.id();
+            googleSpreadSheetTreatedBuildTracking.setContainerId(containerId);
+
             LOGGER.info("Start the container: "+containerName);
             docker.startContainer(container.id());
 
-            ContainerExit exitStatus = docker.waitContainer(container.id());
+            ContainerExit exitStatus = docker.waitContainer(containerId);
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
-            docker.removeContainer(container.id());
-            Launcher.runningDockerContainer.remove(container.id());
-        } catch (InterruptedException|DockerException e) {
-            LOGGER.error("Error while creating/running the container for build id "+buildId, e);
+            docker.removeContainer(containerId);
+
+            serialize("TREATED");
+        } catch (InterruptedException e) {
+            LOGGER.error("Error while running the container for build id "+buildId, e);
+            killDockerContainer(docker, containerId);
+        } catch (DockerException e) {
+            LOGGER.error("Error while creating or running the container for build id "+buildId, e);
+            serialize("ERROR");
+        }
+        Launcher.submittedRunnablePipelineContainers.remove(this);
+    }
+
+    private void killDockerContainer(DockerClient docker, String containerId) {
+        serialize("INTERRUPTED");
+        try {
+            docker.killContainer(containerId);
+            docker.removeContainer(containerId);
+        } catch (DockerException|InterruptedException e) {
+            LOGGER.error("Error while killing docker container "+containerId, e);
         }
 
     }
+
+    public void serialize(String msg) {
+        googleSpreadSheetTreatedBuildTracking.setStatus(msg);
+        googleSpreadSheetTreatedBuildTracking.serialize();
+    }
+
 }

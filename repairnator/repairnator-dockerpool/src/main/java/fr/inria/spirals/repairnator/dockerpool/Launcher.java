@@ -11,6 +11,7 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +33,7 @@ public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
-    public static List<String> runningDockerContainer = new ArrayList<>();
+    public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
 
     private void defineArgs() throws JSAPException {
@@ -90,6 +92,14 @@ public class Launcher {
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault("1");
         opt2.setHelp("Specify the number of day before killing the whole pool.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("googleSecretPath");
+        opt2.setShortFlag('s');
+        opt2.setLongFlag("googleSecretPath");
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        opt2.setDefault("./client_secret.json");
+        opt2.setHelp("Specify the path to the JSON google secret for serializing.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("runId");
@@ -173,20 +183,7 @@ public class Launcher {
         }
     }
 
-    private void killDockerContainers() {
-        try {
-            DockerClient docker = DefaultDockerClient.fromEnv().build();
-            for (String dockerContainerId : runningDockerContainer) {
-                docker.killContainer(dockerContainerId);
-                docker.removeContainer(dockerContainerId);
-            }
-            docker.close();
-        } catch (DockerCertificateException|InterruptedException|DockerException e) {
-            LOGGER.error("Error while killing docker containers",e);
-        }
-    }
-
-    private void runPool() {
+    private void runPool() throws IOException {
         List<Integer> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
 
@@ -198,7 +195,9 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"));
+            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(this.arguments.getString("runId"), builId, this.arguments.getFile("googleSecretPath").getPath());
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), googleSpreadSheetTreatedBuildTracking);
+            submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
 
@@ -206,22 +205,24 @@ public class Launcher {
         try {
             if (executorService.awaitTermination(this.arguments.getInt("globalTimeout"), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
-                docker.close();
             } else {
-                LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+runningDockerContainer.size()+" docker container(s).");
+                LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");
                 executorService.shutdownNow();
-                this.killDockerContainers();
-                docker.close();
+                this.setStatusForUnexecutedJobs();
             }
         } catch (InterruptedException e) {
-            LOGGER.error("Error while await termination. Force stopped "+runningDockerContainer.size()+" docker container(s).", e);
+            LOGGER.error("Error while await termination. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).", e);
             executorService.shutdownNow();
-            this.killDockerContainers();
-            docker.close();
+            this.setStatusForUnexecutedJobs();
         }
+        docker.close();
     }
 
-
+    private void setStatusForUnexecutedJobs() {
+        for (RunnablePipelineContainer runnablePipelineContainer : submittedRunnablePipelineContainers) {
+            runnablePipelineContainer.serialize("ABORTED");
+        }
+    }
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
