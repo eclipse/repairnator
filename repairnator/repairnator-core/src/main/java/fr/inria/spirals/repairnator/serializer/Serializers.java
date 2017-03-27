@@ -1,0 +1,39 @@
+package fr.inria.spirals.repairnator.serializer;
+
+/**
+ * Created by urli on 27/03/2017.
+ */
+public enum Serializers {
+    // pipeline serializers
+    INSPECTOR("inspector","All data!A1:L1"),
+    INSPECTOR4BEARS("inspector4bears","All data!A1:P1"),
+    TIMES("times","Duration Data!A1:O1"),
+    TIMES4BEARS("times4bears","Duration Data!A1:T1"),
+    NOPOL("nopol","Nopol Stats!A1:Q1"),
+
+    // dockerpool
+    TREATEDBUILD("treatedbuild","Treated Build Tracking!A1:G1"),
+    ENDPROCESS("endprocess","End Process!A1:I1"),
+
+    // scanner
+    DETAILEDDATA("detailedData","Scanner Detailed Data!A1:K1"),
+    SCANNER("scanner","Scanner Data!A1:M1"),
+    SCANNER4BEARS("scanner4bears","Scanner Data!A1:P1")
+    ;
+
+    private String filename;
+    private String range;
+
+    Serializers(String filename, String range) {
+        this.filename = filename;
+        this.range = range;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public String getRange() {
+        return range;
+    }
+}
