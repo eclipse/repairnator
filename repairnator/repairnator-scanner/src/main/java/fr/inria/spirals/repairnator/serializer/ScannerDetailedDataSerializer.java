@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.serializer;
 
-import com.google.api.services.sheets.v4.Sheets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.jtravis.entities.Build;
@@ -8,9 +7,6 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +16,6 @@ import java.util.List;
  * Created by fernanda on 13/03/17.
  */
 public class ScannerDetailedDataSerializer extends ProcessSerializer {
-    private Logger logger = LoggerFactory.getLogger(ScannerDetailedDataSerializer.class);
 
     private List<BuildToBeInspected> buildsToBeInspected;
 

@@ -6,8 +6,6 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +14,6 @@ import java.util.List;
  * Created by fernanda on 06/03/2017.
  */
 public class ScannerSerializer4Bears extends ProcessSerializer {
-    private Logger logger = LoggerFactory.getLogger(ScannerSerializer4Bears.class);
-
     private ProjectScanner scanner;
 
     public ScannerSerializer4Bears(List<SerializerEngine> engines, ProjectScanner scanner) {

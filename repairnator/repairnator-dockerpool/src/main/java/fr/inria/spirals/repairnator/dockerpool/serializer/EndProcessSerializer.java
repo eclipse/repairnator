@@ -7,8 +7,6 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +16,6 @@ import java.util.List;
  * Created by urli on 16/02/2017.
  */
 public class EndProcessSerializer extends ProcessSerializer {
-    private Logger logger = LoggerFactory.getLogger(EndProcessSerializer.class);
 
 
     private Date beginDate;

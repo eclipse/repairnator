@@ -17,5 +17,10 @@
             <artifactId>mongodb-driver</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-sheets</artifactId>
+            <version>v4-rev51-1.22.0</version>
+        </dependency>
     </dependencies>
 </project>

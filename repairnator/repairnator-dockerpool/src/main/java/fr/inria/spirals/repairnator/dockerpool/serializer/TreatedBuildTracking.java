@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.dockerpool.serializer;
 
-import com.google.api.services.sheets.v4.Sheets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
@@ -8,9 +7,6 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +17,6 @@ import java.util.List;
  * Created by urli on 03/03/2017.
  */
 public class TreatedBuildTracking extends ProcessSerializer {
-    private Logger logger = LoggerFactory.getLogger(TreatedBuildTracking.class);
 
     private String runid;
     private Integer buildId;

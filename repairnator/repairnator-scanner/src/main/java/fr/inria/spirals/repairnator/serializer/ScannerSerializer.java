@@ -1,15 +1,11 @@
 package fr.inria.spirals.repairnator.serializer;
 
-import com.google.api.services.sheets.v4.Sheets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +14,6 @@ import java.util.List;
  * Created by urli on 02/02/2017.
  */
 public class ScannerSerializer extends ProcessSerializer {
-    private Logger logger = LoggerFactory.getLogger(ScannerSerializer.class);
 
     private ProjectScanner scanner;
 
