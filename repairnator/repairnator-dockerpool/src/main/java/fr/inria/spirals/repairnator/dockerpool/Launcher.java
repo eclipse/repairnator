@@ -15,12 +15,14 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.dockerpool.serializer.EndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.ManageGoogleAccessToken;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +121,19 @@ public class Launcher {
         opt2.setLongFlag("runId");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify the run id for this launch.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBHost");
+        opt2.setLongFlag("dbhost");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb host.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBName");
+        opt2.setLongFlag("dbname");
+        opt2.setDefault("repairnator");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb DB name.");
         this.jsap.registerParameter(opt2);
     }
 
@@ -274,6 +289,13 @@ public class Launcher {
 
         this.engines.add(new CSVSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
         this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
+
+        if (this.arguments.getString("mongoDBHost") != null) {
+            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
+            if (mongoConnection.isConnected()) {
+                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
+            }
+        }
     }
 
     public static void main(String[] args) throws Exception {

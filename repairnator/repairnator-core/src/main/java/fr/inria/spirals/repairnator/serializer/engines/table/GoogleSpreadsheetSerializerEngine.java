@@ -25,12 +25,17 @@ public class GoogleSpreadsheetSerializerEngine implements SerializerEngine {
 
     @Override
     public void serialize(List<SerializedData> data, SerializerType serializer) {
-        List<List<Object>> allRows = new ArrayList<>();
+        if (this.sheets != null) {
+            List<List<Object>> allRows = new ArrayList<>();
 
-        for (SerializedData oneRow : data) {
-            allRows.add(oneRow.getAsList());
+            for (SerializedData oneRow : data) {
+                allRows.add(oneRow.getAsList());
+            }
+
+            GoogleSpreadSheetFactory.insertData(allRows, this.sheets, serializer.getRange(), this.logger);
+        } else {
+            logger.error("Sheets is null, there was certainly an error with connection to API.");
         }
 
-        GoogleSpreadSheetFactory.insertData(allRows, this.sheets, serializer.getRange(), this.logger);
     }
 }

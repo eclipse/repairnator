@@ -12,12 +12,14 @@ import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
@@ -74,6 +76,13 @@ public class Launcher {
         if (this.arguments.getFile("output") != null) {
             this.engines.add(new CSVSerializerEngine(this.arguments.getFile("output").getPath()));
             this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("output").getPath()));
+        }
+
+        if (this.arguments.getString("mongoDBHost") != null) {
+            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
+            if (mongoConnection.isConnected()) {
+                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
+            }
         }
     }
 
@@ -136,7 +145,7 @@ public class Launcher {
         opt2 = new FlaggedOption("output");
         opt2.setShortFlag('o');
         opt2.setLongFlag("output");
-        opt2.setStringParser(FileStringParser.getParser());
+        opt2.setStringParser(FileStringParser.getParser().setMustExist(false).setMustBeFile(true));
         opt2.setHelp("Specify where to write the list of build ids (default: stdout)");
         this.jsap.registerParameter(opt2);
 
@@ -192,6 +201,19 @@ public class Launcher {
         opt2.setLongFlag("runId");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify run id for the scanner.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBHost");
+        opt2.setLongFlag("dbhost");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb host.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBName");
+        opt2.setLongFlag("dbname");
+        opt2.setDefault("repairnator");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb DB name.");
         this.jsap.registerParameter(opt2);
     }
 
@@ -252,7 +274,6 @@ public class Launcher {
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
         if (this.arguments.getFile("output") != null) {
             String outputPath = this.arguments.getFile("output").getAbsolutePath();
-            if (outputPath != null) {
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
@@ -267,7 +288,6 @@ public class Launcher {
                 } catch (IOException e) {
                     LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
                 }
-            }
         }
 
         for (BuildToBeInspected buildToBeInspected : listOfBuilds) {

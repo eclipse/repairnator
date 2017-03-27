@@ -7,7 +7,10 @@ import com.mongodb.client.MongoDatabase;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +19,29 @@ import java.util.List;
  * Created by urli on 27/03/2017.
  */
 public class MongoDBSerializerEngine implements SerializerEngine {
-    MongoClient mongoClient;
-    MongoDatabase mongoDatabase;
+    private Logger logger = LoggerFactory.getLogger(MongoDBSerializerEngine.class);
+    private MongoDatabase mongoDatabase;
 
-    public MongoDBSerializerEngine(String mongoURI, String dbName) {
-        this.mongoClient = new MongoClient(new MongoClientURI(mongoURI));
-        this.mongoDatabase = this.mongoClient.getDatabase(dbName);
+    public MongoDBSerializerEngine(MongoConnection mongoConnection) {
+        this.mongoDatabase = mongoConnection.getMongoDatabase();
     }
 
 
     @Override
     public void serialize(List<SerializedData> data, SerializerType serializer) {
-        MongoCollection<Document> collection = this.mongoDatabase.getCollection(serializer.getFilename());
+        if (this.mongoDatabase != null) {
+            MongoCollection<Document> collection = this.mongoDatabase.getCollection(serializer.getFilename());
 
-        List<Document> listDocuments = new ArrayList<>();
-        for (SerializedData oneData : data) {
-            Document doc = Document.parse(oneData.getAsJson().toString());
-            listDocuments.add(doc);
+            List<Document> listDocuments = new ArrayList<>();
+            for (SerializedData oneData : data) {
+                Document doc = Document.parse(oneData.getAsJson().toString());
+                listDocuments.add(doc);
+            }
+
+            collection.insertMany(listDocuments);
+        } else {
+            logger.error("Mongo connection is null, there was certainly a problem with the connection.");
         }
 
-        collection.insertMany(listDocuments);
     }
 }

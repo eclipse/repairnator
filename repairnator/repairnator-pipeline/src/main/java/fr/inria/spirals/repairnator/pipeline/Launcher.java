@@ -22,9 +22,11 @@ import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +105,12 @@ public class Launcher {
             String serializedFiles = config.getJsonOutputPath()+"/"+this.buildId;
             this.engines.add(new CSVSerializerEngine(serializedFiles));
             this.engines.add(new JSONFileSerializerEngine(serializedFiles));
+        }
+
+        MongoConnection mongoConnection = new MongoConnection(this.config.getMongoDBURI(), this.config.getMongoDBName());
+
+        if (mongoConnection.isConnected()) {
+            this.engines.add(new MongoDBSerializerEngine(mongoConnection));
         }
     }
 

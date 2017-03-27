@@ -17,6 +17,8 @@ public class RepairnatorConfig {
     private boolean serializeJson;
     private String jsonOutputPath;
     private String pushRemoteRepo;
+    private String mongoDBURI;
+    private String mongoDBName;
 
     private static RepairnatorConfig instance;
 
@@ -109,6 +111,22 @@ public class RepairnatorConfig {
 
     public void setPushRemoteRepo(String pushRemoteRepo) {
         this.pushRemoteRepo = pushRemoteRepo;
+    }
+
+    public String getMongoDBURI() {
+        return mongoDBURI;
+    }
+
+    public void setMongoDBURI(String mongoDBURI) {
+        this.mongoDBURI = mongoDBURI;
+    }
+
+    public String getMongoDBName() {
+        return mongoDBName;
+    }
+
+    public void setMongoDBName(String mongoDBName) {
+        this.mongoDBName = mongoDBName;
     }
 
     @Override
