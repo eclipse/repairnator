@@ -1,0 +1,96 @@
+package fr.inria.spirals.repairnator.serializer;
+
+import com.google.api.services.sheets.v4.Sheets;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by fernanda on 13/03/17.
+ */
+public class ScannerDetailedDataSerializer extends ProcessSerializer {
+    private Logger logger = LoggerFactory.getLogger(ScannerDetailedDataSerializer.class);
+
+    private List<BuildToBeInspected> buildsToBeInspected;
+
+    public ScannerDetailedDataSerializer(List<SerializerEngine> engines, List<BuildToBeInspected> buildsToBeInspected) {
+        super(engines, SerializerType.DETAILEDDATA);
+        this.buildsToBeInspected = buildsToBeInspected;
+    }
+
+    private List<Object> serializeAsList(BuildToBeInspected buildToBeInspected) {
+        Build build = buildToBeInspected.getBuild();
+
+        Build previousBuild = buildToBeInspected.getPreviousBuild();
+        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
+        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+
+        List<Object> dataCol = new ArrayList<Object>();
+
+        Date date = new Date();
+        dataCol.add(build.getId() + "");
+        dataCol.add(previousBuildId + "");
+        dataCol.add(buildToBeInspected.getStatus().toString());
+        dataCol.add(build.getRepository().getSlug());
+        dataCol.add(Utils.formatCompleteDate(date));
+        dataCol.add(Utils.formatOnlyDay(date));
+        dataCol.add(Utils.getHostname());
+        dataCol.add(Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+        dataCol.add(Utils.getTravisUrl(previousBuildId, build.getRepository().getSlug()));
+        dataCol.add(committerEmail);
+        dataCol.add(buildToBeInspected.getRunId());
+
+        return dataCol;
+    }
+
+    private JsonElement serializeAsJson(BuildToBeInspected buildToBeInspected) {
+        JsonObject result = new JsonObject();
+
+        Build build = buildToBeInspected.getBuild();
+
+        Build previousBuild = buildToBeInspected.getPreviousBuild();
+        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
+        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+        Date date = new Date();
+
+        result.addProperty("buildId", build.getId());
+        result.addProperty("previousBuildId", previousBuildId);
+        result.addProperty("scannedStatus", buildToBeInspected.getStatus().name());
+        result.addProperty("repositoryName", build.getRepository().getSlug());
+        result.addProperty("dateScanned", Utils.formatCompleteDate(date));
+        result.addProperty("dayScanned", Utils.formatOnlyDay(date));
+        result.addProperty("hostname", Utils.getHostname());
+        result.addProperty("travisBuildUrl", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+        result.addProperty("travisPreviousBuildUrl", Utils.getTravisUrl(previousBuildId, build.getRepository().getSlug()));
+        result.addProperty("comitterEmail", committerEmail);
+        result.addProperty("runId", buildToBeInspected.getRunId());
+
+        return result;
+    }
+
+    public void serialize() {
+        if (!this.buildsToBeInspected.isEmpty()) {
+            List<SerializedData> allData = new ArrayList<>();
+
+            for (BuildToBeInspected buildToBeInspected : this.buildsToBeInspected) {
+                allData.add(new SerializedData(this.serializeAsList(buildToBeInspected), this.serializeAsJson(buildToBeInspected)));
+            }
+
+            for (SerializerEngine engine : this.getEngines()) {
+                engine.serialize(allData, this.getType());
+            }
+        }
+    }
+
+}

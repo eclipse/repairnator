@@ -8,12 +8,12 @@ import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherMode;
-import fr.inria.spirals.repairnator.ProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerDetailedDataSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
+import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
+import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
@@ -198,12 +198,12 @@ public class Launcher {
         ProcessSerializer scannerSerializer;
 
         if (launcherMode == LauncherMode.REPAIR) {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
+            scannerSerializer = new ScannerSerializer(scanner);
         } else {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(scanner);
+            scannerSerializer = new ScannerSerializer4Bears(scanner);
 
             if (this.arguments.getBoolean("scanOnly")) {
-                GoogleSpreadSheetScannerDetailedDataSerializer scannerDetailedDataSerializer = new GoogleSpreadSheetScannerDetailedDataSerializer(buildsToBeInspected);
+                ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(buildsToBeInspected);
                 scannerDetailedDataSerializer.serialize();
             }
         }
