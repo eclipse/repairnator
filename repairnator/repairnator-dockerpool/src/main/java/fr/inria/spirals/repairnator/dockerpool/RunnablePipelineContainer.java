@@ -7,7 +7,7 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
+import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +27,9 @@ public class RunnablePipelineContainer implements Runnable {
     private String logDirectory;
     private String runId;
     private String accessToken;
-    private GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
+    private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking, String accessToken) {
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, String accessToken) {
 
         this.imageId = imageId;
         this.buildId = buildId;

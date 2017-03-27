@@ -12,9 +12,9 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.ManageGoogleAccessToken;
-import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.ManageGoogleAccessToken;
+import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -202,7 +202,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(this.arguments.getString("runId"), builId);
+            TreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new TreatedBuildTracking(this.arguments.getString("runId"), builId);
             RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), googleSpreadSheetTreatedBuildTracking, this.accessToken);
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
