@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.serializer;
 
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,7 +14,11 @@ public abstract class Serializer {
     private SerializerType type;
 
     public Serializer(List<SerializerEngine> engines, SerializerType type) {
-        this.engines = engines;
+        if (engines == null) {
+            this.engines = Collections.EMPTY_LIST;
+        } else {
+            this.engines = engines;
+        }
         this.type = type;
     }
 
