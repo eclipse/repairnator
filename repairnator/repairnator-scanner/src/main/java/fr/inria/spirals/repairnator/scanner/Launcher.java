@@ -10,6 +10,10 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
@@ -20,6 +24,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +38,7 @@ public class Launcher {
     private JSAP jsap;
     private JSAPResult arguments;
     private LauncherMode launcherMode;
+    private List<SerializerEngine> engines;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -46,6 +52,11 @@ public class Launcher {
         }
 
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
+        this.prepareSerializerEngines();
+    }
+
+    private void prepareSerializerEngines() {
+        this.engines = new ArrayList<>();
 
         if (this.launcherMode == LauncherMode.REPAIR) {
             GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
@@ -55,8 +66,14 @@ public class Launcher {
 
         try {
             GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
+            this.engines.add(new GoogleSpreadsheetSerializerEngine());
         } catch (IOException | GeneralSecurityException e) {
             LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+        }
+
+        if (this.arguments.getFile("output") != null) {
+            this.engines.add(new CSVSerializerEngine(this.arguments.getFile("output").getPath()));
+            this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("output").getPath()));
         }
     }
 
@@ -198,12 +215,12 @@ public class Launcher {
         ProcessSerializer scannerSerializer;
 
         if (launcherMode == LauncherMode.REPAIR) {
-            scannerSerializer = new ScannerSerializer(scanner);
+            scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
-            scannerSerializer = new ScannerSerializer4Bears(scanner);
+            scannerSerializer = new ScannerSerializer4Bears(this.engines, scanner);
 
             if (this.arguments.getBoolean("scanOnly")) {
-                ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(buildsToBeInspected);
+                ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
                 scannerDetailedDataSerializer.serialize();
             }
         }
