@@ -13,14 +13,10 @@ import java.util.List;
  */
 public abstract class AbstractDataSerializer extends Serializer {
 
-    private static final String TRAVIS_URL = "http://travis-ci.org/";
+
 
     public AbstractDataSerializer(List<SerializerEngine> engines, SerializerType type) {
         super(engines, type);
-    }
-
-    protected String getTravisUrl(int buildId, String slug) {
-        return TRAVIS_URL + slug + "/builds/" + buildId;
     }
 
     protected String getPrettyPrintState(JobStatus jobStatus) {

@@ -18,6 +18,7 @@ public class Utils {
     private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
+    private static final String TRAVIS_URL = "http://travis-ci.org/";
 
     public static String formatCompleteDate(Date date) {
         return tsvCompleteDateFormat.format(date);
@@ -38,6 +39,10 @@ public class Utils {
         } catch (UnknownHostException e) {
             return "unknown host";
         }
+    }
+
+    public static String getTravisUrl(int buildId, String slug) {
+        return TRAVIS_URL + slug + "/builds/" + buildId;
     }
 
     public static String getDuration(Date dateBegin, Date dateEnd) {

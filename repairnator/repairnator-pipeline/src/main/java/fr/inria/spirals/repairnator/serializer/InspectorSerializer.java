@@ -47,7 +47,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         dataCol.add(realState);
         dataCol.add(Utils.getHostname());
         dataCol.add(Utils.formatCompleteDate(new Date()));
-        dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+        dataCol.add(Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         dataCol.add(typeOfFailures);
         dataCol.add(buildToBeInspected.getRunId());
 
@@ -74,7 +74,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         result.addProperty("realStatus", realState);
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("buildReproductionDate", Utils.formatCompleteDate(new Date()));
-        result.addProperty("travisURL", this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+        result.addProperty("travisURL", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         result.addProperty("typeOfFailures", typeOfFailures);
         result.addProperty("runId", buildToBeInspected.getRunId());
 

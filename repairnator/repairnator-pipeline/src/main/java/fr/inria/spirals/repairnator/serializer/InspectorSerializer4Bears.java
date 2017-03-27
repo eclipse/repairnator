@@ -59,8 +59,8 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         dataCol.add(Utils.formatOnlyDay(build.getFinishedAt()));
         dataCol.add(Utils.getHostname());
         dataCol.add(Utils.formatCompleteDate(new Date()));
-        dataCol.add(this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
-        dataCol.add(this.getTravisUrl(previousBuildId, previousBuildSlug));
+        dataCol.add(Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+        dataCol.add(Utils.getTravisUrl(previousBuildId, previousBuildSlug));
         if (jobStatus.getState() == ProjectState.FIXERBUILDCASE1 || jobStatus.getState() == ProjectState.FIXERBUILDCASE2) {
             String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
             dataCol.add(committerEmail);
@@ -100,8 +100,8 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         result.addProperty("buildFinishedDay", Utils.formatOnlyDay(build.getFinishedAt()));
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("buildReproductionDate", Utils.formatCompleteDate(new Date()));
-        result.addProperty("buildTravisUrl", this.getTravisUrl(build.getId(), build.getRepository().getSlug()));
-        result.addProperty("previousBuildTravisUrl", this.getTravisUrl(previousBuildId, previousBuildSlug));
+        result.addProperty("buildTravisUrl", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
+        result.addProperty("previousBuildTravisUrl", Utils.getTravisUrl(previousBuildId, previousBuildSlug));
         result.addProperty("committerEmail", committerEmail);
         result.addProperty("runId", buildToBeInspected.getRunId());
 
