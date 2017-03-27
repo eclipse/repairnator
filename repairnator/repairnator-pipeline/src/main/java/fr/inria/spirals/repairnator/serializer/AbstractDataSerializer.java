@@ -3,16 +3,20 @@ package fr.inria.spirals.repairnator.serializer;
 
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+
+import java.util.List;
 
 
 /**
  * Created by urli on 20/01/2017.
  */
-public abstract class AbstractDataSerializer {
+public abstract class AbstractDataSerializer extends Serializer {
 
     private static final String TRAVIS_URL = "http://travis-ci.org/";
 
-    public AbstractDataSerializer() {
+    public AbstractDataSerializer(List<SerializerEngine> engines, SerializerType type) {
+        super(engines, type);
     }
 
     protected String getTravisUrl(int buildId, String slug) {

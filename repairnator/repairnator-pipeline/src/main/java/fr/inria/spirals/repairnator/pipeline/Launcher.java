@@ -15,8 +15,12 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.gsheet.inspectors.*;
+import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
+import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
+import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.NopolSerializer;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -232,12 +236,12 @@ public class Launcher {
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            serializers.add(new GoogleSpreadSheetInspectorSerializer());
-            serializers.add(new GoogleSpreadSheetInspectorTimeSerializer());
-            serializers.add(new GoogleSpreadSheetNopolSerializer());
+            serializers.add(new InspectorSerializer());
+            serializers.add(new InspectorTimeSerializer());
+            serializers.add(new NopolSerializer());
         } else {
-            serializers.add(new GoogleSpreadSheetInspectorSerializer4Bears());
-            serializers.add(new GoogleSpreadSheetInspectorTimeSerializer4Bears());
+            serializers.add(new InspectorSerializer4Bears());
+            serializers.add(new InspectorTimeSerializer4Bears());
         }
 
         ProjectInspector inspector;
