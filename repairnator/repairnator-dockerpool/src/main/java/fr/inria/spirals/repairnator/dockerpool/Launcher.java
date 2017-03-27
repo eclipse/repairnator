@@ -12,6 +12,11 @@ import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.dockerpool.serializer.EndProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.ManageGoogleAccessToken;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
@@ -39,6 +44,7 @@ public class Launcher {
     private JSAP jsap;
     private JSAPResult arguments;
     private String accessToken;
+    private List<SerializerEngine> engines;
 
     public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
@@ -191,19 +197,23 @@ public class Launcher {
     }
 
     private void runPool() throws IOException {
+        EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, this.arguments.getString("runId"));
         List<Integer> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
+
+        endProcessSerializer.setNbBuilds(buildIds.size());
 
         String imageId = this.findDockerImage();
         LOGGER.info("Found the following docker image id: "+imageId);
 
         String logFile = this.arguments.getFile("logDirectory").getAbsolutePath();
 
+
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            TreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new TreatedBuildTracking(this.arguments.getString("runId"), builId);
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), googleSpreadSheetTreatedBuildTracking, this.accessToken);
+            TreatedBuildTracking treatedBuildTracking = new TreatedBuildTracking(this.engines, this.arguments.getString("runId"), builId);
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), treatedBuildTracking, this.accessToken);
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
@@ -212,17 +222,21 @@ public class Launcher {
         try {
             if (executorService.awaitTermination(this.arguments.getInt("globalTimeout"), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
+                endProcessSerializer.setStatus("ok");
             } else {
                 LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");
                 executorService.shutdownNow();
                 this.setStatusForUnexecutedJobs();
+                endProcessSerializer.setStatus("timeout");
             }
         } catch (InterruptedException e) {
             LOGGER.error("Error while await termination. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).", e);
             executorService.shutdownNow();
             this.setStatusForUnexecutedJobs();
+            endProcessSerializer.setStatus("interrupted");
         }
         docker.close();
+        endProcessSerializer.serialize();
     }
 
     private void setStatusForUnexecutedJobs() {
@@ -237,6 +251,12 @@ public class Launcher {
         this.checkArguments();
         this.checkEnvironmentVariables();
 
+        this.initializeSerializerEngines();
+    }
+
+    private void initializeSerializerEngines() {
+        this.engines = new ArrayList<>();
+
         try {
             GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
 
@@ -246,9 +266,14 @@ public class Launcher {
             if (credential != null) {
                 this.accessToken = credential.getAccessToken();
             }
+
+            this.engines.add(new GoogleSpreadsheetSerializerEngine());
         } catch (IOException | GeneralSecurityException e) {
             LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
         }
+
+        this.engines.add(new CSVSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
+        this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
     }
 
     public static void main(String[] args) throws Exception {
