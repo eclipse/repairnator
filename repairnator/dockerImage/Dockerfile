@@ -19,7 +19,7 @@ ENV GITHUB_OAUTH=
 ENV BUILD_ID=
 ENV LOG_FILENAME=
 ENV RUN_ID=
-ENV GOOGLE_ACCESS_TOKEN
+ENV GOOGLE_ACCESS_TOKEN=
 
 WORKDIR /root
 ENTRYPOINT java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -m repair -d -b $BUILD_ID --runId $RUN_ID -g $GOOGLE_ACCESS_TOKEN

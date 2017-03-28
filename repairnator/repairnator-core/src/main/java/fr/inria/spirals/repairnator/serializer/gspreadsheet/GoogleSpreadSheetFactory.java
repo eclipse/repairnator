@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.serializer;
+package fr.inria.spirals.repairnator.serializer.gspreadsheet;
 
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;

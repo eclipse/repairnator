@@ -17,6 +17,8 @@ source $SCRIPT_DIR/set_env_variable.sh
 
 if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1
+else
+    mkdir $REPAIR_OUTPUT_PATH
 fi
 
 RUN_ID=`uuidgen`
@@ -45,7 +47,7 @@ cp -r $REPAIR_DOCKER_IMG_DIR/. $REPAIRNATOR_DOCKER_DIR
 
 if [ "$SKIP_SCAN" -eq 0 ]; then
     echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
-    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -g $GOOGLE_SECRET_PATH -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d &> $LOG_DIR/scanner.log
+    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -g $GOOGLE_SECRET_PATH -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID --dbhost $MONGODB_HOST --dbname $MONGODB_NAME -d &> $LOG_DIR/scanner.log
 fi
 
 NB_LINES=`wc -l $REPAIRNATOR_BUILD_LIST`
@@ -60,7 +62,7 @@ echo "Build the docker machine (tag: $DOCKER_TAG)..."
 docker build -t $DOCKER_TAG $REPAIRNATOR_DOCKER_DIR
 
 echo "Launch docker pool..."
-java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR -g $DAY_TIMEOUT -s $GOOGLE_SECRET_PATH --runId $RUN_ID &> $LOG_DIR/dockerpool.log
+java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR -g $DAY_TIMEOUT -s $GOOGLE_SECRET_PATH --runId $RUN_ID --dbhost $MONGODB_HOST --dbname $MONGODB_NAME &> $LOG_DIR/dockerpool.log
 
 echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR

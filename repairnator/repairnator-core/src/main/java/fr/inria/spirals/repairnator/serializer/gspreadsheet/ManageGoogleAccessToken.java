@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.serializer;
+package fr.inria.spirals.repairnator.serializer.gspreadsheet;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
