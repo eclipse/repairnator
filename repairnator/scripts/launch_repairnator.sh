@@ -62,7 +62,7 @@ echo "Build the docker machine (tag: $DOCKER_TAG)..."
 docker build -t $DOCKER_TAG $REPAIRNATOR_DOCKER_DIR
 
 echo "Launch docker pool..."
-java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR -g $DAY_TIMEOUT -s $GOOGLE_SECRET_PATH --runId $RUN_ID --dbhost $MONGODB_HOST --dbname $MONGODB_NAME &> $LOG_DIR/dockerpool.log
+java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR -g $DAY_TIMEOUT -s $GOOGLE_SECRET_PATH --runId $RUN_ID --dbhost $MONGODB_HOST --dbname $MONGODB_NAME -m $SCANNER_MODE --spreadsheet $SPREADSHEET --pushurl $PUSH_URL &> $LOG_DIR/dockerpool.log
 
 echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR

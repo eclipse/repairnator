@@ -60,7 +60,7 @@ public class RunnablePipelineContainer implements Runnable {
                 "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
                 "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
                 "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
-                "OUTPUT="+this.repairnatorConfig.getJsonOutputPath()
+                "OUTPUT=/var/log"
             };
 
             Map<String,String> labels = new HashMap<>();

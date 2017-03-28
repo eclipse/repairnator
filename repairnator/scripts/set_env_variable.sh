@@ -13,6 +13,8 @@ export SCANNER_MODE=repair
 export DAY_TIMEOUT=1
 export MONGODB_HOST=
 export MONGODB_DBNAME=
+export SPREADSHEET=
+export PUSH_URL=
 
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator
 export REPAIR_DOCKER_IMG_DIR=$HOME_REPAIR/dockerImage/

@@ -162,12 +162,6 @@ public class Launcher {
         opt2.setHelp("Specify Google Spreadsheet ID to put data.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("output");
-        opt2.setLongFlag("output");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify output for docker serialized files");
-        this.jsap.registerParameter(opt2);
-
         opt2 = new FlaggedOption("pushUrl");
         opt2.setLongFlag("pushurl");
         opt2.setStringParser(JSAP.INETADDRESS_PARSER);
@@ -312,11 +306,6 @@ public class Launcher {
     private void initConfig() {
         this.config = RepairnatorConfig.getInstance();
         this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
-
-        if (this.arguments.getString("output") != null) {
-            this.config.setSerializeJson(true);
-            this.config.setJsonOutputPath(this.arguments.getString("output"));
-        }
         if (this.arguments.getInetAddress("pushUrl") != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(this.arguments.getInetAddress("pushUrl").toString());
