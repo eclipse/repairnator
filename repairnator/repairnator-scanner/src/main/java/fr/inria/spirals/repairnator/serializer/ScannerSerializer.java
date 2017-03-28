@@ -82,20 +82,10 @@ public class ScannerSerializer extends ProcessSerializer {
         }
     }
 
-    private static String getValue(List<Object> value, int index) {
-        if (index < value.size()) {
-            return value.get(index).toString();
-        } else {
-            return null;
-        }
-    }
-
     public static void main(String[] args) throws IOException, GeneralSecurityException {
         GoogleSpreadSheetFactory.initWithFileSecret("client_secret.json");
         Sheets sheets = GoogleSpreadSheetFactory.getSheets();
 
-        List<String> ranges = new ArrayList<>();
-        ranges.add(SerializerType.SCANNER.getRange());
         List<List<Object>> results = sheets.spreadsheets().values().get(GoogleSpreadSheetFactory.getSpreadsheetID(), "Scanner Data!A:M").execute().getValues();
 
         MongoConnection mongoConnection = new MongoConnection(args[0],"repairnator");
@@ -113,20 +103,20 @@ public class ScannerSerializer extends ProcessSerializer {
 
             JsonObject result = new JsonObject();
 
-            result.addProperty("hostname", getValue(value, 0));
-            result.addProperty("dateBegin", getValue(value, 1));
-            result.addProperty("dateLimit", getValue(value, 2));
-            result.addProperty("totalRepoNumber", getValue(value, 3));
-            result.addProperty("totalRepoUsingTravis", getValue(value, 4));
-            result.addProperty("totalScannedBuilds", getValue(value, 5));
-            result.addProperty("totalJavaBuilds", getValue(value, 6));
-            result.addProperty("totalJavaPassingBuilds", getValue(value, 7));
-            result.addProperty("totalJavaFailingBuilds", getValue(value, 8));
-            result.addProperty("totalJavaFailingBuildsWithFailingTests", getValue(value, 9));
-            result.addProperty("totalPRBuilds", getValue(value, 10));
-            result.addProperty("dayLimit", getValue(value, 11));
-            result.addProperty("duration", getValue(value, 12));
-            result.addProperty("runId", getValue(value, 13));
+            result.addProperty("hostname", Utils.getValue(value, 0));
+            result.addProperty("dateBegin", Utils.getValue(value, 1));
+            result.addProperty("dateLimit", Utils.getValue(value, 2));
+            result.addProperty("totalRepoNumber", Utils.getValue(value, 3));
+            result.addProperty("totalRepoUsingTravis", Utils.getValue(value, 4));
+            result.addProperty("totalScannedBuilds", Utils.getValue(value, 5));
+            result.addProperty("totalJavaBuilds", Utils.getValue(value, 6));
+            result.addProperty("totalJavaPassingBuilds", Utils.getValue(value, 7));
+            result.addProperty("totalJavaFailingBuilds", Utils.getValue(value, 8));
+            result.addProperty("totalJavaFailingBuildsWithFailingTests", Utils.getValue(value, 9));
+            result.addProperty("totalPRBuilds", Utils.getValue(value, 10));
+            result.addProperty("dayLimit", Utils.getValue(value, 11));
+            result.addProperty("duration", Utils.getValue(value, 12));
+            result.addProperty("runId", Utils.getValue(value, 13));
 
             data.add(new SerializedData(Collections.EMPTY_LIST, result));
         }

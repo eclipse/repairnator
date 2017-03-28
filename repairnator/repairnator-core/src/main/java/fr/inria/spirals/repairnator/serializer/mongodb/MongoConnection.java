@@ -19,6 +19,19 @@ public class MongoConnection {
         try {
             MongoClientURI clientURI = new MongoClientURI(mongoDBURI);
             MongoClient client = new MongoClient(clientURI);
+
+            boolean existingDb = false;
+            for (String s : client.listDatabaseNames()) {
+                if (s.equals(dbName)) {
+                    existingDb = true;
+                    break;
+                }
+            }
+
+            if (!existingDb) {
+                logger.info("The database "+dbName+" does not exist, it will certainly be created if you have rights.");
+            }
+
             this.mongoDatabase = client.getDatabase(dbName);
             this.isConnected = true;
         } catch (Exception e) {

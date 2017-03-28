@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by urli on 02/02/2017.
@@ -61,5 +62,13 @@ public class Utils {
 
         Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
         jgit.setLevel(Level.WARN);
+    }
+
+    public static String getValue(List<Object> value, int index) {
+        if (index < value.size()) {
+            return value.get(index).toString();
+        } else {
+            return null;
+        }
     }
 }
