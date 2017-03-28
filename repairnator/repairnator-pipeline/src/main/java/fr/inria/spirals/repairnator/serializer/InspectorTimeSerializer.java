@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.serializer;
 
+import com.google.api.services.sheets.v4.Sheets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.jtravis.entities.Build;
@@ -17,10 +18,16 @@ import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -127,5 +134,49 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         for (SerializerEngine engine : this.getEngines()) {
             engine.serialize(allData, this.getType());
         }
+    }
+
+    public static void main(String[] args) throws IOException, GeneralSecurityException {
+        GoogleSpreadSheetFactory.initWithFileSecret("client_secret.json");
+        Sheets sheets = GoogleSpreadSheetFactory.getSheets();
+
+        List<List<Object>> results = sheets.spreadsheets().values().get(GoogleSpreadSheetFactory.getSpreadsheetID(), "Duration Data!A:P").execute().getValues();
+
+        MongoConnection mongoConnection = new MongoConnection(args[0],"repairnator");
+
+        if (!mongoConnection.isConnected()) {
+            throw new RuntimeException("Error when connection to mongodb");
+        }
+
+        MongoDBSerializerEngine serializerEngine = new MongoDBSerializerEngine(mongoConnection);
+
+        List<SerializedData> data = new ArrayList<>();
+
+        for (int i = 1; i < results.size(); i++) {
+            List<Object> value = results.get(i);
+
+            JsonObject result = new JsonObject();
+
+            result.addProperty("buildId", Utils.getValue(value, 0));
+            result.addProperty("repositoryName", Utils.getValue(value, 1));
+            result.addProperty("buildReproductionDate", Utils.getValue(value, 2));
+            result.addProperty("hostname", Utils.getValue(value, 3));
+            result.addProperty("totalDuration", Utils.getValue(value, 4));
+            result.addProperty("clonage", Utils.getValue(value, 5));
+            result.addProperty("checkoutBuild", Utils.getValue(value, 6));
+            result.addProperty("build", Utils.getValue(value, 7));
+            result.addProperty("test", Utils.getValue(value, 8));
+            result.addProperty("gatherTestInfo", Utils.getValue(value, 9));
+            result.addProperty("squashRepository", Utils.getValue(value, 10));
+            result.addProperty("push", Utils.getValue(value, 11));
+            result.addProperty("computeClasspath", Utils.getValue(value, 12));
+            result.addProperty("computeSourceDir", Utils.getValue(value, 13));
+            result.addProperty("repair", Utils.getValue(value, 14));
+            result.addProperty("runId", Utils.getValue(value, 15));
+
+            data.add(new SerializedData(Collections.EMPTY_LIST, result));
+        }
+
+        serializerEngine.serialize(data, SerializerType.TIMES);
     }
 }

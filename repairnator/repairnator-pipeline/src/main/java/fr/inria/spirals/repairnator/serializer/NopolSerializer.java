@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.serializer;
 
+import com.google.api.services.sheets.v4.Sheets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.lille.repair.common.config.NopolContext;
@@ -12,11 +13,17 @@ import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -141,5 +148,53 @@ public class NopolSerializer extends AbstractDataSerializer {
                 }
             }
         }
+    }
+
+    public static void main(String[] args) throws IOException, GeneralSecurityException {
+        GoogleSpreadSheetFactory.initWithFileSecret("client_secret.json");
+        Sheets sheets = GoogleSpreadSheetFactory.getSheets();
+
+        List<List<Object>> results = sheets.spreadsheets().values().get(GoogleSpreadSheetFactory.getSpreadsheetID(), "Nopol Stats!A:T").execute().getValues();
+
+        MongoConnection mongoConnection = new MongoConnection(args[0],"repairnator");
+
+        if (!mongoConnection.isConnected()) {
+            throw new RuntimeException("Error when connection to mongodb");
+        }
+
+        MongoDBSerializerEngine serializerEngine = new MongoDBSerializerEngine(mongoConnection);
+
+        List<SerializedData> data = new ArrayList<>();
+
+        for (int i = 1; i < results.size(); i++) {
+            List<Object> value = results.get(i);
+
+            JsonObject result = new JsonObject();
+
+            result.addProperty("buildId", Utils.getValue(value, 3));
+            result.addProperty("repositoryName", Utils.getValue(value, 4));
+            result.addProperty("hostname", Utils.getValue(value, 0));
+            result.addProperty("nopolDateEnd", Utils.getValue(value, 1));
+            result.addProperty("nopolDayEnd", Utils.getValue(value, 2));
+            result.addProperty("testClassLocation", Utils.getValue(value, 5));
+            result.addProperty("failures", Utils.getValue(value, 6));
+            result.addProperty("allocatedTime", Utils.getValue(value, 7));
+            result.addProperty("passingTime", Utils.getValue(value, 8));
+            result.addProperty("status", Utils.getValue(value, 9));
+            result.addProperty("exceptionDetail", Utils.getValue(value, 10));
+            result.addProperty("patchNumber", Utils.getValue(value, 11));
+            result.addProperty("patchType", Utils.getValue(value, 12));
+            result.addProperty("patch", Utils.getValue(value, 13));
+            result.addProperty("patchLocation", Utils.getValue(value, 14));
+            result.addProperty("nopolContext", Utils.getValue(value, 15));
+            result.addProperty("nbAngelicValues", Utils.getValue(value, 16));
+            result.addProperty("nbStatements", Utils.getValue(value, 17));
+            result.addProperty("ignoreStatus", Utils.getValue(value, 18));
+            result.addProperty("runId", Utils.getValue(value, 19));
+
+            data.add(new SerializedData(Collections.EMPTY_LIST, result));
+        }
+
+        serializerEngine.serialize(data, SerializerType.NOPOL);
     }
 }

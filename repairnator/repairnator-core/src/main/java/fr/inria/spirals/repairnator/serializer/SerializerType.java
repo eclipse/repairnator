@@ -7,9 +7,9 @@ public enum SerializerType {
     // pipeline serializers
     INSPECTOR("inspector","All data!A1:L1"),
     INSPECTOR4BEARS("inspector4bears","All data!A1:P1"),
-    TIMES("times","Duration Data!A1:O1"),
+    TIMES("times","Duration Data!A1:P1"),
     TIMES4BEARS("times4bears","Duration Data!A1:T1"),
-    NOPOL("nopol","Nopol Stats!A1:Q1"),
+    NOPOL("nopol","Nopol Stats!A1:T1"),
 
     // dockerpool
     TREATEDBUILD("treatedbuild","Treated Build Tracking!A1:G1"),
