@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,6 +83,8 @@ public class ScannerSerializer extends ProcessSerializer {
 
     public static void main(String[] args) throws IOException, GeneralSecurityException {
         GoogleSpreadSheetFactory.initWithFileSecret("client_secret.json");
+        GoogleSpreadSheetFactory.setSpreadsheetId(args[1]);
+
         Sheets sheets = GoogleSpreadSheetFactory.getSheets();
 
         List<List<Object>> results = sheets.spreadsheets().values().get(GoogleSpreadSheetFactory.getSpreadsheetID(), "Scanner Data!A:M").execute().getValues();

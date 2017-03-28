@@ -102,6 +102,8 @@ public class InspectorSerializer extends AbstractDataSerializer {
 
     public static void main(String[] args) throws IOException, GeneralSecurityException {
         GoogleSpreadSheetFactory.initWithFileSecret("client_secret.json");
+        GoogleSpreadSheetFactory.setSpreadsheetId(args[1]);
+
         Sheets sheets = GoogleSpreadSheetFactory.getSheets();
 
         List<List<Object>> results = sheets.spreadsheets().values().get(GoogleSpreadSheetFactory.getSpreadsheetID(), "All data!A:L").execute().getValues();

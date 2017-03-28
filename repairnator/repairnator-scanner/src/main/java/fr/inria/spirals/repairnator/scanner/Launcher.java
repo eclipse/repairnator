@@ -20,7 +20,6 @@ import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
@@ -290,20 +289,20 @@ public class Launcher {
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
         if (this.arguments.getFile("output") != null) {
             String outputPath = this.arguments.getFile("output").getAbsolutePath();
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
-                    for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-                        writer.write(buildToBeInspected.getBuild().getId() + "");
-                        writer.newLine();
-                        writer.flush();
-                    }
-
-                    writer.close();
-                    return;
-                } catch (IOException e) {
-                    LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
+                for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
+                    writer.write(buildToBeInspected.getBuild().getId() + "");
+                    writer.newLine();
+                    writer.flush();
                 }
+
+                writer.close();
+                return;
+            } catch (IOException e) {
+                LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
+            }
         }
 
         for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
