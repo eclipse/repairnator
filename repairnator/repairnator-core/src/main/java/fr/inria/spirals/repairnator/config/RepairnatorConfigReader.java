@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.config;
 
-import fr.inria.spirals.repairnator.FileMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +42,6 @@ public class RepairnatorConfigReader {
 
     private void setConfigurationFromProperties(Properties properties, RepairnatorConfig config) throws RepairnatorConfigException {
         try {
-            config.setFileMode(FileMode.valueOf(properties.getProperty("filemode").toUpperCase()));
-            config.setLookupHours(Integer.parseInt(properties.getProperty("lookupHours")));
-            config.setClean(Boolean.parseBoolean(properties.getProperty("clean")));
             config.setPush(Boolean.parseBoolean(properties.getProperty("push")));
             config.setWorkspacePath(properties.getProperty("workspacePath"));
             config.setZ3solverPath(properties.getProperty("z3path"));

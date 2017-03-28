@@ -17,10 +17,7 @@ public class GoogleSpreadSheetFactory {
 
     private static Logger logger = LoggerFactory.getLogger(GoogleSpreadSheetFactory.class);
 
-    public static final String REPAIR_SPREADSHEET_ID = "1FUHOVx1Y3QZCAQpwcrnMzbpmMoWTUdNg0KBM3NVL_zA";
-    public static final String BEAR_SPREADSHEET_ID = "1MnRwoZGCxxbmkiswc0O6Rg43wJFTBc3bIyrNdTiBhQ4";
-
-    private static String spreadsheetID = REPAIR_SPREADSHEET_ID;
+    private static String spreadsheetID;
     private static GoogleSpreadSheetFactory instance;
 
     private Sheets sheets;

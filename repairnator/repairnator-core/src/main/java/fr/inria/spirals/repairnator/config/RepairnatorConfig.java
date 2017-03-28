@@ -1,15 +1,12 @@
 package fr.inria.spirals.repairnator.config;
 
-import fr.inria.spirals.repairnator.FileMode;
 import fr.inria.spirals.repairnator.LauncherMode;
 
 /**
  * Created by urli on 08/03/2017.
  */
 public class RepairnatorConfig {
-    private FileMode fileMode;
     private LauncherMode launcherMode;
-    private int lookupHours;
     private boolean clean;
     private boolean push;
     private String workspacePath;
@@ -17,28 +14,26 @@ public class RepairnatorConfig {
     private boolean serializeJson;
     private String jsonOutputPath;
     private String pushRemoteRepo;
-    private String mongoDBURI;
-    private String mongoDBName;
+    private String googleAccessToken;
+    private String runId;
+    private String spreadsheetId;
+    private String mongodbHost;
+    private String mongodbName;
 
     private static RepairnatorConfig instance;
 
     private RepairnatorConfig() {}
 
-    public static RepairnatorConfig getInstance() throws RepairnatorConfigException {
+    public void readFromFile() throws RepairnatorConfigException {
+        RepairnatorConfigReader configReader = new RepairnatorConfigReader();
+        configReader.readConfigFile(this);
+    }
+
+    public static RepairnatorConfig getInstance() {
         if (instance == null) {
             instance = new RepairnatorConfig();
-            RepairnatorConfigReader configReader = new RepairnatorConfigReader();
-            configReader.readConfigFile(instance);
         }
         return instance;
-    }
-
-    public FileMode getFileMode() {
-        return fileMode;
-    }
-
-    public void setFileMode(FileMode fileMode) {
-        this.fileMode = fileMode;
     }
 
     public LauncherMode getLauncherMode() {
@@ -47,14 +42,6 @@ public class RepairnatorConfig {
 
     public void setLauncherMode(LauncherMode launcherMode) {
         this.launcherMode = launcherMode;
-    }
-
-    public int getLookupHours() {
-        return lookupHours;
-    }
-
-    public void setLookupHours(int lookupHours) {
-        this.lookupHours = lookupHours;
     }
 
     public boolean isClean() {
@@ -113,35 +100,43 @@ public class RepairnatorConfig {
         this.pushRemoteRepo = pushRemoteRepo;
     }
 
-    public String getMongoDBURI() {
-        return mongoDBURI;
+    public String getGoogleAccessToken() {
+        return googleAccessToken;
     }
 
-    public void setMongoDBURI(String mongoDBURI) {
-        this.mongoDBURI = mongoDBURI;
+    public void setGoogleAccessToken(String googleAccessToken) {
+        this.googleAccessToken = googleAccessToken;
     }
 
-    public String getMongoDBName() {
-        return mongoDBName;
+    public String getRunId() {
+        return runId;
     }
 
-    public void setMongoDBName(String mongoDBName) {
-        this.mongoDBName = mongoDBName;
+    public void setRunId(String runId) {
+        this.runId = runId;
     }
 
-    @Override
-    public String toString() {
-        return "RepairnatorConfig{" +
-                "fileMode=" + fileMode +
-                ", launcherMode=" + launcherMode +
-                ", lookupHours=" + lookupHours +
-                ", clean=" + clean +
-                ", push=" + push +
-                ", workspacePath='" + workspacePath + '\'' +
-                ", z3solverPath='" + z3solverPath + '\'' +
-                ", serializeJson=" + serializeJson +
-                ", jsonOutputPath='" + jsonOutputPath + '\'' +
-                ", pushRemoteRepo='" + pushRemoteRepo + '\'' +
-                '}';
+    public String getSpreadsheetId() {
+        return spreadsheetId;
+    }
+
+    public void setSpreadsheetId(String spreadsheetId) {
+        this.spreadsheetId = spreadsheetId;
+    }
+
+    public String getMongodbHost() {
+        return mongodbHost;
+    }
+
+    public void setMongodbHost(String mongodbHost) {
+        this.mongodbHost = mongodbHost;
+    }
+
+    public String getMongodbName() {
+        return mongodbName;
+    }
+
+    public void setMongodbName(String mongodbName) {
+        this.mongodbName = mongodbName;
     }
 }

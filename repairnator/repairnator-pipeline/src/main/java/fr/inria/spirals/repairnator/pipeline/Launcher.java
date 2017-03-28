@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.pipeline;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
+import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
@@ -56,15 +57,7 @@ public class Launcher {
         this.arguments = jsap.parse(args);
         this.checkArguments();
         this.checkEnvironmentVariables();
-        try {
-            this.config = RepairnatorConfig.getInstance();
-        } catch (RepairnatorConfigException e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.getCause());
-            this.printUsage();
-        }
-
-        this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
+        this.initConfig();
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded();
@@ -82,35 +75,61 @@ public class Launcher {
         this.initializeSerializerEngines();
     }
 
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+        this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
+        this.config.setClean(true);
+        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
+        if (this.arguments.getFile("outputPath") != null) {
+            this.config.setSerializeJson(true);
+            this.config.setJsonOutputPath(this.arguments.getFile("outputPath").getPath());
+        }
+        if (this.arguments.getInetAddress("pushUrl") != null) {
+            this.config.setPush(true);
+            this.config.setPushRemoteRepo(this.arguments.getInetAddress("pushUrl").toString());
+        }
+        this.config.setWorkspacePath(this.arguments.getString("workspace"));
+    }
+
     private void initializeSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
-        } else {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
-        }
+        if (this.arguments.getString("spreadsheet") != null) {
+            LOGGER.info("Initialize Google spreadsheet serializer engine.");
+            GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
 
-        try {
-            if (GoogleSpreadSheetFactory.initWithAccessToken(this.arguments.getString("googleAccessToken"))) {
-                this.engines.add(new GoogleSpreadsheetSerializerEngine());
-            } else {
-                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets");
+            try {
+                if (GoogleSpreadSheetFactory.initWithAccessToken(this.arguments.getString("googleAccessToken"))) {
+                    this.engines.add(new GoogleSpreadsheetSerializerEngine());
+                } else {
+                    LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets");
+                }
+            } catch (IOException | GeneralSecurityException e) {
+                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
             }
-        } catch (IOException | GeneralSecurityException e) {
-            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+        } else {
+            LOGGER.info("Google Spreadsheet won't be used for serialization.");
         }
 
         if (config.isSerializeJson()) {
+            LOGGER.info("Initialize files serializers engines.");
             String serializedFiles = config.getJsonOutputPath()+"/"+this.buildId;
             this.engines.add(new CSVSerializerEngine(serializedFiles));
             this.engines.add(new JSONFileSerializerEngine(serializedFiles));
+        } else {
+            LOGGER.info("Files serializer won't be used");
         }
 
-        MongoConnection mongoConnection = new MongoConnection(this.config.getMongoDBURI(), this.config.getMongoDBName());
-
-        if (mongoConnection.isConnected()) {
-            this.engines.add(new MongoDBSerializerEngine(mongoConnection));
+        if (this.arguments.getString("mongoDBHost") != null) {
+            LOGGER.info("Initialize mongoDB serializer engine.");
+            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
+            if (mongoConnection.isConnected()) {
+                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
+            } else {
+                LOGGER.error("Error while connecting to mongoDB.");
+            }
+        } else {
+            LOGGER.info("MongoDB won't be used for serialization");
         }
     }
 
@@ -198,6 +217,53 @@ public class Launcher {
         opt2.setLongFlag("googleAccessToken");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify the google access token to use for serializers.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("spreadsheet");
+        opt2.setLongFlag("spreadsheet");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBHost");
+        opt2.setLongFlag("dbhost");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb host.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBName");
+        opt2.setLongFlag("dbname");
+        opt2.setDefault("repairnator");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb DB name.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("pushUrl");
+        opt2.setLongFlag("pushurl");
+        opt2.setStringParser(JSAP.INETADDRESS_PARSER);
+        opt2.setHelp("Specify repository to push data");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("z3");
+        opt2.setLongFlag("z3");
+        opt2.setDefault("./z3_for_linux");
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        opt2.setHelp("Specify path to Z3");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("outputPath");
+        opt2.setLongFlag("output");
+        opt2.setShortFlag('o');
+        opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
+        opt2.setHelp("Specify path to output serialized files");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("workspace");
+        opt2.setLongFlag("workspace");
+        opt2.setShortFlag('w');
+        opt2.setDefault("./workspace");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify path to output serialized files");
         this.jsap.registerParameter(opt2);
     }
 

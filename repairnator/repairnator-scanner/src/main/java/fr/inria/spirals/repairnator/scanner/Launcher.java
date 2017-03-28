@@ -20,6 +20,7 @@ import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
@@ -60,29 +61,38 @@ public class Launcher {
     private void prepareSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        if (this.launcherMode == LauncherMode.REPAIR) {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
-        } else {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
-        }
+        if (this.arguments.getString("spreadsheet") != null) {
+            LOGGER.info("Initialize Google spreadsheet serializer engine.");
+            GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
 
-        try {
-            GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
-            this.engines.add(new GoogleSpreadsheetSerializerEngine());
-        } catch (IOException | GeneralSecurityException e) {
-            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+            try {
+                GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
+                this.engines.add(new GoogleSpreadsheetSerializerEngine());
+            } catch (IOException | GeneralSecurityException e) {
+                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+            }
+        } else {
+            LOGGER.info("Google Spreadsheet won't be used for serialization.");
         }
 
         if (this.arguments.getFile("output") != null) {
+            LOGGER.info("Initialize files serializers engines.");
             this.engines.add(new CSVSerializerEngine(this.arguments.getFile("output").getPath()));
             this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("output").getPath()));
+        } else {
+            LOGGER.info("Files serializer won't be used");
         }
 
         if (this.arguments.getString("mongoDBHost") != null) {
+            LOGGER.info("Initialize mongoDB serializer engine.");
             MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
             if (mongoConnection.isConnected()) {
                 this.engines.add(new MongoDBSerializerEngine(mongoConnection));
+            } else {
+                LOGGER.error("Error while connecting to mongoDB.");
             }
+        } else {
+            LOGGER.info("MongoDB won't be used for serialization");
         }
     }
 
@@ -214,6 +224,12 @@ public class Launcher {
         opt2.setDefault("repairnator");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify mongodb DB name.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("spreadsheet");
+        opt2.setLongFlag("spreadsheet");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
         this.jsap.registerParameter(opt2);
     }
 

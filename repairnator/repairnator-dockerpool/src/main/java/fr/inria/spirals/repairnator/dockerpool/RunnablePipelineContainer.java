@@ -6,7 +6,9 @@ import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
+import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
 import org.slf4j.Logger;
@@ -25,17 +27,16 @@ public class RunnablePipelineContainer implements Runnable {
     private String imageId;
     private int buildId;
     private String logDirectory;
-    private String runId;
-    private String accessToken;
+    private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, String accessToken) {
+
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, RepairnatorConfig config, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking) {
 
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
-        this.runId = runId;
-        this.accessToken = accessToken;
+        this.repairnatorConfig = config;
         this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
     }
 
@@ -52,8 +53,14 @@ public class RunnablePipelineContainer implements Runnable {
                 "LOG_FILENAME="+containerName,
                 "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
                 "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
-                "RUN_ID="+this.runId,
-                "GOOGLE_ACCESS_TOKEN="+this.accessToken
+                "RUN_ID="+this.repairnatorConfig.getRunId(),
+                "GOOGLE_ACCESS_TOKEN="+this.repairnatorConfig.getGoogleAccessToken(),
+                "REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase(),
+                "SPREADSHEET_ID="+this.repairnatorConfig.getSpreadsheetId(),
+                "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
+                "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
+                "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
+                "OUTPUT="+this.repairnatorConfig.getJsonOutputPath()
             };
 
             Map<String,String> labels = new HashMap<>();
