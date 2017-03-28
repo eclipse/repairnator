@@ -12,7 +12,6 @@ import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;

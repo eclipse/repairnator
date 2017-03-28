@@ -48,8 +48,6 @@ public class RepairnatorConfigReader {
             config.setSerializeJson(Boolean.parseBoolean(properties.getProperty("json")));
             config.setJsonOutputPath(properties.getProperty("jsonOutputPath"));
             config.setPushRemoteRepo(properties.getProperty("pushRemoteRepo"));
-            config.setMongoDBURI(properties.getProperty("mongoDBURI"));
-            config.setMongoDBName(properties.getProperty("mongoDBName"));
         } catch (Exception e) {
             logger.error("Error while setting config values from properties.");
             throw new RepairnatorConfigException("Error while setting config values from properties.", e);

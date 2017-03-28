@@ -31,12 +31,12 @@ public class RunnablePipelineContainer implements Runnable {
     private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
 
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, RepairnatorConfig config, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking) {
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking) {
 
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
-        this.repairnatorConfig = config;
+        this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
     }
 

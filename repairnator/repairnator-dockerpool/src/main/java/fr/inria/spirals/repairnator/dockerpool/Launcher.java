@@ -266,7 +266,7 @@ public class Launcher {
 
         for (Integer builId : buildIds) {
             TreatedBuildTracking treatedBuildTracking = new TreatedBuildTracking(this.engines, this.arguments.getString("runId"), builId);
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.config, treatedBuildTracking);
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, treatedBuildTracking);
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
