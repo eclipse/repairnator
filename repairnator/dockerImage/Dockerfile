@@ -4,7 +4,7 @@ LABEL Description="Repairnator Pipeline docker image" Vendor="Spirals" Version="
 
 VOLUME ["/var/log/"]
 RUN echo "Europe/Paris" > /etc/timezone
-COPY repairconfig.ini /root/
+
 COPY repairnator-pipeline.jar /root/
 COPY z3_for_linux /root/
 COPY logback.xml /root/
