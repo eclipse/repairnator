@@ -258,7 +258,7 @@ public class BuildHelper extends AbstractHelper {
             }
         }
 
-        if (!dateReached) {
+        if (!dateReached && !(buildArray.size() == 0)) {
             return getTheLastBuildNumberOfADate(slug, date, lastBuildNumber, onlyAfterNumber);
         } else {
             return lastBuildNumber;
