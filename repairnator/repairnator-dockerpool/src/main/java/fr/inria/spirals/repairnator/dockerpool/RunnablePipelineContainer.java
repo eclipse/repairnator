@@ -28,15 +28,17 @@ public class RunnablePipelineContainer implements Runnable {
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
+    private boolean skipDelete;
 
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking) {
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete) {
 
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
+        this.skipDelete = skipDelete;
     }
 
     @Override
@@ -85,7 +87,11 @@ public class RunnablePipelineContainer implements Runnable {
             ContainerExit exitStatus = docker.waitContainer(containerId);
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
-            docker.removeContainer(containerId);
+
+            if (!skipDelete) {
+                LOGGER.info("Container will be removed.");
+                docker.removeContainer(containerId);
+            }
 
             serialize("TREATED");
         } catch (InterruptedException e) {

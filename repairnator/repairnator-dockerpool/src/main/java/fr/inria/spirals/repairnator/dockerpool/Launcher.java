@@ -74,6 +74,11 @@ public class Launcher {
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
 
+        sw1 = new Switch("skipDelete");
+        sw1.setLongFlag("skipDelete");
+        sw1.setDefault("false");
+        this.jsap.registerParameter(sw1);
+
         FlaggedOption opt2 = new FlaggedOption("imageName");
         opt2.setShortFlag('n');
         opt2.setLongFlag("name");
@@ -260,7 +265,7 @@ public class Launcher {
 
         for (Integer builId : buildIds) {
             TreatedBuildTracking treatedBuildTracking = new TreatedBuildTracking(this.engines, this.arguments.getString("runId"), builId);
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, treatedBuildTracking);
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, treatedBuildTracking, this.arguments.getBoolean("skipDelete"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
