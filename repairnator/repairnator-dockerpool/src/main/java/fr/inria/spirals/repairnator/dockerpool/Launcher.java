@@ -5,17 +5,27 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
+import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
+import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.ManageGoogleAccessToken;
-import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.dockerpool.serializer.EndProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.ManageGoogleAccessToken;
+import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +46,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
+    private final LauncherMode launcherMode;
     private JSAP jsap;
     private JSAPResult arguments;
     private String accessToken;
+    private List<SerializerEngine> engines;
+    private RepairnatorConfig config;
 
     public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
@@ -58,6 +71,11 @@ public class Launcher {
         sw1 = new Switch("debug");
         sw1.setShortFlag('d');
         sw1.setLongFlag("debug");
+        sw1.setDefault("false");
+        this.jsap.registerParameter(sw1);
+
+        sw1 = new Switch("skipDelete");
+        sw1.setLongFlag("skipDelete");
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
 
@@ -113,6 +131,46 @@ public class Launcher {
         opt2.setLongFlag("runId");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify the run id for this launch.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBHost");
+        opt2.setLongFlag("dbhost");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb host.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBName");
+        opt2.setLongFlag("dbname");
+        opt2.setDefault("repairnator");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb DB name.");
+        this.jsap.registerParameter(opt2);
+
+        String launcherModeValues = "";
+        for (LauncherMode mode : LauncherMode.values()) {
+            launcherModeValues += mode.name() + ";";
+        }
+        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 1);
+
+        // Launcher mode
+        opt2 = new FlaggedOption("launcherMode");
+        opt2.setShortFlag('m');
+        opt2.setLongFlag("launcherMode");
+        opt2.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
+        opt2.setRequired(true);
+        opt2.setHelp("Specify if the dockerpool intends to repair failing build (REPAIR) or gather builds info (BEARS).");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("spreadsheet");
+        opt2.setLongFlag("spreadsheet");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("pushUrl");
+        opt2.setLongFlag("pushurl");
+        opt2.setStringParser(JSAP.INETADDRESS_PARSER);
+        opt2.setHelp("Specify push URL to push data from docker builds");
         this.jsap.registerParameter(opt2);
     }
 
@@ -191,19 +249,23 @@ public class Launcher {
     }
 
     private void runPool() throws IOException {
+        EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, this.arguments.getString("runId"));
         List<Integer> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
+
+        endProcessSerializer.setNbBuilds(buildIds.size());
 
         String imageId = this.findDockerImage();
         LOGGER.info("Found the following docker image id: "+imageId);
 
         String logFile = this.arguments.getFile("logDirectory").getAbsolutePath();
 
+
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking = new GoogleSpreadSheetTreatedBuildTracking(this.arguments.getString("runId"), builId);
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, this.arguments.getString("runId"), googleSpreadSheetTreatedBuildTracking, this.accessToken);
+            TreatedBuildTracking treatedBuildTracking = new TreatedBuildTracking(this.engines, this.arguments.getString("runId"), builId);
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, treatedBuildTracking, this.arguments.getBoolean("skipDelete"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
@@ -212,17 +274,21 @@ public class Launcher {
         try {
             if (executorService.awaitTermination(this.arguments.getInt("globalTimeout"), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
+                endProcessSerializer.setStatus("ok");
             } else {
                 LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");
                 executorService.shutdownNow();
                 this.setStatusForUnexecutedJobs();
+                endProcessSerializer.setStatus("timeout");
             }
         } catch (InterruptedException e) {
             LOGGER.error("Error while await termination. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).", e);
             executorService.shutdownNow();
             this.setStatusForUnexecutedJobs();
+            endProcessSerializer.setStatus("interrupted");
         }
         docker.close();
+        endProcessSerializer.serialize();
     }
 
     private void setStatusForUnexecutedJobs() {
@@ -236,18 +302,63 @@ public class Launcher {
         this.arguments = jsap.parse(args);
         this.checkArguments();
         this.checkEnvironmentVariables();
+        this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
 
-        try {
-            GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
+        this.initConfig();
+        this.initializeSerializerEngines();
+    }
 
-            ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
-            Credential credential = manageGoogleAccessToken.getCredential();
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+        this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
 
-            if (credential != null) {
-                this.accessToken = credential.getAccessToken();
+        if (this.arguments.getInetAddress("pushUrl") != null) {
+            this.config.setPush(true);
+            this.config.setPushRemoteRepo(this.arguments.getInetAddress("pushUrl").toString());
+        }
+        this.config.setRunId(this.arguments.getString("runId"));
+        this.config.setSpreadsheetId(this.arguments.getString("spreadsheet"));
+        this.config.setMongodbHost(this.arguments.getString("mongoDBHost"));
+        this.config.setMongodbName(this.arguments.getString("mongoDBName"));
+    }
+
+    private void initializeSerializerEngines() {
+        this.engines = new ArrayList<>();
+
+        if (this.arguments.getString("spreadsheet") != null) {
+            LOGGER.info("Initialize Google spreadsheet serializer engine.");
+            GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
+
+            try {
+                GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
+
+                ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
+                Credential credential = manageGoogleAccessToken.getCredential();
+
+                if (credential != null) {
+                    this.accessToken = credential.getAccessToken();
+                    this.config.setGoogleAccessToken(this.accessToken);
+                }
+
+                this.engines.add(new GoogleSpreadsheetSerializerEngine());
+            } catch (IOException | GeneralSecurityException e) {
+                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
             }
-        } catch (IOException | GeneralSecurityException e) {
-            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+        } else {
+            LOGGER.info("Google Spreadsheet won't be used for serialization.");
+        }
+
+        this.engines.add(new CSVSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
+        this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
+
+        if (this.arguments.getString("mongoDBHost") != null) {
+            LOGGER.info("Initialize mongoDB serializer engine.");
+            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
+            if (mongoConnection.isConnected()) {
+                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
+            }
+        } else {
+            LOGGER.info("MongoDB won't be used for serialization");
         }
     }
 

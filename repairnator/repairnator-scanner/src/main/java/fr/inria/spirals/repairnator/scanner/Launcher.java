@@ -8,18 +8,25 @@ import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherMode;
-import fr.inria.spirals.repairnator.ProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.serializer.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerDetailedDataSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer;
-import fr.inria.spirals.repairnator.serializer.gsheet.process.GoogleSpreadSheetScannerSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
+import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
+import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +40,7 @@ public class Launcher {
     private JSAP jsap;
     private JSAPResult arguments;
     private LauncherMode launcherMode;
+    private List<SerializerEngine> engines;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -46,17 +54,44 @@ public class Launcher {
         }
 
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
+        this.prepareSerializerEngines();
+    }
 
-        if (this.launcherMode == LauncherMode.REPAIR) {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.REPAIR_SPREADSHEET_ID);
+    private void prepareSerializerEngines() {
+        this.engines = new ArrayList<>();
+
+        if (this.arguments.getString("spreadsheet") != null) {
+            LOGGER.info("Initialize Google spreadsheet serializer engine.");
+            GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
+
+            try {
+                GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
+                this.engines.add(new GoogleSpreadsheetSerializerEngine());
+            } catch (IOException | GeneralSecurityException e) {
+                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+            }
         } else {
-            GoogleSpreadSheetFactory.setSpreadsheetId(GoogleSpreadSheetFactory.BEAR_SPREADSHEET_ID);
+            LOGGER.info("Google Spreadsheet won't be used for serialization.");
         }
 
-        try {
-            GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
-        } catch (IOException | GeneralSecurityException e) {
-            LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
+        if (this.arguments.getFile("output") != null) {
+            LOGGER.info("Initialize files serializers engines.");
+            this.engines.add(new CSVSerializerEngine(this.arguments.getFile("output").getPath()));
+            this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("output").getPath()));
+        } else {
+            LOGGER.info("Files serializer won't be used");
+        }
+
+        if (this.arguments.getString("mongoDBHost") != null) {
+            LOGGER.info("Initialize mongoDB serializer engine.");
+            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
+            if (mongoConnection.isConnected()) {
+                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
+            } else {
+                LOGGER.error("Error while connecting to mongoDB.");
+            }
+        } else {
+            LOGGER.info("MongoDB won't be used for serialization");
         }
     }
 
@@ -119,7 +154,7 @@ public class Launcher {
         opt2 = new FlaggedOption("output");
         opt2.setShortFlag('o');
         opt2.setLongFlag("output");
-        opt2.setStringParser(FileStringParser.getParser());
+        opt2.setStringParser(FileStringParser.getParser().setMustExist(false).setMustBeFile(true));
         opt2.setHelp("Specify where to write the list of build ids (default: stdout)");
         this.jsap.registerParameter(opt2);
 
@@ -176,6 +211,25 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify run id for the scanner.");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBHost");
+        opt2.setLongFlag("dbhost");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb host.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("mongoDBName");
+        opt2.setLongFlag("dbname");
+        opt2.setDefault("repairnator");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify mongodb DB name.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("spreadsheet");
+        opt2.setLongFlag("spreadsheet");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
+        this.jsap.registerParameter(opt2);
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {
@@ -198,12 +252,12 @@ public class Launcher {
         ProcessSerializer scannerSerializer;
 
         if (launcherMode == LauncherMode.REPAIR) {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer(scanner);
+            scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
-            scannerSerializer = new GoogleSpreadSheetScannerSerializer4Bears(scanner);
+            scannerSerializer = new ScannerSerializer4Bears(this.engines, scanner);
 
             if (this.arguments.getBoolean("scanOnly")) {
-                GoogleSpreadSheetScannerDetailedDataSerializer scannerDetailedDataSerializer = new GoogleSpreadSheetScannerDetailedDataSerializer(buildsToBeInspected);
+                ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
                 scannerDetailedDataSerializer.serialize();
             }
         }
@@ -235,21 +289,19 @@ public class Launcher {
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
         if (this.arguments.getFile("output") != null) {
             String outputPath = this.arguments.getFile("output").getAbsolutePath();
-            if (outputPath != null) {
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
-                    for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-                        writer.write(buildToBeInspected.getBuild().getId() + "");
-                        writer.newLine();
-                        writer.flush();
-                    }
-
-                    writer.close();
-                    return;
-                } catch (IOException e) {
-                    LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
+                for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
+                    writer.write(buildToBeInspected.getBuild().getId() + "");
+                    writer.newLine();
+                    writer.flush();
                 }
+
+                writer.close();
+                return;
+            } catch (IOException e) {
+                LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
             }
         }
 

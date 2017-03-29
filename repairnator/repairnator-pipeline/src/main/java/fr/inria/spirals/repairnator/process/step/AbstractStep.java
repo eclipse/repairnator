@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.apache.commons.lang3.StringUtils;
@@ -56,11 +55,7 @@ public abstract class AbstractStep {
         this.pomLocationTested = false;
         this.serializers = new ArrayList<AbstractDataSerializer>();
         this.properties = new Properties();
-        try {
-            this.config = RepairnatorConfig.getInstance();
-        } catch (RepairnatorConfigException e) {
-            throw new RuntimeException(e);
-        }
+        this.config = RepairnatorConfig.getInstance();
     }
 
     public void setProperties(Properties properties) {

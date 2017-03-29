@@ -41,13 +41,8 @@ public class TestNopolRepair {
             solverPath = SOLVER_PATH_DIR+SOLVER_NAME_LINUX;
         }
 
-        try {
-            RepairnatorConfig config = RepairnatorConfig.getInstance();
-            config.setZ3solverPath(solverPath);
-        } catch (RepairnatorConfigException e) {
-            throw new RuntimeException(e);
-        }
-
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setZ3solverPath(solverPath);
         Utils.setLoggersLevel(Level.ERROR);
     }
 

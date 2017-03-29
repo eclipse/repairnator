@@ -7,7 +7,8 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.dockerpool.serializer.GoogleSpreadSheetTreatedBuildTracking;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +26,19 @@ public class RunnablePipelineContainer implements Runnable {
     private String imageId;
     private int buildId;
     private String logDirectory;
-    private String runId;
-    private String accessToken;
-    private GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
+    private RepairnatorConfig repairnatorConfig;
+    private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
+    private boolean skipDelete;
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, String runId, GoogleSpreadSheetTreatedBuildTracking googleSpreadSheetTreatedBuildTracking, String accessToken) {
+
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete) {
 
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
-        this.runId = runId;
-        this.accessToken = accessToken;
+        this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
+        this.skipDelete = skipDelete;
     }
 
     @Override
@@ -52,8 +54,14 @@ public class RunnablePipelineContainer implements Runnable {
                 "LOG_FILENAME="+containerName,
                 "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
                 "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
-                "RUN_ID="+this.runId,
-                "GOOGLE_ACCESS_TOKEN="+this.accessToken
+                "RUN_ID="+this.repairnatorConfig.getRunId(),
+                "GOOGLE_ACCESS_TOKEN="+this.repairnatorConfig.getGoogleAccessToken(),
+                "REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase(),
+                "SPREADSHEET_ID="+this.repairnatorConfig.getSpreadsheetId(),
+                "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
+                "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
+                "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
+                "OUTPUT=/var/log"
             };
 
             Map<String,String> labels = new HashMap<>();
@@ -79,7 +87,11 @@ public class RunnablePipelineContainer implements Runnable {
             ContainerExit exitStatus = docker.waitContainer(containerId);
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
-            docker.removeContainer(containerId);
+
+            if (!skipDelete && exitStatus.statusCode() != 0) {
+                LOGGER.info("Container will be removed.");
+                docker.removeContainer(containerId);
+            }
 
             serialize("TREATED");
         } catch (InterruptedException e) {

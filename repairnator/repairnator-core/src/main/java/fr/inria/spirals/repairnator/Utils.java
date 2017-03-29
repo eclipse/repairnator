@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by urli on 02/02/2017.
@@ -18,6 +19,7 @@ public class Utils {
     private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
+    private static final String TRAVIS_URL = "http://travis-ci.org/";
 
     public static String formatCompleteDate(Date date) {
         return tsvCompleteDateFormat.format(date);
@@ -40,6 +42,10 @@ public class Utils {
         }
     }
 
+    public static String getTravisUrl(int buildId, String slug) {
+        return TRAVIS_URL + slug + "/builds/" + buildId;
+    }
+
     public static String getDuration(Date dateBegin, Date dateEnd) {
         return DurationFormatUtils.formatDuration(dateEnd.getTime()-dateBegin.getTime(), "HH:mm", true);
     }
@@ -56,5 +62,13 @@ public class Utils {
 
         Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
         jgit.setLevel(Level.WARN);
+    }
+
+    public static String getValue(List<Object> value, int index) {
+        if (index < value.size()) {
+            return value.get(index).toString();
+        } else {
+            return null;
+        }
     }
 }
