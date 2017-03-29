@@ -169,7 +169,7 @@ public class Launcher {
 
         opt2 = new FlaggedOption("pushUrl");
         opt2.setLongFlag("pushurl");
-        opt2.setStringParser(JSAP.INETADDRESS_PARSER);
+        opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify push URL to push data from docker builds");
         this.jsap.registerParameter(opt2);
     }
@@ -312,9 +312,9 @@ public class Launcher {
         this.config = RepairnatorConfig.getInstance();
         this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
 
-        if (this.arguments.getInetAddress("pushUrl") != null) {
+        if (this.arguments.getString("pushUrl") != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(this.arguments.getInetAddress("pushUrl").toString());
+            this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
         }
         this.config.setRunId(this.arguments.getString("runId"));
         this.config.setSpreadsheetId(this.arguments.getString("spreadsheet"));

@@ -83,9 +83,9 @@ public class Launcher {
             this.config.setSerializeJson(true);
             this.config.setJsonOutputPath(this.arguments.getFile("outputPath").getPath());
         }
-        if (this.arguments.getInetAddress("pushUrl") != null) {
+        if (this.arguments.getString("pushUrl") != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(this.arguments.getInetAddress("pushUrl").toString());
+            this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
         }
         this.config.setWorkspacePath(this.arguments.getString("workspace"));
     }
@@ -239,7 +239,7 @@ public class Launcher {
 
         opt2 = new FlaggedOption("pushUrl");
         opt2.setLongFlag("pushurl");
-        opt2.setStringParser(JSAP.INETADDRESS_PARSER);
+        opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify repository to push data");
         this.jsap.registerParameter(opt2);
 
