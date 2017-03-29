@@ -40,7 +40,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
 
         String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
 
-        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");
+        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",")+"";
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
         List<Object> dataCol = new ArrayList<Object>();

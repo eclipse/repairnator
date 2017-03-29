@@ -42,7 +42,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         String state = this.getPrettyPrintState(jobStatus);
 
         String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
-        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");
+        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",")+"";
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
