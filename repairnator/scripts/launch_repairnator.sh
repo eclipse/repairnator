@@ -6,7 +6,12 @@ function ca {
   then
       echo ""
   else
-      echo "$1 $2 "
+    if [ "$2" == "null" ];
+    then
+        echo ""
+    else
+        echo "$1 $2 "
+    fi
   fi
 }
 
