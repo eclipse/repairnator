@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Use to create args in the command line for optionnal arguments
+function ca {
+  if [ -z "$2" ];
+  then
+      echo ""
+  else
+      echo "$1 $2 "
+  fi
+}
+
 SKIP_SCAN=0
 if [ "$#" -eq 1 ]; then
     if [ ! -f $1 ]; then
@@ -47,7 +57,10 @@ cp -r $REPAIR_DOCKER_IMG_DIR/. $REPAIRNATOR_DOCKER_DIR
 
 if [ "$SKIP_SCAN" -eq 0 ]; then
     echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
-    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -g $GOOGLE_SECRET_PATH -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID --dbhost $MONGODB_HOST --dbname $MONGODB_NAME -d &> $LOG_DIR/scanner.log
+
+    args="`ca -g $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME`"
+    echo "Supplementary args for scanner: $args"
+    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
 fi
 
 NB_LINES=`wc -l $REPAIRNATOR_BUILD_LIST`
@@ -62,7 +75,9 @@ echo "Build the docker machine (tag: $DOCKER_TAG)..."
 docker build -t $DOCKER_TAG $REPAIRNATOR_DOCKER_DIR
 
 echo "Launch docker pool..."
-java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR -g $DAY_TIMEOUT -s $GOOGLE_SECRET_PATH --runId $RUN_ID --dbhost $MONGODB_HOST --dbname $MONGODB_NAME -m $SCANNER_MODE --spreadsheet $SPREADSHEET --pushurl $PUSH_URL &> $LOG_DIR/dockerpool.log
+args="`ca -s $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``--dbhost $MONGODB_HOST``--dbname $MONGODB_NAME``--pushurl $PUSH_URL`"
+echo "Supplementary args for docker pool $args"
+java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $SCANNER_MODE $args &> $LOG_DIR/dockerpool.log
 
 echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR

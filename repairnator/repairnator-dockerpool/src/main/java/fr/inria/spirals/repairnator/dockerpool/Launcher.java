@@ -306,6 +306,7 @@ public class Launcher {
     private void initConfig() {
         this.config = RepairnatorConfig.getInstance();
         this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
+
         if (this.arguments.getInetAddress("pushUrl") != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(this.arguments.getInetAddress("pushUrl").toString());
