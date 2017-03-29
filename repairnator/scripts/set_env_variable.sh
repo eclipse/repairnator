@@ -12,7 +12,7 @@ export SCANNER_NB_HOURS=4
 export SCANNER_MODE=repair
 export DAY_TIMEOUT=1
 export MONGODB_HOST=
-export MONGODB_DBNAME=
+export MONGODB_NAME=
 export SPREADSHEET=
 export PUSH_URL=
 
