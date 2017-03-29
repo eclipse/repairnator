@@ -29,4 +29,4 @@ ENV OUTPUT=
 ENV PUSH_URL=
 
 WORKDIR /root
-ENTRYPOINT pipeline_launcher.sh
+ENTRYPOINT pipeline_launcher.sh &> /var/log/pipeline_launcher_$BUILD_ID.log
