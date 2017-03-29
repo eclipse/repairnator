@@ -32,9 +32,9 @@ source $SCRIPT_DIR/set_env_variable.sh
 
 if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1
-else
-    mkdir $REPAIR_OUTPUT_PATH
 fi
+
+mkdir $REPAIR_OUTPUT_PATH
 
 RUN_ID=`uuidgen`
 echo "This will be run with the following RUN_ID: $RUN_ID"
