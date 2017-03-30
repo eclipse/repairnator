@@ -19,6 +19,8 @@ public class RepairnatorConfig {
     private String spreadsheetId;
     private String mongodbHost;
     private String mongodbName;
+    private String smtpServer;
+    private String[] notifyTo;
 
     private static RepairnatorConfig instance;
 
@@ -138,5 +140,21 @@ public class RepairnatorConfig {
 
     public void setMongodbName(String mongodbName) {
         this.mongodbName = mongodbName;
+    }
+
+    public String getSmtpServer() {
+        return smtpServer;
+    }
+
+    public void setSmtpServer(String smtpServer) {
+        this.smtpServer = smtpServer;
+    }
+
+    public String[] getNotifyTo() {
+        return notifyTo;
+    }
+
+    public void setNotifyTo(String[] notifyTo) {
+        this.notifyTo = notifyTo;
     }
 }

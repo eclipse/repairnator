@@ -10,6 +10,7 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,8 @@ public class RunnablePipelineContainer implements Runnable {
                 "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
                 "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
                 "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
+                "SMTP_SERVER="+this.repairnatorConfig.getSmtpServer(),
+                "NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','),
                 "OUTPUT=/var/log"
             };
 

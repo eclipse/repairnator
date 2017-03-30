@@ -65,8 +65,6 @@ public class NopolRepair extends AbstractStep {
             int passingTime = 0;
 
             for (FailureLocation failureLocation : failureLocationList) {
-
-
                 Set<String> erroringTests = failureLocation.getErroringMethods();
                 Set<String> failingTests = failureLocation.getFailingMethods();
 

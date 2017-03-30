@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
@@ -34,9 +35,10 @@ public class ProjectInspector {
     private List<AbstractDataSerializer> serializers;
     private boolean previousBuildFlag;
     private JobStatus jobStatus;
+    private List<AbstractNotifier> notifiers;
 
 
-    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers) {
+    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.config = RepairnatorConfig.getInstance();
         this.buildToBeInspected = buildToBeInspected;
 
@@ -46,6 +48,7 @@ public class ProjectInspector {
         this.serializers = serializers;
         this.gitHelper = new GitHelper();
         this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
     }
 
     public JobStatus getJobStatus() {
@@ -66,10 +69,6 @@ public class ProjectInspector {
 
     public String getM2LocalPath() {
         return m2LocalPath;
-    }
-
-    public void setRepoLocalPath(String repoLocalPath) {
-        this.repoLocalPath = repoLocalPath;
     }
 
     public BuildToBeInspected getBuildToBeInspected() {
@@ -113,6 +112,7 @@ public class ProjectInspector {
                     .setNextStep(new NopolRepair(this));
 
             cloneRepo.setDataSerializer(this.serializers);
+            cloneRepo.setNotifiers(this.notifiers);
             cloneRepo.setState(ProjectState.INIT);
 
             try {

@@ -87,6 +87,8 @@ public class PushIncriminatedBuild extends AbstractStep {
                 git.push().setRemote(REMOTE_NAME).add(branch).setCredentialsProvider(credentialsProvider).call();
 
                 this.getInspector().getJobStatus().setHasBeenPushed(true);
+
+                this.getInspector().getJobStatus().setGitBranchUrl(this.remoteRepoUrl+"/tree/"+branchName);
             } catch (IOException e) {
                 this.getLogger().error("Error while reading git directory at the following location: "
                         + inspector.getRepoLocalPath() + " : " + e);
