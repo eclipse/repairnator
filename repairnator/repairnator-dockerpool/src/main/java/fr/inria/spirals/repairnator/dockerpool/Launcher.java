@@ -179,7 +179,7 @@ public class Launcher {
         opt2.setHelp("Specify SMTP server to use for Email notification");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("notifyTo");
+        opt2 = new FlaggedOption("notifyto");
         opt2.setLongFlag("notifyto");
         opt2.setList(true);
         opt2.setListSeparator(',');
@@ -335,7 +335,7 @@ public class Launcher {
         this.config.setMongodbHost(this.arguments.getString("mongoDBHost"));
         this.config.setMongodbName(this.arguments.getString("mongoDBName"));
         this.config.setSmtpServer(this.arguments.getString("smtpServer"));
-        this.config.setNotifyTo(this.arguments.getStringArray("notifyTo"));
+        this.config.setNotifyTo(this.arguments.getStringArray("notifyto"));
     }
 
     private void initializeSerializerEngines() {

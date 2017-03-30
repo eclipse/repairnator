@@ -275,7 +275,7 @@ public class Launcher {
         opt2.setHelp("Specify SMTP server to use for Email notification");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("notifyTo");
+        opt2 = new FlaggedOption("notifyto");
         opt2.setLongFlag("notifyto");
         opt2.setList(true);
         opt2.setListSeparator(',');
@@ -357,7 +357,11 @@ public class Launcher {
         List<NotifierEngine> notifierEngines = new ArrayList<>();
 
         if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
+            LOGGER.info("The email notifier engine will be used.");
+
             notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
+        } else {
+            LOGGER.info("The email notifier engine won't be used.");
         }
 
 

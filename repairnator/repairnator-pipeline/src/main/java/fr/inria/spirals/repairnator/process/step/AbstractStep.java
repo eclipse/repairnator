@@ -230,6 +230,7 @@ public abstract class AbstractStep {
         this.dateEnd = new Date().getTime();
 
         this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
+        this.inspector.getJobStatus().setState(this.state);
         this.pushNewInformationIfNeeded();
 
         if (!shouldStop) {
@@ -241,7 +242,6 @@ public abstract class AbstractStep {
 
     private void terminatePipeline() {
         this.writeProperty("lastStep", this.getName());
-        this.inspector.getJobStatus().setState(this.state);
         this.serializeData();
         this.pushNewInformationIfNeeded();
         this.cleanMavenArtifacts();
