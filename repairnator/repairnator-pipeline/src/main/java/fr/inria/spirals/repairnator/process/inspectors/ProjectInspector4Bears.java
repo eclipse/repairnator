@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuild;
@@ -25,8 +26,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
     private boolean isFixerBuild_Case1;
     private boolean isFixerBuild_Case2;
 
-    public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers) {
-        super(buildToBeInspected, workspace, serializers);
+    public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+        super(buildToBeInspected, workspace, serializers, notifiers);
         super.setPreviousBuildFlag(false);
         this.isFixerBuild_Case1 = false;
         this.isFixerBuild_Case2 = false;

@@ -12,6 +12,10 @@ import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
+import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
+import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -264,6 +268,20 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify path to output serialized files");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("smtpServer");
+        opt2.setLongFlag("smtpServer");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify SMTP server to use for Email notification");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("notifyto");
+        opt2.setLongFlag("notifyto");
+        opt2.setList(true);
+        opt2.setListSeparator(',');
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify email adresses to notify");
+        this.jsap.registerParameter(opt2);
     }
 
     private void checkEnvironmentVariables() {
@@ -336,12 +354,26 @@ public class Launcher {
             serializers.add(new InspectorTimeSerializer4Bears(this.engines));
         }
 
+        List<NotifierEngine> notifierEngines = new ArrayList<>();
+
+        if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
+            LOGGER.info("The email notifier engine will be used.");
+
+            notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
+        } else {
+            LOGGER.info("The email notifier engine won't be used.");
+        }
+
+
+        List<AbstractNotifier> notifiers = new ArrayList<>();
+        notifiers.add(new PatchNotifier(notifierEngines));
+
         ProjectInspector inspector;
 
         if (config.getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers);
+            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, notifiers);
         } else {
-            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers);
+            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, notifiers);
         }
         inspector.run();
 
