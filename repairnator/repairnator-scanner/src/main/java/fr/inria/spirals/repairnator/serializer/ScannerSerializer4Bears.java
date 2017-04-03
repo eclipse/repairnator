@@ -28,6 +28,7 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningEndDate()));
         dataCol.add(this.scanner.getScannerDuration());
         dataCol.add(Utils.formatCompleteDate(this.scanner.getLookFromDate()));
+        dataCol.add(Utils.formatCompleteDate(this.scanner.getLookToDate()));
         dataCol.add(this.scanner.getTotalRepoNumber());
         dataCol.add(this.scanner.getTotalRepoUsingTravis());
         dataCol.add(this.scanner.getTotalScannedBuilds());
