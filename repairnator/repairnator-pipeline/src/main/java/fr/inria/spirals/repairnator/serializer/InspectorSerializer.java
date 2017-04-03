@@ -39,7 +39,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
         Build build = inspector.getBuild();
 
-        String state = this.getPrettyPrintState(jobStatus);
+        String state = this.getPrettyPrintState(inspector);
 
         String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",")+"";
@@ -66,7 +66,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
         Build build = inspector.getBuild();
 
-        String state = this.getPrettyPrintState(jobStatus);
+        String state = this.getPrettyPrintState(inspector);
 
         String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");

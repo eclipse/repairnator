@@ -1,6 +1,9 @@
 package fr.inria.spirals.repairnator.serializer;
 
 
+import fr.inria.spirals.repairnator.LauncherMode;
+import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -19,7 +22,9 @@ public abstract class AbstractDataSerializer extends Serializer {
         super(engines, type);
     }
 
-    protected String getPrettyPrintState(JobStatus jobStatus) {
+    protected String getPrettyPrintState(ProjectInspector inspector) {
+
+        JobStatus jobStatus = inspector.getJobStatus();
         switch (jobStatus.getState()) {
             case NONE:
             case INIT:
@@ -73,6 +78,21 @@ public abstract class AbstractDataSerializer extends Serializer {
 
             case FIXERBUILDCASE2:
                 return "FIXERBUILD_CASE2";
+
+            case SQUASHED_REPO:
+                if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
+                    if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
+                        return "FIXERBUILD_CASE1";
+                    } else {
+                        return "FIXERBUILD_CASE2";
+                    }
+                } else {
+                    if (jobStatus.isReproducedAsFail()) {
+                        return "test failure";
+                    } else {
+                        return "test errors";
+                    }
+                }
 
             default:
                 return "unknown";
