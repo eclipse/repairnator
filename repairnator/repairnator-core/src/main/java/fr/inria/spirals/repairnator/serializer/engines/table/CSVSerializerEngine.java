@@ -64,16 +64,17 @@ public class CSVSerializerEngine implements SerializerEngine {
 
         BufferedWriter writer = this.openFile(filename);
 
-        for (SerializedData row : data) {
-            String rowStr = StringUtils.join(row.getAsList(), SEPARATOR);
-            this.writeNewLine(writer, rowStr);
-        }
+        if (writer != null) {
+            for (SerializedData row : data) {
+                String rowStr = StringUtils.join(row.getAsList(), SEPARATOR);
+                this.writeNewLine(writer, rowStr);
+            }
 
-        try {
-            writer.close();
-        } catch (IOException e) {
-            logger.error("Error while clonse file", e);
+            try {
+                writer.close();
+            } catch (IOException e) {
+                logger.error("Error while clonse file", e);
+            }
         }
-
     }
 }

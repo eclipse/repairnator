@@ -50,14 +50,16 @@ public class JSONFileSerializerEngine implements SerializerEngine {
         String filename = serializer.getFilename()+FILE_EXTENSION;
         BufferedWriter writer = this.openFile(filename);
 
-        try {
-            for (SerializedData oneData : data) {
-                writer.write(oneData.getAsJson().toString());
-                writer.flush();
+        if (writer != null) {
+            try {
+                for (SerializedData oneData : data) {
+                    writer.write(oneData.getAsJson().toString());
+                    writer.flush();
+                }
+                writer.close();
+            } catch (IOException e) {
+                logger.error("Error while writing json serialization", e);
             }
-            writer.close();
-        } catch (IOException e) {
-            logger.error("Error while writing json serialization", e);
         }
     }
 }

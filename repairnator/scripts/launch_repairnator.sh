@@ -86,3 +86,6 @@ java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REP
 
 echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR
+
+echo "Clean docker cache"
+docker system prune -f
