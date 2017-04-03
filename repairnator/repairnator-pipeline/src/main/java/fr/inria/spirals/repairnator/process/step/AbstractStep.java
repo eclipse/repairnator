@@ -201,7 +201,7 @@ public abstract class AbstractStep {
         if (!pomLocationTested) {
             testPomLocation();
         }
-        return this.inspector.getRepoLocalPath() + File.separator + "pom.xml";
+        return this.inspector.getJobStatus().getPomDirPath() + File.separator + "pom.xml";
     }
 
     protected void cleanMavenArtifacts() {

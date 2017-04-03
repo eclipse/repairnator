@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -32,7 +33,7 @@ import static org.mockito.Mockito.when;
 public class TestBuildProject {
 
     static {
-        Utils.setLoggersLevel(Level.ERROR);
+        Utils.setLoggersLevel(Level.DEBUG);
     }
 
     @Test
@@ -63,6 +64,35 @@ public class TestBuildProject {
         CloneRepository cloneStep = new CloneRepository(inspector);
         BuildProject buildStep = new BuildProject(inspector);
 
+
+        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(buildStep);
+        cloneStep.execute();
+
+        assertThat(buildStep.shouldStop, is(false));
+        assertThat(buildStep.getState(), is(ProjectState.BUILDABLE));
+        assertThat(jobStatus.getState(), is(ProjectState.BUILDABLE));
+    }
+
+    @Test
+    public void testBuildProjectWithPomNotInRoot() throws IOException {
+        int buildId = 218036343;
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_build");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+
+        JobStatus jobStatus = inspector.getJobStatus();
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        BuildProject buildStep = new BuildProject(inspector);
 
         cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(buildStep);
         cloneStep.execute();
