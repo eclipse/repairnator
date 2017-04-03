@@ -65,7 +65,7 @@ public class TestNopolRepair {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
 
-        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null);
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         NopolRepair nopolRepair = new NopolRepair(inspector);

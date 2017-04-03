@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +40,7 @@ public abstract class AbstractStep {
     private long dateEnd;
     private boolean pomLocationTested;
     private List<AbstractDataSerializer> serializers;
+    private List<AbstractNotifier> notifiers;
     private Properties properties;
     private RepairnatorConfig config;
 
@@ -56,6 +58,15 @@ public abstract class AbstractStep {
         this.serializers = new ArrayList<AbstractDataSerializer>();
         this.properties = new Properties();
         this.config = RepairnatorConfig.getInstance();
+    }
+
+    public void setNotifiers(List<AbstractNotifier> notifiers) {
+        if (notifiers != null) {
+            this.notifiers = notifiers;
+            if (this.nextStep != null) {
+                this.nextStep.setNotifiers(notifiers);
+            }
+        }
     }
 
     public void setProperties(Properties properties) {
@@ -89,6 +100,7 @@ public abstract class AbstractStep {
     public AbstractStep setNextStep(AbstractStep nextStep) {
         this.nextStep = nextStep;
         nextStep.setDataSerializer(this.serializers);
+        nextStep.setNotifiers(this.notifiers);
         nextStep.setProperties(this.properties);
         nextStep.setState(this.state);
         return nextStep;
@@ -122,7 +134,9 @@ public abstract class AbstractStep {
     }
 
     protected void executeNextStep() {
+        this.observeAndNotify();
         if (this.nextStep != null) {
+            this.inspector.getJobStatus().setState(this.state);
             this.nextStep.setState(this.state);
             this.nextStep.execute();
         } else {
@@ -135,6 +149,14 @@ public abstract class AbstractStep {
             this.getLogger().info("Serialize all data for build: "+this.getInspector().getBuild().getId());
             for (AbstractDataSerializer serializer : this.serializers) {
                 serializer.serializeData(this.inspector);
+            }
+        }
+    }
+
+    private void observeAndNotify() {
+        if (this.notifiers != null) {
+            for (AbstractNotifier notifier : this.notifiers) {
+                notifier.observe(this.inspector);
             }
         }
     }
@@ -208,6 +230,7 @@ public abstract class AbstractStep {
         this.dateEnd = new Date().getTime();
 
         this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
+        this.inspector.getJobStatus().setState(this.state);
         this.pushNewInformationIfNeeded();
 
         if (!shouldStop) {
@@ -219,7 +242,6 @@ public abstract class AbstractStep {
 
     private void terminatePipeline() {
         this.writeProperty("lastStep", this.getName());
-        this.inspector.getJobStatus().setState(this.state);
         this.serializeData();
         this.pushNewInformationIfNeeded();
         this.cleanMavenArtifacts();

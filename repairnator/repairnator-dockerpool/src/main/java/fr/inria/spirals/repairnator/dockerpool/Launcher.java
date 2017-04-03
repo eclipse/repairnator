@@ -172,6 +172,20 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify push URL to push data from docker builds");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("smtpServer");
+        opt2.setLongFlag("smtpServer");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify SMTP server to use for Email notification");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("notifyto");
+        opt2.setLongFlag("notifyto");
+        opt2.setList(true);
+        opt2.setListSeparator(',');
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify email adresses to notify");
+        this.jsap.registerParameter(opt2);
     }
 
     private void checkArguments() {
@@ -320,6 +334,8 @@ public class Launcher {
         this.config.setSpreadsheetId(this.arguments.getString("spreadsheet"));
         this.config.setMongodbHost(this.arguments.getString("mongoDBHost"));
         this.config.setMongodbName(this.arguments.getString("mongoDBName"));
+        this.config.setSmtpServer(this.arguments.getString("smtpServer"));
+        this.config.setNotifyTo(this.arguments.getStringArray("notifyto"));
     }
 
     private void initializeSerializerEngines() {

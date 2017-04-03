@@ -30,6 +30,7 @@ public class JobStatus {
     private String failingModulePath;
     private Collection<FailureLocation> failureLocations;
     private Set<String> failureNames;
+    private String gitBranchUrl;
 
     public JobStatus(String pomDirPath) {
         this.state = ProjectState.NONE;
@@ -145,5 +146,13 @@ public class JobStatus {
 
     public void setFailureNames(Set<String> failureNames) {
         this.failureNames = failureNames;
+    }
+
+    public String getGitBranchUrl() {
+        return gitBranchUrl;
+    }
+
+    public void setGitBranchUrl(String gitBranchUrl) {
+        this.gitBranchUrl = gitBranchUrl;
     }
 }

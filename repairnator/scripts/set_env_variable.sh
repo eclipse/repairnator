@@ -15,6 +15,8 @@ export MONGODB_HOST=
 export MONGODB_NAME=
 export SPREADSHEET=
 export PUSH_URL=
+export SMTP_SERVER=
+export NOTIFY_TO=
 
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator
 export REPAIR_DOCKER_IMG_DIR=$HOME_REPAIR/dockerImage/
