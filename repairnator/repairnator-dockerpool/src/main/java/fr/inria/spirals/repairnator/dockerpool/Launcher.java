@@ -241,7 +241,7 @@ public class Launcher {
 
     private String findDockerImage() {
         try {
-            this.docker = DefaultDockerClient.fromEnv().build();
+            docker = DefaultDockerClient.fromEnv().build();
 
             List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.allImages());
 
@@ -300,6 +300,12 @@ public class Launcher {
             executorService.shutdownNow();
             this.setStatusForUnexecutedJobs();
             endProcessSerializer.setStatus("interrupted");
+        }
+
+        try {
+            docker.removeImage(imageId);
+        } catch (DockerException | InterruptedException e) {
+            LOGGER.error("Error while removing docker image", e);
         }
         docker.close();
         endProcessSerializer.serialize();
