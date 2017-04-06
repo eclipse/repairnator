@@ -15,6 +15,16 @@ git config --global user.name "Luc Esape"
 git config --global user.email "luc.esape@gmail.com"
 
 cd repairnator
+
+chmod +x ./dockerImage/configure_git.sh
+./dockerImage/configure_git.sh
+
+if [[ $? != 0 ]]
+then
+    echo "Error while installing git aliases"
+    exit 1
+fi
+
 mvn clean install
 
 if [[ $? != 0 ]]

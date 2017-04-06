@@ -83,6 +83,48 @@ public class TestSquashRepository {
     }
 
     @Test
+    public void testSquashRepositoryJavaEEWontCrashButWontSquashEither() throws IOException, GitAPIException, RepairnatorConfigException {
+        int buildId = 187678498;
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_squash");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        SquashRepository squashStep = new SquashRepository(inspector);
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(squashStep);
+
+        RepairnatorConfig config = cloneStep.getConfig();
+        config.setPush(true);
+
+        cloneStep.execute();
+
+        assertThat(jobStatus.getState(), is(ProjectState.NOT_SQUASHED_REPO));
+        Status status = Git.open(new File(tmpDir, "repo")).status().call();
+        assertThat(status.isClean(), is(true));
+        assertThat(squashStep.shouldStop, is(false));
+    }
+
+    @Test
     public void testSquashRepositoryOnProjectWhichChangeFileAtBuildWorks() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 212649623; // surli/failingProject build
 
