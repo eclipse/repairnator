@@ -63,7 +63,8 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
         result.addProperty("previousBuildId", previousBuildId);
         result.addProperty("scannedStatus", buildToBeInspected.getStatus().name());
         result.addProperty("repositoryName", build.getRepository().getSlug());
-        result.addProperty("dateScanned", Utils.formatCompleteDate(date));
+        result.addProperty("dateScannedStr", Utils.formatCompleteDate(date));
+        this.addDate(result, "dateScanned", date);
         result.addProperty("dayScanned", Utils.formatOnlyDay(date));
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("travisBuildUrl", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));

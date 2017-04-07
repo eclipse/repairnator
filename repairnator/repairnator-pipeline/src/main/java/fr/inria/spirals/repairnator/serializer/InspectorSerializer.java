@@ -76,11 +76,15 @@ public class InspectorSerializer extends AbstractDataSerializer {
         result.addProperty("repositoryName", build.getRepository().getSlug());
         result.addProperty("status", state);
         result.addProperty("prNumber", build.getPullRequestNumber());
-        result.addProperty("buildFinishedDate", Utils.formatCompleteDate(build.getFinishedAt()));
+        result.addProperty("buildFinishedDateStr", Utils.formatCompleteDate(build.getFinishedAt()));
+        this.addDate(result, "buildFinishedDate", build.getFinishedAt());
+
         result.addProperty("buildFinishedDay", Utils.formatOnlyDay(build.getFinishedAt()));
         result.addProperty("realStatus", realState);
         result.addProperty("hostname", Utils.getHostname());
-        result.addProperty("buildReproductionDate", Utils.formatCompleteDate(new Date()));
+        result.addProperty("buildReproductionDateStr", Utils.formatCompleteDate(new Date()));
+        this.addDate(result, "buildReproductionDate", new Date());
+
         result.addProperty("travisURL", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         result.addProperty("typeOfFailures", typeOfFailures);
         result.addProperty("runId", buildToBeInspected.getRunId());
