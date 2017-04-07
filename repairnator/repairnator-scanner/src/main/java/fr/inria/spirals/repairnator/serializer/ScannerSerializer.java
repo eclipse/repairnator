@@ -53,8 +53,10 @@ public class ScannerSerializer extends ProcessSerializer {
         JsonObject result = new JsonObject();
 
         result.addProperty("hostname", Utils.getHostname());
-        result.addProperty("dateBegin", Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
-        result.addProperty("dateLimit", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
+        result.addProperty("dateBeginStr", Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
+        this.addDate(result, "dateBegin", this.scanner.getScannerRunningBeginDate());
+        result.addProperty("dateLimitStr", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
+        this.addDate(result, "dateLimit", this.scanner.getLookFromDate());
         result.addProperty("dayLimit", Utils.formatOnlyDay(this.scanner.getLookFromDate()));
         result.addProperty("totalRepoNumber", this.scanner.getTotalRepoNumber());
         result.addProperty("totalRepoUsingTravis", this.scanner.getTotalRepoUsingTravis());

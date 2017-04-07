@@ -1,8 +1,13 @@
 package fr.inria.spirals.repairnator.serializer;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,6 +15,8 @@ import java.util.List;
  */
 public abstract class Serializer {
 
+    private static final String MONGO_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final SimpleDateFormat MONGO_DATE_FORMAT = new SimpleDateFormat(MONGO_UTC_FORMAT);
     private List<SerializerEngine> engines;
     private SerializerType type;
 
@@ -28,5 +35,11 @@ public abstract class Serializer {
 
     public SerializerType getType() {
         return type;
+    }
+
+    public void addDate(JsonObject result, String propertyName, Date value) {
+        JsonObject intermediateObject = new JsonObject();
+        intermediateObject.addProperty("$date", MONGO_DATE_FORMAT.format(value));
+        result.add(propertyName, intermediateObject);
     }
 }
