@@ -89,7 +89,9 @@ public class NopolSerializer extends AbstractDataSerializer {
         result.addProperty("buildId", build.getId());
         result.addProperty("repositoryName", build.getRepository().getSlug());
         result.addProperty("hostname", Utils.getHostname());
-        result.addProperty("nopolDateEnd", Utils.formatCompleteDate(nopolInformation.getDateEnd()));
+        result.addProperty("nopolDateEndStr", Utils.formatCompleteDate(nopolInformation.getDateEnd()));
+        this.addDate(result, "nopolDateEnd", nopolInformation.getDateEnd());
+
         result.addProperty("nopolDayEnd", Utils.formatOnlyDay(nopolInformation.getDateEnd()));
         result.addProperty("testClassLocation", nopolInformation.getLocation().getClassName());
         result.addProperty("failures", StringUtils.join(nopolInformation.getLocation().getFailures(), ","));

@@ -93,10 +93,14 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         result.addProperty("typeOfFailures", typeOfFailures);
         result.addProperty("repositoryName", build.getRepository().getSlug());
         result.addProperty("prNumber", build.getPullRequestNumber());
-        result.addProperty("buildFinishedDate", Utils.formatCompleteDate(build.getFinishedAt()));
+        result.addProperty("buildFinishedDateStr", Utils.formatCompleteDate(build.getFinishedAt()));
+        this.addDate(result, "buildFinishedDate", build.getFinishedAt());
+
         result.addProperty("buildFinishedDay", Utils.formatOnlyDay(build.getFinishedAt()));
         result.addProperty("hostname", Utils.getHostname());
-        result.addProperty("buildReproductionDate", Utils.formatCompleteDate(new Date()));
+        result.addProperty("buildReproductionDateStr", Utils.formatCompleteDate(new Date()));
+        this.addDate(result, "buildReproductionDate", new Date());
+
         result.addProperty("buildTravisUrl", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         result.addProperty("previousBuildTravisUrl", Utils.getTravisUrl(previousBuildId, previousBuildSlug));
         result.addProperty("committerEmail", committerEmail);
