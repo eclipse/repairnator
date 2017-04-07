@@ -161,8 +161,8 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         if (!this.skipSettingStatusInformation) {
-            this.writeProperty("error-types", StringUtils.join(this.failureNames, ","));
-            this.writeProperty("failing-test-cases", StringUtils.join(this.failureLocations, ","));
+            this.writeProperty("error-types", this.failureNames);
+            this.writeProperty("failing-test-cases", this.failureLocations);
             this.inspector.getJobStatus().setFailureLocations(this.failureLocations);
             this.inspector.getJobStatus().setFailureNames(this.failureNames);
         }

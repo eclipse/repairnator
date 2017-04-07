@@ -44,7 +44,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                         this.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getSlug());
                         this.writeProperty("pr-head-commit-id", prInformation.getHead().getSha());
                         this.writeProperty("pr-base-commit-id", prInformation.getBase().getSha());
-                        this.writeProperty("pr-id", build.getPullRequestNumber() + "");
+                        this.writeProperty("pr-id", build.getPullRequestNumber());
                     }
                 } else {
                     this.addStepError("Error while getting the PR information...");
