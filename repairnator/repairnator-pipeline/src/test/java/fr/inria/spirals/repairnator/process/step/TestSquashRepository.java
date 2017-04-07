@@ -167,7 +167,7 @@ public class TestSquashRepository {
 
         List<String> listFiles = Arrays.asList(repo.list());
 
-        assertThat(listFiles.contains("repairnator.properties"), is(true));
+        assertThat(listFiles.contains(AbstractStep.PROPERTY_FILENAME), is(true));
         assertThat(listFiles.contains("repairnator.maven.buildproject.log"), is(true));
 
         Status status = Git.open(repo).status().call();
