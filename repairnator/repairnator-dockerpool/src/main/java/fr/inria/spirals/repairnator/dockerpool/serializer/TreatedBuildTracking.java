@@ -62,7 +62,9 @@ public class TreatedBuildTracking extends ProcessSerializer {
         result.addProperty("runId", runid);
         result.addProperty("buildId", buildId);
         result.addProperty("containerId", containerId);
-        result.addProperty("dateReproducedBuild", Utils.formatCompleteDate(date));
+        result.addProperty("dateReproducedBuildStr", Utils.formatCompleteDate(date));
+        this.addDate(result, "dateReproducedBuild", date);
+
         result.addProperty("dayReproducedBuild", Utils.formatOnlyDay(date));
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("status", status);
