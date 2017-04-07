@@ -1,7 +1,5 @@
 package fr.inria.spirals.repairnator.serializer;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
