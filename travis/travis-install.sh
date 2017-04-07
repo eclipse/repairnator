@@ -37,16 +37,3 @@ then
     echo "Error while installing surefire-report-parser"
     exit 1
 fi
-
-cd ../../travis
-
-chmod +x install_git_rebase_last.sh
-./install_git_rebase_last.sh
-
-if [[ $? != 0 ]]
-then
-    echo "Error while installing git aliases"
-    exit 1
-fi
-
-cd ..

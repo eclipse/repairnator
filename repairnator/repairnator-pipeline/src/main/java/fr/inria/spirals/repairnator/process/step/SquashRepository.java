@@ -4,6 +4,7 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 
@@ -40,8 +41,8 @@ public class SquashRepository extends AbstractStep {
 
         try {
             Process p = processBuilder.start();
-            p.waitFor();
-            return true;
+            int resultCode = p.waitFor();
+            return (resultCode == 0);
         } catch (IOException | InterruptedException e) {
             this.addStepError("There was an error during the squash operation", e);
             return false;
@@ -62,6 +63,7 @@ public class SquashRepository extends AbstractStep {
 
     private boolean rollbackRepo(Git git) {
         try {
+            git.reset().setMode(ResetCommand.ResetType.HARD).setRef("HEAD").call();
             git.checkout().setName(ROLLBACK_BRANCH).call();
             return true;
         } catch (GitAPIException e) {
