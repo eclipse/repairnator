@@ -326,16 +326,27 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, this.arguments.getString("runId"));
         } else {
-            Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
-            if (previousBuild != null) {
-                if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
-                    this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
+            if (build.getBuildStatus() == BuildStatus.PASSED) {
+                Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
+                if (previousBuild != null) {
+                    if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
+                        this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
+                    } else {
+                        this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
+                    }
                 } else {
-                    this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
+                    throw new RuntimeException("There was an error getting the previous build");
                 }
             } else {
-                throw new RuntimeException("There was an error getting the previous build");
+                Build nextPassing = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(build, BuildStatus.PASSED);
+
+                if (nextPassing != null) {
+                    this.buildToBeInspected = new BuildToBeInspected(nextPassing, build, ScannedBuildStatus.FAILING_AND_PASSING);
+                } else {
+                    throw new RuntimeException("There was an error getting the next build.");
+                }
             }
+
         }
     }
 
