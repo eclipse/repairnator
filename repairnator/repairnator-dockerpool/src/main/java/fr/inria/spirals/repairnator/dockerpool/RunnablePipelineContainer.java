@@ -91,7 +91,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
-            if (!skipDelete && exitStatus.statusCode() != 0) {
+            if (!skipDelete && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(containerId);
             }
