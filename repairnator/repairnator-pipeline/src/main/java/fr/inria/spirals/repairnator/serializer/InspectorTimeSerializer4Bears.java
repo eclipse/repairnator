@@ -117,7 +117,9 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         result.addProperty("buildId", build.getId());
         result.addProperty("previousBuildId", previousBuildId);
         result.addProperty("repositoryName", build.getRepository().getSlug());
-        result.addProperty("buildReproductionDate", Utils.formatCompleteDate(new Date()));
+        result.addProperty("buildReproductionDateStr", Utils.formatCompleteDate(new Date()));
+        this.addDate(result, "buildReproductionDate", new Date());
+
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("totalDuration", totalDuration);
         result.addProperty("clonage", cloneRepository);

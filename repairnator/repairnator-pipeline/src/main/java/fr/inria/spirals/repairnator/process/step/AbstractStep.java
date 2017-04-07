@@ -1,11 +1,12 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import org.apache.commons.lang3.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -18,7 +19,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -29,7 +30,7 @@ import java.util.Properties;
  * Created by urli on 03/01/2017.
  */
 public abstract class AbstractStep {
-    public static final String PROPERTY_FILENAME = "repairnator.properties";
+    public static final String PROPERTY_FILENAME = "repairnator.json";
     private String name;
     protected ProjectInspector inspector;
     protected ProjectState state;
@@ -251,7 +252,7 @@ public abstract class AbstractStep {
         try {
             Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
 
-            this.writeProperty("step-durations", StringUtils.join(this.inspector.getJobStatus().getStepsDurationsInSeconds().entrySet()));
+            this.writeProperty("step-durations", this.inspector.getJobStatus().getStepsDurationsInSeconds());
 
             boolean createNewCommit = this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
 
@@ -273,19 +274,23 @@ public abstract class AbstractStep {
         return Math.round((dateEnd - dateBegin) / 1000);
     }
 
-    protected void writeProperty(String property, String value) {
-        this.properties.setProperty(property, value);
+    protected void writeProperty(String propertyName, Object value) {
+        this.properties.put(propertyName, value);
 
         String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
         File file = new File(filePath);
+
+        Gson gson = new GsonBuilder().create();
+        String jsonString = gson.toJson(this.properties);
 
         try {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            OutputStream outputStream = new FileOutputStream(file);
-
-            this.properties.store(outputStream, "Repairnator properties");
+            OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
+            outputStream.write(jsonString);
+            outputStream.flush();
+            outputStream.close();
         } catch (IOException e) {
             this.getLogger().error("Cannot write property to the following file: " + filePath, e);
         }

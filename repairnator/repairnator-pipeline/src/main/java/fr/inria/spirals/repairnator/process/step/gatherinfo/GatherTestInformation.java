@@ -5,7 +5,6 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
 import org.apache.maven.plugins.surefire.report.ReportTestSuite;
 import org.apache.maven.plugins.surefire.report.SurefireReportParser;
@@ -161,8 +160,8 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         if (!this.skipSettingStatusInformation) {
-            this.writeProperty("error-types", StringUtils.join(this.failureNames, ","));
-            this.writeProperty("failing-test-cases", StringUtils.join(this.failureLocations, ","));
+            this.writeProperty("error-types", this.failureNames);
+            this.writeProperty("failing-test-cases", this.failureLocations);
             this.inspector.getJobStatus().setFailureLocations(this.failureLocations);
             this.inspector.getJobStatus().setFailureNames(this.failureNames);
         }

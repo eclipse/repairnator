@@ -64,8 +64,12 @@ public class EndProcessSerializer extends ProcessSerializer {
         result.addProperty("runId", this.runId);
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("beginDay", Utils.formatOnlyDay(this.beginDate));
-        result.addProperty("beginDate", Utils.formatCompleteDate(this.beginDate));
-        result.addProperty("endDate", Utils.formatCompleteDate(now));
+        result.addProperty("beginDateStr", Utils.formatCompleteDate(this.beginDate));
+        this.addDate(result, "beginDate", this.beginDate);
+
+        result.addProperty("endDateStr", Utils.formatCompleteDate(now));
+        this.addDate(result, "endDate", now);
+
         result.addProperty("duration", humanDuration);
         result.addProperty("endStatus", this.status);
         result.addProperty("nbBuilds", this.nbBuilds);
