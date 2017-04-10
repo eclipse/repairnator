@@ -330,9 +330,9 @@ public class Launcher {
                 Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
                 if (previousBuild != null) {
                     if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
-                        this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
+                        this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING, this.arguments.getString("runId"));
                     } else {
-                        this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
+                        this.buildToBeInspected = new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.arguments.getString("runId"));
                     }
                 } else {
                     throw new RuntimeException("There was an error getting the previous build");
@@ -341,7 +341,7 @@ public class Launcher {
                 Build nextPassing = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(build, BuildStatus.PASSED);
 
                 if (nextPassing != null) {
-                    this.buildToBeInspected = new BuildToBeInspected(nextPassing, build, ScannedBuildStatus.FAILING_AND_PASSING);
+                    this.buildToBeInspected = new BuildToBeInspected(nextPassing, build, ScannedBuildStatus.FAILING_AND_PASSING, this.arguments.getString("runId"));
                 } else {
                     throw new RuntimeException("There was an error getting the next build.");
                 }
