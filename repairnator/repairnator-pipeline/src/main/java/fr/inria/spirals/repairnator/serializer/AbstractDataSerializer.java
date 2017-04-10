@@ -80,6 +80,7 @@ public abstract class AbstractDataSerializer extends Serializer {
                 return "FIXERBUILD_CASE2";
 
             case SQUASHED_REPO:
+            case NOT_SQUASHED_REPO:
                 if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                     if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                         return "FIXERBUILD_CASE1";
