@@ -20,10 +20,11 @@ public class BuildToBeInspected {
         this.runId = runId;
     }
 
-    public BuildToBeInspected(Build build, Build previousBuild, ScannedBuildStatus status) {
+    public BuildToBeInspected(Build build, Build previousBuild, ScannedBuildStatus status, String runId) {
         this.build = build;
         this.previousBuild = previousBuild;
         this.status = status;
+        this.runId = runId;
     }
 
     public Build getBuild() {

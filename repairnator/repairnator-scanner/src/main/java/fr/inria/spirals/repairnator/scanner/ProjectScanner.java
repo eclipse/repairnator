@@ -225,11 +225,11 @@ public class ProjectScanner {
 
                     if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
                         this.totalNumberOfFailingAndPassingBuildPairs++;
-                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING);
+                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING, this.runId);
                     } else {
                         if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaFile(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
                             this.totalNumberOfPassingAndPassingBuildPairs++;
-                            return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES);
+                            return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.runId);
                         } else {
                             this.logger.debug("The pair of builds is not interesting.");
                         }
