@@ -97,7 +97,7 @@ public class Launcher {
     private void initializeSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        if (this.arguments.getString("spreadsheet") != null) {
+        if (this.arguments.getString("spreadsheet") != null && this.arguments.getString("googleAccessToken") != null) {
             LOGGER.info("Initialize Google spreadsheet serializer engine.");
             GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
 
