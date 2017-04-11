@@ -23,7 +23,12 @@ public class CheckoutPreviousBuildSourceCode extends CheckoutRepository {
 
         super.businessExecute();
 
-        this.setState((this.shouldStop) ? ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT : ProjectState.PREVIOUSBUILDCODECHECKEDOUT);
+        if (this.shouldStop) {
+            this.setState(ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT);
+        } else {
+            this.setState(ProjectState.PREVIOUSBUILDCODECHECKEDOUT);
+            inspector.setCheckoutType(getCheckoutType());
+        }
     }
 
 }

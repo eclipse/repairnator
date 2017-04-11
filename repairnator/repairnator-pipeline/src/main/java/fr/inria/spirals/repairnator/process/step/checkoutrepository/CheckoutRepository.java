@@ -84,6 +84,10 @@ public abstract class CheckoutRepository extends AbstractStep {
         }
     }
 
+    protected CheckoutType getCheckoutType() {
+        return this.checkoutType;
+    }
+
     protected void setCheckoutType(CheckoutType checkoutType) {
         this.checkoutType = checkoutType;
     }
