@@ -25,15 +25,11 @@ export GOOGLE_SECRET_PATH=$HOME_REPAIR/client_secret.json
 export REPAIRNATOR_SCANNED_DIR=$HOME_REPAIR/scanned/
 
 export REPAIRNATOR_RUN_DIR=$HOME_REPAIR/bin/`date "+%Y-%m-%d_%H%M"`
-export REPAIRNATOR_DOCKER_DIR=$REPAIRNATOR_RUN_DIR/dockerImage
 
 export REPAIRNATOR_SCANNER_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-scanner/target/repairnator-scanner-*-jar-with-dependencies.jar"
 export REPAIRNATOR_SCANNER_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-scanner.jar
 
 export REPAIRNATOR_DOCKERPOOL_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-dockerpool/target/repairnator-dockerpool-*-jar-with-dependencies.jar"
 export REPAIRNATOR_DOCKERPOOL_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-dockerpool.jar
-
-export REPAIRNATOR_PIPELINE_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-pipeline/target/repairnator-pipeline-*-jar-with-dependencies.jar"
-export REPAIRNATOR_PIPELINE_DEST_JAR=$REPAIRNATOR_DOCKER_DIR/repairnator-pipeline.jar
 
 export REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`.txt
