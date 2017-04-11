@@ -103,16 +103,15 @@ public class GatherTestInformation extends AbstractStep {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
                     if (!skipSettingStatusInformation) {
+                        this.nbTotalTests += testSuite.getNumberOfTests();
+                        this.nbSkippingTests += testSuite.getNumberOfSkipped();
+
                         if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                             File failingModule = surefireDir.getParentFile().getParentFile();
                             this.failingModulePath = failingModule.getCanonicalPath();
                             this.getInspector().getJobStatus().setFailingModulePath(this.failingModulePath);
                             this.writeProperty("failingModule", this.failingModulePath);
-                        }
 
-                        this.nbTotalTests += testSuite.getNumberOfTests();
-                        this.nbSkippingTests += testSuite.getNumberOfSkipped();
-                        if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                             for (ReportTestCase testCase : testSuite.getTestCases()) {
                                 if (testCase.hasFailure()) {
                                     this.failureNames.add(testCase.getFailureType());
