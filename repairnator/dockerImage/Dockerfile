@@ -5,14 +5,15 @@ LABEL Description="Repairnator Pipeline docker image" Vendor="Spirals" Version="
 VOLUME ["/var/log/"]
 RUN echo "Europe/Paris" > /etc/timezone
 
-COPY repairnator-pipeline.jar /root/
 COPY z3_for_linux /root/
 COPY logback.xml /root/
 COPY configure_git.sh /root/
+COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
 
 RUN chmod +x /root/*.sh
 RUN /root/configure_git.sh
+RUN /root/build_repairnator.sh
 
 ENV M2_HOME=$MAVEN_HOME
 ENV GITHUB_LOGIN=
