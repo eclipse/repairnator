@@ -302,11 +302,6 @@ public class Launcher {
             endProcessSerializer.setStatus("interrupted");
         }
 
-        try {
-            docker.removeImage(imageId);
-        } catch (DockerException | InterruptedException e) {
-            LOGGER.error("Error while removing docker image", e);
-        }
         docker.close();
         endProcessSerializer.serialize();
     }
