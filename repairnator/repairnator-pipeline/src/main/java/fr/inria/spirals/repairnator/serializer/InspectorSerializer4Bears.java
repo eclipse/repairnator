@@ -47,7 +47,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
         dataCol.add(previousBuildId + "");
-        dataCol.add(inspector.getBuildToBeInspected().getStatus().toString());
+        dataCol.add(buildToBeInspected.getStatus().name());
         dataCol.add(state);
         dataCol.add(realState);
         dataCol.add(inspector.getCheckoutType().name());
@@ -80,6 +80,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
 
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
+
         String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
 
         JsonObject result = new JsonObject();
@@ -89,17 +90,16 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         result.addProperty("scannedBuildStatus", buildToBeInspected.getStatus().name());
         result.addProperty("status", state);
         result.addProperty("realStatus", realState);
+        result.addProperty("checkoutType", inspector.getCheckoutType().name());
         result.addProperty("typeOfFailures", typeOfFailures);
         result.addProperty("repositoryName", build.getRepository().getSlug());
         result.addProperty("prNumber", build.getPullRequestNumber());
         result.addProperty("buildFinishedDateStr", Utils.formatCompleteDate(build.getFinishedAt()));
         this.addDate(result, "buildFinishedDate", build.getFinishedAt());
-
         result.addProperty("buildFinishedDay", Utils.formatOnlyDay(build.getFinishedAt()));
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("buildReproductionDateStr", Utils.formatCompleteDate(new Date()));
         this.addDate(result, "buildReproductionDate", new Date());
-
         result.addProperty("buildTravisUrl", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         result.addProperty("previousBuildTravisUrl", Utils.getTravisUrl(previousBuildId, previousBuildSlug));
         result.addProperty("committerEmail", committerEmail);
