@@ -17,14 +17,12 @@ export SPREADSHEET=
 export PUSH_URL=
 export SMTP_SERVER=
 export NOTIFY_TO=
+export DOCKER_TAG=surli/librepair:latest
 
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator
 export REPAIR_DOCKER_IMG_DIR=$HOME_REPAIR/dockerImage/
 export GOOGLE_SECRET_PATH=$HOME_REPAIR/client_secret.json
 export REPAIRNATOR_SCANNED_DIR=$HOME_REPAIR/scanned/
-
-export DOCKER_VERSION=`date "+%Y-%m-%d_%H%M"`
-export DOCKER_TAG=repairnator/pipeline:$DOCKER_VERSION
 
 export REPAIRNATOR_RUN_DIR=$HOME_REPAIR/bin/`date "+%Y-%m-%d_%H%M"`
 export REPAIRNATOR_DOCKER_DIR=$REPAIRNATOR_RUN_DIR/dockerImage

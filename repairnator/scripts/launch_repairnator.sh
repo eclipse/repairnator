@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Use to create args in the command line for optionnal arguments
 function ca {
@@ -76,8 +77,8 @@ then
    exit 0
 fi
 
-echo "Build the docker machine (tag: $DOCKER_TAG)..."
-docker build -t $DOCKER_TAG $REPAIRNATOR_DOCKER_DIR
+echo "Pull the docker machine (name: $DOCKER_TAG)..."
+docker pull $DOCKER_TAG
 
 echo "Launch docker pool..."
 args="`ca -s $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
