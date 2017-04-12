@@ -4,7 +4,6 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
