@@ -4,11 +4,11 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -26,20 +26,18 @@ public class ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
 
     private GitHelper gitHelper;
-    private RepairnatorConfig config;
     private BuildToBeInspected buildToBeInspected;
     private String repoLocalPath;
 
     private String workspace;
     private String m2LocalPath;
     private List<AbstractDataSerializer> serializers;
-    private boolean previousBuildFlag;
     private JobStatus jobStatus;
     private List<AbstractNotifier> notifiers;
 
+    private CheckoutType checkoutType;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-        this.config = RepairnatorConfig.getInstance();
         this.buildToBeInspected = buildToBeInspected;
 
         this.workspace = workspace;
@@ -126,12 +124,12 @@ public class ProjectInspector {
         }
     }
 
-    public boolean isAboutAPreviousBuild() {
-        return previousBuildFlag;
+    public CheckoutType getCheckoutType() {
+        return checkoutType;
     }
 
-    public void setPreviousBuildFlag(boolean previousBuildFlag) {
-        this.previousBuildFlag = previousBuildFlag;
+    public void setCheckoutType(CheckoutType checkoutType) {
+        this.checkoutType = checkoutType;
     }
 
 }

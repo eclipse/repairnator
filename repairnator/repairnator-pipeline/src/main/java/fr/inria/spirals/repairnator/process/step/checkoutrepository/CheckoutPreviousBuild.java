@@ -15,13 +15,16 @@ public class CheckoutPreviousBuild extends CheckoutRepository {
     protected void businessExecute() {
         this.getLogger().debug("Checking out previous build...");
 
-        this.inspector.setPreviousBuildFlag(true);
-
         super.setCheckoutType(CheckoutType.CHECKOUT_PREVIOUS_BUILD);
 
         super.businessExecute();
 
-        this.setState((this.shouldStop) ? ProjectState.PREVIOUSBUILDNOTCHECKEDOUT : ProjectState.PREVIOUSBUILDCHECKEDOUT);
+        if (this.shouldStop) {
+            this.setState(ProjectState.PREVIOUSBUILDNOTCHECKEDOUT);
+        } else {
+            this.setState(ProjectState.PREVIOUSBUILDCHECKEDOUT);
+            inspector.setCheckoutType(getCheckoutType());
+        }
     }
 
 }

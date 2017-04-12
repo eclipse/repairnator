@@ -19,7 +19,12 @@ public class CheckoutBuild extends CheckoutRepository {
 
         super.businessExecute();
 
-        this.setState((this.shouldStop) ? ProjectState.BUILDNOTCHECKEDOUT : ProjectState.BUILDCHECKEDOUT);
+        if (this.shouldStop) {
+            this.setState(ProjectState.BUILDNOTCHECKEDOUT);
+        } else {
+            this.setState(ProjectState.BUILDCHECKEDOUT);
+            inspector.setCheckoutType(getCheckoutType());
+        }
     }
 
 }

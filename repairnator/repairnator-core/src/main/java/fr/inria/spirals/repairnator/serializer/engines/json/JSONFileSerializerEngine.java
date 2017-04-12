@@ -54,6 +54,7 @@ public class JSONFileSerializerEngine implements SerializerEngine {
             try {
                 for (SerializedData oneData : data) {
                     writer.write(oneData.getAsJson().toString());
+                    writer.newLine();
                     writer.flush();
                 }
                 writer.close();

@@ -280,7 +280,7 @@ public abstract class AbstractStep {
         String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
         File file = new File(filePath);
 
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonString = gson.toJson(this.properties);
 
         try {

@@ -28,7 +28,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
     public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         super(buildToBeInspected, workspace, serializers, notifiers);
-        super.setPreviousBuildFlag(false);
         this.isFixerBuild_Case1 = false;
         this.isFixerBuild_Case2 = false;
     }
@@ -37,7 +36,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep firstStep;
 
         AbstractStep cloneRepo = new CloneRepository(this);
-        GatherTestInformation gatherTestInformation;
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
             cloneRepo.setNextStep(new CheckoutBuild(this))
@@ -50,7 +48,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new SquashRepository(this))
                     .setNextStep(new PushIncriminatedBuild(this));
-
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutBuild(this))
