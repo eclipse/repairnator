@@ -100,7 +100,7 @@ public class Launcher {
         opt2.setShortFlag('o');
         opt2.setLongFlag("output");
         opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
-        opt2.setDefault("/var/log/repairnator");
+        opt2.setRequired(true);
         opt2.setHelp("Specify where to put serialized files from dockerpool");
         this.jsap.registerParameter(opt2);
 
@@ -108,7 +108,7 @@ public class Launcher {
         opt2.setShortFlag('l');
         opt2.setLongFlag("logDirectory");
         opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("/var/log/repairnator");
+        opt2.setRequired(true);
         opt2.setHelp("Specify where to put logs and serialized files created by docker machines.");
         this.jsap.registerParameter(opt2);
 
