@@ -4,6 +4,7 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.StringParser;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
@@ -95,12 +96,20 @@ public class Launcher {
         opt2.setHelp("Specify the input file containing the list of build ids.");
         this.jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("output");
+        opt2.setShortFlag('o');
+        opt2.setLongFlag("output");
+        opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
+        opt2.setDefault("/var/log/repairnator");
+        opt2.setHelp("Specify where to put serialized files from dockerpool");
+        this.jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("logDirectory");
         opt2.setShortFlag('l');
         opt2.setLongFlag("logDirectory");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
+        opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault("/var/log/repairnator");
-        opt2.setHelp("Specify where to put logs created by docker machines.");
+        opt2.setHelp("Specify where to put logs and serialized files created by docker machines.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("threads");
@@ -272,14 +281,13 @@ public class Launcher {
         String imageId = this.findDockerImage();
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        String logFile = this.arguments.getFile("logDirectory").getAbsolutePath();
-
+        String dockerOutputDir = this.arguments.getString("logDirectory");
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
             TreatedBuildTracking treatedBuildTracking = new TreatedBuildTracking(this.engines, this.arguments.getString("runId"), builId);
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, logFile, treatedBuildTracking, this.arguments.getBoolean("skipDelete"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, dockerOutputDir, treatedBuildTracking, this.arguments.getBoolean("skipDelete"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
@@ -365,8 +373,8 @@ public class Launcher {
             LOGGER.info("Google Spreadsheet won't be used for serialization.");
         }
 
-        this.engines.add(new CSVSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
-        this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("logDirectory").getPath()));
+        this.engines.add(new CSVSerializerEngine(this.arguments.getFile("output").getPath()));
+        this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("output").getPath()));
 
         if (this.arguments.getString("mongoDBHost") != null) {
             LOGGER.info("Initialize mongoDB serializer engine.");
