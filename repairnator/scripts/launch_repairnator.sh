@@ -37,7 +37,12 @@ fi
 
 mkdir $REPAIR_OUTPUT_PATH
 
-RUN_ID=`uuidgen`
+if [ -z "$RUN_ID_SUFFIT" ];
+    RUN_ID=`uuidgen`
+else
+    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
+fi
+
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
 echo "Create log directory: $LOG_DIR"
@@ -79,7 +84,7 @@ docker pull $DOCKER_TAG
 echo "Launch docker pool..."
 args="`ca -s $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 echo "Supplementary args for docker pool $args"
-java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -l $LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $SCANNER_MODE $args &> $LOG_DIR/dockerpool.log
+java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $SCANNER_MODE $args &> $LOG_DIR/dockerpool.log
 
 echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR

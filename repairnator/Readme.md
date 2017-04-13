@@ -31,8 +31,6 @@ Create a directory dedicated to repairnator called `librepair` and create in it 
   - bin
   - logs
   - scripts
-  - dockerImage
-  - scanned
   - github
   
 Under github directory, clone this repository and then copy and paste `travis/travis-install.sh` bash file.
@@ -43,8 +41,6 @@ chmod +x travis-install.sh
 ./travis-install.sh
 ```
 
-Then copy and paste content of `librepair/github/librepair/repairnator/dockerImage` in the `librepair/dockerImage` directory you created. Do the same for `librepair/github/librepair/repairnator/scripts` and `librepair/scripts`. 
-
 Then go back to `librepair` directory and launch the following commands:
 ```
 chmod +x ./scripts/*.sh
@@ -53,7 +49,7 @@ chmod +x ./scripts/*.sh
 
 Then create a file containing list of GitHub project names (one name per line) in file `scripts/project_list.txt`.
 
-Then edit files `scripts/set_env_variable.sh` and `dockerImage/repairconfig.ini` to put right information.
+Then edit file `scripts/set_env_variable.sh` to put right information.
 
 And finally you should be able to launch repairnator executing the following command:
 

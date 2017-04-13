@@ -36,9 +36,5 @@ function updateCollection(collectionName, fieldList) {
     });
 }
 
-updateCollection("scanner", ["dateBegin", "dateLimit"]);
-updateCollection("inspector", ["buildFinishedDate", "buildReproductionDate"]);
-updateCollection("endprocess", ["beginDate", "endDate"]);
-updateCollection("nopol", ["nopolDateEnd"]);
-updateCollection("times", ["buildReproductionDate"]);
-updateCollection("treatedbuild", ["dateReproducedBuild"]);
+updateCollection("scanner4bears", ["dateBegin", "dateEnd", "dateLimit"]);
+updateCollection("inspector4bears", ["buildFinishedDate", "buildReproductionDate"]);
