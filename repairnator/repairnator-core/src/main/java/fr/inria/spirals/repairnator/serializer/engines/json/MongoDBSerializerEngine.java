@@ -33,10 +33,21 @@ public class MongoDBSerializerEngine implements SerializerEngine {
             List<Document> listDocuments = new ArrayList<>();
             for (SerializedData oneData : data) {
                 Document doc = Document.parse(oneData.getAsJson().toString());
+
+                /*try {
+                    collection.insertOne(doc);
+                } catch (Exception e) {
+                    logger.error("Error while inserting doc",e);
+                }*/
                 listDocuments.add(doc);
             }
 
-            collection.insertMany(listDocuments);
+            try {
+                collection.insertMany(listDocuments);
+            } catch (Exception e) {
+                logger.error("Error while inserting all documents", e);
+            }
+
         } else {
             logger.error("Mongo connection is null, there was certainly a problem with the connection.");
         }
