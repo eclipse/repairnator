@@ -20,6 +20,8 @@ export SMTP_SERVER= # Smtp server to notify by email
 export NOTIFY_TO= # email adresses separated by comma
 export DOCKER_TAG=surli/librepair:latest # Tag of the docker image to use for pipeline
 
+export RUN_ID_SUFFIX=
+
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator # Path of the local cloned repository for repairnator
 export GOOGLE_SECRET_PATH=$HOME_REPAIR/client_secret.json # Path of the google secret if spreadsheet is used
 

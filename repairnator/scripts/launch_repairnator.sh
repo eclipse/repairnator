@@ -37,7 +37,12 @@ fi
 
 mkdir $REPAIR_OUTPUT_PATH
 
-RUN_ID=`uuidgen`
+if [ -z "$RUN_ID_SUFFIT" ];
+    RUN_ID=`uuidgen`
+else
+    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
+fi
+
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
 echo "Create log directory: $LOG_DIR"
