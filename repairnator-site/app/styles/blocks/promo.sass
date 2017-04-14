@@ -1,0 +1,87 @@
+////////////////////////////////////////
+// $Promo section
+////////////////////////////////////////
+
+//////////////////////////////////////// Block variables
+
+
+//////////////////////////////////////// Block mixins and functions
+
+
+//////////////////////////////////////// Block styles
+$block: ".promo"
+
+#{$block}
+	width: 100%
+	min-height: 455px
+	padding: 70px 0
+	background: #323232 url("../images/promo-bg.jpg") center 0 no-repeat
+	background-attachment: fixed
+	background-size: cover
+	text-align: center
+	color:#fff
+
+
+	// $Promo section inner container
+	&__inner
+		max-width: 1024px
+		margin: 0 auto
+		+clearfix
+
+
+	// $Promo section title
+	&__title
+		margin-bottom: 35px
+		font-size: 55px
+		text-transform: capitalize
+
+		& span
+			font-weight: bold
+
+
+	// $Promo section description
+	&__descr
+		max-width: 580px
+		margin: 0 auto 50px
+		font-size: 18px
+		line-height: 1.1
+		color: #fff
+
+
+	// $Promo section button
+	&__btn
+		display: block
+		width: 125px
+		height: 35px
+		margin: 0 auto 45px
+		padding-top: 10px
+		background-color: #1bbc9b
+		font-size: 15px
+		color: #fff
+		text-transform: uppercase
+		transition: all .5s
+
+		&:hover
+			background-color: darken(#1bbc9b, 10%)
+
+
+	// $Promo section go-next button
+	&__go-next
+		display: block
+		width: 40px
+		height: 40px
+		margin: 0 auto
+		background-color: #fff
+		border-radius: 50%
+		font-size: 0
+		color: #323232
+		transition: transform .5s
+
+		&:before
+			font-size: 30px
+			line-height: 40px
+			font-family: FontAwesome
+			content: "\f078"
+
+		&:hover
+			transform: scale(1.2)

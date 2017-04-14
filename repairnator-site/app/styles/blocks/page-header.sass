@@ -1,0 +1,106 @@
+////////////////////////////////////////
+// $Page header
+////////////////////////////////////////
+
+//////////////////////////////////////// Block variables
+
+
+//////////////////////////////////////// Block mixins and functions
+
+
+//////////////////////////////////////// Block styles
+$block: ".page-header"
+
+#{$block}
+	width: 100%
+	min-height: 95px
+	background-color: #fff
+	+clearfix
+
+	@media screen and (max-width: 480px)
+		min-height: 50px
+
+	// $Page header STATE: fixed header
+	&.is-fixed
+		position: fixed
+		top: 0
+		left: 0
+		z-index: 999
+		box-shadow: 0 2px 4px 0 #424242
+
+
+	// $Page header inner container
+	&__inner
+		max-width: 1024px
+		margin: 0 auto
+		+clearfix
+
+	// $Page header logo
+	&__logo
+		float: left
+		height: 50px
+		margin: 25px 0 0 40px
+		padding: 5px 0 0 65px
+		background: url("../images/logo.jpg") 0 center no-repeat
+
+		@media screen and (max-width: 800px)
+			margin: 25px 0 0 10px
+
+		@media screen and (max-width: 480px)
+			display: none
+
+		& h1
+			font-size: 20px
+			font-weight: bold
+			text-transform: uppercase
+
+			@media screen and (max-width: 640px)
+				display: none
+
+		& span
+			font-size: 14px
+			text-transform: capitalize
+
+			@media screen and (max-width: 640px)
+				display: none
+
+
+	// $Page header navigation
+	&__nav
+		float: right
+		margin: 30px 55px 0 0
+		background-color: #fff
+
+		@media screen and (max-width: 800px)
+			margin: 30px 10px 0 0
+
+		@media screen and (max-width: 480px)
+			float: none
+			margin: 10px auto
+			text-align: center
+
+		& li
+			display: inline-block
+			margin-left: 5px
+
+			@media screen and (max-width: 640px)
+				margin-left: 0
+
+			@media screen and (max-width: 480px)
+				margin-left: 0
+
+
+	// $Page header navigation link
+	&__nav-link
+		display: inline-block
+		font-size: 14px
+		text-transform: uppercase
+		padding: 10px
+		transition: background-color .2s
+		color: #424242
+
+		// $Page header navigation link STATE: active state
+		&:hover,
+		&.is-active
+			background-color: #1bbc9b
+			color: #fff

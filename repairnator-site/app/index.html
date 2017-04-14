@@ -1,0 +1,130 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LibRepair Project</title>
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,300,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/screen.css">
+    <link rel="stylesheet" href="styles/custom.css">
+    <!-- endbuild -->
+
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="/bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+  </head>
+  <body>
+    <!--[if IE]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="page-header js-header">
+      <div class="page-header__inner">
+        <div class="page-header__logo">
+          <h1>RepairNator</h1>&nbsp;<span>Towards repair automation</span>
+        </div>
+        <nav class="page-header__nav js-nav">
+          <ul>
+            <li><a class="page-header__nav-link js-anchor js-link is-active" href="#home">Home</a></li>
+            <li><a class="page-header__nav-link js-anchor js-link" href="#portfolio">Live stats</a></li>
+            <li><a class="page-header__nav-link js-anchor js-link" href="#team">About</a></li>
+            <li><a class="page-header__nav-link js-anchor js-link" href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section class="promo js-jumbo" id="home">
+      <h2 class="promo__title">RepairNator: <span>Scan and Repair</span> automatically</h2>
+      <p class="promo__descr">
+        RepairNator is a tool creating with the purpose to reproduce detected bugs, and to find automatically patches for those bugs.
+      </p>
+      <a class="promo__btn" href="#">Learn more</a>
+      <a class="promo__go-next js-anchor" href="#portfolio">Scroll down</a>
+    </section>
+    <!-- $Portfolio section-->
+    <section id="portfolio">
+      <div id="charts"></div>
+    </section>
+
+    <!-- $Contact section-->
+    <section class="contact" id="contact">
+      <div class="contact__inner">
+        <h2 class="contact__title">Contact us</h2>
+        <p class="contact__descr">The project is supported by Spirals Team @ INRIA research center in France, don't hesitate to get in touch!</p>
+        <form class="contact__form" action="#" method="post">
+          <input class="contact__form-input" id="name" type="text" name="name" placeholder="Your name">
+          <input class="contact__form-input" id="email" type="email" name="email" placeholder="Your email">
+          <textarea class="contact__form-tarea" id="message" name="message" placeholder="Your message"></textarea>
+          <input class="contact__form-submit" type="submit" value="Submit">
+        </form>
+        <div class="contact__card vcard">
+          <h3 class="contact__card-title">Information</h3>
+          <div class="contact__card-item place">
+            <div class="fn org">Inria Lille - Nord Europe <br /> Spirals Team</div>
+            <div class="adr">
+              <div class="street-address">Parc scientifique de la Haute Borne
+                <br />40, avenue Halley - Bât A - Park Plaza</div><span class="locality">59650 Villeneuve d'Ascq</span>
+            </div>
+          </div>
+          <!--a class="contact__card-item email" href="#">info@companyname.com</a-->
+        </div>
+      </div>
+    </section>
+    <!-- $Page footer-->
+    <footer class="page-footer">
+      <div class="page-footer__inner"><span class="page-footer__copyright">&copy; Copyright 2017 INRIA</span><a class="page-footer__gotop js-anchor" href="#home">Go to top</a></div>
+    </footer>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='https://www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/modernizr/modernizr.js"></script>
+    <script src="/bower_components/d3/d3.js"></script>
+    <script src="/bower_components/highcharts/highcharts.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js scripts/plugins.js -->
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/hostname_pie.js"></script>
+    <script src="scripts/scanner_timechart.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>

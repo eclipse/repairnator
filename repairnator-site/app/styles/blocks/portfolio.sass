@@ -1,0 +1,155 @@
+////////////////////////////////////////
+// $Portfolio section
+////////////////////////////////////////
+
+//////////////////////////////////////// Block variables
+
+
+//////////////////////////////////////// Block mixins and functions
+
+
+//////////////////////////////////////// Block styles
+$block: ".portfolio"
+
+#{$block}
+	width: 100%
+	min-height: 680px
+	padding-top: 50px
+	background-color: #fff
+	text-align: center
+
+	@media screen and (max-width: 640px)
+		padding: 50px 10px
+
+
+	// $Portfolio section inner container
+	&__inner
+		max-width: 1024px
+		margin: 0 auto
+		+clearfix
+
+
+	// $Portfolio section title
+	&__title
+		font-size: 28px
+		font-weight: normal
+		margin-bottom: 10px
+
+
+	// $Portfolio section description
+	&__descr
+		font-size: 14px
+		font-weight: normal
+		margin-bottom: 40px
+
+
+	// $Portfolio section filter
+	&__filter
+
+		& li
+			display: inline-block
+			margin: 0 10px
+			cursor: pointer
+
+			@media screen and (max-width: 640px)
+				margin: 0 5px
+
+			@media screen and (max-width: 480px)
+				display: block
+
+
+	// $Portfolio section filter button
+	&__filter-btn
+		display: inline-block
+		font-size: 14px
+		text-transform: uppercase
+		padding: 10px
+		color: #fff
+		background-color: #1bbc9b
+		transition: background-color .2s
+
+		&:hover, &.is-selected
+			background-color: darken(#1bbc9b, 10%)
+
+
+	// $Portfolio section content
+	&__content
+		margin: 45px auto 60px
+
+
+	// $Portfolio section item
+	&__item
+		position: relative
+		display: inline-block
+		width: 180px
+		height: 180px
+		margin: 0 30px 35px
+		border-radius: 50%
+		overflow: hidden
+
+		@media screen and (max-width: 1000px)
+			width: 170px
+			height: 170px
+			margin: 0 1.5% 35px
+
+		@media screen and (max-width: 800px)
+			width: 190px
+			height: 190px
+			margin: 0 5% 35px
+
+		&.is-hidden
+			display: none
+
+
+	// $Portfolio section item image
+	&__item-img
+		display: inline-block
+		height: 100%
+		margin: 0 auto
+
+
+	// $Portfolio section item caption
+	&__item-caption
+		visibility: hidden
+		position: absolute
+		width: 100%
+		height: 100%
+		top: 0
+		padding-top: 35px
+		background-color: rgb(27, 188, 155)
+		background-color: rgba(27, 188, 155, .8)
+		border-radius: 50%
+		color: #fff
+		opacity: 0
+		transition: all .5s
+
+		// $Portfolio section item caption CONTEXT: $Portfolio section item STATE: hover
+		#{$block}__item:hover &
+			opacity: 1
+			visibility: visible
+
+
+	// $Portfolio section item title
+	&__item-title
+		display: block
+		font-size: 18px
+		margin-bottom: 10px
+
+		&:before
+			content: "\f002"
+			display: block
+			width: 40px
+			height: 40px
+			border-radius: 50%
+			margin: 0 auto 20px
+			padding-top: 10px
+			background-color: rgb(204,204,204)
+			background-color: rgba(0, 0, 0, .5)
+			font-family: FontAwesome
+			text-align: center
+
+
+	// $Portfolio section item category
+	&__item-cat
+		display: block
+		font-size: 15px

@@ -1,0 +1,169 @@
+////////////////////////////////////////
+// $Team section
+////////////////////////////////////////
+
+//////////////////////////////////////// Block variables
+
+
+//////////////////////////////////////// Block mixins and functions
+
+
+//////////////////////////////////////// Block styles
+$block: ".team"
+
+#{$block}
+	width: 100%
+	min-height: 645px
+	padding-top: 55px
+	background-color: #16a086
+	text-align: center
+
+	@media screen and (max-width: 640px)
+		padding: 55px 10px
+
+
+	// $Team section inner container
+	&__inner
+		max-width: 1024px
+		margin: 0 auto
+		+clearfix
+
+
+	// $Team section title
+	&__title
+		font-size: 28px
+		font-weight: normal
+		margin-bottom: 10px
+		color: #fff
+		text-transform: capitalize
+
+
+	// $Team section description
+	&__descr
+		font-size: 14px
+		font-weight: normal
+		margin-bottom: 45px
+		color: #fff
+
+
+	// $Team section member
+	&__member
+		display: inline-block
+		position: relative
+		width: 220px
+		margin: 0 30px 30px
+		background-color: #fff
+
+		@media screen and (max-width: 1000px)
+			width: 190px
+			margin: 0 20px 30px
+
+		@media screen and (max-width: 800px)
+			width: 180px
+			margin: 0 10px 30px
+
+		@media screen and (max-width: 640px)
+			display: block
+			width: 260px
+			margin: 0 auto 30px
+
+		& img
+			width: 100%
+
+
+	// $Team section member info
+	&__member-info
+		display: block
+		width: 100%
+		height: 190px
+		padding: 15px 10px
+
+		@media screen and (max-width: 640px)
+			height: auto
+
+
+	// $Team section member name
+	&__member-name
+		margin-bottom: 5px
+		font-size: 18px
+
+
+	// $Team section member role
+	&__member-role
+		display: block
+		margin-bottom: 20px
+		font-size: 13px
+		font-style: italic
+		text-transform: capitalize
+
+
+	// $Team section member description
+	&__member-descr
+		text-align: left
+		line-height: 1.3
+
+		@media screen and (max-width: 640px)
+			display: none
+
+
+	// $Team section member social icons
+	&__member-soc
+		display: block
+		position: absolute
+		width: 180px
+		height: 50px
+		top: 95px
+		left: 50%
+		margin-left: -90px
+		background-color: rgb(22,160,134)
+		background-color: rgba(22,160,134,.8)
+		white-space: nowrap
+		overflow: hidden
+		opacity: 0
+		visibility: hidden
+		transition: all .5s
+
+		// $Team section member social icons CONTEXT: $Team section member STATE: hover
+		#{$block}__member:hover &
+			opacity: 1
+			visibility: visible
+
+		@media screen and (max-width: 640px)
+			width: 260px
+			top: 220px
+			margin-left: -130px
+
+		& li
+			display: inline-block
+
+
+	// $Team section member icon
+	&__member-icon
+		display: block
+		width: 45px
+		height: 50px
+		margin-left: -3px
+		color: #fff
+		transition: all .3s
+		font-size: 0
+
+		&:hover
+			color: #c1c1c1
+
+		&:before
+			display: block
+			font-family: FontAwesome
+			font-size: 30px
+			line-height: 50px
+
+		&.fb:before
+			content: "\f09a"
+
+		&.tw:before
+			content: "\f099"
+
+		&.gplus:before
+			content: "\f0d5"
+
+		&.db:before
+			content: "\f17d"
