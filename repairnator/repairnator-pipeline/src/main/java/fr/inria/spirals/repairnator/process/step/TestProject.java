@@ -11,7 +11,7 @@ import fr.inria.spirals.repairnator.process.maven.output.MavenFilterTestOutputHa
 public class TestProject extends AbstractStep {
 
     public TestProject(ProjectInspector inspector) {
-        this(inspector, "");
+        super(inspector);
     }
 
     public TestProject(ProjectInspector inspector, String stepName) {

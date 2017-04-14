@@ -43,7 +43,9 @@ public abstract class CheckoutRepository extends AbstractStep {
                         this.writeProperty("is-pr", "true");
                         this.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getSlug());
                         this.writeProperty("pr-head-commit-id", prInformation.getHead().getSha());
+                        this.writeProperty("pr-head-commit-id-url", prInformation.getHead().getCompareUrl());
                         this.writeProperty("pr-base-commit-id", prInformation.getBase().getSha());
+                        this.writeProperty("pr-base-commit-id-url", prInformation.getBase().getCompareUrl());
                         this.writeProperty("pr-id", build.getPullRequestNumber());
                     }
                 } else {
@@ -72,6 +74,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                     } else {
                         git.checkout().setStartPoint(commitCheckout).addPath("src/main/java").call();
                     }
+                    this.writeProperty("bugRepo",this.inspector.getRepoSlug());
+                    this.writeProperty("bugCommit", this.inspector.getBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
                     this.shouldStop = true;
