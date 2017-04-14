@@ -1,0 +1,70 @@
+////////////////////////////////////////
+// $Page footer
+////////////////////////////////////////
+
+//////////////////////////////////////// Block variables
+
+
+//////////////////////////////////////// Block mixins and functions
+
+
+//////////////////////////////////////// Block styles
+$block: ".page-footer"
+
+#{$block}
+	width: 100%
+	min-height: 85px
+	padding-bottom: 30px
+	background-color: #2d3e50
+
+	@media screen and (max-width: 480px)
+		padding: 0 10px 30px
+		text-align: center
+
+
+	// $Page footer inner container
+	&__inner
+		max-width: 1024px
+		margin: 0 auto
+		+clearfix
+
+
+	// $Page footer copyright
+	&__copyright
+		display: inline-block
+		margin: 35px 0 0 45px
+		font-size: 14px
+		color: #fff
+
+		@media screen and (max-width: 480px)
+			margin: 35px auto 0
+
+
+	// $Page footer go to top button
+	&__gotop
+		display: block
+		float: right
+		width: 45px
+		height: 45px
+		margin: 20px 45px 0 0
+		font-size: 0
+		text-align: center
+		overflow: hidden
+		background-color: #1bbc9b
+		color: transparent
+		transition: all .5s
+
+		@media screen and (max-width: 480px)
+			float: none
+			width: 100%
+			margin: 20px auto 0
+
+		&:hover
+			background-color: darken(#1bbc9b, 10%)
+
+		&:before
+			font-size: 20px
+			line-height: 45px
+			font-family: FontAwesome
+			content: "\f077"
+			color: #fff
