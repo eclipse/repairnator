@@ -34,17 +34,14 @@ do
         echo "Head ref ignored"
     else
         echo "Treating branch $branchname"
-        mkdir $DEST/$branchname
         git checkout $branchname
 
-        if [ -d "repairnator.json" ]; then
+        if [ -e "repairnator.json" ]; then
             echo "found repairnator.json"
-            mkdir $DEST/$branchname
-            cp -f repairnator.json $DEST/$branchname/
-        elif [ -d "repairnator.properties" ]; then
+            cp repairnator.json "$DEST/$branchname"_repairnator.json
+        elif [ -e "repairnator.properties" ]; then
             echo "Found repairnator.properties"
-            mkdir $DEST/$branchname
-            cp -f repairnator.properties $DEST/$branchname/
+            cp repairnator.properties "$DEST/$branchname"_repairnator.properties
         else
             echo "No property or json file has been found for repairnator."
         fi
