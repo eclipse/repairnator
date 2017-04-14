@@ -1,4 +1,4 @@
-$.get('http://localhost:4040/api/scanners/monthData', function (data) {
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/monthData', function (data) {
   console.log(data);
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);

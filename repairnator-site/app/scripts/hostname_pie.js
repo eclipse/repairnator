@@ -1,4 +1,4 @@
-$.get('http://localhost:4040/api/inspectors/hostnameStats', function (data) {
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/hostnameStats', function (data) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
