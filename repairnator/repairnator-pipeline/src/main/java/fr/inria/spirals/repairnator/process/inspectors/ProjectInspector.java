@@ -100,6 +100,7 @@ public class ProjectInspector {
         if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.ONLY_FAIL) {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo.setNextStep(new CheckoutBuild(this))
+                    .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false))
