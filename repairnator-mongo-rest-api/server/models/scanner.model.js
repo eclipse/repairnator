@@ -88,12 +88,13 @@ ScannerSchema.statics = {
 
     const ltDateIso = ltDate.toISOString();
 
-    console.log("Isodate: "+gtDateIso+" and "+ltDateIso);
-
     return this.find({
       dateBegin: {
         $gte: gtDateIso,
         $lt: ltDateIso
+      },
+      totalRepoNumber: {
+        $gt: 1
       }
     }).sort({ dateBegin: 1 }).exec();
   }
