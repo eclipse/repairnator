@@ -29,9 +29,8 @@ public class ResolveDependency extends AbstractStep {
         if (result == MavenHelper.MAVEN_SUCCESS) {
             this.setState(ProjectState.DEPENDENCY_RESOLVED);
         } else {
-            this.getLogger().warn("Repository " + this.inspector.getRepoSlug() + " has unresolvable dependencies.");
+            this.getLogger().warn("Repository " + this.inspector.getRepoSlug() + " may have unresolvable dependencies.");
             this.setState(ProjectState.DEPENDENCY_UNRESOLVABLE);
-            this.shouldStop = true;
         }
     }
 
