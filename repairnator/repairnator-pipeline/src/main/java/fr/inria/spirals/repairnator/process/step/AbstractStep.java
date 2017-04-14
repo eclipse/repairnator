@@ -275,25 +275,30 @@ public abstract class AbstractStep {
     }
 
     protected void writeProperty(String propertyName, Object value) {
-        this.properties.put(propertyName, value);
+        if (value != null) {
+            this.properties.put(propertyName, value);
 
-        String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
-        File file = new File(filePath);
+            String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
+            File file = new File(filePath);
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonString = gson.toJson(this.properties);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonString = gson.toJson(this.properties);
 
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
+            try {
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
+                outputStream.write(jsonString);
+                outputStream.flush();
+                outputStream.close();
+            } catch (IOException e) {
+                this.getLogger().error("Cannot write property to the following file: " + filePath, e);
             }
-            OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
-            outputStream.write(jsonString);
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            this.getLogger().error("Cannot write property to the following file: " + filePath, e);
+        } else {
+            this.getLogger().warn("Trying to write property null for key: "+propertyName);
         }
+
     }
 
     public RepairnatorConfig getConfig() {
