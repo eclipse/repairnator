@@ -38,9 +38,13 @@ public class TestAbstractStep {
 
     @Test
     public void testSetPropertiesWillGivePropertiesToOtherSteps() {
-        AbstractStep step1 = new AbstractStepNop(null);
-        AbstractStep step2 = new AbstractStepNop(null);
-        AbstractStep step3 = new AbstractStepNop(null);
+        ProjectInspector mockInspector = mock(ProjectInspector.class);
+        JobStatus jobStatus = new JobStatus("");
+        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+
+        AbstractStep step1 = new AbstractStepNop(mockInspector);
+        AbstractStep step2 = new AbstractStepNop(mockInspector);
+        AbstractStep step3 = new AbstractStepNop(mockInspector);
 
         Properties properties = new Properties();
         properties.setProperty("testvalue", "toto");
@@ -54,9 +58,15 @@ public class TestAbstractStep {
 
     @Test
     public void testSetStateWillGiveStateToOtherSteps() {
-        AbstractStep step1 = new AbstractStepNop(null);
-        AbstractStep step2 = new AbstractStepNop(null);
-        AbstractStep step3 = new AbstractStepNop(null);
+        ProjectInspector mockInspector = mock(ProjectInspector.class);
+        JobStatus jobStatus = new JobStatus("");
+        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+
+        AbstractStep step1 = new AbstractStepNop(mockInspector);
+        AbstractStep step2 = new AbstractStepNop(mockInspector);
+        AbstractStep step3 = new AbstractStepNop(mockInspector);
+
+
 
         ProjectState state = ProjectState.NOTFAILING;
 

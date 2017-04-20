@@ -114,6 +114,7 @@ public abstract class AbstractStep {
     public void setState(ProjectState state) {
         if (state != null) {
             this.state = state;
+            this.inspector.getJobStatus().setState(this.state);
             if (this.nextStep != null) {
                 this.nextStep.setState(state);
             }
@@ -137,7 +138,6 @@ public abstract class AbstractStep {
     protected void executeNextStep() {
         this.observeAndNotify();
         if (this.nextStep != null) {
-            this.inspector.getJobStatus().setState(this.state);
             this.nextStep.setState(this.state);
             this.nextStep.execute();
         } else {
