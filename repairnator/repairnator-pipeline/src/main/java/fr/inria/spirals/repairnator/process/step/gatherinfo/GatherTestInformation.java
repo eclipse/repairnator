@@ -54,7 +54,7 @@ public class GatherTestInformation extends AbstractStep {
     }
 
     public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
-        this(inspector, contract, skipSettingStatusInformation, "");
+        this(inspector, contract, skipSettingStatusInformation, GatherTestInformation.class.getSimpleName());
     }
 
     public int getNbFailingTests() {

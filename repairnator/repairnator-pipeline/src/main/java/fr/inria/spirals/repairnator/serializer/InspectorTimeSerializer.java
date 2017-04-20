@@ -10,6 +10,7 @@ import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.ResolveDependency;
 import fr.inria.spirals.repairnator.process.step.SquashRepository;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -55,9 +56,10 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
         int computeSourceDir = durations.getOrDefault(ComputeSourceDir.class.getSimpleName(), 0);
         int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
+        int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
 
         int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
-                computeClasspath + computeSourceDir + repair;
+                computeClasspath + computeSourceDir + repair + dependencyResolution;
 
         Build build = inspector.getBuild();
 
@@ -78,7 +80,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         dataCol.add(computeSourceDir);
         dataCol.add(repair);
         dataCol.add(inspector.getBuildToBeInspected().getRunId());
-
+        dataCol.add(dependencyResolution);
         return dataCol;
     }
 
@@ -95,9 +97,10 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
         int computeSourceDir = durations.getOrDefault(ComputeSourceDir.class.getSimpleName(), 0);
         int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
+        int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
 
         int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
-                computeClasspath + computeSourceDir + repair;
+                computeClasspath + computeSourceDir + repair + dependencyResolution;
 
         Build build = inspector.getBuild();
 
@@ -120,6 +123,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         result.addProperty("computeClasspath", computeClasspath);
         result.addProperty("computeSourceDir", computeSourceDir);
         result.addProperty("repair", repair);
+        result.addProperty("dependendencyResolution", dependencyResolution);
         result.addProperty("runId", inspector.getBuildToBeInspected().getRunId());
 
         return result;
