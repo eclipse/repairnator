@@ -13,6 +13,7 @@ import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
+import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -378,6 +379,7 @@ public class Launcher {
 
         List<AbstractNotifier> notifiers = new ArrayList<>();
         notifiers.add(new PatchNotifier(notifierEngines));
+        notifiers.add(new FixerBuildNotifier(notifierEngines));
 
         ProjectInspector inspector;
 
