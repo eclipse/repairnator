@@ -40,6 +40,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
             cloneRepo.setNextStep(new CheckoutBuild(this))
                     .setNextStep(new ResolveDependency(this))
+                    .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
@@ -53,6 +54,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutBuild(this))
                         .setNextStep(new ResolveDependency(this))
+                        .setNextStep(new ComputeClasspath(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))

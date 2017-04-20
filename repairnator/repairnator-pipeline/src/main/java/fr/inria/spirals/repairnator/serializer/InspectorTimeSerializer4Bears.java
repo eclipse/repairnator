@@ -48,11 +48,13 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         int gatherTestInformationPreviousBuildSourceCode = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
         int pushBuild = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
+        int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
+        int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
 
         int totalDuration = cloneRepository + checkoutBuild + buildProjectBuild + testProjectBuild + gatherTestInformationBuild +
                 checkoutPreviousBuild + buildProjectPreviousBuild + testProjectPreviousBuild + gatherTestInformationPreviousBuild +
                 checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode +
-                gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild;
+                gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild + computeClasspath + dependencyResolution;
 
         Build build = inspector.getBuild();
 
@@ -80,6 +82,8 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         dataCol.add(gatherTestInformationPreviousBuildSourceCode);
         dataCol.add(squashRepository);
         dataCol.add(pushBuild);
+        dataCol.add(computeClasspath);
+        dataCol.add(dependencyResolution);
 
         return dataCol;
     }
@@ -102,11 +106,13 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         int gatherTestInformationPreviousBuildSourceCode = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
         int pushBuild = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
+        int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
+        int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
 
         int totalDuration = cloneRepository + checkoutBuild + buildProjectBuild + testProjectBuild + gatherTestInformationBuild +
                 checkoutPreviousBuild + buildProjectPreviousBuild + testProjectPreviousBuild + gatherTestInformationPreviousBuild +
                 checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode +
-                gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild;
+                gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild + dependencyResolution + computeClasspath;
 
         Build build = inspector.getBuild();
 
@@ -137,6 +143,8 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         result.addProperty("gatherTestInformationPreviousBuildSourceCode", gatherTestInformationPreviousBuildSourceCode);
         result.addProperty("squashRepository", squashRepository);
         result.addProperty("push", pushBuild);
+        result.addProperty("dependendencyResolution", dependencyResolution);
+        result.addProperty("computeClasspath", computeClasspath);
         result.addProperty("runId", inspector.getBuildToBeInspected().getRunId());
 
         return result;

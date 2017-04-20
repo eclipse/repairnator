@@ -37,6 +37,8 @@ public abstract class AbstractDataSerializer extends Serializer {
             case PREVIOUSBUILDCODENOTCHECKEDOUT:
                 return "error in check out";
 
+            case DEPENDENCY_UNRESOLVABLE:
+            case DEPENDENCY_RESOLVED:
             case BUILDCHECKEDOUT:
             case PREVIOUSBUILDCHECKEDOUT:
             case PREVIOUSBUILDCODECHECKEDOUT:
