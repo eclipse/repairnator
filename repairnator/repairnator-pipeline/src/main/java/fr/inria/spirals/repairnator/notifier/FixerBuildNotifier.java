@@ -1,14 +1,11 @@
 package fr.inria.spirals.repairnator.notifier;
 
-import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
-import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.util.List;
 
