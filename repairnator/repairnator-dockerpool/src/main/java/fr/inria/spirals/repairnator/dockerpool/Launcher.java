@@ -255,7 +255,7 @@ public class Launcher {
 
             String imageId = null;
             for (Image image : allImages) {
-                if (image.repoTags().contains(this.arguments.getString("imageName"))) {
+                if (image.repoTags() != null && image.repoTags().contains(this.arguments.getString("imageName"))) {
                     imageId = image.id();
                     break;
                 }
