@@ -61,7 +61,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                 String repository = this.inspector.getRepoSlug();
                 this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
-                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this);
+                boolean onlySourceCode = (checkoutType == CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE);
+                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, onlySourceCode);
                 if (!successfulMerge) {
                     this.getLogger().debug("Error while merging two commits to reproduce the PR.");
                     this.shouldStop = true;
