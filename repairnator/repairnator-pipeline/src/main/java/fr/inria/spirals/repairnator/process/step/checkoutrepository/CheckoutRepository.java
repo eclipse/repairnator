@@ -92,6 +92,20 @@ public abstract class CheckoutRepository extends AbstractStep {
         this.writeProperty("nbCPU", Runtime.getRuntime().availableProcessors());
         this.writeProperty("freeMemory", Runtime.getRuntime().freeMemory());
         this.writeProperty("totalMemory", Runtime.getRuntime().totalMemory());
+
+        switch (this.getInspector().getBuildToBeInspected().getStatus()) {
+            case ONLY_FAIL:
+                this.writeProperty("bugType", "only_fail");
+                break;
+
+            case FAILING_AND_PASSING:
+                this.writeProperty("bugType", "failing_passing");
+                break;
+
+            case PASSING_AND_PASSING_WITH_TEST_CHANGES:
+                this.writeProperty("bugType", "passing_passing");
+                break;
+        }
     }
 
     protected CheckoutType getCheckoutType() {
