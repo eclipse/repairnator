@@ -255,24 +255,26 @@ public class ProjectScanner {
                 this.totalBuildInJavaFailing++;
 
                 for (Job job : build.getJobs()) {
-                    Log jobLog = job.getLog();
+                    if (job.getBuildStatus() == BuildStatus.FAILED) {
+                        Log jobLog = job.getLog();
 
-                    if (jobLog != null) {
-                        TestsInformation testInfo = jobLog.getTestsInformation();
+                        if (jobLog != null) {
+                            TestsInformation testInfo = jobLog.getTestsInformation();
 
-                        // testInfo can be null if the build tool is unknown
-                        if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
-                            this.totalBuildInJavaFailingWithFailingTests++;
-                            if (targetFailing) {
-                                this.slugs.add(repo.getSlug());
-                                this.repositories.add(repo);
-                                return true;
-                            } else {
-                                return false;
+                            // testInfo can be null if the build tool is unknown
+                            if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
+                                this.totalBuildInJavaFailingWithFailingTests++;
+                                if (targetFailing) {
+                                    this.slugs.add(repo.getSlug());
+                                    this.repositories.add(repo);
+                                    return true;
+                                } else {
+                                    return false;
+                                }
                             }
+                        } else {
+                            logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
                         }
-                    } else {
-                        logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
                     }
                 }
             } else if (build.getBuildStatus() == BuildStatus.PASSED) {
