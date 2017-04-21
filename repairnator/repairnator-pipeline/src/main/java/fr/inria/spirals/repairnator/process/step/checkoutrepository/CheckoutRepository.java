@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.PRInformation;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -86,6 +87,11 @@ public abstract class CheckoutRepository extends AbstractStep {
             this.addStepError("Error while getting the commit to checkout from the repo.");
             this.shouldStop = true;
         }
+
+        this.writeProperty("hostname", Utils.getHostname());
+        this.writeProperty("nbCPU", Runtime.getRuntime().availableProcessors());
+        this.writeProperty("freeMemory", Runtime.getRuntime().freeMemory());
+        this.writeProperty("totalMemory", Runtime.getRuntime().totalMemory());
     }
 
     protected CheckoutType getCheckoutType() {

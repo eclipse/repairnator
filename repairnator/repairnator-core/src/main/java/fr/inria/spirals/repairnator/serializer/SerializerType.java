@@ -18,7 +18,8 @@ public enum SerializerType {
     // scanner
     DETAILEDDATA("detailedData","Scanner Detailed Data!A1:K1"),
     SCANNER("scanner","Scanner Data!A1:N1"),
-    SCANNER4BEARS("scanner4bears","Scanner Data!A1:P1")
+    SCANNER4BEARS("scanner4bears","Scanner Data!A1:P1"),
+    HARDWARE_INFO("hardwareInfo","Hardware Info!A:V")
     ;
 
     private String filename;

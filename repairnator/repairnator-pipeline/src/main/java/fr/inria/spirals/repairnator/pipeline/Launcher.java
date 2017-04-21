@@ -20,6 +20,7 @@ import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
@@ -354,6 +355,9 @@ public class Launcher {
     private void mainProcess() throws IOException {
         LOGGER.info("Start by getting the build (buildId: "+this.buildId+") with the following config: "+this.config);
         this.getBuildToBeInspected();
+
+        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.config.getRunId(), this.buildId+"");
+        hardwareInfoSerializer.serialize();
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
