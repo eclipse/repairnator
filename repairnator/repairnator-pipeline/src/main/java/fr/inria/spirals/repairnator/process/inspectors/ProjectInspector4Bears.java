@@ -55,7 +55,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
                 cloneRepo.setNextStep(new CheckoutBuild(this))
                         .setNextStep(new ResolveDependency(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
-                        .setNextStep(new ComputeClasspath(this))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
                         .setNextStep(new CheckoutPreviousBuild(this))
