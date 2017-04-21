@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.PersonIdent;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +61,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                 String repository = this.inspector.getRepoSlug();
                 this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
-                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this);
+                boolean onlySourceCode = (checkoutType == CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE);
+                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, onlySourceCode);
                 if (!successfulMerge) {
                     this.getLogger().debug("Error while merging two commits to reproduce the PR.");
                     this.shouldStop = true;
@@ -74,6 +76,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                         git.checkout().setName(commitCheckout).call();
                     } else {
                         git.checkout().setStartPoint(commitCheckout).addPath("src/main/java").call();
+                        PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
+                        git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
                     }
                     this.writeProperty("bugRepo",this.inspector.getRepoSlug());
                     this.writeProperty("bugCommit", this.inspector.getBuild().getCommit().getCompareUrl());

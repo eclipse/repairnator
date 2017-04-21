@@ -267,7 +267,7 @@ public class GitHelper {
                 + " Reset hour: " + dateFormat.format(rateLimit.reset));
     }
 
-    public boolean mergeTwoCommitsForPR(Git git, Build build, PRInformation prInformation, String repository, AbstractStep step) {
+    public boolean mergeTwoCommitsForPR(Git git, Build build, PRInformation prInformation, String repository, AbstractStep step, boolean onlySourceCode) {
         try {
             String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getSlug() + ".git";
 
@@ -296,7 +296,15 @@ public class GitHelper {
             }
 
             this.getLogger().debug("Step " + step.getName() + " - Get the commit " + commitHeadSha + " for repo " + repository);
-            git.checkout().setName(commitHeadSha).call();
+
+            if (onlySourceCode) {
+                git.checkout().setName(commitHeadSha).addPath("src/main/java").call();
+                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
+                git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
+            } else {
+                git.checkout().setName(commitHeadSha).call();
+            }
+
 
             RevWalk revwalk = new RevWalk(git.getRepository());
             RevCommit revCommitBase = revwalk.lookupCommit(git.getRepository().resolve(commitBaseSha));
