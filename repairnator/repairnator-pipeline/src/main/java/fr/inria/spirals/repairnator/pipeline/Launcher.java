@@ -82,6 +82,7 @@ public class Launcher {
 
     private void initConfig() {
         this.config = RepairnatorConfig.getInstance();
+        this.config.setRunId(this.arguments.getString("runId"));
         this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
         this.config.setClean(true);
         this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
@@ -326,7 +327,7 @@ public class Launcher {
         Build build = BuildHelper.getBuildFromId(this.buildId, null);
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            this.buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, this.arguments.getString("runId"));
+            this.buildToBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, this.config.getRunId());
         } else {
             if (build.getBuildStatus() == BuildStatus.PASSED) {
                 Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
