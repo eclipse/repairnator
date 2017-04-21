@@ -61,9 +61,7 @@ public abstract class AbstractDataSerializer extends Serializer {
             case HASTESTERRORS:
                 return "test errors";
 
-            case CLASSPATHCOMPUTED:
             case SOURCEDIRCOMPUTED:
-            case CLASSPATHNOTCOMPUTED:
             case SOURCEDIRNOTCOMPUTED:
             case NOTPATCHED:
                 if (jobStatus.isReproducedAsFail()) {
@@ -81,6 +79,8 @@ public abstract class AbstractDataSerializer extends Serializer {
             case FIXERBUILDCASE2:
                 return "FIXERBUILD_CASE2";
 
+            case CLASSPATHCOMPUTED:
+            case CLASSPATHNOTCOMPUTED:
             case SQUASHED_REPO:
             case NOT_SQUASHED_REPO:
                 if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
