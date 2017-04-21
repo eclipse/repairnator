@@ -16,6 +16,7 @@ import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.EndProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
@@ -271,7 +272,11 @@ public class Launcher {
     }
 
     private void runPool() throws IOException {
-        EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, this.arguments.getString("runId"));
+        String runId = this.arguments.getString("runId");
+        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "dockerPool");
+        hardwareInfoSerializer.serialize();
+
+        EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, runId);
         List<Integer> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
 
