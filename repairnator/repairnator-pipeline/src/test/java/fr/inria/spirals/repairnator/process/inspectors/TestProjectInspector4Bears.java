@@ -91,4 +91,51 @@ public class TestProjectInspector4Bears {
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
     }
+
+    @Test
+    public void testPassingPassingProject() throws IOException {
+        int buildIdPassing = 201938881;
+        int buildIdPreviousPassing = 201938325;
+
+
+        Path tmpDirPath = Files.createTempDirectory("test_bears2");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        Build passingBuild = BuildHelper.getBuildFromId(buildIdPassing, null);
+        Build previousPassingBuild = BuildHelper.getBuildFromId(buildIdPreviousPassing, null);
+
+
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(passingBuild, previousPassingBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "test");
+
+        List<AbstractDataSerializer> serializers = new ArrayList<>();
+        List<AbstractNotifier> notifiers = new ArrayList<>();
+
+        List<SerializerEngine> serializerEngines = new ArrayList<>();
+        SerializerEngine serializerEngine = mock(SerializerEngine.class);
+        serializerEngines.add(serializerEngine);
+
+        List<NotifierEngine> notifierEngines = new ArrayList<>();
+        NotifierEngine notifierEngine = mock(NotifierEngine.class);
+        notifierEngines.add(notifierEngine);
+
+        serializers.add(new InspectorSerializer4Bears(serializerEngines));
+
+        notifiers.add(new FixerBuildNotifier(notifierEngines));
+
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.BEARS);
+
+        ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        inspector.run();
+
+        JobStatus jobStatus = inspector.getJobStatus();
+        assertThat(jobStatus.getState(), is(ProjectState.CLASSPATHCOMPUTED));
+        assertThat(inspector.isFixerBuildCase2(), is(true));
+        assertThat(jobStatus.getFailureLocations().size(), is(1));
+        assertThat(jobStatus.getFailureNames().size(), is(1));
+
+        verify(notifierEngine, times(1)).notify(anyString(), anyString());
+        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
+    }
 }
