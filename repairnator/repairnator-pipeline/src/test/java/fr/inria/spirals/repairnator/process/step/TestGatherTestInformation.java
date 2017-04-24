@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -16,6 +17,8 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -38,8 +41,14 @@ import static org.mockito.Mockito.when;
  */
 public class TestGatherTestInformation {
 
-    static {
+    @Before
+    public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+    }
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
     }
 
     @Test
@@ -53,6 +62,7 @@ public class TestGatherTestInformation {
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+        System.out.println("Dirpath : "+tmpDirPath);
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
@@ -105,6 +115,7 @@ public class TestGatherTestInformation {
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+        System.out.println("Dirpath : "+tmpDirPath);
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
@@ -166,6 +177,7 @@ public class TestGatherTestInformation {
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+        System.out.println("Dirpath : "+tmpDirPath);
 
         File repoDir = new File(tmpDir, "repo");
 
@@ -219,6 +231,7 @@ public class TestGatherTestInformation {
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+        System.out.println("Dirpath : "+tmpDirPath);
 
 
         File repoDir = new File(tmpDir, "repo");
@@ -269,6 +282,7 @@ public class TestGatherTestInformation {
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+        System.out.println("Dirpath : "+tmpDirPath);
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
 

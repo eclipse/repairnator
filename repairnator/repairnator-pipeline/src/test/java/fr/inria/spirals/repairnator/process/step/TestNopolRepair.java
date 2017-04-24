@@ -13,6 +13,8 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -33,7 +35,8 @@ public class TestNopolRepair {
     private static final String SOLVER_NAME_LINUX = "z3_for_linux";
     private static final String SOLVER_NAME_MAC = "z3_for_mac";
 
-    static {
+    @Before
+    public void setup() {
         String solverPath;
         if (isMac()) {
             solverPath = SOLVER_PATH_DIR+SOLVER_NAME_MAC;
@@ -44,6 +47,11 @@ public class TestNopolRepair {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(solverPath);
         Utils.setLoggersLevel(Level.ERROR);
+    }
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
     }
 
     public static boolean isMac() {
@@ -62,6 +70,7 @@ public class TestNopolRepair {
         Path tmpDirPath = Files.createTempDirectory("test_nopolrepair");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
+        System.out.println("Dirpath : "+tmpDirPath);
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
 

@@ -3,8 +3,11 @@ package fr.inria.spirals.repairnator.process.step;
 import ch.qos.logback.classic.Level;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Properties;
@@ -32,8 +35,14 @@ public class TestAbstractStep {
         }
     }
 
-    static {
+    @Before
+    public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+    }
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
     }
 
     @Test
