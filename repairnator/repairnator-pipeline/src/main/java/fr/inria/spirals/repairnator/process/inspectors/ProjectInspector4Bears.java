@@ -52,7 +52,9 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new PushIncriminatedBuild(this));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-                cloneRepo.setNextStep(new CheckoutPreviousBuildSourceCode(this))
+                cloneRepo.setNextStep(new CheckoutBuild(this))
+                        .setNextStep(new ComputeSourceDir(this))
+                        .setNextStep(new CheckoutPreviousBuildSourceCode(this))
                         .setNextStep(new ResolveDependency(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuildSourceCode"))
