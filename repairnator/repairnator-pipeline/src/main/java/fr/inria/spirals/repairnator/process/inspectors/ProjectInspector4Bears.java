@@ -76,6 +76,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.getSerializers());
+        firstStep.setNotifiers(this.getNotifiers());
         firstStep.setState(ProjectState.INIT);
 
         try {

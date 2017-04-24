@@ -133,4 +133,7 @@ public class ProjectInspector {
         this.checkoutType = checkoutType;
     }
 
+    public List<AbstractNotifier> getNotifiers() {
+        return notifiers;
+    }
 }
