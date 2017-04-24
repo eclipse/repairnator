@@ -68,23 +68,24 @@ public class ComputeSourceDir extends AbstractStep {
 
                 model = MavenHelper.readPomXml(parentPomXml, this.inspector.getM2LocalPath());
 
-                for (String module : model.getModules()) {
-                    File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent() + File.separator + module,
-                            false);
-                    if (srcDir != null) {
-                        result.addAll(Arrays.asList(srcDir));
-                    }
-                }
 
-                if (result.size() > 0) {
-                    return result.toArray(new File[result.size()]);
-                } else {
-                    return null;
-                }
             } else {
                 if (rootCall) {
-                    this.addStepError(
-                            "Source directory is not at default location or specified in build section and no parent can be found.");
+                    for (String module : model.getModules()) {
+                        File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
+                                false);
+                        if (srcDir != null) {
+                            result.addAll(Arrays.asList(srcDir));
+                        }
+                    }
+
+                    if (result.size() > 0) {
+                        return result.toArray(new File[result.size()]);
+                    } else {
+                        this.addStepError(
+                                "Source directory is not at default location or specified in build section and no parent can be found.");
+                        return null;
+                    }
                 }
             }
 

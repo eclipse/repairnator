@@ -83,4 +83,127 @@ public class TestComputeSourceDir {
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/src/main/java")}));
     }
+
+    @Test
+    public void testComputeSourceDirWithMultiModuleProject() throws IOException {
+        int buildId = 225251586; // Spirals-Team/librepair build
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.setFailingModulePath(repoDir.getAbsolutePath()+"/test-projects");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+
+        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.execute();
+
+        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
+    }
+
+    @Test
+    public void testComputeSourceDirWithMultiModuleProject2() throws IOException {
+        int buildId = 225251586; // Spirals-Team/librepair build
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.setFailingModulePath(repoDir.getAbsolutePath()+"/a-module");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+
+        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.execute();
+
+        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder")}));
+    }
+
+    @Test
+    public void testComputeSourceDirWithMultiModuleProject3() throws IOException {
+        int buildId = 225251586; // Spirals-Team/librepair build
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+
+        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.execute();
+
+        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder"), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
+    }
 }
