@@ -28,12 +28,12 @@ class RepositoryModelResolver implements ModelResolver {
     private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2";
     private static final Logger logger = LoggerFactory.getLogger(RepositoryModelResolver.class);
     private File localRepository;
+    private String consideredModulePath;
 
     private List<Repository> repositories = new ArrayList<Repository>();
 
     RepositoryModelResolver(String localRepository) {
         this.localRepository = new File(localRepository);
-
         Repository mainRepo = new Repository();
         mainRepo.setUrl(MAVEN_CENTRAL_URL);
         mainRepo.setId("central");
