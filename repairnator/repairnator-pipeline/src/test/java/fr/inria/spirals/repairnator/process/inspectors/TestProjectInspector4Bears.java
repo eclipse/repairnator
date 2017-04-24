@@ -15,6 +15,8 @@ import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,6 +39,11 @@ import static org.mockito.Mockito.verify;
  * Created by urli on 24/04/2017.
  */
 public class TestProjectInspector4Bears {
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
+    }
 
     @Test
     public void testFailingPassingProject() throws IOException {

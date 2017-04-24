@@ -15,6 +15,8 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -33,8 +35,14 @@ import static org.mockito.Mockito.when;
  */
 public class TestCloneRepositoryStep {
 
-    static {
+    @Before
+    public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+    }
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
     }
 
     @Test

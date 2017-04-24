@@ -18,6 +18,9 @@ import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -45,7 +48,8 @@ public class TestProjectInspector {
     private static final String SOLVER_NAME_LINUX = "z3_for_linux";
     private static final String SOLVER_NAME_MAC = "z3_for_mac";
 
-    static {
+    @Before
+    public void setUp() {
         String solverPath;
         if (isMac()) {
             solverPath = SOLVER_PATH_DIR+SOLVER_NAME_MAC;
@@ -60,7 +64,12 @@ public class TestProjectInspector {
 
     public static boolean isMac() {
         String OS = System.getProperty("os.name").toLowerCase();
-        return (OS.indexOf("mac") >= 0);
+        return (OS.contains("mac"));
+    }
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
     }
 
     @Test

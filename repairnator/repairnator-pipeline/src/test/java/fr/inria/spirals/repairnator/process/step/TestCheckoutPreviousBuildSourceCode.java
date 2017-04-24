@@ -19,6 +19,8 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -39,8 +41,14 @@ import static org.mockito.Mockito.when;
  * Created by urli on 21/04/2017.
  */
 public class TestCheckoutPreviousBuildSourceCode {
-    static {
+    @Before
+    public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+    }
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
     }
 
     @Test
@@ -48,9 +56,6 @@ public class TestCheckoutPreviousBuildSourceCode {
         int buildId = 221992429; // INRIA/spoon
         int previousBuildId = 218213030;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
-
-        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
-        repairnatorConfig.setClean(false);
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
@@ -62,7 +67,7 @@ public class TestCheckoutPreviousBuildSourceCode {
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
 
-        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        Path tmpDirPath = Files.createTempDirectory("test_checkoutprevious");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -144,9 +149,6 @@ public class TestCheckoutPreviousBuildSourceCode {
         int previousBuildId = 222016611;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
-        repairnatorConfig.setClean(false);
-
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
@@ -157,7 +159,7 @@ public class TestCheckoutPreviousBuildSourceCode {
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
 
-        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        Path tmpDirPath = Files.createTempDirectory("test_checkoutprevious");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -239,9 +241,6 @@ public class TestCheckoutPreviousBuildSourceCode {
         int previousBuildId = 222209171;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
-        repairnatorConfig.setClean(false);
-
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
@@ -252,7 +251,7 @@ public class TestCheckoutPreviousBuildSourceCode {
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(true));
 
-        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        Path tmpDirPath = Files.createTempDirectory("test_checkoutprevious");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 

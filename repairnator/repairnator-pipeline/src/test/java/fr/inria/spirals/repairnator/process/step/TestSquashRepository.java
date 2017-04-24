@@ -16,6 +16,8 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuil
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,8 +39,14 @@ import static org.mockito.Mockito.when;
  */
 public class TestSquashRepository {
 
-    static {
+    @Before
+    public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+    }
+
+    @After
+    public void tearDown() {
+        RepairnatorConfig.deleteInstance();
     }
 
     @Test

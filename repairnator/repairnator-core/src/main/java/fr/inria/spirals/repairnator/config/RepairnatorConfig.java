@@ -29,6 +29,12 @@ public class RepairnatorConfig {
     public void readFromFile() throws RepairnatorConfigException {
         RepairnatorConfigReader configReader = new RepairnatorConfigReader();
         configReader.readConfigFile(this);
+
+    }
+
+    // for test purpose
+    public static void deleteInstance() {
+        instance = null;
     }
 
     public static RepairnatorConfig getInstance() {
