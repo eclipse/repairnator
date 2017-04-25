@@ -37,6 +37,7 @@ public class JobStatus {
         this.stepsDurationsInSeconds = new HashMap<>();
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
+        this.repairSourceDir = new File[]{new File("src/main/java")};
     }
 
     public ProjectState getState() {
