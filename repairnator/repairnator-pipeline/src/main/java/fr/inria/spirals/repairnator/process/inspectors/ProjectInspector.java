@@ -99,7 +99,7 @@ public class ProjectInspector {
     }
 
     public void run() {
-        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
+        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo.setNextStep(new CheckoutBuggyBuild(this))
                     .setNextStep(new ResolveDependency(this))
