@@ -20,9 +20,9 @@ public class CheckoutBuggyBuild extends CheckoutRepository {
         super.businessExecute();
 
         if (this.shouldStop) {
-            this.setState(ProjectState.PREVIOUSBUILDNOTCHECKEDOUT);
+            this.setState(ProjectState.BUILDNOTCHECKEDOUT);
         } else {
-            this.setState(ProjectState.PREVIOUSBUILDCHECKEDOUT);
+            this.setState(ProjectState.BUILDCHECKEDOUT);
             inspector.setCheckoutType(getCheckoutType());
         }
     }

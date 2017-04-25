@@ -33,14 +33,14 @@ public abstract class AbstractDataSerializer extends Serializer {
 
             case CLONABLE:
             case BUILDNOTCHECKEDOUT:
-            case PREVIOUSBUILDNOTCHECKEDOUT:
+            case PATCHEDBUILDNOTCHECKEDOUT:
             case PREVIOUSBUILDCODENOTCHECKEDOUT:
                 return "error in check out";
 
             case DEPENDENCY_UNRESOLVABLE:
             case DEPENDENCY_RESOLVED:
             case BUILDCHECKEDOUT:
-            case PREVIOUSBUILDCHECKEDOUT:
+            case PATCHEDBUILDCHECKEDOUT:
             case PREVIOUSBUILDCODECHECKEDOUT:
             case NOTBUILDABLE:
                 return "not buildable";

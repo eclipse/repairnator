@@ -51,7 +51,7 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuild() throws IOException, GitAPIException, RepairnatorConfigException {
+    public void testCheckoutBuggyBuild() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
