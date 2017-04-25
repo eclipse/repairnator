@@ -59,7 +59,7 @@ public class TestProjectInspector {
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(solverPath);
-        //Utils.setLoggersLevel(Level.ERROR);
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     public static boolean isMac() {
