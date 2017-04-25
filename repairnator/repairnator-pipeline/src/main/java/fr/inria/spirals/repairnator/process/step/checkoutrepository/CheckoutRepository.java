@@ -34,7 +34,7 @@ public abstract class CheckoutRepository extends AbstractStep {
             GitHelper gitHelper = this.getInspector().getGitHelper();
             git = Git.open(new File(inspector.getRepoLocalPath()));
             Build build;
-            if (checkoutType == CheckoutType.CHECKOUT_BUILD) {
+            if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
                 build = inspector.getPatchedBuild();
             } else {
                 build = inspector.getBuggyBuild();
@@ -44,7 +44,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                 PRInformation prInformation = build.getPRInformation();
 
                 if (prInformation != null) {
-                    if (checkoutType == CheckoutType.CHECKOUT_BUILD) {
+                    if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
                         this.writeProperty("is-pr", "true");
                         this.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getSlug());
                         this.writeProperty("pr-head-commit-id", prInformation.getHead().getSha());

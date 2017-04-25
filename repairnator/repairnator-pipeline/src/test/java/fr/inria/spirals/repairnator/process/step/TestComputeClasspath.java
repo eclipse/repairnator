@@ -11,7 +11,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +77,7 @@ public class TestComputeClasspath {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeClasspath);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeClasspath);
         cloneStep.execute();
 
         assertThat(computeClasspath.shouldStop, is(false));

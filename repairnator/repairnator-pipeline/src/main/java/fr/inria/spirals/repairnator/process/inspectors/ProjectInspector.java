@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
@@ -111,7 +111,7 @@ public class ProjectInspector {
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this))
-                    .setNextStep(new CheckoutBuild(this))
+                    .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true));

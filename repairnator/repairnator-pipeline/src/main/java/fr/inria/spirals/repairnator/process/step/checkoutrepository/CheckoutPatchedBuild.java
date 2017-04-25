@@ -6,16 +6,16 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 /**
  * Created by fernanda on 02/03/17.
  */
-public class CheckoutBuild extends CheckoutRepository {
+public class CheckoutPatchedBuild extends CheckoutRepository {
 
-    public CheckoutBuild(ProjectInspector inspector) {
+    public CheckoutPatchedBuild(ProjectInspector inspector) {
         super(inspector);
     }
 
     protected void businessExecute() {
         this.getLogger().debug("Checking out build...");
 
-        super.setCheckoutType(CheckoutType.CHECKOUT_BUILD);
+        super.setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);
 
         super.businessExecute();
 

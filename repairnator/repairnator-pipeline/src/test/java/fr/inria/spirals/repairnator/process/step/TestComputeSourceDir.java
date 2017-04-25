@@ -11,7 +11,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +75,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.shouldStop, is(false));
@@ -115,7 +116,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.shouldStop, is(false));
@@ -156,7 +157,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.shouldStop, is(false));
@@ -197,7 +198,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.shouldStop, is(false));

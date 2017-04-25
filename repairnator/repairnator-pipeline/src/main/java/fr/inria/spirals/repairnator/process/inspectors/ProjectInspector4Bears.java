@@ -5,7 +5,7 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.step.*;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildSourceCode;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
@@ -46,7 +46,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this))
-                    .setNextStep(new CheckoutBuild(this))
+                    .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
@@ -54,7 +54,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new PushIncriminatedBuild(this));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-                cloneRepo.setNextStep(new CheckoutBuild(this))
+                cloneRepo.setNextStep(new CheckoutPatchedBuild(this))
                         .setNextStep(new ComputeSourceDir(this))
                         .setNextStep(new CheckoutBuggyBuildSourceCode(this))
                         .setNextStep(new ResolveDependency(this))
@@ -63,7 +63,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new ComputeClasspath(this))
                         .setNextStep(new NopolRepair(this))
-                        .setNextStep(new CheckoutBuild(this))
+                        .setNextStep(new CheckoutPatchedBuild(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))

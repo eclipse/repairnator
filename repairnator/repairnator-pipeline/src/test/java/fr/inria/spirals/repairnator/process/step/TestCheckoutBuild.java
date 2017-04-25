@@ -12,7 +12,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -77,15 +78,15 @@ public class TestCheckoutBuild {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.setNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
+        assertThat(checkoutBuggyBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
         assertThat(jobStatus.getState(), is(ProjectState.BUILDCHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuggyBuild.shouldStop, is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
         Iterable<RevCommit> logs = gitDir.log().call();
@@ -133,15 +134,15 @@ public class TestCheckoutBuild {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.setNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
+        assertThat(checkoutBuggyBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
         assertThat(jobStatus.getState(), is(ProjectState.BUILDCHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuggyBuild.shouldStop, is(false));
     }
 
     @Test
@@ -169,15 +170,15 @@ public class TestCheckoutBuild {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.setNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
         // cannot get the PR information so it stop now
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
+        assertThat(checkoutBuggyBuild.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
         assertThat(jobStatus.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(true));
+        assertThat(checkoutBuggyBuild.shouldStop, is(true));
     }
 }

@@ -22,7 +22,7 @@ public class CheckoutBuggyBuildSourceCode extends CheckoutRepository {
             return;
         }
 
-        super.setCheckoutType(CheckoutType.CHECKOUT_BUILD);
+        super.setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);
 
         super.businessExecute();
 

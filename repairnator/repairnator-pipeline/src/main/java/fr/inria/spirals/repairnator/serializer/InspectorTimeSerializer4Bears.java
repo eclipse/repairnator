@@ -6,7 +6,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.*;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildSourceCode;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -34,7 +34,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         int cloneRepository = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
-        int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
+        int checkoutBuild = durations.getOrDefault(CheckoutPatchedBuild.class.getSimpleName(), 0);
         int buildProjectBuild = durations.getOrDefault(BuildProject.class.getSimpleName()+"Build", 0);
         int testProjectBuild = durations.getOrDefault(TestProject.class.getSimpleName()+"Build", 0);
         int gatherTestInformationBuild = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"Build", 0);
@@ -92,7 +92,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         int cloneRepository = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
-        int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
+        int checkoutBuild = durations.getOrDefault(CheckoutPatchedBuild.class.getSimpleName(), 0);
         int buildProjectBuild = durations.getOrDefault(BuildProject.class.getSimpleName()+"Build", 0);
         int testProjectBuild = durations.getOrDefault(TestProject.class.getSimpleName()+"Build", 0);
         int gatherTestInformationBuild = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"Build", 0);

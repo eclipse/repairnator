@@ -11,7 +11,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class TestBuildProject {
         BuildProject buildStep = new BuildProject(inspector);
 
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(buildStep);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(buildStep);
         cloneStep.execute();
 
         assertThat(buildStep.shouldStop, is(false));
@@ -102,7 +103,7 @@ public class TestBuildProject {
         CloneRepository cloneStep = new CloneRepository(inspector);
         BuildProject buildStep = new BuildProject(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(buildStep);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(buildStep);
         cloneStep.execute();
 
         assertThat(buildStep.shouldStop, is(false));

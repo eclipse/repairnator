@@ -11,7 +11,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -83,7 +84,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
@@ -136,7 +137,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
@@ -199,7 +200,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
@@ -253,7 +254,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(true));
@@ -301,7 +302,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldPass(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
