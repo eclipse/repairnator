@@ -82,7 +82,7 @@ public class TestProjectInspector {
 
         Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
 
-        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, ScannedBuildStatus.ONLY_FAIL, "test");
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
         List<AbstractNotifier> notifiers = new ArrayList<>();
