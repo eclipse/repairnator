@@ -106,7 +106,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                         git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
                     }
                     this.writeProperty("bugRepo",this.inspector.getRepoSlug());
-                    this.writeProperty("bugCommit", this.inspector.getPatchedBuild().getCommit().getCompareUrl());
+                    this.writeProperty("bugCommit", this.inspector.getBuggyBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
                     this.shouldStop = true;

@@ -276,7 +276,7 @@ public class Launcher {
 
         if (buildsToBeInspected != null) {
             for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-                Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getPatchedBuild().getRepository().getSlug() + ":" + buildToBeInspected.getPatchedBuild().getId());
+                Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
             }
 
             this.processOutput(buildsToBeInspected);
@@ -293,7 +293,7 @@ public class Launcher {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
                 for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-                    writer.write(buildToBeInspected.getPatchedBuild().getId() + "");
+                    writer.write(buildToBeInspected.getBuggyBuild().getId() + "");
                     writer.newLine();
                     writer.flush();
                 }
@@ -306,7 +306,7 @@ public class Launcher {
         }
 
         for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-            System.out.println(buildToBeInspected.getPatchedBuild().getId());
+            System.out.println(buildToBeInspected.getBuggyBuild().getId());
         }
     }
 

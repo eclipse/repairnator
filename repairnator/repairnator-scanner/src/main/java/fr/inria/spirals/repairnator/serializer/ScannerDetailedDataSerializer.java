@@ -25,7 +25,7 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
     }
 
     private List<Object> serializeAsList(BuildToBeInspected buildToBeInspected) {
-        Build build = buildToBeInspected.getPatchedBuild();
+        Build build = buildToBeInspected.getBuggyBuild();
 
         Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
@@ -52,7 +52,7 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
     private JsonElement serializeAsJson(BuildToBeInspected buildToBeInspected) {
         JsonObject result = new JsonObject();
 
-        Build build = buildToBeInspected.getPatchedBuild();
+        Build build = buildToBeInspected.getBuggyBuild();
 
         Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;

@@ -71,7 +71,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, previousBuild, status, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(previousBuild, build, status, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
@@ -255,7 +255,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, previousBuild, status, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(previousBuild, build, status, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());

@@ -61,7 +61,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
                 computeClasspath + computeSourceDir + repair + dependencyResolution;
 
-        Build build = inspector.getPatchedBuild();
+        Build build = inspector.getBuggyBuild();
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
@@ -102,7 +102,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
                 computeClasspath + computeSourceDir + repair + dependencyResolution;
 
-        Build build = inspector.getPatchedBuild();
+        Build build = inspector.getBuggyBuild();
 
         JsonObject result = new JsonObject();
 

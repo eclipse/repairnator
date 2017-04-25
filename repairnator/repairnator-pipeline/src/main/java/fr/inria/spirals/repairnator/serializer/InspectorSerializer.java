@@ -37,7 +37,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
     private List<Object> serializeAsList(ProjectInspector inspector) {
         JobStatus jobStatus = inspector.getJobStatus();
         BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
-        Build build = inspector.getPatchedBuild();
+        Build build = inspector.getBuggyBuild();
 
         String state = this.getPrettyPrintState(inspector);
 
@@ -64,7 +64,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
     private JsonElement serializeAsJson(ProjectInspector inspector) {
         JobStatus jobStatus = inspector.getJobStatus();
         BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
-        Build build = inspector.getPatchedBuild();
+        Build build = inspector.getBuggyBuild();
 
         String state = this.getPrettyPrintState(inspector);
 

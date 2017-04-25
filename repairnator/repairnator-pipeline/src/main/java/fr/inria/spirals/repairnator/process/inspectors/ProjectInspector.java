@@ -43,7 +43,7 @@ public class ProjectInspector {
         this.buildToBeInspected = buildToBeInspected;
 
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getPatchedBuild().getId();
+        this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuggyBuild().getId();
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
         this.gitHelper = new GitHelper();
@@ -84,7 +84,7 @@ public class ProjectInspector {
     }
 
     public String getRepoSlug() {
-        return this.buildToBeInspected.getPatchedBuild().getRepository().getSlug();
+        return this.buildToBeInspected.getBuggyBuild().getRepository().getSlug();
     }
 
     public String getRepoLocalPath() {
@@ -93,9 +93,9 @@ public class ProjectInspector {
 
     public String getRemoteBranchName() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
-        String formattedDate = dateFormat.format(this.getPatchedBuild().getFinishedAt());
+        String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
 
-        return this.getRepoSlug().replace('/', '-') + '-' + this.getPatchedBuild().getId() + '-' + formattedDate;
+        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
     }
 
     public void run() {

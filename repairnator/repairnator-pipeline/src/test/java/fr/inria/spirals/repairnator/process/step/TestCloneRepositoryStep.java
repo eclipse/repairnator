@@ -62,7 +62,7 @@ public class TestCloneRepositoryStep {
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getPatchedBuild()).thenReturn(build);
+        when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");

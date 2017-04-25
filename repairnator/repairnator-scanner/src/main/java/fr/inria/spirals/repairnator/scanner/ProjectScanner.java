@@ -216,7 +216,7 @@ public class ProjectScanner {
     public BuildToBeInspected getBuildToBeInspected(Build build, boolean targetFailing) {
         if (testBuild(build, targetFailing)) {
             if (this.launcherMode == LauncherMode.REPAIR) {
-                return new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, this.runId);
+                return new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, this.runId);
             } else {
                 Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
                 if (previousBuild != null) {
@@ -225,11 +225,11 @@ public class ProjectScanner {
 
                     if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
                         this.totalNumberOfFailingAndPassingBuildPairs++;
-                        return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.FAILING_AND_PASSING, this.runId);
+                        return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.FAILING_AND_PASSING, this.runId);
                     } else {
                         if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaFile(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
                             this.totalNumberOfPassingAndPassingBuildPairs++;
-                            return new BuildToBeInspected(build, previousBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.runId);
+                            return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.runId);
                         } else {
                             this.logger.debug("The pair of builds is not interesting.");
                         }
