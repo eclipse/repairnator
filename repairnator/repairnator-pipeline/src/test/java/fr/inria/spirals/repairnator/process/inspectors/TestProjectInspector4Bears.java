@@ -109,7 +109,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
+        assertThat(jobStatus.getState(), is(ProjectState.FIXERBUILDCASE1));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
@@ -156,7 +156,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
+        assertThat(jobStatus.getState(), is(ProjectState.FIXERBUILDCASE2));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
