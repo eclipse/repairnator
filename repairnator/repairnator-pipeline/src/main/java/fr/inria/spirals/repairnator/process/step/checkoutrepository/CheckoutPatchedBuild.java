@@ -15,16 +15,24 @@ public class CheckoutPatchedBuild extends CheckoutRepository {
     protected void businessExecute() {
         this.getLogger().debug("Checking out build...");
 
-        super.setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);
+        if (this.getInspector().getPatchedBuild() != null) {
+            super.setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);
 
-        super.businessExecute();
+            super.businessExecute();
 
-        if (this.shouldStop) {
-            this.setState(ProjectState.PATCHEDBUILDNOTCHECKEDOUT);
+            if (this.shouldStop) {
+                this.setState(ProjectState.PATCHEDBUILDNOTCHECKEDOUT);
+            } else {
+                this.setState(ProjectState.PATCHEDBUILDCHECKEDOUT);
+                inspector.setCheckoutType(getCheckoutType());
+            }
         } else {
-            this.setState(ProjectState.PATCHEDBUILDCHECKEDOUT);
-            inspector.setCheckoutType(getCheckoutType());
+            this.addStepError("There is no patched build retrieved. This will stop now.");
+            this.shouldStop = true;
+            this.setState(ProjectState.PATCHEDBUILDNOTCHECKEDOUT);
         }
+
+
     }
 
 }

@@ -33,9 +33,24 @@ public abstract class AbstractDataSerializer extends Serializer {
 
             case CLONABLE:
             case BUILDNOTCHECKEDOUT:
-            case PATCHEDBUILDNOTCHECKEDOUT:
             case PREVIOUSBUILDCODENOTCHECKEDOUT:
-                return "error in check out";
+                return "error in patch check out";
+
+            case PATCHEDBUILDNOTCHECKEDOUT:
+                if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
+                    return "error in patch check out";
+                } else {
+                    if (jobStatus.isHasBeenPatched()) {
+                        return "PATCHED";
+                    } else {
+                        if (jobStatus.isReproducedAsFail()) {
+                            return "test failure";
+                        } else {
+                            return "test errors";
+                        }
+                    }
+                }
+
 
             case DEPENDENCY_UNRESOLVABLE:
             case DEPENDENCY_RESOLVED:

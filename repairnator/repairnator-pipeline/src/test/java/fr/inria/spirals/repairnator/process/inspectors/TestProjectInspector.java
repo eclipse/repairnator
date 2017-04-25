@@ -59,7 +59,7 @@ public class TestProjectInspector {
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(solverPath);
-        Utils.setLoggersLevel(Level.ERROR);
+        //Utils.setLoggersLevel(Level.ERROR);
     }
 
     public static boolean isMac() {
@@ -107,7 +107,7 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.PATCHED));
+        assertThat(jobStatus.getState(), is(ProjectState.PATCHEDBUILDNOTCHECKEDOUT));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
 
