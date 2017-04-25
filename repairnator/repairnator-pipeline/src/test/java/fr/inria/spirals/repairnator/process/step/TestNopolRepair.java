@@ -72,7 +72,7 @@ public class TestNopolRepair {
         tmpDir.deleteOnExit();
         System.out.println("Dirpath : "+tmpDirPath);
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 

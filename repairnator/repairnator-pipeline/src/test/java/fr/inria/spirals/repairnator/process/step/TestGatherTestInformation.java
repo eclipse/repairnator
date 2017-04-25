@@ -65,7 +65,7 @@ public class TestGatherTestInformation {
         System.out.println("Dirpath : "+tmpDirPath);
 
         File repoDir = new File(tmpDir, "repo");
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
@@ -118,7 +118,7 @@ public class TestGatherTestInformation {
         System.out.println("Dirpath : "+tmpDirPath);
 
         File repoDir = new File(tmpDir, "repo");
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
@@ -181,7 +181,7 @@ public class TestGatherTestInformation {
 
         File repoDir = new File(tmpDir, "repo");
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
@@ -236,7 +236,7 @@ public class TestGatherTestInformation {
 
         File repoDir = new File(tmpDir, "repo");
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
@@ -284,7 +284,7 @@ public class TestGatherTestInformation {
         tmpDir.deleteOnExit();
         System.out.println("Dirpath : "+tmpDirPath);
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
