@@ -12,6 +12,9 @@ import org.eclipse.jgit.lib.PersonIdent;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fernanda on 02/03/17.
@@ -61,8 +64,21 @@ public abstract class CheckoutRepository extends AbstractStep {
                 String repository = this.inspector.getRepoSlug();
                 this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
-                boolean onlySourceCode = (checkoutType == CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE);
-                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, onlySourceCode);
+                List<String> pathes;
+                if (checkoutType == CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE) {
+                    pathes = new ArrayList<String>();
+                    for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
+                        URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
+                        URI pathURI = path.getCanonicalFile().toURI();
+                        String relativePath = gitRepoURI.relativize(pathURI).getPath();
+
+                        pathes.add(relativePath);
+                    }
+                } else {
+                    pathes = null;
+                }
+
+                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, pathes);
                 if (!successfulMerge) {
                     this.getLogger().debug("Error while merging two commits to reproduce the PR.");
                     this.shouldStop = true;
@@ -75,7 +91,17 @@ public abstract class CheckoutRepository extends AbstractStep {
                     if (checkoutType != CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE) {
                         git.checkout().setName(commitCheckout).call();
                     } else {
-                        git.checkout().setStartPoint(commitCheckout).addPath("src/main/java").call();
+
+                        List<String> pathes = new ArrayList<String>();
+                        for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
+                            URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
+                            URI pathURI = path.getCanonicalFile().toURI();
+                            String relativePath = gitRepoURI.relativize(pathURI).getPath();
+
+                            pathes.add(relativePath);
+                        }
+                        git.checkout().setStartPoint(commitCheckout).addPaths(pathes).call();
+
                         PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                         git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
                     }

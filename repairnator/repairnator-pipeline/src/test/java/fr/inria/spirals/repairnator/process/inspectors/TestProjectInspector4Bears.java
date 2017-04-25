@@ -1,11 +1,13 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherMode;
 import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
@@ -17,6 +19,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -39,6 +42,11 @@ import static org.mockito.Mockito.verify;
  * Created by urli on 24/04/2017.
  */
 public class TestProjectInspector4Bears {
+
+    @Before
+    public void setup() {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
 
     @After
     public void tearDown() {

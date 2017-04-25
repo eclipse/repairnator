@@ -260,7 +260,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.NOTFAILING));
         assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
 
-        assertThat(jobStatus.getFailingModulePath(), nullValue());
+        assertThat(jobStatus.getFailingModulePath(), is(tmpDir.getAbsolutePath()+"/repo"));
         assertThat(gatherTestInformation.getNbTotalTests(), is(1));
         assertThat(gatherTestInformation.getNbFailingTests(), is(0));
         assertThat(gatherTestInformation.getNbErroringTests(), is(0));
@@ -308,7 +308,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getState(), is(ProjectState.NOTFAILING));
         assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
 
-        assertThat(jobStatus.getFailingModulePath(), nullValue());
+        assertThat(jobStatus.getFailingModulePath(), is(tmpDir.getAbsolutePath()+"/repo"));
         assertThat(gatherTestInformation.getNbTotalTests(), is(1));
         assertThat(gatherTestInformation.getNbFailingTests(), is(0));
         assertThat(gatherTestInformation.getNbErroringTests(), is(0));
