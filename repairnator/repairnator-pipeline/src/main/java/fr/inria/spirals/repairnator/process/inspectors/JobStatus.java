@@ -38,6 +38,7 @@ public class JobStatus {
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
         this.repairSourceDir = new File[]{new File("src/main/java")};
+        this.failingModulePath = pomDirPath;
     }
 
     public ProjectState getState() {

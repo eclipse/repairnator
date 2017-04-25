@@ -12,6 +12,7 @@ import org.eclipse.jgit.lib.PersonIdent;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +69,11 @@ public abstract class CheckoutRepository extends AbstractStep {
                 if (checkoutType == CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE) {
                     pathes = new ArrayList<String>();
                     for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
-                        pathes.add(git.getRepository().getDirectory().toURI().relativize(path.toURI()).getPath());
+                        URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
+                        URI pathURI = path.getCanonicalFile().toURI();
+                        String relativePath = gitRepoURI.relativize(pathURI).getPath();
+
+                        pathes.add(relativePath);
                     }
                 } else {
                     pathes = null;
@@ -90,7 +95,11 @@ public abstract class CheckoutRepository extends AbstractStep {
 
                         List<String> pathes = new ArrayList<String>();
                         for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
-                            pathes.add(git.getRepository().getDirectory().toURI().relativize(path.toURI()).getPath());
+                            URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
+                            URI pathURI = path.getCanonicalFile().toURI();
+                            String relativePath = gitRepoURI.relativize(pathURI).getPath();
+
+                            pathes.add(relativePath);
                         }
                         git.checkout().setStartPoint(commitCheckout).addPaths(pathes).call();
 
