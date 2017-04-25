@@ -105,7 +105,7 @@ public class ComputeSourceDir extends AbstractStep {
         if (sources == null) {
             this.addStepError("Fail to find the sources directory.");
             this.setState(ProjectState.SOURCEDIRNOTCOMPUTED);
-            this.shouldStop = true;
+            this.inspector.getJobStatus().setRepairSourceDir(null);
         } else {
             this.inspector.getJobStatus().setRepairSourceDir(sources);
             this.setState(ProjectState.SOURCEDIRCOMPUTED);

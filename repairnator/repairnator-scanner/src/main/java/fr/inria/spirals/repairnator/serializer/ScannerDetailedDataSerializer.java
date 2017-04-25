@@ -25,9 +25,9 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
     }
 
     private List<Object> serializeAsList(BuildToBeInspected buildToBeInspected) {
-        Build build = buildToBeInspected.getBuild();
+        Build build = buildToBeInspected.getPatchedBuild();
 
-        Build previousBuild = buildToBeInspected.getPreviousBuild();
+        Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
         String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
 
@@ -52,9 +52,9 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
     private JsonElement serializeAsJson(BuildToBeInspected buildToBeInspected) {
         JsonObject result = new JsonObject();
 
-        Build build = buildToBeInspected.getBuild();
+        Build build = buildToBeInspected.getPatchedBuild();
 
-        Build previousBuild = buildToBeInspected.getPreviousBuild();
+        Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
         String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
         Date date = new Date();

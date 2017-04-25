@@ -12,7 +12,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuildSourceCode;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildSourceCode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by urli on 21/04/2017.
  */
-public class TestCheckoutPreviousBuildSourceCode {
+public class TestCheckoutBuggyBuildSourceCode {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
@@ -77,15 +77,15 @@ public class TestCheckoutPreviousBuildSourceCode {
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
-        when(inspector.getPreviousBuild()).thenReturn(previousBuild);
+        when(inspector.getPatchedBuild()).thenReturn(build);
+        when(inspector.getBuggyBuild()).thenReturn(previousBuild);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutPreviousBuildSourceCode checkoutBuild = new CheckoutPreviousBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
@@ -169,15 +169,15 @@ public class TestCheckoutPreviousBuildSourceCode {
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
-        when(inspector.getPreviousBuild()).thenReturn(previousBuild);
+        when(inspector.getPatchedBuild()).thenReturn(build);
+        when(inspector.getBuggyBuild()).thenReturn(previousBuild);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutPreviousBuildSourceCode checkoutBuild = new CheckoutPreviousBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
@@ -261,15 +261,15 @@ public class TestCheckoutPreviousBuildSourceCode {
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
-        when(inspector.getPreviousBuild()).thenReturn(previousBuild);
+        when(inspector.getPatchedBuild()).thenReturn(build);
+        when(inspector.getBuggyBuild()).thenReturn(previousBuild);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutPreviousBuildSourceCode checkoutBuild = new CheckoutPreviousBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();

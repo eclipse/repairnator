@@ -25,7 +25,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +61,7 @@ public class TestTestProject {
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getPatchedBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
@@ -99,7 +98,7 @@ public class TestTestProject {
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getPatchedBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
@@ -136,7 +135,7 @@ public class TestTestProject {
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getPatchedBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 

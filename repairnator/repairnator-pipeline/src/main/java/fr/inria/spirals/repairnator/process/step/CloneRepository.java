@@ -18,7 +18,7 @@ public class CloneRepository extends AbstractStep {
 
     public CloneRepository(ProjectInspector inspector) {
         super(inspector);
-        this.build = inspector.getBuild();
+        this.build = inspector.getPatchedBuild();
     }
 
     protected void businessExecute() {

@@ -70,7 +70,6 @@ public class ComputeClasspath extends AbstractStep {
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");
             this.setState(ProjectState.CLASSPATHNOTCOMPUTED);
-            this.shouldStop = true;
             return;
         }
 
@@ -89,7 +88,6 @@ public class ComputeClasspath extends AbstractStep {
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath: " + e);
             this.setState(ProjectState.CLASSPATHNOTCOMPUTED);
-            this.shouldStop = true;
             //return ?
         }
 
