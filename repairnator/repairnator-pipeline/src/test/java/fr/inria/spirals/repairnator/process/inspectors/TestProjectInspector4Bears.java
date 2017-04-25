@@ -91,7 +91,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.CLASSPATHCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
@@ -138,7 +138,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.CLASSPATHCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
