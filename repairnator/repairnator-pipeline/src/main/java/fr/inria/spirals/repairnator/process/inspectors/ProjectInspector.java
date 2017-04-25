@@ -7,9 +7,11 @@ import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
+import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ public class ProjectInspector {
         this.buildToBeInspected = buildToBeInspected;
 
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuild().getId();
+        this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuggyBuild().getId();
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
         this.gitHelper = new GitHelper();
@@ -73,16 +75,16 @@ public class ProjectInspector {
         return this.buildToBeInspected;
     }
 
-    public Build getBuild() {
-        return this.buildToBeInspected.getBuild();
+    public Build getPatchedBuild() {
+        return this.buildToBeInspected.getPatchedBuild();
     }
 
-    public Build getPreviousBuild() {
-        return this.buildToBeInspected.getPreviousBuild();
+    public Build getBuggyBuild() {
+        return this.buildToBeInspected.getBuggyBuild();
     }
 
     public String getRepoSlug() {
-        return this.buildToBeInspected.getBuild().getRepository().getSlug();
+        return this.buildToBeInspected.getBuggyBuild().getRepository().getSlug();
     }
 
     public String getRepoLocalPath() {
@@ -91,15 +93,15 @@ public class ProjectInspector {
 
     public String getRemoteBranchName() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
-        String formattedDate = dateFormat.format(this.getBuild().getFinishedAt());
+        String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
 
-        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuild().getId() + '-' + formattedDate;
+        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
     }
 
     public void run() {
-        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.ONLY_FAIL) {
+        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
-            cloneRepo.setNextStep(new CheckoutBuild(this))
+            cloneRepo.setNextStep(new CheckoutBuggyBuild(this))
                     .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
@@ -108,7 +110,11 @@ public class ProjectInspector {
                     .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
-                    .setNextStep(new NopolRepair(this));
+                    .setNextStep(new NopolRepair(this))
+                    .setNextStep(new CheckoutPatchedBuild(this))
+                    .setNextStep(new BuildProject(this))
+                    .setNextStep(new TestProject(this))
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true));
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);

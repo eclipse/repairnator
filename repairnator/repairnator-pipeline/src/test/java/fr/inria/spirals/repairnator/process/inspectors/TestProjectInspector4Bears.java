@@ -43,9 +43,27 @@ import static org.mockito.Mockito.verify;
  */
 public class TestProjectInspector4Bears {
 
+    private static final String SOLVER_PATH_DIR = "src/test/resources/z3/";
+    private static final String SOLVER_NAME_LINUX = "z3_for_linux";
+    private static final String SOLVER_NAME_MAC = "z3_for_mac";
+
     @Before
-    public void setup() {
+    public void setUp() {
+        String solverPath;
+        if (isMac()) {
+            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_MAC;
+        } else {
+            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_LINUX;
+        }
+
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setZ3solverPath(solverPath);
         Utils.setLoggersLevel(Level.ERROR);
+    }
+
+    public static boolean isMac() {
+        String OS = System.getProperty("os.name").toLowerCase();
+        return (OS.contains("mac"));
     }
 
     @After
@@ -67,7 +85,7 @@ public class TestProjectInspector4Bears {
         Build failingBuild = BuildHelper.getBuildFromId(buildIdFailing, null);
 
 
-        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(passingBuild, failingBuild, ScannedBuildStatus.FAILING_AND_PASSING, "test");
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, passingBuild, ScannedBuildStatus.FAILING_AND_PASSING, "test");
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
         List<AbstractNotifier> notifiers = new ArrayList<>();
@@ -91,7 +109,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.CLASSPATHCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.FIXERBUILDCASE1));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
@@ -114,7 +132,7 @@ public class TestProjectInspector4Bears {
         Build previousPassingBuild = BuildHelper.getBuildFromId(buildIdPreviousPassing, null);
 
 
-        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(passingBuild, previousPassingBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "test");
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(previousPassingBuild, passingBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "test");
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
         List<AbstractNotifier> notifiers = new ArrayList<>();
@@ -138,7 +156,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.CLASSPATHCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.FIXERBUILDCASE2));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));

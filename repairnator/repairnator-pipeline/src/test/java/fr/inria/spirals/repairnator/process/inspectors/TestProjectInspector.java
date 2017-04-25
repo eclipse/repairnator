@@ -82,7 +82,7 @@ public class TestProjectInspector {
 
         Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
 
-        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, ScannedBuildStatus.ONLY_FAIL, "test");
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
         List<AbstractNotifier> notifiers = new ArrayList<>();
@@ -107,7 +107,7 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.PATCHED));
+        assertThat(jobStatus.getState(), is(ProjectState.PATCHEDBUILDNOTCHECKEDOUT));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
 

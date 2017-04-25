@@ -12,7 +12,8 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -50,7 +51,7 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuild() throws IOException, GitAPIException, RepairnatorConfigException {
+    public void testCheckoutBuggyBuild() throws IOException, GitAPIException, RepairnatorConfigException {
         int buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
@@ -64,28 +65,28 @@ public class TestCheckoutBuild {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.setNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
+        assertThat(checkoutBuggyBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
         assertThat(jobStatus.getState(), is(ProjectState.BUILDCHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuggyBuild.shouldStop, is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
         Iterable<RevCommit> logs = gitDir.log().call();
@@ -120,28 +121,28 @@ public class TestCheckoutBuild {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.setNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
+        assertThat(checkoutBuggyBuild.getState(), is(ProjectState.BUILDCHECKEDOUT));
         assertThat(jobStatus.getState(), is(ProjectState.BUILDCHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuggyBuild.shouldStop, is(false));
     }
 
     @Test
@@ -156,28 +157,28 @@ public class TestCheckoutBuild {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuild()).thenReturn(build);
+        when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuild checkoutBuild = new CheckoutBuild(inspector);
+        CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.setNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
         // cannot get the PR information so it stop now
-        assertThat(checkoutBuild.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
+        assertThat(checkoutBuggyBuild.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
         assertThat(jobStatus.getState(), is(ProjectState.BUILDNOTCHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(true));
+        assertThat(checkoutBuggyBuild.shouldStop, is(true));
     }
 }

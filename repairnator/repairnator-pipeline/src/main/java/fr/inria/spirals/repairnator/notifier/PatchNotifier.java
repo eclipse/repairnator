@@ -25,12 +25,12 @@ public class PatchNotifier extends AbstractNotifier {
     public void observe(ProjectInspector inspector) {
         JobStatus status = inspector.getJobStatus();
         if (!alreadyNotified && status.getState() == ProjectState.PATCHED) {
-            String subject = "Patched build: "+inspector.getBuild().getId()+" - "+inspector.getBuild().getRepository().getSlug();
+            String subject = "Patched build: "+inspector.getBuggyBuild().getId()+" - "+inspector.getBuggyBuild().getRepository().getSlug();
 
 
 
             String text = "Hurray !\n\n" +
-                    "Patch(es) has been found for the following build: "+ Utils.getTravisUrl(inspector.getBuild().getId(), inspector.getBuild().getRepository().getSlug())+".\n";
+                    "Patch(es) has been found for the following build: "+ Utils.getTravisUrl(inspector.getBuggyBuild().getId(), inspector.getBuggyBuild().getRepository().getSlug())+".\n";
 
             if (status.isHasBeenPushed()) {
                 text += "Data about patches has been pushed on the following branch: "+status.getGitBranchUrl()+".\n";

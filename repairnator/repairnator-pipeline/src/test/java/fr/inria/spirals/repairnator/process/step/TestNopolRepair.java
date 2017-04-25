@@ -8,9 +8,9 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import org.junit.After;
@@ -72,7 +72,7 @@ public class TestNopolRepair {
         tmpDir.deleteOnExit();
         System.out.println("Dirpath : "+tmpDirPath);
 
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, ScannedBuildStatus.ONLY_FAIL, "");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
@@ -80,7 +80,7 @@ public class TestNopolRepair {
         NopolRepair nopolRepair = new NopolRepair(inspector);
         NopolRepair.TOTAL_MAX_TIME = 2;
 
-        cloneStep.setNextStep(new CheckoutBuild(inspector))
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector))
                 .setNextStep(new TestProject(inspector))
                 .setNextStep(new GatherTestInformation(inspector, new BuildShouldFail(), false))
                 .setNextStep(new ComputeClasspath(inspector))

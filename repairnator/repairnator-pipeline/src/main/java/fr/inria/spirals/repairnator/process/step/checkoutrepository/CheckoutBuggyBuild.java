@@ -4,18 +4,18 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
- * Created by fernanda on 02/03/17.
+ * Created by fermadeiral.
  */
-public class CheckoutBuild extends CheckoutRepository {
+public class CheckoutBuggyBuild extends CheckoutRepository {
 
-    public CheckoutBuild(ProjectInspector inspector) {
+    public CheckoutBuggyBuild(ProjectInspector inspector) {
         super(inspector);
     }
 
     protected void businessExecute() {
-        this.getLogger().debug("Checking out build...");
+        this.getLogger().debug("Checking out previous build...");
 
-        super.setCheckoutType(CheckoutType.CHECKOUT_BUILD);
+        super.setCheckoutType(CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         super.businessExecute();
 

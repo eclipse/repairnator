@@ -31,6 +31,7 @@ public class JobStatus {
     private Collection<FailureLocation> failureLocations;
     private Set<String> failureNames;
     private String gitBranchUrl;
+    private boolean hasBeenPatched;
 
     public JobStatus(String pomDirPath) {
         this.state = ProjectState.NONE;
@@ -156,5 +157,13 @@ public class JobStatus {
 
     public void setGitBranchUrl(String gitBranchUrl) {
         this.gitBranchUrl = gitBranchUrl;
+    }
+
+    public boolean isHasBeenPatched() {
+        return hasBeenPatched;
+    }
+
+    public void setHasBeenPatched(boolean hasBeenPatched) {
+        this.hasBeenPatched = hasBeenPatched;
     }
 }

@@ -7,32 +7,25 @@ import fr.inria.spirals.jtravis.entities.Build;
  */
 public class BuildToBeInspected {
 
-    private Build build;
-    private Build previousBuild;
+    private Build patchedBuild;
+    private Build buggyBuild;
     // For RepairNator, the status is about the build, and for Bears it is about the previous build
     private ScannedBuildStatus status;
     private String runId;
 
-    public BuildToBeInspected(Build build, ScannedBuildStatus status, String runId) {
-        this.build = build;
-        this.previousBuild = null;
+    public BuildToBeInspected(Build buggyBuild, Build patchedBuild, ScannedBuildStatus status, String runId) {
+        this.patchedBuild = patchedBuild;
+        this.buggyBuild = buggyBuild;
         this.status = status;
         this.runId = runId;
     }
 
-    public BuildToBeInspected(Build build, Build previousBuild, ScannedBuildStatus status, String runId) {
-        this.build = build;
-        this.previousBuild = previousBuild;
-        this.status = status;
-        this.runId = runId;
+    public Build getPatchedBuild() {
+        return patchedBuild;
     }
 
-    public Build getBuild() {
-        return build;
-    }
-
-    public Build getPreviousBuild() {
-        return previousBuild;
+    public Build getBuggyBuild() {
+        return buggyBuild;
     }
 
     public ScannedBuildStatus getStatus() {

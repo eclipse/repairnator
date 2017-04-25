@@ -5,9 +5,9 @@ import fr.inria.spirals.repairnator.ProjectState;
 import fr.inria.spirals.repairnator.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.step.*;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuildSourceCode;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildSourceCode;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -38,32 +38,35 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep cloneRepo = new CloneRepository(this);
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
-            cloneRepo.setNextStep(new CheckoutPreviousBuild(this))
+            cloneRepo.setNextStep(new CheckoutBuggyBuild(this))
                     .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
-                    .setNextStep(new CheckoutBuild(this))
+                    .setNextStep(new ComputeClasspath(this))
+                    .setNextStep(new ComputeSourceDir(this))
+                    .setNextStep(new NopolRepair(this))
+                    .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                    .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new SquashRepository(this))
                     .setNextStep(new PushIncriminatedBuild(this));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-                cloneRepo.setNextStep(new CheckoutBuild(this))
+                cloneRepo.setNextStep(new CheckoutPatchedBuild(this))
                         .setNextStep(new ComputeSourceDir(this))
-                        .setNextStep(new CheckoutPreviousBuildSourceCode(this))
+                        .setNextStep(new CheckoutBuggyBuildSourceCode(this))
                         .setNextStep(new ResolveDependency(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode"))
-                        .setNextStep(new CheckoutBuild(this))
+                        .setNextStep(new ComputeClasspath(this))
+                        .setNextStep(new NopolRepair(this))
+                        .setNextStep(new CheckoutPatchedBuild(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                        .setNextStep(new ComputeClasspath(this))
                         .setNextStep(new SquashRepository(this))
                         .setNextStep(new PushIncriminatedBuild(this));
             } else {

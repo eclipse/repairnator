@@ -39,7 +39,7 @@ public class NopolSerializer extends AbstractDataSerializer {
 
     private List<Object> serializeNopolInfoAsList(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, Patch patch, int patchNumber) {
 
-        Build build = buildToBeInspected.getBuild();
+        Build build = buildToBeInspected.getBuggyBuild();
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(Utils.getHostname());
         dataCol.add(Utils.formatCompleteDate(nopolInformation.getDateEnd()));
@@ -82,7 +82,7 @@ public class NopolSerializer extends AbstractDataSerializer {
     }
 
     private JsonElement serializeNopolInfoAsJson(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, Patch patch, int patchNumber) {
-        Build build = buildToBeInspected.getBuild();
+        Build build = buildToBeInspected.getBuggyBuild();
 
         JsonObject result = new JsonObject();
 

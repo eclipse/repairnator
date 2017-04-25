@@ -24,10 +24,10 @@ public class FixerBuildNotifier extends AbstractNotifier {
         JobStatus status = inspector.getJobStatus();
         if (!alreadyNotified && (status.getState() == ProjectState.FIXERBUILDCASE1 || status.getState() == ProjectState.FIXERBUILDCASE2)) {
             String slug = inspector.getRepoSlug();
-            String subject = "Fixer build found: "+inspector.getBuild().getId()+" - "+slug;
+            String subject = "Fixer build found: "+inspector.getPatchedBuild().getId()+" - "+slug;
 
-            Build lastBuild = inspector.getBuild();
-            Build previousBuild = inspector.getPreviousBuild();
+            Build patchedBuild = inspector.getPatchedBuild();
+            Build buggyBuild = inspector.getBuggyBuild();
 
             String text = "Hurray !\n\n" +
                     "A fixer build has been found for the following project: "+slug+".\n";
@@ -39,11 +39,11 @@ public class FixerBuildNotifier extends AbstractNotifier {
             text += "You can find several information on the following about it: \n";
             text += "\t Fixer build type: "+status.getState().name()+"\n" +
                     "\t Type of build: "+inspector.getBuildToBeInspected().getStatus().name()+"\n" +
-                    "\t Date of the first build: "+Utils.formatCompleteDate(previousBuild.getFinishedAt())+"\n" +
-                    "\t Url of the first build: "+Utils.getTravisUrl(previousBuild.getId(), slug)+"\n" +
-                    "\t Date of the second build: "+Utils.formatCompleteDate(lastBuild.getFinishedAt())+"\n" +
-                    "\t Url of the second build: "+Utils.getTravisUrl(lastBuild.getId(), slug)+"\n" +
-                    "\t Contact: "+lastBuild.getCommit().getCommitterEmail();
+                    "\t Date of the buggy build: "+Utils.formatCompleteDate(buggyBuild.getFinishedAt())+"\n" +
+                    "\t Url of the buggy build: "+Utils.getTravisUrl(buggyBuild.getId(), slug)+"\n" +
+                    "\t Date of the patched build: "+Utils.formatCompleteDate(patchedBuild.getFinishedAt())+"\n" +
+                    "\t Url of the patched build: "+Utils.getTravisUrl(patchedBuild.getId(), slug)+"\n" +
+                    "\t Contact: "+patchedBuild.getCommit().getCommitterEmail();
 
             this.notifyEngines(subject, text);
             this.alreadyNotified = true;

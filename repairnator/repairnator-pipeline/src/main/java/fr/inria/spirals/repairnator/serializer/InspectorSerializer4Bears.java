@@ -37,9 +37,9 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
     private List<Object> serializeAsList(ProjectInspector inspector) {
         JobStatus jobStatus = inspector.getJobStatus();
         BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
-        Build build = inspector.getBuild();
+        Build build = inspector.getPatchedBuild();
 
-        Build previousBuild = inspector.getPreviousBuild();
+        Build previousBuild = inspector.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
         String state = this.getPrettyPrintState(inspector);
@@ -76,9 +76,9 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
     private JsonElement serializeAsJson(ProjectInspector inspector) {
         JobStatus jobStatus = inspector.getJobStatus();
         BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
-        Build build = inspector.getBuild();
+        Build build = inspector.getPatchedBuild();
 
-        Build previousBuild = inspector.getPreviousBuild();
+        Build previousBuild = inspector.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
         String state = this.getPrettyPrintState(inspector);

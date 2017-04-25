@@ -12,7 +12,7 @@ import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.ResolveDependency;
 import fr.inria.spirals.repairnator.process.step.SquashRepository;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
 import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
@@ -47,7 +47,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
-        int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
+        int checkoutBuild = durations.getOrDefault(CheckoutBuggyBuild.class.getSimpleName(), 0);
         int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
         int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
         int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
@@ -61,7 +61,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
                 computeClasspath + computeSourceDir + repair + dependencyResolution;
 
-        Build build = inspector.getBuild();
+        Build build = inspector.getBuggyBuild();
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
@@ -88,7 +88,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         int clonage = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
-        int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
+        int checkoutBuild = durations.getOrDefault(CheckoutBuggyBuild.class.getSimpleName(), 0);
         int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
         int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
         int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
@@ -102,7 +102,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
                 computeClasspath + computeSourceDir + repair + dependencyResolution;
 
-        Build build = inspector.getBuild();
+        Build build = inspector.getBuggyBuild();
 
         JsonObject result = new JsonObject();
 

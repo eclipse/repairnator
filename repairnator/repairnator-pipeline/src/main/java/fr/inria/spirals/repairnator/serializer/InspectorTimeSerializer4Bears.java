@@ -6,9 +6,9 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.*;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPreviousBuildSourceCode;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildSourceCode;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -34,15 +34,15 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         int cloneRepository = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
-        int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
+        int checkoutBuild = durations.getOrDefault(CheckoutPatchedBuild.class.getSimpleName(), 0);
         int buildProjectBuild = durations.getOrDefault(BuildProject.class.getSimpleName()+"Build", 0);
         int testProjectBuild = durations.getOrDefault(TestProject.class.getSimpleName()+"Build", 0);
         int gatherTestInformationBuild = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"Build", 0);
-        int checkoutPreviousBuild = durations.getOrDefault(CheckoutPreviousBuild.class.getSimpleName(), 0);
+        int checkoutPreviousBuild = durations.getOrDefault(CheckoutBuggyBuild.class.getSimpleName(), 0);
         int buildProjectPreviousBuild = durations.getOrDefault(BuildProject.class.getSimpleName()+"PreviousBuild", 0);
         int testProjectPreviousBuild = durations.getOrDefault(TestProject.class.getSimpleName()+"PreviousBuild", 0);
         int gatherTestInformationPreviousBuild = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuild", 0);
-        int checkoutPreviousBuildSourceCode = durations.getOrDefault(CheckoutPreviousBuildSourceCode.class.getSimpleName(), 0);
+        int checkoutPreviousBuildSourceCode = durations.getOrDefault(CheckoutBuggyBuildSourceCode.class.getSimpleName(), 0);
         int buildProjectPreviousBuildSourceCode = durations.getOrDefault(BuildProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int testProjectPreviousBuildSourceCode = durations.getOrDefault(TestProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int gatherTestInformationPreviousBuildSourceCode = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode", 0);
@@ -56,9 +56,9 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
                 checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode +
                 gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild + computeClasspath + dependencyResolution;
 
-        Build build = inspector.getBuild();
+        Build build = inspector.getPatchedBuild();
 
-        Build previousBuild = inspector.getPreviousBuild();
+        Build previousBuild = inspector.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
         List<Object> dataCol = new ArrayList<Object>();
@@ -92,15 +92,15 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         int cloneRepository = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
-        int checkoutBuild = durations.getOrDefault(CheckoutBuild.class.getSimpleName(), 0);
+        int checkoutBuild = durations.getOrDefault(CheckoutPatchedBuild.class.getSimpleName(), 0);
         int buildProjectBuild = durations.getOrDefault(BuildProject.class.getSimpleName()+"Build", 0);
         int testProjectBuild = durations.getOrDefault(TestProject.class.getSimpleName()+"Build", 0);
         int gatherTestInformationBuild = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"Build", 0);
-        int checkoutPreviousBuild = durations.getOrDefault(CheckoutPreviousBuild.class.getSimpleName(), 0);
+        int checkoutPreviousBuild = durations.getOrDefault(CheckoutBuggyBuild.class.getSimpleName(), 0);
         int buildProjectPreviousBuild = durations.getOrDefault(BuildProject.class.getSimpleName()+"PreviousBuild", 0);
         int testProjectPreviousBuild = durations.getOrDefault(TestProject.class.getSimpleName()+"PreviousBuild", 0);
         int gatherTestInformationPreviousBuild = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuild", 0);
-        int checkoutPreviousBuildSourceCode = durations.getOrDefault(CheckoutPreviousBuildSourceCode.class.getSimpleName(), 0);
+        int checkoutPreviousBuildSourceCode = durations.getOrDefault(CheckoutBuggyBuildSourceCode.class.getSimpleName(), 0);
         int buildProjectPreviousBuildSourceCode = durations.getOrDefault(BuildProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int testProjectPreviousBuildSourceCode = durations.getOrDefault(TestProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int gatherTestInformationPreviousBuildSourceCode = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode", 0);
@@ -114,9 +114,9 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
                 checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode +
                 gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild + dependencyResolution + computeClasspath;
 
-        Build build = inspector.getBuild();
+        Build build = inspector.getPatchedBuild();
 
-        Build previousBuild = inspector.getPreviousBuild();
+        Build previousBuild = inspector.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
         JsonObject result = new JsonObject();
 

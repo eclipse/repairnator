@@ -34,17 +34,17 @@ public abstract class CheckoutRepository extends AbstractStep {
             GitHelper gitHelper = this.getInspector().getGitHelper();
             git = Git.open(new File(inspector.getRepoLocalPath()));
             Build build;
-            if (checkoutType == CheckoutType.CHECKOUT_BUILD) {
-                build = inspector.getBuild();
+            if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
+                build = inspector.getPatchedBuild();
             } else {
-                build = inspector.getPreviousBuild();
+                build = inspector.getBuggyBuild();
             }
 
             if (build.isPullRequest()) {
                 PRInformation prInformation = build.getPRInformation();
 
                 if (prInformation != null) {
-                    if (checkoutType == CheckoutType.CHECKOUT_BUILD) {
+                    if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
                         this.writeProperty("is-pr", "true");
                         this.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getSlug());
                         this.writeProperty("pr-head-commit-id", prInformation.getHead().getSha());
@@ -65,7 +65,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                 this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
                 List<String> pathes;
-                if (checkoutType == CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE) {
+                if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
                     pathes = new ArrayList<String>();
                     for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
                         URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
@@ -88,7 +88,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                 commitCheckout = gitHelper.testCommitExistence(git, commitCheckout, this, build);
                 if (commitCheckout != null) {
                     this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
-                    if (checkoutType != CheckoutType.CHECKOUT_PREVIOUS_BUILD_SOURCE_CODE) {
+                    if (checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
                         git.checkout().setName(commitCheckout).call();
                     } else {
 
@@ -106,7 +106,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                         git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
                     }
                     this.writeProperty("bugRepo",this.inspector.getRepoSlug());
-                    this.writeProperty("bugCommit", this.inspector.getBuild().getCommit().getCompareUrl());
+                    this.writeProperty("bugCommit", this.inspector.getBuggyBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
                     this.shouldStop = true;
