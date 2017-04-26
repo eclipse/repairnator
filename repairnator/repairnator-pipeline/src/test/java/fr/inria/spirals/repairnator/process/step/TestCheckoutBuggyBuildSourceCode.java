@@ -44,6 +44,7 @@ public class TestCheckoutBuggyBuildSourceCode {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig.getInstance().setPush(true);
     }
 
     @After
