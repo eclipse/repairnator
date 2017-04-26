@@ -57,6 +57,20 @@ public class ComputeSourceDir extends AbstractStep {
                         "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
             }
 
+            if (rootCall) {
+                for (String module : model.getModules()) {
+                    File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
+                            false);
+                    if (srcDir != null) {
+                        result.addAll(Arrays.asList(srcDir));
+                    }
+                }
+
+                if (result.size() > 0) {
+                    return result.toArray(new File[result.size()]);
+                }
+            }
+
             if (model.getParent() != null && rootCall) {
                 String relativePath = "../pom.xml";
 
@@ -66,32 +80,25 @@ public class ComputeSourceDir extends AbstractStep {
 
                 File parentPomXml = new File(incriminatedModulePath + File.separator + relativePath);
 
-                model = MavenHelper.readPomXml(parentPomXml, this.inspector.getM2LocalPath());
-
-
-            } else {
-                if (rootCall) {
-                    for (String module : model.getModules()) {
-                        File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
-                                false);
-                        if (srcDir != null) {
-                            result.addAll(Arrays.asList(srcDir));
-                        }
+                if (parentPomXml.exists()) {
+                    File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent(),false);
+                    if (srcDir != null) {
+                        result.addAll(Arrays.asList(srcDir));
                     }
 
                     if (result.size() > 0) {
                         return result.toArray(new File[result.size()]);
-                    } else {
-                        this.addStepError(
-                                "Source directory is not at default location or specified in build section and no parent can be found.");
-                        return null;
                     }
                 }
             }
 
+
         } catch (ModelBuildingException e) {
             this.addStepError("Error while building pom.xml model: " + e);
         }
+
+        this.addStepError(
+                "Source directory is not at default location or specified in build section and no parent can be found.");
         return null;
     }
 

@@ -12,6 +12,7 @@ import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildSourceCode;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.junit.After;
 import org.junit.Before;
@@ -206,5 +207,67 @@ public class TestComputeSourceDir {
         assertThat(jobStatus.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder"), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
+    }
+
+    @Test
+    public void testComputeSourceDirWithMultiModuleProject4() throws IOException {
+        int buildId = 216674182; // pac4j/pac4j
+        int patchedBuildId = 218753299;
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Build patchedBuild = BuildHelper.getBuildFromId(patchedBuildId, null);
+        assertThat(patchedBuild, notNullValue());
+        assertThat(patchedBuildId, is(patchedBuild.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir3");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, patchedBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "");
+
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuggyBuild()).thenReturn(build);
+        when(inspector.getPatchedBuild()).thenReturn(patchedBuild);
+        when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+
+        cloneStep.setNextStep(new CheckoutPatchedBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.execute();
+
+        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+        assertThat(jobStatus.getState(), is(ProjectState.SOURCEDIRCOMPUTED));
+
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {
+                new File(repoDir.getAbsolutePath()+"/pac4j-core/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-config/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-oauth/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-cas/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-openid/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-http/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-saml/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-gae/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-oidc/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-jwt/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-ldap/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-sql/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-mongo/src/main/java"),
+                new File(repoDir.getAbsolutePath()+"/pac4j-stormpath/src/main/java")
+        }));
     }
 }
