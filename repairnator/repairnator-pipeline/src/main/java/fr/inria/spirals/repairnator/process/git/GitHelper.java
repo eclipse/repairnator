@@ -79,7 +79,7 @@ public class GitHelper {
     }
 
     public boolean addAndCommitRepairnatorLogAndProperties(Git git, String commitMsg) {
-        if (RepairnatorConfig.getInstance().getPushRemoteRepo() == null) {
+        if (!RepairnatorConfig.getInstance().isPush()) {
             return false;
         }
 
