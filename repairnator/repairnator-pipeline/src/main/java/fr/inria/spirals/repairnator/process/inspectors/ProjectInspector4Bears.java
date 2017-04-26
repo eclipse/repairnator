@@ -50,7 +50,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                    .setNextStep(new SquashRepository(this))
                     .setNextStep(new PushIncriminatedBuild(this));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
@@ -67,7 +66,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                        .setNextStep(new SquashRepository(this))
                         .setNextStep(new PushIncriminatedBuild(this));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
