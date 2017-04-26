@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.git;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.PRInformation;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import okhttp3.Call;
@@ -78,6 +79,10 @@ public class GitHelper {
     }
 
     public boolean addAndCommitRepairnatorLogAndProperties(Git git, String commitMsg) {
+        if (RepairnatorConfig.getInstance().getPushRemoteRepo() == null) {
+            return false;
+        }
+
         try {
             Status gitStatus = git.status().call();
             if (!gitStatus.isClean()) {
