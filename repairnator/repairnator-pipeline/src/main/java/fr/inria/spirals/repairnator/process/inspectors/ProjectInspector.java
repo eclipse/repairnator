@@ -30,6 +30,7 @@ public class ProjectInspector {
     private GitHelper gitHelper;
     private BuildToBeInspected buildToBeInspected;
     private String repoLocalPath;
+    private String repoToPushLocalPath;
 
     private String workspace;
     private String m2LocalPath;
@@ -44,6 +45,7 @@ public class ProjectInspector {
 
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuggyBuild().getId();
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
         this.gitHelper = new GitHelper();
@@ -89,6 +91,10 @@ public class ProjectInspector {
 
     public String getRepoLocalPath() {
         return repoLocalPath;
+    }
+
+    public String getRepoToPushLocalPath() {
+        return repoToPushLocalPath;
     }
 
     public String getRemoteBranchName() {
