@@ -57,7 +57,7 @@ public class CommitPatch extends AbstractStep {
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
                 if (this.getInspector().getJobStatus().isHasBeenPushed()) {
-                    git.push().call();
+                    git.push().setPushAll().call();
                 }
 
                 if (pushHumanPatch) {
