@@ -8,6 +8,8 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -57,7 +59,8 @@ public class CommitPatch extends AbstractStep {
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
                 if (this.getInspector().getJobStatus().isHasBeenPushed()) {
-                    git.push().setPushAll().call();
+                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
+                    git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
                 }
 
                 if (pushHumanPatch) {

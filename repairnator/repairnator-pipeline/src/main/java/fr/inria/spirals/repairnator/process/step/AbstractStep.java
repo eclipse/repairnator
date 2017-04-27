@@ -274,18 +274,9 @@ public abstract class AbstractStep {
     private void pushNewInformationIfNeeded() {
         try {
             Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
-
-
-
-            boolean createNewCommit = this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
-
-            if (createNewCommit && this.inspector.getJobStatus().isHasBeenPushed()) {
-                CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
-
-                git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
-            }
-        } catch (IOException | GitAPIException  e) {
-            this.getLogger().error("Error while committing (and/or pushing) new repairnator information. ", e);
+            this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
+        } catch (IOException e) {
+            this.getLogger().error("Error while committing new repairnator information. ", e);
         }
 
     }
