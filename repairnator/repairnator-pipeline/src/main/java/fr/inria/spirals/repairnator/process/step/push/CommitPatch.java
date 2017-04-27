@@ -43,7 +43,7 @@ public class CommitPatch extends AbstractStep {
                 FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
                     @Override
                     public boolean accept(File pathname) {
-                        return !pathname.toString().contains(".git");
+                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2");
                     }
                 });
 

@@ -40,6 +40,9 @@ public class InitRepoToPush extends AbstractStep {
                 File gitTargetFolder = new File(targetDir, ".git");
                 FileUtils.deleteDirectory(gitTargetFolder);
 
+                File m2TargetFolder = new File(targetDir, ".m2");
+                FileUtils.deleteDirectory(m2TargetFolder);
+
                 Git git = Git.init().setDirectory(targetDir).call();
                 git.add().addFilepattern(".").call();
 
