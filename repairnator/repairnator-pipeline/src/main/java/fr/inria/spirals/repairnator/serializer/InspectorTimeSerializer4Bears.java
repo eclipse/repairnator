@@ -46,7 +46,6 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         int buildProjectPreviousBuildSourceCode = durations.getOrDefault(BuildProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int testProjectPreviousBuildSourceCode = durations.getOrDefault(TestProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int gatherTestInformationPreviousBuildSourceCode = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode", 0);
-        int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
         int pushBuild = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
         int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
         int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
@@ -54,7 +53,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         int totalDuration = cloneRepository + checkoutBuild + buildProjectBuild + testProjectBuild + gatherTestInformationBuild +
                 checkoutPreviousBuild + buildProjectPreviousBuild + testProjectPreviousBuild + gatherTestInformationPreviousBuild +
                 checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode +
-                gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild + computeClasspath + dependencyResolution;
+                gatherTestInformationPreviousBuildSourceCode + pushBuild + computeClasspath + dependencyResolution;
 
         Build build = inspector.getPatchedBuild();
 
@@ -80,7 +79,6 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         dataCol.add(buildProjectPreviousBuildSourceCode);
         dataCol.add(testProjectPreviousBuildSourceCode);
         dataCol.add(gatherTestInformationPreviousBuildSourceCode);
-        dataCol.add(squashRepository);
         dataCol.add(pushBuild);
         dataCol.add(computeClasspath);
         dataCol.add(dependencyResolution);
@@ -104,7 +102,6 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         int buildProjectPreviousBuildSourceCode = durations.getOrDefault(BuildProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int testProjectPreviousBuildSourceCode = durations.getOrDefault(TestProject.class.getSimpleName()+"PreviousBuildSourceCode", 0);
         int gatherTestInformationPreviousBuildSourceCode = durations.getOrDefault(GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode", 0);
-        int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
         int pushBuild = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
         int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
         int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
@@ -112,7 +109,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         int totalDuration = cloneRepository + checkoutBuild + buildProjectBuild + testProjectBuild + gatherTestInformationBuild +
                 checkoutPreviousBuild + buildProjectPreviousBuild + testProjectPreviousBuild + gatherTestInformationPreviousBuild +
                 checkoutPreviousBuildSourceCode + buildProjectPreviousBuildSourceCode + testProjectPreviousBuildSourceCode +
-                gatherTestInformationPreviousBuildSourceCode + squashRepository + pushBuild + dependencyResolution + computeClasspath;
+                gatherTestInformationPreviousBuildSourceCode + pushBuild + dependencyResolution + computeClasspath;
 
         Build build = inspector.getPatchedBuild();
 
@@ -141,7 +138,6 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         result.addProperty("buildPreviousSourceCode", buildProjectPreviousBuildSourceCode);
         result.addProperty("testProjectPreviousBuildSourceCode", testProjectPreviousBuildSourceCode);
         result.addProperty("gatherTestInformationPreviousBuildSourceCode", gatherTestInformationPreviousBuildSourceCode);
-        result.addProperty("squashRepository", squashRepository);
         result.addProperty("push", pushBuild);
         result.addProperty("dependendencyResolution", dependencyResolution);
         result.addProperty("computeClasspath", computeClasspath);

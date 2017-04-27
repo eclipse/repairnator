@@ -46,9 +46,9 @@ public class InitRepoToPush extends AbstractStep {
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
             } catch (IOException e) {
-                this.addStepError("");
+                this.addStepError("Error while copying the folder to prepare the git repository.");
             } catch (GitAPIException e) {
-                this.addStepError("");
+                this.addStepError("Error while initializing the new git repository.");
             }
 
         } else {
