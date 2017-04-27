@@ -6,6 +6,7 @@ import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.PushState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -17,6 +18,9 @@ import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +30,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyListOf;
@@ -57,6 +63,8 @@ public class TestProjectInspector4Bears {
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(solverPath);
+        config.setPush(true);
+        config.setPushRemoteRepo("");
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -71,7 +79,7 @@ public class TestProjectInspector4Bears {
     }
 
     @Test
-    public void testFailingPassingProject() throws IOException {
+    public void testFailingPassingProject() throws IOException, GitAPIException {
         int buildIdPassing = 203800961;
         int buildIdFailing = 203797975;
 
@@ -109,16 +117,34 @@ public class TestProjectInspector4Bears {
 
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE1));
+        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
+
+        Git gitDir = Git.open(new File(inspector.getRepoToPushLocalPath()));
+        Iterable<RevCommit> logs = gitDir.log().call();
+
+        Iterator<RevCommit> iterator = logs.iterator();
+        assertThat(iterator.hasNext(), is(true));
+
+        RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Human patch"));
+
+        commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Automated patch"));
+
+        commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Bug commit."));
+
+        assertThat(iterator.hasNext(), is(false));
     }
 
     @Test
-    public void testPassingPassingProject() throws IOException {
+    public void testPassingPassingProject() throws IOException, GitAPIException {
         int buildIdPassing = 201938881;
         int buildIdPreviousPassing = 201938325;
 
@@ -156,11 +182,29 @@ public class TestProjectInspector4Bears {
 
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE2));
+        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
+
+        Git gitDir = Git.open(new File(inspector.getRepoToPushLocalPath()));
+        Iterable<RevCommit> logs = gitDir.log().call();
+
+        Iterator<RevCommit> iterator = logs.iterator();
+        assertThat(iterator.hasNext(), is(true));
+
+        RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Human patch"));
+
+        commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Automated patch"));
+
+        commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Bug commit."));
+
+        assertThat(iterator.hasNext(), is(false));
     }
 }

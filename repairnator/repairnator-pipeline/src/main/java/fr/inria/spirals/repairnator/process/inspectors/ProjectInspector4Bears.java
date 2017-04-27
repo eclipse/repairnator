@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.push.PushPatch;
+import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -50,13 +50,13 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this))
-                    .setNextStep(new PushPatch(this, false))
+                    .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
                     .setNextStep(new PushIncriminatedBuild(this))
-                    .setNextStep(new PushPatch(this, true));
+                    .setNextStep(new CommitPatch(this, true));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutPatchedBuild(this))
@@ -69,13 +69,13 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this))
                         .setNextStep(new NopolRepair(this))
-                        .setNextStep(new PushPatch(this, false))
+                        .setNextStep(new CommitPatch(this, false))
                         .setNextStep(new CheckoutPatchedBuild(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
                         .setNextStep(new PushIncriminatedBuild(this))
-                        .setNextStep(new PushPatch(this, true));
+                        .setNextStep(new CommitPatch(this, true));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
                 return;

@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by urli on 27/04/2017.
  */
-public class TestPushPatch {
+public class TestCommitPatch {
 
     @Before
     public void setup() {
@@ -80,10 +80,10 @@ public class TestPushPatch {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new PushPatch(inspector, true));
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new CommitPatch(inspector, true));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_PUSHED));
+        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();
