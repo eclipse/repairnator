@@ -10,6 +10,7 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
@@ -40,7 +41,7 @@ import java.util.List;
  * Created by fernanda on 01/03/17.
  */
 public class GitHelper {
-    
+
     private int nbCommits;
 
     public GitHelper() {

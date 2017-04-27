@@ -14,7 +14,7 @@ import fr.inria.spirals.repairnator.process.step.ResolveDependency;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
-import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;

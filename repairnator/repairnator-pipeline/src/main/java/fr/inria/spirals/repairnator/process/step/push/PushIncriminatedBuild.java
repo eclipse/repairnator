@@ -1,6 +1,8 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.states.PushState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -46,11 +48,12 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             if (System.getenv("GITHUB_OAUTH") == null || System.getenv("GITHUB_OAUTH").equals("")) {
                 this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
+                this.setPushState(PushState.REPO_NOT_PUSHED);
                 return;
             }
 
             try {
-                Git git = Git.open(new File(inspector.getRepoLocalPath()));
+                Git git = Git.open(new File(inspector.getRepoToPushLocalPath()));
                 this.getLogger().debug("Add the remote repository to push the current pipelineState");
 
                 RemoteAddCommand remoteAdd = git.remoteAdd();
@@ -89,6 +92,8 @@ public class PushIncriminatedBuild extends AbstractStep {
                 this.getInspector().getJobStatus().setHasBeenPushed(true);
 
                 this.getInspector().getJobStatus().setGitBranchUrl(this.remoteRepoUrl+"/tree/"+branchName);
+                this.setPushState(PushState.REPO_PUSHED);
+                return;
             } catch (IOException e) {
                 this.getLogger().error("Error while reading git directory at the following location: "
                         + inspector.getRepoLocalPath() + " : " + e);
@@ -101,8 +106,9 @@ public class PushIncriminatedBuild extends AbstractStep {
                 this.getLogger().error("Error while executing a JGit operation: " + e);
                 this.addStepError(e.getMessage());
             } catch (InterruptedException e) {
-                this.addStepError("Error while executing git command to gest last 10 commits" + e.getMessage());
+                this.addStepError("Error while executing git command to check branch presence" + e.getMessage());
             }
+            this.setPushState(PushState.REPO_NOT_PUSHED);
         } else {
             this.getLogger().info("The push argument is set to false. Nothing will be pushed.");
         }

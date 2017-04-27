@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -259,6 +260,7 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
+        this.writeProperty("step-durations", this.inspector.getJobStatus().getStepsDurationsInSeconds());
         this.writeProperty("lastStep", this.getName());
         this.serializeData();
         this.pushNewInformationIfNeeded();
@@ -269,7 +271,7 @@ public abstract class AbstractStep {
         try {
             Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
 
-            this.writeProperty("step-durations", this.inspector.getJobStatus().getStepsDurationsInSeconds());
+
 
             boolean createNewCommit = this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
 

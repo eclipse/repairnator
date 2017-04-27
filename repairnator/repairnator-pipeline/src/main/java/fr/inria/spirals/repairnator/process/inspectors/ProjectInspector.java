@@ -2,6 +2,9 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushPatch;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -99,9 +102,13 @@ public class ProjectInspector {
 
     public String getRemoteBranchName() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
-        String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
-
-        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
+        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.ONLY_FAIL) {
+            String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
+            return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate + "_bugonly";
+        } else {
+            String formattedDate = dateFormat.format(this.getPatchedBuild().getFinishedAt());
+            return this.getRepoSlug().replace('/', '-') + '-' + this.getPatchedBuild().getId() + '-' + formattedDate;
+        }
     }
 
     public void run() {
@@ -112,14 +119,17 @@ public class ProjectInspector {
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false))
+                    .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this))
+                    .setNextStep(new PushPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true));
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true))
+                    .setNextStep(new PushPatch(this, true));
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);

@@ -1,7 +1,8 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
