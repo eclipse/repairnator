@@ -11,11 +11,10 @@ import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.ResolveDependency;
-import fr.inria.spirals.repairnator.process.step.SquashRepository;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.NopolRepair;
-import fr.inria.spirals.repairnator.process.step.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -51,14 +50,13 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
         int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
         int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
-        int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
         int push = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
         int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
         int computeSourceDir = durations.getOrDefault(ComputeSourceDir.class.getSimpleName(), 0);
         int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
         int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
 
-        int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
+        int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + push +
                 computeClasspath + computeSourceDir + repair + dependencyResolution;
 
         Build build = inspector.getBuggyBuild();
@@ -74,7 +72,6 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         dataCol.add(buildtime);
         dataCol.add(test);
         dataCol.add(gatherTestInfo);
-        dataCol.add(squashRepository);
         dataCol.add(push);
         dataCol.add(computeClasspath);
         dataCol.add(computeSourceDir);
@@ -92,14 +89,13 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         int buildtime = durations.getOrDefault(BuildProject.class.getSimpleName(), 0);
         int test = durations.getOrDefault(TestProject.class.getSimpleName(), 0);
         int gatherTestInfo = durations.getOrDefault(GatherTestInformation.class.getSimpleName(), 0);
-        int squashRepository = durations.getOrDefault(SquashRepository.class.getSimpleName(), 0);
         int push = durations.getOrDefault(PushIncriminatedBuild.class.getSimpleName(), 0);
         int computeClasspath = durations.getOrDefault(ComputeClasspath.class.getSimpleName(), 0);
         int computeSourceDir = durations.getOrDefault(ComputeSourceDir.class.getSimpleName(), 0);
         int repair = durations.getOrDefault(NopolRepair.class.getSimpleName(), 0);
         int dependencyResolution = durations.getOrDefault(ResolveDependency.class.getSimpleName(), 0);
 
-        int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + squashRepository + push +
+        int totalDuration = clonage + checkoutBuild + buildtime + test + gatherTestInfo + push +
                 computeClasspath + computeSourceDir + repair + dependencyResolution;
 
         Build build = inspector.getBuggyBuild();
@@ -118,7 +114,6 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         result.addProperty("build", buildtime);
         result.addProperty("test", test);
         result.addProperty("gatherTestInfo", gatherTestInfo);
-        result.addProperty("squashRepository", squashRepository);
         result.addProperty("push", push);
         result.addProperty("computeClasspath", computeClasspath);
         result.addProperty("computeSourceDir", computeSourceDir);

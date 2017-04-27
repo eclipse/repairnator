@@ -2,8 +2,11 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
@@ -30,6 +33,7 @@ public class ProjectInspector {
     private GitHelper gitHelper;
     private BuildToBeInspected buildToBeInspected;
     private String repoLocalPath;
+    private String repoToPushLocalPath;
 
     private String workspace;
     private String m2LocalPath;
@@ -44,6 +48,7 @@ public class ProjectInspector {
 
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuggyBuild().getId();
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
         this.gitHelper = new GitHelper();
@@ -91,11 +96,19 @@ public class ProjectInspector {
         return repoLocalPath;
     }
 
+    public String getRepoToPushLocalPath() {
+        return repoToPushLocalPath;
+    }
+
     public String getRemoteBranchName() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
-        String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
-
-        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
+        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.ONLY_FAIL) {
+            String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
+            return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate + "_bugonly";
+        } else {
+            String formattedDate = dateFormat.format(this.getPatchedBuild().getFinishedAt());
+            return this.getRepoSlug().replace('/', '-') + '-' + this.getPatchedBuild().getId() + '-' + formattedDate;
+        }
     }
 
     public void run() {
@@ -106,19 +119,21 @@ public class ProjectInspector {
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false))
-                    .setNextStep(new SquashRepository(this))
+                    .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this))
+                    .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true));
+                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true))
+                    .setNextStep(new CommitPatch(this, true));
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);
-            cloneRepo.setState(ProjectState.INIT);
+            cloneRepo.setPipelineState(PipelineState.INIT);
 
             try {
                 cloneRepo.execute();

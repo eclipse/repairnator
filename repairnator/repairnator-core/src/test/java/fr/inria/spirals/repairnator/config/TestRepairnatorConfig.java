@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.config;
 
-import fr.inria.spirals.repairnator.FileMode;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;

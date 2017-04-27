@@ -4,15 +4,14 @@ import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,8 +80,8 @@ public class TestComputeClasspath {
         cloneStep.execute();
 
         assertThat(computeClasspath.shouldStop, is(false));
-        assertThat(computeClasspath.getState(), is(ProjectState.CLASSPATHCOMPUTED));
-        assertThat(jobStatus.getState(), is(ProjectState.CLASSPATHCOMPUTED));
+        assertThat(computeClasspath.getPipelineState(), is(PipelineState.CLASSPATHCOMPUTED));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.CLASSPATHCOMPUTED));
 
         List<URL> expectedClasspath = new ArrayList<URL>();
 

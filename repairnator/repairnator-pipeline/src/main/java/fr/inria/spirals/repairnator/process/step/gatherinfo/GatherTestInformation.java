@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
@@ -145,11 +145,11 @@ public class GatherTestInformation extends AbstractStep {
                 }
 
                 if (this.nbFailingTests > 0) {
-                    this.setState(ProjectState.HASTESTFAILURE);
+                    this.setPipelineState(PipelineState.HASTESTFAILURE);
                 } else if (this.nbErroringTests > 0) {
-                    this.setState(ProjectState.HASTESTERRORS);
+                    this.setPipelineState(PipelineState.HASTESTERRORS);
                 } else {
-                    this.setState(ProjectState.NOTFAILING);
+                    this.setPipelineState(PipelineState.NOTFAILING);
                 }
             } catch (MavenReportException e) {
                 this.addStepError("Error while parsing files to get test information:",e);

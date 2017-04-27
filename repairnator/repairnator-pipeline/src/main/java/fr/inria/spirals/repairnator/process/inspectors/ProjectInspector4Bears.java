@@ -1,8 +1,11 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
@@ -43,15 +46,17 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
+                    .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this))
+                    .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                    .setNextStep(new SquashRepository(this))
-                    .setNextStep(new PushIncriminatedBuild(this));
+                    .setNextStep(new PushIncriminatedBuild(this))
+                    .setNextStep(new CommitPatch(this, true));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutPatchedBuild(this))
@@ -61,14 +66,16 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode"))
+                        .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this))
                         .setNextStep(new NopolRepair(this))
+                        .setNextStep(new CommitPatch(this, false))
                         .setNextStep(new CheckoutPatchedBuild(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build"))
                         .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                        .setNextStep(new SquashRepository(this))
-                        .setNextStep(new PushIncriminatedBuild(this));
+                        .setNextStep(new PushIncriminatedBuild(this))
+                        .setNextStep(new CommitPatch(this, true));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
                 return;
@@ -78,7 +85,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.getSerializers());
         firstStep.setNotifiers(this.getNotifiers());
-        firstStep.setState(ProjectState.INIT);
+        firstStep.setPipelineState(PipelineState.INIT);
 
         try {
             firstStep.execute();

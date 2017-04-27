@@ -1,8 +1,9 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.states.PushState;
 
 import java.io.File;
 import java.net.URL;
@@ -17,7 +18,8 @@ import java.util.Set;
  * Created by urli on 23/03/2017.
  */
 public class JobStatus {
-    private ProjectState state;
+    private PipelineState pipelineState;
+    private PushState pushState;
     private List<URL> repairClassPath;
     private File[] repairSourceDir;
     private List<NopolInformation> nopolInformations;
@@ -34,7 +36,7 @@ public class JobStatus {
     private boolean hasBeenPatched;
 
     public JobStatus(String pomDirPath) {
-        this.state = ProjectState.NONE;
+        this.pipelineState = PipelineState.NONE;
         this.stepsDurationsInSeconds = new HashMap<>();
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
@@ -42,12 +44,12 @@ public class JobStatus {
         this.failingModulePath = pomDirPath;
     }
 
-    public ProjectState getState() {
-        return state;
+    public PipelineState getPipelineState() {
+        return pipelineState;
     }
 
-    public void setState(ProjectState state) {
-        this.state = state;
+    public void setPipelineState(PipelineState pipelineState) {
+        this.pipelineState = pipelineState;
     }
 
     public List<URL> getRepairClassPath() {
@@ -165,5 +167,13 @@ public class JobStatus {
 
     public void setHasBeenPatched(boolean hasBeenPatched) {
         this.hasBeenPatched = hasBeenPatched;
+    }
+
+    public PushState getPushState() {
+        return pushState;
+    }
+
+    public void setPushState(PushState pushState) {
+        this.pushState = pushState;
     }
 }

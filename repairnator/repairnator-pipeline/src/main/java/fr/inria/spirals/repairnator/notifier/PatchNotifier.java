@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.notifier;
 
 import fr.inria.lille.repair.common.patch.Patch;
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
@@ -24,7 +24,7 @@ public class PatchNotifier extends AbstractNotifier {
 
     public void observe(ProjectInspector inspector) {
         JobStatus status = inspector.getJobStatus();
-        if (!alreadyNotified && status.getState() == ProjectState.PATCHED) {
+        if (!alreadyNotified && status.getPipelineState() == PipelineState.PATCHED) {
             String subject = "Patched build: "+inspector.getBuggyBuild().getId()+" - "+inspector.getBuggyBuild().getRepository().getSlug();
 
 

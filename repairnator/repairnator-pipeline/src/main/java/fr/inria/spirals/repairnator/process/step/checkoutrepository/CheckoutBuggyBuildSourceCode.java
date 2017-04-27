@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
@@ -18,7 +18,7 @@ public class CheckoutBuggyBuildSourceCode extends CheckoutRepository {
         if (this.getInspector().getJobStatus().getRepairSourceDir() == null) {
             this.getLogger().error("Repair source dir is null: it is therefore impossible to continue.");
             this.shouldStop = true;
-            this.setState(ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT);
+            this.setPipelineState(PipelineState.PREVIOUSBUILDCODENOTCHECKEDOUT);
             return;
         }
 
@@ -31,9 +31,9 @@ public class CheckoutBuggyBuildSourceCode extends CheckoutRepository {
         super.businessExecute();
 
         if (this.shouldStop) {
-            this.setState(ProjectState.PREVIOUSBUILDCODENOTCHECKEDOUT);
+            this.setPipelineState(PipelineState.PREVIOUSBUILDCODENOTCHECKEDOUT);
         } else {
-            this.setState(ProjectState.PREVIOUSBUILDCODECHECKEDOUT);
+            this.setPipelineState(PipelineState.PREVIOUSBUILDCODECHECKEDOUT);
             inspector.setCheckoutType(getCheckoutType());
         }
     }

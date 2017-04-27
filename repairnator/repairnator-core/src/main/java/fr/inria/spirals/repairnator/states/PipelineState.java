@@ -1,9 +1,9 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.states;
 
 /**
  * Created by urli on 03/01/2017.
  */
-public enum ProjectState {
+public enum PipelineState {
     NONE, INIT,
     CLONABLE, NOTCLONABLE,
     BUILDCHECKEDOUT, BUILDNOTCHECKEDOUT,
@@ -16,6 +16,5 @@ public enum ProjectState {
     SOURCEDIRCOMPUTED, SOURCEDIRNOTCOMPUTED,
     PATCHED, NOTPATCHED,
     FIXERBUILDCASE1, FIXERBUILDCASE2,
-    SQUASHED_REPO, NOT_SQUASHED_REPO,
     DEPENDENCY_RESOLVED, DEPENDENCY_UNRESOLVABLE
 }

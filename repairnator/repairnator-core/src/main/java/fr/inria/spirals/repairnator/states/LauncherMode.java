@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.states;
 
 /**
  * Created by urli on 25/01/2017.

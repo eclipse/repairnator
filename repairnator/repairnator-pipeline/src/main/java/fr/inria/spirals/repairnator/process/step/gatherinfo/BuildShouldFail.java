@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
-import fr.inria.spirals.repairnator.LauncherMode;
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
@@ -13,11 +13,11 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
     @Override
     public boolean shouldBeStopped(GatherTestInformation gatherTestInformation) {
         ProjectInspector inspector = gatherTestInformation.getInspector();
-        if (gatherTestInformation.getState() == ProjectState.HASTESTFAILURE) {
+        if (gatherTestInformation.getPipelineState() == PipelineState.HASTESTFAILURE) {
             inspector.getJobStatus().setReproducedAsFail(true);
             return false;
         } else {
-            if (gatherTestInformation.getState() == ProjectState.HASTESTERRORS) {
+            if (gatherTestInformation.getPipelineState() == PipelineState.HASTESTERRORS) {
                 if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                     return true;
                 } else {

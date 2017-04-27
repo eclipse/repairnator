@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
@@ -69,7 +69,7 @@ public class ComputeClasspath extends AbstractStep {
 
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");
-            this.setState(ProjectState.CLASSPATHNOTCOMPUTED);
+            this.setPipelineState(PipelineState.CLASSPATHNOTCOMPUTED);
             return;
         }
 
@@ -87,7 +87,7 @@ public class ComputeClasspath extends AbstractStep {
             }
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath: " + e);
-            this.setState(ProjectState.CLASSPATHNOTCOMPUTED);
+            this.setPipelineState(PipelineState.CLASSPATHNOTCOMPUTED);
             //return ?
         }
 
@@ -104,6 +104,6 @@ public class ComputeClasspath extends AbstractStep {
         }
 
         this.inspector.getJobStatus().setRepairClassPath(this.classPath);
-        this.setState(ProjectState.CLASSPATHCOMPUTED);
+        this.setPipelineState(PipelineState.CLASSPATHCOMPUTED);
     }
 }

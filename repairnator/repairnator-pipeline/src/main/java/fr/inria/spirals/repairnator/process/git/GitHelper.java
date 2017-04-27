@@ -40,7 +40,7 @@ import java.util.List;
  * Created by fernanda on 01/03/17.
  */
 public class GitHelper {
-    
+
     private int nbCommits;
 
     public GitHelper() {

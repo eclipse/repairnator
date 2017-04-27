@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.maven.output.MavenFilterTestOutputHandler;
@@ -36,14 +36,14 @@ public class TestProject extends AbstractStep {
             } else {
                 this.addStepError("No test recorded.");
             }
-            this.setState(ProjectState.NOTFAILING);
+            this.setPipelineState(PipelineState.NOTFAILING);
         } else {
             if (outputTestFilter.isFailingWithTest()) {
                 this.getLogger().debug(outputTestFilter.getFailingTests() + " tests failed, go to next step.");
-                this.setState(ProjectState.TESTABLE);
+                this.setPipelineState(PipelineState.TESTABLE);
             } else {
                 this.addStepError("Error while testing the project.");
-                this.setState(ProjectState.NOTTESTABLE);
+                this.setPipelineState(PipelineState.NOTTESTABLE);
                 this.shouldStop = true;
             }
         }

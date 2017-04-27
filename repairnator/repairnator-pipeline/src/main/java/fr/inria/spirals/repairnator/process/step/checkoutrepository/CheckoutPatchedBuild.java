@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
@@ -21,15 +21,14 @@ public class CheckoutPatchedBuild extends CheckoutRepository {
             super.businessExecute();
 
             if (this.shouldStop) {
-                this.setState(ProjectState.PATCHEDBUILDNOTCHECKEDOUT);
+                this.setPipelineState(PipelineState.PATCHEDBUILDNOTCHECKEDOUT);
             } else {
-                this.setState(ProjectState.PATCHEDBUILDCHECKEDOUT);
+                this.setPipelineState(PipelineState.PATCHEDBUILDCHECKEDOUT);
                 inspector.setCheckoutType(getCheckoutType());
             }
         } else {
             this.addStepError("There is no patched build retrieved. This will stop now.");
             this.shouldStop = true;
-            this.setState(ProjectState.PATCHEDBUILDNOTCHECKEDOUT);
         }
 
 
