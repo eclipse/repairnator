@@ -106,7 +106,7 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.PATCHEDBUILDNOTCHECKEDOUT));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.PATCHED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
 

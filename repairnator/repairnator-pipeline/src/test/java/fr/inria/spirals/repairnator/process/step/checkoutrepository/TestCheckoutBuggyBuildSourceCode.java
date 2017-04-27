@@ -1,9 +1,10 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -94,7 +95,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuild.isShouldStop(), is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
         assertThat(gitDir.status().call().isClean(), is(true));
@@ -186,7 +187,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuild.isShouldStop(), is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
         assertThat(gitDir.status().call().isClean(), is(true));
@@ -278,7 +279,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
 
-        assertThat(checkoutBuild.shouldStop, is(false));
+        assertThat(checkoutBuild.isShouldStop(), is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
         assertThat(gitDir.status().call().isClean(), is(true));

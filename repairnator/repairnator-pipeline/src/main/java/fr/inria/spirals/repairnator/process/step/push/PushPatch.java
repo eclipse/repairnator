@@ -21,10 +21,12 @@ public class PushPatch extends AbstractStep {
 
     public PushPatch(ProjectInspector inspector, boolean pushHumanPatch) {
         super(inspector);
+        this.pushHumanPatch = pushHumanPatch;
     }
 
     public PushPatch(ProjectInspector inspector, String name, boolean pushHumanPatch) {
         super(inspector, name);
+        this.pushHumanPatch = pushHumanPatch;
     }
 
     @Override

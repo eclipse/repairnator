@@ -39,6 +39,7 @@ public class PushIncriminatedBuild extends AbstractStep {
         if (this.getConfig().isPush()) {
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
                 this.getLogger().error("Remote repo should be set !");
+                this.setPushState(PushState.REPO_NOT_PUSHED);
                 return;
             }
 

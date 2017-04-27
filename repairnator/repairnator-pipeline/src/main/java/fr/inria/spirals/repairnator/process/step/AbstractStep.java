@@ -216,6 +216,10 @@ public abstract class AbstractStep {
         }
     }
 
+    public boolean isShouldStop() {
+        return shouldStop;
+    }
+
     protected String getPom() {
         if (!pomLocationTested) {
             testPomLocation();
