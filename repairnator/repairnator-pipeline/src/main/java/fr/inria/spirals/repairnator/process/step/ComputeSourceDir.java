@@ -35,6 +35,10 @@ public class ComputeSourceDir extends AbstractStep {
                 + ") does not exists. Try to read pom.xml to get informations.");
         File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
+        if (!pomIncriminatedModule.exists()) {
+            pomIncriminatedModule = new File(this.getPom());
+        }
+
         try {
             Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
 
@@ -57,18 +61,16 @@ public class ComputeSourceDir extends AbstractStep {
                         "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
             }
 
-            if (rootCall) {
-                for (String module : model.getModules()) {
-                    File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
-                            false);
-                    if (srcDir != null) {
-                        result.addAll(Arrays.asList(srcDir));
-                    }
+            for (String module : model.getModules()) {
+                File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
+                        false);
+                if (srcDir != null) {
+                    result.addAll(Arrays.asList(srcDir));
                 }
+            }
 
-                if (result.size() > 0) {
-                    return result.toArray(new File[result.size()]);
-                }
+            if (result.size() > 0) {
+                return result.toArray(new File[result.size()]);
             }
 
             if (model.getParent() != null && rootCall) {
