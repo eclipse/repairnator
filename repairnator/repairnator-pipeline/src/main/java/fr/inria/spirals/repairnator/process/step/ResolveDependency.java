@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
@@ -27,10 +27,10 @@ public class ResolveDependency extends AbstractStep {
         int result = helper.run();
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
-            this.setState(ProjectState.DEPENDENCY_RESOLVED);
+            this.setPipelineState(PipelineState.DEPENDENCY_RESOLVED);
         } else {
             this.getLogger().warn("Repository " + this.inspector.getRepoSlug() + " may have unresolvable dependencies.");
-            this.setState(ProjectState.DEPENDENCY_UNRESOLVABLE);
+            this.setPipelineState(PipelineState.DEPENDENCY_UNRESOLVABLE);
         }
     }
 

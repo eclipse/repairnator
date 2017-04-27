@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.states.PushState;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -45,10 +46,13 @@ public class InitRepoToPush extends AbstractStep {
                 git.commit().setMessage("Bug commit. This is the reflect of the following commit: ... . Please note some conf files may have been added")
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
+                this.setPushState(PushState.REPO_INITIALIZED);
             } catch (IOException e) {
-                this.addStepError("Error while copying the folder to prepare the git repository.");
+                this.addStepError("Error while copying the folder to prepare the git repository.", e);
+                this.setPushState(PushState.REPO_NOT_INITIALIZED);
             } catch (GitAPIException e) {
-                this.addStepError("Error while initializing the new git repository.");
+                this.addStepError("Error while initializing the new git repository.", e);
+                this.setPushState(PushState.REPO_NOT_INITIALIZED);
             }
 
         } else {

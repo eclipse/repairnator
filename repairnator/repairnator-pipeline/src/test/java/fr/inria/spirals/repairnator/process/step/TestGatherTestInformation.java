@@ -4,15 +4,14 @@ import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -88,8 +87,8 @@ public class TestGatherTestInformation {
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTFAILURE));
-        assertThat(jobStatus.getState(), is(ProjectState.HASTESTFAILURE));
+        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.HASTESTFAILURE));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.HASTESTFAILURE));
 
         assertThat(jobStatus.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(98));
@@ -141,8 +140,8 @@ public class TestGatherTestInformation {
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTERRORS));
-        assertThat(jobStatus.getState(), is(ProjectState.HASTESTERRORS));
+        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.HASTESTERRORS));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.HASTESTERRORS));
 
         assertThat(jobStatus.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(8));
@@ -204,8 +203,8 @@ public class TestGatherTestInformation {
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getState(), is(ProjectState.HASTESTERRORS));
-        assertThat(jobStatus.getState(), is(ProjectState.HASTESTERRORS));
+        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.HASTESTERRORS));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.HASTESTERRORS));
 
         assertThat(jobStatus.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(26));
@@ -258,8 +257,8 @@ public class TestGatherTestInformation {
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(true));
-        assertThat(gatherTestInformation.getState(), is(ProjectState.NOTFAILING));
-        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
+        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.NOTFAILING));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTFAILING));
 
         assertThat(jobStatus.getFailingModulePath(), is(tmpDir.getAbsolutePath()+"/repo"));
         assertThat(gatherTestInformation.getNbTotalTests(), is(1));
@@ -306,8 +305,8 @@ public class TestGatherTestInformation {
         cloneStep.execute();
 
         assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getState(), is(ProjectState.NOTFAILING));
-        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
+        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.NOTFAILING));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTFAILING));
 
         assertThat(jobStatus.getFailingModulePath(), is(tmpDir.getAbsolutePath()+"/repo"));
         assertThat(gatherTestInformation.getNbTotalTests(), is(1));

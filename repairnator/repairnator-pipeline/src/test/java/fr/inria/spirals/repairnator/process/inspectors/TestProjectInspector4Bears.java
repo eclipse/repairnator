@@ -4,9 +4,9 @@ import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.LauncherMode;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -18,7 +18,6 @@ import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -109,7 +108,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.FIXERBUILDCASE1));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE1));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));
@@ -156,7 +155,7 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getState(), is(ProjectState.FIXERBUILDCASE2));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE2));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getFailureNames().size(), is(1));

@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.serializer;
 
 
-import fr.inria.spirals.repairnator.LauncherMode;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -25,7 +25,7 @@ public abstract class AbstractDataSerializer extends Serializer {
     protected String getPrettyPrintState(ProjectInspector inspector) {
 
         JobStatus jobStatus = inspector.getJobStatus();
-        switch (jobStatus.getState()) {
+        switch (jobStatus.getPipelineState()) {
             case NONE:
             case INIT:
             case NOTCLONABLE:
@@ -96,8 +96,6 @@ public abstract class AbstractDataSerializer extends Serializer {
 
             case CLASSPATHCOMPUTED:
             case CLASSPATHNOTCOMPUTED:
-            case SQUASHED_REPO:
-            case NOT_SQUASHED_REPO:
                 if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                     if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                         return "FIXERBUILD_CASE1";

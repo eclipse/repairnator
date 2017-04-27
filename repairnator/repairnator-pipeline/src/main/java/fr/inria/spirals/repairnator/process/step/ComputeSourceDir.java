@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.apache.maven.model.Build;
@@ -111,11 +111,11 @@ public class ComputeSourceDir extends AbstractStep {
 
         if (sources == null) {
             this.addStepError("Fail to find the sources directory.");
-            this.setState(ProjectState.SOURCEDIRNOTCOMPUTED);
+            this.setPipelineState(PipelineState.SOURCEDIRNOTCOMPUTED);
             this.inspector.getJobStatus().setRepairSourceDir(null);
         } else {
             this.inspector.getJobStatus().setRepairSourceDir(sources);
-            this.setState(ProjectState.SOURCEDIRCOMPUTED);
+            this.setPipelineState(PipelineState.SOURCEDIRCOMPUTED);
         }
     }
 

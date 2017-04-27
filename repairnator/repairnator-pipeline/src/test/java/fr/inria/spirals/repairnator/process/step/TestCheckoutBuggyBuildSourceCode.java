@@ -4,8 +4,8 @@ import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
@@ -91,8 +91,8 @@ public class TestCheckoutBuggyBuildSourceCode {
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getState(), is(ProjectState.PREVIOUSBUILDCODECHECKEDOUT));
+        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
 
         assertThat(checkoutBuild.shouldStop, is(false));
 
@@ -183,8 +183,8 @@ public class TestCheckoutBuggyBuildSourceCode {
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getState(), is(ProjectState.PREVIOUSBUILDCODECHECKEDOUT));
+        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
 
         assertThat(checkoutBuild.shouldStop, is(false));
 
@@ -275,8 +275,8 @@ public class TestCheckoutBuggyBuildSourceCode {
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getState(), is(ProjectState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getState(), is(ProjectState.PREVIOUSBUILDCODECHECKEDOUT));
+        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
 
         assertThat(checkoutBuild.shouldStop, is(false));
 

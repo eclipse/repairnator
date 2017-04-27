@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.config;
 
-import fr.inria.spirals.repairnator.LauncherMode;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 
 /**
  * Created by urli on 08/03/2017.

@@ -4,8 +4,8 @@ import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PushState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
@@ -81,6 +81,8 @@ public class TestInitRepoToPush {
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
+
+        assertThat(jobStatus.getPushState(), is(PushState.REPO_INITIALIZED));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();

@@ -42,7 +42,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
 
-            this.getLogger().debug("Start to push failing state in the remote repository: " + remoteRepo + " branch: " + branchName);
+            this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
 
             if (System.getenv("GITHUB_OAUTH") == null || System.getenv("GITHUB_OAUTH").equals("")) {
                 this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
@@ -51,7 +51,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             try {
                 Git git = Git.open(new File(inspector.getRepoLocalPath()));
-                this.getLogger().debug("Add the remote repository to push the current state");
+                this.getLogger().debug("Add the remote repository to push the current pipelineState");
 
                 RemoteAddCommand remoteAdd = git.remoteAdd();
                 remoteAdd.setName(REMOTE_NAME);

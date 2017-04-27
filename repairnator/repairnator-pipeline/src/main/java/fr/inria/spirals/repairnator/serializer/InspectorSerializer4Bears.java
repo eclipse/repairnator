@@ -44,7 +44,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
 
         String state = this.getPrettyPrintState(inspector);
 
-        String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
+        String realState = (jobStatus.getPipelineState() != null) ? jobStatus.getPipelineState().name() : "null";
 
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",")+"";
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
@@ -83,7 +83,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
 
         String state = this.getPrettyPrintState(inspector);
 
-        String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
+        String realState = (jobStatus.getPipelineState() != null) ? jobStatus.getPipelineState().name() : "null";
 
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";

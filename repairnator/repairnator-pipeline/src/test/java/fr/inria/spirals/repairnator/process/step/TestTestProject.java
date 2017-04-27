@@ -4,15 +4,14 @@ import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,8 +76,8 @@ public class TestTestProject {
         cloneStep.execute();
 
         assertThat(testProject.shouldStop, is(false));
-        assertThat(testProject.getState(), is(ProjectState.TESTABLE));
-        assertThat(jobStatus.getState(), is(ProjectState.TESTABLE));
+        assertThat(testProject.getPipelineState(), is(PipelineState.TESTABLE));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.TESTABLE));
     }
 
     @Test
@@ -114,8 +113,8 @@ public class TestTestProject {
         cloneStep.execute();
 
         assertThat(testProject.shouldStop, is(false));
-        assertThat(testProject.getState(), is(ProjectState.TESTABLE));
-        assertThat(jobStatus.getState(), is(ProjectState.TESTABLE));
+        assertThat(testProject.getPipelineState(), is(PipelineState.TESTABLE));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.TESTABLE));
     }
 
     @Test
@@ -151,7 +150,7 @@ public class TestTestProject {
         cloneStep.execute();
 
         assertThat(testProject.shouldStop, is(false));
-        assertThat(testProject.getState(), is(ProjectState.NOTFAILING));
-        assertThat(jobStatus.getState(), is(ProjectState.NOTFAILING));
+        assertThat(testProject.getPipelineState(), is(PipelineState.NOTFAILING));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTFAILING));
     }
 }

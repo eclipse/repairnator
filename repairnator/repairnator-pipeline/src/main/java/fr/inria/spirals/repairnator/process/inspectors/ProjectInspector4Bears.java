@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
@@ -76,7 +76,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.getSerializers());
         firstStep.setNotifiers(this.getNotifiers());
-        firstStep.setState(ProjectState.INIT);
+        firstStep.setPipelineState(PipelineState.INIT);
 
         try {
             firstStep.execute();

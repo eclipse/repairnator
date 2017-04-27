@@ -4,15 +4,14 @@ import ch.qos.logback.classic.Level;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,8 +77,8 @@ public class TestBuildProject {
         cloneStep.execute();
 
         assertThat(buildStep.shouldStop, is(false));
-        assertThat(buildStep.getState(), is(ProjectState.BUILDABLE));
-        assertThat(jobStatus.getState(), is(ProjectState.BUILDABLE));
+        assertThat(buildStep.getPipelineState(), is(PipelineState.BUILDABLE));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.BUILDABLE));
     }
 
     @Test
@@ -107,7 +106,7 @@ public class TestBuildProject {
         cloneStep.execute();
 
         assertThat(buildStep.shouldStop, is(false));
-        assertThat(buildStep.getState(), is(ProjectState.BUILDABLE));
-        assertThat(jobStatus.getState(), is(ProjectState.BUILDABLE));
+        assertThat(buildStep.getPipelineState(), is(PipelineState.BUILDABLE));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.BUILDABLE));
     }
 }

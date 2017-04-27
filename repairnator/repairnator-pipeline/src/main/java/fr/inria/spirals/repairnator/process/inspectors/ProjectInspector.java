@@ -2,8 +2,8 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.ProjectState;
-import fr.inria.spirals.repairnator.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
@@ -123,7 +123,7 @@ public class ProjectInspector {
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);
-            cloneRepo.setState(ProjectState.INIT);
+            cloneRepo.setPipelineState(PipelineState.INIT);
 
             try {
                 cloneRepo.execute();

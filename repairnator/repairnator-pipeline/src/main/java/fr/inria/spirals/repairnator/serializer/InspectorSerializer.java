@@ -41,7 +41,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
 
         String state = this.getPrettyPrintState(inspector);
 
-        String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
+        String realState = (jobStatus.getPipelineState() != null) ? jobStatus.getPipelineState().name() : "null";
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",")+"";
 
         List<Object> dataCol = new ArrayList<Object>();
@@ -68,7 +68,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
 
         String state = this.getPrettyPrintState(inspector);
 
-        String realState = (jobStatus.getState() != null) ? jobStatus.getState().name() : "null";
+        String realState = (jobStatus.getPipelineState() != null) ? jobStatus.getPipelineState().name() : "null";
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");
 
         JsonObject result = new JsonObject();

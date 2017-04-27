@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
@@ -31,10 +31,10 @@ public class BuildProject extends AbstractStep {
         int result = helper.run();
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
-            this.setState(ProjectState.BUILDABLE);
+            this.setPipelineState(PipelineState.BUILDABLE);
         } else {
             this.getLogger().warn("Repository " + this.inspector.getRepoSlug() + " cannot be built.");
-            this.setState(ProjectState.NOTBUILDABLE);
+            this.setPipelineState(PipelineState.NOTBUILDABLE);
             this.shouldStop = true;
         }
     }

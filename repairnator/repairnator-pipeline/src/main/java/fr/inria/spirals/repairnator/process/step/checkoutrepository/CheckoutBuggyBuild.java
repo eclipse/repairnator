@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
@@ -20,9 +20,9 @@ public class CheckoutBuggyBuild extends CheckoutRepository {
         super.businessExecute();
 
         if (this.shouldStop) {
-            this.setState(ProjectState.BUILDNOTCHECKEDOUT);
+            this.setPipelineState(PipelineState.BUILDNOTCHECKEDOUT);
         } else {
-            this.setState(ProjectState.BUILDCHECKEDOUT);
+            this.setPipelineState(PipelineState.BUILDCHECKEDOUT);
             inspector.setCheckoutType(getCheckoutType());
         }
     }

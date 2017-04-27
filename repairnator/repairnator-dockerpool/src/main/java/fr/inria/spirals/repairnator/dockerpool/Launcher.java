@@ -12,7 +12,7 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
-import fr.inria.spirals.repairnator.LauncherMode;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.EndProcessSerializer;

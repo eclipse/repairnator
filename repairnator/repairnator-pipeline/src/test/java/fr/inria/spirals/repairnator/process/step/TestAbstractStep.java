@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import ch.qos.logback.classic.Level;
-import fr.inria.spirals.repairnator.ProjectState;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
@@ -77,12 +77,12 @@ public class TestAbstractStep {
 
 
 
-        ProjectState state = ProjectState.NOTFAILING;
+        PipelineState state = PipelineState.NOTFAILING;
 
         step1.setNextStep(step2).setNextStep(step3);
-        step1.setState(state);
+        step1.setPipelineState(state);
 
-        assertThat(step3.getState(), is(state));
+        assertThat(step3.getPipelineState(), is(state));
     }
 
     @Test
