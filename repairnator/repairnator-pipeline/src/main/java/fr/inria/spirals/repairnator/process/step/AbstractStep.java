@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
+import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -290,7 +291,7 @@ public abstract class AbstractStep {
             String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
             File file = new File(filePath);
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
             String jsonString = gson.toJson(this.properties);
 
             try {

@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.Set;
 /**
  * Created by urli on 28/04/2017.
  */
+@XmlRootElement
 public class Metrics {
     private Map<String, Integer> stepsDurationsInSeconds;
     private Set<String> failureNames;
