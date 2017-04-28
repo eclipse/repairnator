@@ -32,7 +32,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
     }
 
     private List<Object> serializeAsList(ProjectInspector inspector) {
-        Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
+        Map<String, Integer> durations = inspector.getJobStatus().getMetrics().getStepsDurationsInSeconds();
 
         int cloneRepository = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
         int checkoutBuild = durations.getOrDefault(CheckoutPatchedBuild.class.getSimpleName(), 0);
@@ -88,7 +88,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
     }
 
     private JsonElement serializeAsJson(ProjectInspector inspector) {
-        Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
+        Map<String, Integer> durations = inspector.getJobStatus().getMetrics().getStepsDurationsInSeconds();
 
         int cloneRepository = durations.getOrDefault(CloneRepository.class.getSimpleName(), 0);
         int checkoutBuild = durations.getOrDefault(CheckoutPatchedBuild.class.getSimpleName(), 0);

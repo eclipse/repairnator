@@ -58,6 +58,10 @@ public class Metrics {
         this.stepsDurationsInSeconds = stepsDurationsInSeconds;
     }
 
+    public Map<String, Integer> getStepsDurationsInSeconds() {
+        return stepsDurationsInSeconds;
+    }
+
     public Set<String> getFailureNames() {
         return failureNames;
     }
