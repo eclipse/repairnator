@@ -116,6 +116,7 @@ public class ProjectInspector {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo.setNextStep(new CheckoutBuggyBuild(this))
                     .setNextStep(new ComputeSourceDir(this, true))
+                    .setNextStep(new ComputeTestDir(this))
                     .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
