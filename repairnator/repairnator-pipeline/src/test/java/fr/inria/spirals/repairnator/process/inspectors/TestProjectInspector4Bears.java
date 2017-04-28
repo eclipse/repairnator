@@ -132,6 +132,9 @@ public class TestProjectInspector4Bears {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
+
+        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
@@ -197,6 +200,9 @@ public class TestProjectInspector4Bears {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
+
+        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
