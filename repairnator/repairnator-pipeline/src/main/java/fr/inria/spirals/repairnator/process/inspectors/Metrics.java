@@ -1,5 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
+import com.google.gson.JsonElement;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +16,7 @@ public class Metrics {
     private int nbFailingTests;
     private int nbRunningTests;
 
-    private int sizeProjectLOC;
+    private JsonElement sizeProjectLOC;
     private int nbFileApp;
     private int nbFileTests;
 
@@ -79,11 +81,11 @@ public class Metrics {
         this.nbRunningTests = nbRunningTests;
     }
 
-    public int getSizeProjectLOC() {
+    public JsonElement getSizeProjectLOC() {
         return sizeProjectLOC;
     }
 
-    public void setSizeProjectLOC(int sizeProjectLOC) {
+    public void setSizeProjectLOC(JsonElement sizeProjectLOC) {
         this.sizeProjectLOC = sizeProjectLOC;
     }
 
