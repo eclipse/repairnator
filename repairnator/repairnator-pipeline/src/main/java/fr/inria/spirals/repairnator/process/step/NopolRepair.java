@@ -6,6 +6,7 @@ import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
@@ -47,6 +48,7 @@ public class NopolRepair extends AbstractStep {
 
         this.setPipelineState(PipelineState.NOTPATCHED);
 
+        Metrics metric = this.inspector.getJobStatus().getMetrics();
         List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
         File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
 
@@ -152,6 +154,11 @@ public class NopolRepair extends AbstractStep {
                         }
                         nopolInformation.setNbStatements(result.getNbStatements());
                         nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
+
+                        metric.addAngelicValueByTest(failureLocation.getClassName(), result.getNbAngelicValues());
+                        metric.addNbStatementByTest(failureLocation.getClassName(), result.getNbStatements());
+                        metric.addExecutedLinesByTest(failureLocation.getClassName(), -1);
+
                         patch = result.getPatches();
                         if (patch != null && !patch.isEmpty()) {
                             nopolInformation.setPatches(patch);

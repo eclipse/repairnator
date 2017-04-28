@@ -4,6 +4,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.eclipse.jgit.api.Git;
@@ -27,17 +28,43 @@ public abstract class CheckoutRepository extends AbstractStep {
         super(inspector);
     }
 
+    private String getCommitUrl(String commitId) {
+        return "http://github.com/"+this.inspector.getRepoSlug()+"/commit/"+commitId;
+    }
+
     @Override
     protected void businessExecute() {
+
+        Metrics metric = this.getInspector().getJobStatus().getMetrics();
         Git git;
         try {
             GitHelper gitHelper = this.getInspector().getGitHelper();
             git = Git.open(new File(inspector.getRepoLocalPath()));
             Build build;
-            if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
-                build = inspector.getPatchedBuild();
-            } else {
-                build = inspector.getBuggyBuild();
+
+            switch (checkoutType) {
+                case CHECKOUT_BUGGY_BUILD:
+                    build = inspector.getBuggyBuild();
+                    metric.setBugCommit(build.getCommit().getSha());
+                    metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    break;
+
+                case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
+                    build = inspector.getBuggyBuild();
+                    metric.setBugCommit(build.getCommit().getSha());
+                    metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    metric.setReconstructedBugCommit(true);
+                    break;
+
+                case CHECKOUT_PATCHED_BUILD:
+                    build = inspector.getPatchedBuild();
+                    metric.setPatchCommit(build.getCommit().getSha());
+                    metric.setPatchCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    break;
+
+                default:
+                    this.getLogger().warn("A case seems not to have been considered. Buggy build will be used.");
+                    build = inspector.getBuggyBuild();
             }
 
             if (build.isPullRequest()) {

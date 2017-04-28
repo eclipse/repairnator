@@ -166,7 +166,7 @@ public class GatherTestInformation extends AbstractStep {
             this.writeProperty("totalNumberSkippingTests", this.nbSkippingTests);
             this.writeProperty("totalNumberRunningTests", this.nbTotalTests);
             this.inspector.getJobStatus().setFailureLocations(this.failureLocations);
-            this.inspector.getJobStatus().setFailureNames(this.failureNames);
+            this.inspector.getJobStatus().getMetrics().setFailureNames(this.failureNames);
         }
 
 

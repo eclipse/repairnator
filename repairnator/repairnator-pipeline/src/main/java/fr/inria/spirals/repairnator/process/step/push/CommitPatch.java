@@ -1,19 +1,34 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.patch.FileHeader;
+import org.eclipse.jgit.patch.HunkHeader;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by urli on 27/04/2017.
@@ -31,6 +46,51 @@ public class CommitPatch extends AbstractStep {
         this.pushHumanPatch = pushHumanPatch;
     }
 
+    private void computePatchStats(Git git, RevCommit headRev, RevCommit commit) {
+        try {
+            ObjectReader reader = git.getRepository().newObjectReader();
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, headRev.getTree());
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, commit.getTree());
+
+            DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
+            diffFormatter.setRepository(git.getRepository());
+            diffFormatter.setContext(0);
+            List<DiffEntry> entries = diffFormatter.scan(newTreeIter, oldTreeIter);
+
+            int nbLineAdded = 0;
+            int nbLineDeleted = 0;
+            Set<String> changedFiles = new HashSet<>();
+
+            for (DiffEntry entry : entries) {
+                String path;
+                if (entry.getChangeType() == DiffEntry.ChangeType.DELETE) {
+                    path = entry.getOldPath();
+                } else {
+                    path = entry.getNewPath();
+                }
+                if (!path.contains("repairnator")) {
+                    changedFiles.add(path);
+
+                    FileHeader fileHeader = diffFormatter.toFileHeader(entry);
+                    List<? extends HunkHeader> hunks = fileHeader.getHunks();
+                    for (HunkHeader hunk : hunks) {
+                        nbLineAdded += hunk.getOldImage().getLinesAdded();
+                        nbLineDeleted += hunk.getOldImage().getLinesDeleted();
+                    }
+                }
+            }
+
+            Metrics metric = this.getInspector().getJobStatus().getMetrics();
+            metric.setPatchAddedLines(nbLineAdded);
+            metric.setPatchDeletedLines(nbLineDeleted);
+            metric.setPatchChangedFiles(changedFiles.size());
+        } catch (IOException e) {
+            this.getLogger().error("Error while computing stat on the patch", e);
+        }
+    }
+
     @Override
     protected void businessExecute() {
         if (RepairnatorConfig.getInstance().isPush()) {
@@ -41,6 +101,11 @@ public class CommitPatch extends AbstractStep {
 
             try {
                 Git git = Git.open(targetDir);
+                Ref oldHeadRef = git.getRepository().exactRef("HEAD");
+
+                RevWalk revWalk = new RevWalk(git.getRepository());
+                RevCommit headRev = revWalk.parseCommit(oldHeadRef.getObjectId());
+                revWalk.dispose();
 
                 FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
                     @Override
@@ -49,14 +114,15 @@ public class CommitPatch extends AbstractStep {
                     }
                 });
 
-
                 git.add().addFilepattern(".").call();
 
                 String commitMsg = (pushHumanPatch) ? "Human patch for the bug." : "Automated patch and/or related information";
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage(commitMsg)
+                RevCommit commit = git.commit().setMessage(commitMsg)
                         .setAuthor(personIdent).setCommitter(personIdent).call();
+
+                this.computePatchStats(git, headRev, commit);
 
                 if (this.getInspector().getJobStatus().isHasBeenPushed()) {
                     CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");

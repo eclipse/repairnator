@@ -27,11 +27,11 @@ public class Metrics {
     private long totalMemory;
 
     private int patchAddedLines;
-    private int patchRemovedLines;
-    private int patchModifiesLines;
-    private int patchModifiedFiles;
+    private int patchDeletedLines;
+    private int patchChangedFiles;
 
     private Map<String, Integer> angelicValuesByTest;
+    private Map<String, Integer> nbStatementsByTest;
     private Map<String, Integer> executedLinesByTest;
 
     private String bugCommit;
@@ -44,6 +44,7 @@ public class Metrics {
     public Metrics() {
         this.stepsDurationsInSeconds = new HashMap<>();
         this.angelicValuesByTest = new HashMap<>();
+        this.nbStatementsByTest = new HashMap<>();
         this.executedLinesByTest = new HashMap<>();
         this.freeMemoryByStep = new HashMap<>();
     }
@@ -145,28 +146,12 @@ public class Metrics {
         this.patchAddedLines = patchAddedLines;
     }
 
-    public int getPatchRemovedLines() {
-        return patchRemovedLines;
+    public int getPatchDeletedLines() {
+        return patchDeletedLines;
     }
 
-    public void setPatchRemovedLines(int patchRemovedLines) {
-        this.patchRemovedLines = patchRemovedLines;
-    }
-
-    public int getPatchModifiesLines() {
-        return patchModifiesLines;
-    }
-
-    public void setPatchModifiesLines(int patchModifiesLines) {
-        this.patchModifiesLines = patchModifiesLines;
-    }
-
-    public int getPatchModifiedFiles() {
-        return patchModifiedFiles;
-    }
-
-    public void setPatchModifiedFiles(int patchModifiedFiles) {
-        this.patchModifiedFiles = patchModifiedFiles;
+    public void setPatchDeletedLines(int patchDeletedLines) {
+        this.patchDeletedLines = patchDeletedLines;
     }
 
     public Map<String, Integer> getAngelicValuesByTest() {
@@ -231,5 +216,33 @@ public class Metrics {
 
     public void addFreeMemoryByStep(String step, long value) {
         this.freeMemoryByStep.put(step, value);
+    }
+
+    public void addAngelicValueByTest(String test, int nbAngelicValue) {
+        this.angelicValuesByTest.put(test, nbAngelicValue);
+    }
+
+    public void addExecutedLinesByTest(String test, int nbExecutedLine) {
+        this.executedLinesByTest.put(test, nbExecutedLine);
+    }
+
+    public int getPatchChangedFiles() {
+        return patchChangedFiles;
+    }
+
+    public void setPatchChangedFiles(int patchChangedFiles) {
+        this.patchChangedFiles = patchChangedFiles;
+    }
+
+    public Map<String, Integer> getNbStatementsByTest() {
+        return nbStatementsByTest;
+    }
+
+    public void setNbStatementsByTest(Map<String, Integer> nbStatementsByTest) {
+        this.nbStatementsByTest = nbStatementsByTest;
+    }
+
+    public void addNbStatementByTest(String test, int nbStatement) {
+        this.nbStatementsByTest.put(test, nbStatement);
     }
 }
