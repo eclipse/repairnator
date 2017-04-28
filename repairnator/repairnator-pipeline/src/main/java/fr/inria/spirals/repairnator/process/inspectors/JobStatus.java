@@ -21,27 +21,31 @@ public class JobStatus {
     private PipelineState pipelineState;
     private PushState pushState;
     private List<URL> repairClassPath;
+
     private File[] repairSourceDir;
+    private File[] testDir;
+
     private List<NopolInformation> nopolInformations;
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
     private String pomDirPath;
     private boolean hasBeenPushed;
-    private Map<String, Integer> stepsDurationsInSeconds;
-    private Map<String, List<String>> stepErrors;
-    private String failingModulePath;
+
     private Collection<FailureLocation> failureLocations;
-    private Set<String> failureNames;
+    private String failingModulePath;
+    private Map<String, List<String>> stepErrors;
     private String gitBranchUrl;
     private boolean hasBeenPatched;
 
+    private Metrics metrics;
+
     public JobStatus(String pomDirPath) {
         this.pipelineState = PipelineState.NONE;
-        this.stepsDurationsInSeconds = new HashMap<>();
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
+        this.metrics = new Metrics();
     }
 
     public PipelineState getPipelineState() {
@@ -109,9 +113,6 @@ public class JobStatus {
         errors.add(error);
     }
 
-    public void addStepDuration(String step, int duration) {
-        this.stepsDurationsInSeconds.put(step, duration);
-    }
 
     public boolean isHasBeenPushed() {
         return hasBeenPushed;
@@ -119,10 +120,6 @@ public class JobStatus {
 
     public void setHasBeenPushed(boolean hasBeenPushed) {
         this.hasBeenPushed = hasBeenPushed;
-    }
-
-    public Map<String, Integer> getStepsDurationsInSeconds() {
-        return stepsDurationsInSeconds;
     }
 
     public Map<String, List<String>> getStepErrors() {
@@ -143,14 +140,6 @@ public class JobStatus {
 
     public void setFailureLocations(Collection<FailureLocation> failureLocations) {
         this.failureLocations = failureLocations;
-    }
-
-    public Set<String> getFailureNames() {
-        return failureNames;
-    }
-
-    public void setFailureNames(Set<String> failureNames) {
-        this.failureNames = failureNames;
     }
 
     public String getGitBranchUrl() {
@@ -175,5 +164,17 @@ public class JobStatus {
 
     public void setPushState(PushState pushState) {
         this.pushState = pushState;
+    }
+
+    public Metrics getMetrics() {
+        return metrics;
+    }
+
+    public File[] getTestDir() {
+        return testDir;
+    }
+
+    public void setTestDir(File[] testDir) {
+        this.testDir = testDir;
     }
 }
