@@ -118,7 +118,7 @@ public class TestProjectInspector {
         assertThat(jobStatus.getPipelineState(), is(PipelineState.PATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getFailureNames().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));

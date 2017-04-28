@@ -120,7 +120,7 @@ public class TestProjectInspector4Bears {
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getFailureNames().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
@@ -185,7 +185,7 @@ public class TestProjectInspector4Bears {
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getFailureNames().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
