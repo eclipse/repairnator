@@ -92,6 +92,9 @@ public class TestCommitPatch {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
+
+        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
