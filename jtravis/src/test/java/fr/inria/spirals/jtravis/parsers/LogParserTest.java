@@ -1,12 +1,14 @@
 package fr.inria.spirals.jtravis.parsers;
 
 import fr.inria.spirals.jtravis.TestUtils;
-import fr.inria.spirals.jtravis.entities.BuildTool;
+import fr.inria.spirals.jtravis.entities.*;
+import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by urli on 22/02/2017.
@@ -72,4 +74,43 @@ public class LogParserTest {
 
         assertEquals(BuildTool.GRADLE, parser.getBuildTool());
     }
+
+    @Test
+    public void testToEnsureBuildToolIsMaven() {
+        int buildId = 218154223;
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+
+        boolean result = false;
+        for (Job job : build.getJobs()) {
+            Log jobLog = job.getLog();
+
+            if (jobLog != null && jobLog.getBuildTool() == BuildTool.MAVEN) {
+                result = true;
+            }
+        }
+
+        assertTrue(build != null);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testToEnsureBuildToolIsGradle() {
+        int buildId = 218180742;
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+
+        boolean result = false;
+        for (Job job : build.getJobs()) {
+            Log jobLog = job.getLog();
+
+            if (jobLog != null && jobLog.getBuildTool() == BuildTool.GRADLE) {
+                result = true;
+            }
+        }
+
+        assertTrue(build != null);
+        assertEquals(true, result);
+    }
+
 }

@@ -259,18 +259,22 @@ public class ProjectScanner {
                         Log jobLog = job.getLog();
 
                         if (jobLog != null) {
-                            TestsInformation testInfo = jobLog.getTestsInformation();
+                            if (jobLog.getBuildTool() == BuildTool.MAVEN) {
+                                TestsInformation testInfo = jobLog.getTestsInformation();
 
-                            // testInfo can be null if the build tool is unknown
-                            if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
-                                this.totalBuildInJavaFailingWithFailingTests++;
-                                if (targetFailing) {
-                                    this.slugs.add(repo.getSlug());
-                                    this.repositories.add(repo);
-                                    return true;
-                                } else {
-                                    return false;
+                                // testInfo can be null if the build tool is unknown
+                                if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
+                                    this.totalBuildInJavaFailingWithFailingTests++;
+                                    if (targetFailing) {
+                                        this.slugs.add(repo.getSlug());
+                                        this.repositories.add(repo);
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
                                 }
+                            } else {
+                                logger.debug("Maven is not used in the build " + build.getId());
                             }
                         } else {
                             logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
@@ -280,9 +284,21 @@ public class ProjectScanner {
             } else if (build.getBuildStatus() == BuildStatus.PASSED) {
                 this.totalJavaPassingBuilds++;
                 if (!targetFailing) {
-                    this.slugs.add(repo.getSlug());
-                    this.repositories.add(repo);
-                    return true;
+                    for (Job job : build.getJobs()) {
+                        if (job.getBuildStatus() == BuildStatus.PASSED) {
+                            Log jobLog = job.getLog();
+
+                            if (jobLog != null) {
+                                if (jobLog.getBuildTool() == BuildTool.MAVEN) {
+                                    this.slugs.add(repo.getSlug());
+                                    this.repositories.add(repo);
+                                    return true;
+                                } else {
+                                    logger.debug("Maven is not used in the build " + build.getId());
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } else {
