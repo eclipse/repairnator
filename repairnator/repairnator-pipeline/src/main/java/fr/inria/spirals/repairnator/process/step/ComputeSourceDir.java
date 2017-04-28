@@ -30,12 +30,12 @@ public class ComputeSourceDir extends AbstractStep {
 
     public ComputeSourceDir(ProjectInspector inspector, boolean allModules) {
         super(inspector);
-        this.allModules = true;
+        this.allModules = allModules;
     }
 
     public ComputeSourceDir(ProjectInspector inspector, String name, boolean allModules) {
         super(inspector, name);
-        this.allModules = true;
+        this.allModules = allModules;
     }
 
     private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
