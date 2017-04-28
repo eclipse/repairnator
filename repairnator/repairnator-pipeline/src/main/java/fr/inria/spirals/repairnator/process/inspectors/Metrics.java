@@ -20,8 +20,9 @@ public class Metrics {
 
     private int nbLibraries;
     private int nbCPU;
-    private int freeMemory;
-    private int totalMemory;
+    private Map<String, Long> freeMemoryByStep;
+    private long freeMemory;
+    private long totalMemory;
 
     private int patchAddedLines;
     private int patchRemovedLines;
@@ -42,6 +43,7 @@ public class Metrics {
         this.stepsDurationsInSeconds = new HashMap<>();
         this.angelicValuesByTest = new HashMap<>();
         this.executedLinesByTest = new HashMap<>();
+        this.freeMemoryByStep = new HashMap<>();
     }
 
 
@@ -117,19 +119,19 @@ public class Metrics {
         this.nbCPU = nbCPU;
     }
 
-    public int getFreeMemory() {
+    public long getFreeMemory() {
         return freeMemory;
     }
 
-    public void setFreeMemory(int freeMemory) {
+    public void setFreeMemory(long freeMemory) {
         this.freeMemory = freeMemory;
     }
 
-    public int getTotalMemory() {
+    public long getTotalMemory() {
         return totalMemory;
     }
 
-    public void setTotalMemory(int totalMemory) {
+    public void setTotalMemory(long totalMemory) {
         this.totalMemory = totalMemory;
     }
 
@@ -219,5 +221,13 @@ public class Metrics {
 
     public void setPatchCommitUrl(String patchCommitUrl) {
         this.patchCommitUrl = patchCommitUrl;
+    }
+
+    public Map<String, Long> getFreeMemoryByStep() {
+        return freeMemoryByStep;
+    }
+
+    public void addFreeMemoryByStep(String step, long value) {
+        this.freeMemoryByStep.put(step, value);
     }
 }

@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -9,7 +10,6 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
-import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -248,9 +248,11 @@ public abstract class AbstractStep {
         this.businessExecute();
         this.dateEnd = new Date().getTime();
 
-        this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
+        Metrics metric = this.inspector.getJobStatus().getMetrics();
+        metric.addStepDuration(this.name, getDuration());
+        metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
+
         this.inspector.getJobStatus().setPipelineState(this.pipelineState);
-        this.pushNewInformationIfNeeded();
 
         if (!shouldStop) {
             this.executeNextStep();
@@ -260,21 +262,18 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
-        this.writeProperty("step-durations", this.inspector.getJobStatus().getStepsDurationsInSeconds());
-        this.writeProperty("lastStep", this.getName());
+        this.recordMetrics();
+        this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
         this.serializeData();
-        this.pushNewInformationIfNeeded();
         this.cleanMavenArtifacts();
     }
 
-    private void pushNewInformationIfNeeded() {
-        try {
-            Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
-            this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
-        } catch (IOException e) {
-            this.getLogger().error("Error while committing new repairnator information. ", e);
-        }
+    private void recordMetrics() {
+        Metrics metric = this.inspector.getJobStatus().getMetrics();
 
+        metric.setFreeMemory(Runtime.getRuntime().freeMemory());
+        metric.setTotalMemory(Runtime.getRuntime().totalMemory());
+        metric.setNbCPU(Runtime.getRuntime().availableProcessors());
     }
 
     private int getDuration() {
