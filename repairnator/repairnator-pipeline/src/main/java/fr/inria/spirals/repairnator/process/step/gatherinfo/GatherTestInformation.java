@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -166,7 +167,11 @@ public class GatherTestInformation extends AbstractStep {
             this.writeProperty("totalNumberSkippingTests", this.nbSkippingTests);
             this.writeProperty("totalNumberRunningTests", this.nbTotalTests);
             this.inspector.getJobStatus().setFailureLocations(this.failureLocations);
-            this.inspector.getJobStatus().getMetrics().setFailureNames(this.failureNames);
+
+            Metrics metrics = this.inspector.getJobStatus().getMetrics();
+            metrics.setFailureNames(this.failureNames);
+            metrics.setNbFailingTests(this.nbErroringTests+this.nbFailingTests);
+            metrics.setNbRunningTests(this.nbTotalTests);
         }
 
 
