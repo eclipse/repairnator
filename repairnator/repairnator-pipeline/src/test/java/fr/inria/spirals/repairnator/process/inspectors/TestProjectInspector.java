@@ -118,7 +118,7 @@ public class TestProjectInspector {
         assertThat(jobStatus.getPipelineState(), is(PipelineState.PATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getFailureNames().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
@@ -131,10 +131,13 @@ public class TestProjectInspector {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automated patch"));
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit."));
+        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
+
+        commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }

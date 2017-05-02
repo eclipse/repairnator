@@ -92,8 +92,11 @@ public class TestInitRepoToPush {
         Iterator<RevCommit> iterator = logs.iterator();
         assertThat(iterator.hasNext(), is(true));
 
+        RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
+
         RevCommit firstCommit = iterator.next();
-        assertThat(firstCommit.getShortMessage(), containsString("Bug commit."));
+        assertThat(firstCommit.getShortMessage(), containsString("Bug commit"));
         assertThat(iterator.hasNext(), is(false));
     }
 }

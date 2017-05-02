@@ -8,6 +8,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -360,11 +361,12 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             serializers.add(new InspectorSerializer(this.engines));
             serializers.add(new InspectorTimeSerializer(this.engines));
-            serializers.add(new NopolSerializer(this.engines));
         } else {
             serializers.add(new InspectorSerializer4Bears(this.engines));
             serializers.add(new InspectorTimeSerializer4Bears(this.engines));
         }
+        serializers.add(new NopolSerializer(this.engines));
+        serializers.add(new MetricsSerializer(this.engines));
 
         List<NotifierEngine> notifierEngines = new ArrayList<>();
 

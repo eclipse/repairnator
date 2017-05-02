@@ -2,6 +2,9 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
+import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -10,6 +13,10 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -248,9 +255,11 @@ public abstract class AbstractStep {
         this.businessExecute();
         this.dateEnd = new Date().getTime();
 
-        this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
+        Metrics metric = this.inspector.getJobStatus().getMetrics();
+        metric.addStepDuration(this.name, getDuration());
+        metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
+
         this.inspector.getJobStatus().setPipelineState(this.pipelineState);
-        this.pushNewInformationIfNeeded();
 
         if (!shouldStop) {
             this.executeNextStep();
@@ -260,21 +269,19 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
-        this.writeProperty("step-durations", this.inspector.getJobStatus().getStepsDurationsInSeconds());
-        this.writeProperty("lastStep", this.getName());
+        this.recordMetrics();
+        this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
+        this.lastPush();
         this.serializeData();
-        this.pushNewInformationIfNeeded();
         this.cleanMavenArtifacts();
     }
 
-    private void pushNewInformationIfNeeded() {
-        try {
-            Git git = Git.open(new File(this.inspector.getRepoLocalPath()));
-            this.getInspector().getGitHelper().addAndCommitRepairnatorLogAndProperties(git, "Commit done at the end of step "+this.getName());
-        } catch (IOException e) {
-            this.getLogger().error("Error while committing new repairnator information. ", e);
-        }
+    private void recordMetrics() {
+        Metrics metric = this.inspector.getJobStatus().getMetrics();
 
+        metric.setFreeMemory(Runtime.getRuntime().freeMemory());
+        metric.setTotalMemory(Runtime.getRuntime().totalMemory());
+        metric.setNbCPU(Runtime.getRuntime().availableProcessors());
     }
 
     private int getDuration() {
@@ -284,6 +291,38 @@ public abstract class AbstractStep {
         return Math.round((dateEnd - dateBegin) / 1000);
     }
 
+    private void lastPush() {
+        if (RepairnatorConfig.getInstance().isPush()) {
+            File sourceDir = new File(this.getInspector().getRepoLocalPath());
+            File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
+
+            try {
+                Git git = Git.open(targetDir);
+
+                org.apache.commons.io.FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
+                    @Override
+                    public boolean accept(File pathname) {
+                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2");
+                    }
+                });
+
+                git.add().addFilepattern(".").call();
+                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
+                git.commit().setMessage("End of the repairnator process")
+                        .setAuthor(personIdent).setCommitter(personIdent).call();
+
+                if (this.getInspector().getJobStatus().isHasBeenPushed()) {
+                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
+                    git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
+                }
+            } catch (GitAPIException | IOException e) {
+                this.getLogger().error("Error while trying to commit last information for repairnator", e);
+            }
+        }
+
+
+    }
+
     protected void writeProperty(String propertyName, Object value) {
         if (value != null) {
             this.properties.put(propertyName, value);
@@ -291,7 +330,7 @@ public abstract class AbstractStep {
             String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
             File file = new File(filePath);
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
             String jsonString = gson.toJson(this.properties);
 
             try {

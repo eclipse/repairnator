@@ -45,7 +45,6 @@ public class TestCheckoutBuggyBuildSourceCode {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
-        RepairnatorConfig.getInstance().setPush(true);
     }
 
     @After
@@ -78,6 +77,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getRepoToPushLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repotopush");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getPatchedBuild()).thenReturn(build);
         when(inspector.getBuggyBuild()).thenReturn(previousBuild);
@@ -98,7 +98,6 @@ public class TestCheckoutBuggyBuildSourceCode {
         assertThat(checkoutBuild.isShouldStop(), is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
-        assertThat(gitDir.status().call().isClean(), is(true));
 
         Iterable<RevCommit> logs = gitDir.log().call();
 
@@ -170,6 +169,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getRepoToPushLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repotopush");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getPatchedBuild()).thenReturn(build);
         when(inspector.getBuggyBuild()).thenReturn(previousBuild);
@@ -190,7 +190,6 @@ public class TestCheckoutBuggyBuildSourceCode {
         assertThat(checkoutBuild.isShouldStop(), is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
-        assertThat(gitDir.status().call().isClean(), is(true));
 
         Iterable<RevCommit> logs = gitDir.log().call();
 
@@ -262,6 +261,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         ProjectInspector inspector = mock(ProjectInspector.class);
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getRepoToPushLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repotopush");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getPatchedBuild()).thenReturn(build);
         when(inspector.getBuggyBuild()).thenReturn(previousBuild);
@@ -282,7 +282,6 @@ public class TestCheckoutBuggyBuildSourceCode {
         assertThat(checkoutBuild.isShouldStop(), is(false));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
-        assertThat(gitDir.status().call().isClean(), is(true));
 
         Iterable<RevCommit> logs = gitDir.log().call();
 

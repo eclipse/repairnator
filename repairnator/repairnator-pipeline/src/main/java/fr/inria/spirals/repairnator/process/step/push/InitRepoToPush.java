@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -47,7 +48,12 @@ public class InitRepoToPush extends AbstractStep {
                 git.add().addFilepattern(".").call();
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("Bug commit. This is the reflect of the following commit: ... . Please note some conf files may have been added")
+                String message = "Bug commit from the following repository "+this.getInspector().getRepoSlug()+"\n";
+
+                Metrics metrics = this.getInspector().getJobStatus().getMetrics();
+                message += "This bug commit is a reflect of source code from: "+metrics.getBugCommitUrl()+".";
+
+                git.commit().setMessage(message)
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
                 this.setPushState(PushState.REPO_INITIALIZED);

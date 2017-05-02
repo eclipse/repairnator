@@ -73,7 +73,7 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
@@ -114,7 +114,7 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
@@ -155,7 +155,7 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
@@ -196,7 +196,7 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
@@ -243,7 +243,7 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
 
         cloneStep.setNextStep(new CheckoutPatchedBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
@@ -299,7 +299,7 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();

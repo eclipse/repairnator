@@ -104,6 +104,7 @@ public class ComputeClasspath extends AbstractStep {
         }
 
         this.inspector.getJobStatus().setRepairClassPath(this.classPath);
+        this.inspector.getJobStatus().getMetrics().setNbLibraries(this.classPath.size()-2);
         this.setPipelineState(PipelineState.CLASSPATHCOMPUTED);
     }
 }

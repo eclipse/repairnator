@@ -115,6 +115,8 @@ public class ProjectInspector {
         if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo.setNextStep(new CheckoutBuggyBuild(this))
+                    .setNextStep(new ComputeSourceDir(this, true))
+                    .setNextStep(new ComputeTestDir(this))
                     .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
@@ -122,7 +124,7 @@ public class ProjectInspector {
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this))
-                    .setNextStep(new ComputeSourceDir(this))
+                    .setNextStep(new ComputeSourceDir(this, false))
                     .setNextStep(new NopolRepair(this))
                     .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))

@@ -1,20 +1,14 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingException;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,34 +16,27 @@ import java.util.List;
 /**
  * Created by urli on 08/02/2017.
  */
-public class ComputeSourceDir extends AbstractStep {
-    private static final String DEFAULT_SRC_DIR = "/src/main/java";
+public class ComputeTestDir extends AbstractStep {
+    private static final String DEFAULT_TEST_DIR = "/src/test/java";
     private static final String COMPUTE_TOTAL_CLOC = "cloc --json --vcs=git .";
 
-    private boolean allModules;
-
-    public ComputeSourceDir(ProjectInspector inspector, boolean allModules) {
+    public ComputeTestDir(ProjectInspector inspector) {
         super(inspector);
-        this.allModules = allModules;
     }
 
-    public ComputeSourceDir(ProjectInspector inspector, String name, boolean allModules) {
+    public ComputeTestDir(ProjectInspector inspector, String name) {
         super(inspector, name);
-        this.allModules = allModules;
     }
 
     private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
         List<File> result = new ArrayList<File>();
-        File defaultSourceDir = new File(incriminatedModulePath + DEFAULT_SRC_DIR);
+        File defaultTestDir = new File(incriminatedModulePath + DEFAULT_TEST_DIR);
 
-        if (defaultSourceDir.exists()) {
-            result.add(defaultSourceDir);
-            if (!this.allModules) {
-                return result.toArray(new File[result.size()]);
-            }
+        if (defaultTestDir.exists()) {
+            result.add(defaultTestDir);
         }
 
-        this.getLogger().debug("The default source directory (" + defaultSourceDir.getPath()
+        this.getLogger().debug("The default test directory (" + defaultTestDir.getPath()
                 + ") does not exists. Try to read pom.xml to get informations.");
         File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
@@ -63,17 +50,17 @@ public class ComputeSourceDir extends AbstractStep {
             Build buildSection = model.getBuild();
 
             if (buildSection != null) {
-                String pathSrcDirFromPom = model.getBuild().getSourceDirectory();
+                String pathTestDirFromPom = model.getBuild().getTestSourceDirectory();
 
-                File srcDirFromPom = new File(pathSrcDirFromPom);
+                File srcDirFromPom = new File(pathTestDirFromPom);
 
                 if (srcDirFromPom.exists()) {
                     result.add(srcDirFromPom);
                     return result.toArray(new File[result.size()]);
                 }
 
-                this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
-                        + ") does not exists. Try to get source dir from all modules if multimodule.");
+                this.getLogger().debug("The test directory given in pom.xml (" + pathTestDirFromPom
+                        + ") does not exists. Try to get test dir from all modules if multimodule.");
             } else {
                 this.getLogger().debug(
                         "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
@@ -122,62 +109,29 @@ public class ComputeSourceDir extends AbstractStep {
         return null;
     }
 
-    private void computeMetricsOnSources(File[] sources) {
+    private void computeMetricsOnTest(File[] sources) {
         int totalAppFiles = 0;
         if (sources != null && sources.length > 0) {
             for (File f : sources) {
                 int nbFile = FileUtils.listFiles(f, new String[] {"java"}, true).size();
                 totalAppFiles += nbFile;
             }
-            this.inspector.getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
-        }
-    }
-
-    private void computeMetricsOnCompleteRepo() {
-        this.getLogger().debug("Compute the line of code of the project");
-        ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh","-c",COMPUTE_TOTAL_CLOC)
-                .directory(new File(this.inspector.getRepoLocalPath()));
-
-        try {
-            Process p = processBuilder.start();
-            BufferedReader stdin = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            p.waitFor();
-
-            this.getLogger().debug("Get result from cloc process...");
-            String processReturn = "";
-            String line;
-            while (stdin.ready() && (line = stdin.readLine()) != null) {
-                processReturn += line;
-            }
-
-            Gson gson = new GsonBuilder().create();
-            JsonObject json = gson.fromJson(processReturn, JsonObject.class);
-
-            this.inspector.getJobStatus().getMetrics().setSizeProjectLOC(json);
-        } catch (IOException | InterruptedException e) {
-            this.getLogger().error("Error while computing metrics on source code of the whole repo.", e);
+            this.inspector.getJobStatus().getMetrics().setNbFileTests(totalAppFiles);
         }
     }
 
     @Override
     protected void businessExecute() {
-        this.getLogger().debug("Computing the source directory ...");
-        String incriminatedModule = (this.allModules) ? this.inspector.getRepoLocalPath() : this.inspector.getJobStatus().getFailingModulePath();
+        this.getLogger().debug("Computing the test directory ...");
+        File[] sources = this.searchForSourcesDirectory(this.inspector.getRepoLocalPath(), true);
 
-        File[] sources = this.searchForSourcesDirectory(incriminatedModule, true);
-
-        if (allModules) {
-            this.computeMetricsOnCompleteRepo();
-            this.computeMetricsOnSources(sources);
-        }
+        this.computeMetricsOnTest(sources);
 
         if (sources == null) {
             this.addStepError("Fail to find the sources directory.");
-            this.setPipelineState(PipelineState.SOURCEDIRNOTCOMPUTED);
-            this.inspector.getJobStatus().setRepairSourceDir(null);
+            this.setPipelineState(PipelineState.TESTDIRCOMPUTED);
         } else {
-            this.inspector.getJobStatus().setRepairSourceDir(sources);
-            this.setPipelineState(PipelineState.SOURCEDIRCOMPUTED);
+            this.setPipelineState(PipelineState.TESTDIRNOTCOMPUTED);
         }
     }
 

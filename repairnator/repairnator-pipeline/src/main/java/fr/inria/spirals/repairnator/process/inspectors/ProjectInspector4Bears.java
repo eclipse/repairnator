@@ -42,13 +42,14 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
             cloneRepo.setNextStep(new CheckoutBuggyBuild(this))
+                    .setNextStep(new ComputeSourceDir(this, true))
+                    .setNextStep(new ComputeTestDir(this))
                     .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new ComputeClasspath(this))
-                    .setNextStep(new ComputeSourceDir(this))
                     .setNextStep(new NopolRepair(this))
                     .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))
@@ -60,7 +61,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutPatchedBuild(this))
-                        .setNextStep(new ComputeSourceDir(this))
+                        .setNextStep(new ComputeSourceDir(this, true))
+                        .setNextStep(new ComputeTestDir(this))
                         .setNextStep(new CheckoutBuggyBuildSourceCode(this))
                         .setNextStep(new ResolveDependency(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuildSourceCode"))

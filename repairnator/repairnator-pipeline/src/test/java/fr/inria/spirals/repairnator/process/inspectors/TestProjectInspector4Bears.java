@@ -120,7 +120,7 @@ public class TestProjectInspector4Bears {
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getFailureNames().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
@@ -132,13 +132,16 @@ public class TestProjectInspector4Bears {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
+
+        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automated patch"));
+        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit."));
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }
@@ -185,7 +188,7 @@ public class TestProjectInspector4Bears {
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getFailureNames().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
@@ -197,13 +200,16 @@ public class TestProjectInspector4Bears {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
+
+        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automated patch"));
+        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit."));
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }
