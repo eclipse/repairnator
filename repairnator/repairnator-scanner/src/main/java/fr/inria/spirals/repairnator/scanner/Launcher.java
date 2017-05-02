@@ -107,6 +107,10 @@ public class Launcher {
         if (this.arguments.getBoolean("help")) {
             this.printUsage();
         }
+
+        if (!this.arguments.getString("launcherMode").equals("bears") && this.arguments.getBoolean("skip-failing")) {
+            this.printUsage();
+        }
     }
 
     private void printUsage() {
@@ -140,6 +144,12 @@ public class Launcher {
         sw1.setLongFlag("scan-only");
         sw1.setDefault("false");
         sw1.setHelp("Use it when the scanner is not used to launch the pipeline to gather more datas in spreadsheet.");
+        this.jsap.registerParameter(sw1);
+
+        sw1 = new Switch("skip-failing");
+        sw1.setLongFlag("skip-failing");
+        sw1.setDefault("false");
+        sw1.setHelp("Use it when the scanner should skip failing builds (can be used only with bears mode)");
         this.jsap.registerParameter(sw1);
 
         // Tab size
@@ -238,14 +248,14 @@ public class Launcher {
         Date lookFromDate = this.arguments.getDate("lookFromDate");
         Date lookToDate = this.arguments.getDate("lookToDate");
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"), this.arguments.getBoolean("skip-failing"));
         } else {
             int lookupHours = this.arguments.getInt("lookupHours");
             Calendar limitCal = Calendar.getInstance();
             limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
             lookFromDate = limitCal.getTime();
             lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"), this.arguments.getBoolean("skip-failing"));
         }
 
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
