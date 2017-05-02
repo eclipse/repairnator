@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import com.google.gson.JsonElement;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,8 @@ import java.util.Set;
 public class Metrics {
     private Map<String, Integer> stepsDurationsInSeconds;
     private Set<String> failureNames;
+
+    private String repoSlug;
 
     private int nbFailingTests;
     private int nbRunningTests;
@@ -28,13 +31,20 @@ public class Metrics {
     private long freeMemory;
     private long totalMemory;
 
+    private int buggyBuildId;
+    private int patchedBuilId;
+
+    private String buggyBuildURL;
+    private String patchedBuildURL;
+
+    private Date buggyBuildDate;
+    private Date patchedBuildDate;
+
     private int patchAddedLines;
     private int patchDeletedLines;
     private int patchChangedFiles;
 
     private Map<String, Integer> angelicValuesByTest;
-    private Map<String, Integer> nbStatementsByTest;
-    private Map<String, Integer> executedLinesByTest;
 
     private String bugCommit;
     private String bugCommitUrl;
@@ -46,8 +56,6 @@ public class Metrics {
     public Metrics() {
         this.stepsDurationsInSeconds = new HashMap<>();
         this.angelicValuesByTest = new HashMap<>();
-        this.nbStatementsByTest = new HashMap<>();
-        this.executedLinesByTest = new HashMap<>();
         this.freeMemoryByStep = new HashMap<>();
     }
 
@@ -168,14 +176,6 @@ public class Metrics {
         this.angelicValuesByTest = angelicValuesByTest;
     }
 
-    public Map<String, Integer> getExecutedLinesByTest() {
-        return executedLinesByTest;
-    }
-
-    public void setExecutedLinesByTest(Map<String, Integer> executedLinesByTest) {
-        this.executedLinesByTest = executedLinesByTest;
-    }
-
     public String getBugCommit() {
         return bugCommit;
     }
@@ -228,10 +228,6 @@ public class Metrics {
         this.angelicValuesByTest.put(test, nbAngelicValue);
     }
 
-    public void addExecutedLinesByTest(String test, int nbExecutedLine) {
-        this.executedLinesByTest.put(test, nbExecutedLine);
-    }
-
     public int getPatchChangedFiles() {
         return patchChangedFiles;
     }
@@ -240,15 +236,59 @@ public class Metrics {
         this.patchChangedFiles = patchChangedFiles;
     }
 
-    public Map<String, Integer> getNbStatementsByTest() {
-        return nbStatementsByTest;
+    public int getBuggyBuildId() {
+        return buggyBuildId;
     }
 
-    public void setNbStatementsByTest(Map<String, Integer> nbStatementsByTest) {
-        this.nbStatementsByTest = nbStatementsByTest;
+    public void setBuggyBuildId(int buggyBuildId) {
+        this.buggyBuildId = buggyBuildId;
     }
 
-    public void addNbStatementByTest(String test, int nbStatement) {
-        this.nbStatementsByTest.put(test, nbStatement);
+    public int getPatchedBuilId() {
+        return patchedBuilId;
+    }
+
+    public void setPatchedBuilId(int patchedBuilId) {
+        this.patchedBuilId = patchedBuilId;
+    }
+
+    public String getBuggyBuildURL() {
+        return buggyBuildURL;
+    }
+
+    public void setBuggyBuildURL(String buggyBuildURL) {
+        this.buggyBuildURL = buggyBuildURL;
+    }
+
+    public String getPatchedBuildURL() {
+        return patchedBuildURL;
+    }
+
+    public void setPatchedBuildURL(String patchedBuildURL) {
+        this.patchedBuildURL = patchedBuildURL;
+    }
+
+    public Date getBuggyBuildDate() {
+        return buggyBuildDate;
+    }
+
+    public void setBuggyBuildDate(Date buggyBuildDate) {
+        this.buggyBuildDate = buggyBuildDate;
+    }
+
+    public Date getPatchedBuildDate() {
+        return patchedBuildDate;
+    }
+
+    public void setPatchedBuildDate(Date patchedBuildDate) {
+        this.patchedBuildDate = patchedBuildDate;
+    }
+
+    public String getRepoSlug() {
+        return repoSlug;
+    }
+
+    public void setRepoSlug(String repoSlug) {
+        this.repoSlug = repoSlug;
     }
 }
