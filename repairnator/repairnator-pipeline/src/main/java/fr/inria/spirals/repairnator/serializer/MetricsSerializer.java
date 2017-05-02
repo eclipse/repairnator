@@ -36,6 +36,8 @@ public class MetricsSerializer extends AbstractDataSerializer {
             element.addProperty("patchedBuildId", inspector.getPatchedBuild().getId());
         }
 
+        element.addProperty("status",this.getPrettyPrintState(inspector));
+
         List<SerializedData> dataList = new ArrayList<>();
 
         dataList.add(new SerializedData(new ArrayList<>(), element));
