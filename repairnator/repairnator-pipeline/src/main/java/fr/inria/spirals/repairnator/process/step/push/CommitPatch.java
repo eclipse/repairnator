@@ -120,7 +120,7 @@ public class CommitPatch extends AbstractStep {
                     commitMsg = "Human patch from the following repository "+this.getInspector().getRepoSlug()+"\n";
 
                     Metrics metrics = this.getInspector().getJobStatus().getMetrics();
-                    commitMsg += "This commit is a reflect of the following : "+metrics.getBugCommitUrl()+".";
+                    commitMsg += "This commit is a reflect of the following : "+metrics.getPatchCommitUrl()+".";
                 } else {
                     commitMsg = "Automatic repair information (optionally automatic patches).";
                 }
