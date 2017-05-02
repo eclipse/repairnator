@@ -37,7 +37,7 @@ fi
 
 mkdir $REPAIR_OUTPUT_PATH
 
-if [ -z "$RUN_ID_SUFFIT" ]; then
+if [ -z "$RUN_ID_SUFFIX" ]; then
     RUN_ID=`uuidgen`
 else
     RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
