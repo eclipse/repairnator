@@ -158,8 +158,6 @@ public class NopolRepair extends AbstractStep {
                         String failureLocationWithoutDots = failureLocation.getClassName().replace('.','/');
 
                         metric.addAngelicValueByTest(failureLocationWithoutDots, result.getNbAngelicValues());
-                        metric.addNbStatementByTest(failureLocationWithoutDots, result.getNbStatements());
-                        metric.addExecutedLinesByTest(failureLocationWithoutDots, -1);
 
                         patch = result.getPatches();
                         if (patch != null && !patch.isEmpty()) {
