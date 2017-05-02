@@ -98,7 +98,7 @@ public class TestCommitPatch {
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit."));
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }

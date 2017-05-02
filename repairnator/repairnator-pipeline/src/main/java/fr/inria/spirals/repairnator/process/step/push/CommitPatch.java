@@ -117,12 +117,12 @@ public class CommitPatch extends AbstractStep {
 
                 String commitMsg;
                 if (pushHumanPatch) {
-                    commitMsg = "Human patch from the following repository "+this.getInspector().getRepoSlug();
+                    commitMsg = "Human patch from the following repository "+this.getInspector().getRepoSlug()+"\n";
 
                     Metrics metrics = this.getInspector().getJobStatus().getMetrics();
                     commitMsg += "This commit is a reflect of the following : "+metrics.getBugCommitUrl()+".";
                 } else {
-                    commitMsg = "This commit contains information in relation with automatic repair (optionally automatic patches).";
+                    commitMsg = "Automatic repair information (optionally automatic patches).";
                 }
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");

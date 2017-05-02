@@ -134,10 +134,10 @@ public class TestProjectInspector {
         assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automated patch"));
+        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit."));
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }

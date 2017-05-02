@@ -48,7 +48,7 @@ public class InitRepoToPush extends AbstractStep {
                 git.add().addFilepattern(".").call();
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                String message = "Bug commit from the following repository "+this.getInspector().getRepoSlug();
+                String message = "Bug commit from the following repository "+this.getInspector().getRepoSlug()+"\n";
 
                 Metrics metrics = this.getInspector().getJobStatus().getMetrics();
                 message += "This bug commit is a reflect of source code from: "+metrics.getBugCommitUrl()+".";
