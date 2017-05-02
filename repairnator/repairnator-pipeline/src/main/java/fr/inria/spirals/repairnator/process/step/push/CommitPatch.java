@@ -115,7 +115,15 @@ public class CommitPatch extends AbstractStep {
 
                 git.add().addFilepattern(".").call();
 
-                String commitMsg = (pushHumanPatch) ? "Human patch for the bug." : "Automated patch and/or related information";
+                String commitMsg;
+                if (pushHumanPatch) {
+                    commitMsg = "Human patch from the following repository "+this.getInspector().getRepoSlug();
+
+                    Metrics metrics = this.getInspector().getJobStatus().getMetrics();
+                    commitMsg += "This commit is a reflect of the following : "+metrics.getBugCommitUrl()+".";
+                } else {
+                    commitMsg = "This commit contains information in relation with automatic repair (optionally automatic patches).";
+                }
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 RevCommit commit = git.commit().setMessage(commitMsg)
