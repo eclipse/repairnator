@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
@@ -54,6 +55,21 @@ public class ProjectInspector {
         this.gitHelper = new GitHelper();
         this.jobStatus = new JobStatus(repoLocalPath);
         this.notifiers = notifiers;
+        this.initMetricsValue();
+    }
+
+    private void initMetricsValue() {
+        Metrics metrics = this.jobStatus.getMetrics();
+        metrics.setRepoSlug(this.getRepoSlug());
+        metrics.setBuggyBuildId(this.getBuggyBuild().getId());
+        metrics.setBuggyBuildURL(Utils.getTravisUrl(this.getBuggyBuild().getId(), this.getRepoSlug()));
+        metrics.setBuggyBuildDate(this.getBuggyBuild().getFinishedAt());
+
+        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.ONLY_FAIL) {
+            metrics.setPatchedBuilId(this.getPatchedBuild().getId());
+            metrics.setPatchedBuildURL(Utils.getTravisUrl(this.getPatchedBuild().getId(), this.getRepoSlug()));
+            metrics.setPatchedBuildDate(this.getPatchedBuild().getFinishedAt());
+        }
     }
 
     public JobStatus getJobStatus() {

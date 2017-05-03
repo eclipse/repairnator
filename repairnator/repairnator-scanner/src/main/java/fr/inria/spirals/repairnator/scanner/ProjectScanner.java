@@ -40,11 +40,12 @@ public class ProjectScanner {
     private Date lookToDate;
     private LauncherMode launcherMode;
     private String runId;
+    private boolean skipFailing;
 
     private Date scannerRunningBeginDate;
     private Date scannerRunningEndDate;
 
-    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode, String runId) {
+    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode, String runId, boolean skipFailing) {
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
         this.launcherMode = launcherMode;
@@ -52,6 +53,7 @@ public class ProjectScanner {
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
         this.runId = runId;
+        this.skipFailing = skipFailing;
     }
 
     public String getRunId() {
@@ -251,7 +253,7 @@ public class ProjectScanner {
 
             this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
                     + build.getBuildStatus().name());
-            if (build.getBuildStatus() == BuildStatus.FAILED) {
+            if (build.getBuildStatus() == BuildStatus.FAILED && !skipFailing) {
                 this.totalBuildInJavaFailing++;
 
                 for (Job job : build.getJobs()) {
