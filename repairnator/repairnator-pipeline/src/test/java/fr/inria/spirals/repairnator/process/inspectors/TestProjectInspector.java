@@ -141,4 +141,40 @@ public class TestProjectInspector {
 
         assertThat(iterator.hasNext(), is(false));
     }
+
+    @Test
+    public void testFailingProjectNotBuildable() throws IOException, GitAPIException {
+        int buildId = 228303218; // surli/failingProject only-one-failing
+
+        Path tmpDirPath = Files.createTempDirectory("test_complete2");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
+
+        List<AbstractDataSerializer> serializers = new ArrayList<>();
+        List<AbstractNotifier> notifiers = new ArrayList<>();
+
+        List<SerializerEngine> serializerEngines = new ArrayList<>();
+        SerializerEngine serializerEngine = mock(SerializerEngine.class);
+        serializerEngines.add(serializerEngine);
+
+        serializers.add(new InspectorSerializer(serializerEngines));
+        serializers.add(new NopolSerializer(serializerEngines));
+
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.REPAIR);
+
+        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        inspector.run();
+
+        JobStatus jobStatus = inspector.getJobStatus();
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTBUILDABLE));
+        assertThat(jobStatus.getPushState(), is(PushState.NONE));
+
+        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
+
+    }
 }

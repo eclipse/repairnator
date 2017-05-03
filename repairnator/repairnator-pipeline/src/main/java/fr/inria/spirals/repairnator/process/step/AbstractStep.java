@@ -292,7 +292,7 @@ public abstract class AbstractStep {
     }
 
     private void lastPush() {
-        if (RepairnatorConfig.getInstance().isPush()) {
+        if (RepairnatorConfig.getInstance().isPush() && this.getInspector().getJobStatus().getPushState() != PushState.NONE) {
             File sourceDir = new File(this.getInspector().getRepoLocalPath());
             File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
 
