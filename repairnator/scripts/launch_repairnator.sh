@@ -33,6 +33,7 @@ source $SCRIPT_DIR/set_env_variable.sh
 
 if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1
+    SKIP_LAUNCH_REPAIRNATOR=0
 fi
 
 mkdir $REPAIR_OUTPUT_PATH
@@ -68,6 +69,11 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
     args="`ca -g $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME`"
     echo "Supplementary args for scanner: $args"
     java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
+fi
+
+if [ "$SKIP_LAUNCH_REPAIRNATOR" -eq 1 ]; then
+    echo "Only scanning, skip the next steps"
+    exit 0
 fi
 
 NB_LINES=`wc -l $REPAIRNATOR_BUILD_LIST`
