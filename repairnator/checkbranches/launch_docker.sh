@@ -5,5 +5,6 @@ if [ "$#" -ne 2 ]; then
     exit 2
 fi
 
+touch $2
 docker build -t checkbranches .
 docker run -v $2:/tmp/outputcheck.txt -e REPOSITORY=$1 checkbranches:latest
