@@ -40,11 +40,7 @@ function count(req, res, next) {
 }
 
 function monthData(req, res, next) {
-  const now = new Date();
-  const month = now.getMonth();
-  const year = now.getFullYear();
-
-  Scanner.getMonthData(month, year).then(result => res.json(result)).catch(e => next(e));
+  Scanner.getLastMonthData().then(result => res.json(result)).catch(e => next(e));
 }
 
 export default { load, get, list, count, monthData };
