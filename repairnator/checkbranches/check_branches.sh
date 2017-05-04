@@ -5,7 +5,7 @@ if [ "$#" -ne 2 ]; then
     exit 2
 fi
 
-TMP_GIT_DIR=/tmp/checkbranches_`uuidgen`
+TMP_GIT_DIR=/tmp/checkbranches
 REPO=$1
 DEST=$2
 
@@ -28,13 +28,13 @@ fi
 echo "Analyze started: `date "+%Y-%m-%d_%H%M%S"`" > $DEST
 echo "Considered repository: $REPO" >> $DEST
 
-git for-each-ref --shell --format="branchname=%(refname:strip=3)" refs/remotes | \
+git for-each-ref --shell --format="branchname=%(refname:short)" refs/remotes | \
 while read entry
 do
     eval "$entry"
-    if [ "$branchname" == "master" ]; then
+    if [ "$branchname" == "origin/master" ]; then
         echo "Master branch ignored"
-    elif [ "$branchname" == "HEAD" ]; then
+    elif [ "$branchname" == "origin/HEAD" ]; then
         echo "Head ref ignored"
     else
         echo "Treating branch $branchname"
