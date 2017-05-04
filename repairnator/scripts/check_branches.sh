@@ -23,8 +23,8 @@ then
     exit 1
 fi
 
-echo "Considered repository: $REPO"
 echo "Analyze started: `date "+%Y-%m-%d_%H%M%S"`" > $DEST
+echo "Considered repository: $REPO" > $DEST
 
 git for-each-ref --shell --format="branchname=%(refname:strip=3)" refs/remotes | \
 while read entry
