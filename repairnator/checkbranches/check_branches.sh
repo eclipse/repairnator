@@ -48,11 +48,15 @@ do
 
         git checkout -q $bugCommitId
 
-        mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
+        timeout 1800s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
 
         if [ "$?" -eq 0 ]; then
             >&2 echo -e "$RED Error while reproducing the bug for branch $branchname $NC"
             echo "$branchname [FAILURE] (bug reproduction)" >> $DEST
+            continue
+        elif [ "$?" -eq 124 ]; then
+            >&2 echo -e "$RED Error while reproducing the bug for branch $branchname $NC"
+            echo "$branchname [FAILURE] (bug reproduction timeout)" >> $DEST
             continue
         fi
 
@@ -61,9 +65,13 @@ do
 
         git checkout -q $patchCommitId
 
-        mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
+        timeout 1800s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
 
-        if [ "$?" -ne 0 ]; then
+        if [ "$?" -eq 124 ]; then
+            >&2 echo -e "$RED Error while reproducing the passing build for branch $branchname $NC"
+            echo "$branchname [FAILURE] (patch reproduction timeout)" >> $DEST
+            continue
+        elif [ "$?" -ne 0 ]; then
             >&2 echo -e "$RED Error while reproducing the passing build for branch $branchname $NC"
             echo "$branchname [FAILURE] (patch reproduction)" >> $DEST
             continue
