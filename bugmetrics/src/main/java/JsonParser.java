@@ -6,6 +6,7 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -20,7 +21,8 @@ public class JsonParser {
     // Metrics
     private int numberOfBugs;
     private Map<String, Integer> projectsToBugsMap = new HashMap<String, Integer>();
-    private Map<String, Integer> exceptionTypesToCounterMap = new HashMap<String, Integer>();
+    private Map<String, Integer> bugTypesToCounterMap = new HashMap<String, Integer>();
+    private Map<String, Map<String, Integer>> exceptionTypesToProjectsToCounterMap = new HashMap<String, Map<String, Integer>>();
 
     JsonParser(String jsonFileFolderPath) {
         this.jsonFileFolderPath = jsonFileFolderPath;
@@ -52,13 +54,27 @@ public class JsonParser {
                 }
                 this.projectsToBugsMap.put(project, this.projectsToBugsMap.get(project)+1);
 
-                JSONArray arrays = (JSONArray) bug.get("error-types");
-                for (Object object : arrays) {
-                    String errorType = object.toString().replace(":", "");
-                    if (!this.exceptionTypesToCounterMap.containsKey(errorType)) {
-                        this.exceptionTypesToCounterMap.put(errorType, 0);
+                String bugType = (String) bug.get("bugType");
+                if (!this.bugTypesToCounterMap.keySet().contains(bugType)) {
+                    this.bugTypesToCounterMap.put(bugType, 0);
+                }
+                this.bugTypesToCounterMap.put(bugType, this.bugTypesToCounterMap.get(bugType)+1);
+
+                JSONArray failingTestCases = (JSONArray) bug.get("failing-test-cases");
+                Iterator failingTestCasesIterator = failingTestCases.iterator();
+                while (failingTestCasesIterator.hasNext()) {
+                    JSONArray failures = (JSONArray) ((JSONObject) failingTestCasesIterator.next()).get("failures");
+                    Iterator failuresIterator = failures.iterator();
+                    while (failuresIterator.hasNext()) {
+                        String errorType = ((JSONObject) failuresIterator.next()).get("failureName").toString().replace(":", "");
+                        if (!this.exceptionTypesToProjectsToCounterMap.containsKey(errorType)) {
+                            this.exceptionTypesToProjectsToCounterMap.put(errorType, new HashMap<String, Integer>());
+                        }
+                        if (!this.exceptionTypesToProjectsToCounterMap.get(errorType).containsKey(project)) {
+                            this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, 0);
+                        }
+                        this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, this.exceptionTypesToProjectsToCounterMap.get(errorType).get(project) + 1);
                     }
-                    this.exceptionTypesToCounterMap.put(errorType, this.exceptionTypesToCounterMap.get(errorType) + 1);
                 }
             }
 
@@ -66,11 +82,14 @@ public class JsonParser {
 
             System.out.println("#Projects: " + this.projectsToBugsMap.keySet().size());
 
-            Map<String, Integer> sortedMapAsc = sortByComparator(this.exceptionTypesToCounterMap, false);
-            System.out.println("#Error types: " + sortedMapAsc.keySet().size());
-            for (Entry entry : sortedMapAsc.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
+            System.out.println("Bug types: ");
+            for (Entry entry : this.bugTypesToCounterMap.entrySet()) {
+                System.out.println("#" + entry.getKey() + ": " + entry.getValue());
             }
+
+            System.out.println("#Distinct error types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
+
+            csvFile();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -78,17 +97,69 @@ public class JsonParser {
         }
     }
 
-    private static Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap, final boolean order) {
+    private void csvFile() {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter("distribution-errortypes-by-projects.csv");
+
+            Map<String, Integer> sortedProjectsToBugsMap = sortByComparator(this.projectsToBugsMap, true, false);
+
+            String FILE_HEADER = "error type";
+            for (String projectName : sortedProjectsToBugsMap.keySet()) {
+                FILE_HEADER += "," + projectName;
+            }
+            fileWriter.append(FILE_HEADER.toString());
+
+            fileWriter.append("\n");
+
+            for (String exceptionType : this.exceptionTypesToProjectsToCounterMap.keySet()) {
+                String line;
+                line = exceptionType + ",";
+                for (String projectName : sortedProjectsToBugsMap.keySet()) {
+                    if (this.exceptionTypesToProjectsToCounterMap.get(exceptionType).containsKey(projectName)) {
+                        line += this.exceptionTypesToProjectsToCounterMap.get(exceptionType).get(projectName) + ",";
+                    } else {
+                        line += "0,";
+                    }
+                }
+                line = line.substring(0, line.length());
+                fileWriter.append(line);
+                fileWriter.append("\n");
+            }
+
+            System.out.println("CSV file was created successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap, final boolean sortKeySet, final boolean order) {
         List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(unsortMap.entrySet());
 
         Collections.sort(list, new Comparator<Entry<String, Integer>>() {
             public int compare(Entry<String, Integer> o1,
                                Entry<String, Integer> o2) {
-                if (order) {
-                    return o1.getValue().compareTo(o2.getValue());
-                } else {
-                    return o2.getValue().compareTo(o1.getValue());
+                if (sortKeySet) {
+                    if (order) {
+                        return o1.getKey().compareTo(o2.getKey());
+                    } else {
+                        return o2.getKey().compareTo(o1.getKey());
 
+                    }
+                } else {
+                    if (order) {
+                        return o1.getValue().compareTo(o2.getValue());
+                    } else {
+                        return o2.getValue().compareTo(o1.getValue());
+
+                    }
                 }
             }
         });
