@@ -20,6 +20,7 @@ public class JsonParser {
     // Metrics
     private int numberOfBugs;
     private Map<String, Integer> projectsToBugsMap = new HashMap<String, Integer>();
+    private Map<String, Integer> bugTypesToCounterMap = new HashMap<String, Integer>();
     private Map<String, Integer> exceptionTypesToCounterMap = new HashMap<String, Integer>();
 
     JsonParser(String jsonFileFolderPath) {
@@ -52,13 +53,24 @@ public class JsonParser {
                 }
                 this.projectsToBugsMap.put(project, this.projectsToBugsMap.get(project)+1);
 
-                JSONArray arrays = (JSONArray) bug.get("error-types");
-                for (Object object : arrays) {
-                    String errorType = object.toString().replace(":", "");
-                    if (!this.exceptionTypesToCounterMap.containsKey(errorType)) {
-                        this.exceptionTypesToCounterMap.put(errorType, 0);
+                String bugType = (String) bug.get("bugType");
+                if (!this.bugTypesToCounterMap.keySet().contains(bugType)) {
+                    this.bugTypesToCounterMap.put(bugType, 0);
+                }
+                this.bugTypesToCounterMap.put(bugType, this.bugTypesToCounterMap.get(bugType)+1);
+
+                JSONArray failingTestCases = (JSONArray) bug.get("failing-test-cases");
+                Iterator failingTestCasesIterator = failingTestCases.iterator();
+                while (failingTestCasesIterator.hasNext()) {
+                    JSONArray failures = (JSONArray) ((JSONObject) failingTestCasesIterator.next()).get("failures");
+                    Iterator failuresIterator = failures.iterator();
+                    while (failuresIterator.hasNext()) {
+                        String errorType = ((JSONObject) failuresIterator.next()).get("failureName").toString().replace(":", "");
+                        if (!this.exceptionTypesToCounterMap.containsKey(errorType)) {
+                            this.exceptionTypesToCounterMap.put(errorType, 0);
+                        }
+                        this.exceptionTypesToCounterMap.put(errorType, this.exceptionTypesToCounterMap.get(errorType) + 1);
                     }
-                    this.exceptionTypesToCounterMap.put(errorType, this.exceptionTypesToCounterMap.get(errorType) + 1);
                 }
             }
 
@@ -66,8 +78,13 @@ public class JsonParser {
 
             System.out.println("#Projects: " + this.projectsToBugsMap.keySet().size());
 
+            System.out.println("Bug types: ");
+            for (Entry entry : this.bugTypesToCounterMap.entrySet()) {
+                System.out.println("#" + entry.getKey() + ": " + entry.getValue());
+            }
+
             Map<String, Integer> sortedMapAsc = sortByComparator(this.exceptionTypesToCounterMap, false);
-            System.out.println("#Error types: " + sortedMapAsc.keySet().size());
+            System.out.println("#Distinct error types: " + sortedMapAsc.keySet().size());
             for (Entry entry : sortedMapAsc.entrySet()) {
                 System.out.println(entry.getKey() + ": " + entry.getValue());
             }
