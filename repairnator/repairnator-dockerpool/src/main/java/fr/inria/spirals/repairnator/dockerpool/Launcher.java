@@ -91,6 +91,12 @@ public class Launcher {
         sw1.setHelp("Activate the notification when the process ends.");
         this.jsap.registerParameter(sw1);
 
+        sw1 = new Switch("createOutputDir");
+        sw1.setLongFlag("createOutputDir");
+        sw1.setDefault("false");
+        sw1.setHelp("Create a specific directory for output.");
+        this.jsap.registerParameter(sw1);
+
         FlaggedOption opt2 = new FlaggedOption("imageName");
         opt2.setShortFlag('n');
         opt2.setLongFlag("name");
@@ -302,7 +308,7 @@ public class Launcher {
 
         for (Integer builId : buildIds) {
             TreatedBuildTracking treatedBuildTracking = new TreatedBuildTracking(this.engines, this.arguments.getString("runId"), builId);
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, dockerOutputDir, treatedBuildTracking, this.arguments.getBoolean("skipDelete"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, dockerOutputDir, treatedBuildTracking, this.arguments.getBoolean("skipDelete"), this.arguments.getBoolean("createOutputDir"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }

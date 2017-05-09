@@ -98,6 +98,10 @@ if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"
 fi
 
+if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
+    args="$args --createOutputDir"
+fi
+
 echo "Supplementary args for docker pool $args"
 java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $SCANNER_MODE $args &> $LOG_DIR/dockerpool.log
 
