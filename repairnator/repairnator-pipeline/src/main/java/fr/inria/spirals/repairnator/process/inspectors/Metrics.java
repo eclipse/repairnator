@@ -16,7 +16,7 @@ public class Metrics {
     private Map<String, Integer> stepsDurationsInSeconds;
     private Set<String> failureNames;
 
-    private String repoSlug;
+    private Date reproductionDate;
 
     private int nbFailingTests;
     private int nbRunningTests;
@@ -54,11 +54,15 @@ public class Metrics {
     private String patchCommitUrl;
 
     public Metrics() {
+        this.reproductionDate = new Date();
         this.stepsDurationsInSeconds = new HashMap<>();
         this.angelicValuesByTest = new HashMap<>();
         this.freeMemoryByStep = new HashMap<>();
     }
 
+    public Date getReproductionDate() {
+        return reproductionDate;
+    }
 
     public void addStepDuration(String step, int duration) {
         this.stepsDurationsInSeconds.put(step, duration);
@@ -282,13 +286,5 @@ public class Metrics {
 
     public void setPatchedBuildDate(Date patchedBuildDate) {
         this.patchedBuildDate = patchedBuildDate;
-    }
-
-    public String getRepoSlug() {
-        return repoSlug;
-    }
-
-    public void setRepoSlug(String repoSlug) {
-        this.repoSlug = repoSlug;
     }
 }
