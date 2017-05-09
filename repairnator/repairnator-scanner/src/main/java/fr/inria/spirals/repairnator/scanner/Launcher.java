@@ -7,6 +7,9 @@ import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
+import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
+import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
@@ -41,6 +44,7 @@ public class Launcher {
     private JSAPResult arguments;
     private LauncherMode launcherMode;
     private List<SerializerEngine> engines;
+    private EndProcessNotifier endProcessNotifier;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -55,6 +59,22 @@ public class Launcher {
 
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
         this.prepareSerializerEngines();
+        this.initNotifiers();
+    }
+
+    private void initNotifiers() {
+        if (!this.arguments.getBoolean("skipNotifyEnd")) {
+            List<NotifierEngine> notifierEngines = new ArrayList<>();
+            if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
+                LOGGER.info("The email notifier engine will be used.");
+
+                notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
+            } else {
+                LOGGER.info("The email notifier engine won't be used.");
+            }
+
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, "scanner");
+        }
     }
 
     private void prepareSerializerEngines() {
@@ -152,6 +172,12 @@ public class Launcher {
         sw1.setHelp("Use it when the scanner should skip failing builds (can be used only with bears mode)");
         this.jsap.registerParameter(sw1);
 
+        sw1 = new Switch("skipNotifyEnd");
+        sw1.setLongFlag("skipNotifyEnd");
+        sw1.setDefault("true");
+        sw1.setHelp("Skip the notification when the process ends.");
+        this.jsap.registerParameter(sw1);
+
         // Tab size
         FlaggedOption opt2 = new FlaggedOption("input");
         opt2.setShortFlag('i');
@@ -240,6 +266,20 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify Google Spreadsheet ID to put data.");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("smtpServer");
+        opt2.setLongFlag("smtpServer");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify SMTP server to use for Email notification");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("notifyto");
+        opt2.setLongFlag("notifyto");
+        opt2.setList(true);
+        opt2.setListSeparator(',');
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify email adresses to notify");
+        this.jsap.registerParameter(opt2);
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {
@@ -292,7 +332,9 @@ public class Launcher {
             this.processOutput(buildsToBeInspected);
         } else {
             Launcher.LOGGER.warn("Builds inspected has null value.");
-            System.exit(-1);
+        }
+        if (this.endProcessNotifier != null) {
+            this.endProcessNotifier.notifyEnd();
         }
     }
 

@@ -12,6 +12,9 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
+import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
+import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
+import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -53,6 +56,7 @@ public class Launcher {
     private String accessToken;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
+    private EndProcessNotifier endProcessNotifier;
 
     public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
@@ -78,6 +82,13 @@ public class Launcher {
         sw1 = new Switch("skipDelete");
         sw1.setLongFlag("skipDelete");
         sw1.setDefault("false");
+        sw1.setHelp("Skip the deletion of docker container.");
+        this.jsap.registerParameter(sw1);
+
+        sw1 = new Switch("skipNotifyEnd");
+        sw1.setLongFlag("skipNotifyEnd");
+        sw1.setDefault("true");
+        sw1.setHelp("Skip the notification when the process ends.");
         this.jsap.registerParameter(sw1);
 
         FlaggedOption opt2 = new FlaggedOption("imageName");
@@ -316,6 +327,9 @@ public class Launcher {
 
         docker.close();
         endProcessSerializer.serialize();
+        if (this.endProcessNotifier != null) {
+            this.endProcessNotifier.notifyEnd();
+        }
     }
 
     private void setStatusForUnexecutedJobs() {
@@ -333,6 +347,22 @@ public class Launcher {
 
         this.initConfig();
         this.initializeSerializerEngines();
+        this.initNotifiers();
+    }
+
+    private void initNotifiers() {
+        if (!this.arguments.getBoolean("skipNotifyEnd")) {
+            List<NotifierEngine> notifierEngines = new ArrayList<>();
+            if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
+                LOGGER.info("The email notifier engine will be used.");
+
+                notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
+            } else {
+                LOGGER.info("The email notifier engine won't be used.");
+            }
+
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, "dockerpool");
+        }
     }
 
     private void initConfig() {

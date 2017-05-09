@@ -67,6 +67,10 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
     echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
 
     args="`ca -g $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME`"
+
+    if [ "$SKIP_NOTIFY_ENDPROCESS" -eq 1 ]; then
+        args="$args --skipNotifyEnd"
+    fi
     echo "Supplementary args for scanner: $args"
     java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
 fi
@@ -89,6 +93,10 @@ docker pull $DOCKER_TAG
 
 echo "Launch docker pool..."
 args="`ca -s $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+if [ "$SKIP_NOTIFY_ENDPROCESS" -eq 1 ]; then
+    args="$args --skipNotifyEnd"
+fi
+
 echo "Supplementary args for docker pool $args"
 java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $SCANNER_MODE $args &> $LOG_DIR/dockerpool.log
 
