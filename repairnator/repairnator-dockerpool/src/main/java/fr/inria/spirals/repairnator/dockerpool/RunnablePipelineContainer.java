@@ -30,9 +30,10 @@ public class RunnablePipelineContainer implements Runnable {
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
     private boolean skipDelete;
+    private boolean createOutputDir;
 
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete) {
+    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
 
         this.imageId = imageId;
         this.buildId = buildId;
@@ -40,6 +41,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
         this.skipDelete = skipDelete;
+        this.createOutputDir = createOutputDir;
     }
 
     @Override
@@ -50,6 +52,8 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("Start to build and run container for build id "+buildId);
 
             String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
+            String output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
+
             String[] envValues = new String[] {
                 "BUILD_ID="+this.buildId,
                 "LOG_FILENAME="+containerName,
@@ -64,7 +68,7 @@ public class RunnablePipelineContainer implements Runnable {
                 "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
                 "SMTP_SERVER="+this.repairnatorConfig.getSmtpServer(),
                 "NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','),
-                "OUTPUT=/var/log"
+                "OUTPUT="+output
             };
 
             Map<String,String> labels = new HashMap<>();
