@@ -17,6 +17,7 @@ public class EndProcessNotifier {
     public EndProcessNotifier(List<NotifierEngine> engines, String processName) {
         this.launchDate = new Date();
         this.processName = processName;
+        this.engines = engines;
     }
 
     public void notifyEnd() {
