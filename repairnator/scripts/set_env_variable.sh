@@ -19,6 +19,9 @@ export PUSH_URL= # Github repository URL to put data (data are pushed in branche
 export SMTP_SERVER= # Smtp server to notify by email
 export NOTIFY_TO= # email adresses separated by comma
 export DOCKER_TAG=surli/librepair:latest # Tag of the docker image to use for pipeline
+export LOOK_FROM_DATE=
+export LOOK_TO_DATE=
+
 
 export SKIP_LAUNCH_REPAIRNATOR=0
 export NOTIFY_ENDPROCESS=0
