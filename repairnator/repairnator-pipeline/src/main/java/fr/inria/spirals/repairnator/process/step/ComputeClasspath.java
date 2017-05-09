@@ -80,7 +80,7 @@ public class ComputeClasspath extends AbstractStep {
             String classpathLine = reader.readLine();
 
             String[] allJars = classpathLine.split(":");
-            this.writeProperty("nbLibraries", allJars.length);
+
             for (String jar : allJars) {
                 File f = new File(jar);
                 this.addFileToClassPath(f);

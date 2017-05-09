@@ -132,7 +132,6 @@ public abstract class CheckoutRepository extends AbstractStep {
                         PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                         git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
                     }
-                    this.writeProperty("bugRepo",this.inspector.getRepoSlug());
                     this.writeProperty("bugCommit", this.inspector.getBuggyBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
@@ -146,9 +145,6 @@ public abstract class CheckoutRepository extends AbstractStep {
         }
 
         this.writeProperty("hostname", Utils.getHostname());
-        this.writeProperty("nbCPU", Runtime.getRuntime().availableProcessors());
-        this.writeProperty("freeMemory", Runtime.getRuntime().freeMemory());
-        this.writeProperty("totalMemory", Runtime.getRuntime().totalMemory());
 
         switch (this.getInspector().getBuildToBeInspected().getStatus()) {
             case ONLY_FAIL:

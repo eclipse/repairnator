@@ -60,7 +60,6 @@ public class ProjectInspector {
 
     private void initMetricsValue() {
         Metrics metrics = this.jobStatus.getMetrics();
-        metrics.setRepoSlug(this.getRepoSlug());
         metrics.setBuggyBuildId(this.getBuggyBuild().getId());
         metrics.setBuggyBuildURL(Utils.getTravisUrl(this.getBuggyBuild().getId(), this.getRepoSlug()));
         metrics.setBuggyBuildDate(this.getBuggyBuild().getFinishedAt());

@@ -31,10 +31,7 @@ public class CloneRepository extends AbstractStep {
 
             Git.cloneRepository().setURI(repoRemotePath).setDirectory(new File(repoLocalPath)).call();
 
-            this.writeProperty("workspace", this.inspector.getWorkspace());
-            this.writeProperty("buildid", this.build.getId());
-            this.writeProperty("repo", this.build.getRepository().getSlug());
-
+            this.writeProperty("repo",this.inspector.getRepoSlug());
             this.setPipelineState(PipelineState.CLONABLE);
         } catch (Exception e) {
             this.getLogger().warn("Repository " + repository + " cannot be cloned.");
