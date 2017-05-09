@@ -325,26 +325,23 @@ public class Launcher {
     }
 
     private void getBuildToBeInspected() {
-        Build build = BuildHelper.getBuildFromId(this.buildId, null);
+        Build buggyBuild = BuildHelper.getBuildFromId(this.buildId, null);
+        String runId = this.arguments.getString("runId");
 
-        if (build.getBuildStatus() == BuildStatus.PASSED) {
-            Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
-            if (previousBuild != null) {
-                if (previousBuild.getBuildStatus() == BuildStatus.FAILED) {
-                    this.buildToBeInspected = new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.FAILING_AND_PASSING, this.arguments.getString("runId"));
-                } else {
-                    this.buildToBeInspected = new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.arguments.getString("runId"));
-                }
+        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
+            Build patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);
+            if (buggyBuild.getBuildStatus() == BuildStatus.FAILED) {
+                this.buildToBeInspected = new BuildToBeInspected(buggyBuild, patchedBuild, ScannedBuildStatus.FAILING_AND_PASSING, runId);
             } else {
-                throw new RuntimeException("There was an error getting the previous build");
+                this.buildToBeInspected = new BuildToBeInspected(buggyBuild, patchedBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, runId);
             }
         } else {
-            Build nextPassing = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(build, BuildStatus.PASSED);
+            Build nextPassing = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, BuildStatus.PASSED);
 
             if (nextPassing != null) {
-                this.buildToBeInspected = new BuildToBeInspected(build, nextPassing, ScannedBuildStatus.FAILING_AND_PASSING, this.arguments.getString("runId"));
+                this.buildToBeInspected = new BuildToBeInspected(buggyBuild, nextPassing, ScannedBuildStatus.FAILING_AND_PASSING, runId);
             } else {
-                this.buildToBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, this.config.getRunId());
+                this.buildToBeInspected = new BuildToBeInspected(buggyBuild, null, ScannedBuildStatus.ONLY_FAIL, runId);
             }
         }
     }
