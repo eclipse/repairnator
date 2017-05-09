@@ -68,8 +68,8 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
 
     args="`ca -g $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME`"
 
-    if [ "$SKIP_NOTIFY_ENDPROCESS" -eq 1 ]; then
-        args="$args --skipNotifyEnd"
+    if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
+        args="$args --notifyEndProcess"
     fi
     echo "Supplementary args for scanner: $args"
     java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
@@ -93,8 +93,8 @@ docker pull $DOCKER_TAG
 
 echo "Launch docker pool..."
 args="`ca -s $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
-if [ "$SKIP_NOTIFY_ENDPROCESS" -eq 1 ]; then
-    args="$args --skipNotifyEnd"
+if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
+    args="$args --notifyEndProcess"
 fi
 
 echo "Supplementary args for docker pool $args"

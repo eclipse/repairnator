@@ -63,7 +63,7 @@ public class Launcher {
     }
 
     private void initNotifiers() {
-        if (!this.arguments.getBoolean("skipNotifyEnd")) {
+        if (this.arguments.getBoolean("notifyEndProcess")) {
             List<NotifierEngine> notifierEngines = new ArrayList<>();
             if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
                 LOGGER.info("The email notifier engine will be used.");
@@ -172,10 +172,10 @@ public class Launcher {
         sw1.setHelp("Use it when the scanner should skip failing builds (can be used only with bears mode)");
         this.jsap.registerParameter(sw1);
 
-        sw1 = new Switch("skipNotifyEnd");
-        sw1.setLongFlag("skipNotifyEnd");
-        sw1.setDefault("true");
-        sw1.setHelp("Skip the notification when the process ends.");
+        sw1 = new Switch("notifyEndProcess");
+        sw1.setLongFlag("notifyEndProcess");
+        sw1.setDefault("false");
+        sw1.setHelp("Activate the notification when the process ends.");
         this.jsap.registerParameter(sw1);
 
         // Tab size

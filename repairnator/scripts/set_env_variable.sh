@@ -21,7 +21,7 @@ export NOTIFY_TO= # email adresses separated by comma
 export DOCKER_TAG=surli/librepair:latest # Tag of the docker image to use for pipeline
 
 export SKIP_LAUNCH_REPAIRNATOR=0
-export SKIP_NOTIFY_ENDPROCESS=1
+export NOTIFY_ENDPROCESS=0
 export RUN_ID_SUFFIX=
 
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator # Path of the local cloned repository for repairnator
