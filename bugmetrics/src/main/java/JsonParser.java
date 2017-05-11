@@ -34,6 +34,8 @@ public class JsonParser {
 
     private Pattern patternToGetDateFromBranchName = Pattern.compile("(.*)[-]\\d*[-](\\d*)[-]\\d*");
 
+    private Map<String, Integer> errorTypesOut = new HashMap<String, Integer>();
+
     JsonParser(String jsonFileFolderPath, String outputPath, LauncherMode launcherMode, OutputType outputType, Date lookFromDate, Date lookToDate) {
         this.jsonFileFolderPath = jsonFileFolderPath;
         this.outputPath = outputPath;
@@ -44,6 +46,9 @@ public class JsonParser {
 
         this.listOfProjectsA = this.getListOfProjects("./list_of_projectsA.txt");
         this.listOfProjectsB = this.getListOfProjects("./list_of_projectsB.txt");
+
+        this.errorTypesOut.put("skipped", 0);
+        this.errorTypesOut.put("Wanted but not invoked", 0);
     }
 
     public void run() {
@@ -124,13 +129,17 @@ public class JsonParser {
                         Iterator failuresIterator = failures.iterator();
                         while (failuresIterator.hasNext()) {
                             String errorType = ((JSONObject) failuresIterator.next()).get("failureName").toString().replace(":", "");
-                            if (!this.exceptionTypesToProjectsToCounterMap.containsKey(errorType)) {
-                                this.exceptionTypesToProjectsToCounterMap.put(errorType, new HashMap<String, Integer>());
+                            if (errorTypesOut.keySet().contains(errorType)) {
+                                errorTypesOut.put(errorType, errorTypesOut.get(errorType) + 1);
+                            } else {
+                                if (!this.exceptionTypesToProjectsToCounterMap.containsKey(errorType)) {
+                                    this.exceptionTypesToProjectsToCounterMap.put(errorType, new HashMap<String, Integer>());
+                                }
+                                if (!this.exceptionTypesToProjectsToCounterMap.get(errorType).containsKey(project)) {
+                                    this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, 0);
+                                }
+                                this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, this.exceptionTypesToProjectsToCounterMap.get(errorType).get(project) + 1);
                             }
-                            if (!this.exceptionTypesToProjectsToCounterMap.get(errorType).containsKey(project)) {
-                                this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, 0);
-                            }
-                            this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, this.exceptionTypesToProjectsToCounterMap.get(errorType).get(project) + 1);
                         }
                     }
                 }
@@ -146,6 +155,11 @@ public class JsonParser {
             }
 
             System.out.println("#Distinct error types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
+
+            System.out.println();
+            for (String errorTypeOut : errorTypesOut.keySet()) {
+                System.out.println(errorTypeOut + ": " + errorTypesOut.get(errorTypeOut));
+            }
 
             writeErrorTypeDistributionCsvFile();
         } catch (IOException e) {
