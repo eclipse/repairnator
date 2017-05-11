@@ -78,7 +78,7 @@ public class JsonParser {
                 if (date.after(lookFromDate) && date.before(lookToDate)) {
                     return true;
                 }
-                if (date.equals(lookFromDate) || date.equals(lookToDate)) {
+                if (date.equals(lookFromDate)) {
                     return true;
                 }
             } catch (java.text.ParseException e) {
