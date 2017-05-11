@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class JsonParser {
 
     private String jsonFileFolderPath;
+    private String outputPath;
     private LauncherMode launcherMode;
     private OutputType outputType;
     private Date lookFromDate;
@@ -31,10 +32,11 @@ public class JsonParser {
     private Map<String, Integer> bugTypesToCounterMap = new HashMap<String, Integer>();
     private Map<String, Map<String, Integer>> exceptionTypesToProjectsToCounterMap = new HashMap<String, Map<String, Integer>>();
 
-    private Pattern patternToGetDateFromBanchName = Pattern.compile("(.*)[-]\\d*[-](\\d*)[-]\\d*");
+    private Pattern patternToGetDateFromBranchName = Pattern.compile("(.*)[-]\\d*[-](\\d*)[-]\\d*");
 
-    JsonParser(String jsonFileFolderPath, LauncherMode launcherMode, OutputType outputType, Date lookFromDate, Date lookToDate) {
+    JsonParser(String jsonFileFolderPath, String outputPath, LauncherMode launcherMode, OutputType outputType, Date lookFromDate, Date lookToDate) {
         this.jsonFileFolderPath = jsonFileFolderPath;
+        this.outputPath = outputPath;
         this.launcherMode = launcherMode;
         this.outputType = outputType;
         this.lookFromDate = lookFromDate;
@@ -66,7 +68,7 @@ public class JsonParser {
         if (launcherMode == LauncherMode.ALL_BRANCHES) {
             return true;
         }
-        Matcher matcher = patternToGetDateFromBanchName.matcher(branchName);
+        Matcher matcher = patternToGetDateFromBranchName.matcher(branchName);
         if (matcher.find()) {
             String dateStr = matcher.group(2);
             DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
@@ -145,7 +147,7 @@ public class JsonParser {
 
             System.out.println("#Distinct error types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
 
-            csvFile();
+            writeErrorTypeDistributionCsvFile();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -165,35 +167,57 @@ public class JsonParser {
         }
     }
 
-    private void csvFile() {
+    private void writeErrorTypeDistributionCsvFile() {
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter("distribution-errortypes-by-projects.csv");
+            fileWriter = new FileWriter(outputPath + "/distribution-error-types-by-projects.csv");
 
             Map<String, Integer> sortedProjectsToBugsMap = sortByComparator(this.projectsToBugsMap);
 
-            String FILE_HEADER = "error type";
+            String fileHeader = "error type";
             for (String projectName : sortedProjectsToBugsMap.keySet()) {
-                FILE_HEADER += "," + projectName;
+                fileHeader += "," + projectName;
             }
-            fileWriter.append(FILE_HEADER.toString());
+            fileHeader += ",sum";
+            fileWriter.append(fileHeader);
 
             fileWriter.append("\n");
 
+            Map<String, Map<String, Integer>> projectsToExceptionTypesToCounterMap = new HashMap<String, Map<String, Integer>>();
+
+            String line;
             for (String exceptionType : this.exceptionTypesToProjectsToCounterMap.keySet()) {
-                String line;
+                int sumForErrorType = 0;
                 line = exceptionType + ",";
                 for (String projectName : sortedProjectsToBugsMap.keySet()) {
                     if (this.exceptionTypesToProjectsToCounterMap.get(exceptionType).containsKey(projectName)) {
-                        line += this.exceptionTypesToProjectsToCounterMap.get(exceptionType).get(projectName) + ",";
+                        int number = this.exceptionTypesToProjectsToCounterMap.get(exceptionType).get(projectName);
+                        line += number + ",";
+                        sumForErrorType += number;
+                        if (!projectsToExceptionTypesToCounterMap.containsKey(projectName)) {
+                            projectsToExceptionTypesToCounterMap.put(projectName, new HashMap<String, Integer>());
+                        }
+                        if (!projectsToExceptionTypesToCounterMap.get(projectName).containsKey(exceptionType)) {
+                            projectsToExceptionTypesToCounterMap.get(projectName).put(exceptionType, number);
+                        }
                     } else {
                         line += "0,";
                     }
                 }
-                line = line.substring(0, line.length());
+                line += sumForErrorType;
                 fileWriter.append(line);
                 fileWriter.append("\n");
             }
+            line = "sum";
+            for (String projectName : sortedProjectsToBugsMap.keySet()) {
+                int sumForProject = 0;
+                Map<String, Integer> exceptionTypesToCounter = projectsToExceptionTypesToCounterMap.get(projectName);
+                for (Integer counter : exceptionTypesToCounter.values()) {
+                    sumForProject += counter;
+                }
+                line += "," + sumForProject;
+            }
+            fileWriter.append(line);
 
             System.out.println("CSV file was created successfully");
         } catch (Exception e) {

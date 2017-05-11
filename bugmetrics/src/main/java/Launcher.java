@@ -107,6 +107,7 @@ public class Launcher {
     private void initArgs() {
         this.jsonFileFolderPath = this.arguments.getFile("jsonFileFolderPath").getPath();
         this.outputPath = this.arguments.getFile("outputPath").getPath();
+        this.outputType = OutputType.valueOf(this.arguments.getString("outputType").toUpperCase());
     }
 
     private void printUsage() {
@@ -125,11 +126,9 @@ public class Launcher {
             this.launcherMode = LauncherMode.ALL_BRANCHES;
         }
 
-        this.outputType = OutputType.valueOf(this.arguments.getString("outputType").toUpperCase());
-
         LOGGER.info("Starting...");
 
-        JsonParser jsonParser = new JsonParser(jsonFileFolderPath, this.launcherMode, this.outputType, lookFromDate, lookToDate);
+        JsonParser jsonParser = new JsonParser(this.jsonFileFolderPath, this.outputPath, this.launcherMode, this.outputType, lookFromDate, lookToDate);
         jsonParser.run();
 
         LOGGER.info("Process is finished");
