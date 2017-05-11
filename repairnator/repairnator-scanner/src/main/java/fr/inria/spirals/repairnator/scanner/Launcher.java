@@ -73,7 +73,7 @@ public class Launcher {
                 LOGGER.info("The email notifier engine won't be used.");
             }
 
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, "scanner");
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, "scanner (runid: "+this.arguments.getString("runId")+")");
         }
     }
 
