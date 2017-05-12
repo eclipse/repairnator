@@ -46,7 +46,7 @@ public class RunnablePipelineContainer implements Runnable {
         try {
             LOGGER.info("Start to run check container for branch "+branchName);
 
-            String containerName = "repairnator-checkbranch_"+ Utils.formatFilenameDate(new Date());
+            String containerName = "checkbranch_"+ branchName;
 
             String[] envValues = new String[] {
                 "BRANCH_NAME="+this.branchName,
@@ -69,7 +69,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             containerId = container.id();
 
-            LOGGER.info("Start the container: "+containerName);
+            LOGGER.info("Start the container: "+containerName+" (id: "+containerId+")");
             docker.startContainer(container.id());
 
             ContainerExit exitStatus = docker.waitContainer(containerId);
