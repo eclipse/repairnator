@@ -44,8 +44,8 @@ public class JsonParser {
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
 
-        this.listOfProjectsA = this.getListOfProjects("./list_of_projectsA.txt");
-        this.listOfProjectsB = this.getListOfProjects("./list_of_projectsB.txt");
+        this.listOfProjectsA = this.getListOfProjects("../bearsData/list_of_projectsA.txt");
+        this.listOfProjectsB = this.getListOfProjects("../bearsData/list_of_projectsB.txt");
 
         this.errorTypesOut.put("skipped", 0);
         this.errorTypesOut.put("Wanted but not invoked", 0);
