@@ -95,12 +95,12 @@ public class Launcher {
         opt2.setHelp("Specify where to put output data");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("logDirectory");
-        opt2.setShortFlag('l');
-        opt2.setLongFlag("logDirectory");
+        opt2 = new FlaggedOption("repository");
+        opt2.setShortFlag('r');
+        opt2.setLongFlag("repository");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setRequired(true);
-        opt2.setHelp("Specify where to put logs and serialized files created by docker machines.");
+        opt2.setHelp("Specify where to collect branches");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("threads");
@@ -217,7 +217,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, branchName, this.arguments.getBoolean("skipDelete"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, this.arguments.getString("output"), this.arguments.getBoolean("skipDelete"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
@@ -229,23 +229,15 @@ public class Launcher {
             } else {
                 LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");
                 executorService.shutdownNow();
-                this.setStatusForUnexecutedJobs();
             }
         } catch (InterruptedException e) {
             LOGGER.error("Error while await termination. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).", e);
             executorService.shutdownNow();
-            this.setStatusForUnexecutedJobs();
         }
 
         docker.close();
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
-        }
-    }
-
-    private void setStatusForUnexecutedJobs() {
-        for (RunnablePipelineContainer runnablePipelineContainer : submittedRunnablePipelineContainers) {
-            runnablePipelineContainer.serialize("ABORTED");
         }
     }
 

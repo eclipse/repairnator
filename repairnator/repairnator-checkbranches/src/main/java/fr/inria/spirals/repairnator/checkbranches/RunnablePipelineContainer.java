@@ -7,10 +7,8 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.checkbranches.serializer.TreatedBuildTracking;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,23 +23,20 @@ public class RunnablePipelineContainer implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RunnablePipelineContainer.class);
     private String imageId;
-    private int buildId;
-    private String logDirectory;
+    private String branchName;
+    private String output;
     private RepairnatorConfig repairnatorConfig;
-    private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
     private boolean skipDelete;
-    private boolean createOutputDir;
+    private String repository;
 
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
-
+    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output, boolean skipDelete) {
         this.imageId = imageId;
-        this.buildId = buildId;
-        this.logDirectory = logDirectory;
+        this.branchName = branchName;
+        this.output = output;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
-        this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
         this.skipDelete = skipDelete;
-        this.createOutputDir = createOutputDir;
+        this.repository = repository;
     }
 
     @Override
@@ -49,31 +44,18 @@ public class RunnablePipelineContainer implements Runnable {
         String containerId = null;
         DockerClient docker = Launcher.docker;
         try {
-            LOGGER.info("Start to build and run container for build id "+buildId);
+            LOGGER.info("Start to run check container for branch "+branchName);
 
-            String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
-            String output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
+            String containerName = "repairnator-checkbranch_"+ Utils.formatFilenameDate(new Date());
 
             String[] envValues = new String[] {
-                "BUILD_ID="+this.buildId,
-                "LOG_FILENAME="+containerName,
-                "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
-                "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
-                "RUN_ID="+this.repairnatorConfig.getRunId(),
-                "GOOGLE_ACCESS_TOKEN="+this.repairnatorConfig.getGoogleAccessToken(),
-                "REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase(),
-                "SPREADSHEET_ID="+this.repairnatorConfig.getSpreadsheetId(),
-                "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
-                "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
-                "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
-                "SMTP_SERVER="+this.repairnatorConfig.getSmtpServer(),
-                "NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','),
-                "OUTPUT="+output
+                "BRANCH_NAME="+this.branchName,
+                "REPOSITORY="+this.repository
             };
 
             Map<String,String> labels = new HashMap<>();
             labels.put("name",containerName);
-            HostConfig hostConfig = HostConfig.builder().appendBinds(this.logDirectory+":/var/log").build();
+            HostConfig hostConfig = HostConfig.builder().appendBinds(this.output+":/tmp/result.txt").build();
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
                     .env(envValues)
@@ -86,7 +68,6 @@ public class RunnablePipelineContainer implements Runnable {
             ContainerCreation container = docker.createContainer(containerConfig);
 
             containerId = container.id();
-            googleSpreadSheetTreatedBuildTracking.setContainerId(containerId);
 
             LOGGER.info("Start the container: "+containerName);
             docker.startContainer(container.id());
@@ -99,20 +80,18 @@ public class RunnablePipelineContainer implements Runnable {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(containerId);
             }
-
-            serialize("TREATED");
+            LOGGER.info("TREATED Docker container : "+containerId);
         } catch (InterruptedException e) {
-            LOGGER.error("Error while running the container for build id "+buildId, e);
+            LOGGER.error("Error while running the container for branch name "+branchName, e);
             killDockerContainer(docker, containerId);
         } catch (DockerException e) {
-            LOGGER.error("Error while creating or running the container for build id "+buildId, e);
-            serialize("ERROR");
+            LOGGER.error("Error while creating or running the container for branch name "+branchName, e);
         }
         Launcher.submittedRunnablePipelineContainers.remove(this);
     }
 
     private void killDockerContainer(DockerClient docker, String containerId) {
-        serialize("INTERRUPTED");
+        LOGGER.info("Killing docker container: "+containerId);
         try {
             docker.killContainer(containerId);
             docker.removeContainer(containerId);
@@ -120,11 +99,6 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.error("Error while killing docker container "+containerId, e);
         }
 
-    }
-
-    public void serialize(String msg) {
-        googleSpreadSheetTreatedBuildTracking.setStatus(msg);
-        googleSpreadSheetTreatedBuildTracking.serialize();
     }
 
 }
