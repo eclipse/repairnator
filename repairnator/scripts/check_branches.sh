@@ -74,7 +74,7 @@ if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
 fi
 
 echo "Supplementary args for docker pool checkbranches $args"
-java -jar $REPAIRNATOR_CHECKBRANCHES_DEST_JAR -t $NB_THREADS -n $DOCKER_CHECKBRANCHES_TAG -i $INPUT -o $OUTPUT -g $DAY_TIMEOUT --runId $RUN_ID $args &> $LOG_DIR/checkbranches.log
+java -jar $REPAIRNATOR_CHECKBRANCHES_DEST_JAR -t $NB_THREADS -n $DOCKER_CHECKBRANCHES_TAG -i $INPUT -o $OUTPUT -r $CHECK_BRANCH_REPOSITORY -g $DAY_TIMEOUT --runId $RUN_ID $args &> $LOG_DIR/checkbranches.log
 
 echo "Docker pool checkbranches finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR
