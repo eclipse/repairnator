@@ -12,7 +12,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
