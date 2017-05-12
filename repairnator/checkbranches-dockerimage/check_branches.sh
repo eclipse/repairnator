@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ "$#" -ne 2 ]; then
-    echo "Usage: ./check_branches.sh <github repository> <BRANCH_NAME>"
+    echo "Usage: ./check_branches.sh <github repository> <branch name>"
     exit 2
 fi
 

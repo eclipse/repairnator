@@ -27,6 +27,9 @@ export SKIP_LAUNCH_REPAIRNATOR=0 # Skip the launch of docker pool: it will only 
 export NOTIFY_ENDPROCESS=0 # If set to 1, the end of dockerpool and scan will send a notification using smtp and notify_to information
 export RUN_ID_SUFFIX= # A suffix to add to the run id.
 
+export CHECK_BRANCH_REPOSITORY= # Repository to use for check branches script
+export DOCKER_CHECKBRANCHES_TAG=surli/checkbranches:latest
+
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator # Path of the local cloned repository for repairnator
 export GOOGLE_SECRET_PATH=$HOME_REPAIR/client_secret.json # Path of the google secret if spreadsheet is used
 
@@ -39,3 +42,6 @@ export REPAIRNATOR_DOCKERPOOL_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-dockerp
 export REPAIRNATOR_DOCKERPOOL_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-dockerpool.jar
 
 export REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`.txt # full name of the scanned build list
+
+export REPAIRNATOR_CHECKBRANCHES_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-checkbranches/target/repairnator-checkbranches-*-jar-with-dependencies.jar" # full name of the scanner jar
+export REPAIRNATOR_CHECKBRANCHES_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-checkbranches.jar

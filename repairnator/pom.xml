@@ -13,6 +13,7 @@
         <module>repairnator-core</module>
         <module>repairnator-scanner</module>
         <module>repairnator-dockerpool</module>
+        <module>repairnator-checkbranches</module>
     </modules>
 
     <properties>
