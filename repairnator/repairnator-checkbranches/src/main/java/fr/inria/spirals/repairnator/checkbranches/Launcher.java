@@ -217,7 +217,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, this.arguments.getString("output"), this.arguments.getBoolean("skipDelete"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, this.arguments.getFile("output").getAbsolutePath(), this.arguments.getBoolean("skipDelete"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
