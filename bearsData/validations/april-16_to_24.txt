@@ -1,0 +1,24 @@
+FasterXML-jackson-databind-223291136-20170418-215123 [OK]
+DiUS-java-faker-224205148-20170421-053934 [OK]
+FasterXML-jackson-databind-223291913-20170418-215411 [OK]
+apache-commons-lang-224269231-20170421-105710 [OK]
+asciidoctor-asciidoctor-maven-plugin-223196089-20170418-172027 [OK]
+AsyncHttpClient-async-http-client-224015156-20170420-180607 [OK]
+AsyncHttpClient-async-http-client-223984929-20170420-165228 [OK]
+phoenixnap-springmvc-raml-plugin-223559406-20170419-153903 [OK]
+phoenixnap-springmvc-raml-plugin-223898069-20170420-121624 [OK]
+spring-projects-spring-data-commons-223489974-20170419-132008 [OK]
+languagetool-org-languagetool-222578596-20170416-180308 [OK]
+languagetool-org-languagetool-222586490-20170416-184829 [OK]
+languagetool-org-languagetool-222608868-20170416-220309 [OK]
+tananaev-traccar-222479725-20170416-045446 [OK]
+tipsy-j2html-222516081-20170416-103825 [OK]
+tananaev-traccar-222667430-20170417-024526 [OK]
+ThreeTen-threeten-extra-222555973-20170416-155453 [OK]
+spring-projects-spring-data-solr-223067212-20170418-103832 [OK]
+oVirt-ovirt-engine-224254169-20170421-101943 [OK]
+geotools-geotools-223765658-20170420-020505 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-222999789-20170418-051100 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-223144851-20170418-154214 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-223307455-20170418-231652 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-224438095-20170421-200927 [FAILURE] (patch reproduction - status = 1)
