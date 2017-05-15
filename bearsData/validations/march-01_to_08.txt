@@ -1,0 +1,30 @@
+Analyze started: 2017-05-12_151114
+Considered repository: https://github.com/surli/bugs-collection
+apache-opennlp-207136984-20170304-010354 [OK]
+CloudSlang-cloud-slang-208513758-20170307-100911 [OK]
+AxonFramework-AxonFramework-207143564-20170302-215509 [OK]
+graphhopper-graphhopper-206564536-20170301-121037 [FAILURE] (patch reproduction - status = 1)
+GwtMaterialDesign-gwt-material-207325835-20170303-122543 [OK]
+google-error-prone-206415065-20170301-021253 [OK]
+google-error-prone-207191589-20170303-002402 [OK]
+INRIA-spoon-207361743-20170303-145353 [OK]
+geotools-geotools-207295203-20170303-104200 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-207701263-20170304-173723 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-207700946-20170304-172951 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-207701019-20170304-173622 [FAILURE] (patch reproduction - status = 1)
+oVirt-ovirt-engine-206552510-20170301-141618 [OK]
+HubSpot-Singularity-208769544-20170307-234639 [FAILURE] (bug reproduction timeout)
+phoenixnap-springmvc-raml-plugin-206505191-20170301-082426 [OK]
+phoenixnap-springmvc-raml-plugin-206689412-20170301-183329 [OK]
+geotools-geotools-206964326-20170302-130057 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-207295301-20170303-104552 [FAILURE] (patch reproduction - status = 1)
+phoenixnap-springmvc-raml-plugin-207006501-20170302-150633 [OK]
+tananaev-traccar-206851755-20170302-035523 [OK]
+geotools-geotools-206544447-20170301-112617 [FAILURE] (patch reproduction - status = 1)
+oVirt-ovirt-engine-206553152-20170301-152327 [OK]
+spring-projects-spring-data-commons-208573790-20170307-135540 [OK]
+spring-projects-spring-data-commons-208573806-20170307-135707 [OK]
+oVirt-ovirt-engine-206553274-20170301-151736 [OK]
+oVirt-ovirt-engine-206553844-20170301-160826 [OK]
+sakaiproject-sakai-207448875-20170303-190836 [FAILURE] (patch reproduction timeout)
+Analyze finished: 2017-05-12_162805
