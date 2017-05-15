@@ -1,0 +1,13 @@
+FasterXML-jackson-databind-215799347-20170328-070955 [OK]
+FasterXML-jackson-databind-215111320-20170326-013759 [OK]
+phoenixnap-springmvc-raml-plugin-216359941-20170329-155651 [OK]
+tipsy-j2html-216094003-20170328-222754 [OK]
+owlcs-owlapi-216138121-20170329-004746 [OK]
+OpenGamma-Strata-216465125-20170329-215837 [OK]
+OpenGamma-Strata-216882883-20170330-205302 [OK]
+languagetool-org-languagetool-214726090-20170324-181543 [OK]
+languagetool-org-languagetool-215682025-20170327-222910 [OK]
+oVirt-ovirt-engine-216366905-20170329-163907 [OK]
+oVirt-ovirt-engine-215860614-20170328-113554 [OK]
+geotools-geotools-217279392-20170331-205752 [FAILURE] (bug reproduction timeout)
+geotools-geotools-216522929-20170329-234946 [FAILURE] (bug reproduction timeout)
