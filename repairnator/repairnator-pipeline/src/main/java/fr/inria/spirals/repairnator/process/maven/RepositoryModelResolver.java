@@ -1,14 +1,15 @@
 package fr.inria.spirals.repairnator.process.maven;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.building.FileModelSource;
@@ -26,9 +27,11 @@ import org.slf4j.LoggerFactory;
 
 class RepositoryModelResolver implements ModelResolver {
     private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2";
+    private static final String MAVEN_CENTRAL_URL_MIRROR_1 = "http://repo.maven.apache.org/maven2";
+    private static final String MAVEN_CENTRAL_URL_MIRROR_2 = "http://uk.maven.org/maven2";
+
     private static final Logger logger = LoggerFactory.getLogger(RepositoryModelResolver.class);
     private File localRepository;
-    private String consideredModulePath;
 
     private List<Repository> repositories = new ArrayList<Repository>();
 
@@ -37,6 +40,16 @@ class RepositoryModelResolver implements ModelResolver {
         Repository mainRepo = new Repository();
         mainRepo.setUrl(MAVEN_CENTRAL_URL);
         mainRepo.setId("central");
+        repositories.add(mainRepo);
+
+        mainRepo = new Repository();
+        mainRepo.setUrl(MAVEN_CENTRAL_URL_MIRROR_1);
+        mainRepo.setId("mirror1");
+        repositories.add(mainRepo);
+
+        mainRepo = new Repository();
+        mainRepo.setUrl(MAVEN_CENTRAL_URL_MIRROR_2);
+        mainRepo.setId("mirror2");
         repositories.add(mainRepo);
     }
 
@@ -68,27 +81,18 @@ class RepositoryModelResolver implements ModelResolver {
 
             logger.debug("Downloading " + url);
 
-            try {
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setInstanceFollowRedirects(true);
-                InputStream in = conn.getInputStream();
-                localRepoFile.getParentFile().mkdirs();
-                FileOutputStream out = new FileOutputStream(localRepoFile);
-                byte[] buffer = new byte[4096];
-                int len;
-                while ((len = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
-                }
-                in.close();
-                out.close();
-                return;
-            } catch (IOException e) {
-                logger.warn("Failed to download " + url);
-                logger.debug(e.getMessage());
-            }
-        }
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
 
-        throw new IOException("Failed to download " + localRepoFile);
+            Response response = client.newCall(request).execute();
+            localRepoFile.getParentFile().mkdirs();
+            FileWriter out = new FileWriter(localRepoFile);
+            out.write(response.body().string());
+            out.flush();
+            out.close();
+        }
     }
 
     @Override
