@@ -1,0 +1,17 @@
+FasterXML-jackson-databind-195777970-20170127-074320 [OK]
+FasterXML-jackson-databind-195433804-20170126-065819 [OK]
+IQSS-dataverse-194874155-20170124-172620 [OK]
+qos-ch-slf4j-195421925-20170126-052412 [FAILURE] (patch reproduction - status = 1)
+tananaev-traccar-194695079-20170124-040824 [OK]
+AxonFramework-AxonFramework-195492579-20170126-120910 [OK]
+tananaev-traccar-195455832-20170126-092107 [OK]
+tipsy-j2html-196345192-20170129-155050 [OK]
+brettwooldridge-HikariCP-194696936-20170124-042357 [OK]
+OpenGamma-Strata-196641047-20170130-173511 [OK]
+INRIA-spoon-196966996-20170131-155013 [OK]
+unic-neba-195364051-20170125-234531 [OK]
+konsoletyper-teavm-194960761-20170124-222912 [OK]
+konsoletyper-teavm-194955933-20170124-220645 [OK]
+konsoletyper-teavm-196200926-20170128-210018 [OK]
+geotools-geotools-195930442-20170127-180632 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-195930177-20170127-180402 [FAILURE] (patch reproduction - status = 1)
