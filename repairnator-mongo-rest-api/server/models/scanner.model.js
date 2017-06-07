@@ -88,6 +88,21 @@ ScannerSchema.statics = {
         $gt: 1
       }
     }).sort({ dateBegin: 1 }).exec();
+  },
+
+  getLastWeeksData(nbWeeks) {
+    const ltDateIso = moment().toISOString();
+    const gtDateIso = moment().subtract(nbWeeks, 'weeks').toISOString();
+
+    return this.find({
+      dateBegin: {
+        $gte: gtDateIso,
+        $lt: ltDateIso
+      },
+      totalRepoNumber: {
+        $gt: 1
+      }
+    }).sort({ dateBegin: 1 }).exec();
   }
 };
 

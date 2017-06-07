@@ -1,4 +1,4 @@
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/monthData', function (data) {
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksData/2', function (data) {
   console.log(data);
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);

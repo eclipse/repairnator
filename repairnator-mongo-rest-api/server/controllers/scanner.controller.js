@@ -43,4 +43,8 @@ function monthData(req, res, next) {
   Scanner.getLastMonthData().then(result => res.json(result)).catch(e => next(e));
 }
 
-export default { load, get, list, count, monthData };
+function weeksData(req, res, next) {
+  Scanner.getLastWeeksData(req.nbWeeks).then(result => res.json(result)).catch(e => next(e));
+}
+
+export default { load, get, list, count, monthData, weeksData };

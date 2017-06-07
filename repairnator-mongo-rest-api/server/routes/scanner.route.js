@@ -15,6 +15,14 @@ router.route('/count')
 router.route('/monthData')
   .get(scannerCtrl.monthData);
 
+router.route('/weeksData/:nbWeeks')
+  .get(scannerCtrl.weeksData);
+
+router.param('nbWeeks', (req, res, next, nbWeeks) => {
+  req.nbWeeks = nbWeeks; // eslint-disable-line no-param-reassign
+  next();
+});
+
 router.route('/:scannerId')
   /** GET /api/users/:userId - Get user */
   .get(scannerCtrl.get);
