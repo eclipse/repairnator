@@ -1,0 +1,11 @@
+OWASP-java-html-sanitizer-231634556-20170512-185643 [OK]
+square-javapoet-231862123-20170513-145452 [OK]
+square-retrofit-231247660-20170511-192847 [OK]
+square-retrofit-231764479-20170513-024517 [OK]
+alibaba-fastjson-230277356-20170509-113904 [OK]
+square-retrofit-231765304-20170513-025134 [OK]
+spring-projects-spring-data-commons-231307769-20170511-223138 [OK]
+spring-projects-spring-data-commons-231817930-20170513-101928 [OK]
+AsyncHttpClient-async-http-client-231302718-20170511-221950 [FAILURE] (patch reproduction - status = 1)
+HubSpot-Singularity-230046970-20170508-194727 [OK]
+languagetool-org-languagetool-232140479-20170514-193914 [OK]
