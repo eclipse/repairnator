@@ -21,6 +21,8 @@ public class RepairnatorConfig {
     private String mongodbName;
     private String smtpServer;
     private String[] notifyTo;
+    private String githubLogin;
+    private String githubToken;
 
     private static RepairnatorConfig instance;
 
@@ -162,5 +164,21 @@ public class RepairnatorConfig {
 
     public void setNotifyTo(String[] notifyTo) {
         this.notifyTo = notifyTo;
+    }
+
+    public String getGithubLogin() {
+        return githubLogin;
+    }
+
+    public void setGithubLogin(String githubLogin) {
+        this.githubLogin = githubLogin;
+    }
+
+    public String getGithubToken() {
+        return githubToken;
+    }
+
+    public void setGithubToken(String githubToken) {
+        this.githubToken = githubToken;
     }
 }
