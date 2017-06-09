@@ -132,7 +132,7 @@ public class CommitPatch extends AbstractStep {
                 this.computePatchStats(git, headRev, commit);
 
                 if (this.getInspector().getJobStatus().isHasBeenPushed()) {
-                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
+                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.getConfig().getGithubToken(), "");
                     git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
                 }
 

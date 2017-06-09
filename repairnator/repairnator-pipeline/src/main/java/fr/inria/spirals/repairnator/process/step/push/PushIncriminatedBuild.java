@@ -47,7 +47,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
 
-            if (System.getenv("GITHUB_OAUTH") == null || System.getenv("GITHUB_OAUTH").equals("")) {
+            if (this.getConfig().getGithubToken() == null || this.getConfig().getGithubToken().equals("")) {
                 this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
                 this.setPushState(PushState.REPO_NOT_PUSHED);
                 return;
@@ -62,7 +62,7 @@ public class PushIncriminatedBuild extends AbstractStep {
                 remoteAdd.setUri(new URIish(remoteRepo));
                 remoteAdd.call();
 
-                CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
+                CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.getConfig().getGithubToken(), "");
 
                 this.getLogger().debug("Check if a branch already exists in the remote repository");
                 ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh","-c","git remote show "+REMOTE_NAME+" | grep "+branchName)

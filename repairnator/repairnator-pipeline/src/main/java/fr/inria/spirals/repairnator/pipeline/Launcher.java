@@ -62,7 +62,6 @@ public class Launcher {
         this.defineArgs();
         this.arguments = jsap.parse(args);
         this.checkArguments();
-        this.checkEnvironmentVariables();
         this.initConfig();
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
@@ -96,6 +95,9 @@ public class Launcher {
             this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
         }
         this.config.setWorkspacePath(this.arguments.getString("workspace"));
+
+        this.config.setGithubLogin(this.arguments.getString("ghLogin"));
+        this.config.setGithubToken(this.arguments.getString("ghOauth"));
     }
 
     private void initializeSerializerEngines() {
@@ -286,15 +288,20 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify email adresses to notify");
         this.jsap.registerParameter(opt2);
-    }
 
-    private void checkEnvironmentVariables() {
-        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
-            if (System.getenv(envVar) == null || System.getenv(envVar).equals("")) {
-                System.err.println("You must set the following environment variable: "+envVar);
-                this.printUsage();
-            }
-        }
+        opt2 = new FlaggedOption("githubLogin");
+        opt2.setLongFlag("ghLogin");
+        opt2.setRequired(true);
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify login for Github use");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("githubOauth");
+        opt2.setLongFlag("ghOauth");
+        opt2.setRequired(true);
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Specify oauth for Github use");
+        this.jsap.registerParameter(opt2);
     }
 
     private void printUsage() {

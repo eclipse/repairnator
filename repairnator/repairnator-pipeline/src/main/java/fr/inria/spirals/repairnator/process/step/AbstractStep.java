@@ -312,7 +312,7 @@ public abstract class AbstractStep {
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
                 if (this.getInspector().getJobStatus().isHasBeenPushed()) {
-                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(System.getenv("GITHUB_OAUTH"), "");
+                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.config.getGithubToken(), "");
                     git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
                 }
             } catch (GitAPIException | IOException e) {
