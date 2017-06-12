@@ -289,14 +289,14 @@ public class Launcher {
         opt2.setHelp("Specify email adresses to notify");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("githubLogin");
+        opt2 = new FlaggedOption("ghLogin");
         opt2.setLongFlag("ghLogin");
         opt2.setRequired(true);
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify login for Github use");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("githubOauth");
+        opt2 = new FlaggedOption("ghOauth");
         opt2.setLongFlag("ghOauth");
         opt2.setRequired(true);
         opt2.setStringParser(JSAP.STRING_PARSER);
