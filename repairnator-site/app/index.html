@@ -9,6 +9,7 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,300,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Place favicon.ico in the root directory -->
 
     <!-- build:css styles/vendor.css -->
@@ -41,6 +42,7 @@
             <li><a class="page-header__nav-link js-anchor js-link" href="#portfolio">Live stats</a></li>
             <li><a class="page-header__nav-link js-anchor js-link" href="#team">About</a></li>
             <li><a class="page-header__nav-link js-anchor js-link" href="#contact">Contact</a></li>
+            <li><a class="page-header__nav-link js-anchor js-link" href="#realtimedata">Realtime</a></li>
           </ul>
         </nav>
       </div>
@@ -57,6 +59,14 @@
     <!-- $Portfolio section-->
     <section id="portfolio">
       <div id="charts"></div>
+    </section>
+
+    <section id="realtimedata">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <tbody id="tablerealtime"></tbody>
+        </table>
+      </div>
     </section>
 
     <!-- $Contact section-->
@@ -104,6 +114,7 @@
     <script src="/bower_components/modernizr/modernizr.js"></script>
     <script src="/bower_components/d3/d3.js"></script>
     <script src="/bower_components/highcharts/highcharts.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -125,6 +136,7 @@
     <!-- build:js scripts/main.js -->
     <script src="scripts/hostname_pie.js"></script>
     <script src="scripts/scanner_timechart.js"></script>
+    <script src="scripts/realtime_values.js"></script>
     <!-- endbuild -->
   </body>
 </html>
