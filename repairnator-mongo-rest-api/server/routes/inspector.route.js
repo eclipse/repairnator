@@ -15,6 +15,9 @@ router.route('/count')
 router.route('/hostnameStats')
   .get(inspectorCtrl.hostnameStats);
 
+router.route('/statusStats')
+  .get(inspectorCtrl.statusStats);
+
 router.route('/uniqueBuilds')
   .get(inspectorCtrl.nbUniqueBuilds);
 

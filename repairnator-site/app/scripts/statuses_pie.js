@@ -1,4 +1,4 @@
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/hostnameStats', function (data) {
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
@@ -11,7 +11,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/hostna
       renderTo: htmlElement[0]
     },
     title: {
-      text: 'Build treated by hostname'
+      text: 'Build statuses'
     },
     tooltip: {
       pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -30,7 +30,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/hostna
       }
     },
     series: [{
-      name: 'Hostname',
+      name: 'Statuses',
       colorByPoint: true,
       data: data.map(function (d) {
         return {

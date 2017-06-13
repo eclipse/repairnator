@@ -83,6 +83,19 @@ InspectorSchema.statics = {
     ]).exec();
   },
 
+  statusStats() {
+    return this.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          counted: {
+            $sum: 1
+          }
+        }
+      }
+    ]).exec();
+  },
+
   nbUniqueBuilds() {
     return this.aggregate([
       {
