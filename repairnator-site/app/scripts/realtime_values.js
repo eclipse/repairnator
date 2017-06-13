@@ -43,6 +43,10 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fun
         }
       }
 
+      if (fieldName == 'typeOfFailures') {
+        dataValue = dataValue.split(',').join(' ');
+      }
+
       if (fieldName == 'travisURL') {
         dataValue = '<a href="'+dataValue+'">'+dataValue+'</a>';
       }
