@@ -1,0 +1,5 @@
+apache/httpcomponents-core
+apache/pdfbox
+CorfuDB/CorfuDB
+dangdangdotcom/sharding-jdbc
+FasterXML/jackson-dataformat-xml
