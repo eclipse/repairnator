@@ -170,6 +170,7 @@ public class JsonParser {
     }
 
     private void getBranchNames(File[] files) {
+        int totalBranchOutput = 0;
         for (int i = 0; i < files.length; i++) {
             String branchName = files[i].getName().replace("_repairnator.json", "");
 
@@ -178,7 +179,10 @@ public class JsonParser {
             }
 
             System.out.println(branchName);
+            totalBranchOutput++;
         }
+
+        System.out.println("#Total branches output: "+totalBranchOutput);
     }
 
     private void writeErrorTypeDistributionCsvFile() {
