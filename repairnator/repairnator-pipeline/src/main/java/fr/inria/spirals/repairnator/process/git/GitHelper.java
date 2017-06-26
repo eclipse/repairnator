@@ -150,7 +150,7 @@ public class GitHelper {
     private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
             addAndCommitRepairnatorLogAndProperties(git, "Commit done before retrieving a commit from GH API.");
-            GitHub gh = GitHubBuilder.fromEnvironment().build();
+            GitHub gh = GitHubBuilder.fromCredentials().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
 
             String lastKnowParent = getLastKnowParent(gh, ghRepo, git, oldCommitSha, step);
