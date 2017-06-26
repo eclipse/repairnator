@@ -1,7 +1,6 @@
 2dxgujun/AndroidTagGroup
 3breadt/dd-plist
 47deg/appsly-android-rest
-4pr0n/ripme
 ActiveJpa/activejpa
 Adobe-Consulting-Services/acs-aem-commons
 Adobe-Consulting-Services/acs-aem-tools
