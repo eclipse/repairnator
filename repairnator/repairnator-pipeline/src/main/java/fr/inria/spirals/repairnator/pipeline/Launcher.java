@@ -7,6 +7,7 @@ import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
+import fr.inria.spirals.jtravis.helpers.GithubTokenHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -98,6 +99,9 @@ public class Launcher {
 
         this.config.setGithubLogin(this.arguments.getString("ghLogin"));
         this.config.setGithubToken(this.arguments.getString("ghOauth"));
+
+        GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
+        GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
     }
 
     private void initializeSerializerEngines() {
