@@ -39,7 +39,7 @@ public class GithubTokenHelper {
             return true;
         }
 
-        if (System.getenv("GITHUB_OAUTH") != null && System.getenv("GITHUB_LOGIN") != null) {
+        if (System.getenv("GITHUB_OAUTH") != null && !System.getenv("GITHUB_OAUTH").equals("") && System.getenv("GITHUB_LOGIN") != null && !System.getenv("GITHUB_LOGIN").equals("")) {
             this.setGithubLogin(System.getenv("GITHUB_LOGIN"));
             this.setGithubOauth(System.getenv("GITHUB_OAUTH"));
             return true;
