@@ -284,4 +284,30 @@ public class BuildHelperTest {
         assertEquals(215, Integer.parseInt(builds.get(builds.size()-1).getNumber()));
     }
 
+    @Test
+    public void testGetBuildsFromRepositoryInTimeIntervalAlsoTakePR() {
+        Repository repo = new Repository();
+        repo.setSlug("INRIA/spoon");
+
+        Date initialDate = TestUtils.getDate(2017, 06, 26, 20, 00, 00);
+
+        Date finalDate = TestUtils.getDate(2017, 06, 26, 21, 00, 00);
+        List<Build> builds = BuildHelper.getBuildsFromRepositoryInTimeInterval(repo, initialDate, finalDate);
+
+        assertTrue(builds != null);
+
+        if (builds.size() > 1) {
+            Collections.sort(builds);
+        }
+
+        assertEquals(3, builds.size());
+        assertEquals(3424, Integer.parseInt(builds.get(0).getNumber()));
+        for (Build build : builds) {
+            assertTrue(build.isPullRequest());
+        }
+
+
+        assertEquals(1428, builds.get(0).getPullRequestNumber());
+    }
+
 }
