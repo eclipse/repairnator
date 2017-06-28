@@ -43,6 +43,12 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fun
         }
       }
 
+      if (fieldName == 'prNumber') {
+        if (dataValue != 0) {
+          dataValue = '<a href="https://github.com/'+data['repositoryName']+'/pull/'+data[fieldName]+'">'+dataValue+'</a>';
+        }
+      }
+
       if (fieldName == 'typeOfFailures' && dataValue != null) {
         dataValue = dataValue.split(',').join(' ');
       }
