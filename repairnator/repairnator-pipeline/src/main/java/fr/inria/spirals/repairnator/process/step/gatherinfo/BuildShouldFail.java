@@ -1,8 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
