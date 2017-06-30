@@ -354,7 +354,7 @@ public class ProjectScanner {
                 GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
                 GHCommit.File[] modifiedFiles = compare.getFiles();
                 for (GHCommit.File file : modifiedFiles) {
-                    if (file.getFileName().toLowerCase().contains("test")) {
+                    if (file.getFileName().toLowerCase().contains("test") && file.getFileName().endsWith(".java")) {
                         this.logger.debug("First probable test file found: " + file.getFileName());
                         return true;
                     }
