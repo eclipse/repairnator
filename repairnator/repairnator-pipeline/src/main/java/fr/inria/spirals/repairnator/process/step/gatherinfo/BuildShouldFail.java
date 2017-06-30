@@ -1,8 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
@@ -18,13 +16,9 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
             return false;
         } else {
             if (gatherTestInformation.getPipelineState() == PipelineState.HASTESTERRORS) {
-                if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
-                    return true;
-                } else {
-                    gatherTestInformation.addStepError("Only get test errors, no failing tests. It will try to repair it.");
-                    inspector.getJobStatus().setReproducedAsError(true);
-                    return false;
-                }
+                gatherTestInformation.addStepError("Only get test errors, no failing tests. It will try to repair it.");
+                inspector.getJobStatus().setReproducedAsError(true);
+                return false;
             } else {
                 return true;
             }
