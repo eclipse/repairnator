@@ -448,7 +448,6 @@ bkiers/Liqp
 blockchain/thunder
 bluelinelabs/LoganSquare
 bluestreak01/questdb
-blynkkk/blynk-server
 bndtools/bnd
 bndtools/bndtools
 bodar/totallylazy
