@@ -18,13 +18,9 @@ public class BuildShouldFail implements ContractForGatherTestInformation {
             return false;
         } else {
             if (gatherTestInformation.getPipelineState() == PipelineState.HASTESTERRORS) {
-                if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
-                    return true;
-                } else {
-                    gatherTestInformation.addStepError("Only get test errors, no failing tests. It will try to repair it.");
-                    inspector.getJobStatus().setReproducedAsError(true);
-                    return false;
-                }
+                gatherTestInformation.addStepError("Only get test errors, no failing tests. It will try to repair it.");
+                inspector.getJobStatus().setReproducedAsError(true);
+                return false;
             } else {
                 return true;
             }
