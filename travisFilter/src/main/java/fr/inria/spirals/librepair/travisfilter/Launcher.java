@@ -3,6 +3,7 @@ package fr.inria.spirals.librepair.travisfilter;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
@@ -17,6 +18,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,7 +40,7 @@ public class Launcher {
         return (build.getBuildTool() == tool);
     }
 
-    private static List<Repository> getListOfValidRepository(List<String> allSlugs, String language, BuildTool tool) {
+    private static List<Repository> getListOfValidRepository(List<String> allSlugs, String language, BuildTool tool, Date dateLimit) {
         List<Repository> result = new ArrayList<Repository>();
 
         for (String slug : allSlugs) {
@@ -51,27 +53,43 @@ public class Launcher {
                     } else if (tool == null && lastBuild.getConfig().getLanguage().equals(language)) {
                         result.add(repo);
                     } else if (tool != null && (language == null || lastBuild.getConfig().getLanguage().equals(language))){
-                        if (lastBuild.getBuildStatus() == BuildStatus.PASSED) {
-                            if (checkBuildValidityOnTool(lastBuild, tool)) {
-                                result.add(repo);
-                            }
-                        } else {
+                        if (lastBuild.getBuildStatus() != BuildStatus.PASSED) {
                             Build lastPassingBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(lastBuild, BuildStatus.PASSED);
                             if (lastPassingBuild == null) {
                                 lastBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(lastBuild, BuildStatus.FAILED);
                             } else {
                                 lastBuild = lastPassingBuild;
                             }
-                            if (lastBuild != null && checkBuildValidityOnTool(lastBuild, tool)) {
-                                result.add(repo);
+                            if (lastBuild == null) {
+                                continue;
                             }
                         }
+                    }
+
+                    if (checkBuildValidityOnTool(lastBuild, tool) && checkDateValidity(repo, lastBuild, dateLimit)) {
+                        result.add(repo);
                     }
                 }
             }
         }
 
         return result;
+    }
+
+    private static boolean checkDateValidity(Repository repo, Build lastBuild, Date dateLimit) {
+        if (dateLimit == null) {
+            return true;
+        } else {
+            if (lastBuild.getFinishedAt().after(dateLimit)) { // check on master
+                return true;
+            } else {
+                lastBuild = repo.getLastBuild(false); // check on other branches
+                if (lastBuild.getFinishedAt().after(dateLimit)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void writeResultToFile(List<Repository> repos, String outputPath) throws IOException {
@@ -126,6 +144,17 @@ public class Launcher {
         opt2.setHelp("Specify the tool to filter");
         jsap.registerParameter(opt2);
 
+        DateStringParser dateStringParser = DateStringParser.getParser();
+        dateStringParser.setProperty("format", "dd/MM/yyyy");
+
+        opt2 = new FlaggedOption("dateLimit");
+        opt2.setShortFlag('d');
+        opt2.setLongFlag("dateLimit");
+        opt2.setStringParser(dateStringParser);
+        opt2.setRequired(false);
+        opt2.setHelp("Specify a date limit for the most recent passing build: if there's no build after this date, the project is not selected");
+        jsap.registerParameter(opt2);
+
         JSAPResult arguments = jsap.parse(args);
 
         if (!arguments.success()) {
@@ -150,7 +179,7 @@ public class Launcher {
 
 
         List<String> inputContent = getFileContent(arguments.getString("input"));
-        List<Repository> result = getListOfValidRepository(inputContent, arguments.getString("language"), toolMode);
+        List<Repository> result = getListOfValidRepository(inputContent, arguments.getString("language"), toolMode, arguments.getDate("dateLimit"));
 
         writeResultToFile(result, arguments.getString("output"));
 
