@@ -310,4 +310,13 @@ public class BuildHelperTest {
         assertEquals(1428, builds.get(0).getPullRequestNumber());
     }
 
+    @Test
+    public void testGetLastBuildFromMasterIgnoreNumberNullBuilds() {
+        String slug = "Graylog2/graylog2-server";
+        Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
+
+        Build b = repo.getLastBuild(true);
+        assertTrue(b.getNumber() != null);
+    }
+
 }

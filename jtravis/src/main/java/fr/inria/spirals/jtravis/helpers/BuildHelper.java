@@ -216,10 +216,11 @@ public class BuildHelper extends AbstractHelper {
                     if (lastBuildNumber > buildNumber) {
                         lastBuildNumber = buildNumber;
                     }
-                }
 
-                if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
-                    result.add(build);
+                    // we only accept build with a build number
+                    if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
+                        result.add(build);
+                    }
                 }
 
                 // if we reach the limitNumber we can break the loop, and consider the date is reached
@@ -478,6 +479,7 @@ public class BuildHelper extends AbstractHelper {
         int prNumber = -1;
 
         getBuildsFromSlugRecursively(slug, results, limitDate, 0, 0, eventTypes, limitNumber, null, prNumber, false, null);
+
 
         if (results.size() > 0) {
             return results.get(0);
