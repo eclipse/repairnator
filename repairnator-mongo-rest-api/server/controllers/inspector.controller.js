@@ -46,7 +46,13 @@ function hostnameStats(req, res, next) {
 }
 
 function statusStats(req, res, next) {
-  Inspector.statusStats()
+  Inspector.statusStats(0)
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+function statusStatsPeriod(req, res, next) {
+  Inspector.statusStats(req.nbWeeks)
     .then(result => res.json(result))
     .catch(e => next(e));
 }
@@ -57,4 +63,4 @@ function nbUniqueBuilds(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds };
+export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod };

@@ -2,6 +2,7 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
+import moment from 'moment';
 import APIError from '../helpers/APIError';
 
 /**
@@ -83,8 +84,19 @@ InspectorSchema.statics = {
     ]).exec();
   },
 
-  statusStats() {
+  statusStats(nbWeeks) {
+    const ltDateIso = moment().toISOString();
+    const gtDateIso = (nbWeeks !== 0) ? moment().subtract(nbWeeks, 'weeks').toISOString() : moment('01-01-2017', 'DD-MM-YYYY').toISOString();
+
     return this.aggregate([
+      {
+        $match: {
+          buildFinishedDate: {
+            $gte: new Date(gtDateIso),
+            $lt: new Date(ltDateIso)
+          },
+        }
+      },
       {
         $group: {
           _id: '$status',
