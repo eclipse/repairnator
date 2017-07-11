@@ -25,6 +25,18 @@ public abstract class AbstractDataSerializer extends Serializer {
     protected String getPrettyPrintState(ProjectInspector inspector) {
 
         JobStatus jobStatus = inspector.getJobStatus();
+        if (jobStatus.isHasBeenPatched()) {
+            return "PATCHED";
+        }
+
+        if (jobStatus.isReproducedAsFail()) {
+            return "test failure";
+        }
+
+        if (jobStatus.isReproducedAsError()) {
+            return "test errors";
+        }
+
         switch (jobStatus.getPipelineState()) {
             case NONE:
             case INIT:
@@ -78,14 +90,16 @@ public abstract class AbstractDataSerializer extends Serializer {
 
             case SOURCEDIRCOMPUTED:
             case SOURCEDIRNOTCOMPUTED:
-            case NOTPATCHED:
+            case NOPOL_NOTPATCHED:
+            case NPEFIX_NOTPATCHED:
                 if (jobStatus.isReproducedAsFail()) {
                     return "test failure";
                 } else {
                     return "test errors";
                 }
 
-            case PATCHED:
+            case NPEFIX_PATCHED:
+            case NOPOL_PATCHED:
                 return "PATCHED";
 
             case FIXERBUILDCASE1:

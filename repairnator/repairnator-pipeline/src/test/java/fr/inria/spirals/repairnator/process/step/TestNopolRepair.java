@@ -88,7 +88,7 @@ public class TestNopolRepair {
         cloneStep.execute();
 
         assertThat(nopolRepair.shouldStop, is(false));
-        assertThat(nopolRepair.getPipelineState(), is(PipelineState.PATCHED));
+        assertThat(nopolRepair.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(nopolRepair.getNopolInformations().size(), is(11));
     }
 }

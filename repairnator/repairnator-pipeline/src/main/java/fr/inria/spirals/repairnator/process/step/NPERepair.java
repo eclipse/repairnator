@@ -1,13 +1,23 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Created by urli on 10/07/2017.
@@ -41,20 +51,71 @@ public class NPERepair extends AbstractStep {
         if (isThereNPE()) {
             this.getLogger().info("NPE found, start NPEFix");
 
-            MavenHelper mavenHelper = new MavenHelper(this.getInspector().getJobStatus().getFailingModulePath()+"/pom.xml", NPEFIX_GOAL, null, this.getName(), this.getInspector(), true );
+            MavenHelper mavenHelper = new MavenHelper(this.getPom(), NPEFIX_GOAL, null, this.getName(), this.getInspector(), true );
             int status = mavenHelper.run();
 
             if (status == MavenHelper.MAVEN_ERROR) {
-                this.getLogger().warn("Error while running NPE fix");
+                this.addStepError("Error while running NPE fix: maybe the project does not contain a NPE?");
+                this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
             } else {
-                try {
-                    FileUtils.moveFile(new File(this.getInspector().getJobStatus().getFailingModulePath()+"/target/npefix/patches.json"), new File(this.getInspector().getRepoLocalPath()+"/repairnator.npefix.results"));
-                } catch (IOException e) {
-                    this.addStepError("Error while moving NPE fix results", e);
+                Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { ".json"}, false);
+                if (!files.isEmpty()) {
+
+                    File patchesFiles = files.iterator().next();
+                    try {
+                        FileUtils.copyFile(patchesFiles, new File(this.getInspector().getRepoLocalPath()+"/repairnator.npefix.results"));
+                    } catch (IOException e) {
+                        this.addStepError("Error while moving NPE fix results", e);
+                    }
+
+                    boolean effectivelyPatched = false;
+                    File patchDir = new File(this.getInspector().getRepoLocalPath()+"/repairnatorPatches");
+
+                    patchDir.mkdir();
+                    try {
+                        JsonParser jsonParser = new JsonParser();
+                        JsonElement root = jsonParser.parse(new FileReader(patchesFiles));
+
+                        JsonArray executions = root.getAsJsonObject().getAsJsonArray("executions");
+
+                        for (JsonElement execution : executions) {
+                            if (execution.getAsJsonObject().getAsJsonObject("result").get("success").getAsBoolean()) {
+                                effectivelyPatched = true;
+                                String testName = execution.getAsJsonObject().getAsJsonObject("test").get("name").getAsString();
+                                long startDate = execution.getAsJsonObject().get("startDate").getAsLong();
+
+                                String filename = "npefix_"+testName+"_"+startDate+".patch";
+                                String content = execution.getAsJsonObject().get("diff").getAsString();
+
+                                File patchFile = new File(patchDir.getPath()+"/"+filename);
+                                BufferedWriter patchWriter = new BufferedWriter(new FileWriter(patchFile));
+                                patchWriter.write(content);
+                                patchWriter.flush();
+                                patchWriter.close();
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        this.addStepError("Error while parsing JSON patch files");
+                    }
+
+                    if (effectivelyPatched) {
+                        this.setPipelineState(PipelineState.NPEFIX_PATCHED);
+                        this.getInspector().getJobStatus().setHasBeenPatched(true);
+                    } else {
+                        this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
+                    }
+
+                } else {
+                    this.addStepError("Error while getting the patch json file: no file found.");
+                    this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
                 }
+
+
             }
         } else {
             this.getLogger().info("No NPE found, this step will be skipped.");
+            this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
         }
     }
 }

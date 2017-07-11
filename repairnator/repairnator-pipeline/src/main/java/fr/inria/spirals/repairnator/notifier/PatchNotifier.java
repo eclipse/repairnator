@@ -24,7 +24,7 @@ public class PatchNotifier extends AbstractNotifier {
 
     public void observe(ProjectInspector inspector) {
         JobStatus status = inspector.getJobStatus();
-        if (!alreadyNotified && status.getPipelineState() == PipelineState.PATCHED) {
+        if (!alreadyNotified && status.isHasBeenPatched()) {
             String subject = "Patched build: "+inspector.getBuggyBuild().getId()+" - "+inspector.getBuggyBuild().getRepository().getSlug();
 
 
@@ -36,32 +36,46 @@ public class PatchNotifier extends AbstractNotifier {
                 text += "Data about patches has been pushed on the following branch: "+status.getGitBranchUrl()+".\n";
             }
 
-            text += "You can find several information on the following about those patches: \n";
+            text += "You may find several information on the following about those patches: \n";
 
-            String details = "";
             int totalPatches = 0;
-            int i = 1;
-            int totalFailure = status.getNopolInformations().size();
+            String details = "";
+            if (status.getNopolInformations() != null && !status.getNopolInformations().isEmpty()) {
+                int i = 1;
+                int totalFailure = status.getNopolInformations().size();
+                details += "Nopol Generated Patches: \n\n";
+                for (NopolInformation nopolInformation : status.getNopolInformations()) {
+                    totalPatches += nopolInformation.getPatches().size();
 
-            for (NopolInformation nopolInformation : status.getNopolInformations()) {
-                totalPatches += nopolInformation.getPatches().size();
+                    FailureLocation location = nopolInformation.getLocation();
+                    details += "\t Failure #"+i+" on "+totalFailure+"\n" +
+                            "\t\t Concerned class: "+location.getClassName()+" ("+location.getNbFailures()+" failures / "+location.getNbErrors()+" errors)\n";
 
-                FailureLocation location = nopolInformation.getLocation();
-                details += "\t Failure #"+i+" on "+totalFailure+"\n" +
-                        "\t\t Concerned class: "+location.getClassName()+" ("+location.getNbFailures()+" failures / "+location.getNbErrors()+" errors)\n";
+                    for (int j = 0; j < Math.min(10, nopolInformation.getPatches().size()); j++) {
+                        Patch patch = nopolInformation.getPatches().get(j);
+                        details += "\t\t Proposed patch #"+j+" in "+patch.getSourceLocation().toString()+" : "+patch.asString()+"\n";
+                        totalPatches++;
+                    }
 
-                for (int j = 0; j < Math.min(10, nopolInformation.getPatches().size()); j++) {
-                    Patch patch = nopolInformation.getPatches().get(j);
-                    details += "\t\t Proposed patch #"+j+" in "+patch.getSourceLocation().toString()+" : "+patch.asString()+"\n";
+                    details += "\n\n";
+                    i++;
                 }
-
-                details += "\n\n";
-                i++;
             }
 
-            text += "\t Total patches found: "+totalPatches+".\n" +
-                    details;
+            if (status.getNpeFixPatches() != null && !status.getNpeFixPatches().isEmpty()) {
+                int i = 1;
+                int npePatches = status.getNpeFixPatches().size();
 
+                details += "NPEfix generated patches: \n\n";
+                for (String diff : status.getNpeFixPatches()) {
+                    details += "\tPatch #"+i+" on "+npePatches+"\n";
+                    details += "\tDiff: "+diff+"\n\n";
+                    totalPatches++;
+                    i++;
+                }
+            }
+
+            text += "\t Total patches found: "+totalPatches+".\n" + details;
             this.notifyEngines(subject, text);
             this.alreadyNotified = true;
         }
