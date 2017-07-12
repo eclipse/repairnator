@@ -15,13 +15,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by urli on 10/07/2017.
  */
 public class NPERepair extends AbstractStep {
-    private static final String NPEFIX_GOAL = "fr.inria.spirals:npefix-maven:1.0-SNAPSHOT:npefix";
+    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:npefix-maven:1.1:npefix";
 
     public NPERepair(ProjectInspector inspector) {
         super(inspector);
@@ -56,7 +58,7 @@ public class NPERepair extends AbstractStep {
                 this.addStepError("Error while running NPE fix: maybe the project does not contain a NPE?");
                 this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
             } else {
-                Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { ".json"}, false);
+                Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { "json"}, false);
                 if (!files.isEmpty()) {
 
                     File patchesFiles = files.iterator().next();
@@ -74,6 +76,8 @@ public class NPERepair extends AbstractStep {
                         JsonParser jsonParser = new JsonParser();
                         JsonElement root = jsonParser.parse(new FileReader(patchesFiles));
 
+                        List<String> npePatches = new ArrayList<String>();
+
                         JsonArray executions = root.getAsJsonObject().getAsJsonArray("executions");
 
                         for (JsonElement execution : executions) {
@@ -90,9 +94,11 @@ public class NPERepair extends AbstractStep {
                                 patchWriter.write(content);
                                 patchWriter.flush();
                                 patchWriter.close();
+
+                                npePatches.add(content);
                             }
                         }
-
+                        this.getInspector().getJobStatus().setNpeFixPatches(npePatches);
                     } catch (IOException e) {
                         this.addStepError("Error while parsing JSON patch files");
                     }
