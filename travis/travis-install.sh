@@ -37,3 +37,14 @@ then
     echo "Error while installing surefire-report-parser"
     exit 1
 fi
+
+cd ../..
+git clone https://github.com/Spirals-Team/npefix-maven
+cd npefix-maven
+mvn install
+
+if [[ $? != 0 ]]
+then
+    echo "Error while installing NPEfix"
+    exit 1
+fi

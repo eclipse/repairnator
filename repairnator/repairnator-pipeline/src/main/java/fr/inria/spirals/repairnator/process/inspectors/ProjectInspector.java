@@ -138,6 +138,7 @@ public class ProjectInspector {
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false))
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new PushIncriminatedBuild(this))
+                    .setNextStep(new NPERepair(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this, false))
                     .setNextStep(new NopolRepair(this))

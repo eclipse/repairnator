@@ -25,6 +25,7 @@ public class JobStatus {
     private File[] testDir;
 
     private List<NopolInformation> nopolInformations;
+    private List<String> npeFixPatches;
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
     private String pomDirPath;
@@ -175,5 +176,13 @@ public class JobStatus {
 
     public void setTestDir(File[] testDir) {
         this.testDir = testDir;
+    }
+
+    public List<String> getNpeFixPatches() {
+        return npeFixPatches;
+    }
+
+    public void setNpeFixPatches(List<String> npeFixPatches) {
+        this.npeFixPatches = npeFixPatches;
     }
 }
