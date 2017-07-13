@@ -9,7 +9,8 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fun
     {id: 'status', readable: 'Status'},
     {id: 'prNumber', readable: 'Pull Request ID'},
     {id: 'travisURL', readable: 'URL of Travis build'},
-    {id: 'typeOfFailures', readable: 'Type of failures'}
+    {id: 'typeOfFailures', readable: 'Type of failures'},
+    {id: 'branchURL', readable: 'URL of the branch'}
   ];
 
   var headersDisplayed = false;
@@ -55,6 +56,15 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fun
 
       if (fieldName == 'travisURL') {
         dataValue = '<a href="'+dataValue+'">'+dataValue+'</a>';
+      }
+
+      if (fieldName == 'branchURL') {
+        if (dataValue != undefined) {
+          dataValue = '<a href="'+branchURL+'">'+branchURL+'</a>';
+        } else {
+          dataValue = "N/A";
+        }
+
       }
 
       td.html(dataValue);
