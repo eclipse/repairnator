@@ -177,4 +177,68 @@ public class TestProjectInspector {
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
 
     }
+
+    @Test
+    public void testRepairingWithNPEFix() throws IOException, GitAPIException {
+        int buildId = 253130137; // surli/failingProject npe
+
+        Path tmpDirPath = Files.createTempDirectory("test_complete_npe");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "testnpe");
+
+        List<AbstractDataSerializer> serializers = new ArrayList<>();
+        List<AbstractNotifier> notifiers = new ArrayList<>();
+
+        List<SerializerEngine> serializerEngines = new ArrayList<>();
+        SerializerEngine serializerEngine = mock(SerializerEngine.class);
+        serializerEngines.add(serializerEngine);
+
+        List<NotifierEngine> notifierEngines = new ArrayList<>();
+        NotifierEngine notifierEngine = mock(NotifierEngine.class);
+        notifierEngines.add(notifierEngine);
+
+        serializers.add(new InspectorSerializer(serializerEngines));
+        serializers.add(new NopolSerializer(serializerEngines));
+
+        notifiers.add(new PatchNotifier(notifierEngines));
+
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.REPAIR);
+
+        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        inspector.run();
+
+        JobStatus jobStatus = inspector.getJobStatus();
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
+        assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
+        assertThat(jobStatus.getFailureLocations().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+        assertThat(jobStatus.isHasBeenPatched(), is(true));
+        assertThat(jobStatus.getNpeFixPatches().size(), is(6));
+
+        verify(notifierEngine, times(1)).notify(anyString(), anyString());
+        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
+        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.NOPOL));
+
+        Git gitDir = Git.open(new File(inspector.getRepoToPushLocalPath()));
+        Iterable<RevCommit> logs = gitDir.log().call();
+
+        Iterator<RevCommit> iterator = logs.iterator();
+        assertThat(iterator.hasNext(), is(true));
+
+        RevCommit commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
+
+        commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
+
+        commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
+
+        assertThat(iterator.hasNext(), is(false));
+    }
 }
