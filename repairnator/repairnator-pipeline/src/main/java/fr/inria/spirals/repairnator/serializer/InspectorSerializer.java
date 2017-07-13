@@ -88,6 +88,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         result.addProperty("travisURL", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         result.addProperty("typeOfFailures", typeOfFailures);
         result.addProperty("runId", buildToBeInspected.getRunId());
+        result.addProperty("branchURL", jobStatus.getGitBranchUrl());
 
         return result;
     }
