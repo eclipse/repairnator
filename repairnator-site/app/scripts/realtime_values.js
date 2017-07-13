@@ -34,6 +34,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fun
     fieldNames.forEach(function (column) {
       var fieldName = column.id;
       var td = $('<td></td>');
+
       var dataValue = data[fieldName];
 
       if (fieldName == 'status') {
@@ -59,8 +60,8 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fun
       }
 
       if (fieldName == 'branchURL') {
-        if (dataValue != undefined) {
-          dataValue = '<a href="'+branchURL+'">'+branchURL+'</a>';
+        if (dataValue != undefined && dataValue != null) {
+          dataValue = '<a href="'+dataValue+'">Go to branch</a>';
         } else {
           dataValue = "N/A";
         }
