@@ -1,5 +1,11 @@
 alibaba-fastjson-230277356-20170509-113904
+apache-pdfbox-231035412-20170511-075209
+apache-pdfbox-231179680-20170511-162430
 AsyncHttpClient-async-http-client-231302718-20170511-221950
+CorfuDB-CorfuDB-231543852-20170512-150030
+dangdangdotcom-sharding-jdbc-230708565-20170510-130737
+dangdangdotcom-sharding-jdbc-231497969-20170512-121937
+FasterXML-jackson-dataformat-xml-231035641-20170511-074942
 HubSpot-Singularity-230046970-20170508-194727
 languagetool-org-languagetool-232140479-20170514-193914
 OWASP-java-html-sanitizer-231634556-20170512-185643
