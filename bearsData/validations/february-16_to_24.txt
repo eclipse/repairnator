@@ -1,14 +1,25 @@
-joel-costigliola-assertj-core-203109069-20170219-094343 [OK]
+Analyze started: 2017-08-03_131635
+Considered repository: https://github.com/surli/bugs-collection
+DiUS-java-faker-203263025-20170219-233644 [OK]
 apache-httpcomponents-core-202486632-20170217-185349 [OK]
 AxonFramework-AxonFramework-202538093-20170217-091817 [FAILURE] (bug reproduction - status = 0)
-OpenGamma-Strata-204598001-20170223-152058 [OK]
-google-error-prone-202850608-20170218-050120 [OK]
-owlcs-owlapi-204105870-20170222-092224 [OK]
+apache-pdfbox-202398785-20170217-131557 [FAILURE] (patch reproduction - status = 1)
+apache-pdfbox-202398719-20170217-131140 [FAILURE] (patch reproduction - status = 1)
+brettwooldridge-HikariCP-202846590-20170218-041355 [OK]
 google-error-prone-202363212-20170216-214129 [OK]
-google-error-prone-202856715-20170218-060758 [OK]
 google-error-prone-202511779-20170217-071046 [OK]
+google-error-prone-202850608-20170218-050120 [OK]
+joel-costigliola-assertj-core-203109069-20170219-094343 [OK]
+google-error-prone-202856715-20170218-060758 [OK]
+INRIA-spoon-203780350-20170221-131611 [OK]
 google-error-prone-203045766-20170219-004656 [OK]
+tananaev-traccar-203297305-20170220-025416 [OK]
 google-error-prone-204064632-20170222-051447 [OK]
+TridentSDK-TridentSDK-204060819-20170222-044129 [OK]
 google-error-prone-204067230-20170222-053227 [OK]
+tananaev-traccar-204058552-20170222-043130 [OK]
+OpenGamma-Strata-204598001-20170223-152058 [OK]
+owlcs-owlapi-204105870-20170222-092224 [OK]
 languagetool-org-languagetool-202888637-20170218-102033 [OK]
 oVirt-ovirt-engine-204268519-20170222-181904 [OK]
+Analyze finished: 2017-08-03_134026

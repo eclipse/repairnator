@@ -1,3 +1,5 @@
+Analyze started: 2017-08-03_154429
+Considered repository: https://github.com/surli/bugs-collection
 qos-ch-slf4j-206190550-20170228-150958 [FAILURE] (bug reproduction - status = 0)
 GwtMaterialDesign-gwt-material-205185141-20170225-032108 [OK]
 OpenGamma-Strata-205883354-20170227-185551 [OK]
@@ -5,4 +7,5 @@ airlift-airlift-205641678-20170227-011037 [FAILURE] (patch reproduction - status
 google-error-prone-206050964-20170228-045950 [OK]
 google-error-prone-204854112-20170224-054941 [OK]
 google-error-prone-206008916-20170228-012145 [OK]
-geotools-geotools-205249417-20170225-122103 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-205249417-20170225-122103 [FAILURE] (bug reproduction timeout)
+Analyze finished: 2017-08-03_161447

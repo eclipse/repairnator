@@ -1,3 +1,5 @@
+Analyze started: 2017-08-03_102433
+Considered repository: https://github.com/surli/bugs-collection
 FasterXML-jackson-databind-195777970-20170127-074320 [OK]
 FasterXML-jackson-databind-195433804-20170126-065819 [OK]
 brettwooldridge-HikariCP-194696936-20170124-042357 [FAILURE] (bug reproduction - status = 0)
@@ -15,3 +17,4 @@ konsoletyper-teavm-194960761-20170124-222912 [OK]
 konsoletyper-teavm-196200926-20170128-210018 [OK]
 geotools-geotools-195930442-20170127-180632 [FAILURE] (patch reproduction - status = 1)
 geotools-geotools-195930177-20170127-180402 [FAILURE] (patch reproduction - status = 1)
+Analyze finished: 2017-08-03_104842

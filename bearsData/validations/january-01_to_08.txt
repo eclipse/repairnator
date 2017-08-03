@@ -1,3 +1,5 @@
+Analyze started: 2017-08-02_163032
+Considered repository: https://github.com/surli/bugs-collection
 dangdangdotcom-sharding-jdbc-189476479-20170106-122734 [FAILURE] (patch reproduction - status = 1)
 fabric8io-docker-maven-plugin-188341607-20170102-215813 [OK]
 CloudSlang-cloud-slang-188457974-20170103-092543 [OK]
@@ -18,3 +20,4 @@ oVirt-ovirt-engine-188283103-20170102-180112 [OK]
 oVirt-ovirt-engine-188876237-20170104-162400 [OK]
 languagetool-org-languagetool-189864337-20170107-221307 [OK]
 sakaiproject-sakai-189545107-20170106-171949 [OK]
+Analyze finished: 2017-08-02_165811

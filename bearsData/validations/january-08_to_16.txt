@@ -1,3 +1,5 @@
+Analyze started: 2017-08-02_170101
+Considered repository: https://github.com/surli/bugs-collection
 alibaba-fastjson-189922060-20170108-053117 [OK]
 culturegraph-metafacture-core-190152556-20170109-070000 [OK]
 AsyncHttpClient-async-http-client-192069640-20170115-100150 [OK]
@@ -26,3 +28,4 @@ geotools-geotools-191918492-20170114-160335 [FAILURE] (patch reproduction - stat
 geotools-geotools-191918526-20170114-160304 [FAILURE] (patch reproduction - status = 1)
 geotools-geotools-191591110-20170113-120259 [FAILURE] (patch reproduction - status = 1)
 geotools-geotools-191607352-20170113-131129 [FAILURE] (patch reproduction - status = 1)
+Analyze finished: 2017-08-02_173448
