@@ -1,28 +1,28 @@
-culturegraph-metafacture-core-190152556-20170109-070000 [OK]
 alibaba-fastjson-189922060-20170108-053117 [OK]
+culturegraph-metafacture-core-190152556-20170109-070000 [OK]
 AsyncHttpClient-async-http-client-192069640-20170115-100150 [OK]
+brettwooldridge-HikariCP-190021087-20170108-175810 [FAILURE] (bug reproduction - status = 0)
 apache-opennlp-190237579-20170109-135627 [OK]
-apache-opennlp-191135576-20170112-000843 [OK]
 apache-opennlp-190690008-20170110-184902 [OK]
 apache-opennlp-190243217-20170109-141442 [OK]
+apache-opennlp-191135576-20170112-000843 [OK]
 AsyncHttpClient-async-http-client-192067671-20170115-094152 [OK]
-joel-costigliola-assertj-core-192157106-20170115-193858 [OK]
-brettwooldridge-HikariCP-190021087-20170108-175810 [OK]
 INRIA-spoon-190241752-20170109-141349 [OK]
 INRIA-spoon-190940154-20170111-135247 [OK]
 INRIA-spoon-191595944-20170113-121004 [OK]
 google-error-prone-190725411-20170110-205323 [OK]
+joel-costigliola-assertj-core-192157106-20170115-193858 [OK]
+oVirt-ovirt-engine-190195972-20170109-110951 [FAILURE] (patch reproduction - status = 1)
 prometheus-client_java-190580909-20170110-124816 [OK]
+oVirt-ovirt-engine-190971338-20170111-155756 [OK]
 rest-assured-rest-assured-189929200-20170108-070426 [OK]
 languagetool-org-languagetool-190704127-20170110-194020 [OK]
-spring-projects-spring-data-commons-191604001-20170113-131952 [OK]
 tananaev-traccar-189931827-20170108-073141 [OK]
 tananaev-traccar-191103948-20170111-220953 [OK]
+spring-projects-spring-data-commons-191604001-20170113-131952 [OK]
 tananaev-traccar-191465599-20170112-232029 [OK]
 konsoletyper-teavm-190067165-20170108-220627 [OK]
-oVirt-ovirt-engine-190971338-20170111-155756 [OK]
-oVirt-ovirt-engine-190195972-20170109-110951 [OK]
+geotools-geotools-191918492-20170114-160335 [FAILURE] (patch reproduction - status = 1)
 geotools-geotools-191918526-20170114-160304 [FAILURE] (patch reproduction - status = 1)
 geotools-geotools-191591110-20170113-120259 [FAILURE] (patch reproduction - status = 1)
 geotools-geotools-191607352-20170113-131129 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-191918492-20170114-160335 [FAILURE] (bug reproduction timeout)
