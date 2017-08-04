@@ -1,0 +1,21 @@
+Analyze started: 2017-08-04_160456
+Considered repository: https://github.com/surli/bugs-collection
+apache-opennlp-237576035-20170530-180550 [OK]
+apache-opennlp-235580633-20170524-122524 [OK]
+alibaba-fastjson-235954999-20170525-114444 [OK]
+dangdangdotcom-sharding-jdbc-236303372-20170526-112151 [OK]
+CorfuDB-CorfuDB-235906469-20170525-071805 [FAILURE] (bug reproduction - status = 0)
+CorfuDB-CorfuDB-235913092-20170525-080957 [FAILURE] (bug reproduction - status = 0)
+CorfuDB-CorfuDB-236144048-20170525-223152 [FAILURE] (bug reproduction - status = 0)
+mpatric-mp3agic-237165529-20170529-151633 [OK]
+dangdangdotcom-sharding-jdbc-237930594-20170531-162736 [OK]
+dangdangdotcom-sharding-jdbc-236705786-20170527-185711 [OK]
+CorfuDB-CorfuDB-236537649-20170526-235951 [FAILURE] (bug reproduction - status = 0)
+dangdangdotcom-sharding-jdbc-236731643-20170527-210241 [OK]
+phoenixnap-springmvc-raml-plugin-236325862-20170526-123808 [FAILURE] (patch reproduction - status = 1)
+phoenixnap-springmvc-raml-plugin-237492245-20170530-141715 [FAILURE] (patch reproduction - status = 1)
+tananaev-traccar-237041672-20170529-063229 [OK]
+tananaev-traccar-237042934-20170529-064538 [OK]
+dangdangdotcom-sharding-jdbc-237948846-20170531-170859 [OK]
+IQSS-dataverse-236542163-20170527-001128 [OK]
+Analyze finished: 2017-08-04_161355

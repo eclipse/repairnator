@@ -1,41 +1,45 @@
+Analyze started: 2017-08-04_101828
+Considered repository: https://github.com/surli/bugs-collection
 alibaba-java-dns-cache-manipulator-212959922-20170320-131523 [FAILURE] (patch reproduction - status = 1)
-culturegraph-metafacture-core-212425260-20170318-123301 [FAILURE] (patch reproduction - status = 1)
-docker-java-docker-java-211761601-20170316-153527 [OK]
+culturegraph-metafacture-core-212425260-20170318-123301 [OK]
 code4craft-webmagic-211955499-20170317-005705 [OK]
-apache-httpclient-212432361-20170318-130959 [FAILURE] (patch reproduction - status = 1)
 apache-opennlp-211573066-20170316-023626 [OK]
-fabric8io-docker-maven-plugin-212735333-20170319-183628 [OK]
+apache-httpclient-212432361-20170318-130959 [FAILURE] (patch reproduction - status = 1)
+docker-java-docker-java-211761601-20170316-153527 [OK]
+apache-pdfbox-213105153-20170320-193910 [OK]
 fabric8io-docker-maven-plugin-212684019-20170319-143139 [OK]
-INL-BlackLab-212439018-20170318-134822 [OK]
-IQSS-dataverse-212168712-20170317-165457 [OK]
-AxonFramework-AxonFramework-213837881-20170322-150057 [OK]
+fabric8io-docker-maven-plugin-212735333-20170319-183628 [OK]
 CloudSlang-cloud-slang-211692877-20170316-114758 [OK]
+AxonFramework-AxonFramework-213837881-20170322-150057 [OK]
+INL-BlackLab-212439018-20170318-134822 [OK]
 GwtMaterialDesign-gwt-material-213283759-20170321-062727 [OK]
+IQSS-dataverse-212168712-20170317-165457 [OK]
 google-error-prone-211897436-20170316-213516 [OK]
 languagetool-org-languagetool-212767510-20170319-205238 [OK]
-languagetool-org-languagetool-213109561-20170320-194054 [OK]
-languagetool-org-languagetool-212930557-20170320-112609 [OK]
 languagetool-org-languagetool-212493470-20170318-183540 [OK]
-phoenixnap-springmvc-raml-plugin-212121382-20170317-144359 [OK]
 languagetool-org-languagetool-212819700-20170320-003116 [OK]
+geotools-geotools-212174766-20170317-173904 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-212174893-20170317-175333 [FAILURE] (patch reproduction - status = 1)
+languagetool-org-languagetool-212930557-20170320-112609 [OK]
+phoenixnap-springmvc-raml-plugin-212121382-20170317-144359 [FAILURE] (patch reproduction - status = 1)
+phoenixnap-springmvc-raml-plugin-212881926-20170320-071934 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-212169935-20170317-173349 [FAILURE] (patch reproduction - status = 1)
+phoenixnap-springmvc-raml-plugin-213472148-20170321-171906 [FAILURE] (patch reproduction - status = 1)
+phoenixnap-springmvc-raml-plugin-213783660-20170322-120425 [FAILURE] (patch reproduction - status = 1)
+phoenixnap-springmvc-raml-plugin-213884876-20170322-164417 [FAILURE] (patch reproduction - status = 1)
+languagetool-org-languagetool-213109561-20170320-194054 [OK]
 owlcs-owlapi-212557099-20170318-231733 [OK]
-phoenixnap-springmvc-raml-plugin-213472148-20170321-171906 [OK]
-phoenixnap-springmvc-raml-plugin-212881926-20170320-071934 [OK]
-phoenixnap-springmvc-raml-plugin-213783660-20170322-120425 [OK]
-geotools-geotools-212169935-20170317-173349 [FAILURE] (bug reproduction timeout)
 square-javapoet-211550878-20170316-000405 [OK]
-geotools-geotools-212174766-20170317-173904 [FAILURE] (bug reproduction timeout)
-geotools-geotools-212174893-20170317-175333 [FAILURE] (bug reproduction timeout)
-phoenixnap-springmvc-raml-plugin-213884876-20170322-164417 [OK]
 square-javapoet-213382466-20170321-131233 [OK]
-geotools-geotools-213356589-20170321-121236 [FAILURE] (bug reproduction timeout)
 tananaev-traccar-211583575-20170316-022232 [OK]
 tananaev-traccar-211918203-20170316-224027 [OK]
+geotools-geotools-213356589-20170321-121236 [FAILURE] (patch reproduction - status = 1)
 tananaev-traccar-212635664-20170319-091446 [OK]
 tananaev-traccar-213176631-20170320-224659 [OK]
-tananaev-traccar-213271968-20170321-051101 [OK]
 TridentSDK-TridentSDK-212339960-20170318-021121 [OK]
 tananaev-traccar-213296797-20170321-074044 [OK]
+tananaev-traccar-213271968-20170321-051101 [OK]
 languagetool-org-languagetool-213121546-20170320-201324 [OK]
-languagetool-org-languagetool-214163619-20170323-100400 [OK]
 languagetool-org-languagetool-213929485-20170322-182809 [OK]
+languagetool-org-languagetool-214163619-20170323-100400 [OK]
+Analyze finished: 2017-08-04_105835

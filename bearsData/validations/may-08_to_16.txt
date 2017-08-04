@@ -1,11 +1,20 @@
-OWASP-java-html-sanitizer-231634556-20170512-185643 [OK]
-square-javapoet-231862123-20170513-145452 [OK]
-square-retrofit-231247660-20170511-192847 [OK]
-square-retrofit-231764479-20170513-024517 [OK]
+Analyze started: 2017-08-04_152207
+Considered repository: https://github.com/surli/bugs-collection
+FasterXML-jackson-dataformat-xml-231035641-20170511-074942 [OK]
 alibaba-fastjson-230277356-20170509-113904 [OK]
-square-retrofit-231765304-20170513-025134 [OK]
+apache-pdfbox-231179680-20170511-162430 [OK]
+apache-pdfbox-231035412-20170511-075209 [OK]
+dangdangdotcom-sharding-jdbc-230708565-20170510-130737 [OK]
+OWASP-java-html-sanitizer-231634556-20170512-185643 [OK]
+dangdangdotcom-sharding-jdbc-231497969-20170512-121937 [OK]
+square-javapoet-231862123-20170513-145452 [OK]
+CorfuDB-CorfuDB-231543852-20170512-150030 [FAILURE] (bug reproduction - status = 0)
+square-retrofit-231247660-20170511-192847 [OK]
 spring-projects-spring-data-commons-231307769-20170511-223138 [OK]
+AsyncHttpClient-async-http-client-231302718-20170511-221950 [OK]
+square-retrofit-231764479-20170513-024517 [OK]
+square-retrofit-231765304-20170513-025134 [OK]
 spring-projects-spring-data-commons-231817930-20170513-101928 [OK]
-AsyncHttpClient-async-http-client-231302718-20170511-221950 [FAILURE] (patch reproduction - status = 1)
 HubSpot-Singularity-230046970-20170508-194727 [OK]
 languagetool-org-languagetool-232140479-20170514-193914 [OK]
+Analyze finished: 2017-08-04_153804
