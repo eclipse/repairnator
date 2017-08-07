@@ -36,7 +36,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
     xAxis: {
       type: 'datetime',
       dateTimeLabelFormats: { // don't display the dummy year
-        minute:"%A, %b %e, %H:%M",
+        minute:'%A, %b %e, %H:%M',
       },
       title: {
         text: 'Date'
