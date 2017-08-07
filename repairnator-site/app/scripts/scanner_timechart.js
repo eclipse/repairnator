@@ -66,7 +66,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
         name: 'totalScannedBuilds',
         data: data.map( function (d) {
           return [
-            Date.parse(d.dateBegin),
+            Date.parse(d.dateLimit),
             d.totalScannedBuilds
           ]
         })
@@ -75,7 +75,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
         name: 'totalJavaBuilds',
         data: data.map( function (d) {
           return [
-            Date.parse(d.dateBegin),
+            Date.parse(d.dateLimit),
             d.totalJavaBuilds
           ]
         })
@@ -84,7 +84,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
         name: 'totalJavaPassingBuilds',
         data: data.map( function (d) {
           return [
-            Date.parse(d.dateBegin),
+            Date.parse(d.dateLimit),
             d.totalJavaPassingBuilds
           ]
         })
@@ -93,7 +93,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
         name: 'totalJavaFailingBuilds',
         data: data.map( function (d) {
           return [
-            Date.parse(d.dateBegin),
+            Date.parse(d.dateLimit),
             d.totalJavaFailingBuilds
           ]
         })
@@ -102,7 +102,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
         name: 'totalJavaFailingBuildsWithFailingTests',
         data: data.map( function (d) {
           return [
-            Date.parse(d.dateBegin),
+            Date.parse(d.dateLimit),
             d.totalJavaFailingBuildsWithFailingTests
           ]
         })

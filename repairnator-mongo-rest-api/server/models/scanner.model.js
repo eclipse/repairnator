@@ -87,7 +87,7 @@ ScannerSchema.statics = {
       totalRepoNumber: {
         $gt: 1
       }
-    }).sort({ dateBegin: 1 }).exec();
+    }).sort({ dateLimit: 1 }).exec();
   },
 
   getLastWeeksData(nbWeeks) {
@@ -102,7 +102,7 @@ ScannerSchema.statics = {
       totalRepoNumber: {
         $gt: 1
       }
-    }).sort({ dateBegin: 1 }).exec();
+    }).sort({ dateLimit: 1 }).exec();
   }
 };
 

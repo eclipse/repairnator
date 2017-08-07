@@ -17,7 +17,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
       text: 'Build statuses (all times - '+total+' builds)'
     },
     tooltip: {
-      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
     },
     plotOptions: {
       pie: {
