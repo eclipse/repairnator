@@ -1,22 +1,22 @@
-https://github.com/surli/bugs-collection/tree/apache-httpcomponents-core-202486632-20170217-185349
-https://github.com/surli/bugs-collection/tree/apache-pdfbox-202398719-20170217-131140
-https://github.com/surli/bugs-collection/tree/apache-pdfbox-202398785-20170217-131557
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-202538093-20170217-091817
-https://github.com/surli/bugs-collection/tree/brettwooldridge-HikariCP-202846590-20170218-041355
-https://github.com/surli/bugs-collection/tree/DiUS-java-faker-203263025-20170219-233644
-https://github.com/surli/bugs-collection/tree/google-error-prone-202363212-20170216-214129
-https://github.com/surli/bugs-collection/tree/google-error-prone-202511779-20170217-071046
-https://github.com/surli/bugs-collection/tree/google-error-prone-202850608-20170218-050120
-https://github.com/surli/bugs-collection/tree/google-error-prone-202856715-20170218-060758
-https://github.com/surli/bugs-collection/tree/google-error-prone-203045766-20170219-004656
-https://github.com/surli/bugs-collection/tree/google-error-prone-204064632-20170222-051447
-https://github.com/surli/bugs-collection/tree/google-error-prone-204067230-20170222-053227
-https://github.com/surli/bugs-collection/tree/INRIA-spoon-203780350-20170221-131611
-https://github.com/surli/bugs-collection/tree/joel-costigliola-assertj-core-203109069-20170219-094343
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-202888637-20170218-102033
-https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-204598001-20170223-152058
-https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-204268519-20170222-181904
-https://github.com/surli/bugs-collection/tree/owlcs-owlapi-204105870-20170222-092224
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-203297305-20170220-025416
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-204058552-20170222-043130
-https://github.com/surli/bugs-collection/tree/TridentSDK-TridentSDK-204060819-20170222-044129
+* https://github.com/surli/bugs-collection/tree/apache-httpcomponents-core-202486632-20170217-185349
+* https://github.com/surli/bugs-collection/tree/apache-pdfbox-202398719-20170217-131140
+* https://github.com/surli/bugs-collection/tree/apache-pdfbox-202398785-20170217-131557
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-202538093-20170217-091817
+* https://github.com/surli/bugs-collection/tree/brettwooldridge-HikariCP-202846590-20170218-041355
+* https://github.com/surli/bugs-collection/tree/DiUS-java-faker-203263025-20170219-233644
+* https://github.com/surli/bugs-collection/tree/google-error-prone-202363212-20170216-214129
+* https://github.com/surli/bugs-collection/tree/google-error-prone-202511779-20170217-071046
+* https://github.com/surli/bugs-collection/tree/google-error-prone-202850608-20170218-050120
+* https://github.com/surli/bugs-collection/tree/google-error-prone-202856715-20170218-060758
+* https://github.com/surli/bugs-collection/tree/google-error-prone-203045766-20170219-004656
+* https://github.com/surli/bugs-collection/tree/google-error-prone-204064632-20170222-051447
+* https://github.com/surli/bugs-collection/tree/google-error-prone-204067230-20170222-053227
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-203780350-20170221-131611
+* https://github.com/surli/bugs-collection/tree/joel-costigliola-assertj-core-203109069-20170219-094343
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-202888637-20170218-102033
+* https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-204598001-20170223-152058
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-204268519-20170222-181904
+* https://github.com/surli/bugs-collection/tree/owlcs-owlapi-204105870-20170222-092224
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-203297305-20170220-025416
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-204058552-20170222-043130
+* https://github.com/surli/bugs-collection/tree/TridentSDK-TridentSDK-204060819-20170222-044129

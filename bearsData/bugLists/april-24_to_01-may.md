@@ -1,27 +1,27 @@
-https://github.com/surli/bugs-collection/tree/alibaba-fastjson-225533047-20170425-113124
-https://github.com/surli/bugs-collection/tree/apache-httpcomponents-core-225146191-20170424-121809
-https://github.com/surli/bugs-collection/tree/apache-httpcore-225146191-20170424-121809
-https://github.com/surli/bugs-collection/tree/AsyncHttpClient-async-http-client-226000201-20170426-151800
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-226420762-20170427-164411
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-226421456-20170427-164539
-https://github.com/surli/bugs-collection/tree/cdk-cdk-225774986-20170425-232324
-https://github.com/surli/bugs-collection/tree/cdk-cdk-227345051-20170430-141329
-https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-226908526-20170428-195833
-https://github.com/surli/bugs-collection/tree/geotools-geotools-226470083-20170427-190226
-https://github.com/surli/bugs-collection/tree/google-error-prone-225307442-20170424-195449
-https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-225184688-20170424-141844
-https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-225189056-20170424-143246
-https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-225231523-20170424-162934
-https://github.com/surli/bugs-collection/tree/INRIA-spoon-227073271-20170429-085520
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-226512398-20170427-203435
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-226519676-20170427-205557
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-226922107-20170428-204246
-https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-227350671-20170430-150823
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-226405221-20170427-160006
-https://github.com/surli/bugs-collection/tree/rest-assured-rest-assured-226732800-20170428-110410
-https://github.com/surli/bugs-collection/tree/rest-assured-rest-assured-226742994-20170428-113242
-https://github.com/surli/bugs-collection/tree/spring-cloud-spring-cloud-aws-227119343-20170429-135008
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-225061986-20170424-055301
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-226678972-20170428-064712
-https://github.com/surli/bugs-collection/tree/uwolfer-gerrit-rest-java-client-225300973-20170424-192737
-https://github.com/surli/bugs-collection/tree/xjodoin-torpedoquery-225658803-20170425-174920
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-225533047-20170425-113124
+* https://github.com/surli/bugs-collection/tree/apache-httpcomponents-core-225146191-20170424-121809
+* https://github.com/surli/bugs-collection/tree/apache-httpcore-225146191-20170424-121809
+* https://github.com/surli/bugs-collection/tree/AsyncHttpClient-async-http-client-226000201-20170426-151800
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-226420762-20170427-164411
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-226421456-20170427-164539
+* https://github.com/surli/bugs-collection/tree/cdk-cdk-225774986-20170425-232324
+* https://github.com/surli/bugs-collection/tree/cdk-cdk-227345051-20170430-141329
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-226908526-20170428-195833
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-226470083-20170427-190226
+* https://github.com/surli/bugs-collection/tree/google-error-prone-225307442-20170424-195449
+* https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-225184688-20170424-141844
+* https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-225189056-20170424-143246
+* https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-225231523-20170424-162934
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-227073271-20170429-085520
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-226512398-20170427-203435
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-226519676-20170427-205557
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-226922107-20170428-204246
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-227350671-20170430-150823
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-226405221-20170427-160006
+* https://github.com/surli/bugs-collection/tree/rest-assured-rest-assured-226732800-20170428-110410
+* https://github.com/surli/bugs-collection/tree/rest-assured-rest-assured-226742994-20170428-113242
+* https://github.com/surli/bugs-collection/tree/spring-cloud-spring-cloud-aws-227119343-20170429-135008
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-225061986-20170424-055301
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-226678972-20170428-064712
+* https://github.com/surli/bugs-collection/tree/uwolfer-gerrit-rest-java-client-225300973-20170424-192737
+* https://github.com/surli/bugs-collection/tree/xjodoin-torpedoquery-225658803-20170425-174920

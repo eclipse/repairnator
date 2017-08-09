@@ -1,0 +1,10 @@
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-215111320-20170326-013759 
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-215799347-20170328-070955 
+* https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-216882883-20170330-205302 
+* https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-216465125-20170329-215837 
+* https://github.com/surli/bugs-collection/tree/tipsy-j2html-216094003-20170328-222754 
+* https://github.com/surli/bugs-collection/tree/owlcs-owlapi-216138121-20170329-004746 
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-216366905-20170329-163907 
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-215682025-20170327-222910 
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-214726090-20170324-181543 
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-215860614-20170328-113554 

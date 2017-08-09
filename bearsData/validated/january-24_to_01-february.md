@@ -1,0 +1,13 @@
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-195777970-20170127-074320 
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-195433804-20170126-065819 
+* https://github.com/surli/bugs-collection/tree/IQSS-dataverse-194874155-20170124-172620 
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-195492579-20170126-120910 
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-194695079-20170124-040824 
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-195455832-20170126-092107 
+* https://github.com/surli/bugs-collection/tree/tipsy-j2html-196345192-20170129-155050 
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-196966996-20170131-155013 
+* https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-196641047-20170130-173511 
+* https://github.com/surli/bugs-collection/tree/unic-neba-195364051-20170125-234531 
+* https://github.com/surli/bugs-collection/tree/konsoletyper-teavm-194955933-20170124-220645 
+* https://github.com/surli/bugs-collection/tree/konsoletyper-teavm-194960761-20170124-222912 
+* https://github.com/surli/bugs-collection/tree/konsoletyper-teavm-196200926-20170128-210018 

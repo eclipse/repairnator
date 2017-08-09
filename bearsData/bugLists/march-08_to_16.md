@@ -1,35 +1,35 @@
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-209001942-20170308-161152
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-209391860-20170309-163738
-https://github.com/surli/bugs-collection/tree/CloudSlang-cloud-slang-211407112-20170315-170953
-https://github.com/surli/bugs-collection/tree/code4craft-webmagic-209979669-20170311-044342
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-208887726-20170308-094614
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-209308955-20170309-122019
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-209667540-20170310-095304
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210457944-20170313-080033
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210474667-20170313-093031
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210799714-20170314-032300
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210804591-20170314-034823
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-211209421-20170315-042307
-https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-211414194-20170315-173139
-https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-208840427-20170308-045647
-https://github.com/surli/bugs-collection/tree/geotools-geotools-209501332-20170309-215255
-https://github.com/surli/bugs-collection/tree/geotools-geotools-209846910-20170310-200523
-https://github.com/surli/bugs-collection/tree/geotools-geotools-209847167-20170310-200808
-https://github.com/surli/bugs-collection/tree/geotools-geotools-209847175-20170310-200203
-https://github.com/surli/bugs-collection/tree/google-error-prone-208833066-20170308-042532
-https://github.com/surli/bugs-collection/tree/google-error-prone-209840868-20170310-192249
-https://github.com/surli/bugs-collection/tree/INL-BlackLab-211320496-20170315-130349
-https://github.com/surli/bugs-collection/tree/INRIA-spoon-211090498-20170314-211255
-https://github.com/surli/bugs-collection/tree/INRIA-spoon-211342085-20170315-142234
-https://github.com/surli/bugs-collection/tree/INRIA-spoon-211425556-20170315-175256
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-208924346-20170308-115130
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-209462741-20170309-194346
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-209909283-20170310-225929
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-210070331-20170311-165115
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-211332008-20170315-135048
-https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-211120712-20170314-225341
-https://github.com/surli/bugs-collection/tree/owlcs-owlapi-210091154-20170311-184109
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-208900204-20170308-101944
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-209806963-20170310-173655
-https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-210844747-20170314-075049
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-210805595-20170314-041225
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-209001942-20170308-161152
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-209391860-20170309-163738
+* https://github.com/surli/bugs-collection/tree/CloudSlang-cloud-slang-211407112-20170315-170953
+* https://github.com/surli/bugs-collection/tree/code4craft-webmagic-209979669-20170311-044342
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-208887726-20170308-094614
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-209308955-20170309-122019
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-209667540-20170310-095304
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210457944-20170313-080033
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210474667-20170313-093031
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210799714-20170314-032300
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-210804591-20170314-034823
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-211209421-20170315-042307
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-211414194-20170315-173139
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-208840427-20170308-045647
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-209501332-20170309-215255
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-209846910-20170310-200523
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-209847167-20170310-200808
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-209847175-20170310-200203
+* https://github.com/surli/bugs-collection/tree/google-error-prone-208833066-20170308-042532
+* https://github.com/surli/bugs-collection/tree/google-error-prone-209840868-20170310-192249
+* https://github.com/surli/bugs-collection/tree/INL-BlackLab-211320496-20170315-130349
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-211090498-20170314-211255
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-211342085-20170315-142234
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-211425556-20170315-175256
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-208924346-20170308-115130
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-209462741-20170309-194346
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-209909283-20170310-225929
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-210070331-20170311-165115
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-211332008-20170315-135048
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-211120712-20170314-225341
+* https://github.com/surli/bugs-collection/tree/owlcs-owlapi-210091154-20170311-184109
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-208900204-20170308-101944
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-209806963-20170310-173655
+* https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-210844747-20170314-075049
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-210805595-20170314-041225

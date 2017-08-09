@@ -1,0 +1,12 @@
+ * https://github.com/surli/bugs-collection/tree/alibaba-fastjson-235163072-20170523-114409 
+ * https://github.com/surli/bugs-collection/tree/FasterXML-jackson-dataformat-xml-233445479-20170518-020804 
+ * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-235283969-20170523-180234 
+ * https://github.com/surli/bugs-collection/tree/AsyncHttpClient-async-http-client-234754147-20170522-115212 
+ * https://github.com/surli/bugs-collection/tree/prometheus-client_java-234804588-20170522-143333 
+ * https://github.com/surli/bugs-collection/tree/CorfuDB-CorfuDB-235333726-20170523-202023 
+ * https://github.com/surli/bugs-collection/tree/tananaev-traccar-233583193-20170518-125426 
+ * https://github.com/surli/bugs-collection/tree/TridentSDK-TridentSDK-234222478-20170520-035202 
+ * https://github.com/surli/bugs-collection/tree/IQSS-dataverse-234166081-20170519-231253 
+ * https://github.com/surli/bugs-collection/tree/CorfuDB-CorfuDB-233070969-20170517-043809 
+ * https://github.com/surli/bugs-collection/tree/CorfuDB-CorfuDB-235390751-20170523-225802 
+ * https://github.com/surli/bugs-collection/tree/sakaiproject-sakai-233703615-20170518-183917 

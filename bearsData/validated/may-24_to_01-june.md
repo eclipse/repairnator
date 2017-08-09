@@ -1,0 +1,12 @@
+ * https://github.com/surli/bugs-collection/tree/apache-opennlp-237576035-20170530-180550 
+ * https://github.com/surli/bugs-collection/tree/apache-opennlp-235580633-20170524-122524 
+ * https://github.com/surli/bugs-collection/tree/alibaba-fastjson-235954999-20170525-114444 
+ * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-236303372-20170526-112151 
+ * https://github.com/surli/bugs-collection/tree/mpatric-mp3agic-237165529-20170529-151633 
+ * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-237930594-20170531-162736 
+ * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-236705786-20170527-185711 
+ * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-236731643-20170527-210241 
+ * https://github.com/surli/bugs-collection/tree/tananaev-traccar-237041672-20170529-063229 
+ * https://github.com/surli/bugs-collection/tree/tananaev-traccar-237042934-20170529-064538 
+ * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-237948846-20170531-170859 
+ * https://github.com/surli/bugs-collection/tree/IQSS-dataverse-236542163-20170527-001128 

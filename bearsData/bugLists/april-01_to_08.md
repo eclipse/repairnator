@@ -1,28 +1,28 @@
-https://github.com/surli/bugs-collection/tree/alibaba-fastjson-217796138-20170402-164933
-https://github.com/surli/bugs-collection/tree/alibaba-fastjson-218805396-20170405-112212
-https://github.com/surli/bugs-collection/tree/alibaba-fastjson-219207210-20170406-112240
-https://github.com/surli/bugs-collection/tree/apache-pdfbox-218525074-20170404-181657
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-218785678-20170405-101727
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-218902195-20170405-163820
-https://github.com/surli/bugs-collection/tree/Flipkart-foxtrot-218233956-20170403-230300
-https://github.com/surli/bugs-collection/tree/Flipkart-foxtrot-219638047-20170407-130445
-https://github.com/surli/bugs-collection/tree/geotools-geotools-218891762-20170405-163553
-https://github.com/surli/bugs-collection/tree/geotools-geotools-219565066-20170407-085110
-https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219036670-20170405-230939
-https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219036703-20170405-230713
-https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219036756-20170405-230737
-https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219859842-20170407-233442
-https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219860403-20170407-233600
-https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-217554387-20170401-181133
-https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-217936884-20170403-055243
-https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-219603247-20170407-105821
-https://github.com/surli/bugs-collection/tree/INRIA-spoon-218096069-20170403-164935
-https://github.com/surli/bugs-collection/tree/jpush-jpush-api-java-client-218726227-20170405-050843
-https://github.com/surli/bugs-collection/tree/killbill-killbill-218313159-20170404-055019
-https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-217604877-20170401-220049
-https://github.com/surli/bugs-collection/tree/pac4j-vertx-pac4j-219580211-20170407-093510
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-217972670-20170403-095035
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-219254578-20170406-141521
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-217431352-20170401-051515
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-217633533-20170402-001752
-https://github.com/surli/bugs-collection/tree/ThreeTen-threeten-extra-217651782-20170402-020653
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-217796138-20170402-164933
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-218805396-20170405-112212
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-219207210-20170406-112240
+* https://github.com/surli/bugs-collection/tree/apache-pdfbox-218525074-20170404-181657
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-218785678-20170405-101727
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-218902195-20170405-163820
+* https://github.com/surli/bugs-collection/tree/Flipkart-foxtrot-218233956-20170403-230300
+* https://github.com/surli/bugs-collection/tree/Flipkart-foxtrot-219638047-20170407-130445
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-218891762-20170405-163553
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-219565066-20170407-085110
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219036670-20170405-230939
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219036703-20170405-230713
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219036756-20170405-230737
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219859842-20170407-233442
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-219860403-20170407-233600
+* https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-217554387-20170401-181133
+* https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-217936884-20170403-055243
+* https://github.com/surli/bugs-collection/tree/hypercube1024-firefly-219603247-20170407-105821
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-218096069-20170403-164935
+* https://github.com/surli/bugs-collection/tree/jpush-jpush-api-java-client-218726227-20170405-050843
+* https://github.com/surli/bugs-collection/tree/killbill-killbill-218313159-20170404-055019
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-217604877-20170401-220049
+* https://github.com/surli/bugs-collection/tree/pac4j-vertx-pac4j-219580211-20170407-093510
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-217972670-20170403-095035
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-219254578-20170406-141521
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-217431352-20170401-051515
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-217633533-20170402-001752
+* https://github.com/surli/bugs-collection/tree/ThreeTen-threeten-extra-217651782-20170402-020653

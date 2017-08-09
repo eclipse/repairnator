@@ -1,27 +1,27 @@
-https://github.com/surli/bugs-collection/tree/apache-opennlp-207136984-20170304-010354
-https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-207143564-20170302-215509
-https://github.com/surli/bugs-collection/tree/CloudSlang-cloud-slang-208513758-20170307-100911
-https://github.com/surli/bugs-collection/tree/geotools-geotools-206544447-20170301-112617
-https://github.com/surli/bugs-collection/tree/geotools-geotools-206964326-20170302-130057
-https://github.com/surli/bugs-collection/tree/geotools-geotools-207295203-20170303-104200
-https://github.com/surli/bugs-collection/tree/geotools-geotools-207295301-20170303-104552
-https://github.com/surli/bugs-collection/tree/geotools-geotools-207700946-20170304-172951
-https://github.com/surli/bugs-collection/tree/geotools-geotools-207701019-20170304-173622
-https://github.com/surli/bugs-collection/tree/geotools-geotools-207701263-20170304-173723
-https://github.com/surli/bugs-collection/tree/google-error-prone-206415065-20170301-021253
-https://github.com/surli/bugs-collection/tree/google-error-prone-207191589-20170303-002402
-https://github.com/surli/bugs-collection/tree/graphhopper-graphhopper-206564536-20170301-121037
-https://github.com/surli/bugs-collection/tree/GwtMaterialDesign-gwt-material-207325835-20170303-122543
-https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-208769544-20170307-234639
-https://github.com/surli/bugs-collection/tree/INRIA-spoon-207361743-20170303-145353
-https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206552510-20170301-141618
-https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206553152-20170301-152327
-https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206553274-20170301-151736
-https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206553844-20170301-160826
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-206505191-20170301-082426
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-206689412-20170301-183329
-https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-207006501-20170302-150633
-https://github.com/surli/bugs-collection/tree/sakaiproject-sakai-207448875-20170303-190836
-https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-208573790-20170307-135540
-https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-208573806-20170307-135707
-https://github.com/surli/bugs-collection/tree/tananaev-traccar-206851755-20170302-035523
+* https://github.com/surli/bugs-collection/tree/apache-opennlp-207136984-20170304-010354
+* https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-207143564-20170302-215509
+* https://github.com/surli/bugs-collection/tree/CloudSlang-cloud-slang-208513758-20170307-100911
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-206544447-20170301-112617
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-206964326-20170302-130057
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-207295203-20170303-104200
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-207295301-20170303-104552
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-207700946-20170304-172951
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-207701019-20170304-173622
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-207701263-20170304-173723
+* https://github.com/surli/bugs-collection/tree/google-error-prone-206415065-20170301-021253
+* https://github.com/surli/bugs-collection/tree/google-error-prone-207191589-20170303-002402
+* https://github.com/surli/bugs-collection/tree/graphhopper-graphhopper-206564536-20170301-121037
+* https://github.com/surli/bugs-collection/tree/GwtMaterialDesign-gwt-material-207325835-20170303-122543
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-208769544-20170307-234639
+* https://github.com/surli/bugs-collection/tree/INRIA-spoon-207361743-20170303-145353
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206552510-20170301-141618
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206553152-20170301-152327
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206553274-20170301-151736
+* https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-206553844-20170301-160826
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-206505191-20170301-082426
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-206689412-20170301-183329
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-207006501-20170302-150633
+* https://github.com/surli/bugs-collection/tree/sakaiproject-sakai-207448875-20170303-190836
+* https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-208573790-20170307-135540
+* https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-208573806-20170307-135707
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-206851755-20170302-035523
