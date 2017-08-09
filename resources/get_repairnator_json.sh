@@ -37,13 +37,13 @@ do
         git checkout $branchname
 
         if [ -e "repairnator.json" ]; then
-            echo "found repairnator.json"
+            echo "found repairnator.json in $branchname"
             cp repairnator.json "$DEST/$branchname"_repairnator.json
         elif [ -e "repairnator.properties" ]; then
-            echo "Found repairnator.properties"
+            echo "Found repairnator.properties in $branchname"
             cp repairnator.properties "$DEST/$branchname"_repairnator.properties
         else
-            echo "No property or json file has been found for repairnator."
+            echo "No property or json file has been found for repairnator in $branchname."
         fi
     fi
 done
