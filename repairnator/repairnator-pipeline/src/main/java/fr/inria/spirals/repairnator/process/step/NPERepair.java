@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
@@ -81,7 +82,10 @@ public class NPERepair extends AbstractStep {
                         JsonArray executions = root.getAsJsonObject().getAsJsonArray("executions");
 
                         for (JsonElement execution : executions) {
-                            if (execution.getAsJsonObject().getAsJsonObject("result").get("success").getAsBoolean()) {
+                            JsonObject result = execution.getAsJsonObject().getAsJsonObject("result");
+                            boolean success = result.get("success").getAsBoolean() && execution.getAsJsonObject().has("decisions");
+
+                            if (success) {
                                 effectivelyPatched = true;
                                 String testName = execution.getAsJsonObject().getAsJsonObject("test").get("name").getAsString();
                                 long startDate = execution.getAsJsonObject().get("startDate").getAsLong();
