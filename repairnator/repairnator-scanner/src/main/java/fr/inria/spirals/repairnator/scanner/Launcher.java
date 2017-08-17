@@ -80,7 +80,7 @@ public class Launcher {
     private void prepareSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        if (this.arguments.getString("spreadsheet") != null) {
+        if (this.arguments.getString("spreadsheet") != null && this.arguments.getFile("googleSecretPath").exists()) {
             LOGGER.info("Initialize Google spreadsheet serializer engine.");
             GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
 
@@ -237,7 +237,7 @@ public class Launcher {
         opt2 = new FlaggedOption("googleSecretPath");
         opt2.setShortFlag('g');
         opt2.setLongFlag("googleSecretPath");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
         opt2.setDefault("./client_secret.json");
         opt2.setHelp("Specify the path to the JSON google secret for serializing.");
         this.jsap.registerParameter(opt2);
