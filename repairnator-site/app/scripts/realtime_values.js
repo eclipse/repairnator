@@ -63,7 +63,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fun
         if (dataValue != undefined && dataValue != null) {
           dataValue = '<a href="'+dataValue+'">Go to branch</a>';
         } else {
-          dataValue = "N/A";
+          dataValue = 'N/A';
         }
 
       }
