@@ -62,8 +62,15 @@ public abstract class AbstractHelper {
     protected GitHub getGithub() throws IOException {
         if (this.github == null) {
             if (GithubTokenHelper.getInstance().isAvailable()) {
-                this.getLogger().debug("Get GH login: "+GithubTokenHelper.getInstance().getGithubLogin()+ "; OAuth (10 first characters): "+GithubTokenHelper.getInstance().getGithubOauth().substring(0,10));
-                this.github = GitHubBuilder.fromCredentials().withOAuthToken(GithubTokenHelper.getInstance().getGithubOauth(), GithubTokenHelper.getInstance().getGithubLogin()).build();
+                try {
+                    this.getLogger().debug("Get GH login: "+GithubTokenHelper.getInstance().getGithubLogin()+ "; OAuth (10 first characters): "+GithubTokenHelper.getInstance().getGithubOauth().substring(0,10));
+                    this.github = GitHubBuilder.fromEnvironment().withOAuthToken(GithubTokenHelper.getInstance().getGithubOauth(), GithubTokenHelper.getInstance().getGithubLogin()).build();
+                } catch (IOException e) {
+                    this.getLogger().warn("Error while using credentials: try to use anonymous access to github.", e);
+                    this.github = GitHub.connectAnonymously();
+                    this.getLogger().warn("No github information has been given to connect (set GITHUB_OAUTH and GITHUB_LOGIN), you will have a very low ratelimit for github requests.");
+                }
+
             } else {
                 this.github = GitHub.connectAnonymously();
                 this.getLogger().warn("No github information has been given to connect (set GITHUB_OAUTH and GITHUB_LOGIN), you will have a very low ratelimit for github requests.");
