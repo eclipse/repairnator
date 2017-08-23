@@ -128,9 +128,6 @@ public class BuildHelper extends AbstractHelper {
         }
 
         Collections.sort( jsonValues, new Comparator<JsonObject>() {
-            //You can change "Name" with "ID" if you want to sort by ID
-            private static final String KEY_NAME = "Name";
-
             @Override
             public int compare(JsonObject a, JsonObject b) {
                 return (a.get("number").getAsInt()-b.get("number").getAsInt());
@@ -265,7 +262,6 @@ public class BuildHelper extends AbstractHelper {
         JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits, true);
         int lastBuildNumber = after_number;
 
-        boolean firstLoop = true;
         for (JsonElement buildJson : buildArray) {
             Build build = createGson().fromJson(buildJson, Build.class);
             int commitId = build.getCommitId();
@@ -276,15 +272,6 @@ public class BuildHelper extends AbstractHelper {
 
             if (build.getNumber() != null) {
                 int buildNumber = Integer.parseInt(build.getNumber());
-
-                if (firstLoop) {
-                    firstLoop = false;
-                    if (buildNumber == after_number) {
-                        dateReached = true;
-                        break;
-                    }
-                }
-
                 if (buildNumber > after_number) {
                     if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
                         result.add(build);
@@ -301,6 +288,10 @@ public class BuildHelper extends AbstractHelper {
                 dateReached = true;
                 break;
             }
+        }
+
+        if (lastBuildNumber == after_number) {
+            dateReached = true;
         }
 
         if (buildArray.size() == 0) {
