@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -317,6 +318,19 @@ public class BuildHelperTest {
 
         Build b = repo.getLastBuild(true);
         assertTrue(b.getNumber() != null);
+    }
+
+    @Test
+    public void testGetFutureBuildOfBranch() {
+        int buildId = 220970612;
+
+        Build b = BuildHelper.getBuildFromId(buildId, null);
+        assertEquals("21405", b.getNumber());
+
+        Build obtained = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(b, null);
+
+        assertNotNull(obtained);
+        assertEquals("21423", obtained.getNumber());
     }
 
 }
