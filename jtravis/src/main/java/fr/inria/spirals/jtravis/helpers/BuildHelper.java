@@ -265,6 +265,7 @@ public class BuildHelper extends AbstractHelper {
         JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits, true);
         int lastBuildNumber = after_number;
 
+        boolean firstLoop = true;
         for (JsonElement buildJson : buildArray) {
             Build build = createGson().fromJson(buildJson, Build.class);
             int commitId = build.getCommitId();
@@ -275,9 +276,16 @@ public class BuildHelper extends AbstractHelper {
 
             if (build.getNumber() != null) {
                 int buildNumber = Integer.parseInt(build.getNumber());
-                if (buildNumber <= after_number) {
-                    dateReached = true;
-                } else {
+
+                if (firstLoop) {
+                    firstLoop = false;
+                    if (buildNumber == after_number) {
+                        dateReached = true;
+                        break;
+                    }
+                }
+
+                if (buildNumber > after_number) {
                     if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
                         result.add(build);
                     }
@@ -285,6 +293,8 @@ public class BuildHelper extends AbstractHelper {
                         lastBuildNumber = buildNumber;
                     }
                 }
+
+
             }
 
             if (limitNumber != 0 && result.size() >= limitNumber) {
