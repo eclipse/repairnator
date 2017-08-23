@@ -341,6 +341,11 @@ public class Launcher {
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             Build patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);
+            if (patchedBuild == null) {
+                LOGGER.error("Error while getting patched build: obtained null value. The process will exit now.");
+                System.exit(-1);
+            }
+
             if (buggyBuild.getBuildStatus() == BuildStatus.FAILED) {
                 this.buildToBeInspected = new BuildToBeInspected(buggyBuild, patchedBuild, ScannedBuildStatus.FAILING_AND_PASSING, runId);
             } else {
