@@ -333,4 +333,17 @@ public class BuildHelperTest {
         assertEquals("21423", obtained.getNumber());
     }
 
+    @Test
+    public void testGetFutureBuildOfBranch2() {
+        int buildId = 219250521;
+
+        Build b = BuildHelper.getBuildFromId(buildId, null);
+        assertEquals("21005", b.getNumber());
+
+        Build obtained = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(b, null);
+
+        assertNotNull(obtained);
+        assertEquals("21420", obtained.getNumber());
+    }
+
 }
