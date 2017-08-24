@@ -25,6 +25,7 @@ public class JsonParser {
 
     private List<String> listOfProjectsA;
     private List<String> listOfProjectsB;
+    private List<String> listOfProjectsG;
 
     // Metrics
     private int numberOfBugs;
@@ -44,8 +45,9 @@ public class JsonParser {
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
 
-        this.listOfProjectsA = this.getListOfProjects("../bearsData/list_of_projectsA.txt");
-        this.listOfProjectsB = this.getListOfProjects("../bearsData/list_of_projectsB.txt");
+        this.listOfProjectsA = this.getListOfProjects("../librepair/bearsData/list_of_projectsA.txt");
+        this.listOfProjectsB = this.getListOfProjects("../librepair/bearsData/list_of_projectsB.txt");
+        this.listOfProjectsG = this.getListOfProjects("../librepair/bearsData/list_of_projectsG.txt");
 
         this.errorTypesOut.put("skipped", 0);
         this.errorTypesOut.put("Wanted but not invoked", 0);
@@ -108,7 +110,7 @@ public class JsonParser {
 
                 String project = (String) bug.get("repo");
 
-                if (listOfProjectsA.contains(project) || listOfProjectsB.contains(project)) {
+                if (listOfProjectsA.contains(project) || listOfProjectsB.contains(project) || listOfProjectsG.contains(project)) {
                     this.numberOfBugs++;
 
                     if (!this.projectsToBugsMap.keySet().contains(project)) {
