@@ -54,7 +54,7 @@ git clone https://github.com/SpoonLabs/astor.git
 cd astor
 
 mvn clean
-mvn install
+mvn install -DskipTests=true
 
 if [[ $? != 0 ]]
 then
