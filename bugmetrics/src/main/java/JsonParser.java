@@ -279,7 +279,7 @@ public class JsonParser {
 
         Collections.sort(list, new Comparator<Entry<String, Integer>>() {
             public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-                return o2.getKey().compareTo(o1.getKey());
+                return o1.getKey().compareTo(o2.getKey());
             }
         });
 
