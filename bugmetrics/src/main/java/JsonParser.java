@@ -36,7 +36,7 @@ public class JsonParser {
 
     private Pattern patternToGetDateFromBranchName = Pattern.compile("(.*)[-]\\d*[-](\\d*)[-]\\d*");
 
-    private Map<String, Integer> errorTypesOut = new HashMap<String, Integer>();
+    private Map<String, Integer> exceptionTypesOut = new HashMap<String, Integer>();
 
     JsonParser(String jsonFileFolderPath, String outputPath, LauncherMode launcherMode, OutputType outputType, Date lookFromDate, Date lookToDate) {
         this.jsonFileFolderPath = jsonFileFolderPath;
@@ -50,9 +50,9 @@ public class JsonParser {
         this.listOfProjectsB = this.getListOfProjects("../librepair/bearsData/list_of_projectsB.txt");
         this.listOfProjectsG = this.getListOfProjects("../librepair/bearsData/list_of_projectsG.txt");
 
-        this.errorTypesOut.put("skipped", 0);
-        this.errorTypesOut.put("Wanted but not invoked", 0);
-        this.errorTypesOut.put("Condition not satisfied", 0);
+        this.exceptionTypesOut.put("skipped", 0);
+        this.exceptionTypesOut.put("Wanted but not invoked", 0);
+        this.exceptionTypesOut.put("Condition not satisfied", 0);
     }
 
     public void run() {
@@ -132,25 +132,25 @@ public class JsonParser {
                         JSONArray failures = (JSONArray) ((JSONObject) failingTestCasesIterator.next()).get("failures");
                         Iterator failuresIterator = failures.iterator();
                         while (failuresIterator.hasNext()) {
-                            String errorType = ((JSONObject) failuresIterator.next()).get("failureName").toString().replace(":", "");
-                            if (errorTypesOut.keySet().contains(errorType)) {
-                                errorTypesOut.put(errorType, errorTypesOut.get(errorType) + 1);
+                            String exceptionType = ((JSONObject) failuresIterator.next()).get("failureName").toString().replace(":", "");
+                            if (exceptionTypesOut.keySet().contains(exceptionType)) {
+                                exceptionTypesOut.put(exceptionType, exceptionTypesOut.get(exceptionType) + 1);
                             } else {
-                                if (!this.exceptionTypesToProjectsToCounterMap.containsKey(errorType)) {
-                                    this.exceptionTypesToProjectsToCounterMap.put(errorType, new HashMap<String, Integer>());
+                                if (!this.exceptionTypesToProjectsToCounterMap.containsKey(exceptionType)) {
+                                    this.exceptionTypesToProjectsToCounterMap.put(exceptionType, new HashMap<String, Integer>());
                                 }
-                                if (!this.exceptionTypesToProjectsToCounterMap.get(errorType).containsKey(projectName)) {
-                                    this.exceptionTypesToProjectsToCounterMap.get(errorType).put(projectName, 0);
+                                if (!this.exceptionTypesToProjectsToCounterMap.get(exceptionType).containsKey(projectName)) {
+                                    this.exceptionTypesToProjectsToCounterMap.get(exceptionType).put(projectName, 0);
                                 }
-                                this.exceptionTypesToProjectsToCounterMap.get(errorType).put(projectName, this.exceptionTypesToProjectsToCounterMap.get(errorType).get(projectName) + 1);
+                                this.exceptionTypesToProjectsToCounterMap.get(exceptionType).put(projectName, this.exceptionTypesToProjectsToCounterMap.get(exceptionType).get(projectName) + 1);
                             }
                             if (!projectsToExceptionTypesToCounterMap.containsKey(projectName)) {
                                 projectsToExceptionTypesToCounterMap.put(projectName, new HashMap<String, Integer>());
                             }
-                            if (!projectsToExceptionTypesToCounterMap.get(projectName).containsKey(errorType)) {
-                                projectsToExceptionTypesToCounterMap.get(projectName).put(errorType, 0);
+                            if (!projectsToExceptionTypesToCounterMap.get(projectName).containsKey(exceptionType)) {
+                                projectsToExceptionTypesToCounterMap.get(projectName).put(exceptionType, 0);
                             } else {
-                                this.projectsToExceptionTypesToCounterMap.get(projectName).put(errorType, this.projectsToExceptionTypesToCounterMap.get(projectName).get(errorType) + 1);
+                                this.projectsToExceptionTypesToCounterMap.get(projectName).put(exceptionType, this.projectsToExceptionTypesToCounterMap.get(projectName).get(exceptionType) + 1);
                             }
                         }
                     }
@@ -166,14 +166,14 @@ public class JsonParser {
                 System.out.println("#" + entry.getKey() + ": " + entry.getValue());
             }
 
-            System.out.println("#Distinct error types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
+            System.out.println("#Distinct exception types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
 
             System.out.println();
-            for (String errorTypeOut : errorTypesOut.keySet()) {
-                System.out.println(errorTypeOut + ": " + errorTypesOut.get(errorTypeOut));
+            for (String exceptionTypeOut : exceptionTypesOut.keySet()) {
+                System.out.println(exceptionTypeOut + ": " + exceptionTypesOut.get(exceptionTypeOut));
             }
 
-            writeErrorTypeDistributionCsvFile();
+            writeExceptionTypeDistributionCsvFile();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -197,14 +197,14 @@ public class JsonParser {
         System.out.println("#Total branches output: "+totalBranchOutput);
     }
 
-    private void writeErrorTypeDistributionCsvFile() {
+    private void writeExceptionTypeDistributionCsvFile() {
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter(outputPath + "/distribution-error-types-by-projects.csv");
+            fileWriter = new FileWriter(outputPath + "/distribution-exception-types-by-projects.csv");
 
             Map<String, Integer> sortedProjectsToBugsMap = sortByComparator(this.projectsToBugsMap);
 
-            String fileHeader = "error type";
+            String fileHeader = "exception type";
             for (String projectName : sortedProjectsToBugsMap.keySet()) {
                 fileHeader += "," + projectName;
             }
@@ -215,18 +215,18 @@ public class JsonParser {
 
             String line;
             for (String exceptionType : this.exceptionTypesToProjectsToCounterMap.keySet()) {
-                int sumForErrorType = 0;
+                int sumForExceptionType = 0;
                 line = exceptionType + ",";
                 for (String projectName : sortedProjectsToBugsMap.keySet()) {
                     if (this.exceptionTypesToProjectsToCounterMap.get(exceptionType).containsKey(projectName)) {
                         int number = this.exceptionTypesToProjectsToCounterMap.get(exceptionType).get(projectName);
                         line += number + ",";
-                        sumForErrorType += number;
+                        sumForExceptionType += number;
                     } else {
                         line += "0,";
                     }
                 }
-                line += sumForErrorType;
+                line += sumForExceptionType;
                 fileWriter.append(line);
                 fileWriter.append("\n");
             }
