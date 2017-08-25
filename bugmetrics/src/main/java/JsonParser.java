@@ -51,6 +51,7 @@ public class JsonParser {
 
         this.errorTypesOut.put("skipped", 0);
         this.errorTypesOut.put("Wanted but not invoked", 0);
+        this.errorTypesOut.put("Condition not satisfied", 0);
     }
 
     public void run() {
