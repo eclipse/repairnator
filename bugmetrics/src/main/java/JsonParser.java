@@ -64,10 +64,10 @@ public class JsonParser {
         File dir = new File(this.jsonFileFolderPath);
         File[] files = dir.listFiles(filter);
 
-        System.out.println("#Files found: " + files.length);
+        System.out.println("# Files found: " + files.length);
 
         if (outputType == OutputType.METRICS) {
-            calculateMetrics(files);
+            calculateMetricsFromRepairnatorJsonFile(files);
         } else {
             getBranchNames(files);
         }
@@ -97,7 +97,7 @@ public class JsonParser {
         return false;
     }
 
-    private void calculateMetrics(File[] files) {
+    private void calculateMetricsFromRepairnatorJsonFile(File[] files) {
         try {
             for (int i = 0; i < files.length; i++) {
                 String branchName = files[i].getName().replace("_repairnator.json", "");
@@ -157,23 +157,23 @@ public class JsonParser {
                 }
             }
 
-            System.out.println("#Bugs: " + this.numberOfBugs);
+            System.out.println("# Bugs: " + this.numberOfBugs);
 
-            System.out.println("#Projects: " + this.projectsToBugsMap.keySet().size());
+            System.out.println("# Projects: " + this.projectsToBugsMap.keySet().size());
 
-            System.out.println("Bug types: ");
+            System.out.println("\nBug types: ");
             for (Entry entry : this.bugTypesToCounterMap.entrySet()) {
-                System.out.println("#" + entry.getKey() + ": " + entry.getValue());
+                System.out.println("# " + entry.getKey() + ": " + entry.getValue());
             }
 
-            System.out.println("#Distinct exception types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
+            System.out.println("\n# Distinct exception types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
 
-            System.out.println();
+            System.out.println("\nException types out:");
             for (String exceptionTypeOut : exceptionTypesOut.keySet()) {
                 System.out.println(exceptionTypeOut + ": " + exceptionTypesOut.get(exceptionTypeOut));
             }
 
-            writeExceptionTypeDistributionCsvFile();
+            createDistributionExceptionTypesByProjectsCsvFile();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -194,15 +194,15 @@ public class JsonParser {
             totalBranchOutput++;
         }
 
-        System.out.println("#Total branches output: "+totalBranchOutput);
+        System.out.println("# Total branches output: "+totalBranchOutput);
     }
 
-    private void writeExceptionTypeDistributionCsvFile() {
+    private void createDistributionExceptionTypesByProjectsCsvFile() {
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(outputPath + "/distribution-exception-types-by-projects.csv");
 
-            Map<String, Integer> sortedProjectsToBugsMap = sortByComparator(this.projectsToBugsMap);
+            Map<String, Integer> sortedProjectsToBugsMap = sortMap(this.projectsToBugsMap);
 
             String fileHeader = "exception type";
             for (String projectName : sortedProjectsToBugsMap.keySet()) {
@@ -241,7 +241,7 @@ public class JsonParser {
             }
             fileWriter.append(line);
 
-            System.out.println("CSV file was created successfully");
+            System.out.println("\nDistribution exception types by projects CSV file was created successfully");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -274,7 +274,7 @@ public class JsonParser {
         return listOfProjects;
     }
 
-    private static Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap) {
+    private static Map<String, Integer> sortMap(Map<String, Integer> unsortMap) {
         List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(unsortMap.entrySet());
 
         Collections.sort(list, new Comparator<Entry<String, Integer>>() {
