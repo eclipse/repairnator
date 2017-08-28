@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import fr.inria.astor.core.entities.ProgramVariant;
+import fr.inria.main.AstorOutputStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
@@ -27,7 +27,9 @@ public class JobStatus {
 
     private List<NopolInformation> nopolInformations;
     private List<String> npeFixPatches;
-    private List<ProgramVariant> astorPatches;
+    private List<String> astorPatches;
+    private AstorOutputStatus astorStatus;
+
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
     private String pomDirPath;
@@ -188,11 +190,19 @@ public class JobStatus {
         this.npeFixPatches = npeFixPatches;
     }
 
-    public List<ProgramVariant> getAstorPatches() {
+    public List<String> getAstorPatches() {
         return astorPatches;
     }
 
-    public void setAstorPatches(List<ProgramVariant> astorPatches) {
+    public void setAstorPatches(List<String> astorPatches) {
         this.astorPatches = astorPatches;
+    }
+
+    public AstorOutputStatus getAstorStatus() {
+        return astorStatus;
+    }
+
+    public void setAstorStatus(AstorOutputStatus astorStatus) {
+        this.astorStatus = astorStatus;
     }
 }

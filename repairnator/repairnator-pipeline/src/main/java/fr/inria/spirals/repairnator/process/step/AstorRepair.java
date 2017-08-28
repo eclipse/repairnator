@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.astor.core.entities.ProgramVariant;
+import fr.inria.main.AstorOutputStatus;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -30,7 +31,7 @@ public class AstorRepair extends AbstractStep {
         this.getLogger().info("Start to repair using Astor");
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
-        List<ProgramVariant> astorPatches = new ArrayList<>();
+        List<String> astorPatches = new ArrayList<>();
 
         List<String> dependencies = new ArrayList<>();
         for (URL url : jobStatus.getRepairClassPath()) {
@@ -53,36 +54,46 @@ public class AstorRepair extends AbstractStep {
         astorArgs.add(jobStatus.getRepairSourceDir()[0].getAbsolutePath());
 
         astorArgs.add("-stopfirst");
-        astorArgs.add("true");
+        astorArgs.add("false");
 
-        int totalMaxTime = 100;
-        int counter = 0;
-        for (FailureLocation location : jobStatus.getFailureLocations()) {
-            counter++;
-            int maxtime = (counter == jobStatus.getFailureLocations().size()-1) ? totalMaxTime : Math.round(totalMaxTime/2);
+        astorArgs.add("-population");
+        astorArgs.add("1");
 
-            List<String> locationArgs = new ArrayList<>(astorArgs);
-            locationArgs.add("-maxtime");
-            locationArgs.add(maxtime+"");
-            locationArgs.add("-failing");
-            locationArgs.add(location.getClassName());
+        astorArgs.add("-loglevel");
+        astorArgs.add("DEBUG");
 
-            AstorMain astorMain = new AstorMain();
-            try {
-                astorMain.execute(locationArgs.toArray(new String[locationArgs.size()]));
-                List<ProgramVariant> solutions = astorMain.getEngine().getSolutions();
+        // todo explicit java 8
 
-                for (ProgramVariant pv : solutions) {
-                    if (pv.isSolution()) {
-                        astorPatches.add(pv);
-                    }
+        astorArgs.add("-parameters");
+        astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3");
+
+        astorArgs.add("-maxtime");
+        astorArgs.add("100");
+
+        astorArgs.add("-flthreshold");
+        astorArgs.add("0.5");
+
+        AstorMain astorMain = new AstorMain();
+
+        AstorOutputStatus status;
+        try {
+            astorMain.execute(astorArgs.toArray(new String[0]));
+
+            status = astorMain.getEngine().getOutputStatus();
+            List<ProgramVariant> solutions = astorMain.getEngine().getSolutions();
+
+            for (ProgramVariant pv : solutions) {
+                if (pv.isSolution()) {
+                    astorPatches.add(pv.getPatchDiff());
                 }
-            } catch (Exception e) {
-                this.addStepError("Error while executing astor with args: "+ StringUtils.join(locationArgs,","), e);
             }
+        } catch (Exception e) {
+            status = AstorOutputStatus.ERROR;
+            this.addStepError("Error while executing astor with args: "+ StringUtils.join(astorArgs,","), e);
         }
 
         jobStatus.setAstorPatches(astorPatches);
+        jobStatus.setAstorStatus(status);
 
         if (astorPatches.isEmpty()) {
             this.setPipelineState(PipelineState.ASTOR_NOTPATCHED);
