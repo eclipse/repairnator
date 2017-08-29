@@ -33,6 +33,7 @@ public class JsonParser {
     private Map<String, Integer> projectsToBugsMap = new HashMap<String, Integer>();
     private Map<String, Map<String, Integer>> projectsToExceptionTypesToCounterMap = new HashMap<String, Map<String, Integer>>();
     private Map<String, Map<String, Integer>> exceptionTypesToProjectsToCounterMap = new HashMap<String, Map<String, Integer>>();
+    private Map<String, List<Map<String, Integer>>> projectsToStepsToDurationsMap = new HashMap<String, List<Map<String, Integer>>>();
 
     private Pattern patternToGetDateFromBranchName = Pattern.compile("(.*)[-]\\d*[-](\\d*)[-]\\d*");
 
@@ -155,6 +156,72 @@ public class JsonParser {
                             }
                         }
                     }
+
+                    Map<String, Integer> stepsToDurationsMap = new HashMap<String, Integer>();
+
+                    JSONObject metrics = (JSONObject) bug.get("metrics");
+                    JSONObject stepDurations = (JSONObject) metrics.get("StepsDurationsInSeconds");
+
+                    int cloneRepositoryDuration = Integer.parseInt(stepDurations.get("CloneRepository").toString());
+                    int checkoutBuggyBuildDuration;
+                    int checkoutPatchedBuildDuration = Integer.parseInt(stepDurations.get("CheckoutPatchedBuild").toString());
+                    int computeClasspathDuration = Integer.parseInt(stepDurations.get("ComputeClasspath").toString());
+                    int computeSourceDirDuration = Integer.parseInt(stepDurations.get("ComputeSourceDir").toString());
+                    int computeTestDirDuration = Integer.parseInt(stepDurations.get("ComputeTestDir").toString());
+                    int resolveDependencyDuration = Integer.parseInt(stepDurations.get("ResolveDependency").toString());
+                    int buildProjectBuildDuration = Integer.parseInt(stepDurations.get("BuildProjectBuild").toString());
+                    int buildProjectPreviousBuildDuration;
+                    int testProjectBuildDuration = Integer.parseInt(stepDurations.get("TestProjectBuild").toString());
+                    int testProjectPreviousBuildDuration;
+                    int gatherTestInformationBuildDuration = Integer.parseInt(stepDurations.get("GatherTestInformationBuild").toString());
+                    int gatherTestInformationPreviousBuildDuration;
+                    int nopolRepairDuration = Integer.parseInt(stepDurations.get("NopolRepair").toString());
+                    int initRepoToPushDuration = Integer.parseInt(stepDurations.get("InitRepoToPush").toString());
+                    int pushIncriminatedBuildDuration = Integer.parseInt(stepDurations.get("PushIncriminatedBuild").toString());
+                    int commitPatchDuration = Integer.parseInt(stepDurations.get("CommitPatch").toString());
+
+                    if (bugType.equals("failing_passing")) {
+                        checkoutBuggyBuildDuration = Integer.parseInt(stepDurations.get("CheckoutBuggyBuild").toString());
+                        buildProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("BuildProjectPreviousBuild").toString());
+                        testProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("TestProjectPreviousBuild").toString());
+                        gatherTestInformationPreviousBuildDuration = Integer.parseInt(stepDurations.get("GatherTestInformationPreviousBuild").toString());
+                    } else {
+                        checkoutBuggyBuildDuration = Integer.parseInt(stepDurations.get("CheckoutBuggyBuildSourceCode").toString());
+                        buildProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("BuildProjectPreviousBuildSourceCode").toString());
+                        testProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("TestProjectPreviousBuildSourceCode").toString());
+                        gatherTestInformationPreviousBuildDuration = Integer.parseInt(stepDurations.get("GatherTestInformationPreviousBuildSourceCode").toString());
+                    }
+
+                    int totalDuration = cloneRepositoryDuration + checkoutBuggyBuildDuration + checkoutPatchedBuildDuration
+                            + computeClasspathDuration + computeSourceDirDuration + computeTestDirDuration
+                            + resolveDependencyDuration + buildProjectBuildDuration + buildProjectPreviousBuildDuration
+                            + testProjectBuildDuration + testProjectPreviousBuildDuration + gatherTestInformationBuildDuration
+                            + gatherTestInformationPreviousBuildDuration + nopolRepairDuration + initRepoToPushDuration
+                            + pushIncriminatedBuildDuration + commitPatchDuration;
+
+                    stepsToDurationsMap.put("cloneRepository", cloneRepositoryDuration);
+                    stepsToDurationsMap.put("checkoutBuggyBuild", checkoutBuggyBuildDuration);
+                    stepsToDurationsMap.put("checkoutPatchedBuild", checkoutPatchedBuildDuration);
+                    stepsToDurationsMap.put("computeClasspath", computeClasspathDuration);
+                    stepsToDurationsMap.put("computeSourceDir", computeSourceDirDuration);
+                    stepsToDurationsMap.put("computeTestDir", computeTestDirDuration);
+                    stepsToDurationsMap.put("resolveDependency", resolveDependencyDuration);
+                    stepsToDurationsMap.put("buildProjectBuild", buildProjectBuildDuration);
+                    stepsToDurationsMap.put("buildProjectPreviousBuild", buildProjectPreviousBuildDuration);
+                    stepsToDurationsMap.put("testProjectBuild", testProjectBuildDuration);
+                    stepsToDurationsMap.put("testProjectPreviousBuild", testProjectPreviousBuildDuration);
+                    stepsToDurationsMap.put("gatherTestInformationBuild", gatherTestInformationBuildDuration);
+                    stepsToDurationsMap.put("gatherTestInformationPreviousBuild", gatherTestInformationPreviousBuildDuration);
+                    stepsToDurationsMap.put("nopolRepair", nopolRepairDuration);
+                    stepsToDurationsMap.put("initRepoToPush", initRepoToPushDuration);
+                    stepsToDurationsMap.put("pushIncriminatedBuild", pushIncriminatedBuildDuration);
+                    stepsToDurationsMap.put("commitPatch", commitPatchDuration);
+                    stepsToDurationsMap.put("totalDuration", totalDuration);
+
+                    if (!this.projectsToStepsToDurationsMap.containsKey(projectName)) {
+                        this.projectsToStepsToDurationsMap.put(projectName, new ArrayList<>());
+                    }
+                    this.projectsToStepsToDurationsMap.get(projectName).add(stepsToDurationsMap);
                 }
             }
 
@@ -175,6 +242,7 @@ public class JsonParser {
             }
 
             createDistributionExceptionTypesByProjectsCsvFile();
+            createStepTotalDurationByProjectsCsvFile();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -215,8 +283,8 @@ public class JsonParser {
 
             String line;
             for (String exceptionType : this.exceptionTypesToProjectsToCounterMap.keySet()) {
-                int sumForExceptionType = 0;
                 line = exceptionType + ",";
+                int sumForExceptionType = 0;
                 for (String projectName : sortedProjectsToExceptionTypesToCounterMap.keySet()) {
                     if (this.exceptionTypesToProjectsToCounterMap.get(exceptionType).containsKey(projectName)) {
                         int number = this.exceptionTypesToProjectsToCounterMap.get(exceptionType).get(projectName);
@@ -242,6 +310,43 @@ public class JsonParser {
             fileWriter.append(line);
 
             System.out.println("\nDistribution exception types by projects CSV file was created successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void createStepTotalDurationByProjectsCsvFile() {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(outputPath + "/step-total-duration-by-projects.csv");
+
+            Map<String, Map<String, Integer>> sortedProjectsToExceptionTypesToCounterMap = sortMap(this.projectsToExceptionTypesToCounterMap);
+
+            String fileHeader = "project,average,min,max\n";
+            fileWriter.append(fileHeader);
+
+            String line;
+            for (String projectName : sortedProjectsToExceptionTypesToCounterMap.keySet()) {
+                line = projectName + ",";
+                int sum = 0, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+                for (Map<String, Integer> stepsToDurationsMap : projectsToStepsToDurationsMap.get(projectName)) {
+                    int totalDuration = stepsToDurationsMap.get("totalDuration");
+                    sum += totalDuration;
+                    min = (totalDuration < min) ? totalDuration : min;
+                    max = (totalDuration > max) ? totalDuration : max;
+                }
+                line += sum / projectsToStepsToDurationsMap.get(projectName).size() + "," + min + "," + max + "\n";
+                fileWriter.append(line);
+            }
+
+            System.out.println("\nStep total duration by projects CSV file was created successfully");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
