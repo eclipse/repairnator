@@ -242,7 +242,7 @@ public class JsonParser {
             }
 
             createNumberOfBugsByProjectsCsvFile();
-            createDistributionExceptionTypesByProjectsCsvFile();
+            createDistributionExceptionTypeOccurrencesByProjectsCsvFile();
             createStepTotalDurationByProjectsCsvFile();
         } catch (IOException e) {
             e.printStackTrace();
@@ -296,10 +296,10 @@ public class JsonParser {
         }
     }
 
-    private void createDistributionExceptionTypesByProjectsCsvFile() {
+    private void createDistributionExceptionTypeOccurrencesByProjectsCsvFile() {
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter(outputPath + "/distribution-exception-types-by-projects.csv");
+            fileWriter = new FileWriter(outputPath + "/distribution-exception-type-occurrences-by-projects.csv");
 
             Map<String, Map<String, Integer>> sortedProjectsToExceptionTypesToCounterMap = sortMap(this.projectsToExceptionTypesToCounterMap);
 
@@ -307,9 +307,8 @@ public class JsonParser {
             for (String projectName : sortedProjectsToExceptionTypesToCounterMap.keySet()) {
                 fileHeader += "," + projectName;
             }
-            fileHeader += ",sum";
+            fileHeader += ",sum\n";
             fileWriter.append(fileHeader);
-            fileWriter.append("\n");
 
             String line;
             for (String exceptionType : this.exceptionTypesToProjectsToCounterMap.keySet()) {
@@ -324,9 +323,8 @@ public class JsonParser {
                         line += "0,";
                     }
                 }
-                line += sumForExceptionType;
+                line += sumForExceptionType + "\n";
                 fileWriter.append(line);
-                fileWriter.append("\n");
             }
             line = "sum";
             for (String projectName : sortedProjectsToExceptionTypesToCounterMap.keySet()) {
@@ -339,7 +337,7 @@ public class JsonParser {
             }
             fileWriter.append(line);
 
-            System.out.println("\nDistribution exception types by projects CSV file was created successfully");
+            System.out.println("\nDistribution exception type occurrences by projects CSV file was created successfully");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
