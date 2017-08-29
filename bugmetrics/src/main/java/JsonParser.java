@@ -241,6 +241,7 @@ public class JsonParser {
                 System.out.println(exceptionTypeOut + ": " + exceptionTypesOut.get(exceptionTypeOut));
             }
 
+            createNumberOfBugsByProjectsCsvFile();
             createDistributionExceptionTypesByProjectsCsvFile();
             createStepTotalDurationByProjectsCsvFile();
         } catch (IOException e) {
@@ -264,6 +265,35 @@ public class JsonParser {
         }
 
         System.out.println("# Total branches output: "+totalBranchOutput);
+    }
+
+    private void createNumberOfBugsByProjectsCsvFile() {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(outputPath + "/number-of-bugs-by-projects.csv");
+
+            Map<String, Map<String, Integer>> sortedProjectsToExceptionTypesToCounterMap = sortMap(this.projectsToExceptionTypesToCounterMap);
+
+            String fileHeader = "project,number of bugs\n";
+            fileWriter.append(fileHeader);
+
+            String line;
+            for (String projectName : sortedProjectsToExceptionTypesToCounterMap.keySet()) {
+                line = projectName + "," + this.projectsToBugsMap.get(projectName) + "\n";
+                fileWriter.append(line);
+            }
+
+            System.out.println("\nNumber of bugs by projects CSV file was created successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void createDistributionExceptionTypesByProjectsCsvFile() {
