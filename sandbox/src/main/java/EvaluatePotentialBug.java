@@ -10,8 +10,14 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 import org.kohsuke.github.HttpException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -264,6 +270,21 @@ public class EvaluatePotentialBug {
         }
 
         EvaluatePotentialBug evaluatePotentialBug = new EvaluatePotentialBug(jsonLocation, githubLogin, githubOauth);
-        evaluatePotentialBug.printScoreResults(evaluatePotentialBug.computeAllScores(interestingBranches));
+        Map<Integer, Collection<RepairInfo>> results = evaluatePotentialBug.computeAllScores(interestingBranches);
+        evaluatePotentialBug.printScoreResults(results);
+
+        if (args.length > 4) {
+            File outputFile = new File(args[4]);
+            BufferedWriter buffer = new BufferedWriter(new FileWriter(outputFile));
+
+            for (int score : results.keySet()) {
+                Collection<RepairInfo> repairInfos = results.get(score);
+                for (RepairInfo repairInfo : repairInfos) {
+                    buffer.write(repairInfo.getPushBranchName()+","+score+"\n");
+                    buffer.flush();
+                }
+            }
+            buffer.close();
+        }
     }
 }
