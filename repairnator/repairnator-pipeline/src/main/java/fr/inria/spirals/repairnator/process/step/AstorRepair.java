@@ -70,6 +70,10 @@ public class AstorRepair extends AbstractStep {
         astorArgs.add("-maxtime");
         astorArgs.add("100");
 
+        astorArgs.add("-seed");
+        astorArgs.add("10");
+
+
         AstorMain astorMain = new AstorMain();
 
         AstorOutputStatus status;
