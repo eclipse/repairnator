@@ -59,19 +59,16 @@ public class AstorRepair extends AbstractStep {
         astorArgs.add("-population");
         astorArgs.add("1");
 
-        //astorArgs.add("-loglevel");
-        //astorArgs.add("DEBUG");
+        astorArgs.add("-loglevel");
+        astorArgs.add("DEBUG");
 
         // todo explicit java 8
 
         astorArgs.add("-parameters");
-        astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:100");
+        astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000");
 
         astorArgs.add("-maxtime");
         astorArgs.add("100");
-
-        astorArgs.add("-flthreshold");
-        astorArgs.add("0.5");
 
         AstorMain astorMain = new AstorMain();
 

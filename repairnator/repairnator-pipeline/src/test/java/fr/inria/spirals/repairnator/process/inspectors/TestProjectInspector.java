@@ -278,7 +278,8 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.ASTOR_NOTPATCHED));
+        assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
