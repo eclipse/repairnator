@@ -7,12 +7,15 @@ import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
+import org.kohsuke.github.HttpException;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +71,7 @@ public class EvaluatePotentialBug {
 
     private int computeScore(RepairInfo repairInfo) throws IOException {
         int score = 0;
-        GitHub gitHub = GitHubBuilder.fromCredentials().withOAuthToken(this.githubToken, this.githubLogin).build();
+        GitHub gitHub = GitHubBuilder.fromEnvironment().withOAuthToken(this.githubToken, this.githubLogin).build();
 
         GHRepository ghRepo = gitHub.getRepository(repairInfo.getGithubProject());
         String commitMsg = ghRepo.getCommit(repairInfo.getPatchCommit()).getCommitShortInfo().getMessage().toLowerCase();
@@ -88,13 +91,17 @@ public class EvaluatePotentialBug {
                 }
             }
 
-            for (GHLabel label : pullRequest.getLabels()) {
-                for (String s : potentialBugEvidence) {
-                    if (label.getName().toLowerCase().contains(s)) {
-                        score += 100;
+            try {
+                for (GHLabel label : pullRequest.getLabels()) {
+                    for (String s : potentialBugEvidence) {
+                        if (label.getName().toLowerCase().contains(s)) {
+                            score += 100;
+                        }
                     }
                 }
+            } catch (HttpException e) {
             }
+
 
             for (GHIssueComment comment : pullRequest.getComments()) {
                 for (String s : potentialBugEvidence) {
@@ -137,10 +144,12 @@ public class EvaluatePotentialBug {
         RepairInfo result = new RepairInfo();
 
         result.setGithubProject((String)json.get("repo"));
-        result.setBugCommit((String)json.get("BugCommit"));
-        result.setPatchCommit((String)json.get("PatchCommit"));
+
+        JSONObject metrics = (JSONObject) json.get("metrics");
+        result.setBugCommit((String)metrics.get("BugCommit"));
+        result.setPatchCommit((String)metrics.get("PatchCommit"));
         if (json.containsKey("pr-id")) {
-            result.setPrId((String)json.get("pr-id"));
+            result.setPrId(json.get("pr-id").toString());
         }
 
         return result;
@@ -153,8 +162,10 @@ public class EvaluatePotentialBug {
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(new FileReader(f));
             RepairInfo repairInfo = createRepairInfoFromJson(json);
-            repairInfo.setPushBranchName(f.getName());
-            result.add(repairInfo);
+            if (repairInfo.getPatchCommit() != null) {
+                repairInfo.setPushBranchName(f.getName());
+                result.add(repairInfo);
+            }
         }
 
         return result;
@@ -164,8 +175,10 @@ public class EvaluatePotentialBug {
         List<File> result = new ArrayList<>();
         File file = new File(path);
 
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.json");
+
         for (Path p : Files.newDirectoryStream(file.toPath())) {
-            if (p.toFile().isFile() && p.endsWith(".json")) {
+            if (p.toFile().isFile() && matcher.matches(p)) {
                 result.add(p.toFile());
             }
         }
