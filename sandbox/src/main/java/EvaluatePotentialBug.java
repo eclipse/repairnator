@@ -1,6 +1,7 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueComment;
 import org.kohsuke.github.GHLabel;
 import org.kohsuke.github.GHPullRequest;
@@ -23,12 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by urli on 01/09/2017.
  */
 public class EvaluatePotentialBug {
-    private static final String[] potentialBugEvidence = new String[] { "bug", "fix", "patch" };
+    private static final String[] potentialBugEvidence = new String[] { "bug", "fix", "patch", "error", "exception", "test" };
+    private static final String[] potentialRefactoringEvidence = new String[] { "feature", "refactor", "typo" };
+    private static final Pattern ISSUE_PATTERN = Pattern.compile("#[0-9]+");
 
     private String jsonLocation;
     private String githubLogin;
@@ -40,10 +45,30 @@ public class EvaluatePotentialBug {
         this.githubToken = githubToken;
     }
 
-    public Map<Integer, Collection<RepairInfo>> computeAllScores() {
+    private String getBranchnameFromFile(File f) {
+        String name = f.getName();
+        String[] parts = name.split("_repairnator");
+        return parts[0];
+    }
+
+    public Map<Integer, Collection<RepairInfo>> computeAllScores(List<String> interestingBranches) {
         try {
             Collection<File> allJson = getJsonFromDirectory(this.jsonLocation);
-            Collection<RepairInfo> allRepairInfo = getRepairInfoFromFiles(allJson);
+            Collection<File> jsonToInspect;
+
+            if (interestingBranches != null) {
+                jsonToInspect = new ArrayList<>();
+
+                for (File file : allJson) {
+                    String branchName = getBranchnameFromFile(file);
+                    if (interestingBranches.contains(branchName)) {
+                        jsonToInspect.add(file);
+                    }
+                }
+            } else {
+                jsonToInspect = allJson;
+            }
+            Collection<RepairInfo> allRepairInfo = getRepairInfoFromFiles(jsonToInspect);
             return this.computeScoring(allRepairInfo);
 
         } catch (Exception e) {
@@ -69,55 +94,97 @@ public class EvaluatePotentialBug {
         }
     }
 
+    private int computeScoreForMessage(String message, int gain, int loose) {
+        int score = 0;
+        String lowerCaseMessage = message.toLowerCase();
+
+        for (String s : potentialBugEvidence) {
+            if (lowerCaseMessage.contains(s)) {
+                score += gain;
+            }
+        }
+
+        for (String s : potentialRefactoringEvidence) {
+            if (lowerCaseMessage.contains(s)) {
+                score -= loose;
+            }
+        }
+
+        return score;
+    }
+
     private int computeScore(RepairInfo repairInfo) throws IOException {
         int score = 0;
         GitHub gitHub = GitHubBuilder.fromEnvironment().withOAuthToken(this.githubToken, this.githubLogin).build();
 
         GHRepository ghRepo = gitHub.getRepository(repairInfo.getGithubProject());
-        String commitMsg = ghRepo.getCommit(repairInfo.getPatchCommit()).getCommitShortInfo().getMessage().toLowerCase();
+        String commitMsg = ghRepo.getCommit(repairInfo.getPatchCommit()).getCommitShortInfo().getMessage();
 
-        for (String s : potentialBugEvidence) {
-            if (commitMsg.contains(s)) {
-                score += 10;
-            }
-        }
+        score += this.computeScoreForMessage(commitMsg, 10, 20);
 
         if (repairInfo.getPrId() != null) {
             GHPullRequest pullRequest = ghRepo.getPullRequest(Integer.parseInt(repairInfo.getPrId()));
-
-            for (String s : potentialBugEvidence) {
-                if (pullRequest.getTitle().toLowerCase().contains(s)) {
-                    score += 100;
-                }
-            }
+            score += this.computeScoreForMessage(pullRequest.getTitle(), 100, 120);
 
             try {
                 for (GHLabel label : pullRequest.getLabels()) {
-                    for (String s : potentialBugEvidence) {
-                        if (label.getName().toLowerCase().contains(s)) {
-                            score += 100;
-                        }
-                    }
+                    score += this.computeScoreForMessage(label.getName(), 100, 120);
                 }
             } catch (HttpException e) {
             }
 
 
             for (GHIssueComment comment : pullRequest.getComments()) {
-                for (String s : potentialBugEvidence) {
-                    if (comment.getBody().toLowerCase().contains(s)) {
-                        if (comment.getUser().equals(pullRequest.getUser())) {
-                            score += 10;
-                        } else {
-                            score += 1;
-                        }
+                if (comment.getUser().equals(pullRequest.getUser())) {
+                    score += this.computeScoreForMessage(commitMsg, 10, 20);
+                } else {
+                    score += this.computeScoreForMessage(commitMsg, 1, 2);
+                }
+            }
+        }
+
+        Matcher matcher = ISSUE_PATTERN.matcher(commitMsg);
+        List<Integer> issuesOrPr = new ArrayList<>();
+
+        while (matcher.find()) {
+            int newIssueOrPRId = Integer.parseInt(matcher.group().substring(1));
+            issuesOrPr.add(newIssueOrPRId);
+        }
+
+        for (int issueOrPRId : issuesOrPr) {
+            GHIssue prOrIssue;
+            try {
+                prOrIssue = ghRepo.getPullRequest(issueOrPRId);
+                if (prOrIssue == null) {
+                    prOrIssue = ghRepo.getIssue(issueOrPRId);
+                }
+            } catch (Exception e) {
+                prOrIssue = ghRepo.getIssue(issueOrPRId);
+            }
+
+            if (prOrIssue != null) {
+                score += this.computeScoreForMessage(prOrIssue.getTitle(), 80, 100);
+
+                for (GHIssueComment comment : prOrIssue.getComments()) {
+                    if (comment.getUser().equals(prOrIssue.getUser())) {
+                        score += this.computeScoreForMessage(commitMsg, 10, 20);
+                    } else {
+                        score += this.computeScoreForMessage(commitMsg, 1, 2);
                     }
+                }
+                try {
+                    for (GHLabel label : prOrIssue.getLabels()) {
+                        score += this.computeScoreForMessage(label.getName(), 100, 120);
+                    }
+                } catch (HttpException e) {
                 }
             }
         }
 
         return score;
     }
+
+
 
     private Map<Integer, Collection<RepairInfo>> computeScoring(Collection<RepairInfo> allRepairinfo) {
         Map<Integer, Collection<RepairInfo>> result = new HashMap<>();
@@ -163,7 +230,7 @@ public class EvaluatePotentialBug {
             JSONObject json = (JSONObject) parser.parse(new FileReader(f));
             RepairInfo repairInfo = createRepairInfoFromJson(json);
             if (repairInfo.getPatchCommit() != null) {
-                repairInfo.setPushBranchName(f.getName());
+                repairInfo.setPushBranchName(this.getBranchnameFromFile(f));
                 result.add(repairInfo);
             }
         }
@@ -186,12 +253,17 @@ public class EvaluatePotentialBug {
         return result;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String jsonLocation = args[0];
         String githubLogin = args[1];
         String githubOauth = args[2];
 
+        List<String> interestingBranches = null;
+        if (args.length > 3) {
+           interestingBranches = Files.readAllLines(new File(args[3]).toPath());
+        }
+
         EvaluatePotentialBug evaluatePotentialBug = new EvaluatePotentialBug(jsonLocation, githubLogin, githubOauth);
-        evaluatePotentialBug.printScoreResults(evaluatePotentialBug.computeAllScores());
+        evaluatePotentialBug.printScoreResults(evaluatePotentialBug.computeAllScores(interestingBranches));
     }
 }
