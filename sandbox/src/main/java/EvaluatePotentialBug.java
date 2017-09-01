@@ -172,7 +172,7 @@ public class EvaluatePotentialBug {
                 score += this.computeScoreForMessage(prOrIssue.getTitle(), 80, 100);
 
                 for (GHIssueComment comment : prOrIssue.getComments()) {
-                    if (comment.getUser().equals(prOrIssue.getUser())) {
+                    if (comment.getUserName().equals(prOrIssue.getUser().getLogin())) {
                         score += this.computeScoreForMessage(commitMsg, 10, 20);
                     } else {
                         score += this.computeScoreForMessage(commitMsg, 1, 2);
