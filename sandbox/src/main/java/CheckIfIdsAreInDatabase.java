@@ -44,7 +44,7 @@ public class CheckIfIdsAreInDatabase {
         MongoCollection collection = database.getCollection(collectionName);
 
         Calendar limitDateMay = Calendar.getInstance();
-        limitDateMay.set(2017, Calendar.MAY, 01);
+        limitDateMay.set(2017, Calendar.MAY, 10);
 
         Calendar limitDateNow = Calendar.getInstance();
 

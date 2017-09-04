@@ -37,8 +37,8 @@ import java.util.regex.Pattern;
  * Created by urli on 01/09/2017.
  */
 public class EvaluatePotentialBug {
-    private static final String[] potentialBugEvidence = new String[] { "bug", "fix", "patch", "error", "exception", "test" };
-    private static final String[] potentialRefactoringEvidence = new String[] { "feature", "refactor", "typo" };
+    private static final String[] potentialBugEvidence = new String[] { "bug", "fix", "patch", "error", "exception" };
+    private static final String[] potentialRefactoringEvidence = new String[] { "feature", "refactor", "typo", "add" };
     private static final Pattern ISSUE_PATTERN = Pattern.compile("#[0-9]+");
 
     private String jsonLocation;
