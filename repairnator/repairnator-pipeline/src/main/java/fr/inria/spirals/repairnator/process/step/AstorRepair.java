@@ -54,7 +54,7 @@ public class AstorRepair extends AbstractStep {
         astorArgs.add(jobStatus.getRepairSourceDir()[0].getAbsolutePath());
 
         astorArgs.add("-stopfirst");
-        astorArgs.add("false");
+        astorArgs.add("true");
 
         astorArgs.add("-population");
         astorArgs.add("1");
@@ -71,7 +71,7 @@ public class AstorRepair extends AbstractStep {
         astorArgs.add("100");
 
         astorArgs.add("-seed");
-        astorArgs.add("10");
+        astorArgs.add("1");
 
 
         AstorMain astorMain = new AstorMain();

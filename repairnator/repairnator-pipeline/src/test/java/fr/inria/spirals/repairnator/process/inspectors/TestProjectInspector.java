@@ -180,7 +180,7 @@ public class TestProjectInspector {
 
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.STOP_BY_PATCH_FOUND));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.ASTOR_PATCHED));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_NOTPATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
