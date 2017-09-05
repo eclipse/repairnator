@@ -1,9 +1,5 @@
 package fr.inria.spirals.repairnator.serializer;
 
-
-import fr.inria.spirals.repairnator.states.LauncherMode;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
