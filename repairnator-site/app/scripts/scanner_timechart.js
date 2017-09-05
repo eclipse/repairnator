@@ -25,6 +25,26 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
    },
    */
 
+  var reducedData = data.reduce(function (accumulator, currentValue) {
+    if (accumulator.length == 0) {
+      return [ currentValue ];
+    } else {
+      var previousValue = accumulator[accumulator.length - 1];
+
+      if (previousValue.dayLimit === currentValue.dayLimit) {
+        for (var attr in previousValue) {
+          if (attr.indexOf('total') != -1) {
+            previousValue[attr] += currentValue[attr];
+          }
+        }
+      } else {
+        accumulator.push(currentValue);
+      }
+
+      return accumulator;
+    }
+  }, []);
+
   Highcharts.chart({
     chart: {
       type: 'spline',
@@ -36,7 +56,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
     xAxis: {
       type: 'datetime',
       dateTimeLabelFormats: { // don't display the dummy year
-        minute:'%A, %b %e, %H:%M',
+        day:'%A, %b %e',
       },
       title: {
         text: 'Date'
@@ -50,7 +70,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
     },
     tooltip: {
       headerFormat: '<b>{series.name}</b><br>',
-      pointFormat: '{point.x:%A, %b %e, %H:%M}: {point.y} builds'
+      pointFormat: '{point.x:%A, %b %e}: {point.y} builds'
     },
 
     plotOptions: {
@@ -64,7 +84,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
     series: [
       {
         name: 'totalScannedBuilds',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalScannedBuilds
@@ -73,7 +93,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
       },
       {
         name: 'totalJavaBuilds',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalJavaBuilds
@@ -82,7 +102,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
       },
       {
         name: 'totalJavaPassingBuilds',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalJavaPassingBuilds
@@ -91,7 +111,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
       },
       {
         name: 'totalJavaFailingBuilds',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalJavaFailingBuilds
@@ -100,7 +120,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
       },
       {
         name: 'totalJavaFailingBuildsWithFailingTests',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalJavaFailingBuildsWithFailingTests
