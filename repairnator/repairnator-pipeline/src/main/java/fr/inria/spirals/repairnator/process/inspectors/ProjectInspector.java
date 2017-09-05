@@ -59,16 +59,21 @@ public class ProjectInspector {
     }
 
     private void initMetricsValue() {
-        Metrics metrics = this.jobStatus.getMetrics();
-        metrics.setBuggyBuildId(this.getBuggyBuild().getId());
-        metrics.setBuggyBuildURL(Utils.getTravisUrl(this.getBuggyBuild().getId(), this.getRepoSlug()));
-        metrics.setBuggyBuildDate(this.getBuggyBuild().getFinishedAt());
+        try {
+            Metrics metrics = this.jobStatus.getMetrics();
+            metrics.setBuggyBuildId(this.getBuggyBuild().getId());
+            metrics.setBuggyBuildURL(Utils.getTravisUrl(this.getBuggyBuild().getId(), this.getRepoSlug()));
+            metrics.setBuggyBuildDate(this.getBuggyBuild().getFinishedAt());
 
-        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.ONLY_FAIL) {
-            metrics.setPatchedBuilId(this.getPatchedBuild().getId());
-            metrics.setPatchedBuildURL(Utils.getTravisUrl(this.getPatchedBuild().getId(), this.getRepoSlug()));
-            metrics.setPatchedBuildDate(this.getPatchedBuild().getFinishedAt());
+            if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.ONLY_FAIL) {
+                metrics.setPatchedBuilId(this.getPatchedBuild().getId());
+                metrics.setPatchedBuildURL(Utils.getTravisUrl(this.getPatchedBuild().getId(), this.getRepoSlug()));
+                metrics.setPatchedBuildDate(this.getPatchedBuild().getFinishedAt());
+            }
+        } catch (Exception e) {
+            this.logger.error("Error while initializing metrics value", e);
         }
+
     }
 
     public JobStatus getJobStatus() {

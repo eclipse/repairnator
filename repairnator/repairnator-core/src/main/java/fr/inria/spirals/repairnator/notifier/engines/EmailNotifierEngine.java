@@ -31,7 +31,7 @@ public class EmailNotifierEngine implements NotifierEngine {
         this.session = Session.getDefaultInstance(this.properties, null);
 
         try {
-            this.from = new InternetAddress("repairnator@inria.fr");
+            this.from = new InternetAddress("librepair@inria.fr");
         } catch (AddressException e) {
             logger.error("Error while creating from adresses, the notifier won't be usable.", e);
         }
