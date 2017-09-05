@@ -59,8 +59,8 @@ public class AstorRepair extends AbstractStep {
         astorArgs.add("-population");
         astorArgs.add("1");
 
-        astorArgs.add("-loglevel");
-        astorArgs.add("DEBUG");
+        //astorArgs.add("-loglevel");
+        //astorArgs.add("DEBUG");
 
         // todo explicit java 8
 
