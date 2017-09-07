@@ -37,6 +37,9 @@ public class JobStatus {
     private String gitBranchUrl;
     private boolean hasBeenPatched;
 
+    private boolean commitRetrievedFromGithub;
+    private Throwable fatalError;
+
     private Metrics metrics;
 
     public JobStatus(String pomDirPath) {
@@ -184,5 +187,21 @@ public class JobStatus {
 
     public void setNpeFixPatches(List<String> npeFixPatches) {
         this.npeFixPatches = npeFixPatches;
+    }
+
+    public boolean isCommitRetrievedFromGithub() {
+        return commitRetrievedFromGithub;
+    }
+
+    public void setCommitRetrievedFromGithub(boolean commitRetrievedFromGithub) {
+        this.commitRetrievedFromGithub = commitRetrievedFromGithub;
+    }
+
+    public Throwable getFatalError() {
+        return fatalError;
+    }
+
+    public void setFatalError(Throwable fatalError) {
+        this.fatalError = fatalError;
     }
 }

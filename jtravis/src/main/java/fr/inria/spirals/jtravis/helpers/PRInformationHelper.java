@@ -44,12 +44,15 @@ public class PRInformationHelper extends AbstractHelper {
                     GHRepository ghRepo = github.getRepository(build.getRepository().getSlug());
                     GHPullRequest pullRequest = ghRepo.getPullRequest(build.getPullRequestNumber());
 
+
+                    GHCommit commitMerge = ghRepo.getCommit(build.getCommit().getSha());
+
                     PRInformation prInformation = new PRInformation();
 
-                    GHCommitPointer base = pullRequest.getBase();
-                    GHCommitPointer head = pullRequest.getHead();
+                    GHCommit base = commitMerge.getParents().get(0);
+                    GHCommit head = commitMerge.getParents().get(1);
 
-                    GHRepository headRepo = head.getRepository();
+                    GHRepository headRepo = pullRequest.getHead().getRepository();
 
                     if (headRepo == null) {
                         getInstance().getLogger().warn("The head repository is null: maybe it has been deleted from GitHub");
@@ -64,11 +67,11 @@ public class PRInformationHelper extends AbstractHelper {
                     prInformation.setOtherRepo(repoPR);
 
                     Commit commitHead = new Commit();
-                    commitHead.setSha(head.getSha());
-                    commitHead.setBranch(head.getRef());
-                    commitHead.setCompareUrl(head.getCommit().getHtmlUrl().toString());
+                    commitHead.setSha(head.getSHA1());
+                    commitHead.setBranch(pullRequest.getHead().getRef());
+                    commitHead.setCompareUrl(head.getHtmlUrl().toString());
 
-                    GHCommit.ShortInfo infoCommit = head.getCommit().getCommitShortInfo();
+                    GHCommit.ShortInfo infoCommit = head.getCommitShortInfo();
 
                     commitHead.setMessage(infoCommit.getMessage());
                     commitHead.setCommitterEmail(infoCommit.getAuthor().getEmail());
@@ -77,11 +80,11 @@ public class PRInformationHelper extends AbstractHelper {
                     prInformation.setHead(commitHead);
 
                     Commit commitBase = new Commit();
-                    commitBase.setSha(base.getSha());
-                    commitBase.setBranch(base.getRef());
-                    commitBase.setCompareUrl(base.getCommit().getHtmlUrl().toString());
+                    commitBase.setSha(base.getSHA1());
+                    commitBase.setBranch(pullRequest.getBase().getRef());
+                    commitBase.setCompareUrl(base.getHtmlUrl().toString());
 
-                    infoCommit = base.getCommit().getCommitShortInfo();
+                    infoCommit = base.getCommitShortInfo();
 
                     commitBase.setMessage(infoCommit.getMessage());
                     commitBase.setCommitterEmail(infoCommit.getAuthor().getEmail());

@@ -10,9 +10,11 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
+import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -103,17 +105,29 @@ public class GitHelper {
                     }
                 }
 
-                if (!filesToCheckout.isEmpty()) {
-                    this.getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
-                    git.checkout().addPaths(filesToCheckout).call();
-                }
-
                 if (filesToAdd.isEmpty()) {
                     this.getLogger().info("No repairnator properties or log file to commit.");
                     return false;
                 }
 
+                if (!filesToCheckout.isEmpty()) {
+                    this.getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
 
+                    this.getLogger().info("Exec following command: git checkout -- " + StringUtils.join(filesToCheckout, " "));
+                    ProcessBuilder processBuilder = new ProcessBuilder("git", "checkout", "--", StringUtils.join(filesToCheckout, " "))
+                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+
+                    try {
+                        Process p = processBuilder.start();
+                        p.waitFor();
+
+                    } catch (InterruptedException|IOException e) {
+                        this.getLogger().error("Error while executing git command to checkout files: " + e);
+                        return false;
+                    }
+
+                    //git.checkout().addPaths(filesToCheckout).call();
+                }
 
                 this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
                 AddCommand addCommand = git.add();
@@ -150,7 +164,7 @@ public class GitHelper {
     private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
             addAndCommitRepairnatorLogAndProperties(git, "Commit done before retrieving a commit from GH API.");
-            GitHub gh = GitHubBuilder.fromCredentials().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
+            GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
 
             String lastKnowParent = getLastKnowParent(gh, ghRepo, git, oldCommitSha, step);
@@ -219,6 +233,7 @@ public class GitHelper {
 
                     tempFile.delete();
 
+                    step.getInspector().getJobStatus().setCommitRetrievedFromGithub(true);
                     return ref.getName();
                 } catch (InterruptedException e) {
                     step.addStepError("Error while executing git command to apply patch: " + e);
@@ -310,12 +325,11 @@ public class GitHelper {
                 git.checkout().setName(commitHeadSha).call();
             }
 
-
             RevWalk revwalk = new RevWalk(git.getRepository());
             RevCommit revCommitBase = revwalk.lookupCommit(git.getRepository().resolve(commitBaseSha));
 
             this.getLogger().debug("Step " + step.getName() + " - Do the merge with the PR commit for repo " + repository);
-            git.merge().include(revCommitBase).setFastForward(MergeCommand.FastForwardMode.NO_FF).call();
+            MergeResult result = git.merge().include(revCommitBase).setFastForward(MergeCommand.FastForwardMode.NO_FF).call();
             this.nbCommits++;
         } catch (Exception e) {
             step.addStepError(e.getMessage());
