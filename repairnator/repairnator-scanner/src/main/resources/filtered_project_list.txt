@@ -272,3 +272,4 @@ spring-projects/spring-boot
 alibaba/dubbo
 Tencent/angel
 zxing/zxing
+iluwatar/java-design-patterns

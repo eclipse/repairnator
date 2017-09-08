@@ -85,10 +85,22 @@ public class PRInformationHelperTest {
     }
 
     @Test
-    public void testGetBuildWithPR() {
+    public void testGetBuildWithPRWhenMergeCommitDeleted() {
         PRInformation expectedPRInfo = expectedPRInfo();
         PRInformation obtainedPRInfo = PRInformationHelper.getPRInformationFromBuild(expectedBuild());
 
         assertEquals(expectedPRInfo, obtainedPRInfo);
+    }
+
+    @Test
+    public void testGetCommitInformationFromPR() {
+        Build originBuild = BuildHelper.getBuildFromId(186814810, null);
+
+        PRInformation prInformation = PRInformationHelper.getPRInformationFromBuild(originBuild);
+        assertEquals("pvojtechovsky/spoon", prInformation.getOtherRepo().getSlug());
+        assertEquals("master", prInformation.getBase().getBranch());
+        assertEquals("lazyQueries", prInformation.getHead().getBranch());
+        assertEquals("7a55cd2c526a7bbb914dacbe6ba2ddc621f23870", prInformation.getBase().getSha());
+        assertEquals("1ae580bc0f1bbeb140db074bb84c23080620f156", prInformation.getHead().getSha());
     }
 }

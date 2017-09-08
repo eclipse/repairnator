@@ -11,6 +11,7 @@ import org.kohsuke.github.GHRateLimit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
@@ -43,18 +44,27 @@ public class PRInformationHelper extends AbstractHelper {
                 if (rateLimit.remaining > 2) {
                     GHRepository ghRepo = github.getRepository(build.getRepository().getSlug());
                     GHPullRequest pullRequest = ghRepo.getPullRequest(build.getPullRequestNumber());
-
                     PRInformation prInformation = new PRInformation();
 
-                    GHCommitPointer base = pullRequest.getBase();
-                    GHCommitPointer head = pullRequest.getHead();
-
-                    GHRepository headRepo = head.getRepository();
+                    GHRepository headRepo = pullRequest.getHead().getRepository();
 
                     if (headRepo == null) {
                         getInstance().getLogger().warn("The head repository is null: maybe it has been deleted from GitHub");
                         return null;
                     }
+
+                    GHCommit base, head;
+                    try {
+                        GHCommit commitMerge = ghRepo.getCommit(build.getCommit().getSha());
+                        base = commitMerge.getParents().get(0);
+                        head = commitMerge.getParents().get(1);
+                    } catch (FileNotFoundException e) {
+                        getInstance().getLogger().warn("The merge commit was deleted from Github, get the commits from the PR base/head");
+                        base = pullRequest.getBase().getCommit();
+                        head = pullRequest.getHead().getCommit();
+                    }
+
+
                     Repository repoPR = new Repository();
                     repoPR.setId(headRepo.getId());
                     repoPR.setDescription(headRepo.getDescription());
@@ -64,11 +74,11 @@ public class PRInformationHelper extends AbstractHelper {
                     prInformation.setOtherRepo(repoPR);
 
                     Commit commitHead = new Commit();
-                    commitHead.setSha(head.getSha());
-                    commitHead.setBranch(head.getRef());
-                    commitHead.setCompareUrl(head.getCommit().getHtmlUrl().toString());
+                    commitHead.setSha(head.getSHA1());
+                    commitHead.setBranch(pullRequest.getHead().getRef());
+                    commitHead.setCompareUrl(head.getHtmlUrl().toString());
 
-                    GHCommit.ShortInfo infoCommit = head.getCommit().getCommitShortInfo();
+                    GHCommit.ShortInfo infoCommit = head.getCommitShortInfo();
 
                     commitHead.setMessage(infoCommit.getMessage());
                     commitHead.setCommitterEmail(infoCommit.getAuthor().getEmail());
@@ -77,11 +87,11 @@ public class PRInformationHelper extends AbstractHelper {
                     prInformation.setHead(commitHead);
 
                     Commit commitBase = new Commit();
-                    commitBase.setSha(base.getSha());
-                    commitBase.setBranch(base.getRef());
-                    commitBase.setCompareUrl(base.getCommit().getHtmlUrl().toString());
+                    commitBase.setSha(base.getSHA1());
+                    commitBase.setBranch(pullRequest.getBase().getRef());
+                    commitBase.setCompareUrl(base.getHtmlUrl().toString());
 
-                    infoCommit = base.getCommit().getCommitShortInfo();
+                    infoCommit = base.getCommitShortInfo();
 
                     commitBase.setMessage(infoCommit.getMessage());
                     commitBase.setCommitterEmail(infoCommit.getAuthor().getEmail());

@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
@@ -163,6 +164,16 @@ public class ProjectInspector {
             } catch (Exception e) {
                 this.jobStatus.addStepError("Unknown", e.getMessage());
                 this.logger.error("Exception catch while executing steps: ", e);
+                this.jobStatus.setFatalError(e);
+
+                ErrorNotifier errorNotifier = ErrorNotifier.getInstance();
+                if (errorNotifier != null) {
+                    errorNotifier.observe(this);
+                }
+
+                for (AbstractDataSerializer serializer : this.serializers) {
+                    serializer.serializeData(this);
+                }
             }
         } else {
             this.logger.debug("Scanned build is not a failing build.");
