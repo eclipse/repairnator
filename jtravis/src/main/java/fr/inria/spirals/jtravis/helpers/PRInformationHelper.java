@@ -46,6 +46,13 @@ public class PRInformationHelper extends AbstractHelper {
                     GHPullRequest pullRequest = ghRepo.getPullRequest(build.getPullRequestNumber());
                     PRInformation prInformation = new PRInformation();
 
+                    GHRepository headRepo = pullRequest.getHead().getRepository();
+
+                    if (headRepo == null) {
+                        getInstance().getLogger().warn("The head repository is null: maybe it has been deleted from GitHub");
+                        return null;
+                    }
+
                     GHCommit base, head;
                     try {
                         GHCommit commitMerge = ghRepo.getCommit(build.getCommit().getSha());
@@ -57,12 +64,7 @@ public class PRInformationHelper extends AbstractHelper {
                         head = pullRequest.getHead().getCommit();
                     }
 
-                    GHRepository headRepo = pullRequest.getHead().getRepository();
 
-                    if (headRepo == null) {
-                        getInstance().getLogger().warn("The head repository is null: maybe it has been deleted from GitHub");
-                        return null;
-                    }
                     Repository repoPR = new Repository();
                     repoPR.setId(headRepo.getId());
                     repoPR.setDescription(headRepo.getDescription());
