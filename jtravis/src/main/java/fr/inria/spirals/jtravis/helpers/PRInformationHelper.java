@@ -5,7 +5,6 @@ import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.PRInformation;
 import fr.inria.spirals.jtravis.entities.Repository;
 import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHCommitPointer;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRateLimit;
 import org.kohsuke.github.GHRepository;
@@ -59,9 +58,8 @@ public class PRInformationHelper extends AbstractHelper {
                         base = commitMerge.getParents().get(0);
                         head = commitMerge.getParents().get(1);
                     } catch (FileNotFoundException e) {
-                        getInstance().getLogger().warn("The merge commit was deleted from Github, get the commits from the PR base/head");
-                        base = pullRequest.getBase().getCommit();
-                        head = pullRequest.getHead().getCommit();
+                        getInstance().getLogger().error("The merge commit was deleted from Github: it means the previous commit information can't be get.");
+                        return null;
                     }
 
 

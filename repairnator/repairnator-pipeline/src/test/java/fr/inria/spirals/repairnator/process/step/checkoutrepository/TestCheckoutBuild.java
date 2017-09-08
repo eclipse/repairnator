@@ -110,8 +110,44 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuildFromPR() throws IOException, GitAPIException {
+    public void testCheckoutBuildFromPRWithMissingMerge() throws IOException, GitAPIException {
         int buildId = 199527447; // surli/failingProject build
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_checkout");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuggyBuild()).thenReturn(build);
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector);
+
+        cloneStep.setNextStep(checkoutBuggyBuild);
+        cloneStep.execute();
+
+        assertThat(checkoutBuggyBuild.getPipelineState(), is(PipelineState.BUILDNOTCHECKEDOUT));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.BUILDNOTCHECKEDOUT));
+
+        assertThat(checkoutBuggyBuild.isShouldStop(), is(true));
+    }
+
+    @Test
+    public void testCheckoutBuildFromPRWithMerge() throws IOException, GitAPIException {
+        int buildId = 199923736; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
         assertThat(build, notNullValue());
