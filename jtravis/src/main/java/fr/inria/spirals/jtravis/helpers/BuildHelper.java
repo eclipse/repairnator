@@ -434,7 +434,7 @@ public class BuildHelper extends AbstractHelper {
         return result;
     }
 
-    public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository) {
+    public static List<Build> getBuildsFromRepository(Repository repository) {
         return getBuildsFromRepositoryWithLimitDate(repository, null);
     }
 

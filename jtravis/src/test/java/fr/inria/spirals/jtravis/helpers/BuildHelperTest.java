@@ -3,14 +3,9 @@ package fr.inria.spirals.jtravis.helpers;
 import fr.inria.spirals.jtravis.entities.*;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by urli on 22/12/2016.
@@ -290,9 +285,9 @@ public class BuildHelperTest {
         Repository repo = new Repository();
         repo.setSlug("INRIA/spoon");
 
-        Date initialDate = TestUtils.getDate(2017, 06, 26, 20, 00, 00);
+        Date initialDate = TestUtils.getDate(2017, 6, 26, 20, 0, 0);
 
-        Date finalDate = TestUtils.getDate(2017, 06, 26, 21, 00, 00);
+        Date finalDate = TestUtils.getDate(2017, 6, 26, 21, 0, 0);
         List<Build> builds = BuildHelper.getBuildsFromRepositoryInTimeInterval(repo, initialDate, finalDate);
 
         assertTrue(builds != null);
@@ -344,6 +339,52 @@ public class BuildHelperTest {
 
         assertNotNull(obtained);
         assertEquals("21420", obtained.getNumber());
+    }
+
+    @Test
+    public void testGetBuildsFromSlugWithLimitDate() {
+        String slug = "surli/failingProject";
+        Date limitDate = TestUtils.getDate(2017, 9, 14, 0, 0, 1);
+
+        List<Build> builds = BuildHelper.getBuildsFromSlugWithLimitDate(slug, limitDate);
+        List<String> obtainedIds = new ArrayList<String>();
+
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+        }
+            
+
+        List<String> expectedIds = Arrays.asList("373","374","375");
+        List<String> unexpectedIds = Arrays.asList("273","274","275");
+
+        assertNotNull(builds);
+
+        //Vérifie que tout les ids de la liste expectedIds sont présents dans la liste des ids retournés
+        assertTrue(obtainedIds.containsAll(expectedIds));
+
+        //Vérifie qu'aucun des ids de la liste unexpectedIds n'est présent dans la liste des ids retournés
+        for (String id:unexpectedIds)
+        {
+            assertFalse(obtainedIds.contains(id));
+        }
+
+    }
+
+    @Test
+    public void testGetBuildsFromSlug() {
+
+    }
+
+    @Test
+    public void testGetBuildsFromRepositoryWithLimitDate() {
+
+    }
+
+    @Test
+    public void testGetBuildsFromRepository() {
+
     }
 
 }
