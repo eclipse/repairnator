@@ -3,9 +3,17 @@ package fr.inria.spirals.jtravis.helpers;
 import fr.inria.spirals.jtravis.entities.*;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by urli on 22/12/2016.
@@ -372,19 +380,6 @@ public class BuildHelperTest {
 
     }
 
-    @Test
-    public void testGetBuildsFromSlug() {
-
-    }
-
-    @Test
-    public void testGetBuildsFromRepositoryWithLimitDate() {
-
-    }
-
-    @Test
-    public void testGetBuildsFromRepository() {
-
-    }
+    
 
 }
