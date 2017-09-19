@@ -380,6 +380,80 @@ public class BuildHelperTest {
 
     }
 
-    
+    @Test
+    public void testGetBuildsFromSlug() {
+        String slug = "surli/failingProject";
+
+        List<Build> builds = BuildHelper.getBuildsFromSlug(slug);
+        List<String> obtainedIds = new ArrayList<String>();
+
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+        }
+
+
+        List<String> expectedIds = Arrays.asList("1","373","374","375");
+
+        assertNotNull(builds);
+
+        //Vérifie que tout les ids de la liste expectedIds sont présents dans la liste des ids retournés
+        assertTrue(obtainedIds.containsAll(expectedIds));
+    }
+
+    @Test
+    public void testGetBuildsFromRepositoryWithLimitDate() {
+        Repository repo = new Repository();
+        repo.setSlug("surli/failingProject");
+        Date limitDate = TestUtils.getDate(2017, 9, 14, 0, 0, 1);
+
+        List<Build> builds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, limitDate);
+        List<String> obtainedIds = new ArrayList<String>();
+
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+        }
+
+
+        List<String> expectedIds = Arrays.asList("373","374","375");
+        List<String> unexpectedIds = Arrays.asList("273","274","275");
+
+        assertNotNull(builds);
+
+        //Vérifie que tout les ids de la liste expectedIds sont présents dans la liste des ids retournés
+        assertTrue(obtainedIds.containsAll(expectedIds));
+
+        //Vérifie qu'aucun des ids de la liste unexpectedIds n'est présent dans la liste des ids retournés
+        for (String id:unexpectedIds)
+        {
+            assertFalse(obtainedIds.contains(id));
+        }
+    }
+
+    @Test
+    public void testGetBuildsFromRepository() {
+        Repository repo = new Repository();
+        repo.setSlug("surli/failingProject");
+
+        List<Build> builds = BuildHelper.getBuildsFromRepository(repo);
+        List<String> obtainedIds = new ArrayList<String>();
+
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+        }
+
+
+        List<String> expectedIds = Arrays.asList("1","373","374","375");
+
+        assertNotNull(builds);
+
+        //Vérifie que tout les ids de la liste expectedIds sont présents dans la liste des ids retournés
+        assertTrue(obtainedIds.containsAll(expectedIds));
+    }
 
 }
