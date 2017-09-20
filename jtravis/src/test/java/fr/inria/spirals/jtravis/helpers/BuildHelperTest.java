@@ -359,23 +359,20 @@ public class BuildHelperTest {
 
         List<Build> builds = BuildHelper.getBuildsFromSlugWithLimitDate(slug, limitDate);
         List<String> obtainedIds = new ArrayList<String>();
-        //Expected build's number
-        List<String> expectedIds = Arrays.asList("373","374","375");
-        //Unexpected build's number
+        //Unexpected build's numbers
         List<String> unexpectedIds = Arrays.asList("273","274","275");
 
 
         for (Build b:builds)
         {
             obtainedIds.add(b.getNumber());
-            //Check that the build number is not among the unexpected
+            //Check that the retrieved build number is not among the unexpected
             assertFalse(unexpectedIds.contains(b.getNumber()));
         }
         assertNotNull(builds);
 
         //Check that retrieved build's numbers are all in the expected build's numbers list
-        assertTrue(obtainedIds.containsAll(expectedIds));
-        //assertThat((List)obtainedIds, CoreMatchers.hasItem(expectedIds));
+        assertThat(obtainedIds, CoreMatchers.hasItems("373","374","375"));
     }
 
     @Test
@@ -384,7 +381,6 @@ public class BuildHelperTest {
 
         List<Build> builds = BuildHelper.getBuildsFromSlug(slug);
         List<String> obtainedIds = new ArrayList<String>();
-        List<String> expectedIds = Arrays.asList("1","373","374","375");
 
         for (Build b:builds)
         {
@@ -393,8 +389,7 @@ public class BuildHelperTest {
         assertNotNull(builds);
 
         //Check that retrieved build's numbers are all in the expected build's numbers list
-        assertTrue(obtainedIds.containsAll(expectedIds));
-        //assertThat((List)obtainedIds, CoreMatchers.hasItem(expectedIds));
+        assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
     }
 
     @Test
@@ -406,20 +401,18 @@ public class BuildHelperTest {
 
         List<Build> builds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, limitDate);
         List<String> obtainedIds = new ArrayList<String>();
-        List<String> expectedIds = Arrays.asList("685","684","679");
         List<String> unexpectedIds = Arrays.asList("273","274","275");
 
         for (Build b:builds)
         {
             obtainedIds.add(b.getNumber());
-            //Check that the build number is not among the unexpected
+            //Check that the retrieved build number is not among the unexpected
             assertFalse(unexpectedIds.contains(b.getNumber()));
         }
         assertNotNull(builds);
 
         //Check that retrieved build's numbers are all in the expected build's numbers list
-        assertTrue(obtainedIds.containsAll(expectedIds));
-        //assertThat((List)obtainedIds, CoreMatchers.hasItem(expectedIds));
+        assertThat(obtainedIds, CoreMatchers.hasItems("685","684","679"));
     }
 
     @Test
@@ -429,7 +422,6 @@ public class BuildHelperTest {
 
         List<Build> builds = BuildHelper.getBuildsFromRepository(repo);
         List<String> obtainedIds = new ArrayList<String>();
-        List<String> expectedIds = Arrays.asList("602","613","615","685");
 
         for (Build b:builds)
         {
@@ -438,8 +430,7 @@ public class BuildHelperTest {
         assertNotNull(builds);
 
         //Check that retrieved build's numbers are all in the expected build's numbers list
-        assertTrue(obtainedIds.containsAll(expectedIds));
-        //assertThat((List)obtainedIds, CoreMatchers.hasItem(expectedIds));
+        assertThat(obtainedIds, CoreMatchers.hasItems("602","613","615","685"));
     }
 
 }
