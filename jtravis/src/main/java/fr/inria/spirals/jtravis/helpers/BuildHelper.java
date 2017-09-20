@@ -236,7 +236,7 @@ public class BuildHelper extends AbstractHelper {
             dateReached = true;
         }
 
-        if (limitDate != null && !dateReached) {
+        if (!dateReached) {
             getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, original_after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
         } else {
             eventTypes.remove(0);
@@ -434,7 +434,7 @@ public class BuildHelper extends AbstractHelper {
         return result;
     }
 
-    public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository) {
+    public static List<Build> getBuildsFromRepository(Repository repository) {
         return getBuildsFromRepositoryWithLimitDate(repository, null);
     }
 
