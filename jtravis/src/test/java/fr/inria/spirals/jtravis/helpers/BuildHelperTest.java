@@ -418,6 +418,7 @@ public class BuildHelperTest {
     @Test
     public void testGetBuildsFromRepository() {
         Repository repo = new Repository();
+        //repo.setSlug("surli/failingProject");
         repo.setSlug("google/jsonnet");
 
         List<Build> builds = BuildHelper.getBuildsFromRepository(repo);
@@ -430,7 +431,8 @@ public class BuildHelperTest {
         assertNotNull(builds);
 
         //Check that retrieved build's numbers are all in the expected build's numbers list
-        assertThat(obtainedIds, CoreMatchers.hasItems("602","613","615","685"));
+        //assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
+        assertThat(obtainedIds, CoreMatchers.hasItems("1","602","613","615","685"));
     }
 
 }
