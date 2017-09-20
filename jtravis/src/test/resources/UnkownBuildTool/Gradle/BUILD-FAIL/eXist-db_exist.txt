@@ -1,0 +1,2665 @@
+travis_fold:start:worker_info
+[0K[33;1mWorker information[0m
+hostname: i-0dde221-production-2-worker-org-ec2.travisci.net:b9271a19-f7b3-450c-a127-656b0a6c2229
+version: v2.9.3 https://github.com/travis-ci/worker/tree/a41c772c638071fbbdbc106f31a664c0532e0c36
+instance: 838a2b9:travis:java (via amqp)
+startup: 767.382663ms
+travis_fold:end:worker_info
+[0Ktravis_fold:start:system_info
+[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: trusty
+Build id: 273672139
+Job id: 273672140
+Runtime kernel version: 4.11.6-041106-generic
+travis-build version: bf5c09e13
+[34m[1mBuild image provisioning date and time[0m
+Fri Jul  7 18:52:25 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 14.04.5 LTS
+Release:	14.04
+Codename:	trusty
+[34m[1mLinux Version[0m
+4.4.0-83-generic
+[34m[1mCookbooks Version[0m
+15a6f94 https://github.com/travis-ci/travis-cookbooks/tree/15a6f94
+[34m[1mgit version[0m
+git version 2.13.0
+[34m[1mbash version[0m
+GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
+[34m[1mgcc version[0m
+gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+Copyright (C) 2013 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mdocker version[0m
+Client:
+ Version:      17.03.1-ce
+ API version:  1.27
+ Go version:   go1.7.5
+ Git commit:   c6d412e
+ Built:        Mon Mar 27 16:58:30 2017
+ OS/Arch:      linux/amd64
+[34m[1mclang version[0m
+clang version 3.5.0 (tags/RELEASE_350/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mjq version[0m
+jq-1.5
+[34m[1mbats version[0m
+Bats 0.4.0
+[34m[1mshellcheck version[0m
+0.4.5
+[34m[1mshfmt version[0m
+v1.0.0
+[34m[1mccache version[0m
+ccache version 3.1.9
+
+Copyright (C) 2002-2007 Andrew Tridgell
+Copyright (C) 2009-2011 Joel Rosdahl
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 3 of the License, or (at your option) any later
+version.
+[34m[1mcmake version[0m
+cmake version 3.2.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+[34m[1mheroku version[0m
+heroku-cli/6.12.5-17216bc (linux-x64) node-v8.1.3
+[34m[1mimagemagick version[0m
+Version: ImageMagick 6.7.7-10 2017-05-26 Q16 http://www.imagemagick.org
+[34m[1mmd5deep version[0m
+4.2
+[34m[1mmercurial version[0m
+Mercurial Distributed SCM (version 4.2.2)
+(see https://mercurial-scm.org for more information)
+
+Copyright (C) 2005-2017 Matt Mackall and others
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+[34m[1mmysql version[0m
+mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
+[34m[1mopenssl version[0m
+OpenSSL 1.0.2j  26 Sep 2016
+[34m[1mpacker version[0m
+Packer v0.10.1
+
+Your version of Packer is out of date! The latest version
+is 1.0.2. You can update by downloading from www.packer.io
+[34m[1mpostgresql client version[0m
+psql (PostgreSQL) 9.6.3
+[34m[1mragel version[0m
+Ragel State Machine Compiler version 6.8 Feb 2013
+Copyright (c) 2001-2009 by Adrian Thurston
+[34m[1msubversion version[0m
+svn, version 1.8.8 (r1568071)
+   compiled Aug 20 2015, 12:51:30 on x86_64-pc-linux-gnu
+
+Copyright (C) 2013 The Apache Software Foundation.
+This software consists of contributions made by many people;
+see the NOTICE file for more information.
+Subversion is open source software, see http://subversion.apache.org/
+
+The following repository access (RA) modules are available:
+
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - with Cyrus SASL authentication
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
+  - using serf 1.3.3
+  - handles 'http' scheme
+  - handles 'https' scheme
+
+[34m[1msudo version[0m
+Sudo version 1.8.9p5
+Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
+Sudoers policy plugin version 1.8.9p5
+Sudoers file grammar version 43
+
+Sudoers path: /etc/sudoers
+Authentication methods: 'pam'
+Syslog facility if syslog is being used for logging: authpriv
+Syslog priority to use when user authenticates successfully: notice
+Syslog priority to use when user authenticates unsuccessfully: alert
+Send mail if the user is not in sudoers
+Use a separate timestamp for each user/tty combo
+Lecture user the first time they run sudo
+Root may run sudo
+Allow some information gathering to give useful error messages
+Require fully-qualified hostnames in the sudoers file
+Visudo will honor the EDITOR environment variable
+Set the LOGNAME and USER environment variables
+Length at which to wrap log file lines (0 for no wrap): 80
+Authentication timestamp timeout: 15.0 minutes
+Password prompt timeout: 0.0 minutes
+Number of tries to enter a password: 3
+Umask to use or 0777 to use user's: 022
+Path to mail program: /usr/sbin/sendmail
+Flags for mail program: -t
+Address to send mail to: root
+Subject line for mail messages: *** SECURITY information for %h ***
+Incorrect password message: Sorry, try again.
+Path to authentication timestamp dir: /var/lib/sudo
+Default password prompt: [sudo] password for %p: 
+Default user to run commands as: root
+Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+Path to the editor for use by visudo: /usr/bin/editor
+When to require a password for 'list' pseudocommand: any
+When to require a password for 'verify' pseudocommand: all
+File descriptors >= 3 will be closed before executing a command
+Environment variables to check for sanity:
+	TZ
+	TERM
+	LINGUAS
+	LC_*
+	LANGUAGE
+	LANG
+	COLORTERM
+Environment variables to remove:
+	RUBYOPT
+	RUBYLIB
+	PYTHONUSERBASE
+	PYTHONINSPECT
+	PYTHONPATH
+	PYTHONHOME
+	TMPPREFIX
+	ZDOTDIR
+	READNULLCMD
+	NULLCMD
+	FPATH
+	PERL5DB
+	PERL5OPT
+	PERL5LIB
+	PERLLIB
+	PERLIO_DEBUG 
+	JAVA_TOOL_OPTIONS
+	SHELLOPTS
+	GLOBIGNORE
+	PS4
+	BASH_ENV
+	ENV
+	TERMCAP
+	TERMPATH
+	TERMINFO_DIRS
+	TERMINFO
+	_RLD*
+	LD_*
+	PATH_LOCALE
+	NLSPATH
+	HOSTALIASES
+	RES_OPTIONS
+	LOCALDOMAIN
+	CDPATH
+	IFS
+Environment variables to preserve:
+	JAVA_HOME
+	TRAVIS
+	CI
+	DEBIAN_FRONTEND
+	XAUTHORIZATION
+	XAUTHORITY
+	PS2
+	PS1
+	PATH
+	LS_COLORS
+	KRB5CCNAME
+	HOSTNAME
+	HOME
+	DISPLAY
+	COLORS
+Locale to use while parsing sudoers: C
+Directory in which to store input/output logs: /var/log/sudo-io
+File in which to store the input/output log: %{seq}
+Add an entry to the utmp/utmpx file when allocating a pty
+PAM service name to use
+PAM service name to use for login shells
+Create a new PAM session for the command to run in
+Maximum I/O log sequence number: 0
+
+Local IP address and netmask pairs:
+	172.17.0.2/255.255.0.0
+
+Sudoers I/O plugin version 1.8.9p5
+[34m[1mgzip version[0m
+gzip 1.6
+Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
+Copyright (C) 1993 Jean-loup Gailly.
+This is free software.  You may redistribute copies of it under the terms of
+the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jean-loup Gailly.
+[34m[1mzip version[0m
+Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
+This is Zip 3.0 (July 5th 2008), by Info-ZIP.
+Currently maintained by E. Gordon.  Please send bug reports to
+the authors using the web page at www.info-zip.org; see README for details.
+
+Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
+as of above date; see http://www.info-zip.org/ for other sites.
+
+Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
+
+Zip special compilation options:
+	USE_EF_UT_TIME       (store Universal Time)
+	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
+	    bzip2 code and library copyright (c) Julian R Seward
+	    (See the bzip2 license for terms of use)
+	SYMLINK_SUPPORT      (symbolic links supported)
+	LARGE_FILE_SUPPORT   (can read and write large files on file system)
+	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
+	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
+	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
+	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
+	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
+
+Encryption notice:
+	The encryption code of this program is not copyrighted and is
+	put in the public domain.  It was originally written in Europe
+	and, to the best of our knowledge, can be freely distributed
+	in both source and object forms from any country, including
+	the USA under License Exception TSU of the U.S. Export
+	Administration Regulations (section 740.13(e)) of 6 June 2002.
+
+Zip environment options:
+             ZIP:  [none]
+          ZIPOPT:  [none]
+[34m[1mvim version[0m
+VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
+Included patches: 1-52
+Extra patches: 8.0.0056
+Modified by pkg-vim-maintainers@lists.alioth.debian.org
+Compiled by buildd@
+Huge version without GUI.  Features included (+) or not (-):
++acl             +farsi           +mouse_netterm   +syntax
++arabic          +file_in_path    +mouse_sgr       +tag_binary
++autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
+-balloon_eval    +float           +mouse_urxvt     -tag_any_white
+-browse          +folding         +mouse_xterm     -tcl
+++builtin_terms  -footer          +multi_byte      +terminfo
++byte_offset     +fork()          +multi_lang      +termresponse
++cindent         +gettext         -mzscheme        +textobjects
+-clientserver    -hangul_input    +netbeans_intg   +title
+-clipboard       +iconv           +path_extra      -toolbar
++cmdline_compl   +insert_expand   -perl            +user_commands
++cmdline_hist    +jumplist        +persistent_undo +vertsplit
++cmdline_info    +keymap          +postscript      +virtualedit
++comments        +langmap         +printer         +visual
++conceal         +libcall         +profile         +visualextra
++cryptv          +linebreak       +python          +viminfo
++cscope          +lispindent      -python3         +vreplace
++cursorbind      +listcmds        +quickfix        +wildignore
++cursorshape     +localmap        +reltime         +wildmenu
++dialog_con      -lua             +rightleft       +windows
++diff            +menu            -ruby            +writebackup
++digraphs        +mksession       +scrollbind      -X11
+-dnd             +modify_fname    +signs           -xfontset
+-ebcdic          +mouse           +smartindent     -xim
++emacs_tags      -mouseshape      -sniff           -xsmp
++eval            +mouse_dec       +startuptime     -xterm_clipboard
++ex_extra        +mouse_gpm       +statusline      -xterm_save
++extra_search    -mouse_jsbterm   -sun_workshop    -xpm
+   system vimrc file: "$VIM/vimrc"
+     user vimrc file: "$HOME/.vimrc"
+ 2nd user vimrc file: "~/.vim/vimrc"
+      user exrc file: "$HOME/.exrc"
+  fall-back for $VIM: "/usr/share/vim"
+Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
+Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
+[34m[1miptables version[0m
+iptables v1.4.21
+[34m[1mcurl version[0m
+curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
+[34m[1mwget version[0m
+GNU Wget 1.15 built on linux-gnu.
+[34m[1mrsync version[0m
+rsync  version 3.1.0  protocol version 31
+[34m[1mgimme version[0m
+v1.0.0
+[34m[1mnvm version[0m
+0.33.0
+[34m[1mperlbrew version[0m
+/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
+[34m[1mphpenv version[0m
+rbenv 1.1.1-2-g615f844
+[34m[1mrvm version[0m
+rvm 1.29.2 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io/]
+[34m[1mdefault ruby version[0m
+ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mElasticSearch version[0m
+5.4.3
+[34m[1mInstalled Firefox version[0m
+firefox 50.0.2
+[34m[1mMongoDB version[0m
+MongoDB 3.2.15
+[34m[1mPre-installed PostgreSQL versions[0m
+9.2.21
+9.3.17
+9.4.12
+9.5.7
+9.6.3
+[34m[1mRabbitMQ Version[0m
+3.6.10
+[34m[1mRedis version[0m
+redis-server 3.2.9
+[34m[1mriak version[0m
+2.2.3
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mant version[0m
+Apache Ant(TM) version 1.9.3 compiled on April 8 2014
+[34m[1mmvn version[0m
+Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-10T16:41:47+00:00)
+Maven home: /usr/local/maven-3.3.9
+Java version: 1.8.0_131, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.4.0-83-generic", arch: "amd64", family: "unix"
+[34m[1mgradle version[0m
+
+------------------------------------------------------------
+Gradle 3.2.1
+------------------------------------------------------------
+
+Build time:   2016-11-22 15:19:54 UTC
+Revision:     83b485b914fd4f335ad0e66af9d14aad458d2cc5
+
+Groovy:       2.4.7
+Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+JVM:          1.8.0_131 (Oracle Corporation 25.131-b11)
+OS:           Linux 4.4.0-83-generic amd64
+
+[34m[1mlein version[0m
+WARNING: You're currently running as root; probably by accident.
+Press control-C to abort or Enter to continue as root.
+Set LEIN_ROOT to disable this warning.
+Leiningen 2.7.1 on Java 1.8.0_131 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mPre-installed Node.js versions[0m
+v4.8.3
+v6.11.0
+v6.9.4
+v7.4
+v7.4.0
+[34m[1mphpenv versions[0m
+  system
+  5.6
+* 5.6.24 (set by /home/travis/.phpenv/version)
+  7.0
+  7.0.7
+  hhvm
+  hhvm-stable
+[34m[1mcomposer --version[0m
+Composer version 1.2.0 2016-07-19 01:28:52
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.7
+ruby-2.3.4
+ruby-2.4.1
+travis_fold:end:system_info
+[0K
+W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+[33;1mPatching redis-server init script[0m
+$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+travis_fold:start:git.checkout
+[0Ktravis_time:start:0a125f53
+[0K$ git clone --depth=50 --branch=develop https://github.com/eXist-db/exist.git eXist-db/exist
+Cloning into 'eXist-db/exist'...
+remote: Counting objects: 14299, done.[K
+remote: Compressing objects:   0% (1/8025)   [K
+remote: Compressing objects:   1% (81/8025)   [K
+remote: Compressing objects:   2% (161/8025)   [K
+remote: Compressing objects:   3% (241/8025)   [K
+remote: Compressing objects:   4% (321/8025)   [K
+remote: Compressing objects:   5% (402/8025)   [K
+remote: Compressing objects:   6% (482/8025)   [K
+remote: Compressing objects:   7% (562/8025)   [K
+remote: Compressing objects:   8% (642/8025)   [K
+remote: Compressing objects:   9% (723/8025)   [K
+remote: Compressing objects:  10% (803/8025)   [K
+remote: Compressing objects:  11% (883/8025)   [K
+remote: Compressing objects:  12% (963/8025)   [K
+remote: Compressing objects:  13% (1044/8025)   [K
+remote: Compressing objects:  14% (1124/8025)   [K
+remote: Compressing objects:  15% (1204/8025)   [K
+remote: Compressing objects:  16% (1284/8025)   [K
+remote: Compressing objects:  17% (1365/8025)   [K
+remote: Compressing objects:  18% (1445/8025)   [K
+remote: Compressing objects:  19% (1525/8025)   [K
+remote: Compressing objects:  20% (1605/8025)   [K
+remote: Compressing objects:  21% (1686/8025)   [K
+remote: Compressing objects:  22% (1766/8025)   [K
+remote: Compressing objects:  23% (1846/8025)   [K
+remote: Compressing objects:  24% (1926/8025)   [K
+remote: Compressing objects:  25% (2007/8025)   [K
+remote: Compressing objects:  26% (2087/8025)   [K
+remote: Compressing objects:  27% (2167/8025)   [K
+remote: Compressing objects:  28% (2247/8025)   [K
+remote: Compressing objects:  29% (2328/8025)   [K
+remote: Compressing objects:  30% (2408/8025)   [K
+remote: Compressing objects:  31% (2488/8025)   [K
+remote: Compressing objects:  32% (2568/8025)   [K
+remote: Compressing objects:  33% (2649/8025)   [K
+remote: Compressing objects:  34% (2729/8025)   [K
+remote: Compressing objects:  35% (2809/8025)   [K
+remote: Compressing objects:  36% (2889/8025)   [K
+remote: Compressing objects:  37% (2970/8025)   [K
+remote: Compressing objects:  38% (3050/8025)   [K
+remote: Compressing objects:  39% (3130/8025)   [K
+remote: Compressing objects:  40% (3210/8025)   [K
+remote: Compressing objects:  41% (3291/8025)   [K
+remote: Compressing objects:  42% (3371/8025)   [K
+remote: Compressing objects:  43% (3451/8025)   [K
+remote: Compressing objects:  44% (3531/8025)   [K
+remote: Compressing objects:  44% (3532/8025)   [K
+remote: Compressing objects:  45% (3612/8025)   [K
+remote: Compressing objects:  46% (3692/8025)   [K
+remote: Compressing objects:  47% (3772/8025)   [K
+remote: Compressing objects:  48% (3852/8025)   [K
+remote: Compressing objects:  49% (3933/8025)   [K
+remote: Compressing objects:  50% (4013/8025)   [K
+remote: Compressing objects:  51% (4093/8025)   [K
+remote: Compressing objects:  52% (4173/8025)   [K
+remote: Compressing objects:  53% (4254/8025)   [K
+remote: Compressing objects:  54% (4334/8025)   [K
+remote: Compressing objects:  55% (4414/8025)   [K
+remote: Compressing objects:  56% (4494/8025)   [K
+remote: Compressing objects:  57% (4575/8025)   [K
+remote: Compressing objects:  58% (4655/8025)   [K
+remote: Compressing objects:  59% (4735/8025)   [K
+remote: Compressing objects:  60% (4815/8025)   [K
+remote: Compressing objects:  61% (4896/8025)   [K
+remote: Compressing objects:  62% (4976/8025)   [K
+remote: Compressing objects:  63% (5056/8025)   [K
+remote: Compressing objects:  64% (5136/8025)   [K
+remote: Compressing objects:  65% (5217/8025)   [K
+remote: Compressing objects:  66% (5297/8025)   [K
+remote: Compressing objects:  67% (5377/8025)   [K
+remote: Compressing objects:  68% (5457/8025)   [K
+remote: Compressing objects:  69% (5538/8025)   [K
+remote: Compressing objects:  70% (5618/8025)   [K
+remote: Compressing objects:  71% (5698/8025)   [K
+remote: Compressing objects:  72% (5778/8025)   [K
+remote: Compressing objects:  73% (5859/8025)   [K
+remote: Compressing objects:  74% (5939/8025)   [K
+remote: Compressing objects:  75% (6019/8025)   [K
+remote: Compressing objects:  76% (6099/8025)   [K
+remote: Compressing objects:  77% (6180/8025)   [K
+remote: Compressing objects:  78% (6260/8025)   [K
+remote: Compressing objects:  79% (6340/8025)   [K
+remote: Compressing objects:  80% (6420/8025)   [K
+remote: Compressing objects:  81% (6501/8025)   [K
+remote: Compressing objects:  82% (6581/8025)   [K
+remote: Compressing objects:  83% (6661/8025)   [K
+remote: Compressing objects:  84% (6741/8025)   [K
+remote: Compressing objects:  85% (6822/8025)   [K
+remote: Compressing objects:  86% (6902/8025)   [K
+remote: Compressing objects:  87% (6982/8025)   [K
+remote: Compressing objects:  88% (7062/8025)   [K
+remote: Compressing objects:  89% (7143/8025)   [K
+remote: Compressing objects:  90% (7223/8025)   [K
+remote: Compressing objects:  91% (7303/8025)   [K
+remote: Compressing objects:  92% (7383/8025)   [K
+remote: Compressing objects:  93% (7464/8025)   [K
+remote: Compressing objects:  94% (7544/8025)   [K
+remote: Compressing objects:  95% (7624/8025)   [K
+remote: Compressing objects:  96% (7704/8025)   [K
+remote: Compressing objects:  97% (7785/8025)   [K
+remote: Compressing objects:  98% (7865/8025)   [K
+remote: Compressing objects:  99% (7945/8025)   [K
+remote: Compressing objects: 100% (8025/8025)   [K
+remote: Compressing objects: 100% (8025/8025), done.[K
+Receiving objects:   0% (1/14299)   
+Receiving objects:   1% (143/14299)   
+Receiving objects:   2% (286/14299)   
+Receiving objects:   3% (429/14299)   
+Receiving objects:   4% (572/14299)   
+Receiving objects:   5% (715/14299)   
+Receiving objects:   6% (858/14299)   
+Receiving objects:   7% (1001/14299)   
+Receiving objects:   8% (1144/14299)   
+Receiving objects:   9% (1287/14299)   
+Receiving objects:  10% (1430/14299)   
+Receiving objects:  11% (1573/14299)   
+Receiving objects:  12% (1716/14299)   
+Receiving objects:  13% (1859/14299)   
+Receiving objects:  14% (2002/14299)   
+Receiving objects:  15% (2145/14299)   
+Receiving objects:  16% (2288/14299)   
+Receiving objects:  17% (2431/14299)   
+Receiving objects:  18% (2574/14299)   
+Receiving objects:  19% (2717/14299)   
+Receiving objects:  20% (2860/14299)   
+Receiving objects:  21% (3003/14299)   
+Receiving objects:  22% (3146/14299)   
+Receiving objects:  23% (3289/14299)   
+Receiving objects:  24% (3432/14299)   
+Receiving objects:  25% (3575/14299)   
+Receiving objects:  26% (3718/14299)   
+Receiving objects:  27% (3861/14299)   
+Receiving objects:  28% (4004/14299)   
+Receiving objects:  29% (4147/14299)   
+Receiving objects:  30% (4290/14299)   
+Receiving objects:  31% (4433/14299)   
+Receiving objects:  32% (4576/14299)   
+Receiving objects:  33% (4719/14299)   
+Receiving objects:  34% (4862/14299)   
+Receiving objects:  35% (5005/14299)   
+Receiving objects:  36% (5148/14299)   
+Receiving objects:  37% (5291/14299)   
+Receiving objects:  38% (5434/14299)   
+Receiving objects:  39% (5577/14299)   
+Receiving objects:  40% (5720/14299)   
+Receiving objects:  41% (5863/14299)   
+Receiving objects:  42% (6006/14299)   
+Receiving objects:  43% (6149/14299)   
+Receiving objects:  44% (6292/14299)   
+Receiving objects:  44% (6382/14299), 15.48 MiB | 15.48 MiB/s   
+Receiving objects:  45% (6435/14299), 22.68 MiB | 15.11 MiB/s   
+Receiving objects:  46% (6578/14299), 22.68 MiB | 15.11 MiB/s   
+Receiving objects:  47% (6721/14299), 22.68 MiB | 15.11 MiB/s   
+Receiving objects:  47% (6798/14299), 22.68 MiB | 15.11 MiB/s   
+Receiving objects:  48% (6864/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  49% (7007/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  50% (7150/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  51% (7293/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  52% (7436/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  53% (7579/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  54% (7722/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  55% (7865/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  56% (8008/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  57% (8151/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  58% (8294/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  59% (8437/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  60% (8580/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  61% (8723/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  62% (8866/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  63% (9009/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  64% (9152/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  65% (9295/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  66% (9438/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  67% (9581/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  68% (9724/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  69% (9867/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  70% (10010/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  71% (10153/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  72% (10296/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  73% (10439/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  74% (10582/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  75% (10725/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  76% (10868/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  77% (11011/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  78% (11154/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  79% (11297/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  80% (11440/14299), 30.70 MiB | 15.35 MiB/s   
+Receiving objects:  80% (11453/14299), 46.45 MiB | 15.48 MiB/s   
+Receiving objects:  81% (11583/14299), 53.48 MiB | 15.28 MiB/s   
+Receiving objects:  81% (11621/14299), 62.01 MiB | 15.50 MiB/s   
+Receiving objects:  82% (11726/14299), 62.01 MiB | 15.50 MiB/s   
+Receiving objects:  83% (11869/14299), 62.01 MiB | 15.50 MiB/s   
+Receiving objects:  84% (12012/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  85% (12155/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  86% (12298/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  87% (12441/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  88% (12584/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  89% (12727/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  90% (12870/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  91% (13013/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  91% (13066/14299), 70.68 MiB | 15.71 MiB/s   
+Receiving objects:  92% (13156/14299), 77.50 MiB | 15.59 MiB/s   
+Receiving objects:  93% (13299/14299), 77.50 MiB | 15.59 MiB/s   
+Receiving objects:  93% (13342/14299), 93.05 MiB | 15.64 MiB/s   
+Receiving objects:  93% (13359/14299), 107.57 MiB | 15.32 MiB/s   
+Receiving objects:  94% (13442/14299), 107.57 MiB | 15.32 MiB/s   
+Receiving objects:  95% (13585/14299), 107.57 MiB | 15.32 MiB/s   
+Receiving objects:  96% (13728/14299), 107.57 MiB | 15.32 MiB/s   
+Receiving objects:  97% (13871/14299), 116.03 MiB | 15.46 MiB/s   
+Receiving objects:  98% (14014/14299), 116.03 MiB | 15.46 MiB/s   
+Receiving objects:  98% (14126/14299), 125.11 MiB | 15.92 MiB/s   
+Receiving objects:  99% (14157/14299), 132.68 MiB | 15.71 MiB/s   
+Receiving objects:  99% (14161/14299), 138.72 MiB | 15.12 MiB/s   
+remote: Total 14299 (delta 7050), reused 10276 (delta 4694), pack-reused 0[K
+Receiving objects: 100% (14299/14299), 138.72 MiB | 15.12 MiB/s   
+Receiving objects: 100% (14299/14299), 142.49 MiB | 15.31 MiB/s, done.
+Resolving deltas:   0% (0/7050)   
+Resolving deltas:   1% (77/7050)   
+Resolving deltas:   2% (142/7050)   
+Resolving deltas:   3% (228/7050)   
+Resolving deltas:   4% (302/7050)   
+Resolving deltas:   5% (369/7050)   
+Resolving deltas:   6% (425/7050)   
+Resolving deltas:   7% (504/7050)   
+Resolving deltas:   8% (564/7050)   
+Resolving deltas:   9% (655/7050)   
+Resolving deltas:  11% (788/7050)   
+Resolving deltas:  12% (854/7050)   
+Resolving deltas:  15% (1065/7050)   
+Resolving deltas:  16% (1150/7050)   
+Resolving deltas:  17% (1211/7050)   
+Resolving deltas:  18% (1269/7050)   
+Resolving deltas:  20% (1414/7050)   
+Resolving deltas:  21% (1491/7050)   
+Resolving deltas:  22% (1551/7050)   
+Resolving deltas:  23% (1627/7050)   
+Resolving deltas:  24% (1756/7050)   
+Resolving deltas:  25% (1769/7050)   
+Resolving deltas:  27% (1948/7050)   
+Resolving deltas:  30% (2124/7050)   
+Resolving deltas:  31% (2188/7050)   
+Resolving deltas:  32% (2266/7050)   
+Resolving deltas:  33% (2336/7050)   
+Resolving deltas:  34% (2421/7050)   
+Resolving deltas:  35% (2468/7050)   
+Resolving deltas:  36% (2560/7050)   
+Resolving deltas:  37% (2617/7050)   
+Resolving deltas:  38% (2679/7050)   
+Resolving deltas:  39% (2750/7050)   
+Resolving deltas:  40% (2822/7050)   
+Resolving deltas:  41% (2896/7050)   
+Resolving deltas:  42% (2962/7050)   
+Resolving deltas:  43% (3032/7050)   
+Resolving deltas:  44% (3107/7050)   
+Resolving deltas:  45% (3175/7050)   
+Resolving deltas:  46% (3244/7050)   
+Resolving deltas:  47% (3315/7050)   
+Resolving deltas:  48% (3384/7050)   
+Resolving deltas:  49% (3456/7050)   
+Resolving deltas:  50% (3525/7050)   
+Resolving deltas:  51% (3599/7050)   
+Resolving deltas:  52% (3666/7050)   
+Resolving deltas:  53% (3740/7050)   
+Resolving deltas:  54% (3807/7050)   
+Resolving deltas:  55% (3878/7050)   
+Resolving deltas:  56% (3951/7050)   
+Resolving deltas:  57% (4019/7050)   
+Resolving deltas:  58% (4090/7050)   
+Resolving deltas:  59% (4167/7050)   
+Resolving deltas:  60% (4230/7050)   
+Resolving deltas:  61% (4336/7050)   
+Resolving deltas:  62% (4371/7050)   
+Resolving deltas:  63% (4443/7050)   
+Resolving deltas:  64% (4512/7050)   
+Resolving deltas:  65% (4587/7050)   
+Resolving deltas:  66% (4654/7050)   
+Resolving deltas:  67% (4724/7050)   
+Resolving deltas:  68% (4794/7050)   
+Resolving deltas:  69% (4876/7050)   
+Resolving deltas:  70% (4935/7050)   
+Resolving deltas:  71% (5006/7050)   
+Resolving deltas:  72% (5076/7050)   
+Resolving deltas:  73% (5149/7050)   
+Resolving deltas:  74% (5218/7050)   
+Resolving deltas:  75% (5288/7050)   
+Resolving deltas:  76% (5358/7050)   
+Resolving deltas:  77% (5429/7050)   
+Resolving deltas:  78% (5500/7050)   
+Resolving deltas:  79% (5572/7050)   
+Resolving deltas:  80% (5640/7050)   
+Resolving deltas:  81% (5712/7050)   
+Resolving deltas:  82% (5782/7050)   
+Resolving deltas:  83% (5852/7050)   
+Resolving deltas:  84% (5924/7050)   
+Resolving deltas:  85% (6000/7050)   
+Resolving deltas:  86% (6065/7050)   
+Resolving deltas:  87% (6146/7050)   
+Resolving deltas:  88% (6210/7050)   
+Resolving deltas:  89% (6281/7050)   
+Resolving deltas:  90% (6347/7050)   
+Resolving deltas:  91% (6416/7050)   
+Resolving deltas:  92% (6489/7050)   
+Resolving deltas:  93% (6558/7050)   
+Resolving deltas:  94% (6630/7050)   
+Resolving deltas:  95% (6698/7050)   
+Resolving deltas:  96% (6770/7050)   
+Resolving deltas:  97% (6840/7050)   
+Resolving deltas:  98% (6910/7050)   
+Resolving deltas:  99% (6980/7050)   
+Resolving deltas: 100% (7050/7050)   
+Resolving deltas: 100% (7050/7050), done.
+
+travis_time:end:0a125f53:start=1504980985969147544,finish=1504980999258123541,duration=13288975997
+[0K$ cd eXist-db/exist
+$ git checkout -qf 49fe57d288f61dde8a14d927f9e7acc0399fd8fe
+travis_fold:end:git.checkout
+[0K[33;1mDisabling Gradle daemon[0m
+travis_time:start:1a4861c5
+[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+
+travis_time:end:1a4861c5:start=1504981007863217579,finish=1504981007897100219,duration=33882640
+[0K$ export PATH=$JAVA_HOME/bin:$PATH
+$ java -Xmx32m -version
+java version "1.8.0_131"
+Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
+Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.8.0_131
+travis_time:start:0b295abf
+[0K$ ./build.sh -Dexist.autodeploy=off -Dtest.haltonerror=true -Dtest.haltonfailure=true travis
+Starting Ant...
+
+/usr/lib/jvm/java-8-oracle/bin/java
+Buildfile: /home/travis/build/eXist-db/exist/build.xml
+
+clean:
+     [echo] -------------------------
+     [echo] Cleaning
+     [echo] -------------------------
+
+clean:
+     [echo] 
+     [echo]             Uninstalling betterFORM.
+     [echo]         
+     [move] Warning: Could not find file /home/travis/build/eXist-db/exist/extensions/betterform/uninstall/web.xml to copy.
+
+clean:
+
+clean:
+
+clean:
+
+clean:
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/xprocxq/main/dist
+
+clean:
+
+clean:
+     [echo] /home/travis/build/eXist-db/exist
+     [echo] /home/travis/build/eXist-db/exist/build/scripts
+
+clean:
+     [echo] Cleaning 'contentextraction'
+
+clean-3rd-party:
+     [echo] Removing 3rd party jar files 'contentextraction'
+
+clean:
+     [echo] Cleaning 'debugger'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'exiftool'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'expath-20130805'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'exquery-request-module'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'restxq'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'fluent'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'imagescaling'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'index-lucene'
+
+clean-3rd-party:
+     [echo] Removing 3rd party jar files 'index-lucene'
+
+clean:
+     [echo] Cleaning 'index-ngram'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'index-range'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'index-sort'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'index-spatial'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'metadata-interface'
+
+clean-3rd-party:
+     [echo] Removing 3rd party jar files 'metadata-interface'
+
+clean:
+     [echo] Cleaning 'metadata-sleepycat'
+
+clean-3rd-party:
+     [echo] Removing 3rd party jar files 'metadata-sleepycat'
+
+clean:
+     [echo] Cleaning 'netedit'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'scheduler'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'security-iprange'
+
+clean-3rd-party:
+     [echo] Removing 3rd party jar files 'security-iprange'
+
+clean:
+     [echo] Cleaning 'security-ldap'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'security-oauth'
+
+clean-3rd-party:
+     [echo] Removing 3rd party jar files 'security-oauth'
+
+clean:
+     [echo] Cleaning 'security-openid'
+
+clean-3rd-party:
+     [echo] Removing 3rd party jar files 'security-openid'
+
+clean:
+     [echo] Cleaning 'tomcat-realm'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'webdav'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'xUnit'
+
+clean-3rd-party:
+
+clean:
+     [echo] Cleaning 'xqdoc'
+
+clean-3rd-party:
+
+clean-default-data-dir:
+
+clean-all:
+
+clean-all:
+
+git.details:
+     [exec] Result: 1
+     [exec] Result: 128
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist
+
+prepare:
+     [echo] --------------------------------------------
+     [echo] eXist 3.5.0-SNAPSHOT+201709091816 build
+     [echo] --------------------------------------------
+     [echo] Git commit: 49fe57d
+     [echo] Git tag: 
+     [echo] 
+     [echo] Apache Ant(TM) version 1.10.1 compiled on February 2 2017
+     [echo] ---------------------------------------------
+     [echo] 
+     [echo] basedir=/home/travis/build/eXist-db/exist
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/build/classes
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/tools/jetty/logs
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/tools/jetty/work
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/webapp/xqts
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/installer
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/src/org/exist/util
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/webapp/WEB-INF
+
+compile:
+     [echo] Compiling with Java 1.8 from 1.8 source to 1.8 target, debug on, optimize on, deprecation off
+    [javac] Compiling 1522 source files to /home/travis/build/eXist-db/exist/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+compile-testkit:
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/test/classes
+     [echo] Compiling with Java 1.8 from 1.8 source to 1.8 target, debug on, optimize on, deprecation off
+    [javac] Compiling 7 source files to /home/travis/build/eXist-db/exist/test/classes
+    [javac] Note: /home/travis/build/eXist-db/exist/test/src/org/exist/TestUtils.java uses or overrides a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+check.aspects.uptodate:
+
+compile-aspectj:
+     [echo] Compiling aspects with Java 1.8 from 1.8 source to 1.8 target, debug on, optimize on, deprecation off
+     [iajc] Join point 'method-execution(void org.exist.security.SimpleACLPermission.addACE(org.exist.security.ACLPermission$ACE_ACCESS_TYPE, org.exist.security.ACLPermission$ACE_TARGET, int, int))' in Type 'org.exist.security.SimpleACLPermission' (SimpleACLPermission.java:81) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.SimpleACLPermission.insertACE(int, org.exist.security.ACLPermission$ACE_ACCESS_TYPE, org.exist.security.ACLPermission$ACE_TARGET, int, int))' in Type 'org.exist.security.SimpleACLPermission' (SimpleACLPermission.java:106) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.SimpleACLPermission.removeACE(int))' in Type 'org.exist.security.SimpleACLPermission' (SimpleACLPermission.java:186) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.SimpleACLPermission.modifyACE(int, org.exist.security.ACLPermission$ACE_ACCESS_TYPE, int))' in Type 'org.exist.security.SimpleACLPermission' (SimpleACLPermission.java:203) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.SimpleACLPermission.clear())' in Type 'org.exist.security.SimpleACLPermission' (SimpleACLPermission.java:217) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.SimpleACLPermission.copyAclOf(org.exist.security.SimpleACLPermission))' in Type 'org.exist.security.SimpleACLPermission' (SimpleACLPermission.java:386) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setOwnerId(int))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:154) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setGroupId(int))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:218) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setGroupId(int))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:218) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:51)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setGroupFrom(org.exist.security.Permission))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:224) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setGroupFrom(org.exist.security.Permission))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:224) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:51)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setMode(int))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:258) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setSetUid(boolean))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:277) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setSetGid(boolean))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:288) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setSticky(boolean))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:299) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setOwnerMode(int))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:320) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setGroupMode(int))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:346) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+     [iajc] Join point 'method-execution(void org.exist.security.UnixStylePermission.setOtherMode(int))' in Type 'org.exist.security.UnixStylePermission' (UnixStylePermission.java:372) advised by before advice from 'org.exist.security.PermissionRequiredAspect' (PermissionRequiredAspect.java:86)
+     [iajc] 	
+
+jar:
+     [copy] Copying 31 files to /home/travis/build/eXist-db/exist/build/classes/org/exist/client
+     [copy] Copying 9 files to /home/travis/build/eXist-db/exist/build/classes/org/exist/xquery/lib
+     [copy] Copying 4 files to /home/travis/build/eXist-db/exist/build/classes/org/exist/atom/modules
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist/http
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist/xquery/util
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist/ant
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist/start
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist/security
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist/util
+     [copy] Copying 2 files to /home/travis/build/eXist-db/exist/build/classes/org/exist/validation/internal/query
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/build/classes/org/exist/scheduler/impl
+     [copy] Copying 11 files to /home/travis/build/eXist-db/exist/build/classes/org/exist/launcher
+     [copy] Copying 4 files to /home/travis/build/eXist-db/exist/build/classes/org/exist/webstart/resources
+[native2ascii] Converting 10 files from /home/travis/build/eXist-db/exist/src/org/exist/client to /home/travis/build/eXist-db/exist/build/classes/org/exist/client
+     [echo] Creating exist.jar ...
+      [jar] Building jar: /home/travis/build/eXist-db/exist/exist.jar
+     [echo] Creating start.jar ...
+      [jar] Building jar: /home/travis/build/eXist-db/exist/start.jar
+     [echo] Creating exist-optional.jar ...
+      [jar] Building jar: /home/travis/build/eXist-db/exist/exist-optional.jar
+     [echo] Creating exist-testkit.jar ...
+      [jar] Building jar: /home/travis/build/eXist-db/exist/exist-testkit.jar
+
+wrapper:
+
+create-conf:
+     [echo] Creating wrapper config files for installer and direct local repo use...
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/tools/yajsw/conf
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/tools/yajsw/conf
+
+prepare:
+     [echo] --------------------------------------------------
+     [echo] Setting up Java Service Wrapper
+     [echo] --------------------------------------------------
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/tools/yajsw/classes
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/tools/yajsw/logs
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/tools/yajsw/work
+     [xslt] Processing /home/travis/build/eXist-db/exist/log4j2.xml to /home/travis/build/eXist-db/exist/tools/yajsw/conf/log4j2.xml
+     [xslt] Loading stylesheet /home/travis/build/eXist-db/exist/tools/yajsw/wrapper-log4j.xsl
+
+compile:
+    [javac] Compiling 1 source file to /home/travis/build/eXist-db/exist/tools/yajsw/classes
+
+extension-betterform:
+
+resolve:
+[ivy:resolve] :: Apache Ivy 2.4.0 - 20141213170938 :: http://ant.apache.org/ivy/ ::
+[ivy:resolve] :: loading settings :: file = /home/travis/build/eXist-db/exist/extensions/betterform/ivysettings.xml
+[ivy:resolve] :: resolving dependencies :: org.exist#betterfrom;working@testing-docker-cd8869e0-0fd4-4fa9-99db-a9bb05abb0b7
+[ivy:resolve] 	confs: [default]
+[ivy:resolve] 	found org.jgroups#jgroups;3.4.1.Final in central
+[ivy:resolve] 	found org.jboss.spec.javax.transaction#jboss-transaction-api_1.1_spec;1.0.1.Final in central
+[ivy:resolve] 	found org.jboss.marshalling#jboss-marshalling;1.3.18.GA in central
+[ivy:resolve] 	found org.jboss.modules#jboss-modules;1.1.0.Beta1 in central
+[ivy:resolve] 	found org.jboss.marshalling#jboss-marshalling-river;1.3.18.GA in central
+[ivy:resolve] 	found org.jboss.logging#jboss-logging;3.1.2.GA in central
+[ivy:resolve] 	found org.jboss.logmanager#jboss-logmanager;1.2.0.GA in central
+[ivy:resolve] 	found org.infinispan#infinispan-commons;6.0.0.Final in central
+[ivy:resolve] 	found org.jboss.logging#jboss-logging-processor;1.1.0.Final in central
+[ivy:resolve] 	found org.jboss.jdeparser#jdeparser;1.0.0.Final in central
+[ivy:resolve] 	found net.jcip#jcip-annotations;1.0 in central
+[ivy:resolve] 	found org.infinispan#infinispan-core;6.0.0.Final in central
+[ivy:resolve] 	found de.betterform#betterform-exist;5.1-SNAPSHOT-20160615 in exist
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jgroups/jgroups/3.4.1.Final/jgroups-3.4.1.Final.jar ...
+[ivy:resolve] ............................................................................................................................................ (2062kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jgroups#jgroups;3.4.1.Final!jgroups.jar(bundle) (279ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/spec/javax/transaction/jboss-transaction-api_1.1_spec/1.0.1.Final/jboss-transaction-api_1.1_spec-1.0.1.Final.jar ...
+[ivy:resolve] ........... (24kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.spec.javax.transaction#jboss-transaction-api_1.1_spec;1.0.1.Final!jboss-transaction-api_1.1_spec.jar (19ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/marshalling/jboss-marshalling/1.3.18.GA/jboss-marshalling-1.3.18.GA.jar ...
+[ivy:resolve] .......................... (228kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.marshalling#jboss-marshalling;1.3.18.GA!jboss-marshalling.jar (39ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/marshalling/jboss-marshalling-river/1.3.18.GA/jboss-marshalling-river-1.3.18.GA.jar ...
+[ivy:resolve] ................. (80kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.marshalling#jboss-marshalling-river;1.3.18.GA!jboss-marshalling-river.jar (29ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/logging/jboss-logging/3.1.2.GA/jboss-logging-3.1.2.GA.jar ...
+[ivy:resolve] ............... (53kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.logging#jboss-logging;3.1.2.GA!jboss-logging.jar (30ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/infinispan/infinispan-commons/6.0.0.Final/infinispan-commons-6.0.0.Final.jar ...
+[ivy:resolve] ........................................ (433kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.infinispan#infinispan-commons;6.0.0.Final!infinispan-commons.jar(bundle) (226ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/infinispan/infinispan-core/6.0.0.Final/infinispan-core-6.0.0.Final.jar ...
+[ivy:resolve] ....................................................................................................................................... (1977kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.infinispan#infinispan-core;6.0.0.Final!infinispan-core.jar(bundle) (161ms)
+[ivy:resolve] downloading https://raw.github.com/exist-db/mvn-repo/master/de/betterform/betterform-exist/5.1-SNAPSHOT-20160615/betterform-exist-5.1-SNAPSHOT-20160615.jar ...
+[ivy:resolve] .......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................... (13278kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] de.betterform#betterform-exist;5.1-SNAPSHOT-20160615!betterform-exist.jar (932ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/modules/jboss-modules/1.1.0.Beta1/jboss-modules-1.1.0.Beta1.jar ...
+[ivy:resolve] ......................... (213kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.modules#jboss-modules;1.1.0.Beta1!jboss-modules.jar (28ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/logmanager/jboss-logmanager/1.2.0.GA/jboss-logmanager-1.2.0.GA.jar ...
+[ivy:resolve] ....................... (179kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.logmanager#jboss-logmanager;1.2.0.GA!jboss-logmanager.jar (23ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/logging/jboss-logging-processor/1.1.0.Final/jboss-logging-processor-1.1.0.Final.jar ...
+[ivy:resolve] ....................... (180kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.logging#jboss-logging-processor;1.1.0.Final!jboss-logging-processor.jar (26ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/org/jboss/jdeparser/jdeparser/1.0.0.Final/jdeparser-1.0.0.Final.jar ...
+[ivy:resolve] ..................... (159kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] org.jboss.jdeparser#jdeparser;1.0.0.Final!jdeparser.jar (23ms)
+[ivy:resolve] downloading https://repo1.maven.org/maven2/net/jcip/jcip-annotations/1.0/jcip-annotations-1.0.jar ...
+[ivy:resolve] .. (2kB)
+[ivy:resolve] .. (0kB)
+[ivy:resolve] 	[SUCCESSFUL ] net.jcip#jcip-annotations;1.0!jcip-annotations.jar (15ms)
+[ivy:resolve] :: resolution report :: resolve 4737ms :: artifacts dl 1877ms
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   13  |   13  |   13  |   0   ||   13  |   13  |
+	---------------------------------------------------------------------
+[ivy:retrieve] :: retrieving :: org.exist#betterfrom
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	13 artifacts copied, 0 already retrieved (18875kB/79ms)
+
+install:
+     [echo] 
+     [echo]             Add betterFORM config parameters to eXist to /home/travis/build/eXist-db/exist/extensions/betterform/../../webapp/WEB-INF/web.xml
+     [echo]         
+
+patchWebXml:
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/betterform/uninstall
+     [echo] XSLT Generating /home/travis/build/eXist-db/exist/extensions/betterform/../../webapp/WEB-INF/web.xml.bf
+     [move] Moving 1 file to /home/travis/build/eXist-db/exist/extensions/betterform/uninstall
+     [move] Moving 1 file to /home/travis/build/eXist-db/exist/webapp/WEB-INF
+     [echo] 
+     [echo]             Deploy betterFORM resources to eXist webapp (/home/travis/build/eXist-db/exist/extensions/betterform/../../webapp/WEB-INF/)
+     [echo]         
+
+deployBFResources:
+     [echo] 
+     [echo]             Creating uninstall folder.
+     [echo]         
+     [echo] 
+     [echo]             Copying betterFORM configuration files to WEB-INF dir.
+     [echo]         
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/webapp/WEB-INF
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/webapp/WEB-INF
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/webapp/WEB-INF
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/webapp/WEB-INF
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/webapp/WEB-INF/classes
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/webapp/WEB-INF/classes
+
+extension-modules:
+
+prepare-ivy:
+[ivy:retrieve] :: loading settings :: url = jar:file:/home/travis/build/eXist-db/exist/tools/ant/lib/ivy-2.4.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[ivy:retrieve] :: resolving dependencies :: org.exist.xquery.modules#extensions-modules;working@testing-docker-cd8869e0-0fd4-4fa9-99db-a9bb05abb0b7
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	found net.sourceforge.cssparser#cssparser;0.9.5 in public
+[ivy:retrieve] 	found org.w3c.css#sac;1.3 in public
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/net/sourceforge/cssparser/cssparser/0.9.5/cssparser-0.9.5.jar ...
+[ivy:retrieve] ........................... (247kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] net.sourceforge.cssparser#cssparser;0.9.5!cssparser.jar (28ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/w3c/css/sac/1.3/sac-1.3.jar ...
+[ivy:retrieve] ....... (15kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.w3c.css#sac;1.3!sac.jar (14ms)
+[ivy:retrieve] :: resolution report :: resolve 303ms :: artifacts dl 44ms
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   2   |   2   |   2   |   0   ||   2   |   2   |
+	---------------------------------------------------------------------
+[ivy:retrieve] :: retrieving :: org.exist.xquery.modules#extensions-modules
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	2 artifacts copied, 0 already retrieved (263kB/14ms)
+
+check-xslfo-libs-available:
+
+prepare-xslfo:
+     [echo] Load: true
+     [echo] ------------------------------------------------------
+     [echo] Downloading libraries required by the xsl-fo module
+     [echo] ------------------------------------------------------
+    [fetch] Creating fetch local cache directory /home/travis/.fetch
+    [fetch] Getting: http://mirror.ox.ac.uk/sites/rsync.apache.org/xmlgraphics/fop/binaries/fop-2.2-bin.zip
+    [fetch] To: /tmp/FetchTask3797906419862469893tmp
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ................................
+    [fetch] Expanding: /tmp/FetchTask3797906419862469893tmp into /home/travis/build/eXist-db/exist/extensions/modules/lib
+     [move] Moving 1 file to /home/travis/build/eXist-db/exist/extensions/modules/lib
+
+prepare-simpleql:
+
+prepare-memcached:
+
+prepare-xmpp:
+
+prepare-expathrepo:
+     [echo] ------------------------------------------------------
+     [echo] Downloading libraries required by the expath package module
+     [echo] ------------------------------------------------------
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/extensions/modules/classes/org/exist/xquery/modules/expathrepo
+
+prepare-cqlparser:
+
+prepare:
+
+compile:
+     [echo] ---------------------------
+     [echo] Compiling extension modules
+     [echo] ---------------------------
+     [echo] Compiling with Java 1.8 from 1.8 source to 1.8 target, debug on, optimize on, deprecation off
+    [javac] Compiling 123 source files to /home/travis/build/eXist-db/exist/extensions/modules/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/extensions/modules/classes/org/exist/xquery/modules/file
+
+finish-persistentlogin:
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/extensions/modules/classes/org/exist/xquery/modules/persistentlogin
+
+jar:
+     [echo] Creating exist-modules.jar ...
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-modules.jar
+
+extension-xprocxq:
+
+clean:
+
+clean:
+   [delete] Deleting directory /home/travis/build/eXist-db/exist/extensions/xprocxq/main/dist
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/xprocxq/main/dist
+
+all:
+     [echo] -------------------------------------
+     [echo] Building XProcXQ
+     [echo] -------------------------------------
+
+clean:
+   [delete] Deleting directory /home/travis/build/eXist-db/exist/extensions/xprocxq/main/dist
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/xprocxq/main/dist
+
+exist-jar:
+      [zip] Building zip: /home/travis/build/eXist-db/exist/extensions/xprocxq/main/dist/xprocxq.jar
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/lib/extensions
+
+extensions-xar:
+
+prepare:
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/autodeploy
+
+setup:
+
+download:
+
+download-xar:
+    [fetch] Getting: http://demo.exist-db.org/exist/apps/public-repo/pkg.zip?abbrev=dashboard&zip=yes&processor=3.5.0-SNAPSHOT
+    [fetch] To: /tmp/FetchTask5604691377083671023tmp
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ........................
+    [fetch] Expanding: /tmp/FetchTask5604691377083671023tmp into /home/travis/build/eXist-db/exist/autodeploy
+
+download:
+
+download-xar:
+    [fetch] Getting: http://demo.exist-db.org/exist/apps/public-repo/pkg.zip?abbrev=shared&zip=yes&processor=3.5.0-SNAPSHOT
+    [fetch] To: /tmp/FetchTask2018276731270739036tmp
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] .
+    [fetch] Expanding: /tmp/FetchTask2018276731270739036tmp into /home/travis/build/eXist-db/exist/autodeploy
+
+download:
+
+download-xar:
+    [fetch] Getting: http://demo.exist-db.org/exist/apps/public-repo/pkg.zip?abbrev=eXide&zip=yes&processor=3.5.0-SNAPSHOT
+    [fetch] To: /tmp/FetchTask2085887921303199327tmp
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ...........................................
+    [fetch] Expanding: /tmp/FetchTask2085887921303199327tmp into /home/travis/build/eXist-db/exist/autodeploy
+
+download:
+
+download-xar:
+    [fetch] Getting: http://demo.exist-db.org/exist/apps/public-repo/pkg.zip?abbrev=monex&zip=yes&processor=3.5.0-SNAPSHOT
+    [fetch] To: /tmp/FetchTask1248834229992540817tmp
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ....................................................
+    [fetch] ...................................
+    [fetch] Expanding: /tmp/FetchTask1248834229992540817tmp into /home/travis/build/eXist-db/exist/autodeploy
+
+test-compile:
+     [echo] Compiling with Java 1.8 from 1.8 source to 1.8 target, debug on, optimize on, deprecation off
+    [javac] Compiling 400 source files to /home/travis/build/eXist-db/exist/test/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/test/classes/org/exist/performance/ant
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/test/classes/org/exist/performance
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/test/classes/org/exist/config/mapping
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/test/classes/org/exist/source
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/test/classes/org/exist/source
+
+all:
+
+all:
+     [echo] existdb
+     [echo] basedir=/home/travis/build/eXist-db/exist/build/scripts
+     [echo] existhome.dir=/home/travis/build/eXist-db/exist
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'contentextraction' ('contentextraction')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'contentextraction'
+
+compile:
+     [echo] Compiling 'contentextraction'
+
+init:
+     [echo] Initializing 'contentextraction'
+
+download-3rd-party:
+     [echo] Retrieving 3rd party jar files 'contentextraction'
+[ivy:retrieve] :: loading settings :: url = jar:file:/home/travis/build/eXist-db/exist/tools/ant/lib/ivy-2.4.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[ivy:retrieve] :: resolving dependencies :: org.exist#tika;working@testing-docker-cd8869e0-0fd4-4fa9-99db-a9bb05abb0b7
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	found org.apache.tika#tika-parsers;1.16 in public
+[ivy:retrieve] 	found org.apache.tika#tika-core;1.16 in public
+[ivy:retrieve] 	found org.gagravarr#vorbis-java-tika;0.8 in public
+[ivy:retrieve] 	found com.healthmarketscience.jackcess#jackcess;2.1.8 in public
+[ivy:retrieve] 	found com.healthmarketscience.jackcess#jackcess-encrypt;2.1.2 in public
+[ivy:retrieve] 	found org.tallison#jmatio;1.2 in public
+[ivy:retrieve] 	found org.apache.james#apache-mime4j-core;0.8.1 in public
+[ivy:retrieve] 	found org.apache.james#apache-mime4j-dom;0.8.1 in public
+[ivy:retrieve] 	found org.tukaani#xz;1.6 in public
+[ivy:retrieve] 	found org.apache.pdfbox#pdfbox;2.0.6 in public
+[ivy:retrieve] 	found org.apache.pdfbox#fontbox;2.0.6 in public
+[ivy:retrieve] 	found org.apache.pdfbox#pdfbox-tools;2.0.6 in public
+[ivy:retrieve] 	found org.apache.pdfbox#pdfbox-debugger;2.0.6 in public
+[ivy:retrieve] 	found org.apache.pdfbox#jempbox;1.8.13 in public
+[ivy:retrieve] 	found org.bouncycastle#bcmail-jdk15on;1.54 in public
+[ivy:retrieve] 	found org.bouncycastle#bcprov-jdk15on;1.54 in public
+[ivy:retrieve] 	found org.bouncycastle#bcpkix-jdk15on;1.54 in public
+[ivy:retrieve] 	found org.apache.poi#poi;3.17-beta1 in public
+[ivy:retrieve] 	found org.apache.commons#commons-collections4;4.1 in public
+[ivy:retrieve] 	found org.apache.poi#poi-scratchpad;3.17-beta1 in public
+[ivy:retrieve] 	found org.apache.poi#poi-ooxml;3.17-beta1 in public
+[ivy:retrieve] 	found org.apache.poi#poi-ooxml-schemas;3.17-beta1 in public
+[ivy:retrieve] 	found org.apache.xmlbeans#xmlbeans;2.6.0 in public
+[ivy:retrieve] 	found com.github.virtuald#curvesapi;1.04 in public
+[ivy:retrieve] 	found org.ccil.cowan.tagsoup#tagsoup;1.2.1 in public
+[ivy:retrieve] 	found com.googlecode.mp4parser#isoparser;1.1.18 in public
+[ivy:retrieve] 	found com.drewnoakes#metadata-extractor;2.9.1 in public
+[ivy:retrieve] 	found com.adobe.xmp#xmpcore;5.1.2 in public
+[ivy:retrieve] 	found de.l3s.boilerpipe#boilerpipe;1.1.0 in public
+[ivy:retrieve] 	found com.rometools#rome;1.5.1 in public
+[ivy:retrieve] 	found com.rometools#rome-utils;1.5.1 in public
+[ivy:retrieve] 	found org.gagravarr#vorbis-java-core;0.8 in public
+[ivy:retrieve] 	found com.googlecode.juniversalchardet#juniversalchardet;1.0.3 in public
+[ivy:retrieve] 	found org.codelibs#jhighlight;1.0.2 in public
+[ivy:retrieve] 	found com.pff#java-libpst;0.8.1 in public
+[ivy:retrieve] 	found com.github.junrar#junrar;0.7 in public
+[ivy:retrieve] 	found org.apache.commons#commons-vfs2;2.0 in public
+[ivy:retrieve] 	found org.apache.commons#commons-exec;1.3 in public
+[ivy:retrieve] 	found org.apache.opennlp#opennlp-tools;1.6.0 in public
+[ivy:retrieve] 	found com.googlecode.json-simple#json-simple;1.1.1 in public
+[ivy:retrieve] 	found com.tdunning#json;1.8 in public
+[ivy:retrieve] 	found com.google.code.gson#gson;2.8.1 in public
+[ivy:retrieve] 	found edu.ucar#netcdf4;4.5.5 in public
+[ivy:retrieve] 	found net.jcip#jcip-annotations;1.0 in default
+[ivy:retrieve] 	found net.java.dev.jna#jna;4.1.0 in public
+[ivy:retrieve] 	found edu.ucar#grib;4.5.5 in public
+[ivy:retrieve] 	found com.google.protobuf#protobuf-java;2.5.0 in public
+[ivy:retrieve] 	found org.jdom#jdom2;2.0.4 in public
+[ivy:retrieve] 	found org.jsoup#jsoup;1.7.2 in public
+[ivy:retrieve] 	found org.itadaki#bzip2;0.9.1 in public
+[ivy:retrieve] 	found edu.ucar#cdm;4.5.5 in public
+[ivy:retrieve] 	found edu.ucar#udunits;4.5.5 in public
+[ivy:retrieve] 	found joda-time#joda-time;2.2 in public
+[ivy:retrieve] 	found edu.ucar#httpservices;4.5.5 in public
+[ivy:retrieve] 	found com.google.guava#guava;17.0 in public
+[ivy:retrieve] 	found com.beust#jcommander;1.35 in public
+[ivy:retrieve] 	found org.apache.commons#commons-csv;1.0 in public
+[ivy:retrieve] 	found org.apache.sis.core#sis-utility;0.6 in public
+[ivy:retrieve] 	found org.opengis#geoapi;3.0.0 in public
+[ivy:retrieve] 	found javax.measure#jsr-275;0.9.3 in public
+[ivy:retrieve] 	found org.apache.sis.storage#sis-netcdf;0.6 in public
+[ivy:retrieve] 	found org.apache.sis.storage#sis-storage;0.6 in public
+[ivy:retrieve] 	found org.apache.sis.core#sis-metadata;0.6 in public
+[ivy:retrieve] 	found org.apache.sis.core#sis-referencing;0.6 in public
+[ivy:retrieve] 	found edu.usc.ir#sentiment-analysis-parser;0.1 in public
+[ivy:retrieve] 	found org.apache.ctakes#ctakes-core;3.2.2 in public
+[ivy:retrieve] 	found org.apache.ctakes#ctakes-core-res;3.2.2 in public
+[ivy:retrieve] 	found org.apache.ctakes#ctakes-type-system;3.2.2 in public
+[ivy:retrieve] 	found org.apache.uima#uimaj-core;2.5.0 in public
+[ivy:retrieve] 	found tw.edu.ntu.csie#libsvm;3.1 in public
+[ivy:retrieve] 	found org.apache.uima#uimafit-core;2.1.0 in public
+[ivy:retrieve] 	found org.apache.ctakes#ctakes-utils;3.2.2 in public
+[ivy:retrieve] 	found org.apache.uima#uimaj-tools;2.6.0 in public
+[ivy:retrieve] 	found org.apache.uima#uimaj-cpe;2.6.0 in public
+[ivy:retrieve] 	found org.apache.uima#uimaj-adapter-vinci;2.6.0 in public
+[ivy:retrieve] 	found org.apache.uima#jVinci;2.6.0 in public
+[ivy:retrieve] 	found org.cleartk#cleartk-util;2.0.0 in public
+[ivy:retrieve] 	found org.apache.opennlp#opennlp-maxent;3.0.3 in public
+[ivy:retrieve] 	found edu.mit.findstruct#findstructapi;0.0.1 in public
+[ivy:retrieve] 	found com.googlecode.armbrust-file-utils#sqlwrapper;0.0.1 in public
+[ivy:retrieve] 	found net.sourceforge.openai#openaifsm;0.0.1 in public
+[ivy:retrieve] 	found org.apache.uima#uimaj-examples;2.4.0 in public
+[ivy:retrieve] 	found org.apache.uima#uimaj-document-annotation;2.5.0 in public
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/tika/tika-parsers/1.16/tika-parsers-1.16.jar ...
+[ivy:retrieve] ............................................................................ (1025kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.tika#tika-parsers;1.16!tika-parsers.jar(bundle) (93ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/tika/tika-core/1.16/tika-core-1.16.jar ...
+[ivy:retrieve] ................................................... (632kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.tika#tika-core;1.16!tika-core.jar(bundle) (42ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/gagravarr/vorbis-java-tika/0.8/vorbis-java-tika-0.8.jar ...
+[ivy:retrieve] ........... (24kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.gagravarr#vorbis-java-tika;0.8!vorbis-java-tika.jar (13ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/healthmarketscience/jackcess/jackcess/2.1.8/jackcess-2.1.8.jar ...
+[ivy:retrieve] ................................................................ (841kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.healthmarketscience.jackcess#jackcess;2.1.8!jackcess.jar (50ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/healthmarketscience/jackcess/jackcess-encrypt/2.1.2/jackcess-encrypt-2.1.2.jar ...
+[ivy:retrieve] ................. (84kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.healthmarketscience.jackcess#jackcess-encrypt;2.1.2!jackcess-encrypt.jar (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/tallison/jmatio/1.2/jmatio-1.2.jar ...
+[ivy:retrieve] ................ (70kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.tallison#jmatio;1.2!jmatio.jar (14ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/james/apache-mime4j-core/0.8.1/apache-mime4j-core-0.8.1.jar ...
+[ivy:retrieve] .................. (101kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.james#apache-mime4j-core;0.8.1!apache-mime4j-core.jar(bundle) (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/james/apache-mime4j-dom/0.8.1/apache-mime4j-dom-0.8.1.jar ...
+[ivy:retrieve] ................................ (321kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.james#apache-mime4j-dom;0.8.1!apache-mime4j-dom.jar(bundle) (40ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/tukaani/xz/1.6/xz-1.6.jar ...
+[ivy:retrieve] .................. (100kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.tukaani#xz;1.6!xz.jar (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox/2.0.6/pdfbox-2.0.6.jar ...
+[ivy:retrieve] .................................................................................................................................................................. (2409kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.pdfbox#pdfbox;2.0.6!pdfbox.jar(bundle) (126ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox-tools/2.0.6/pdfbox-tools-2.0.6.jar ...
+[ivy:retrieve] ................ (69kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.pdfbox#pdfbox-tools;2.0.6!pdfbox-tools.jar (14ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/pdfbox/jempbox/1.8.13/jempbox-1.8.13.jar ...
+[ivy:retrieve] ............... (50kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.pdfbox#jempbox;1.8.13!jempbox.jar(bundle) (12ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/bouncycastle/bcmail-jdk15on/1.54/bcmail-jdk15on-1.54.jar ...
+[ivy:retrieve] .................. (99kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.bouncycastle#bcmail-jdk15on;1.54!bcmail-jdk15on.jar (16ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.54/bcprov-jdk15on-1.54.jar ...
+[ivy:retrieve] .................................................................................................................................................................................................................... (3200kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.bouncycastle#bcprov-jdk15on;1.54!bcprov-jdk15on.jar (162ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/poi/poi/3.17-beta1/poi-3.17-beta1.jar ...
+[ivy:retrieve] ................................................................................................................................................................................ (2628kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.poi#poi;3.17-beta1!poi.jar (133ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/poi/poi-scratchpad/3.17-beta1/poi-scratchpad-3.17-beta1.jar ...
+[ivy:retrieve] ................................................................................................ (1353kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.poi#poi-scratchpad;3.17-beta1!poi-scratchpad.jar (90ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml/3.17-beta1/poi-ooxml-3.17-beta1.jar ...
+[ivy:retrieve] ...................................................................................................... (1439kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.poi#poi-ooxml;3.17-beta1!poi-ooxml.jar (87ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar ...
+[ivy:retrieve] ................. (88kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.ccil.cowan.tagsoup#tagsoup;1.2.1!tagsoup.jar (29ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/googlecode/mp4parser/isoparser/1.1.18/isoparser-1.1.18.jar ...
+[ivy:retrieve] ............................................................................ (1033kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.googlecode.mp4parser#isoparser;1.1.18!isoparser.jar (183ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/drewnoakes/metadata-extractor/2.9.1/metadata-extractor-2.9.1.jar ...
+[ivy:retrieve] ................................... (369kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.drewnoakes#metadata-extractor;2.9.1!metadata-extractor.jar (27ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/de/l3s/boilerpipe/boilerpipe/1.1.0/boilerpipe-1.1.0.jar ...
+[ivy:retrieve] ................. (89kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] de.l3s.boilerpipe#boilerpipe;1.1.0!boilerpipe.jar (18ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/rometools/rome/1.5.1/rome-1.5.1.jar ...
+[ivy:retrieve] .......................... (237kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.rometools#rome;1.5.1!rome.jar (19ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/gagravarr/vorbis-java-core/0.8/vorbis-java-core-0.8.jar ...
+[ivy:retrieve] ................... (118kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.gagravarr#vorbis-java-core;0.8!vorbis-java-core.jar (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3.jar ...
+[ivy:retrieve] ......................... (215kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.googlecode.juniversalchardet#juniversalchardet;1.0.3!juniversalchardet.jar (21ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/codelibs/jhighlight/1.0.2/jhighlight-1.0.2.jar ...
+[ivy:retrieve] .......................... (228kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.codelibs#jhighlight;1.0.2!jhighlight.jar (18ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/pff/java-libpst/0.8.1/java-libpst-0.8.1.jar ...
+[ivy:retrieve] ................. (83kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.pff#java-libpst;0.8.1!java-libpst.jar (16ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/github/junrar/junrar/0.7/junrar-0.7.jar ...
+[ivy:retrieve] ..................... (151kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.github.junrar#junrar;0.7!junrar.jar (22ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/commons/commons-exec/1.3/commons-exec-1.3.jar ...
+[ivy:retrieve] ............... (53kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.commons#commons-exec;1.3!commons-exec.jar (16ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/opennlp/opennlp-tools/1.6.0/opennlp-tools-1.6.0.jar ...
+[ivy:retrieve] .............................................................................. (1060kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.opennlp#opennlp-tools;1.6.0!opennlp-tools.jar(bundle) (72ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar ...
+[ivy:retrieve] .......... (23kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.googlecode.json-simple#json-simple;1.1.1!json-simple.jar(bundle) (13ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/tdunning/json/1.8/json-1.8.jar ...
+[ivy:retrieve] ........... (24kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.tdunning#json;1.8!json.jar (12ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.1/gson-2.8.1.jar ...
+[ivy:retrieve] .......................... (227kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.google.code.gson#gson;2.8.1!gson.jar (23ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/edu/ucar/netcdf4/4.5.5/netcdf4-4.5.5.jar ...
+[ivy:retrieve] ............... (60kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] edu.ucar#netcdf4;4.5.5!netcdf4.jar (14ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/edu/ucar/grib/4.5.5/grib-4.5.5.jar ...
+[ivy:retrieve] .................................................................................................................................................................................................................................................................................................................................... (5006kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] edu.ucar#grib;4.5.5!grib.jar (278ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/edu/ucar/cdm/4.5.5/cdm-4.5.5.jar ...
+[ivy:retrieve] ........................................................................................................................................................................................................................................................................... (4083kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] edu.ucar#cdm;4.5.5!cdm.jar (237ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/edu/ucar/httpservices/4.5.5/httpservices-4.5.5.jar ...
+[ivy:retrieve] ............... (60kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] edu.ucar#httpservices;4.5.5!httpservices.jar (13ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/commons/commons-csv/1.0/commons-csv-1.0.jar ...
+[ivy:retrieve] .............. (34kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.commons#commons-csv;1.0!commons-csv.jar (11ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/sis/core/sis-utility/0.6/sis-utility-0.6.jar ...
+[ivy:retrieve] ................................................... (629kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.sis.core#sis-utility;0.6!sis-utility.jar(bundle) (33ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/sis/storage/sis-netcdf/0.6/sis-netcdf-0.6.jar ...
+[ivy:retrieve] ............... (52kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.sis.storage#sis-netcdf;0.6!sis-netcdf.jar(bundle) (11ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/sis/core/sis-metadata/0.6/sis-metadata-0.6.jar ...
+[ivy:retrieve] ............................................. (533kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.sis.core#sis-metadata;0.6!sis-metadata.jar(bundle) (35ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/opengis/geoapi/3.0.0/geoapi-3.0.0.jar ...
+[ivy:retrieve] ......................... (208kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.opengis#geoapi;3.0.0!geoapi.jar(bundle) (16ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/edu/usc/ir/sentiment-analysis-parser/0.1/sentiment-analysis-parser-0.1.jar ...
+[ivy:retrieve] ............ (28kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] edu.usc.ir#sentiment-analysis-parser;0.1!sentiment-analysis-parser.jar (11ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.6/fontbox-2.0.6.jar ...
+[ivy:retrieve] ...................................................................................................... (1444kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.pdfbox#fontbox;2.0.6!fontbox.jar(bundle) (80ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox-debugger/2.0.6/pdfbox-debugger-2.0.6.jar ...
+[ivy:retrieve] .......................... (230kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.pdfbox#pdfbox-debugger;2.0.6!pdfbox-debugger.jar (20ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.54/bcpkix-jdk15on-1.54.jar ...
+[ivy:retrieve] ..................................................... (657kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.bouncycastle#bcpkix-jdk15on;1.54!bcpkix-jdk15on.jar (33ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.1/commons-collections4-4.1.jar ...
+[ivy:retrieve] ......................................................... (733kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.commons#commons-collections4;4.1!commons-collections4.jar (124ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml-schemas/3.17-beta1/poi-ooxml-schemas-3.17-beta1.jar ...
+[ivy:retrieve] ................................................................................................................................................................................................................................................................................................................................................................................................................................ (5773kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.poi#poi-ooxml-schemas;3.17-beta1!poi-ooxml-schemas.jar (320ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/github/virtuald/curvesapi/1.04/curvesapi-1.04.jar ...
+[ivy:retrieve] .................. (96kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.github.virtuald#curvesapi;1.04!curvesapi.jar (17ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/xmlbeans/xmlbeans/2.6.0/xmlbeans-2.6.0.jar ...
+[ivy:retrieve] .................................................................................................................................................................................. (2666kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.xmlbeans#xmlbeans;2.6.0!xmlbeans.jar (135ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/adobe/xmp/xmpcore/5.1.2/xmpcore-5.1.2.jar ...
+[ivy:retrieve] ................... (114kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.adobe.xmp#xmpcore;5.1.2!xmpcore.jar (16ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/rometools/rome-utils/1.5.1/rome-utils-1.5.1.jar ...
+[ivy:retrieve] .... (6kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.rometools#rome-utils;1.5.1!rome-utils.jar (10ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar ...
+[ivy:retrieve] ..................................... (405kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.commons#commons-vfs2;2.0!commons-vfs2.jar (32ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/net/java/dev/jna/jna/4.1.0/jna-4.1.0.jar ...
+[ivy:retrieve] ................................................................... (893kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] net.java.dev.jna#jna;4.1.0!jna.jar (58ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/2.5.0/protobuf-java-2.5.0.jar ...
+[ivy:retrieve] ............................................ (520kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.google.protobuf#protobuf-java;2.5.0!protobuf-java.jar(bundle) (33ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/jdom/jdom2/2.0.4/jdom2-2.0.4.jar ...
+[ivy:retrieve] .............................. (291kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.jdom#jdom2;2.0.4!jdom2.jar (26ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/jsoup/jsoup/1.7.2/jsoup-1.7.2.jar ...
+[ivy:retrieve] ............................. (286kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.jsoup#jsoup;1.7.2!jsoup.jar (26ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/itadaki/bzip2/0.9.1/bzip2-0.9.1.jar ...
+[ivy:retrieve] ............... (48kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.itadaki#bzip2;0.9.1!bzip2.jar (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/edu/ucar/udunits/4.5.5/udunits-4.5.5.jar ...
+[ivy:retrieve] ................... (121kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] edu.ucar#udunits;4.5.5!udunits.jar (18ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/joda-time/joda-time/2.2/joda-time-2.2.jar ...
+[ivy:retrieve] ............................................... (560kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] joda-time#joda-time;2.2!joda-time.jar (41ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/google/guava/guava/17.0/guava-17.0.jar ...
+[ivy:retrieve] .................................................................................................................................................... (2190kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.google.guava#guava;17.0!guava.jar(bundle) (112ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/beust/jcommander/1.35/jcommander-1.35.jar ...
+[ivy:retrieve] ............... (59kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.beust#jcommander;1.35!jcommander.jar (14ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/javax/measure/jsr-275/0.9.3/jsr-275-0.9.3.jar ...
+[ivy:retrieve] ........................... (253kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] javax.measure#jsr-275;0.9.3!jsr-275.jar (22ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/sis/storage/sis-storage/0.6/sis-storage-0.6.jar ...
+[ivy:retrieve] ................ (69kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.sis.storage#sis-storage;0.6!sis-storage.jar(bundle) (17ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/sis/core/sis-referencing/0.6/sis-referencing-0.6.jar ...
+[ivy:retrieve] ................................................. (598kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.sis.core#sis-referencing;0.6!sis-referencing.jar(bundle) (40ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/ctakes/ctakes-core/3.2.2/ctakes-core-3.2.2.jar ...
+[ivy:retrieve] ............................. (280kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.ctakes#ctakes-core;3.2.2!ctakes-core.jar (27ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/ctakes/ctakes-core-res/3.2.2/ctakes-core-res-3.2.2.jar ...
+[ivy:retrieve] .................................................... (643kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.ctakes#ctakes-core-res;3.2.2!ctakes-core-res.jar (42ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/ctakes/ctakes-type-system/3.2.2/ctakes-type-system-3.2.2.jar ...
+[ivy:retrieve] ............................................... (562kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.ctakes#ctakes-type-system;3.2.2!ctakes-type-system.jar (38ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/ctakes/ctakes-utils/3.2.2/ctakes-utils-3.2.2.jar ...
+[ivy:retrieve] ................ (69kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.ctakes#ctakes-utils;3.2.2!ctakes-utils.jar (14ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/cleartk/cleartk-util/2.0.0/cleartk-util-2.0.0.jar ...
+[ivy:retrieve] ................ (78kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.cleartk#cleartk-util;2.0.0!cleartk-util.jar (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/opennlp/opennlp-maxent/3.0.3/opennlp-maxent-3.0.3.jar ...
+[ivy:retrieve] ................... (127kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.opennlp#opennlp-maxent;3.0.3!opennlp-maxent.jar(bundle) (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/edu/mit/findstruct/findstructapi/0.0.1/findstructapi-0.0.1.jar ...
+[ivy:retrieve] ....... (13kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] edu.mit.findstruct#findstructapi;0.0.1!findstructapi.jar (12ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/com/googlecode/armbrust-file-utils/sqlwrapper/0.0.1/sqlwrapper-0.0.1.jar ...
+[ivy:retrieve] ........ (16kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] com.googlecode.armbrust-file-utils#sqlwrapper;0.0.1!sqlwrapper.jar (11ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/net/sourceforge/openai/openaifsm/0.0.1/openaifsm-0.0.1.jar ...
+[ivy:retrieve] ...... (12kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] net.sourceforge.openai#openaifsm;0.0.1!openaifsm.jar (12ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/uimaj-examples/2.4.0/uimaj-examples-2.4.0.jar ...
+[ivy:retrieve] ..................... (156kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#uimaj-examples;2.4.0!uimaj-examples.jar (18ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/uimafit-core/2.1.0/uimafit-core-2.1.0.jar ...
+[ivy:retrieve] ..................... (152kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#uimafit-core;2.1.0!uimafit-core.jar (18ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/uimaj-core/2.5.0/uimaj-core-2.5.0.jar ...
+[ivy:retrieve] .................................................................................................. (1388kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#uimaj-core;2.5.0!uimaj-core.jar (153ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/tw/edu/ntu/csie/libsvm/3.1/libsvm-3.1.jar ...
+[ivy:retrieve] ............... (57kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] tw.edu.ntu.csie#libsvm;3.1!libsvm.jar (15ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/uimaj-tools/2.6.0/uimaj-tools-2.6.0.jar ...
+[ivy:retrieve] ............................................. (532kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#uimaj-tools;2.6.0!uimaj-tools.jar (44ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/uimaj-cpe/2.6.0/uimaj-cpe-2.6.0.jar ...
+[ivy:retrieve] ................................. (350kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#uimaj-cpe;2.6.0!uimaj-cpe.jar (30ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/uimaj-adapter-vinci/2.6.0/uimaj-adapter-vinci-2.6.0.jar ...
+[ivy:retrieve] ............... (49kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#uimaj-adapter-vinci;2.6.0!uimaj-adapter-vinci.jar (13ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/jVinci/2.6.0/jVinci-2.6.0.jar ...
+[ivy:retrieve] ..................... (153kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#jVinci;2.6.0!jVinci.jar (18ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/uima/uimaj-document-annotation/2.5.0/uimaj-document-annotation-2.5.0.jar ...
+[ivy:retrieve] ...... (11kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.uima#uimaj-document-annotation;2.5.0!uimaj-document-annotation.jar (11ms)
+[ivy:retrieve] :: resolution report :: resolve 7649ms :: artifacts dl 3900ms
+[ivy:retrieve] 	:: evicted modules:
+[ivy:retrieve] 	org.apache.tika#tika-core;1.12 by [org.apache.tika#tika-core;1.16] in [default]
+[ivy:retrieve] 	com.healthmarketscience.jackcess#jackcess;2.1.0 by [com.healthmarketscience.jackcess#jackcess;2.1.8] in [default]
+[ivy:retrieve] 	org.jdom#jdom2;2.0.3 by [org.jdom#jdom2;2.0.4] in [default]
+[ivy:retrieve] 	com.google.guava#guava;10.0 by [com.google.guava#guava;17.0] in [default]
+[ivy:retrieve] 	org.apache.opennlp#opennlp-tools;1.5.3 by [org.apache.opennlp#opennlp-tools;1.6.0] in [default]
+[ivy:retrieve] 	org.apache.uima#uimaj-cpe;2.4.0 by [org.apache.uima#uimaj-cpe;2.6.0] in [default]
+[ivy:retrieve] 	org.apache.uima#uimaj-tools;2.4.0 by [org.apache.uima#uimaj-tools;2.6.0] in [default]
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   90  |   82  |   82  |   7   ||   83  |   82  |
+	---------------------------------------------------------------------
+[ivy:retrieve] 
+[ivy:retrieve] :: problems summary ::
+[ivy:retrieve] :::: ERRORS
+[ivy:retrieve] 	unknown resolver central
+[ivy:retrieve] 	unknown resolver central
+[ivy:retrieve] 	unknown resolver central
+[ivy:retrieve] 
+[ivy:retrieve] :: USE VERBOSE OR DEBUG MESSAGE LEVEL FOR MORE DETAILS
+[ivy:retrieve] :: retrieving :: org.exist#tika [sync]
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	83 artifacts copied, 0 already retrieved (51839kB/144ms)
+
+compile-src:
+     [echo] Compiling sources 'contentextraction'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/contentextraction/build/classes
+    [javac] Compiling 7 source files to /home/travis/build/eXist-db/exist/extensions/contentextraction/build/classes
+    [javac] Note: /home/travis/build/eXist-db/exist/extensions/contentextraction/src/org/exist/contentextraction/xquery/ContentFunctions.java uses or overrides a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-contentextraction.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'debugger' ('debugger')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'exiftool' ('exiftool')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'exiftool'
+
+compile:
+     [echo] Compiling 'exiftool'
+
+init:
+     [echo] Initializing 'exiftool'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'exiftool'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/exiftool/build/classes
+    [javac] Compiling 2 source files to /home/travis/build/eXist-db/exist/extensions/exiftool/build/classes
+    [javac] Note: /home/travis/build/eXist-db/exist/extensions/exiftool/src/org/exist/exiftool/xquery/MetadataFunctions.java uses or overrides a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-exiftool.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'expath-20130805' ('expath-20130805')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'expath-20130805'
+
+compile:
+     [echo] Compiling 'expath-20130805'
+
+init:
+     [echo] Initializing 'expath-20130805'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'expath-20130805'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/expath/build/classes
+    [javac] Compiling 10 source files to /home/travis/build/eXist-db/exist/extensions/expath/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-expath-20130805.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'exquery-request-module' ('exquery-request-module')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'exquery-request-module'
+
+compile:
+     [echo] Compiling 'exquery-request-module'
+
+init:
+     [echo] Initializing 'exquery-request-module'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'exquery-request-module'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/exquery/modules/request/build/classes
+    [javac] Compiling 8 source files to /home/travis/build/eXist-db/exist/extensions/exquery/modules/request/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-exquery-request-module.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'restxq' ('restxq')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'restxq'
+
+compile:
+     [echo] Compiling 'restxq'
+
+init:
+     [echo] Initializing 'restxq'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'restxq'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/exquery/restxq/build/classes
+    [javac] Compiling 35 source files to /home/travis/build/eXist-db/exist/extensions/exquery/restxq/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+compile-test:
+     [echo] Compiling tests 'restxq'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/exquery/restxq/build/test/classes
+    [javac] Compiling 2 source files to /home/travis/build/eXist-db/exist/extensions/exquery/restxq/build/test/classes
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-restxq.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'fluent' ('fluent')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'fluent'
+
+compile:
+     [echo] Compiling 'fluent'
+
+init:
+     [echo] Initializing 'fluent'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'fluent'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/fluent/build/classes
+    [javac] Compiling 24 source files to /home/travis/build/eXist-db/exist/extensions/fluent/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+     [echo] Compiling tests 'fluent'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/fluent/build/test/classes
+    [javac] Compiling 13 source files to /home/travis/build/eXist-db/exist/extensions/fluent/build/test/classes
+     [copy] Copying 1 file to /home/travis/build/eXist-db/exist/extensions/fluent/build/classes
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-fluent.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'imagescaling' ('imagescaling')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'index-lucene' ('lucene')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'index-lucene'
+
+compile:
+     [echo] Compiling 'index-lucene'
+
+init:
+     [echo] Initializing 'index-lucene'
+
+download-3rd-party:
+     [echo] Retrieving 3rd party jar files 'index-lucene'
+[ivy:retrieve] :: loading settings :: url = jar:file:/home/travis/build/eXist-db/exist/tools/ant/lib/ivy-2.4.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[ivy:retrieve] :: resolving dependencies :: org.exist#indexes.lucene;working@testing-docker-cd8869e0-0fd4-4fa9-99db-a9bb05abb0b7
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	found org.apache.lucene#lucene-core;4.10.4 in public
+[ivy:retrieve] 	found org.apache.lucene#lucene-analyzers-common;4.10.4 in public
+[ivy:retrieve] 	found org.apache.lucene#lucene-queries;4.10.4 in public
+[ivy:retrieve] 	found org.apache.lucene#lucene-queryparser;4.10.4 in public
+[ivy:retrieve] 	found org.apache.lucene#lucene-sandbox;4.10.4 in public
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/lucene/lucene-core/4.10.4/lucene-core-4.10.4.jar ...
+[ivy:retrieve] ........................................................................................................................................................................ (2503kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.lucene#lucene-core;4.10.4!lucene-core.jar (162ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/lucene/lucene-analyzers-common/4.10.4/lucene-analyzers-common-4.10.4.jar ...
+[ivy:retrieve] ................................................................................................................... (1660kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.lucene#lucene-analyzers-common;4.10.4!lucene-analyzers-common.jar (107ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/lucene/lucene-queries/4.10.4/lucene-queries-4.10.4.jar ...
+[ivy:retrieve] ......................... (208kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.lucene#lucene-queries;4.10.4!lucene-queries.jar (24ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/lucene/lucene-queryparser/4.10.4/lucene-queryparser-4.10.4.jar ...
+[ivy:retrieve] ................................... (382kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.lucene#lucene-queryparser;4.10.4!lucene-queryparser.jar (33ms)
+[ivy:retrieve] downloading https://repo1.maven.org/maven2/org/apache/lucene/lucene-sandbox/4.10.4/lucene-sandbox-4.10.4.jar ...
+[ivy:retrieve] ................... (116kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve] 	[SUCCESSFUL ] org.apache.lucene#lucene-sandbox;4.10.4!lucene-sandbox.jar (17ms)
+[ivy:retrieve] :: resolution report :: resolve 1281ms :: artifacts dl 350ms
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   5   |   5   |   5   |   0   ||   5   |   5   |
+	---------------------------------------------------------------------
+[ivy:retrieve] :: retrieving :: org.exist#indexes.lucene [sync]
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	5 artifacts copied, 0 already retrieved (4870kB/12ms)
+
+compile-src:
+     [echo] Compiling sources 'index-lucene'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/lucene/build/classes
+    [javac] Compiling 32 source files to /home/travis/build/eXist-db/exist/extensions/indexes/lucene/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+compile-test:
+     [echo] Compiling tests 'index-lucene'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/lucene/build/test/classes
+    [javac] Compiling 5 source files to /home/travis/build/eXist-db/exist/extensions/indexes/lucene/build/test/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-index-lucene.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'index-ngram' ('ngram')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'index-ngram'
+
+compile:
+     [echo] Compiling 'index-ngram'
+
+init:
+     [echo] Initializing 'index-ngram'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'index-ngram'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/ngram/build/classes
+    [javac] Compiling 22 source files to /home/travis/build/eXist-db/exist/extensions/indexes/ngram/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: /home/travis/build/eXist-db/exist/extensions/indexes/ngram/src/org/exist/indexing/ngram/NGramIndexWorker.java uses unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+compile-test:
+     [echo] Compiling tests 'index-ngram'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/ngram/build/test/classes
+    [javac] Compiling 3 source files to /home/travis/build/eXist-db/exist/extensions/indexes/ngram/build/test/classes
+    [javac] Note: /home/travis/build/eXist-db/exist/extensions/indexes/ngram/test/src/org/exist/indexing/ngram/CustomIndexTest.java uses unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-index-ngram.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'index-range' ('range')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'index-range'
+
+compile:
+     [echo] Compiling 'index-range'
+
+init:
+     [echo] Initializing 'index-range'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'index-range'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/range/build/classes
+    [javac] Compiling 23 source files to /home/travis/build/eXist-db/exist/extensions/indexes/range/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+compile-test:
+     [echo] Compiling tests 'index-range'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/range/build/test/classes
+    [javac] Compiling 2 source files to /home/travis/build/eXist-db/exist/extensions/indexes/range/build/test/classes
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-index-range.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'index-sort' ('sort')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'index-sort'
+
+compile:
+     [echo] Compiling 'index-sort'
+
+init:
+     [echo] Initializing 'index-sort'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'index-sort'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/sort/build/classes
+    [javac] Compiling 8 source files to /home/travis/build/eXist-db/exist/extensions/indexes/sort/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+     [echo] Compiling tests 'index-sort'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/indexes/sort/build/test/classes
+    [javac] Compiling 1 source file to /home/travis/build/eXist-db/exist/extensions/indexes/sort/build/test/classes
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-index-sort.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'index-spatial' ('spatial')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'metadata-interface' ('metadata-interface')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'metadata-sleepycat' ('metadata-sleepycat')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'netedit' ('netedit')
+     [echo] ====================================================================
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'scheduler' ('scheduler')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'scheduler'
+
+compile:
+     [echo] Compiling 'scheduler'
+
+init:
+     [echo] Initializing 'scheduler'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'scheduler'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/scheduler/build/classes
+    [javac] Compiling 2 source files to /home/travis/build/eXist-db/exist/extensions/scheduler/build/classes
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-scheduler.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'security-iprange' ('security-iprange')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'security-ldap' ('security-ldap')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'security-ldap'
+
+compile:
+     [echo] Compiling 'security-ldap'
+
+init:
+     [echo] Initializing 'security-ldap'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'security-ldap'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/security/ldap/build/classes
+    [javac] Compiling 16 source files to /home/travis/build/eXist-db/exist/extensions/security/ldap/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-security-ldap.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'security-oauth' ('security-oauth')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'security-openid' ('security-openid')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'tomcat-realm' ('tomcat-realm')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'tomcat-realm'
+
+compile:
+     [echo] Compiling 'tomcat-realm'
+
+init:
+     [echo] Initializing 'tomcat-realm'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'tomcat-realm'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/tomcat-realm/build/classes
+    [javac] Compiling 1 source file to /home/travis/build/eXist-db/exist/extensions/tomcat-realm/build/classes
+    [javac] Note: /home/travis/build/eXist-db/exist/extensions/tomcat-realm/src/org/exist/http/realm/XmldbRealm.java uses or overrides a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-tomcat-realm.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'webdav' ('webdav')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'webdav'
+
+compile:
+     [echo] Compiling 'webdav'
+
+init:
+     [echo] Initializing 'webdav'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'webdav'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/webdav/build/classes
+    [javac] Compiling 14 source files to /home/travis/build/eXist-db/exist/extensions/webdav/build/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-webdav.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'xUnit' ('xUnit')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'xUnit'
+
+init:
+     [echo] Initializing 'xUnit'
+
+download-3rd-party:
+
+compile:
+     [echo] Compiling 'xUnit'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/xUnit/build/classes
+    [javac] Compiling 3 source files to /home/travis/build/eXist-db/exist/extensions/xUnit/build/classes
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-xUnit.jar
+
+all:
+     [echo] ====================================================================
+     [echo] Extension 'xqdoc' ('xqdoc')
+     [echo] ====================================================================
+
+git.details:
+
+dist:
+     [echo] Generating jar for 'xqdoc'
+
+compile:
+     [echo] Compiling 'xqdoc'
+
+init:
+     [echo] Initializing 'xqdoc'
+
+download-3rd-party:
+
+compile-src:
+     [echo] Compiling sources 'xqdoc'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/xqdoc/build/classes
+    [javac] Compiling 4 source files to /home/travis/build/eXist-db/exist/extensions/xqdoc/build/classes
+    [javac] Note: /home/travis/build/eXist-db/exist/extensions/xqdoc/src/org/exist/xqdoc/xquery/Scan.java uses or overrides a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+compile-test:
+     [echo] Compiling tests 'xqdoc'
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/xqdoc/build/test/classes
+    [javac] Compiling 1 source file to /home/travis/build/eXist-db/exist/extensions/xqdoc/build/test/classes
+     [copy] Copying 2 files to /home/travis/build/eXist-db/exist/extensions/xqdoc/build/classes
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-xqdoc.jar
+
+prepare:
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/extensions/security/activedirectory/classes
+
+compile:
+     [echo] ---------------------------
+     [echo] Compiling Active Directory security module
+     [echo] ---------------------------
+     [echo] Compiling with Java 1.8 from 1.8 source to 1.8 target, debug on, optimize on, deprecation off
+    [javac] Compiling 2 source files to /home/travis/build/eXist-db/exist/extensions/security/activedirectory/classes
+
+jar:
+     [echo] Creating exist-security-activedirectory.jar ...
+      [jar] Building jar: /home/travis/build/eXist-db/exist/lib/extensions/exist-security-activedirectory.jar
+
+sign:
+
+test-prepare:
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/test/junit/data
+    [mkdir] Created dir: /home/travis/build/eXist-db/exist/test/junit/html
+     [xslt] Processing /home/travis/build/eXist-db/exist/log4j2.xml to /home/travis/build/eXist-db/exist/test/classes/log4j2-test.xml
+     [xslt] Loading stylesheet /home/travis/build/eXist-db/exist/build/scripts/log4j2-test.xsl
+
+test-local:
+     [echo] ------------------------------------------
+     [echo] Running tests on a local database instance
+     [echo] ------------------------------------------
+    [junit] Running org.exist.backup.BackupRestoreSecurityPrincipalsTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.51 sec
+    [junit] Running org.exist.backup.SystemExportFiltersTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.815 sec
+    [junit] Running org.exist.backup.SystemExportImportTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.083 sec
+    [junit] Running org.exist.collections.triggers.CollectionTriggerTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.572 sec
+    [junit] Running org.exist.collections.triggers.SAXTriggerTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.945 sec
+    [junit] Running org.exist.collections.triggers.TriggerConfigTest
+    [junit] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.959 sec
+    [junit] Running org.exist.collections.triggers.XQueryTriggerTest
+    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.311 sec
+    [junit] Running org.exist.config.ConfigurableTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.384 sec
+    [junit] Running org.exist.config.TwoDatabasesTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.946 sec
+    [junit] Running org.exist.config.mapping.ConfigurableTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.584 sec
+    [junit] Running org.exist.dom.QNameTest
+    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.347 sec
+    [junit] Running org.exist.dom.memtree.DOMIndexerTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.973 sec
+    [junit] Running org.exist.dom.memtree.DOMTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.348 sec
+    [junit] Running org.exist.dom.memtree.DocumentBuilderReceiverTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.702 sec
+    [junit] Running org.exist.dom.memtree.TextImplTest
+    [junit] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.431 sec
+    [junit] Running org.exist.dom.persistent.BasicNodeSetTest
+    [junit] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.913 sec
+    [junit] Running org.exist.dom.persistent.DefaultDocumentSetTest
+    [junit] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.916 sec
+    [junit] Running org.exist.dom.persistent.DocTypeTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.847 sec
+    [junit] Running org.exist.dom.persistent.DocumentImplTest
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.61 sec
+    [junit] Running org.exist.dom.persistent.DocumentMetadataTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.169 sec
+    [junit] Running org.exist.dom.persistent.ElementImplTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.68 sec
+    [junit] Running org.exist.dom.persistent.NodeTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.814 sec
+    [junit] Running org.exist.dom.persistent.SymbolTableTest
+    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.699 sec
+    [junit] Running org.exist.dom.persistent.TextImplTest
+    [junit] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.868 sec
+    [junit] Running org.exist.dom.persistent.XMLUtilTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.405 sec
+    [junit] Running org.exist.http.urlrewrite.URLRewriteTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.32 sec
+    [junit] Running org.exist.http.urlrewrite.XQueryURLRewriteTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.432 sec
+    [junit] Running org.exist.security.internal.aider.UnixStylePermissionAiderTest
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.342 sec
+    [junit] Running org.exist.source.SourceFactoryTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.392 sec
+    [junit] Running org.exist.storage.btree.BTreeTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.136 sec
+    [junit] Running org.exist.storage.io.VariableByteStreamTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.535 sec
+    [junit] Running org.exist.storage.structural.NativeStructuralIndexWorkerTest
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.654 sec
+    [junit] Running org.exist.storage.txn.TxnTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.7 sec
+    [junit] Running org.exist.util.DOMSerializerTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.216 sec
+    [junit] Running org.exist.util.MimeTableTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.429 sec
+    [junit] Running org.exist.util.VirtualTempFileTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.038 sec
+    [junit] Running org.exist.util.XMLStringTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.307 sec
+    [junit] Running org.exist.util.hashtable.HashtableTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.979 sec
+    [junit] Running org.exist.util.hashtable.Int2ObjectHashMapTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.23 sec
+    [junit] Running org.exist.util.hashtable.Long2ObjectHashMapTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.356 sec
+    [junit] Running org.exist.util.hashtable.NamePoolTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.261 sec
+    [junit] Running org.exist.util.hashtable.Object2IntHashMapTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.283 sec
+    [junit] Running org.exist.util.hashtable.Object2LongHashMapTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.317 sec
+    [junit] Running org.exist.util.hashtable.Object2LongIdentityHashMapTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.317 sec
+    [junit] Running org.exist.util.hashtable.Object2ObjectHashMapTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.289 sec
+    [junit] Running org.exist.util.hashtable.ObjectHashSetTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.272 sec
+    [junit] Running org.exist.util.hashtable.SequencedLongHashMapTest
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.318 sec
+    [junit] Running org.exist.util.io.ByteBufferInputStreamTest
+    [junit] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.335 sec
+    [junit] Running org.exist.util.io.CachingFilterInputStreamTest
+    [junit] Tests run: 87, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.589 sec
+    [junit] Running org.exist.util.pool.NodePoolTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.201 sec
+    [junit] Running org.exist.util.serializer.EXISerializerTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.654 sec
+    [junit] Running org.exist.util.serializer.json.JSONObjectTest
+    [junit] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.425 sec
+    [junit] Running org.exist.util.serializer.json.JSONWriterTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.055 sec
+    [junit] Running org.exist.util.sorters.SortComparatorTest
+    [junit] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.377 sec
+    [junit] Running org.exist.util.sorters.SortTest
+    [junit] Tests run: 144, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.087 sec
+    [junit] Running org.exist.validation.ApacheXmlComponentsTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.556 sec
+    [junit] Running org.exist.validation.CollectionConfigurationTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.846 sec
+    [junit] Running org.exist.validation.CollectionConfigurationValidationModeTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.281 sec
+    [junit] Running org.exist.validation.DatabaseCollectionTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.784 sec
+    [junit] Running org.exist.validation.DatabaseInsertResources_NoValidation_Test
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.029 sec
+    [junit] Running org.exist.validation.DatabaseInsertResources_WithValidation_Test
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.986 sec
+    [junit] Running org.exist.validation.DtdEntityTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 7.219 sec
+    [junit] Running org.exist.validation.ValidationFunctions_DTD_Test
+    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.555 sec
+    [junit] Running org.exist.validation.ValidationFunctions_Node_Test
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.751 sec
+    [junit] Running org.exist.validation.ValidationFunctions_XSD_Test
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.648 sec
+    [junit] Running org.exist.xqj.MarshallerTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.142 sec
+    [junit] Running org.exist.xquery.functions.fn.DocTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.375 sec
+    [junit] Running org.exist.xquery.functions.fn.FunLangTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.468 sec
+    [junit] Running org.exist.xquery.functions.fn.FunNumberTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.363 sec
+    [junit] Running org.exist.xquery.functions.inspect.InspectModuleTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 6.543 sec
+    [junit] Running org.exist.xquery.functions.request.GetDataTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.045 sec
+    [junit] Running org.exist.xquery.functions.request.GetHeaderTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.175 sec
+    [junit] Running org.exist.xquery.functions.request.GetParameterTest
+    [junit] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.838 sec
+    [junit] Running org.exist.xquery.functions.response.StreamBinaryTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.028 sec
+    [junit] Running org.exist.xquery.functions.securitymanager.IdFunctionTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.98 sec
+    [junit] Running org.exist.xquery.functions.securitymanager.PermissionFunctionsTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.892 sec
+    [junit] Running org.exist.xquery.functions.transform.TransformTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.784 sec
+    [junit] Running org.exist.xquery.functions.util.Base64FunctionsTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.734 sec
+    [junit] Running org.exist.xquery.functions.util.BaseConversionFunctionsTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.951 sec
+    [junit] Running org.exist.xquery.functions.util.BaseConverterTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.332 sec
+    [junit] Running org.exist.xquery.functions.util.BinaryToStringTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.549 sec
+    [junit] Running org.exist.xquery.functions.util.CounterTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.717 sec
+    [junit] Running org.exist.xquery.functions.util.EvalTest
+    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.475 sec
+    [junit] Running org.exist.xquery.functions.util.ExpandTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.066 sec
+    [junit] Running org.exist.xquery.functions.util.SerializeTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.702 sec
+    [junit] Running org.exist.xquery.functions.validate.AdditionalJingXsdRngTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 6.913 sec
+    [junit] Running org.exist.xquery.functions.validate.JaxpDtdCatalogTest
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.737 sec
+    [junit] Running org.exist.xquery.functions.validate.JaxpParseTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.589 sec
+    [junit] Running org.exist.xquery.functions.validate.JaxpXsdCatalogTest
+    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.225 sec
+    [junit] Running org.exist.xquery.functions.validate.JaxvTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.497 sec
+    [junit] Running org.exist.xquery.functions.validate.JingOnvdlTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.669 sec
+    [junit] Running org.exist.xquery.functions.validate.JingRelaxNgTest
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.051 sec
+    [junit] Running org.exist.xquery.functions.validate.JingSchematronTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.036 sec
+    [junit] Running org.exist.xquery.functions.validate.JingXsdTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.575 sec
+    [junit] Running org.exist.xquery.functions.xquery3.DeclareVariableTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.458 sec
+    [junit] Running org.exist.xquery.functions.xquery3.SwitchTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.741 sec
+    [junit] Running org.exist.xquery.functions.xquery3.TryCatchTest
+    [junit] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.47 sec
+    [junit] Running org.exist.xquery.modules.sql.ExecuteFunctionTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.771 sec
+    [junit] Running org.exist.xquery.update.IndexIntegrationTest
+    [junit] Tests run: 3, Failures: 0, Errors: 6, Skipped: 0, Time elapsed: 7.732 sec
+
+BUILD FAILED
+/home/travis/build/eXist-db/exist/build/scripts/junit.xml:124: Test org.exist.xquery.update.IndexIntegrationTest failed
+
+Total time: 14 minutes 32 seconds
+
+travis_time:end:0b295abf:start=1504981009832764007,finish=1504981883600899830,duration=873768135823
+[0K
+[31;1mThe command "./build.sh -Dexist.autodeploy=off -Dtest.haltonerror=true -Dtest.haltonfailure=true travis" exited with 1.[0m
+
+Done. Your build exited with 1.
+
