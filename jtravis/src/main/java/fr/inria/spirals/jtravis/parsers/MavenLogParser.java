@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
  */
 public class MavenLogParser extends JavaLogParser {
 
-    protected static final String MVN_LINE_PATTERN = "^(-------------------------------------------------------|\\[INFO\\] Reactor Summary:)$";
+    //protected static final String MVN_LINE_PATTERN = "^(-------------------------------------------------------|\\[INFO\\] Reactor Summary:)$";
+    protected static final String MVN_LINE_PATTERN = "^(\\[INFO\\].*|\\[ERROR\\].*)$";
     private static final String MVN_TESTS_PATTERN = " T E S T S";
     private static final String MVN_TEST_NUMBER_PATTERN = "Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*)(, Skipped: (\\d*))?";
 
