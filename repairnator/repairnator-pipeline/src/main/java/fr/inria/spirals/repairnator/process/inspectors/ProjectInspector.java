@@ -56,6 +56,7 @@ public class ProjectInspector {
         this.gitHelper = new GitHelper();
         this.jobStatus = new JobStatus(repoLocalPath);
         this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.initMetricsValue();
     }
 
