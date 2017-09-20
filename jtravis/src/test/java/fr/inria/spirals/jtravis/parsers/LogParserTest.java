@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -126,30 +127,155 @@ public class LogParserTest {
     }
 
     @Test
-    public void testLogParserRecognizeALogAsMavenLog() throws IOException {
-        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-SUCCESS/";
-        //String path = "./src/test/resources/maven-logs/";
-        File folder = new File(path);
-        File[] files = folder.listFiles();
+    public void testLogParserRecognizeSuccessLog1AsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-SUCCESS/chrishantha_ jfr-flame-graph.txt";
 
-        for(File file : files) {
-            if(file.isFile()) {
-                String fileContent = TestUtils.readFile(file.getPath());
-                LogParser parser = new LogParser(fileContent);
-                assertEquals(BuildTool.MAVEN, parser.getBuildTool());
-            }
-            else if (file.isDirectory()) {
-                for(File file2 : file.listFiles()) {
-                    if (file2.isFile()) {
-                        String fileContent = TestUtils.readFile(file2.getPath());
-                        LogParser parser = new LogParser(fileContent);
-                        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
-                    }
-                }
-            }
-        }
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeSuccessLog2AsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-SUCCESS/influxdata_influxdb-java.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeSuccessLog3AsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-SUCCESS/maven-log.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeFailLog1AsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-FAIL/apache_syncope.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeFailLog2AsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-FAIL/javaee7log.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeFailLog3AsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-FAIL/spoon_build_log.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
 
 
+    @Test
+    public void testLogParserRecognizeFailLog4AsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-FAIL/joel-costigliola_assertj-core.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeGradleNotAsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Gradle/BUILD-SUCCESSFUL/gradle-log.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertNotEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeGradle2NotAsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Gradle/BUILD-SUCCESSFUL/passingLog.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertNotEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeGradle3NotAsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Gradle/BUILD-SUCCESSFUL/bndtools_bndtools.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertNotEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeGradle4NotAsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Gradle/BUILD-FAIL/bndtools_bndtools.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertNotEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeGradle5NotAsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Gradle/BUILD-FAIL/eXist-db_exist.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertNotEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void testLogParserRecognizeGradle6NotAsMavenLog() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/Gradle/BUILD-FAIL/multipleErrorsAndFailures.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+
+        assertNotEquals(BuildTool.MAVEN, parser.getBuildTool());
+    }
+
+    @Test
+    public void multipleTestRun() throws IOException {
+        //Test is NOK
+        //testLogParserRecognizeSuccessLog2AsMavenLog();
+
+        //Test is OK
+        testLogParserRecognizeSuccessLog1AsMavenLog();
+        testLogParserRecognizeSuccessLog3AsMavenLog();
+        testLogParserRecognizeFailLog1AsMavenLog();
+        testLogParserRecognizeFailLog2AsMavenLog();
+        testLogParserRecognizeFailLog3AsMavenLog();
+        testLogParserRecognizeFailLog4AsMavenLog();
+
+        testLogParserRecognizeGradleNotAsMavenLog();
+        testLogParserRecognizeGradle2NotAsMavenLog();
+        testLogParserRecognizeGradle3NotAsMavenLog();
+        testLogParserRecognizeGradle4NotAsMavenLog();
+        testLogParserRecognizeGradle5NotAsMavenLog();
+        testLogParserRecognizeGradle6NotAsMavenLog();
     }
 
 }
