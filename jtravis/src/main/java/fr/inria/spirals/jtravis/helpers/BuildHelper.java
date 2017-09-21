@@ -304,6 +304,7 @@ public class BuildHelper extends AbstractHelper {
         }
 
         boolean dateReached;
+        int lastBuildNumber = after_number;
 
         if (stop_condition_in_future >= after_number || stop_condition_in_future == 0) {
             String resourceUrl = getResourceUrl(slug, eventTypes.get(0), after_number+20);
@@ -312,7 +313,6 @@ public class BuildHelper extends AbstractHelper {
             Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
             JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits, true);
-            int lastBuildNumber = after_number;
 
             for (JsonElement buildJson : buildArray) {
                 Build build = createGson().fromJson(buildJson, Build.class);
@@ -342,6 +342,10 @@ public class BuildHelper extends AbstractHelper {
                 }
             }
 
+            if (lastBuildNumber == after_number) {
+                lastBuildNumber += 20;
+            }
+
             if (stop_condition_in_future == 0) {
                 if (lastBuildNumber == after_number) {
                     dateReached = true;
@@ -361,7 +365,7 @@ public class BuildHelper extends AbstractHelper {
         }
 
         if (!dateReached) {
-            getBuildsFromSlugRecursivelyInFuture(slug, result, after_number+20, originalAfterNumber, eventTypes, status, prNumber, previousBranch, limitNumber, stop_condition_in_future);
+            getBuildsFromSlugRecursivelyInFuture(slug, result, lastBuildNumber, originalAfterNumber, eventTypes, status, prNumber, previousBranch, limitNumber, stop_condition_in_future);
         } else {
             eventTypes.remove(0);
             getBuildsFromSlugRecursivelyInFuture(slug, result, originalAfterNumber, originalAfterNumber, eventTypes, status, prNumber, previousBranch, limitNumber, -1);
