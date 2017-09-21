@@ -330,16 +330,6 @@ public class LogParserTest {
     }
 
     @Test
-    public void testLogParserRecognizeMaven2NotAsGradleLog() throws IOException {
-        String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-SUCCESS/influxdata_influxdb-java.txt";
-
-        String fileContent = TestUtils.readFile(path);
-        LogParser parser = new LogParser(fileContent);
-
-        assertNotEquals(BuildTool.GRADLE, parser.getBuildTool());
-    }
-
-    @Test
     public void testLogParserRecognizeMaven3NotAsGradleLog() throws IOException {
         String path = "./src/test/resources/UnkownBuildTool/Maven/BUILD-SUCCESS/maven-log.txt";
 
