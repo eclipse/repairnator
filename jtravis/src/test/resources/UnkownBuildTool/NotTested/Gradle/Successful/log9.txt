@@ -1,0 +1,1699 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: ed7255de-645c-4a0e-968c-7fdf2f8751d6@1.i-0a8566e-production-2-worker-org-ec2.travisci.net
+version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
+instance: b58ddcc:travis:java (via amqp)
+startup: 470.10945ms
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: trusty
+Build id: 275454144
+Job id: 275454145
+Runtime kernel version: 4.11.6-041106-generic
+travis-build version: ec7da3751
+[34m[1mBuild image provisioning date and time[0m
+Tue Aug 29 02:50:02 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 14.04.5 LTS
+Release:	14.04
+Codename:	trusty
+[34m[1mCookbooks Version[0m
+4642454 https://github.com/travis-ci/travis-cookbooks/tree/4642454
+[34m[1mgit version[0m
+git version 2.14.1
+[34m[1mbash version[0m
+GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
+[34m[1mgcc version[0m
+gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+Copyright (C) 2013 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mdocker version[0m
+Client:
+ Version:      17.03.1-ce
+ API version:  1.27
+ Go version:   go1.7.5
+ Git commit:   c6d412e
+ Built:        Mon Mar 27 16:58:30 2017
+ OS/Arch:      linux/amd64
+[34m[1mclang version[0m
+clang version 3.9.0 (tags/RELEASE_390/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /usr/local/clang-3.9.0/bin
+[34m[1mjq version[0m
+jq-1.5
+[34m[1mbats version[0m
+Bats 0.4.0
+[34m[1mshellcheck version[0m
+0.4.6
+[34m[1mshfmt version[0m
+v1.3.1
+[34m[1mccache version[0m
+ccache version 3.1.9
+
+Copyright (C) 2002-2007 Andrew Tridgell
+Copyright (C) 2009-2011 Joel Rosdahl
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 3 of the License, or (at your option) any later
+version.
+[34m[1mcmake version[0m
+cmake version 3.2.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+[34m[1mheroku version[0m
+heroku-cli/6.13.19-6cd27b3 (linux-x64) node-v8.3.0
+[34m[1mimagemagick version[0m
+Version: ImageMagick 6.7.7-10 2017-07-31 Q16 http://www.imagemagick.org
+[34m[1mmd5deep version[0m
+4.2
+[34m[1mmercurial version[0m
+Mercurial Distributed SCM (version 4.2.2)
+(see https://mercurial-scm.org for more information)
+
+Copyright (C) 2005-2017 Matt Mackall and others
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+[34m[1mmysql version[0m
+mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
+[34m[1mopenssl version[0m
+OpenSSL 1.0.1f 6 Jan 2014
+[34m[1mpacker version[0m
+Packer v1.0.2
+
+Your version of Packer is out of date! The latest version
+is 1.0.4. You can update by downloading from www.packer.io
+[34m[1mpostgresql client version[0m
+psql (PostgreSQL) 9.6.4
+[34m[1mragel version[0m
+Ragel State Machine Compiler version 6.8 Feb 2013
+Copyright (c) 2001-2009 by Adrian Thurston
+[34m[1msubversion version[0m
+svn, version 1.8.8 (r1568071)
+   compiled Aug 10 2017, 17:20:39 on x86_64-pc-linux-gnu
+
+Copyright (C) 2013 The Apache Software Foundation.
+This software consists of contributions made by many people;
+see the NOTICE file for more information.
+Subversion is open source software, see http://subversion.apache.org/
+
+The following repository access (RA) modules are available:
+
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - with Cyrus SASL authentication
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
+  - using serf 1.3.3
+  - handles 'http' scheme
+  - handles 'https' scheme
+
+[34m[1msudo version[0m
+Sudo version 1.8.9p5
+Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
+Sudoers policy plugin version 1.8.9p5
+Sudoers file grammar version 43
+
+Sudoers path: /etc/sudoers
+Authentication methods: 'pam'
+Syslog facility if syslog is being used for logging: authpriv
+Syslog priority to use when user authenticates successfully: notice
+Syslog priority to use when user authenticates unsuccessfully: alert
+Send mail if the user is not in sudoers
+Use a separate timestamp for each user/tty combo
+Lecture user the first time they run sudo
+Root may run sudo
+Allow some information gathering to give useful error messages
+Require fully-qualified hostnames in the sudoers file
+Visudo will honor the EDITOR environment variable
+Set the LOGNAME and USER environment variables
+Length at which to wrap log file lines (0 for no wrap): 80
+Authentication timestamp timeout: 15.0 minutes
+Password prompt timeout: 0.0 minutes
+Number of tries to enter a password: 3
+Umask to use or 0777 to use user's: 022
+Path to mail program: /usr/sbin/sendmail
+Flags for mail program: -t
+Address to send mail to: root
+Subject line for mail messages: *** SECURITY information for %h ***
+Incorrect password message: Sorry, try again.
+Path to authentication timestamp dir: /var/lib/sudo
+Default password prompt: [sudo] password for %p: 
+Default user to run commands as: root
+Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+Path to the editor for use by visudo: /usr/bin/editor
+When to require a password for 'list' pseudocommand: any
+When to require a password for 'verify' pseudocommand: all
+File descriptors >= 3 will be closed before executing a command
+Environment variables to check for sanity:
+	TZ
+	TERM
+	LINGUAS
+	LC_*
+	LANGUAGE
+	LANG
+	COLORTERM
+Environment variables to remove:
+	RUBYOPT
+	RUBYLIB
+	PYTHONUSERBASE
+	PYTHONINSPECT
+	PYTHONPATH
+	PYTHONHOME
+	TMPPREFIX
+	ZDOTDIR
+	READNULLCMD
+	NULLCMD
+	FPATH
+	PERL5DB
+	PERL5OPT
+	PERL5LIB
+	PERLLIB
+	PERLIO_DEBUG 
+	JAVA_TOOL_OPTIONS
+	SHELLOPTS
+	GLOBIGNORE
+	PS4
+	BASH_ENV
+	ENV
+	TERMCAP
+	TERMPATH
+	TERMINFO_DIRS
+	TERMINFO
+	_RLD*
+	LD_*
+	PATH_LOCALE
+	NLSPATH
+	HOSTALIASES
+	RES_OPTIONS
+	LOCALDOMAIN
+	CDPATH
+	IFS
+Environment variables to preserve:
+	JAVA_HOME
+	TRAVIS
+	CI
+	DEBIAN_FRONTEND
+	XAUTHORIZATION
+	XAUTHORITY
+	PS2
+	PS1
+	PATH
+	LS_COLORS
+	KRB5CCNAME
+	HOSTNAME
+	HOME
+	DISPLAY
+	COLORS
+Locale to use while parsing sudoers: C
+Directory in which to store input/output logs: /var/log/sudo-io
+File in which to store the input/output log: %{seq}
+Add an entry to the utmp/utmpx file when allocating a pty
+PAM service name to use
+PAM service name to use for login shells
+Create a new PAM session for the command to run in
+Maximum I/O log sequence number: 0
+
+Local IP address and netmask pairs:
+	172.17.0.2/255.255.0.0
+
+Sudoers I/O plugin version 1.8.9p5
+[34m[1mgzip version[0m
+gzip 1.6
+Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
+Copyright (C) 1993 Jean-loup Gailly.
+This is free software.  You may redistribute copies of it under the terms of
+the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jean-loup Gailly.
+[34m[1mzip version[0m
+Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
+This is Zip 3.0 (July 5th 2008), by Info-ZIP.
+Currently maintained by E. Gordon.  Please send bug reports to
+the authors using the web page at www.info-zip.org; see README for details.
+
+Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
+as of above date; see http://www.info-zip.org/ for other sites.
+
+Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
+
+Zip special compilation options:
+	USE_EF_UT_TIME       (store Universal Time)
+	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
+	    bzip2 code and library copyright (c) Julian R Seward
+	    (See the bzip2 license for terms of use)
+	SYMLINK_SUPPORT      (symbolic links supported)
+	LARGE_FILE_SUPPORT   (can read and write large files on file system)
+	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
+	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
+	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
+	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
+	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
+
+Encryption notice:
+	The encryption code of this program is not copyrighted and is
+	put in the public domain.  It was originally written in Europe
+	and, to the best of our knowledge, can be freely distributed
+	in both source and object forms from any country, including
+	the USA under License Exception TSU of the U.S. Export
+	Administration Regulations (section 740.13(e)) of 6 June 2002.
+
+Zip environment options:
+             ZIP:  [none]
+          ZIPOPT:  [none]
+[34m[1mvim version[0m
+VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
+Included patches: 1-52
+Extra patches: 8.0.0056
+Modified by pkg-vim-maintainers@lists.alioth.debian.org
+Compiled by buildd@
+Huge version without GUI.  Features included (+) or not (-):
++acl             +farsi           +mouse_netterm   +syntax
++arabic          +file_in_path    +mouse_sgr       +tag_binary
++autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
+-balloon_eval    +float           +mouse_urxvt     -tag_any_white
+-browse          +folding         +mouse_xterm     -tcl
+++builtin_terms  -footer          +multi_byte      +terminfo
++byte_offset     +fork()          +multi_lang      +termresponse
++cindent         +gettext         -mzscheme        +textobjects
+-clientserver    -hangul_input    +netbeans_intg   +title
+-clipboard       +iconv           +path_extra      -toolbar
++cmdline_compl   +insert_expand   -perl            +user_commands
++cmdline_hist    +jumplist        +persistent_undo +vertsplit
++cmdline_info    +keymap          +postscript      +virtualedit
++comments        +langmap         +printer         +visual
++conceal         +libcall         +profile         +visualextra
++cryptv          +linebreak       +python          +viminfo
++cscope          +lispindent      -python3         +vreplace
++cursorbind      +listcmds        +quickfix        +wildignore
++cursorshape     +localmap        +reltime         +wildmenu
++dialog_con      -lua             +rightleft       +windows
++diff            +menu            -ruby            +writebackup
++digraphs        +mksession       +scrollbind      -X11
+-dnd             +modify_fname    +signs           -xfontset
+-ebcdic          +mouse           +smartindent     -xim
++emacs_tags      -mouseshape      -sniff           -xsmp
++eval            +mouse_dec       +startuptime     -xterm_clipboard
++ex_extra        +mouse_gpm       +statusline      -xterm_save
++extra_search    -mouse_jsbterm   -sun_workshop    -xpm
+   system vimrc file: "$VIM/vimrc"
+     user vimrc file: "$HOME/.vimrc"
+ 2nd user vimrc file: "~/.vim/vimrc"
+      user exrc file: "$HOME/.exrc"
+  fall-back for $VIM: "/usr/share/vim"
+Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
+Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
+[34m[1miptables version[0m
+iptables v1.4.21
+[34m[1mcurl version[0m
+curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
+[34m[1mwget version[0m
+GNU Wget 1.15 built on linux-gnu.
+[34m[1mrsync version[0m
+rsync  version 3.1.0  protocol version 31
+[34m[1mgimme version[0m
+v1.2.0
+[34m[1mnvm version[0m
+0.33.2
+[34m[1mperlbrew version[0m
+/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
+[34m[1mphpenv version[0m
+rbenv 1.1.1-4-g4ebd1bd
+[34m[1mrvm version[0m
+rvm 1.29.2 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io/]
+[34m[1mdefault ruby version[0m
+ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mElasticSearch version[0m
+5.5.0
+[34m[1mInstalled Firefox version[0m
+firefox 55.0.2
+[34m[1mMongoDB version[0m
+MongoDB 3.2.16
+[34m[1mPre-installed PostgreSQL versions[0m
+9.2.22
+9.3.18
+9.4.13
+9.5.8
+9.6.4
+[34m[1mRabbitMQ Version[0m
+3.6.11
+[34m[1mRedis version[0m
+redis-server 4.0.1
+[34m[1mriak version[0m
+2.2.3
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mant version[0m
+Apache Ant(TM) version 1.9.3 compiled on April 8 2014
+[34m[1mmvn version[0m
+Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
+Maven home: /usr/local/maven-3.5.0
+Java version: 1.8.0_144, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.4.0-92-generic", arch: "amd64", family: "unix"
+[34m[1mgradle version[0m
+
+------------------------------------------------------------
+Gradle 4.0.1
+------------------------------------------------------------
+
+Build time:   2017-07-07 14:02:41 UTC
+Revision:     38e5dc0f772daecca1d2681885d3d85414eb6826
+
+Groovy:       2.4.11
+Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+JVM:          1.8.0_144 (Oracle Corporation 25.144-b01)
+OS:           Linux 4.4.0-92-generic amd64
+
+[34m[1mlein version[0m
+WARNING: You're currently running as root; probably by accident.
+Press control-C to abort or Enter to continue as root.
+Set LEIN_ROOT to disable this warning.
+Leiningen 2.7.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mPre-installed Node.js versions[0m
+v4.8.4
+v6.11.2
+v6.9.4
+v7.4.0
+v8.4
+[34m[1mphpenv versions[0m
+  system
+  5.6
+* 5.6.31 (set by /home/travis/.phpenv/version)
+  7.0
+  7.0.22
+  hhvm
+  hhvm-stable
+[34m[1mcomposer --version[0m
+Composer version 1.4.2 2017-05-17 08:17:52
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.7
+ruby-2.3.4
+ruby-2.4.1
+travis_fold:end:system_info[0K
+W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+travis_fold:start:git.checkout[0Ktravis_time:start:0969de84[0K$ git clone --depth=50 https://github.com/java-native-access/jna.git java-native-access/jna
+Cloning into 'java-native-access/jna'...
+remote: Counting objects: 2823, done.[K
+remote: Compressing objects:   0% (1/1317)   [Kremote: Compressing objects:   1% (14/1317)   [Kremote: Compressing objects:   2% (27/1317)   [Kremote: Compressing objects:   2% (28/1317)   [Kremote: Compressing objects:   3% (40/1317)   [Kremote: Compressing objects:   3% (43/1317)   [Kremote: Compressing objects:   4% (53/1317)   [Kremote: Compressing objects:   5% (66/1317)   [Kremote: Compressing objects:   6% (80/1317)   [Kremote: Compressing objects:   7% (93/1317)   [Kremote: Compressing objects:   8% (106/1317)   [Kremote: Compressing objects:   9% (119/1317)   [Kremote: Compressing objects:  10% (132/1317)   [Kremote: Compressing objects:  11% (145/1317)   [Kremote: Compressing objects:  12% (159/1317)   [Kremote: Compressing objects:  13% (172/1317)   [Kremote: Compressing objects:  14% (185/1317)   [Kremote: Compressing objects:  15% (198/1317)   [Kremote: Compressing objects:  16% (211/1317)   [Kremote: Compressing objects:  17% (224/1317)   [Kremote: Compressing objects:  18% (238/1317)   [Kremote: Compressing objects:  19% (251/1317)   [Kremote: Compressing objects:  20% (264/1317)   [Kremote: Compressing objects:  21% (277/1317)   [Kremote: Compressing objects:  22% (290/1317)   [Kremote: Compressing objects:  23% (303/1317)   [Kremote: Compressing objects:  24% (317/1317)   [Kremote: Compressing objects:  25% (330/1317)   [Kremote: Compressing objects:  26% (343/1317)   [Kremote: Compressing objects:  27% (356/1317)   [Kremote: Compressing objects:  28% (369/1317)   [Kremote: Compressing objects:  29% (382/1317)   [Kremote: Compressing objects:  30% (396/1317)   [Kremote: Compressing objects:  31% (409/1317)   [Kremote: Compressing objects:  32% (422/1317)   [Kremote: Compressing objects:  33% (435/1317)   [Kremote: Compressing objects:  34% (448/1317)   [Kremote: Compressing objects:  35% (461/1317)   [Kremote: Compressing objects:  36% (475/1317)   [Kremote: Compressing objects:  37% (488/1317)   [Kremote: Compressing objects:  38% (501/1317)   [Kremote: Compressing objects:  39% (514/1317)   [Kremote: Compressing objects:  40% (527/1317)   [Kremote: Compressing objects:  41% (540/1317)   [Kremote: Compressing objects:  42% (554/1317)   [Kremote: Compressing objects:  43% (567/1317)   [Kremote: Compressing objects:  44% (580/1317)   [Kremote: Compressing objects:  45% (593/1317)   [Kremote: Compressing objects:  46% (606/1317)   [Kremote: Compressing objects:  47% (619/1317)   [Kremote: Compressing objects:  48% (633/1317)   [Kremote: Compressing objects:  49% (646/1317)   [Kremote: Compressing objects:  50% (659/1317)   [Kremote: Compressing objects:  51% (672/1317)   [Kremote: Compressing objects:  52% (685/1317)   [Kremote: Compressing objects:  53% (699/1317)   [Kremote: Compressing objects:  54% (712/1317)   [Kremote: Compressing objects:  55% (725/1317)   [Kremote: Compressing objects:  56% (738/1317)   [Kremote: Compressing objects:  57% (751/1317)   [Kremote: Compressing objects:  58% (764/1317)   [Kremote: Compressing objects:  59% (778/1317)   [Kremote: Compressing objects:  60% (791/1317)   [Kremote: Compressing objects:  61% (804/1317)   [Kremote: Compressing objects:  62% (817/1317)   [Kremote: Compressing objects:  63% (830/1317)   [Kremote: Compressing objects:  64% (843/1317)   [Kremote: Compressing objects:  65% (857/1317)   [Kremote: Compressing objects:  66% (870/1317)   [Kremote: Compressing objects:  67% (883/1317)   [Kremote: Compressing objects:  68% (896/1317)   [Kremote: Compressing objects:  69% (909/1317)   [Kremote: Compressing objects:  70% (922/1317)   [Kremote: Compressing objects:  71% (936/1317)   [Kremote: Compressing objects:  72% (949/1317)   [Kremote: Compressing objects:  73% (962/1317)   [Kremote: Compressing objects:  74% (975/1317)   [Kremote: Compressing objects:  75% (988/1317)   [Kremote: Compressing objects:  76% (1001/1317)   [Kremote: Compressing objects:  77% (1015/1317)   [Kremote: Compressing objects:  78% (1028/1317)   [Kremote: Compressing objects:  79% (1041/1317)   [Kremote: Compressing objects:  80% (1054/1317)   [Kremote: Compressing objects:  81% (1067/1317)   [Kremote: Compressing objects:  82% (1080/1317)   [Kremote: Compressing objects:  83% (1094/1317)   [Kremote: Compressing objects:  84% (1107/1317)   [Kremote: Compressing objects:  85% (1120/1317)   [Kremote: Compressing objects:  86% (1133/1317)   [Kremote: Compressing objects:  87% (1146/1317)   [Kremote: Compressing objects:  88% (1159/1317)   [Kremote: Compressing objects:  89% (1173/1317)   [Kremote: Compressing objects:  90% (1186/1317)   [Kremote: Compressing objects:  91% (1199/1317)   [Kremote: Compressing objects:  92% (1212/1317)   [Kremote: Compressing objects:  93% (1225/1317)   [Kremote: Compressing objects:  94% (1238/1317)   [Kremote: Compressing objects:  95% (1252/1317)   [Kremote: Compressing objects:  96% (1265/1317)   [Kremote: Compressing objects:  97% (1278/1317)   [Kremote: Compressing objects:  98% (1291/1317)   [Kremote: Compressing objects:  99% (1304/1317)   [Kremote: Compressing objects: 100% (1317/1317)   [Kremote: Compressing objects: 100% (1317/1317), done.[K
+Receiving objects:   0% (1/2823)   Receiving objects:   1% (29/2823)   Receiving objects:   2% (57/2823)   Receiving objects:   3% (85/2823)   Receiving objects:   4% (113/2823)   Receiving objects:   5% (142/2823)   Receiving objects:   6% (170/2823)   Receiving objects:   7% (198/2823)   Receiving objects:   8% (226/2823)   Receiving objects:   9% (255/2823)   Receiving objects:  10% (283/2823)   Receiving objects:  11% (311/2823)   Receiving objects:  12% (339/2823)   Receiving objects:  13% (367/2823)   Receiving objects:  14% (396/2823)   Receiving objects:  15% (424/2823)   Receiving objects:  16% (452/2823)   Receiving objects:  17% (480/2823)   Receiving objects:  18% (509/2823)   Receiving objects:  19% (537/2823)   Receiving objects:  20% (565/2823)   Receiving objects:  21% (593/2823)   Receiving objects:  22% (622/2823)   Receiving objects:  23% (650/2823)   Receiving objects:  24% (678/2823)   Receiving objects:  25% (706/2823)   Receiving objects:  26% (734/2823)   Receiving objects:  27% (763/2823)   Receiving objects:  28% (791/2823)   Receiving objects:  29% (819/2823)   Receiving objects:  30% (847/2823)   Receiving objects:  31% (876/2823)   Receiving objects:  32% (904/2823)   Receiving objects:  33% (932/2823)   Receiving objects:  34% (960/2823)   Receiving objects:  35% (989/2823)   Receiving objects:  36% (1017/2823)   Receiving objects:  37% (1045/2823)   Receiving objects:  38% (1073/2823)   Receiving objects:  39% (1101/2823)   Receiving objects:  40% (1130/2823)   Receiving objects:  41% (1158/2823)   Receiving objects:  42% (1186/2823)   Receiving objects:  43% (1214/2823)   Receiving objects:  44% (1243/2823)   Receiving objects:  45% (1271/2823)   Receiving objects:  46% (1299/2823)   Receiving objects:  47% (1327/2823)   Receiving objects:  48% (1356/2823)   Receiving objects:  49% (1384/2823)   Receiving objects:  50% (1412/2823)   Receiving objects:  51% (1440/2823)   Receiving objects:  52% (1468/2823)   Receiving objects:  53% (1497/2823)   Receiving objects:  54% (1525/2823)   Receiving objects:  55% (1553/2823), 5.45 MiB | 10.89 MiB/s   Receiving objects:  55% (1577/2823), 14.15 MiB | 14.15 MiB/s   Receiving objects:  56% (1581/2823), 14.15 MiB | 14.15 MiB/s   Receiving objects:  56% (1597/2823), 27.62 MiB | 13.73 MiB/s   Receiving objects:  56% (1597/2823), 29.43 MiB | 9.76 MiB/s   Receiving objects:  57% (1610/2823), 32.88 MiB | 9.35 MiB/s   Receiving objects:  57% (1624/2823), 36.63 MiB | 9.12 MiB/s   Receiving objects:  57% (1624/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  58% (1638/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  59% (1666/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  60% (1694/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  61% (1723/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  62% (1751/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  63% (1779/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  64% (1807/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  65% (1835/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  66% (1864/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  67% (1892/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  68% (1920/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  69% (1948/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  70% (1977/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  71% (2005/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  72% (2033/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  73% (2061/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  74% (2090/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  75% (2118/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  76% (2146/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  77% (2174/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  78% (2202/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  79% (2231/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  80% (2259/2823), 46.36 MiB | 9.05 MiB/s   Receiving objects:  81% (2287/2823), 53.09 MiB | 8.62 MiB/s   Receiving objects:  82% (2315/2823), 53.09 MiB | 8.62 MiB/s   Receiving objects:  82% (2326/2823), 60.37 MiB | 8.09 MiB/s   Receiving objects:  83% (2344/2823), 60.37 MiB | 8.09 MiB/s   Receiving objects:  83% (2356/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  84% (2372/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  85% (2400/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  86% (2428/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  87% (2457/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  88% (2485/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  89% (2513/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  90% (2541/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  91% (2569/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  92% (2598/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  93% (2626/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  94% (2654/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  95% (2682/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  96% (2711/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  97% (2739/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  98% (2767/2823), 71.76 MiB | 9.68 MiB/s   Receiving objects:  99% (2795/2823), 71.76 MiB | 9.68 MiB/s   remote: Total 2823 (delta 1410), reused 2059 (delta 1149), pack-reused 0[K
+Receiving objects: 100% (2823/2823), 76.13 MiB | 10.35 MiB/s   Receiving objects: 100% (2823/2823), 76.28 MiB | 10.11 MiB/s, done.
+Resolving deltas:   0% (0/1410)   Resolving deltas:   1% (15/1410)   Resolving deltas:   2% (32/1410)   Resolving deltas:   3% (46/1410)   Resolving deltas:   7% (102/1410)   Resolving deltas:   8% (118/1410)   Resolving deltas:   9% (131/1410)   Resolving deltas:  11% (157/1410)   Resolving deltas:  13% (192/1410)   Resolving deltas:  14% (203/1410)   Resolving deltas:  15% (224/1410)   Resolving deltas:  16% (234/1410)   Resolving deltas:  19% (276/1410)   Resolving deltas:  20% (286/1410)   Resolving deltas:  21% (297/1410)   Resolving deltas:  22% (312/1410)   Resolving deltas:  23% (329/1410)   Resolving deltas:  25% (355/1410)   Resolving deltas:  27% (384/1410)   Resolving deltas:  28% (399/1410)   Resolving deltas:  30% (426/1410)   Resolving deltas:  31% (448/1410)   Resolving deltas:  32% (452/1410)   Resolving deltas:  33% (477/1410)   Resolving deltas:  34% (484/1410)   Resolving deltas:  35% (498/1410)   Resolving deltas:  36% (513/1410)   Resolving deltas:  37% (526/1410)   Resolving deltas:  38% (536/1410)   Resolving deltas:  39% (551/1410)   Resolving deltas:  40% (564/1410)   Resolving deltas:  41% (579/1410)   Resolving deltas:  42% (593/1410)   Resolving deltas:  43% (614/1410)   Resolving deltas:  44% (622/1410)   Resolving deltas:  45% (635/1410)   Resolving deltas:  46% (649/1410)   Resolving deltas:  47% (663/1410)   Resolving deltas:  48% (677/1410)   Resolving deltas:  49% (702/1410)   Resolving deltas:  50% (706/1410)   Resolving deltas:  51% (729/1410)   Resolving deltas:  52% (740/1410)   Resolving deltas:  53% (748/1410)   Resolving deltas:  55% (777/1410)   Resolving deltas:  56% (790/1410)   Resolving deltas:  57% (807/1410)   Resolving deltas:  58% (818/1410)   Resolving deltas:  59% (833/1410)   Resolving deltas:  60% (846/1410)   Resolving deltas:  61% (861/1410)   Resolving deltas:  62% (875/1410)   Resolving deltas:  63% (900/1410)   Resolving deltas:  64% (904/1410)   Resolving deltas:  65% (917/1410)   Resolving deltas:  66% (936/1410)   Resolving deltas:  67% (946/1410)   Resolving deltas:  68% (959/1410)   Resolving deltas:  69% (976/1410)   Resolving deltas:  70% (991/1410)   Resolving deltas:  80% (1132/1410)   Resolving deltas:  84% (1190/1410)   Resolving deltas:  85% (1202/1410)   Resolving deltas:  93% (1312/1410)   Resolving deltas:  94% (1329/1410)   Resolving deltas:  95% (1347/1410)   Resolving deltas:  99% (1409/1410)   Resolving deltas: 100% (1410/1410)   Resolving deltas: 100% (1410/1410), done.
+
+travis_time:end:0969de84:start=1505393457292047947,finish=1505393468826412190,duration=11534364243[0K$ cd java-native-access/jna
+travis_time:start:15f3a08e[0K$ git fetch origin +refs/pull/859/merge:
+remote: Counting objects: 32, done.[K
+remote: Compressing objects:  50% (1/2)   [Kremote: Compressing objects: 100% (2/2)   [Kremote: Compressing objects: 100% (2/2), done.[K
+remote: Total 32 (delta 21), reused 30 (delta 20), pack-reused 0[K
+Unpacking objects:   3% (1/32)   Unpacking objects:   6% (2/32)   Unpacking objects:   9% (3/32)   Unpacking objects:  12% (4/32)   Unpacking objects:  15% (5/32)   Unpacking objects:  18% (6/32)   Unpacking objects:  21% (7/32)   Unpacking objects:  25% (8/32)   Unpacking objects:  28% (9/32)   Unpacking objects:  31% (10/32)   Unpacking objects:  34% (11/32)   Unpacking objects:  37% (12/32)   Unpacking objects:  40% (13/32)   Unpacking objects:  43% (14/32)   Unpacking objects:  46% (15/32)   Unpacking objects:  50% (16/32)   Unpacking objects:  53% (17/32)   Unpacking objects:  56% (18/32)   Unpacking objects:  59% (19/32)   Unpacking objects:  62% (20/32)   Unpacking objects:  65% (21/32)   Unpacking objects:  68% (22/32)   Unpacking objects:  71% (23/32)   Unpacking objects:  75% (24/32)   Unpacking objects:  78% (25/32)   Unpacking objects:  81% (26/32)   Unpacking objects:  84% (27/32)   Unpacking objects:  87% (28/32)   Unpacking objects:  90% (29/32)   Unpacking objects:  93% (30/32)   Unpacking objects:  96% (31/32)   Unpacking objects: 100% (32/32)   Unpacking objects: 100% (32/32), done.
+From https://github.com/java-native-access/jna
+ * branch            refs/pull/859/merge -> FETCH_HEAD
+
+travis_time:end:15f3a08e:start=1505393468832485599,finish=1505393469113709928,duration=281224329[0K$ git checkout -qf FETCH_HEAD
+travis_fold:end:git.checkout[0Ktravis_fold:start:apt[0K[33;1mInstalling APT Packages (BETA)[0m
+$ export DEBIAN_FRONTEND=noninteractive
+travis_time:start:178e79c8[0K$ sudo -E apt-get -yq update &>> ~/apt-get-update.log
+
+travis_time:end:178e79c8:start=1505393469550685342,finish=1505393474360420511,duration=4809735169[0Ktravis_time:start:34b8aa7e[0K$ sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install ant-optional
+Reading package lists...
+Building dependency tree...
+Reading state information...
+ant-optional is already the newest version (1.9.3-2build1).
+0 upgraded, 0 newly installed, 0 to remove and 29 not upgraded.
+
+travis_time:end:34b8aa7e:start=1505393474365193225,finish=1505393477748947217,duration=3383753992[0Ktravis_fold:end:apt[0K[33;1mDisabling Gradle daemon[0m
+travis_time:start:0a5c6100[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+
+travis_time:end:0a5c6100:start=1505393482986075031,finish=1505393482991285149,duration=5210118[0K$ export PATH=$JAVA_HOME/bin:$PATH
+$ java -Xmx32m -version
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+java version "1.8.0_144"
+Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
+Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
+$ javac -J-Xmx32m -version
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+javac 1.8.0_144
+travis_fold:start:install.1[0Ktravis_time:start:0fab1b84[0K$ [ "${TRAVIS_OS_NAME}" = "osx" ] && brew update || true
+
+travis_time:end:0fab1b84:start=1505393483961024053,finish=1505393483965004994,duration=3980941[0Ktravis_fold:end:install.1[0Ktravis_fold:start:install.2[0Ktravis_time:start:01da9a7e[0K$ [ "${TRAVIS_OS_NAME}" = "osx" ] && brew uninstall libtool && brew install libtool || true
+
+travis_time:end:01da9a7e:start=1505393483970009072,finish=1505393483973869368,duration=3860296[0Ktravis_fold:end:install.2[0Ktravis_fold:start:install.3[0Ktravis_time:start:1392ef38[0K$ [ "${TRAVIS_OS_NAME}" = "osx" ] && brew install ant || true
+
+travis_time:end:1392ef38:start=1505393483978831051,finish=1505393483982853273,duration=4022222[0Ktravis_fold:end:install.3[0Ktravis_time:start:04daf738[0K$ ant test
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+Buildfile: /home/travis/build/java-native-access/jna/build.xml
+
+-enable-native:
+
+-dynamic-properties:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/ant-elfanalyser
+    [javac] Compiling 2 source files to /home/travis/build/java-native-access/jna/build/ant-elfanalyser
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/native-linux-x86-64
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/classes
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/test-classes
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/reports
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/doc
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/aar
+     [echo] Java version 1.8.0_144, compatibility: 1.6, ant: 1.8
+     [echo] JNA version 5.0.0-SNAPSHOT, native 5.2.0, android 3
+     [echo] Java HotSpot(TM) 64-Bit Server VM (Oracle Corporation, 25.144-b01)
+     [echo] java.home=/usr/lib/jvm/java-8-oracle/jre
+     [echo] java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+     [echo] os.prefix=linux-x86-64
+     [echo] os.name=Linux
+     [echo] os.arch=amd64 (little)
+     [echo] build=build
+     [echo] build.native=/home/travis/build/java-native-access/jna/build/native-linux-x86-64
+     [echo] build.aar=/home/travis/build/java-native-access/jna/build/aar
+
+-setup:
+
+compile:
+    [javac] Compiling 61 source files to /home/travis/build/java-native-access/jna/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 1 warning
+
+javah:
+    [javah] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+
+-native-api-check:
+
+:rsrc:
+
+rsrc:
+
+native:
+     [exec] Generating configure
+     [exec] autoreconf: Entering directory `.'
+     [exec] autoreconf: configure.ac: not using Gettext
+     [exec] autoreconf: running: aclocal --force -I m4
+     [exec] autoreconf: configure.ac: tracing
+     [exec] autoreconf: running: libtoolize --copy --force
+     [exec] libtoolize: putting auxiliary files in `.'.
+     [exec] libtoolize: copying file `./ltmain.sh'
+     [exec] libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `m4'.
+     [exec] libtoolize: copying file `m4/libtool.m4'
+     [exec] libtoolize: copying file `m4/ltoptions.m4'
+     [exec] libtoolize: copying file `m4/ltsugar.m4'
+     [exec] libtoolize: copying file `m4/ltversion.m4'
+     [exec] libtoolize: copying file `m4/lt~obsolete.m4'
+     [exec] autoreconf: running: /usr/bin/autoconf --force
+     [exec] autoreconf: running: /usr/bin/autoheader --force
+     [exec] autoreconf: running: automake --add-missing --copy --force-missing
+     [exec] configure.ac:31: installing './compile'
+     [exec] configure.ac:8: installing './config.guess'
+     [exec] configure.ac:8: installing './config.sub'
+     [exec] configure.ac:19: installing './install-sh'
+     [exec] configure.ac:19: installing './missing'
+     [exec] Makefile.am: installing './depcomp'
+     [exec] Makefile.am:56: installing './mdate-sh'
+     [exec] Configuring libffi (amd64)
+     [exec] autoreconf: Leaving directory `.'
+     [exec] checking build system type... x86_64-unknown-linux-gnu
+     [exec] checking host system type... x86_64-unknown-linux-gnu
+     [exec] checking target system type... x86_64-unknown-linux-gnu
+     [exec] checking for gsed... sed
+     [exec] checking for a BSD-compatible install... /usr/bin/install -c
+     [exec] checking whether build environment is sane... yes
+     [exec] checking for a thread-safe mkdir -p... /bin/mkdir -p
+     [exec] checking for gawk... gawk
+     [exec] checking whether make sets $(MAKE)... yes
+     [exec] checking whether make supports nested variables... yes
+     [exec] checking for gcc... gcc -m64
+     [exec] checking whether the C compiler works... yes
+     [exec] checking for C compiler default output file name... a.out
+     [exec] checking for suffix of executables... 
+     [exec] checking whether we are cross compiling... no
+     [exec] checking for suffix of object files... o
+     [exec] checking whether we are using the GNU C compiler... yes
+     [exec] checking whether gcc -m64 accepts -g... yes
+     [exec] checking for gcc -m64 option to accept ISO C89... none needed
+     [exec] checking whether gcc -m64 understands -c and -o together... yes
+     [exec] checking for style of include used by make... GNU
+     [exec] checking dependency style of gcc -m64... gcc3
+     [exec] checking for g++... g++
+     [exec] checking whether we are using the GNU C++ compiler... yes
+     [exec] checking whether g++ accepts -g... yes
+     [exec] checking dependency style of g++... gcc3
+     [exec] checking dependency style of gcc -m64... gcc3
+     [exec] checking how to print strings... printf
+     [exec] checking for a sed that does not truncate output... /bin/sed
+     [exec] checking for grep that handles long lines and -e... /bin/grep
+     [exec] checking for egrep... /bin/grep -E
+     [exec] checking for fgrep... /bin/grep -F
+     [exec] checking for ld used by gcc -m64... /usr/bin/ld
+     [exec] checking if the linker (/usr/bin/ld) is GNU ld... yes
+     [exec] checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+     [exec] checking the name lister (/usr/bin/nm -B) interface... BSD nm
+     [exec] checking whether ln -s works... yes
+     [exec] checking the maximum length of command line arguments... 3458764513820540925
+     [exec] checking whether the shell understands some XSI constructs... yes
+     [exec] checking whether the shell understands "+="... yes
+     [exec] checking how to convert x86_64-unknown-linux-gnu file names to x86_64-unknown-linux-gnu format... func_convert_file_noop
+     [exec] checking how to convert x86_64-unknown-linux-gnu file names to toolchain format... func_convert_file_noop
+     [exec] checking for /usr/bin/ld option to reload object files... -r
+     [exec] checking for objdump... objdump
+     [exec] checking how to recognize dependent libraries... pass_all
+     [exec] checking for dlltool... no
+     [exec] checking how to associate runtime and link libraries... printf %s\n
+     [exec] checking for ar... ar
+     [exec] checking for archiver @FILE support... @
+     [exec] checking for strip... strip
+     [exec] checking for ranlib... ranlib
+     [exec] checking command to parse /usr/bin/nm -B output from gcc -m64 object... ok
+     [exec] checking for sysroot... no
+     [exec] checking for mt... mt
+     [exec] checking if mt is a manifest tool... no
+     [exec] checking how to run the C preprocessor... gcc -m64 -E
+     [exec] checking for ANSI C header files... yes
+     [exec] checking for sys/types.h... yes
+     [exec] checking for sys/stat.h... yes
+     [exec] checking for stdlib.h... yes
+     [exec] checking for string.h... yes
+     [exec] checking for memory.h... yes
+     [exec] checking for strings.h... yes
+     [exec] checking for inttypes.h... yes
+     [exec] checking for stdint.h... yes
+     [exec] checking for unistd.h... yes
+     [exec] checking for dlfcn.h... yes
+     [exec] checking for objdir... .libs
+     [exec] checking if gcc -m64 supports -fno-rtti -fno-exceptions... no
+     [exec] checking for gcc -m64 option to produce PIC... -fPIC -DPIC
+     [exec] checking if gcc -m64 PIC flag -fPIC -DPIC works... yes
+     [exec] checking if gcc -m64 static flag -static works... yes
+     [exec] checking if gcc -m64 supports -c -o file.o... yes
+     [exec] checking if gcc -m64 supports -c -o file.o... (cached) yes
+     [exec] checking whether the gcc -m64 linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+     [exec] checking dynamic linker characteristics... GNU/Linux ld.so
+     [exec] checking how to hardcode library paths into programs... immediate
+     [exec] checking whether stripping libraries is possible... yes
+     [exec] checking if libtool supports shared libraries... yes
+     [exec] checking whether to build shared libraries... no
+     [exec] checking whether to build static libraries... yes
+     [exec] checking how to run the C++ preprocessor... g++ -E
+     [exec] checking for ld used by g++... /usr/bin/ld -m elf_x86_64
+     [exec] checking if the linker (/usr/bin/ld -m elf_x86_64) is GNU ld... yes
+     [exec] checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+     [exec] checking for g++ option to produce PIC... -fPIC -DPIC
+     [exec] checking if g++ PIC flag -fPIC -DPIC works... yes
+     [exec] checking if g++ static flag -static works... yes
+     [exec] checking if g++ supports -c -o file.o... yes
+     [exec] checking if g++ supports -c -o file.o... (cached) yes
+     [exec] checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+     [exec] checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+     [exec] checking how to hardcode library paths into programs... immediate
+     [exec] checking size of size_t... 8
+     [exec] checking for C compiler vendor... gnu
+     [exec] checking CFLAGS for maximum warnings... -Wall
+     [exec] checking whether to enable maintainer-specific portions of Makefiles... no
+     [exec] checking sys/mman.h usability... yes
+     [exec] checking sys/mman.h presence... yes
+     [exec] checking for sys/mman.h... yes
+     [exec] checking for mmap... yes
+     [exec] checking for mkostemp... yes
+     [exec] checking for sys/mman.h... (cached) yes
+     [exec] checking for mmap... (cached) yes
+     [exec] checking whether read-only mmap of a plain file works... yes
+     [exec] checking whether mmap from /dev/zero works... yes
+     [exec] checking for MAP_ANON(YMOUS)... yes
+     [exec] checking whether mmap with MAP_ANON(YMOUS) works... yes
+     [exec] checking for ANSI C header files... (cached) yes
+     [exec] checking for memcpy... yes
+     [exec] checking for size_t... yes
+     [exec] checking for working alloca.h... yes
+     [exec] checking for alloca... yes
+     [exec] checking size of double... 8
+     [exec] checking size of long double... 16
+     [exec] checking whether byte ordering is bigendian... no
+     [exec] checking assembler .cfi pseudo-op support... yes
+     [exec] checking assembler supports pc related relocs... yes
+     [exec] checking assembler .ascii pseudo-op support... yes
+     [exec] checking assembler .string pseudo-op support... yes
+     [exec] checking for _ prefix in compiled symbols... no
+     [exec] checking toolchain supports unwind section type... yes
+     [exec] checking whether .eh_frame section should be read-only... yes
+     [exec] checking for __attribute__((visibility("hidden")))... yes
+     [exec] checking that generated files are newer than configure... done
+     [exec] configure: creating ./config.status
+     [exec] config.status: creating include/Makefile
+     [exec] config.status: creating include/ffi.h
+     [exec] config.status: creating Makefile
+     [exec] config.status: creating testsuite/Makefile
+     [exec] config.status: creating man/Makefile
+     [exec] config.status: creating libffi.pc
+     [exec] config.status: creating fficonfig.h
+     [exec] config.status: linking /home/travis/build/java-native-access/jna/native/libffi/src/x86/ffitarget.h to include/ffitarget.h
+     [exec] config.status: executing buildir commands
+     [exec] config.status: skipping top_srcdir/Makefile - not created
+     [exec] config.status: executing depfiles commands
+     [exec] config.status: executing libtool commands
+     [exec] config.status: executing include commands
+     [exec] config.status: executing src commands
+     [exec] make -C /home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi
+     [exec] make[1]: Entering directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi'
+     [exec] make 'AR_FLAGS=' 'CC_FOR_BUILD=' 'CFLAGS=-O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions' 'CXXFLAGS=-g -O2' 'CFLAGS_FOR_BUILD=' 'CFLAGS_FOR_TARGET=' 'INSTALL=/usr/bin/install -c' 'INSTALL_DATA=/usr/bin/install -c -m 644' 'INSTALL_PROGRAM=/usr/bin/install -c' 'INSTALL_SCRIPT=/usr/bin/install -c' 'JC1FLAGS=' 'LDFLAGS=' 'LIBCFLAGS=' 'LIBCFLAGS_FOR_TARGET=' 'MAKE=make' 'MAKEINFO=/bin/bash /home/travis/build/java-native-access/jna/native/libffi/missing makeinfo ' 'PICFLAG=' 'PICFLAG_FOR_TARGET=' 'RUNTESTFLAGS=' 'SHELL=/bin/bash' 'exec_prefix=/usr/local' 'infodir=/usr/local/share/info' 'libdir=/usr/local/lib' 'mandir=/usr/local/share/man' 'prefix=/usr/local' 'AR=ar' 'AS=as' 'CC=gcc -m64' 'CXX=g++' 'LD=/usr/bin/ld -m elf_x86_64' 'NM=/usr/bin/nm -B' 'RANLIB=ranlib' 'DESTDIR=' all-recursive
+     [exec] make[2]: Entering directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi'
+     [exec] Making all in include
+     [exec] make[3]: Entering directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/include'
+     [exec] make[3]: Nothing to be done for `all'.
+     [exec] make[3]: Leaving directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/include'
+     [exec] Making all in testsuite
+     [exec] make[3]: Entering directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/testsuite'
+     [exec] make[3]: Nothing to be done for `all'.
+     [exec] make[3]: Leaving directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/testsuite'
+     [exec] Making all in man
+     [exec] make[3]: Entering directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/man'
+     [exec] make[3]: Nothing to be done for `all'.
+     [exec] make[3]: Leaving directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/man'
+     [exec] make[3]: Entering directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi'
+     [exec] depbase=`echo src/prep_cif.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool  --tag=CC   --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -MT src/prep_cif.lo -MD -MP -MF $depbase.Tpo -c -o src/prep_cif.lo /home/travis/build/java-native-access/jna/native/libffi/src/prep_cif.c &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -O2 -fno-omit-frame-pointer -fno-strict-aliasing -Wall -fexceptions -MT src/prep_cif.lo -MD -MP -MF src/.deps/prep_cif.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/prep_cif.c  -fPIC -DPIC -o src/prep_cif.o
+     [exec] depbase=`echo src/types.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool  --tag=CC   --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -MT src/types.lo -MD -MP -MF $depbase.Tpo -c -o src/types.lo /home/travis/build/java-native-access/jna/native/libffi/src/types.c &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -O2 -fno-omit-frame-pointer -fno-strict-aliasing -Wall -fexceptions -MT src/types.lo -MD -MP -MF src/.deps/types.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/types.c  -fPIC -DPIC -o src/types.o
+     [exec] depbase=`echo src/raw_api.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool  --tag=CC   --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -MT src/raw_api.lo -MD -MP -MF $depbase.Tpo -c -o src/raw_api.lo /home/travis/build/java-native-access/jna/native/libffi/src/raw_api.c &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -O2 -fno-omit-frame-pointer -fno-strict-aliasing -Wall -fexceptions -MT src/raw_api.lo -MD -MP -MF src/.deps/raw_api.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/raw_api.c  -fPIC -DPIC -o src/raw_api.o
+     [exec] depbase=`echo src/java_raw_api.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool  --tag=CC   --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -MT src/java_raw_api.lo -MD -MP -MF $depbase.Tpo -c -o src/java_raw_api.lo /home/travis/build/java-native-access/jna/native/libffi/src/java_raw_api.c &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -O2 -fno-omit-frame-pointer -fno-strict-aliasing -Wall -fexceptions -MT src/java_raw_api.lo -MD -MP -MF src/.deps/java_raw_api.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/java_raw_api.c  -fPIC -DPIC -o src/java_raw_api.o
+     [exec] depbase=`echo src/closures.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool  --tag=CC   --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -MT src/closures.lo -MD -MP -MF $depbase.Tpo -c -o src/closures.lo /home/travis/build/java-native-access/jna/native/libffi/src/closures.c &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -O2 -fno-omit-frame-pointer -fno-strict-aliasing -Wall -fexceptions -MT src/closures.lo -MD -MP -MF src/.deps/closures.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/closures.c  -fPIC -DPIC -o src/closures.o
+     [exec] /home/travis/build/java-native-access/jna/native/libffi/src/closures.c: In function ‘dlmmap_locked’:
+     [exec] /home/travis/build/java-native-access/jna/native/libffi/src/closures.c:488:17: warning: ignoring return value of ‘ftruncate’, declared with attribute warn_unused_result [-Wunused-result]
+     [exec]        ftruncate (execfd, offset);
+     [exec]                  ^
+     [exec] /home/travis/build/java-native-access/jna/native/libffi/src/closures.c:500:17: warning: ignoring return value of ‘ftruncate’, declared with attribute warn_unused_result [-Wunused-result]
+     [exec]        ftruncate (execfd, offset);
+     [exec]                  ^
+     [exec] depbase=`echo src/x86/ffi64.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool  --tag=CC   --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -MT src/x86/ffi64.lo -MD -MP -MF $depbase.Tpo -c -o src/x86/ffi64.lo /home/travis/build/java-native-access/jna/native/libffi/src/x86/ffi64.c &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -O2 -fno-omit-frame-pointer -fno-strict-aliasing -Wall -fexceptions -MT src/x86/ffi64.lo -MD -MP -MF src/x86/.deps/ffi64.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/x86/ffi64.c  -fPIC -DPIC -o src/x86/ffi64.o
+     [exec] depbase=`echo src/x86/unix64.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool    --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -MT src/x86/unix64.lo -MD -MP -MF $depbase.Tpo -c -o src/x86/unix64.lo /home/travis/build/java-native-access/jna/native/libffi/src/x86/unix64.S &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -O2 -fno-omit-frame-pointer -fno-strict-aliasing -MT src/x86/unix64.lo -MD -MP -MF src/x86/.deps/unix64.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/x86/unix64.S  -fPIC -DPIC -o src/x86/unix64.o
+     [exec] depbase=`echo src/x86/ffi.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool  --tag=CC   --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -MT src/x86/ffi.lo -MD -MP -MF $depbase.Tpo -c -o src/x86/ffi.lo /home/travis/build/java-native-access/jna/native/libffi/src/x86/ffi.c &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -O2 -fno-omit-frame-pointer -fno-strict-aliasing -Wall -fexceptions -MT src/x86/ffi.lo -MD -MP -MF src/x86/.deps/ffi.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/x86/ffi.c  -fPIC -DPIC -o src/x86/ffi.o
+     [exec] depbase=`echo src/x86/sysv.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+     [exec] 	/bin/bash ./libtool    --mode=compile gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi  -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -MT src/x86/sysv.lo -MD -MP -MF $depbase.Tpo -c -o src/x86/sysv.lo /home/travis/build/java-native-access/jna/native/libffi/src/x86/sysv.S &&\
+     [exec] 	mv -f $depbase.Tpo $depbase.Plo
+     [exec] libtool: compile:  gcc -m64 -DHAVE_CONFIG_H -I. -I/home/travis/build/java-native-access/jna/native/libffi -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -D_REENTRANT -DHAVE_PROTECTION -I. -I/home/travis/build/java-native-access/jna/native/libffi/include -Iinclude -I/home/travis/build/java-native-access/jna/native/libffi/src -O2 -fno-omit-frame-pointer -fno-strict-aliasing -MT src/x86/sysv.lo -MD -MP -MF src/x86/.deps/sysv.Tpo -c /home/travis/build/java-native-access/jna/native/libffi/src/x86/sysv.S  -fPIC -DPIC -o src/x86/sysv.o
+     [exec] /bin/bash ./libtool  --tag=CC   --mode=link gcc -m64  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions   -o libffi_convenience.la  src/prep_cif.lo src/types.lo src/raw_api.lo src/java_raw_api.lo src/closures.lo                                src/x86/ffi64.lo src/x86/unix64.lo src/x86/ffi.lo src/x86/sysv.lo          
+     [exec] libtool: link: ar cru .libs/libffi_convenience.a  src/prep_cif.o src/types.o src/raw_api.o src/java_raw_api.o src/closures.o src/x86/ffi64.o src/x86/unix64.o src/x86/ffi.o src/x86/sysv.o
+     [exec] libtool: link: ranlib .libs/libffi_convenience.a
+     [exec] libtool: link: ( cd ".libs" && rm -f "libffi_convenience.la" && ln -s "../libffi_convenience.la" "libffi_convenience.la" )
+     [exec] /bin/bash ./libtool  --tag=CC   --mode=link gcc -m64  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -Wall -fexceptions -no-undefined -version-info `grep -v '^#' /home/travis/build/java-native-access/jna/native/libffi/libtool-version`    -o libffi.la -rpath /usr/local/lib/../lib src/prep_cif.lo src/types.lo src/raw_api.lo src/java_raw_api.lo src/closures.lo                                src/x86/ffi64.lo src/x86/unix64.lo src/x86/ffi.lo src/x86/sysv.lo          
+     [exec] libtool: link: ar cru .libs/libffi.a  src/prep_cif.o src/types.o src/raw_api.o src/java_raw_api.o src/closures.o src/x86/ffi64.o src/x86/unix64.o src/x86/ffi.o src/x86/sysv.o
+     [exec] libtool: link: ranlib .libs/libffi.a
+     [exec] libtool: link: ( cd ".libs" && rm -f "libffi.la" && ln -s "../libffi.la" "libffi.la" )
+     [exec] make[3]: Leaving directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi'
+     [exec] make[2]: Leaving directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi'
+     [exec] make[1]: Leaving directory `/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi'
+     [exec] gcc -m64 -W -Wall -Wno-unused -Wno-parentheses -fPIC  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -D_REENTRANT -DHAVE_PROTECTION -I"/usr/lib/jvm/java-8-oracle/jre/../include" -I"/usr/lib/jvm/java-8-oracle/jre/../include/linux" -I"/home/travis/build/java-native-access/jna/build/native-linux-x86-64" -I/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/include -DJNA_JNI_VERSION='"5.2.0"' -DCHECKSUM='"74e8f8e397c43487738c5c1f1363498b"'  -c dispatch.c -o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/dispatch.o
+     [exec] gcc -m64 -W -Wall -Wno-unused -Wno-parentheses -fPIC  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -D_REENTRANT -DHAVE_PROTECTION -I"/usr/lib/jvm/java-8-oracle/jre/../include" -I"/usr/lib/jvm/java-8-oracle/jre/../include/linux" -I"/home/travis/build/java-native-access/jna/build/native-linux-x86-64" -I/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/include -DJNA_JNI_VERSION='"5.2.0"' -DCHECKSUM='"74e8f8e397c43487738c5c1f1363498b"'  -c callback.c -o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/callback.o
+     [exec] gcc -m64 -m64 -o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/libjnidispatch.so -shared -static-libgcc -Wl,-soname,/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libjnidispatch.so,-Bsymbolic /home/travis/build/java-native-access/jna/build/native-linux-x86-64/dispatch.o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/callback.o  /home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/.libs/libffi.a 
+     [exec] strip -x /home/travis/build/java-native-access/jna/build/native-linux-x86-64/libjnidispatch.so
+     [exec] gcc -m64 -W -Wall -Wno-unused -Wno-parentheses -fPIC  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -D_REENTRANT -DHAVE_PROTECTION -I"/usr/lib/jvm/java-8-oracle/jre/../include" -I"/usr/lib/jvm/java-8-oracle/jre/../include/linux" -I"/home/travis/build/java-native-access/jna/build/native-linux-x86-64" -I/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/include -DJNA_JNI_VERSION='"5.2.0"' -DCHECKSUM='"74e8f8e397c43487738c5c1f1363498b"'  -c testlib.c -o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/testlib.o
+     [exec] gcc -m64 -m64 -o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/libtestlib.so -shared -static-libgcc -Wl,-soname,/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libtestlib.so,-Bsymbolic /home/travis/build/java-native-access/jna/build/native-linux-x86-64/testlib.o 
+     [exec] gcc -m64 -W -Wall -Wno-unused -Wno-parentheses -fPIC  -O2 -fno-omit-frame-pointer -fno-strict-aliasing  -D_REENTRANT -DHAVE_PROTECTION -I"/usr/lib/jvm/java-8-oracle/jre/../include" -I"/usr/lib/jvm/java-8-oracle/jre/../include/linux" -I"/home/travis/build/java-native-access/jna/build/native-linux-x86-64" -I/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libffi/include -DJNA_JNI_VERSION='"5.2.0"' -DCHECKSUM='"74e8f8e397c43487738c5c1f1363498b"'  -c testlib2.c -o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/testlib2.o
+     [exec] gcc -m64 -m64 -o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/libtestlib2.so -shared -static-libgcc -Wl,-soname,/home/travis/build/java-native-access/jna/build/native-linux-x86-64/libtestlib2.so,-Bsymbolic /home/travis/build/java-native-access/jna/build/native-linux-x86-64/testlib2.o /home/travis/build/java-native-access/jna/build/native-linux-x86-64/libtestlib.so 
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/classes/com/sun/jna/linux-x86-64
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build/classes/com/sun/jna/linux-x86-64
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build.eclipse/classes/com/sun/jna/linux-x86-64
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build.eclipse/classes/com/sun/jna/linux-x86-64
+      [jar] Building jar: /home/travis/build/java-native-access/jna/build/linux-x86-64.jar
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/lib/native
+
+:jar:
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/build/jna.jar
+      [jar] com/sun/jna/linux-x86-64/libjnidispatch.so already added, skipping
+      [zip] Building zip: /home/travis/build/java-native-access/jna/build/jna-min.jar
+
+compile-tests:
+    [javac] Compiling 43 source files to /home/travis/build/java-native-access/jna/build/test-classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 1 warning
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/test-classes/linux-x86-64
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build/test-classes
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build/test-classes/linux-x86-64
+      [jar] Building jar: /home/travis/build/java-native-access/jna/build/jna-test.jar
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/jws
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build/jws
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build/jws
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build/jws
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/build/jws
+      [jar] Building jar: /home/travis/build/java-native-access/jna/build/jws/jnidispatch.jar
+
+test:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/junit-results/linux-x86-64
+     [echo] Saving test results in /home/travis/build/java-native-access/jna/build/junit-results/linux-x86-64
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.AnnotatedLibraryTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.198 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.ArgumentsMarshalTest
+    [junit] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.248 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.BufferArgumentsMarshalTest
+    [junit] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.196 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.ByReferenceArgumentsTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.16 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.CallbacksTest
+    [junit] Tests run: 52, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.51 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectArgumentsMarshalTest
+    [junit] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.207 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectBufferArgumentsMarshalTest
+    [junit] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.19 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectByReferenceArgumentsTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.158 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectCallbacksTest
+    [junit] Tests run: 52, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.467 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectReturnTypesTest
+    [junit] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.19 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectStructureByValueTest
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.183 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.DirectTypeMapperTest
+    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.168 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.ELFAnalyserTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.FunctionTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.149 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.HeadlessLoadLibraryTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.IntegerTypeTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.091 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.JNALoadTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.419 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.LastErrorTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.229 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.LibraryLoadTest
+    [junit] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.233 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.MemoryTest
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.352 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.NativeLibraryTest
+    [junit] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.231 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.NativeTest
+    [junit] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.68 sec
+    [junit] 
+    [junit] ------------- Standard Error -----------------
+    [junit] JNA Warning: Encoding 'unsupported' is unsupported
+    [junit] JNA Warning: Encoding with fallback UTF-8
+    [junit] ------------- ---------------- ---------------
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.PerformanceTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.PlatformTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.PointerBufferTest
+    [junit] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.08 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.PointerTest
+    [junit] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.087 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.PrematureGCTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.108 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.ReturnTypesTest
+    [junit] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.186 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.StructureBufferFieldTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.087 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.StructureByValueTest
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.181 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.StructureFieldOrderInspectorTest
+    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.543 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.StructureTest
+    [junit] Tests run: 87, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.372 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.TypeMapperTest
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.189 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.UnionTest
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.11 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.VMCrashProtectionTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.077 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.VarArgsCheckerTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.VarArgsTest
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.164 sec
+    [junit] 
+[junitreport] Processing /home/travis/build/java-native-access/jna/build/junit-results/linux-x86-64/TESTS-TestSuites.xml to /tmp/null221356179
+[junitreport] Loading stylesheet jar:file:/usr/share/ant/lib/ant-junit.jar!/org/apache/tools/ant/taskdefs/optional/junit/xsl/junit-frames.xsl
+[junitreport] Warning: org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.
+[junitreport] Warning: org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+[junitreport] Transform time: 924ms
+[junitreport] Deleting: /tmp/null221356179
+     [echo] View test report in file:///home/travis/build/java-native-access/jna/build/reports/junit/linux-x86-64/index.html
+
+BUILD SUCCESSFUL
+Total time: 53 seconds
+
+travis_time:end:04daf738:start=1505393483987842661,finish=1505393537651626063,duration=53663783402[0K
+[32;1mThe command "ant test" exited with 0.[0m
+travis_time:start:036a707c[0K$ ant test-platform
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+Buildfile: /home/travis/build/java-native-access/jna/build.xml
+
+-dynamic-properties:
+     [echo] Java version 1.8.0_144, compatibility: 1.6, ant: 1.8
+     [echo] JNA version 5.0.0-SNAPSHOT, native 5.2.0, android 3
+     [echo] Java HotSpot(TM) 64-Bit Server VM (Oracle Corporation, 25.144-b01)
+     [echo] java.home=/usr/lib/jvm/java-8-oracle/jre
+     [echo] java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+     [echo] os.prefix=linux-x86-64
+     [echo] os.name=Linux
+     [echo] os.arch=amd64 (little)
+     [echo] build=build
+     [echo] build.native=/home/travis/build/java-native-access/jna/build/native-linux-x86-64
+     [echo] build.aar=/home/travis/build/java-native-access/jna/build/aar
+
+-setup:
+
+compile:
+
+-enable-native:
+
+javah:
+
+-native-api-check:
+
+:rsrc:
+
+rsrc:
+
+native:
+
+:jar:
+
+jar:
+
+compile-some-tests:
+
+platform-jar:
+
+-pre-init:
+
+-init-private:
+
+-init-user:
+
+-init-project:
+
+-init-macrodef-property:
+
+-do-init:
+
+-post-init:
+
+-init-check:
+
+-init-ap-cmdline-properties:
+
+-init-macrodef-javac-with-processors:
+
+-init-macrodef-javac-without-processors:
+
+-init-macrodef-javac:
+
+-init-macrodef-test-impl:
+
+-init-macrodef-junit-init:
+
+-init-macrodef-junit-single:
+
+-init-test-properties:
+
+-init-macrodef-junit-batch:
+
+-init-macrodef-junit:
+
+-init-macrodef-junit-impl:
+Trying to override old definition of task http://www.netbeans.org/ns/j2se-project/3:test-impl
+
+-init-macrodef-testng:
+
+-init-macrodef-testng-impl:
+
+-init-macrodef-test:
+
+-init-macrodef-junit-debug:
+
+-init-macrodef-junit-debug-batch:
+
+-init-macrodef-junit-debug-impl:
+
+-init-macrodef-test-debug-junit:
+
+-init-macrodef-testng-debug:
+
+-init-macrodef-testng-debug-impl:
+
+-init-macrodef-test-debug-testng:
+
+-init-macrodef-test-debug:
+
+-init-debug-args:
+
+-init-macrodef-nbjpda:
+
+-init-macrodef-debug:
+
+-init-macrodef-java:
+
+-init-presetdef-jar:
+
+-init-ap-cmdline-supported:
+
+-init-ap-cmdline:
+
+init:
+
+-deps-jar-init:
+
+deps-jar:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/build
+
+-warn-already-built-jar:
+[propertyfile] Updating property file: /home/travis/build/java-native-access/jna/contrib/platform/build/built-jar.properties
+
+-check-automatic-build:
+
+-clean-after-automatic-build:
+
+-verify-automatic-build:
+
+-pre-pre-compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/build/classes
+
+-pre-compile:
+
+-copy-persistence-xml:
+
+-compile-depend:
+
+-do-compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/build/empty
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/${build.generated.sources.dir}/ap-source-output
+    [javac] Compiling 206 source files to /home/travis/build/java-native-access/jna/contrib/platform/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 1 warning
+     [copy] Copying 20 files to /home/travis/build/java-native-access/jna/contrib/platform/build/classes
+
+-post-compile:
+
+compile:
+
+-pre-jar:
+
+-pre-pre-jar:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/dist
+
+-do-jar-create-manifest:
+
+-do-jar-copy-manifest:
+
+-do-jar-set-mainclass:
+
+-do-jar-set-profile:
+
+-do-jar-set-splashscreen:
+
+-do-jar-jar:
+[j2seproject1:jar] Building jar: /home/travis/build/java-native-access/jna/contrib/platform/dist/jna-platform.jar
+
+-init-macrodef-copylibs:
+
+-do-jar-copylibs:
+
+-do-jar-delete-manifest:
+
+-do-jar-without-libraries:
+
+-do-jar-with-libraries:
+
+-post-jar:
+
+-do-jar:
+
+jar:
+      [zip] Building zip: /home/travis/build/java-native-access/jna/dist/platform-5.0.0-SNAPSHOT-sources.jar
+
+test-platform:
+
+-pre-init:
+
+-init-private:
+
+-init-user:
+
+-init-project:
+
+-init-macrodef-property:
+
+-do-init:
+
+-post-init:
+
+-init-check:
+
+-init-ap-cmdline-properties:
+
+-init-macrodef-javac-with-processors:
+
+-init-macrodef-javac-without-processors:
+
+-init-macrodef-javac:
+
+-init-macrodef-test-impl:
+
+-init-macrodef-junit-init:
+
+-init-macrodef-junit-single:
+
+-init-test-properties:
+
+-init-macrodef-junit-batch:
+
+-init-macrodef-junit:
+
+-init-macrodef-junit-impl:
+Trying to override old definition of task http://www.netbeans.org/ns/j2se-project/3:test-impl
+
+-init-macrodef-testng:
+
+-init-macrodef-testng-impl:
+
+-init-macrodef-test:
+
+-init-macrodef-junit-debug:
+
+-init-macrodef-junit-debug-batch:
+
+-init-macrodef-junit-debug-impl:
+
+-init-macrodef-test-debug-junit:
+
+-init-macrodef-testng-debug:
+
+-init-macrodef-testng-debug-impl:
+
+-init-macrodef-test-debug-testng:
+
+-init-macrodef-test-debug:
+
+-init-debug-args:
+
+-init-macrodef-nbjpda:
+
+-init-macrodef-debug:
+
+-init-macrodef-java:
+
+-init-presetdef-jar:
+
+-init-ap-cmdline-supported:
+
+-init-ap-cmdline:
+
+init:
+
+-deps-jar-init:
+   [delete] Deleting: /home/travis/build/java-native-access/jna/contrib/platform/build/built-jar.properties
+
+deps-jar:
+
+-warn-already-built-jar:
+[propertyfile] Updating property file: /home/travis/build/java-native-access/jna/contrib/platform/build/built-jar.properties
+
+-check-automatic-build:
+
+-clean-after-automatic-build:
+
+-verify-automatic-build:
+
+-pre-pre-compile:
+
+-pre-compile:
+
+-copy-persistence-xml:
+
+-compile-depend:
+
+-do-compile:
+
+-post-compile:
+
+compile:
+
+-pre-pre-compile-test:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/build/test/classes
+
+-pre-compile-test:
+
+-compile-test-depend:
+
+-do-compile-test:
+    [javac] Compiling 100 source files to /home/travis/build/java-native-access/jna/contrib/platform/build/test/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 1 warning
+     [copy] Copying 5 files to /home/travis/build/java-native-access/jna/contrib/platform/build/test/classes
+
+-post-compile-test:
+
+compile-test:
+
+-pre-test-run:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/build/test/results
+
+test:
+     [echo] Running platform tests: test
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/platform/build/junit-results/linux-x86-64
+     [echo] Saving test results in /home/travis/build/java-native-access/jna/contrib/platform/build/junit-results/linux-x86-64
+     [echo] tests.platform=**/unix/**/*Test.java
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.platform.unix.LibCTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.172 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.platform.unix.X11Test
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 sec
+    [junit] 
+    [junit] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+    [junit] Testsuite: com.sun.jna.platform.unix.solaris.LibKstatTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 sec
+    [junit] 
+[junitreport] Processing /home/travis/build/java-native-access/jna/contrib/platform/build/junit-results/linux-x86-64/TESTS-TestSuites.xml to /tmp/null1197150251
+[junitreport] Loading stylesheet jar:file:/usr/share/ant/lib/ant-junit.jar!/org/apache/tools/ant/taskdefs/optional/junit/xsl/junit-frames.xsl
+[junitreport] Warning: org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.
+[junitreport] Warning: org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+[junitreport] Transform time: 510ms
+[junitreport] Deleting: /tmp/null1197150251
+     [echo] View test report in file:///home/travis/build/java-native-access/jna/contrib/platform/build/reports/junit/linux-x86-64/index.html
+
+BUILD SUCCESSFUL
+Total time: 7 seconds
+
+travis_time:end:036a707c:start=1505393537656676191,finish=1505393545813380467,duration=8156704276[0K
+[32;1mThe command "ant test-platform" exited with 0.[0m
+travis_time:start:04a06676[0K$ ant dist
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+Buildfile: /home/travis/build/java-native-access/jna/build.xml
+
+-dynamic-properties:
+     [echo] Java version 1.8.0_144, compatibility: 1.6, ant: 1.8
+     [echo] JNA version 5.0.0-SNAPSHOT, native 5.2.0, android 3
+     [echo] Java HotSpot(TM) 64-Bit Server VM (Oracle Corporation, 25.144-b01)
+     [echo] java.home=/usr/lib/jvm/java-8-oracle/jre
+     [echo] java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+     [echo] os.prefix=linux-x86-64
+     [echo] os.name=Linux
+     [echo] os.arch=amd64 (little)
+     [echo] build=build
+     [echo] build.native=/home/travis/build/java-native-access/jna/build/native-linux-x86-64
+     [echo] build.aar=/home/travis/build/java-native-access/jna/build/aar
+
+-setup:
+
+-enable-native:
+
+compile:
+
+javah:
+
+-native-api-check:
+
+:rsrc:
+
+rsrc:
+
+native:
+
+:jar:
+
+jar:
+
+aar:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/build/aar/res/values
+      [zip] Building zip: /home/travis/build/java-native-access/jna/build/jna.aar
+
+javadoc:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/doc/javadoc
+  [javadoc] Generating Javadoc
+  [javadoc] Javadoc execution
+  [javadoc] Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+  [javadoc] Loading source files for package com.sun.jna.ptr...
+  [javadoc] Loading source files for package com.sun.jna.win32...
+  [javadoc] Loading source files for package com.sun.jna.platform.dnd...
+  [javadoc] Loading source files for package com.sun.jna.platform.mac...
+  [javadoc] Loading source files for package com.sun.jna.platform.unix...
+  [javadoc] Loading source files for package com.sun.jna.platform.unix.solaris...
+  [javadoc] Loading source files for package com.sun.jna.platform.win32...
+  [javadoc] Loading source files for package com.sun.jna.platform.win32.COM...
+  [javadoc] Loading source files for package com.sun.jna.platform.win32.COM.tlb...
+  [javadoc] Loading source files for package com.sun.jna.platform.win32.COM.tlb.imp...
+  [javadoc] Loading source files for package com.sun.jna.platform.win32.COM.util...
+  [javadoc] Loading source files for package com.sun.jna.platform.win32.COM.util.annotation...
+  [javadoc] Loading source files for package com.sun.jna.platform.wince...
+  [javadoc] Loading source files for package com.sun.jna...
+  [javadoc] Loading source files for package com.sun.jna.platform...
+  [javadoc] Constructing Javadoc information...
+  [javadoc] Standard Doclet version 1.8.0_144
+  [javadoc] Building tree for all the packages and classes...
+  [javadoc] Building index for all the packages and classes...
+  [javadoc] Building index for all classes...
+      [jar] Building jar: /home/travis/build/java-native-access/jna/dist/platform-5.0.0-SNAPSHOT-javadoc.jar
+
+platform-jar:
+
+-pre-init:
+
+-init-private:
+
+-init-user:
+
+-init-project:
+
+-init-macrodef-property:
+
+-do-init:
+
+-post-init:
+
+-init-check:
+
+-init-ap-cmdline-properties:
+
+-init-macrodef-javac-with-processors:
+
+-init-macrodef-javac-without-processors:
+
+-init-macrodef-javac:
+
+-init-macrodef-test-impl:
+
+-init-macrodef-junit-init:
+
+-init-macrodef-junit-single:
+
+-init-test-properties:
+
+-init-macrodef-junit-batch:
+
+-init-macrodef-junit:
+
+-init-macrodef-junit-impl:
+Trying to override old definition of task http://www.netbeans.org/ns/j2se-project/3:test-impl
+
+-init-macrodef-testng:
+
+-init-macrodef-testng-impl:
+
+-init-macrodef-test:
+
+-init-macrodef-junit-debug:
+
+-init-macrodef-junit-debug-batch:
+
+-init-macrodef-junit-debug-impl:
+
+-init-macrodef-test-debug-junit:
+
+-init-macrodef-testng-debug:
+
+-init-macrodef-testng-debug-impl:
+
+-init-macrodef-test-debug-testng:
+
+-init-macrodef-test-debug:
+
+-init-debug-args:
+
+-init-macrodef-nbjpda:
+
+-init-macrodef-debug:
+
+-init-macrodef-java:
+
+-init-presetdef-jar:
+
+-init-ap-cmdline-supported:
+
+-init-ap-cmdline:
+
+init:
+
+-deps-jar-init:
+   [delete] Deleting: /home/travis/build/java-native-access/jna/contrib/platform/build/built-jar.properties
+
+deps-jar:
+
+-warn-already-built-jar:
+[propertyfile] Updating property file: /home/travis/build/java-native-access/jna/contrib/platform/build/built-jar.properties
+
+-check-automatic-build:
+
+-clean-after-automatic-build:
+
+-verify-automatic-build:
+
+-pre-pre-compile:
+
+-pre-compile:
+
+-copy-persistence-xml:
+
+-compile-depend:
+
+-do-compile:
+
+-post-compile:
+
+compile:
+
+-pre-jar:
+
+-pre-pre-jar:
+
+-do-jar-create-manifest:
+
+-do-jar-copy-manifest:
+
+-do-jar-set-mainclass:
+
+-do-jar-set-profile:
+
+-do-jar-set-splashscreen:
+
+-do-jar-jar:
+
+-init-macrodef-copylibs:
+
+-do-jar-copylibs:
+
+-do-jar-delete-manifest:
+
+-do-jar-without-libraries:
+
+-do-jar-with-libraries:
+
+-post-jar:
+
+-do-jar:
+
+jar:
+
+contrib-jars:
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/alphamaskdemo/build/classes
+    [javac] Compiling 2 source files to /home/travis/build/java-native-access/jna/contrib/alphamaskdemo/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 1 warning
+
+jar:
+     [copy] Copying 2 files to /home/travis/build/java-native-access/jna/contrib/alphamaskdemo/build/classes/com
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/alphamaskdemo/build/demo-alphamask.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/balloonmanagerdemo/build/classes
+    [javac] Compiling 2 source files to /home/travis/build/java-native-access/jna/contrib/balloonmanagerdemo/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/balloonmanagerdemo/build/demo-balloonmanager.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/balloontips/build/classes
+    [javac] Compiling 2 source files to /home/travis/build/java-native-access/jna/contrib/balloontips/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/balloontips/build/demo-balloontips.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/dnddemo/build/classes
+    [javac] Compiling 1 source file to /home/travis/build/java-native-access/jna/contrib/dnddemo/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+     [copy] Copying 1 file to /home/travis/build/java-native-access/jna/contrib/dnddemo/build/classes/com
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/dnddemo/build/demo-dnd.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/monitordemo/build/classes
+    [javac] Compiling 1 source file to /home/travis/build/java-native-access/jna/contrib/monitordemo/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/monitordemo/build/demo-monitordemo.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/msoffice/build/classes
+    [javac] Compiling 64 source files to /home/travis/build/java-native-access/jna/contrib/msoffice/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+     [copy] Copying 2 files to /home/travis/build/java-native-access/jna/contrib/msoffice/build/classes/com
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/msoffice/build/demo-msoffice.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/native_window_msg/build/classes
+    [javac] Compiling 1 source file to /home/travis/build/java-native-access/jna/contrib/native_window_msg/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/native_window_msg/build/demo-nativewindowmsg.jar
+
+-pre-init:
+
+-init-private:
+
+-init-user:
+
+-init-project:
+
+-init-macrodef-property:
+
+-do-init:
+
+-post-init:
+
+-init-check:
+
+-init-macrodef-javac:
+
+-init-macrodef-junit:
+
+-init-macrodef-nbjpda:
+
+-init-macrodef-debug:
+
+-init-macrodef-java:
+
+-init-presetdef-jar:
+
+init:
+
+deps-jar:
+
+-pre-pre-compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/ntservice/build/classes
+
+-pre-compile:
+
+-do-compile:
+    [javac] Compiling 2 source files to /home/travis/build/java-native-access/jna/contrib/ntservice/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+-post-compile:
+
+compile:
+
+-pre-jar:
+
+-pre-pre-jar:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/ntservice/dist
+
+-do-jar-with-manifest:
+
+-do-jar-without-manifest:
+
+-do-jar-with-mainclass:
+[j2seproject1:jar] Building jar: /home/travis/build/java-native-access/jna/contrib/ntservice/dist/contrib-ntservice.jar
+     [echo] To run this application from the command line without Ant, try:
+     [echo] java -cp "/home/travis/build/java-native-access/jna/build/jna.jar:/home/travis/build/java-native-access/jna/contrib/platform/dist/jna-platform.jar:/home/travis/build/java-native-access/jna/contrib/ntservice/dist/contrib-ntservice.jar" jnacontrib.win32.TestService
+
+-do-jar-with-libraries:
+
+-post-jar:
+
+jar:
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/shapedwindowdemo/build/classes
+    [javac] Compiling 1 source file to /home/travis/build/java-native-access/jna/contrib/shapedwindowdemo/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/shapedwindowdemo/build/demo-shapedwindow.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/w32keyhook/build/classes
+    [javac] Compiling 1 source file to /home/travis/build/java-native-access/jna/contrib/w32keyhook/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/w32keyhook/build/demo-w32keyhook.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/w32printing/build/classes
+    [javac] Compiling 1 source file to /home/travis/build/java-native-access/jna/contrib/w32printing/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/w32printing/build/demo-w32printing.jar
+
+compile:
+    [mkdir] Created dir: /home/travis/build/java-native-access/jna/contrib/x11/build/classes
+    [javac] Compiling 4 source files to /home/travis/build/java-native-access/jna/contrib/x11/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 1 warning
+
+jar:
+      [jar] Building jar: /home/travis/build/java-native-access/jna/contrib/x11/build/demo-x11.jar
+
+compile-tests:
+
+dist:
+     [copy] Copying 37 files to /home/travis/build/java-native-access/jna/dist
+     [copy] Copying 11 files to /home/travis/build/java-native-access/jna/dist/jnacontrib
+      [jar] Building jar: /home/travis/build/java-native-access/jna/dist/jna-5.0.0-SNAPSHOT-javadoc.jar
+      [zip] Building zip: /home/travis/build/java-native-access/jna/dist/doc.zip
+      [zip] Building zip: /home/travis/build/java-native-access/jna/dist/src.zip
+      [zip] Building zip: /home/travis/build/java-native-access/jna/dist/src-full.zip
+      [zip] Building zip: /home/travis/build/java-native-access/jna/dist/jna-5.0.0-SNAPSHOT-sources.jar
+
+BUILD SUCCESSFUL
+Total time: 24 seconds
+
+travis_time:end:04a06676:start=1505393545818746724,finish=1505393570705046338,duration=24886299614[0K
+[32;1mThe command "ant dist" exited with 0.[0m
+
+Done. Your build exited with 0.

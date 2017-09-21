@@ -1,0 +1,582 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: 0791a6dd-7eeb-42d3-8b99-72786d6c9630@1.i-0ce9108-production-2-worker-org-ec2.travisci.net
+version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
+instance: 850efd1:travis:java (via amqp)
+startup: 610.912678ms
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: trusty
+Build id: 277137957
+Job id: 277137958
+Runtime kernel version: 4.11.6-041106-generic
+travis-build version: d172b37cb
+[34m[1mBuild image provisioning date and time[0m
+Tue Aug 29 02:50:02 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 14.04.5 LTS
+Release:	14.04
+Codename:	trusty
+[34m[1mCookbooks Version[0m
+4642454 https://github.com/travis-ci/travis-cookbooks/tree/4642454
+[34m[1mgit version[0m
+git version 2.14.1
+[34m[1mbash version[0m
+GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
+[34m[1mgcc version[0m
+gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+Copyright (C) 2013 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mdocker version[0m
+Client:
+ Version:      17.03.1-ce
+ API version:  1.27
+ Go version:   go1.7.5
+ Git commit:   c6d412e
+ Built:        Mon Mar 27 16:58:30 2017
+ OS/Arch:      linux/amd64
+[34m[1mclang version[0m
+clang version 3.9.0 (tags/RELEASE_390/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /usr/local/clang-3.9.0/bin
+[34m[1mjq version[0m
+jq-1.5
+[34m[1mbats version[0m
+Bats 0.4.0
+[34m[1mshellcheck version[0m
+0.4.6
+[34m[1mshfmt version[0m
+v1.3.1
+[34m[1mccache version[0m
+ccache version 3.1.9
+
+Copyright (C) 2002-2007 Andrew Tridgell
+Copyright (C) 2009-2011 Joel Rosdahl
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 3 of the License, or (at your option) any later
+version.
+[34m[1mcmake version[0m
+cmake version 3.2.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+[34m[1mheroku version[0m
+heroku-cli/6.13.19-6cd27b3 (linux-x64) node-v8.3.0
+[34m[1mimagemagick version[0m
+Version: ImageMagick 6.7.7-10 2017-07-31 Q16 http://www.imagemagick.org
+[34m[1mmd5deep version[0m
+4.2
+[34m[1mmercurial version[0m
+Mercurial Distributed SCM (version 4.2.2)
+(see https://mercurial-scm.org for more information)
+
+Copyright (C) 2005-2017 Matt Mackall and others
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+[34m[1mmysql version[0m
+mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
+[34m[1mopenssl version[0m
+OpenSSL 1.0.1f 6 Jan 2014
+[34m[1mpacker version[0m
+Packer v1.0.2
+
+Your version of Packer is out of date! The latest version
+is 1.0.4. You can update by downloading from www.packer.io
+[34m[1mpostgresql client version[0m
+psql (PostgreSQL) 9.6.4
+[34m[1mragel version[0m
+Ragel State Machine Compiler version 6.8 Feb 2013
+Copyright (c) 2001-2009 by Adrian Thurston
+[34m[1msubversion version[0m
+svn, version 1.8.8 (r1568071)
+   compiled Aug 10 2017, 17:20:39 on x86_64-pc-linux-gnu
+
+Copyright (C) 2013 The Apache Software Foundation.
+This software consists of contributions made by many people;
+see the NOTICE file for more information.
+Subversion is open source software, see http://subversion.apache.org/
+
+The following repository access (RA) modules are available:
+
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - with Cyrus SASL authentication
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
+  - using serf 1.3.3
+  - handles 'http' scheme
+  - handles 'https' scheme
+
+[34m[1msudo version[0m
+Sudo version 1.8.9p5
+Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
+Sudoers policy plugin version 1.8.9p5
+Sudoers file grammar version 43
+
+Sudoers path: /etc/sudoers
+Authentication methods: 'pam'
+Syslog facility if syslog is being used for logging: authpriv
+Syslog priority to use when user authenticates successfully: notice
+Syslog priority to use when user authenticates unsuccessfully: alert
+Send mail if the user is not in sudoers
+Use a separate timestamp for each user/tty combo
+Lecture user the first time they run sudo
+Root may run sudo
+Allow some information gathering to give useful error messages
+Require fully-qualified hostnames in the sudoers file
+Visudo will honor the EDITOR environment variable
+Set the LOGNAME and USER environment variables
+Length at which to wrap log file lines (0 for no wrap): 80
+Authentication timestamp timeout: 15.0 minutes
+Password prompt timeout: 0.0 minutes
+Number of tries to enter a password: 3
+Umask to use or 0777 to use user's: 022
+Path to mail program: /usr/sbin/sendmail
+Flags for mail program: -t
+Address to send mail to: root
+Subject line for mail messages: *** SECURITY information for %h ***
+Incorrect password message: Sorry, try again.
+Path to authentication timestamp dir: /var/lib/sudo
+Default password prompt: [sudo] password for %p: 
+Default user to run commands as: root
+Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+Path to the editor for use by visudo: /usr/bin/editor
+When to require a password for 'list' pseudocommand: any
+When to require a password for 'verify' pseudocommand: all
+File descriptors >= 3 will be closed before executing a command
+Environment variables to check for sanity:
+	TZ
+	TERM
+	LINGUAS
+	LC_*
+	LANGUAGE
+	LANG
+	COLORTERM
+Environment variables to remove:
+	RUBYOPT
+	RUBYLIB
+	PYTHONUSERBASE
+	PYTHONINSPECT
+	PYTHONPATH
+	PYTHONHOME
+	TMPPREFIX
+	ZDOTDIR
+	READNULLCMD
+	NULLCMD
+	FPATH
+	PERL5DB
+	PERL5OPT
+	PERL5LIB
+	PERLLIB
+	PERLIO_DEBUG 
+	JAVA_TOOL_OPTIONS
+	SHELLOPTS
+	GLOBIGNORE
+	PS4
+	BASH_ENV
+	ENV
+	TERMCAP
+	TERMPATH
+	TERMINFO_DIRS
+	TERMINFO
+	_RLD*
+	LD_*
+	PATH_LOCALE
+	NLSPATH
+	HOSTALIASES
+	RES_OPTIONS
+	LOCALDOMAIN
+	CDPATH
+	IFS
+Environment variables to preserve:
+	JAVA_HOME
+	TRAVIS
+	CI
+	DEBIAN_FRONTEND
+	XAUTHORIZATION
+	XAUTHORITY
+	PS2
+	PS1
+	PATH
+	LS_COLORS
+	KRB5CCNAME
+	HOSTNAME
+	HOME
+	DISPLAY
+	COLORS
+Locale to use while parsing sudoers: C
+Directory in which to store input/output logs: /var/log/sudo-io
+File in which to store the input/output log: %{seq}
+Add an entry to the utmp/utmpx file when allocating a pty
+PAM service name to use
+PAM service name to use for login shells
+Create a new PAM session for the command to run in
+Maximum I/O log sequence number: 0
+
+Local IP address and netmask pairs:
+	172.17.0.2/255.255.0.0
+
+Sudoers I/O plugin version 1.8.9p5
+[34m[1mgzip version[0m
+gzip 1.6
+Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
+Copyright (C) 1993 Jean-loup Gailly.
+This is free software.  You may redistribute copies of it under the terms of
+the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jean-loup Gailly.
+[34m[1mzip version[0m
+Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
+This is Zip 3.0 (July 5th 2008), by Info-ZIP.
+Currently maintained by E. Gordon.  Please send bug reports to
+the authors using the web page at www.info-zip.org; see README for details.
+
+Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
+as of above date; see http://www.info-zip.org/ for other sites.
+
+Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
+
+Zip special compilation options:
+	USE_EF_UT_TIME       (store Universal Time)
+	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
+	    bzip2 code and library copyright (c) Julian R Seward
+	    (See the bzip2 license for terms of use)
+	SYMLINK_SUPPORT      (symbolic links supported)
+	LARGE_FILE_SUPPORT   (can read and write large files on file system)
+	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
+	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
+	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
+	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
+	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
+
+Encryption notice:
+	The encryption code of this program is not copyrighted and is
+	put in the public domain.  It was originally written in Europe
+	and, to the best of our knowledge, can be freely distributed
+	in both source and object forms from any country, including
+	the USA under License Exception TSU of the U.S. Export
+	Administration Regulations (section 740.13(e)) of 6 June 2002.
+
+Zip environment options:
+             ZIP:  [none]
+          ZIPOPT:  [none]
+[34m[1mvim version[0m
+VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
+Included patches: 1-52
+Extra patches: 8.0.0056
+Modified by pkg-vim-maintainers@lists.alioth.debian.org
+Compiled by buildd@
+Huge version without GUI.  Features included (+) or not (-):
++acl             +farsi           +mouse_netterm   +syntax
++arabic          +file_in_path    +mouse_sgr       +tag_binary
++autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
+-balloon_eval    +float           +mouse_urxvt     -tag_any_white
+-browse          +folding         +mouse_xterm     -tcl
+++builtin_terms  -footer          +multi_byte      +terminfo
++byte_offset     +fork()          +multi_lang      +termresponse
++cindent         +gettext         -mzscheme        +textobjects
+-clientserver    -hangul_input    +netbeans_intg   +title
+-clipboard       +iconv           +path_extra      -toolbar
++cmdline_compl   +insert_expand   -perl            +user_commands
++cmdline_hist    +jumplist        +persistent_undo +vertsplit
++cmdline_info    +keymap          +postscript      +virtualedit
++comments        +langmap         +printer         +visual
++conceal         +libcall         +profile         +visualextra
++cryptv          +linebreak       +python          +viminfo
++cscope          +lispindent      -python3         +vreplace
++cursorbind      +listcmds        +quickfix        +wildignore
++cursorshape     +localmap        +reltime         +wildmenu
++dialog_con      -lua             +rightleft       +windows
++diff            +menu            -ruby            +writebackup
++digraphs        +mksession       +scrollbind      -X11
+-dnd             +modify_fname    +signs           -xfontset
+-ebcdic          +mouse           +smartindent     -xim
++emacs_tags      -mouseshape      -sniff           -xsmp
++eval            +mouse_dec       +startuptime     -xterm_clipboard
++ex_extra        +mouse_gpm       +statusline      -xterm_save
++extra_search    -mouse_jsbterm   -sun_workshop    -xpm
+   system vimrc file: "$VIM/vimrc"
+     user vimrc file: "$HOME/.vimrc"
+ 2nd user vimrc file: "~/.vim/vimrc"
+      user exrc file: "$HOME/.exrc"
+  fall-back for $VIM: "/usr/share/vim"
+Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
+Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
+[34m[1miptables version[0m
+iptables v1.4.21
+[34m[1mcurl version[0m
+curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
+[34m[1mwget version[0m
+GNU Wget 1.15 built on linux-gnu.
+[34m[1mrsync version[0m
+rsync  version 3.1.0  protocol version 31
+[34m[1mgimme version[0m
+v1.2.0
+[34m[1mnvm version[0m
+0.33.2
+[34m[1mperlbrew version[0m
+/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
+[34m[1mphpenv version[0m
+rbenv 1.1.1-4-g4ebd1bd
+[34m[1mrvm version[0m
+rvm 1.29.2 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io/]
+[34m[1mdefault ruby version[0m
+ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mElasticSearch version[0m
+5.5.0
+[34m[1mInstalled Firefox version[0m
+firefox 55.0.2
+[34m[1mMongoDB version[0m
+MongoDB 3.2.16
+[34m[1mPre-installed PostgreSQL versions[0m
+9.2.22
+9.3.18
+9.4.13
+9.5.8
+9.6.4
+[34m[1mRabbitMQ Version[0m
+3.6.11
+[34m[1mRedis version[0m
+redis-server 4.0.1
+[34m[1mriak version[0m
+2.2.3
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mant version[0m
+Apache Ant(TM) version 1.9.3 compiled on April 8 2014
+[34m[1mmvn version[0m
+Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
+Maven home: /usr/local/maven-3.5.0
+Java version: 1.8.0_144, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.4.0-92-generic", arch: "amd64", family: "unix"
+[34m[1mgradle version[0m
+
+------------------------------------------------------------
+Gradle 4.0.1
+------------------------------------------------------------
+
+Build time:   2017-07-07 14:02:41 UTC
+Revision:     38e5dc0f772daecca1d2681885d3d85414eb6826
+
+Groovy:       2.4.11
+Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+JVM:          1.8.0_144 (Oracle Corporation 25.144-b01)
+OS:           Linux 4.4.0-92-generic amd64
+
+[34m[1mlein version[0m
+WARNING: You're currently running as root; probably by accident.
+Press control-C to abort or Enter to continue as root.
+Set LEIN_ROOT to disable this warning.
+Leiningen 2.7.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mPre-installed Node.js versions[0m
+v4.8.4
+v6.11.2
+v6.9.4
+v7.4.0
+v8.4
+[34m[1mphpenv versions[0m
+  system
+  5.6
+* 5.6.31 (set by /home/travis/.phpenv/version)
+  7.0
+  7.0.22
+  hhvm
+  hhvm-stable
+[34m[1mcomposer --version[0m
+Composer version 1.4.2 2017-05-17 08:17:52
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.7
+ruby-2.3.4
+ruby-2.4.1
+travis_fold:end:system_info[0K
+W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+travis_fold:start:git.checkout[0Ktravis_time:start:155156a5[0K$ git clone --depth=50 --branch=master https://github.com/eclipse/eclipse-collections-kata.git eclipse/eclipse-collections-kata
+Cloning into 'eclipse/eclipse-collections-kata'...
+remote: Counting objects: 496, done.[K
+remote: Compressing objects:   3% (1/26)   [Kremote: Compressing objects:   7% (2/26)   [Kremote: Compressing objects:  11% (3/26)   [Kremote: Compressing objects:  15% (4/26)   [Kremote: Compressing objects:  19% (5/26)   [Kremote: Compressing objects:  23% (6/26)   [Kremote: Compressing objects:  26% (7/26)   [Kremote: Compressing objects:  30% (8/26)   [Kremote: Compressing objects:  34% (9/26)   [Kremote: Compressing objects:  38% (10/26)   [Kremote: Compressing objects:  42% (11/26)   [Kremote: Compressing objects:  46% (12/26)   [Kremote: Compressing objects:  50% (13/26)   [Kremote: Compressing objects:  53% (14/26)   [Kremote: Compressing objects:  57% (15/26)   [Kremote: Compressing objects:  61% (16/26)   [Kremote: Compressing objects:  65% (17/26)   [Kremote: Compressing objects:  69% (18/26)   [Kremote: Compressing objects:  73% (19/26)   [Kremote: Compressing objects:  76% (20/26)   [Kremote: Compressing objects:  80% (21/26)   [Kremote: Compressing objects:  84% (22/26)   [Kremote: Compressing objects:  88% (23/26)   [Kremote: Compressing objects:  92% (24/26)   [Kremote: Compressing objects:  96% (25/26)   [Kremote: Compressing objects: 100% (26/26)   [Kremote: Compressing objects: 100% (26/26), done.[K
+Receiving objects:   0% (1/496)   Receiving objects:   1% (5/496)   Receiving objects:   2% (10/496)   Receiving objects:   3% (15/496)   Receiving objects:   4% (20/496)   Receiving objects:   5% (25/496)   Receiving objects:   6% (30/496)   Receiving objects:   7% (35/496)   Receiving objects:   8% (40/496)   Receiving objects:   9% (45/496)   Receiving objects:  10% (50/496)   Receiving objects:  11% (55/496)   Receiving objects:  12% (60/496)   Receiving objects:  13% (65/496)   Receiving objects:  14% (70/496)   Receiving objects:  15% (75/496)   Receiving objects:  16% (80/496)   Receiving objects:  17% (85/496)   Receiving objects:  18% (90/496)   Receiving objects:  19% (95/496)   Receiving objects:  20% (100/496)   Receiving objects:  21% (105/496)   Receiving objects:  22% (110/496)   Receiving objects:  23% (115/496)   Receiving objects:  24% (120/496)   Receiving objects:  25% (124/496)   Receiving objects:  26% (129/496)   Receiving objects:  27% (134/496)   Receiving objects:  28% (139/496)   Receiving objects:  29% (144/496)   Receiving objects:  30% (149/496)   Receiving objects:  31% (154/496)   Receiving objects:  32% (159/496)   Receiving objects:  33% (164/496)   Receiving objects:  34% (169/496)   Receiving objects:  35% (174/496)   Receiving objects:  36% (179/496)   Receiving objects:  37% (184/496)   Receiving objects:  38% (189/496)   Receiving objects:  39% (194/496)   Receiving objects:  40% (199/496)   Receiving objects:  41% (204/496)   Receiving objects:  42% (209/496)   Receiving objects:  43% (214/496)   Receiving objects:  44% (219/496)   Receiving objects:  45% (224/496)   Receiving objects:  46% (229/496)   Receiving objects:  47% (234/496)   Receiving objects:  48% (239/496)   Receiving objects:  49% (244/496)   Receiving objects:  50% (248/496)   Receiving objects:  51% (253/496)   Receiving objects:  52% (258/496)   Receiving objects:  53% (263/496)   Receiving objects:  54% (268/496)   Receiving objects:  55% (273/496)   Receiving objects:  56% (278/496)   Receiving objects:  57% (283/496)   Receiving objects:  58% (288/496)   Receiving objects:  59% (293/496)   Receiving objects:  60% (298/496)   Receiving objects:  61% (303/496)   Receiving objects:  62% (308/496)   Receiving objects:  63% (313/496)   Receiving objects:  64% (318/496)   Receiving objects:  65% (323/496)   Receiving objects:  66% (328/496)   Receiving objects:  67% (333/496)   Receiving objects:  68% (338/496)   Receiving objects:  69% (343/496)   Receiving objects:  70% (348/496)   Receiving objects:  71% (353/496)   Receiving objects:  72% (358/496)   Receiving objects:  73% (363/496)   Receiving objects:  74% (368/496)   Receiving objects:  75% (372/496)   Receiving objects:  76% (377/496)   Receiving objects:  77% (382/496)   Receiving objects:  78% (387/496)   Receiving objects:  79% (392/496)   Receiving objects:  80% (397/496)   Receiving objects:  81% (402/496)   Receiving objects:  82% (407/496)   Receiving objects:  83% (412/496)   Receiving objects:  84% (417/496)   Receiving objects:  85% (422/496)   Receiving objects:  86% (427/496)   Receiving objects:  87% (432/496)   Receiving objects:  88% (437/496)   Receiving objects:  89% (442/496)   Receiving objects:  90% (447/496)   Receiving objects:  91% (452/496)   Receiving objects:  92% (457/496)   Receiving objects:  93% (462/496)   Receiving objects:  94% (467/496)   Receiving objects:  95% (472/496)   Receiving objects:  96% (477/496)   Receiving objects:  97% (482/496)   Receiving objects:  98% (487/496)   remote: Total 496 (delta 9), reused 24 (delta 6), pack-reused 464[K
+Receiving objects:  99% (492/496)   Receiving objects: 100% (496/496)   Receiving objects: 100% (496/496), 1.40 MiB | 23.49 MiB/s, done.
+Resolving deltas:   0% (0/193)   Resolving deltas:   2% (4/193)   Resolving deltas:   5% (10/193)   Resolving deltas:   7% (14/193)   Resolving deltas:   8% (17/193)   Resolving deltas:  12% (24/193)   Resolving deltas:  13% (26/193)   Resolving deltas:  17% (34/193)   Resolving deltas:  21% (41/193)   Resolving deltas:  22% (43/193)   Resolving deltas:  25% (49/193)   Resolving deltas:  32% (62/193)   Resolving deltas:  33% (64/193)   Resolving deltas:  35% (68/193)   Resolving deltas:  36% (70/193)   Resolving deltas:  37% (72/193)   Resolving deltas:  38% (74/193)   Resolving deltas:  41% (81/193)   Resolving deltas:  42% (82/193)   Resolving deltas:  45% (87/193)   Resolving deltas:  48% (93/193)   Resolving deltas:  51% (100/193)   Resolving deltas:  54% (105/193)   Resolving deltas:  58% (112/193)   Resolving deltas:  59% (114/193)   Resolving deltas:  61% (119/193)   Resolving deltas:  63% (123/193)   Resolving deltas:  64% (124/193)   Resolving deltas:  81% (158/193)   Resolving deltas:  84% (164/193)   Resolving deltas:  86% (166/193)   Resolving deltas:  87% (169/193)   Resolving deltas:  88% (171/193)   Resolving deltas:  89% (172/193)   Resolving deltas:  90% (175/193)   Resolving deltas:  92% (178/193)   Resolving deltas:  93% (181/193)   Resolving deltas:  94% (182/193)   Resolving deltas:  95% (184/193)   Resolving deltas:  96% (187/193)   Resolving deltas:  97% (189/193)   Resolving deltas:  98% (190/193)   Resolving deltas:  99% (192/193)   Resolving deltas: 100% (193/193)   Resolving deltas: 100% (193/193), done.
+
+travis_time:end:155156a5:start=1505821041327435281,finish=1505821041723817730,duration=396382449[0K$ cd eclipse/eclipse-collections-kata
+$ git checkout -qf 0cfb3f2ec2d4f99891be1d029802f2a732bc2755
+travis_fold:end:git.checkout[0K$ export TERM=dumb
+[33;1mDisabling Gradle daemon[0m
+travis_time:start:08f1c599[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+
+travis_time:end:08f1c599:start=1505821046071812800,finish=1505821046077644394,duration=5831594[0K$ export PATH=$JAVA_HOME/bin:$PATH
+travis_fold:start:cache.1[0KSetting up build cache
+$ export CASHER_DIR=$HOME/.casher
+travis_time:start:37da36f0[0K$ Installing caching utilities
+
+travis_time:end:37da36f0:start=1505821050260231730,finish=1505821050295904814,duration=35673084[0Ktravis_time:start:0b377bd5[0K
+travis_time:end:0b377bd5:start=1505821050303402985,finish=1505821050309332798,duration=5929813[0Ktravis_time:start:11a290d2[0K[32;1mattempting to download cache archive[0m
+[32;1mfetching master/cache-linux-trusty-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855--jdk-oraclejdk8.tgz[0m
+[32;1mfound cache[0m
+
+travis_time:end:11a290d2:start=1505821050315408555,finish=1505821055206760104,duration=4891351549[0Ktravis_time:start:093df498[0K
+travis_time:end:093df498:start=1505821055213288925,finish=1505821055218780327,duration=5491402[0Ktravis_time:start:0f9ffd61[0K[32;1madding /home/travis/.m2 to cache[0m
+
+travis_time:end:0f9ffd61:start=1505821055225187910,finish=1505821057515110290,duration=2289922380[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+java version "1.8.0_144"
+Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
+Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
+$ javac -J-Xmx32m -version
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+javac 1.8.0_144
+travis_fold:start:before_install[0Ktravis_time:start:139ce684[0K$ echo "MAVEN_OPTS='-Dmaven.repo.local=$HOME/.m2/repository -Xmx1g -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS'" > ~/.mavenrc
+
+travis_time:end:139ce684:start=1505821058004181837,finish=1505821058009279635,duration=5097798[0Ktravis_fold:end:before_install[0Ktravis_fold:start:install[0Ktravis_time:start:2055f6fc[0K$ ./gradlew assemble
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+Downloading https://services.gradle.org/distributions/gradle-2.10-all.zip
+.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+Unzipping /home/travis/.gradle/wrapper/dists/gradle-2.10-all/a4w5fzrkeut1ox71xslb49gst/gradle-2.10-all.zip to /home/travis/.gradle/wrapper/dists/gradle-2.10-all/a4w5fzrkeut1ox71xslb49gst
+Set executable permissions for: /home/travis/.gradle/wrapper/dists/gradle-2.10-all/a4w5fzrkeut1ox71xslb49gst/gradle-2.10/bin/gradle
+:company-kata:compileJava
+:company-kata:processResources UP-TO-DATE
+:company-kata:classes
+:company-kata:jar
+:company-kata:assemble
+:pet-kata:compileJava
+:pet-kata:processResources UP-TO-DATE
+:pet-kata:classes
+:pet-kata:jar
+:pet-kata:assemble
+
+BUILD SUCCESSFUL
+
+Total time: 13.47 secs
+
+travis_time:end:2055f6fc:start=1505821058015549407,finish=1505821071905411140,duration=13889861733[0Ktravis_fold:end:install[0Ktravis_time:start:12cd73bf[0K$ mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
+Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
+Maven home: /usr/local/maven-3.5.0
+Java version: 1.8.0_144, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.11.6-041106-generic", arch: "amd64", family: "unix"
+11:37:54:564 [INFO] Scanning for projects...
+11:37:54:702 [INFO] ------------------------------------------------------------------------
+11:37:54:702 [INFO] Reactor Build Order:
+11:37:54:703 [INFO] 
+11:37:54:703 [INFO] Eclipse Collections Kata
+11:37:54:703 [INFO] company-kata
+11:37:54:703 [INFO] pet-kata
+11:37:54:712 [INFO] 
+11:37:54:712 [INFO] ------------------------------------------------------------------------
+11:37:54:712 [INFO] Building Eclipse Collections Kata 7.1.0-SNAPSHOT
+11:37:54:712 [INFO] ------------------------------------------------------------------------
+11:37:54:787 [INFO] 
+11:37:54:787 [INFO] --- maven-install-plugin:2.4:install (default-install) @ eclipse-collections-kata-parent ---
+11:37:55:026 [INFO] Installing /home/travis/build/eclipse/eclipse-collections-kata/pom.xml to /home/travis/.m2/repository/org/eclipse/collections/kata/eclipse-collections-kata-parent/7.1.0-SNAPSHOT/eclipse-collections-kata-parent-7.1.0-SNAPSHOT.pom
+11:37:55:050 [INFO] 
+11:37:55:050 [INFO] ------------------------------------------------------------------------
+11:37:55:050 [INFO] Building company-kata 7.1.0-SNAPSHOT
+11:37:55:050 [INFO] ------------------------------------------------------------------------
+11:37:55:251 [INFO] 
+11:37:55:252 [INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ company-kata ---
+11:37:55:426 [INFO] Using 'UTF-8' encoding to copy filtered resources.
+11:37:55:427 [INFO] skip non existing resourceDirectory /home/travis/build/eclipse/eclipse-collections-kata/company-kata/src/main/resources
+11:37:55:428 [INFO] 
+11:37:55:428 [INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ company-kata ---
+11:37:55:793 [INFO] Changes detected - recompiling the module!
+11:37:55:798 [INFO] Compiling 5 source files to /home/travis/build/eclipse/eclipse-collections-kata/company-kata/target/classes
+11:37:57:112 [INFO] 
+11:37:57:112 [INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ company-kata ---
+11:37:57:121 [INFO] Using 'UTF-8' encoding to copy filtered resources.
+11:37:57:121 [INFO] skip non existing resourceDirectory /home/travis/build/eclipse/eclipse-collections-kata/company-kata/src/test/resources
+11:37:57:121 [INFO] 
+11:37:57:121 [INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ company-kata ---
+11:37:57:135 [INFO] Changes detected - recompiling the module!
+11:37:57:135 [INFO] Compiling 9 source files to /home/travis/build/eclipse/eclipse-collections-kata/company-kata/target/test-classes
+11:37:58:871 [INFO] 
+11:37:58:871 [INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ company-kata ---
+11:37:58:998 [INFO] Tests are skipped.
+11:37:58:998 [INFO] 
+11:37:58:998 [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ company-kata ---
+11:37:59:205 [INFO] Building jar: /home/travis/build/eclipse/eclipse-collections-kata/company-kata/target/company-kata-7.1.0-SNAPSHOT.jar
+11:37:59:228 [INFO] 
+11:37:59:228 [INFO] --- maven-install-plugin:2.4:install (default-install) @ company-kata ---
+11:37:59:233 [INFO] Installing /home/travis/build/eclipse/eclipse-collections-kata/company-kata/target/company-kata-7.1.0-SNAPSHOT.jar to /home/travis/.m2/repository/org/eclipse/collections/kata/company-kata/7.1.0-SNAPSHOT/company-kata-7.1.0-SNAPSHOT.jar
+11:37:59:234 [INFO] Installing /home/travis/build/eclipse/eclipse-collections-kata/company-kata/pom.xml to /home/travis/.m2/repository/org/eclipse/collections/kata/company-kata/7.1.0-SNAPSHOT/company-kata-7.1.0-SNAPSHOT.pom
+11:37:59:238 [INFO] 
+11:37:59:238 [INFO] ------------------------------------------------------------------------
+11:37:59:238 [INFO] Building pet-kata 7.1.0-SNAPSHOT
+11:37:59:238 [INFO] ------------------------------------------------------------------------
+11:37:59:253 [INFO] 
+11:37:59:254 [INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ pet-kata ---
+11:37:59:268 [INFO] Using 'UTF-8' encoding to copy filtered resources.
+11:37:59:268 [INFO] skip non existing resourceDirectory /home/travis/build/eclipse/eclipse-collections-kata/pet-kata/src/main/resources
+11:37:59:268 [INFO] 
+11:37:59:268 [INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ pet-kata ---
+11:37:59:272 [INFO] Changes detected - recompiling the module!
+11:37:59:273 [INFO] Compiling 3 source files to /home/travis/build/eclipse/eclipse-collections-kata/pet-kata/target/classes
+11:38:00:513 [INFO] 
+11:38:00:513 [INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ pet-kata ---
+11:38:00:515 [INFO] Using 'UTF-8' encoding to copy filtered resources.
+11:38:00:515 [INFO] skip non existing resourceDirectory /home/travis/build/eclipse/eclipse-collections-kata/pet-kata/src/test/resources
+11:38:00:515 [INFO] 
+11:38:00:515 [INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ pet-kata ---
+11:38:00:518 [INFO] Changes detected - recompiling the module!
+11:38:00:518 [INFO] Compiling 6 source files to /home/travis/build/eclipse/eclipse-collections-kata/pet-kata/target/test-classes
+11:38:02:199 [INFO] 
+11:38:02:199 [INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ pet-kata ---
+11:38:02:202 [INFO] Tests are skipped.
+11:38:02:202 [INFO] 
+11:38:02:202 [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ pet-kata ---
+11:38:02:211 [INFO] Building jar: /home/travis/build/eclipse/eclipse-collections-kata/pet-kata/target/pet-kata-7.1.0-SNAPSHOT.jar
+11:38:02:230 [INFO] 
+11:38:02:230 [INFO] --- maven-install-plugin:2.4:install (default-install) @ pet-kata ---
+11:38:02:231 [INFO] Installing /home/travis/build/eclipse/eclipse-collections-kata/pet-kata/target/pet-kata-7.1.0-SNAPSHOT.jar to /home/travis/.m2/repository/org/eclipse/collections/kata/pet-kata/7.1.0-SNAPSHOT/pet-kata-7.1.0-SNAPSHOT.jar
+11:38:02:236 [INFO] Installing /home/travis/build/eclipse/eclipse-collections-kata/pet-kata/pom.xml to /home/travis/.m2/repository/org/eclipse/collections/kata/pet-kata/7.1.0-SNAPSHOT/pet-kata-7.1.0-SNAPSHOT.pom
+11:38:02:250 [INFO] ------------------------------------------------------------------------
+11:38:02:250 [INFO] Reactor Summary:
+11:38:02:250 [INFO] 
+11:38:02:251 [INFO] Eclipse Collections Kata ........................... SUCCESS [  0.338 s]
+11:38:02:251 [INFO] company-kata ....................................... SUCCESS [  4.188 s]
+11:38:02:251 [INFO] pet-kata ........................................... SUCCESS [  3.012 s]
+11:38:02:251 [INFO] ------------------------------------------------------------------------
+11:38:02:251 [INFO] BUILD SUCCESS
+11:38:02:251 [INFO] ------------------------------------------------------------------------
+11:38:02:252 [INFO] Total time: 7.727 s
+11:38:02:252 [INFO] Finished at: 2017-09-19T11:38:02Z
+11:38:02:340 [INFO] Final Memory: 12M/491M
+11:38:02:340 [INFO] ------------------------------------------------------------------------
+
+travis_time:end:12cd73bf:start=1505821071912108090,finish=1505821082363884335,duration=10451776245[0K
+[32;1mThe command "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V" exited with 0.[0m
+travis_fold:start:cache.2[0Kstore build cache
+travis_time:start:209e0a0a[0K
+travis_time:end:209e0a0a:start=1505821082370630144,finish=1505821082375789196,duration=5159052[0Ktravis_time:start:2ee60df9[0K[32;1mchange detected (content changed, file is created, or file is deleted):
+/home/travis/.m2/repository/org/eclipse/collections/kata/company-kata/7.1.0-SNAPSHOT/company-kata-7.1.0-SNAPSHOT.jar
+/home/travis/.m2/repository/org/eclipse/collections/kata/company-kata/7.1.0-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/org/eclipse/collections/kata/company-kata/7.1.0-SNAPSHOT/_remote.repositories
+/home/travis/.m2/repository/org/eclipse/collections/kata/company-kata/maven-metadata-local.xml
+/home/travis/.m2/repository/org/eclipse/collections/kata/eclipse-collections-kata-parent/7.1.0-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/org/eclipse/collections/kata/eclipse-collections-kata-parent/7.1.0-SNAPSHOT/_remote.repositories
+/home/travis/.m2/repository/org/eclipse/collections/kata/eclipse-collections-kata-parent/maven-metadata-local.xml
+/home/travis/.m2/repository/org/eclipse/collections/kata/pet-kata/7.1.0-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/org/eclipse/collections/kata/pet-kata/7.1.0-SNAPSHOT/pet-kata-7.1.0-SNA
+[0m
+[32;1m...
+[0m
+[32;1mchanges detected, packing new archive[0m
+[32;1muploading archive[0m
+
+travis_time:end:2ee60df9:start=1505821082382642823,finish=1505821085899539229,duration=3516896406[0Ktravis_fold:end:cache.2[0K
+Done. Your build exited with 0.

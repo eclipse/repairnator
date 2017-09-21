@@ -1,0 +1,1299 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: production-5-worker-org-b-4-gce:771d2642-5567-4fb0-a1d5-1dd990b823be
+version: v2.7.0 https://github.com/travis-ci/worker/tree/66fc24311e055643710f4e0567f6888c927d3ab8
+instance: testing-gce-2c8e3b6f-50b3-41ec-91d9-a1a63b95b3d7:travis-ci-jvm-precise-1491941442
+startup: 21.406812638s
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: precise
+Build id: 245772766
+Job id: 245772767
+travis-build version: b1c1ff156
+[34m[1mBuild image provisioning date and time[0m
+Tue Apr 11 20:22:39 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 12.04.5 LTS
+Release:	12.04
+Codename:	precise
+[34m[1mLinux Version[0m
+3.13.0-115-generic
+[34m[1mCookbooks Version[0m
+cc4eb5e https://github.com/travis-ci/travis-cookbooks/tree/cc4eb5e
+[34m[1mGit version[0m
+git version 1.8.5.6
+[34m[1mbash version[0m
+GNU bash, version 4.2.25(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+[34m[1mGCC version[0m
+gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mLLVM version[0m
+clang version 3.4 (tags/RELEASE_34/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.6
+[34m[1mPre-installed Node.js versions[0m
+v0.10.36
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mmysql --version[0m
+mysql  Ver 14.14 Distrib 5.5.54, for debian-linux-gnu (x86_64) using readline 6.2
+[34m[1mPre-installed PostgreSQL versions[0m
+9.1.24
+9.2.20
+9.3.16
+9.4.11
+9.5.6
+[34m[1mRedis version[0m
+redis-server 3.0.7
+[34m[1mriak version[0m
+2.0.2
+[34m[1mmemcached version[0m
+1.4.13
+[34m[1mMongoDB version[0m
+MongoDB 2.4.14
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mInstalled Sphinx versions[0m
+2.0.10
+2.1.9
+2.2.6
+[34m[1mDefault Sphinx version[0m
+2.2.6
+[34m[1mInstalled Firefox version[0m
+firefox 38.4.0esr
+[34m[1mPhantomJS version[0m
+1.9.8
+[34m[1mant -version[0m
+Apache Ant(TM) version 1.8.2 compiled on December 3 2011
+[34m[1mmvn -version[0m
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.8.0_121, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en, platform encoding: UTF-8
+OS name: "linux", version: "3.13.0-115-generic", arch: "amd64", family: "unix"
+[34m[1mgradle -version[0m
+
+------------------------------------------------------------
+Gradle 2.2.1
+------------------------------------------------------------
+
+Build time:   2014-11-24 09:45:35 UTC
+Build number: none
+Revision:     6fcb59c06f43a4e6b1bcb401f7686a8601a1fb4a
+
+Groovy:       2.3.6
+Ant:          Apache Ant(TM) version 1.9.3 compiled on December 23 2013
+JVM:          1.8.0_121 (Oracle Corporation 25.121-b13)
+OS:           Linux 3.13.0-115-generic amd64
+
+[34m[1mlein1 version[0m
+WARNING: Clojure jar failed to download from http://build.clojure.org/releases/org/clojure/clojure/1.2.1/clojure-1.2.1.jar
+Downloading Leiningen now...
+WARNING: Clojure jar failed to download from http://build.clojure.org/releases/org/clojure/clojure/1.2.1/clojure-1.2.1.jar
+Using JLine for console I/O; install rlwrap for optimum experience.
+Leiningen 1.7.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mlein2 version[0m
+Downloading Leiningen to /home/travis/.lein/self-installs/home/travis/.lein/leiningen-2.5.1-standalone.jar now...
+Leiningen 2.5.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mlein version[0m
+Downloading Leiningen to /home/travis/.lein/self-installs/home/travis/.lein/leiningen-2.5.1-standalone.jar now...
+Leiningen 2.5.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+travis_fold:end:system_info[0K
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-updates/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-backports/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise/Release.gpg: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://security.ubuntu.com/ubuntu/dists/precise-security/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://downloads-distro.mongodb.org/repo/debian-sysvinit/dists/dist/Release.gpg: Signature by key 492EAFE8CD016A07919F1D2B9ECBEC467F0CEB10 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/precise/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/git-core/v1.8/ubuntu/dists/precise/Release.gpg: Signature by key E1DD270288B4E6030699E45FA1715D88E1DF1F24 uses weak digest algorithm (SHA1)
+$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+travis_fold:start:git.checkout[0Ktravis_time:start:1aa8b350[0K$ git clone --depth=50 --branch=dev https://github.com/jindrapetrik/jpexs-decompiler.git jindrapetrik/jpexs-decompiler
+Cloning into 'jindrapetrik/jpexs-decompiler'...
+remote: Counting objects: 4891, done.[K
+remote: Compressing objects:   0% (1/2728)   [Kremote: Compressing objects:   1% (28/2728)   [Kremote: Compressing objects:   2% (55/2728)   [Kremote: Compressing objects:   3% (82/2728)   [Kremote: Compressing objects:   4% (110/2728)   [Kremote: Compressing objects:   5% (137/2728)   [Kremote: Compressing objects:   6% (164/2728)   [Kremote: Compressing objects:   7% (191/2728)   [Kremote: Compressing objects:   8% (219/2728)   [Kremote: Compressing objects:   9% (246/2728)   [Kremote: Compressing objects:  10% (273/2728)   [Kremote: Compressing objects:  11% (301/2728)   [Kremote: Compressing objects:  12% (328/2728)   [Kremote: Compressing objects:  13% (355/2728)   [Kremote: Compressing objects:  14% (382/2728)   [Kremote: Compressing objects:  15% (410/2728)   [Kremote: Compressing objects:  16% (437/2728)   [Kremote: Compressing objects:  17% (464/2728)   [Kremote: Compressing objects:  18% (492/2728)   [Kremote: Compressing objects:  19% (519/2728)   [Kremote: Compressing objects:  20% (546/2728)   [Kremote: Compressing objects:  21% (573/2728)   [Kremote: Compressing objects:  22% (601/2728)   [Kremote: Compressing objects:  23% (628/2728)   [Kremote: Compressing objects:  24% (655/2728)   [Kremote: Compressing objects:  25% (682/2728)   [Kremote: Compressing objects:  26% (710/2728)   [Kremote: Compressing objects:  27% (737/2728)   [Kremote: Compressing objects:  28% (764/2728)   [Kremote: Compressing objects:  29% (792/2728)   [Kremote: Compressing objects:  30% (819/2728)   [Kremote: Compressing objects:  31% (846/2728)   [Kremote: Compressing objects:  32% (873/2728)   [Kremote: Compressing objects:  33% (901/2728)   [Kremote: Compressing objects:  34% (928/2728)   [Kremote: Compressing objects:  35% (955/2728)   [Kremote: Compressing objects:  36% (983/2728)   [Kremote: Compressing objects:  37% (1010/2728)   [Kremote: Compressing objects:  38% (1037/2728)   [Kremote: Compressing objects:  39% (1064/2728)   [Kremote: Compressing objects:  40% (1092/2728)   [Kremote: Compressing objects:  41% (1119/2728)   [Kremote: Compressing objects:  42% (1146/2728)   [Kremote: Compressing objects:  43% (1174/2728)   [Kremote: Compressing objects:  44% (1201/2728)   [Kremote: Compressing objects:  45% (1228/2728)   [Kremote: Compressing objects:  46% (1255/2728)   [Kremote: Compressing objects:  47% (1283/2728)   [Kremote: Compressing objects:  48% (1310/2728)   [Kremote: Compressing objects:  49% (1337/2728)   [Kremote: Compressing objects:  50% (1364/2728)   [Kremote: Compressing objects:  51% (1392/2728)   [Kremote: Compressing objects:  52% (1419/2728)   [Kremote: Compressing objects:  53% (1446/2728)   [Kremote: Compressing objects:  54% (1474/2728)   [Kremote: Compressing objects:  55% (1501/2728)   [Kremote: Compressing objects:  56% (1528/2728)   [Kremote: Compressing objects:  57% (1555/2728)   [Kremote: Compressing objects:  58% (1583/2728)   [Kremote: Compressing objects:  59% (1610/2728)   [Kremote: Compressing objects:  60% (1637/2728)   [Kremote: Compressing objects:  61% (1665/2728)   [Kremote: Compressing objects:  62% (1692/2728)   [Kremote: Compressing objects:  63% (1719/2728)   [Kremote: Compressing objects:  64% (1746/2728)   [Kremote: Compressing objects:  65% (1774/2728)   [Kremote: Compressing objects:  66% (1801/2728)   [Kremote: Compressing objects:  67% (1828/2728)   [Kremote: Compressing objects:  68% (1856/2728)   [Kremote: Compressing objects:  69% (1883/2728)   [Kremote: Compressing objects:  70% (1910/2728)   [Kremote: Compressing objects:  71% (1937/2728)   [Kremote: Compressing objects:  72% (1965/2728)   [Kremote: Compressing objects:  73% (1992/2728)   [Kremote: Compressing objects:  74% (2019/2728)   [Kremote: Compressing objects:  75% (2046/2728)   [Kremote: Compressing objects:  76% (2074/2728)   [Kremote: Compressing objects:  77% (2101/2728)   [Kremote: Compressing objects:  78% (2128/2728)   [Kremote: Compressing objects:  79% (2156/2728)   [Kremote: Compressing objects:  80% (2183/2728)   [Kremote: Compressing objects:  81% (2210/2728)   [Kremote: Compressing objects:  82% (2237/2728)   [Kremote: Compressing objects:  83% (2265/2728)   [Kremote: Compressing objects:  84% (2292/2728)   [Kremote: Compressing objects:  85% (2319/2728)   [Kremote: Compressing objects:  86% (2347/2728)   [Kremote: Compressing objects:  87% (2374/2728)   [Kremote: Compressing objects:  88% (2401/2728)   [Kremote: Compressing objects:  89% (2428/2728)   [Kremote: Compressing objects:  90% (2456/2728)   [Kremote: Compressing objects:  91% (2483/2728)   [Kremote: Compressing objects:  92% (2510/2728)   [Kremote: Compressing objects:  93% (2538/2728)   [Kremote: Compressing objects:  94% (2565/2728)   [Kremote: Compressing objects:  95% (2592/2728)   [Kremote: Compressing objects:  96% (2619/2728)   [Kremote: Compressing objects:  97% (2647/2728)   [Kremote: Compressing objects:  98% (2674/2728)   [Kremote: Compressing objects:  99% (2701/2728)   [Kremote: Compressing objects: 100% (2728/2728)   [Kremote: Compressing objects: 100% (2728/2728), done.[K
+Receiving objects:   0% (1/4891)   Receiving objects:   1% (49/4891)   Receiving objects:   2% (98/4891)   Receiving objects:   3% (147/4891)   Receiving objects:   4% (196/4891)   Receiving objects:   5% (245/4891)   Receiving objects:   6% (294/4891)   Receiving objects:   7% (343/4891)   Receiving objects:   8% (392/4891)   Receiving objects:   9% (441/4891)   Receiving objects:  10% (490/4891)   Receiving objects:  11% (539/4891)   Receiving objects:  12% (587/4891)   Receiving objects:  13% (636/4891)   Receiving objects:  14% (685/4891)   Receiving objects:  15% (734/4891)   Receiving objects:  16% (783/4891)   Receiving objects:  17% (832/4891)   Receiving objects:  18% (881/4891)   Receiving objects:  19% (930/4891)   Receiving objects:  20% (979/4891)   Receiving objects:  21% (1028/4891)   Receiving objects:  22% (1077/4891)   Receiving objects:  23% (1125/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  24% (1174/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  25% (1223/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  26% (1272/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  27% (1321/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  28% (1370/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  29% (1419/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  30% (1468/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  31% (1517/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  32% (1566/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  33% (1615/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  34% (1663/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  35% (1712/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  36% (1761/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  37% (1810/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  38% (1859/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  39% (1908/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  40% (1957/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  41% (2006/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  42% (2055/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  43% (2104/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  44% (2153/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  45% (2201/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  46% (2250/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  47% (2299/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  48% (2348/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  49% (2397/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  50% (2446/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  51% (2495/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  52% (2544/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  53% (2593/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  54% (2642/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  55% (2691/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  56% (2739/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  57% (2788/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  58% (2837/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  59% (2886/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  60% (2935/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  61% (2984/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  62% (3033/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  63% (3082/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  64% (3131/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  65% (3180/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  66% (3229/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  67% (3277/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  68% (3326/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  69% (3375/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  70% (3424/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  71% (3473/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  72% (3522/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  73% (3571/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  74% (3620/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  75% (3669/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  76% (3718/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  77% (3767/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  78% (3815/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  79% (3864/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  80% (3913/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  81% (3962/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  82% (4011/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  83% (4060/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  84% (4109/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  85% (4158/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  86% (4207/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  87% (4256/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  88% (4305/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  89% (4353/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  90% (4402/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  91% (4451/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  92% (4500/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  93% (4549/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  94% (4598/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  95% (4647/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  96% (4696/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  97% (4745/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  98% (4794/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects:  99% (4843/4891), 9.28 MiB | 18.52 MiB/s   remote: Total 4891 (delta 2926), reused 2947 (delta 1869), pack-reused 0[K
+Receiving objects: 100% (4891/4891), 9.28 MiB | 18.52 MiB/s   Receiving objects: 100% (4891/4891), 18.90 MiB | 18.52 MiB/s, done.
+Resolving deltas:   0% (0/2926)   Resolving deltas:   1% (30/2926)   Resolving deltas:   3% (105/2926)   Resolving deltas:   4% (132/2926)   Resolving deltas:   5% (159/2926)   Resolving deltas:   6% (176/2926)   Resolving deltas:   7% (212/2926)   Resolving deltas:   8% (238/2926)   Resolving deltas:   9% (267/2926)   Resolving deltas:  10% (295/2926)   Resolving deltas:  11% (327/2926)   Resolving deltas:  12% (353/2926)   Resolving deltas:  13% (385/2926)   Resolving deltas:  14% (412/2926)   Resolving deltas:  15% (439/2926)   Resolving deltas:  16% (469/2926)   Resolving deltas:  17% (498/2926)   Resolving deltas:  18% (530/2926)   Resolving deltas:  19% (556/2926)   Resolving deltas:  20% (587/2926)   Resolving deltas:  21% (624/2926)   Resolving deltas:  22% (644/2926)   Resolving deltas:  23% (677/2926)   Resolving deltas:  24% (726/2926)   Resolving deltas:  25% (736/2926)   Resolving deltas:  26% (767/2926)   Resolving deltas:  27% (791/2926)   Resolving deltas:  28% (820/2926)   Resolving deltas:  29% (853/2926)   Resolving deltas:  30% (881/2926)   Resolving deltas:  31% (915/2926)   Resolving deltas:  32% (939/2926)   Resolving deltas:  36% (1073/2926)   Resolving deltas:  38% (1116/2926)   Resolving deltas:  39% (1146/2926)   Resolving deltas:  41% (1208/2926)   Resolving deltas:  42% (1254/2926)   Resolving deltas:  43% (1266/2926)   Resolving deltas:  44% (1294/2926)   Resolving deltas:  45% (1322/2926)   Resolving deltas:  46% (1347/2926)   Resolving deltas:  47% (1396/2926)   Resolving deltas:  48% (1406/2926)   Resolving deltas:  50% (1490/2926)   Resolving deltas:  51% (1510/2926)   Resolving deltas:  52% (1549/2926)   Resolving deltas:  53% (1557/2926)   Resolving deltas:  54% (1586/2926)   Resolving deltas:  55% (1616/2926)   Resolving deltas:  56% (1644/2926)   Resolving deltas:  57% (1672/2926)   Resolving deltas:  58% (1698/2926)   Resolving deltas:  59% (1729/2926)   Resolving deltas:  60% (1756/2926)   Resolving deltas:  61% (1786/2926)   Resolving deltas:  62% (1816/2926)   Resolving deltas:  63% (1844/2926)   Resolving deltas:  64% (1879/2926)   Resolving deltas:  65% (1903/2926)   Resolving deltas:  66% (1932/2926)   Resolving deltas:  67% (1962/2926)   Resolving deltas:  68% (1991/2926)   Resolving deltas:  69% (2019/2926)   Resolving deltas:  70% (2051/2926)   Resolving deltas:  71% (2087/2926)   Resolving deltas:  72% (2130/2926)   Resolving deltas:  73% (2136/2926)   Resolving deltas:  74% (2166/2926)   Resolving deltas:  75% (2202/2926)   Resolving deltas:  76% (2230/2926)   Resolving deltas:  77% (2258/2926)   Resolving deltas:  78% (2287/2926)   Resolving deltas:  79% (2312/2926)   Resolving deltas:  80% (2346/2926)   Resolving deltas:  81% (2372/2926)   Resolving deltas:  82% (2402/2926)   Resolving deltas:  83% (2431/2926)   Resolving deltas:  84% (2460/2926)   Resolving deltas:  85% (2488/2926)   Resolving deltas:  86% (2522/2926)   Resolving deltas:  87% (2547/2926)   Resolving deltas:  88% (2583/2926)   Resolving deltas:  89% (2627/2926)   Resolving deltas:  90% (2648/2926)   Resolving deltas:  91% (2675/2926)   Resolving deltas:  93% (2730/2926)   Resolving deltas:  94% (2751/2926)   Resolving deltas:  95% (2790/2926)   Resolving deltas:  96% (2816/2926)   Resolving deltas:  97% (2856/2926)   Resolving deltas:  98% (2871/2926)   Resolving deltas:  99% (2899/2926)   Resolving deltas: 100% (2926/2926)   Resolving deltas: 100% (2926/2926), done.
+Checking connectivity... done.
+
+travis_time:end:1aa8b350:start=1498135603247371570,finish=1498135606254976962,duration=3007605392[0K$ cd jindrapetrik/jpexs-decompiler
+$ git checkout -qf cdf72b6798a124a3e8fd7d6e5803839782ee4768
+travis_fold:end:git.checkout[0K
+[33;1mSetting environment variables from repository settings[0m
+$ export tools_dir=/home/travis/tools
+$ export website_password=[secure]
+$ export website_user=[secure]
+
+$ java -Xmx32m -version
+java version "1.8.0_121"
+Java(TM) SE Runtime Environment (build 1.8.0_121-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 25.121-b13, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.8.0_121
+travis_fold:start:before_install.1[0Ktravis_time:start:195d15af[0K$ sudo chmod a+x ./travis/*.sh
+
+travis_time:end:195d15af:start=1498135607326911197,finish=1498135607335226176,duration=8314979[0Ktravis_fold:end:before_install.1[0Ktravis_fold:start:before_install.2[0Ktravis_time:start:0ec91738[0K$ ./travis/before_install.sh
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-updates/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-backports/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise/Release.gpg: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://security.ubuntu.com/ubuntu/dists/precise-security/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://downloads-distro.mongodb.org/repo/debian-sysvinit/dists/dist/Release.gpg: Signature by key 492EAFE8CD016A07919F1D2B9ECBEC467F0CEB10 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/precise/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/git-core/v1.8/ubuntu/dists/precise/Release.gpg: Signature by key E1DD270288B4E6030699E45FA1715D88E1DF1F24 uses weak digest algorithm (SHA1)
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+scons is already the newest version (2.1.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 43 not upgraded.
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+zlib1g-dev is already the newest version (1:1.2.3.4.dfsg-3ubuntu4).
+zlib1g-dev set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 43 not upgraded.
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+The following additional packages will be installed:
+  lib32tinfo5 libc6-i386
+The following NEW packages will be installed:
+  lib32ncurses5 lib32tinfo5 lib32z1 libc6-i386
+0 upgraded, 4 newly installed, 0 to remove and 43 not upgraded.
+Need to get 4,244 kB of archives.
+After this operation, 10.7 MB of additional disk space will be used.
+0% [Working]            Get:1 http://us-central1.gce.archive.ubuntu.com/ubuntu precise-updates/main amd64 libc6-i386 amd64 2.15-0ubuntu10.18 [3,989 kB]
+0% [1 libc6-i386 13.7 kB/3,989 kB 0%]                                     80% [Working]             Get:2 http://us-central1.gce.archive.ubuntu.com/ubuntu precise/main amd64 lib32tinfo5 amd64 5.9-4 [90.1 kB]
+80% [2 lib32tinfo5 7,546 B/90.1 kB 8%]                                      87% [Working]             Get:3 http://us-central1.gce.archive.ubuntu.com/ubuntu precise/main amd64 lib32ncurses5 amd64 5.9-4 [114 kB]
+88% [3 lib32ncurses5 32.3 kB/114 kB 28%]                                        94% [Working]             Get:4 http://us-central1.gce.archive.ubuntu.com/ubuntu precise/main amd64 lib32z1 amd64 1:1.2.3.4.dfsg-3ubuntu4 [51.1 kB]
+95% [4 lib32z1 36.9 kB/51.1 kB 72%]                                   100% [Working]              Fetched 4,244 kB in 0s (65.0 MB/s)
+Selecting previously unselected package libc6-i386.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 76561 files and directories currently installed.)
+Unpacking libc6-i386 (from .../libc6-i386_2.15-0ubuntu10.18_amd64.deb) ...
+Selecting previously unselected package lib32tinfo5.
+Unpacking lib32tinfo5 (from .../lib32tinfo5_5.9-4_amd64.deb) ...
+Selecting previously unselected package lib32ncurses5.
+Unpacking lib32ncurses5 (from .../lib32ncurses5_5.9-4_amd64.deb) ...
+Selecting previously unselected package lib32z1.
+Unpacking lib32z1 (from .../lib32z1_1%3a1.2.3.4.dfsg-3ubuntu4_amd64.deb) ...
+Setting up libc6-i386 (2.15-0ubuntu10.18) ...
+Setting up lib32tinfo5 (5.9-4) ...
+Setting up lib32ncurses5 (5.9-4) ...
+Setting up lib32z1 (1:1.2.3.4.dfsg-3ubuntu4) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+unzip is already the newest version (6.0-4ubuntu2.5).
+0 upgraded, 0 newly installed, 0 to remove and 43 not upgraded.
+Source/script.cpp: In member function 'int CEXEBuild::doCommand(int, LineParser&)':
+Source/script.cpp:3202:47: warning: unused variable 'forceutf8' [-Wunused-variable]
+/home/travis/build/jindrapetrik/jpexs-decompiler
+Archive:  nsis-3.0-addon.zip
+  inflating: /home/travis/tools/nsis-3.0-src/Include/InstallOptions.nsh  
+  inflating: /home/travis/tools/nsis-3.0-src/Include/MultiUser.nsh  
+  inflating: /home/travis/tools/nsis-3.0-src/Include/nsDialogs.nsh  
+  inflating: /home/travis/tools/nsis-3.0-src/Include/VPatchLib.nsh  
+   creating: /home/travis/tools/nsis-3.0-src/Plugins/
+   creating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/AdvSplash.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/Banner.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/BgImage.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/Dialer.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/InstallOptions.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/LangDLL.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/Math.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/nsDialogs.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/nsExec.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/NSISdl.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/Splash.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/StartMenu.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/System.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/TypeLib.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/UserInfo.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-ansi/VPatch.dll  
+   creating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/AdvSplash.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/Banner.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/BgImage.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/Dialer.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/InstallOptions.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/LangDLL.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/Math.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/nsDialogs.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/nsExec.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/NSISdl.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/Splash.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/StartMenu.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/System.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/TypeLib.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/UserInfo.dll  
+  inflating: /home/travis/tools/nsis-3.0-src/Plugins/x86-unicode/VPatch.dll  
+   creating: /home/travis/tools/nsis-3.0-src/Stubs/
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/bzip2-x86-ansi  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/bzip2-x86-unicode  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/bzip2_solid-x86-ansi  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/bzip2_solid-x86-unicode  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/lzma-x86-ansi  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/lzma-x86-unicode  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/lzma_solid-x86-ansi  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/lzma_solid-x86-unicode  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/uninst  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/zlib-x86-ansi  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/zlib-x86-unicode  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/zlib_solid-x86-ansi  
+  inflating: /home/travis/tools/nsis-3.0-src/Stubs/zlib_solid-x86-unicode  
+  inflating: /home/travis/tools/nsis-3.0-src/Contrib/UIs/default.exe  
+  inflating: /home/travis/tools/nsis-3.0-src/Contrib/UIs/modern.exe  
+  inflating: /home/travis/tools/nsis-3.0-src/Contrib/UIs/modern_headerbmp.exe  
+  inflating: /home/travis/tools/nsis-3.0-src/Contrib/UIs/modern_headerbmpr.exe  
+  inflating: /home/travis/tools/nsis-3.0-src/Contrib/UIs/modern_nodesc.exe  
+  inflating: /home/travis/tools/nsis-3.0-src/Contrib/UIs/modern_smalldesc.exe  
+  inflating: /home/travis/tools/nsis-3.0-src/Contrib/UIs/sdbarker_tiny.exe  
+
+travis_time:end:0ec91738:start=1498135607339353128,finish=1498135633733008380,duration=26393655252[0Ktravis_fold:end:before_install.2[0Ktravis_fold:start:install[0Ktravis_time:start:012f9ee8[0K$ ./travis/install.sh
+Buildfile: /home/travis/build/jindrapetrik/jpexs-decompiler/build.xml
+
+-get-home-from-user-windows-appdata:
+
+-get-home-from-user-windows-home:
+
+-get-home-from-user-osx-home:
+
+-get-home-from-user:
+     [echo] Detected homedir in user home: /home/travis/.FFDec
+
+-get-home-no:
+
+-get-home:
+
+-get-playerglobal-home:
+    [mkdir] Created dir: /home/travis/.FFDec/flashlib
+     [echo] PlayerGlobal homedir: /home/travis/.FFDec/flashlib
+
+download-playerglobal:
+      [get] Getting: https://www.adobe.com/support/flashplayer/debug_downloads.html
+      [get] To: /home/travis/build/jindrapetrik/jpexs-decompiler/adobepages1983116101.html
+      [get] Getting: https://fpdownload.macromedia.com/get/flashplayer/updaters/26/playerglobal26_0.swc
+      [get] To: /home/travis/.FFDec/flashlib/playerglobal26_0.swc
+   [delete] Deleting: /home/travis/build/jindrapetrik/jpexs-decompiler/adobepages1983116101.html
+
+deps:
+
+BUILD SUCCESSFUL
+Total time: 3 seconds
+
+travis_time:end:012f9ee8:start=1498135633737551043,finish=1498135637695769549,duration=3958218506[0Ktravis_fold:end:install[0Ktravis_time:start:279226a4[0K$ ./travis/script.sh
+Buildfile: /home/travis/build/jindrapetrik/jpexs-decompiler/build.xml
+
+-git-check-exists:
+
+-git-required:
+
+git-pull:
+     [exec] Already up-to-date.
+
+-new-version-set:
+
+-inc-nightlybuild:
+
+-set-none-newversion:
+
+-no-git-tag:
+
+-do-git-tag:
+     [echo] Git tag:cdf72b6798a124a3e8fd7d6e5803839782ee4768
+     [echo] Git shorttag:cdf72b6
+
+git-tag:
+
+-check-version-online:
+     [echo] Checking version online: nightly...
+
+clean_lib:
+Trying to override old definition of task testng
+Trying to override old definition of task antlib:org.jacoco.ant:coverage
+Trying to override old definition of task antlib:org.jacoco.ant:agent
+Trying to override old definition of task antlib:org.jacoco.ant:report
+Trying to override old definition of task antlib:org.jacoco.ant:merge
+Trying to override old definition of task antlib:org.jacoco.ant:dump
+Trying to override old definition of task antlib:org.jacoco.ant:instrument
+
+clean:
+
+clean:
+
+-loadversion-prop:
+     [echo] Loaded Version:10.0.0.1655
+
+-loadversion-private:
+
+-loadversion:
+
+-save-version-info-file:
+[propertyfile] Updating property file: /home/travis/build/jindrapetrik/jpexs-decompiler/version.properties
+
+-save-version-info:
+
+build_lib:
+     [copy] Copying 1 file to /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib
+Trying to override old definition of task testng
+Trying to override old definition of task antlib:org.jacoco.ant:coverage
+Trying to override old definition of task antlib:org.jacoco.ant:agent
+Trying to override old definition of task antlib:org.jacoco.ant:report
+Trying to override old definition of task antlib:org.jacoco.ant:merge
+Trying to override old definition of task antlib:org.jacoco.ant:dump
+Trying to override old definition of task antlib:org.jacoco.ant:instrument
+
+-check-versionfile-exists:
+
+-load-version-file:
+
+-load-version-private:
+
+-load-version:
+
+-dotimestamp:
+
+-git-check-exists:
+
+-no-git-tag:
+
+-do-git-tag:
+     [echo] Git tag:cdf72b6798a124a3e8fd7d6e5803839782ee4768
+     [echo] Git shorttag:cdf72b6
+
+-git-tag:
+
+-timestamp:
+     [echo] Library Version: 10.0.0
+
+-nightly-suffix:
+
+-private-suffix:
+
+-no-suffix:
+
+-suffix:
+
+lexers:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+compile:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/build/classes
+    [javac] Compiling 1381 source files to /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/build/classes
+     [copy] Copying 30 files to /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/build/classes
+
+build:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/dist
+[propertyfile] Creating new property file: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/build/classes/project.properties
+      [jar] Building jar: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/dist/ffdec_lib.jar
+
+-copy-lib:
+     [copy] Copying 1 file to /home/travis/build/jindrapetrik/jpexs-decompiler/lib
+
+-timestamp:
+     [echo] Version: 10.0.0
+
+-nightly-suffix:
+
+-private-suffix:
+
+-no-suffix:
+
+-suffix:
+
+compile:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/build/classes
+    [javac] Compiling 229 source files to /home/travis/build/jindrapetrik/jpexs-decompiler/build/classes
+     [copy] Copying 576 files to /home/travis/build/jindrapetrik/jpexs-decompiler/build/classes
+
+build:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/dist
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/dist/lib
+     [copy] Copying 39 files to /home/travis/build/jindrapetrik/jpexs-decompiler/dist/lib
+[propertyfile] Creating new property file: /home/travis/build/jindrapetrik/jpexs-decompiler/build/classes/project.properties
+      [jar] Building jar: /home/travis/build/jindrapetrik/jpexs-decompiler/dist/ffdec.jar
+
+-test-halt-newver:
+
+-test-halt-nonewver:
+
+-test_lib-newver:
+Trying to override old definition of task testng
+Trying to override old definition of task antlib:org.jacoco.ant:coverage
+Trying to override old definition of task antlib:org.jacoco.ant:agent
+Trying to override old definition of task antlib:org.jacoco.ant:report
+Trying to override old definition of task antlib:org.jacoco.ant:merge
+Trying to override old definition of task antlib:org.jacoco.ant:dump
+Trying to override old definition of task antlib:org.jacoco.ant:instrument
+
+-test-sethalt:
+
+-test-setnohalt:
+
+lexers:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+compile:
+
+compile-tests:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/build/test
+    [javac] Compiling 26 source files to /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/build/test
+
+test:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/reports/tests
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/reports/tests/raw
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/coverage
+[jacoco:coverage] Enhancing testng with coverage
+   [testng] [TestNG] Running:
+   [testng]   Ant suite
+   [testng] 
+   [testng] Recompiling:classes.mypackage1.myNamespace...
+   [testng] Recompiling:classes.myInternal...
+   [testng] Recompiling:classes.testPkgFunc...
+   [testng] Recompiling:classes.mypackage1.TestClass2...
+   [testng] Recompiling:classes.MyInterface...
+   [testng] Recompiling:classes.MoreClass...
+   [testng] Recompiling:classes.TestClass3...
+   [testng] Recompiling:classes.mypackage3.TestClass...
+   [testng] Recompiling:classes.TestNs...
+   [testng] Recompiling:classes.TestClass2...
+   [testng] Recompiling:classes.TestClass1...
+   [testng] Recompiling:classes.mypackage2.TestInterface...
+   [testng] Recompiling:classes.MyInterface2...
+   [testng] Recompiling:classes.mypackage2.TestClass...
+   [testng] Recompiling:classes.mypackage1.TestInterface...
+   [testng] Recompiling:classes.Test...
+   [testng] Recompiling:classes.mypackage1.TestClass...
+   [testng] Recompiling:TestMovie...
+   [testng] Recompiling:com.freeactionscript.CollisionTest...
+   [testng] Recompiling:Main...
+   [testng] Recompiling:Main...
+   [testng] Recompiling:StarSmall...
+   [testng] Recompiling:com.freeactionscript.StarField...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.WeaponManager...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.components.WeaponTypes...
+   [testng] Recompiling:com.freeactionscript.utils.MathTools...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.components.AbstractWeapon...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.components.Bullet...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.components.Barrel...
+   [testng] Recompiling:Barrel1Skin...
+   [testng] Recompiling:Barrel2Skin...
+   [testng] Recompiling:Barrel3Skin...
+   [testng] Recompiling:Barrel4Skin...
+   [testng] Recompiling:BulletRed...
+   [testng] Recompiling:BulletYellow...
+   [testng] Recompiling:Main...
+   [testng] Recompiling:WeaponDualSkin...
+   [testng] Recompiling:WeaponQuadSkin...
+   [testng] Recompiling:WeaponSingleSkin...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.weapons.ProjectileSingle...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.weapons.ProjectileQuad...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.weapons.LaserDual...
+   [testng] Recompiling:com.freeactionscript.weaponsystem.weapons.LaserSingle...
+   [testng] PASSED: testS32
+   [testng] PASSED: testU30
+   [testng] PASSED: testU32
+   [testng] PASSED: testModifiedConstantPools
+   [testng] PASSED: testNegativeFloatValue
+   [testng] PASSED: parameterInInnerFuncMustNotBeStoredInRegister
+   [testng] PASSED: variableInInnerFuncMustNotBeStoredInRegister
+   [testng] PASSED: testEvailExpressionAfterWhile
+   [testng] PASSED: testRemoveBasicFalseExpressions("1==5")
+   [testng] PASSED: testRemoveBasicFalseExpressions("5!=5")
+   [testng] PASSED: testRemoveBasicFalseExpressions("1>4")
+   [testng] PASSED: testRemoveBasicFalseExpressions("5<4")
+   [testng] PASSED: testRemoveBasicFalseExpressions("5*7==12")
+   [testng] PASSED: testRemoveBasicTrueExpressions("1!=5")
+   [testng] PASSED: testRemoveBasicTrueExpressions("5==5")
+   [testng] PASSED: testRemoveBasicTrueExpressions("1<4")
+   [testng] PASSED: testRemoveBasicTrueExpressions("5>4")
+   [testng] PASSED: testRemoveBasicTrueExpressions("5*6==30")
+   [testng] PASSED: testRemoveGetTime
+   [testng] PASSED: testRemoveGetTimeAndIncrement
+   [testng] PASSED: testRemoveJumpsToTheNextAction
+   [testng] PASSED: testAddActionAfterContainer
+   [testng] PASSED: testAddActionIf
+   [testng] PASSED: testAddAtion1
+   [testng] PASSED: testAddAtionFirst
+   [testng] PASSED: testAddAtionToContainer
+   [testng] PASSED: testAddToJumpTarget
+   [testng] PASSED: testRemoveActionFromContainer
+   [testng] PASSED: testRemoveIfTargetAction
+   [testng] PASSED: testRemoveIfTargetLastAction
+   [testng] PASSED: testRemoveJumpAction
+   [testng] PASSED: testRemoveLastActionFromContainer
+   [testng] PASSED: testAS2Parse1
+   [testng] PASSED: testAS2Parse2
+   [testng] PASSED: testAS2Parse3
+   [testng] PASSED: testAS2Parse4
+   [testng] PASSED: testAS2Parse5
+   [testng] PASSED: frame23_Test
+   [testng] PASSED: frame24_unicodeTest
+   [testng] PASSED: frame25_ifWithElseTest
+   [testng] PASSED: frame26_forTest
+   [testng] PASSED: frame27_whileTest
+   [testng] PASSED: frame28_forWithContinueTest
+   [testng] PASSED: frame29_doWhileTest
+   [testng] PASSED: frame30_switchTest
+   [testng] PASSED: frame31_strictEqualsTest
+   [testng] PASSED: frame32_switchForTest
+   [testng] PASSED: frame33_functionTest
+   [testng] PASSED: frame34_multipleConditionsTest
+   [testng] PASSED: frame35_multipleConditions2Test
+   [testng] PASSED: frame36_chainedAssignmentsTest
+   [testng] PASSED: frame37_objectsTest
+   [testng] PASSED: frame38_doWhile2Test
+   [testng] PASSED: frame39_whileAndTest
+   [testng] PASSED: frame40_forInTest
+   [testng] PASSED: frame41_tryTest
+   [testng] PASSED: frame42_indicesTest
+   [testng] PASSED: frame43_incDecTest
+   [testng] PASSED: frame44_chainedAssignments2Test
+   [testng] PASSED: frame45_function2Test
+   [testng] PASSED: frame46_tryFunctionTest
+   [testng] PASSED: frame47_ternarTest
+   [testng] PASSED: frame48_forInInTest
+   [testng] PASSED: frame49_registersFuncTest
+   [testng] PASSED: frame50_ifFrameLoadedTest
+   [testng] PASSED: frame51_function3Test
+   [testng] PASSED: frame52_commaOperatorTest
+   [testng] PASSED: frame53_commaOperator2Test
+   [testng] PASSED: frame54_function4Test
+   [testng] PASSED: frame55_pushTest
+   [testng] PASSED: frame56_commaOperator3Test
+   [testng] PASSED: frame57_commaOperator4Test
+   [testng] PASSED: frame58_globalFunctionsTest
+   [testng] PASSED: frame59_unaryOpTest
+   [testng] PASSED: frame61_switchDefaultTest
+   [testng] PASSED: frame62_Test
+   [testng] PASSED: frame64_functionInnerParametersTest
+   [testng] PASSED: removeInstruction
+   [testng] PASSED: removeInstruction2
+   [testng] PASSED: replaceInstruction
+   [testng] PASSED: replaceInstruction2
+   [testng] PASSED: testAddressToPos
+   [testng] PASSED: testInstructionStackSizes
+   [testng] PASSED: testJumps
+   [testng] PASSED: testRemoveBasicFalseExpressions("1==5")
+   [testng] PASSED: testRemoveBasicFalseExpressions("5!=5")
+   [testng] PASSED: testRemoveBasicFalseExpressions("1>4")
+   [testng] PASSED: testRemoveBasicFalseExpressions("5<4")
+   [testng] PASSED: testRemoveBasicFalseExpressions("5*7==12")
+   [testng] PASSED: testRemoveBasicTrueExpressions("1!=5")
+   [testng] PASSED: testRemoveBasicTrueExpressions("5==5")
+   [testng] PASSED: testRemoveBasicTrueExpressions("1<4")
+   [testng] PASSED: testRemoveBasicTrueExpressions("5>4")
+   [testng] PASSED: testRemoveBasicTrueExpressions("5*6==30")
+   [testng] PASSED: testRemoveKnownVariables
+   [testng] PASSED: testRemoveKnownVariables2
+   [testng] PASSED: testArguments
+   [testng] PASSED: testCatchFinally
+   [testng] PASSED: testChain2
+   [testng] PASSED: testChainedAssignments
+   [testng] PASSED: testComplexExpressions
+   [testng] PASSED: testContinueLevels
+   [testng] PASSED: testDecl2
+   [testng] PASSED: testDeclarations
+   [testng] PASSED: testDefaultNotLastGrouped
+   [testng] PASSED: testDoWhile
+   [testng] PASSED: testDoWhile2
+   [testng] PASSED: testExpressions
+   [testng] PASSED: testFinallyZeroJump
+   [testng] PASSED: testFor
+   [testng] PASSED: testForBreak
+   [testng] PASSED: testForContinue
+   [testng] PASSED: testForEach
+   [testng] PASSED: testForEachObjectArray
+   [testng] PASSED: testForEachObjectAttribute
+   [testng] PASSED: testForIn
+   [testng] PASSED: testHello
+   [testng] PASSED: testIf
+   [testng] PASSED: testIfElse
+   [testng] PASSED: testInc2
+   [testng] PASSED: testIncDec
+   [testng] PASSED: testInlineFunctions
+   [testng] PASSED: testInnerFunctions
+   [testng] PASSED: testInnerIf
+   [testng] PASSED: testInnerTry
+   [testng] PASSED: testLogicalComputing
+   [testng] PASSED: testManualConvert
+   [testng] PASSED: testMissingDefault
+   [testng] PASSED: testMultipleCondition
+   [testng] PASSED: testMyPackage1MyNamespace
+   [testng] PASSED: testMyPackage1TestClass
+   [testng] PASSED: testMyPackage1TestClass2
+   [testng] PASSED: testMyPackage1TestInterface
+   [testng] PASSED: testMyPackage2TestClass
+   [testng] PASSED: testMyPackage2TestInterface
+   [testng] PASSED: testMyPackage3TestClass
+   [testng] PASSED: testNamedAnonFunctions
+   [testng] PASSED: testNames
+   [testng] PASSED: testOptionalParameters
+   [testng] PASSED: testParamNames
+   [testng] PASSED: testParamsCount
+   [testng] PASSED: testPrecedence
+   [testng] PASSED: testPrecedenceX
+   [testng] PASSED: testProperty
+   [testng] PASSED: testRegExp
+   [testng] PASSED: testRest
+   [testng] PASSED: testStringConcat
+   [testng] PASSED: testStrings
+   [testng] PASSED: testSwitch
+   [testng] PASSED: testSwitchDefault
+   [testng] PASSED: testTernarOperator
+   [testng] PASSED: testTry
+   [testng] PASSED: testTryReturn
+   [testng] PASSED: testVector
+   [testng] PASSED: testVector2
+   [testng] PASSED: testWhileAnd
+   [testng] PASSED: testWhileContinue
+   [testng] PASSED: testWhileTry
+   [testng] PASSED: testWhileTry2
+   [testng] PASSED: testRecompile("all.bin")
+   [testng] PASSED: testNoSerializerHandlingInArrayAssociative
+   [testng] PASSED: testNoSerializerHandlingInArrayDense
+   [testng] PASSED: testNoSerializerHandlingInDictionaryKeys
+   [testng] PASSED: testNoSerializerHandlingInDictionaryValues
+   [testng] PASSED: testNoSerializerHandlingInObjectDynamicProp
+   [testng] PASSED: testNoSerializerHandlingInObjectSealedProp
+   [testng] PASSED: testNoSerializerHandlingInVector
+   [testng] PASSED: testReadCustomSerialized
+   [testng] PASSED: testReadCustomSerializedNeedsSerializer
+   [testng] PASSED: testReadObject
+   [testng] PASSED: testUnsupportedMarker
+   [testng] PASSED: testRecompile("all.bin")
+   [testng] PASSED: testRecompile("custom.bin")
+   [testng] PASSED: testRecompile("noserializer_array_associative.bin")
+   [testng] PASSED: testRecompile("noserializer_array_dense.bin")
+   [testng] PASSED: testRecompile("noserializer_dictionary_key.bin")
+   [testng] PASSED: testRecompile("noserializer_dictionary_value.bin")
+   [testng] PASSED: testRecompile("noserializer_object_dynamic.bin")
+   [testng] PASSED: testRecompile("noserializer_object_sealed.bin")
+   [testng] PASSED: testRecompile("noserializer_vector.bin")
+   [testng] PASSED: testDirectEditing("testdata/as2/as2.swf")
+   [testng] PASSED: testDirectEditing("testdata/as3/as3.swf")
+   [testng] PASSED: testDirectEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/enemy-behavior-run-away-follow-player.swf")
+   [testng] PASSED: testDirectEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/flash-game-projectile-weapons-v3.swf")
+   [testng] PASSED: testDirectEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/pixel.swf")
+   [testng] PASSED: testDirectEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/space.swf")
+   [testng] PASSED: testDirectEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/weaponsystem.swf")
+   [testng] PASSED: testDecompileAS("testdata/as2/as2.swf")
+   [testng] PASSED: testDecompileAS("testdata/as3/as3.swf")
+   [testng] PASSED: testDecompileAS("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/enemy-behavior-run-away-follow-player.swf")
+   [testng] PASSED: testDecompileAS("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/flash-game-projectile-weapons-v3.swf")
+   [testng] PASSED: testDecompileAS("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/pixel.swf")
+   [testng] PASSED: testDecompileAS("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/space.swf")
+   [testng] PASSED: testDecompileAS("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/weaponsystem.swf")
+   [testng] PASSED: testDecompilePcode("testdata/as2/as2.swf")
+   [testng] PASSED: testDecompilePcode("testdata/as3/as3.swf")
+   [testng] PASSED: testDecompilePcode("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/enemy-behavior-run-away-follow-player.swf")
+   [testng] PASSED: testDecompilePcode("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/flash-game-projectile-weapons-v3.swf")
+   [testng] PASSED: testDecompilePcode("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/pixel.swf")
+   [testng] PASSED: testDecompilePcode("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/space.swf")
+   [testng] PASSED: testDecompilePcode("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/weaponsystem.swf")
+   [testng] PASSED: testFileHashMap
+   [testng] PASSED: testAS3InstructionParsing("testdata/as2/as2.swf")
+   [testng] PASSED: testAS3InstructionParsing("testdata/as3/as3.swf")
+   [testng] PASSED: testAS3InstructionParsing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/enemy-behavior-run-away-follow-player.swf")
+   [testng] PASSED: testAS3InstructionParsing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/flash-game-projectile-weapons-v3.swf")
+   [testng] PASSED: testAS3InstructionParsing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/pixel.swf")
+   [testng] PASSED: testAS3InstructionParsing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/space.swf")
+   [testng] PASSED: testAS3InstructionParsing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/weaponsystem.swf")
+   [testng] PASSED: testRecompile("testdata/as2/as2.swf")
+   [testng] PASSED: testRecompile("testdata/as3/as3.swf")
+   [testng] PASSED: testRecompile("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/enemy-behavior-run-away-follow-player.swf")
+   [testng] PASSED: testRecompile("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/flash-game-projectile-weapons-v3.swf")
+   [testng] PASSED: testRecompile("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/pixel.swf")
+   [testng] PASSED: testRecompile("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/space.swf")
+   [testng] PASSED: testRecompile("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/weaponsystem.swf")
+   [testng] PASSED: testTagEditing("testdata/as2/as2.swf")
+   [testng] PASSED: testTagEditing("testdata/as3/as3.swf")
+   [testng] PASSED: testTagEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/enemy-behavior-run-away-follow-player.swf")
+   [testng] PASSED: testTagEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/flash-game-projectile-weapons-v3.swf")
+   [testng] PASSED: testTagEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/pixel.swf")
+   [testng] PASSED: testTagEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/space.swf")
+   [testng] PASSED: testTagEditing("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/weaponsystem.swf")
+   [testng] PASSED: testFB
+   [testng] PASSED: testFIXEDandFIXED8
+   [testng] PASSED: testFLOATAndDouble
+   [testng] PASSED: testNeededBits
+   [testng] PASSED: testRECT
+   [testng] PASSED: testSB
+   [testng] PASSED: testUB
+   [testng] PASSED: testExportImportXml("testdata/as2/as2.swf")
+   [testng] PASSED: testExportImportXml("testdata/as3/as3.swf")
+   [testng] PASSED: testExportImportXml("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/enemy-behavior-run-away-follow-player.swf")
+   [testng] PASSED: testExportImportXml("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as2/flash-game-projectile-weapons-v3.swf")
+   [testng] PASSED: testExportImportXml("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/pixel.swf")
+   [testng] PASSED: testExportImportXml("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/space.swf")
+   [testng] PASSED: testExportImportXml("/home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/testdata/freeactionscript.com/as3/weaponsystem.swf")
+   [testng] 
+   [testng] ===============================================
+   [testng]     Ant test
+   [testng]     Tests run: 237, Failures: 0, Skips: 0
+   [testng] ===============================================
+   [testng] 
+   [testng] 
+   [testng] ===============================================
+   [testng] Ant suite
+   [testng] Total tests run: 237, Failures: 0, Skips: 0
+   [testng] ===============================================
+   [testng] 
+   [testng] [TestNG] Time taken by org.testng.reporters.JUnitReportReporter@58a9760d: 172 ms
+   [testng] [TestNG] Time taken by [FailedReporter passed=0 failed=0 skipped=0]: 1 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.jq.Main@4c583ecf: 146 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.EmailableReporter@41a2befb: 107 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.SuiteHTMLReporter@351d00c0: 133 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.XMLReporter@1165b38: 83 ms
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/reports/coverage
+[jacoco:report] Loading execution data file /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/coverage/jacoco.exec
+[jacoco:report] Writing bundle 'FFDec_Lib' with 1418 classes
+
+testhalt:
+
+-test_lib-nonewver:
+
+test_lib:
+
+compile-tests:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/build/test
+    [javac] Compiling 5 source files to /home/travis/build/jindrapetrik/jpexs-decompiler/build/test
+
+test:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/reports/tests
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/reports/tests/raw
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/coverage
+[jacoco:coverage] Enhancing testng with coverage
+   [testng] [TestNG] Running:
+   [testng]   Ant suite
+   [testng] 
+   [testng] PASSED: testAdvancedSettginsDialog
+   [testng] 
+   [testng] ===============================================
+   [testng]     Ant test
+   [testng]     Tests run: 1, Failures: 0, Skips: 0
+   [testng] ===============================================
+   [testng] 
+   [testng] 
+   [testng] ===============================================
+   [testng] Ant suite
+   [testng] Total tests run: 1, Failures: 0, Skips: 0
+   [testng] ===============================================
+   [testng] 
+   [testng] [TestNG] Time taken by org.testng.reporters.jq.Main@13e39c73: 65 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.EmailableReporter@35cabb2a: 3 ms
+   [testng] [TestNG] Time taken by [FailedReporter passed=0 failed=0 skipped=0]: 0 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.XMLReporter@56620197: 6 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.SuiteHTMLReporter@3c130745: 7 ms
+   [testng] [TestNG] Time taken by org.testng.reporters.JUnitReportReporter@35e2d654: 3 ms
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/reports/coverage
+[jacoco:report] Loading execution data file /home/travis/build/jindrapetrik/jpexs-decompiler/coverage/jacoco.exec
+[jacoco:report] Writing bundle 'FFDec' with 665 classes
+
+javadoc:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/javadoc
+  [javadoc] Generating Javadoc
+  [javadoc] Javadoc execution
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/CacheEntry.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/CacheImplementation.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/CacheReader.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/ChunkedInputStream.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/RafInputStream.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/BlockFileHeader.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/CacheAddr.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/ChromeCache.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/EntryFlags.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/EntryState.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/EntryStore.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/HttpResponseInfo.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/Index.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/IndexHeader.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/IndexInputStream.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/LruData.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/chrome/RankingsNode.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/firefox/CacheInputStream.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/firefox/CacheMap.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/firefox/FirefoxCache.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/firefox/IncompatibleVersionException.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/firefox/Location.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/firefox/MapBucket.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/browsers/cache/firefox/MetaData.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/console/CommandLineArgumentParser.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/console/ConsoleAbortRetryIgnoreHandler.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/console/ContextMenuTools.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/AboutDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/AdvancedSettingsDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/AppDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/AppFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/AppRibbonFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/AppStrings.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/BinaryPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ButtonsPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ComboBoxItem.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/DebugLogDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/DebugPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/DebuggerHandler.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/DocsPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/EachRowRendererEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ErrorLogFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ErrorState.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ExportDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/FlashUnsupportedException.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/FolderPreviewPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/FontEmbedDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/FontFace.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/FontFamily.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/FontPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/FontPreviewDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/GenericTagPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/GenericTagTreePanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/GraphDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/GraphTreeFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/GuiAbortRetryIgnoreHandler.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/HeaderInfoPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/HeaderLabel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/HtmlLabel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ImagePanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/Language.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LazyCardLayout.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LicenseUpdater.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LinkLabel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ListLayout.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LoadFromCacheFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LoadFromMemoryFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LoadingDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LoadingPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/LogFormatter.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/Main.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainFrameClassic.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainFrameClassicMenu.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainFrameMenu.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainFrameRibbon.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainFrameRibbonMenu.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainFrameStatusPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MainPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MenuBuilder.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ModeFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MyCommandButtonUI.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MyFormattedTextField.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MyProgressBarUI.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MyResizableIcon.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MyRibbonApplicationMenuButtonUI.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MyRibbonApplicationMenuPopupPanelUI.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MyTextField.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/NewVersionDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/OceanicSkin.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/OpenFileResult.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/PreviewPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/QuickFindPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/RecentFilesButton.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/RenameDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ReplaceCharacterDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/ReplaceTraceDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SaveFileMode.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SearchDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SearchInMemory.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SearchInMemoryListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SearchListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SearchPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SearchResultsDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SelectLanguageDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SoundTagPlayer.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/SwfInMemory.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/TagEditorPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/TagInfoPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/TextPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/TreeNodeType.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/TreePanelMode.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/View.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/WrapLayout.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/ABCComboBoxModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/ABCPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/ASMSourceEditorPane.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/ClassesListTreeModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/ConstantsListModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/DecompiledEditorPane.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/DeobfuscationDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/DetailPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/DialogMissingSymbolHandler.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/DocsListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/IconListRenderer.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/MethodCodePanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/MethodTraitDetailPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/NewTraitDialog.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/RootABCContainerTag.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/SlotConstTraitDetailPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/TraitDetail.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/TraitsList.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/TraitsListItem.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/TraitsListModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/UsageFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/UsageListModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/DecimalTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/DoubleTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/IntTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/MultinameTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/NamespaceSetTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/NamespaceTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/StringTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/abc/tablemodels/UIntTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/action/ActionPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/controls/JPersistentSplitPane.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/controls/JRepeatButton.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/controls/NoneSelectedButtonGroup.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/debugger/DebugListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/debugger/Debugger.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/debugger/DebuggerTools.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/dumpview/DumpTree.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/dumpview/DumpTreeModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/dumpview/DumpViewPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/editor/DebuggableEditorPane.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/editor/LineMarkedEditorPane.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/editor/LinkHandler.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/editor/MyMarkers.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/editor/TextChangedListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/editor/UndoFixedEditorPane.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/Amf3ValueEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/BinaryDataEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/BooleanEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/ChangeListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/ColorEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/EnumEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/FullSized.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/GenericTagEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/NumberEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/generictageditors/StringEditor.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/helpers/CheckResources.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/helpers/CollectionChangedAction.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/helpers/CollectionChangedEvent.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/helpers/CollectionChangedListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/helpers/ObservableList.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/helpers/SpringUtilities.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/helpers/TableLayoutHelper.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/hexview/HexView.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/hexview/HexViewListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/hexview/HexViewTableModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/pipes/FirstInstance.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/pipes/PipeInputStream.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/pipes/PipeOutputStream.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/player/FlashPlayerPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/player/MediaDisplay.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/player/MediaDisplayListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/player/PlayerControls.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/player/Zoom.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/proxy/ProxyFrame.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/proxy/SWFListModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/tagtree/TagIdClassMap.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/tagtree/TagTree.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/tagtree/TagTreeContextMenu.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/tagtree/TagTreeModel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/tagtree/TagTreeRoot.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/tagtree/TagTreeSwfInfo.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/timeline/FrameSelectionListener.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/timeline/TimelineBodyPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/timeline/TimelineDepthPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/timeline/TimelinePanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/timeline/TimelineTimePanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/timeline/TimelineViewPanel.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/process/Process.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/process/ProcessTools.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/process/win32/Win32Process.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/process/win32/Win32ProcessTools.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/Advapi32.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/Advapi32Util.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/BITMAP.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/BaseTSD.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/Gdi32.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/ICONINFO.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/Kernel32.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/MEMORY_BASIC_INFORMATION.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/PROCESSENTRY32.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/Psapi.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/SHELLEXECUTEINFO.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/SHFILEINFO.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/Shell32.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/User32.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/W32Errors.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/Win32Exception.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/WinBase.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/WinDef.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/WinError.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/WinGDI.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/WinNT.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/WinReg.java...
+  [javadoc] Loading source file /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/sun/jna/platform/win32/WinUser.java...
+  [javadoc] Loading source files for package com.jpexs.browsers.cache...
+  [javadoc] Loading source files for package com.jpexs.browsers.cache.chrome...
+  [javadoc] Loading source files for package com.jpexs.browsers.cache.firefox...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.console...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.abc...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.abc.tablemodels...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.action...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.controls...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.debugger...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.dumpview...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.editor...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.generictageditors...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.helpers...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.hexview...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.pipes...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.player...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.proxy...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.tagtree...
+  [javadoc] Loading source files for package com.jpexs.decompiler.flash.gui.timeline...
+  [javadoc] Loading source files for package com.jpexs.process...
+  [javadoc] Loading source files for package com.jpexs.process.win32...
+  [javadoc] Loading source files for package com.sun.jna.platform.win32...
+  [javadoc] Constructing Javadoc information...
+  [javadoc] Standard Doclet version 1.8.0_121
+  [javadoc] Building tree for all the packages and classes...
+  [javadoc] /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/AdvancedSettingsDialog.java:97: warning: no description for @param
+  [javadoc]      * @param selectedCategory
+  [javadoc]        ^
+  [javadoc] /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/Main.java:215: warning: no description for @param
+  [javadoc]      * @param v
+  [javadoc]        ^
+  [javadoc] /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MenuBuilder.java:200: warning: no description for @param
+  [javadoc]      * @param key
+  [javadoc]        ^
+  [javadoc] /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MenuBuilder.java:201: warning: no description for @param
+  [javadoc]      * @param isOptional
+  [javadoc]        ^
+  [javadoc] /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MenuBuilder.java:214: warning: no description for @param
+  [javadoc]      * @param key
+  [javadoc]        ^
+  [javadoc] /home/travis/build/jindrapetrik/jpexs-decompiler/src/com/jpexs/decompiler/flash/gui/MenuBuilder.java:230: warning: no description for @return
+  [javadoc]      * @return
+  [javadoc]        ^
+  [javadoc] Building index for all the packages and classes...
+  [javadoc] Building index for all classes...
+  [javadoc] Generating /home/travis/build/jindrapetrik/jpexs-decompiler/javadoc/help-doc.html...
+  [javadoc] 6 warnings
+
+release_lib:
+Trying to override old definition of task testng
+Trying to override old definition of task antlib:org.jacoco.ant:coverage
+Trying to override old definition of task antlib:org.jacoco.ant:agent
+Trying to override old definition of task antlib:org.jacoco.ant:report
+Trying to override old definition of task antlib:org.jacoco.ant:merge
+Trying to override old definition of task antlib:org.jacoco.ant:dump
+Trying to override old definition of task antlib:org.jacoco.ant:instrument
+
+-check-versionfile-exists:
+
+-load-version-file:
+
+-load-version-private:
+
+-load-version:
+
+-dotimestamp:
+
+-git-check-exists:
+
+-no-git-tag:
+
+-do-git-tag:
+     [echo] Git tag:cdf72b6798a124a3e8fd7d6e5803839782ee4768
+     [echo] Git shorttag:cdf72b6
+
+-git-tag:
+
+-timestamp:
+     [echo] Library Version: 10.0.0
+
+-nightly-suffix:
+
+-private-suffix:
+
+-no-suffix:
+
+-suffix:
+
+lexers:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+-lexer:
+
+compile:
+
+build:
+[propertyfile] Updating property file: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/build/classes/project.properties
+      [jar] Building jar: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/dist/ffdec_lib.jar
+
+release:
+      [zip] Building zip: /home/travis/build/jindrapetrik/jpexs-decompiler/libsrc/ffdec_lib/releases/ffdec_lib_10.0.0_nightly1655.zip
+
+library:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/releases
+     [copy] Copying 1 file to /home/travis/build/jindrapetrik/jpexs-decompiler/releases
+
+-set-gui-type:
+
+-check-tools:
+
+-load-tools-ok:
+
+-load-tools-fail:
+
+-load-tools:
+
+-exe-config:
+
+-exe-linux:
+     [exec] launch4j: Compiling resources
+     [exec] launch4j: Linking
+     [exec] launch4j: Successfully created /home/travis/build/jindrapetrik/jpexs-decompiler/dist/ffdec.exe
+
+-exe-windows:
+
+exe:
+
+dist:
+     [copy] Copying 6 files to /home/travis/build/jindrapetrik/jpexs-decompiler/dist
+     [copy] Copying 1 file to /home/travis/build/jindrapetrik/jpexs-decompiler/dist
+
+archive:
+      [zip] Building zip: /home/travis/build/jindrapetrik/jpexs-decompiler/releases/ffdec_10.0.0_nightly1655.zip
+
+deb:
+[desktopentry] Multiple main categories specified, the entry may appear under multiple menus!
+[desktopentry] Generating desktop entry to: /home/travis/build/jindrapetrik/jpexs-decompiler/desktop419632283
+      [deb] Building tar: /tmp/deb5615675845372145674.dir/data.tar.gz
+      [deb] Building tar: /tmp/deb5615675845372145674.dir/control.tar.gz
+      [deb] Writing deb file to: /home/travis/build/jindrapetrik/jpexs-decompiler/releases/ffdec_10.0.0-1_all.deb
+     [move] Moving 1 file to /home/travis/build/jindrapetrik/jpexs-decompiler/releases
+   [delete] Deleting: /home/travis/build/jindrapetrik/jpexs-decompiler/desktop419632283
+
+osx-app-bundle:
+     [copy] Copying 48 files to /home/travis/build/jindrapetrik/jpexs-decompiler/mac/bundle/FFDec.app/Contents/Resources
+
+osx-app-archive:
+      [zip] Building zip: /home/travis/build/jindrapetrik/jpexs-decompiler/releases/ffdec_10.0.0_nightly1655_macosx.zip
+
+installer:
+     [nsis] Successfully compiled script /home/travis/build/jindrapetrik/jpexs-decompiler/installer.nsi
+     [echo] Setup created in releases/ffdec_10.0.0_nightly1655_setup.exe
+
+osx-app-installer:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/mac/installer/flat/base.pkg
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/mac/installer/flat/Resources/en.lproj
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/mac/installer/root/Applications
+     [copy] Copying 50 files to /home/travis/build/jindrapetrik/jpexs-decompiler/mac/installer/root/Applications
+     [gzip] Building: /home/travis/build/jindrapetrik/jpexs-decompiler/mac/installer/flat/base.pkg/Payload
+   [delete] Deleting: /home/travis/build/jindrapetrik/jpexs-decompiler/cpio1232768425
+    [mkbom] MkBom: Creating BOM file to "/home/travis/build/jindrapetrik/jpexs-decompiler/mac/installer/flat/base.pkg/Bom" ...
+    [mkbom] MkBom: File created in "/home/travis/build/jindrapetrik/jpexs-decompiler/mac/installer/flat/base.pkg/Bom"
+      [xar] Xar: Creating XAR archive to "/home/travis/build/jindrapetrik/jpexs-decompiler/releases/ffdec_10.0.0_nightly1655.pkg" ...
+      [xar] Warning: org.apache.xerces.parsers.SAXParser: Feature 'http://javax.xml.XMLConstants/feature/secure-processing' is not recognized.
+      [xar] Warning: org.apache.xerces.parsers.SAXParser: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.
+      [xar] Warning: org.apache.xerces.parsers.SAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+
+locales:
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/FFDec
+     [copy] Copying 376 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/FFDec
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/bundle
+     [copy] Copying 16 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/bundle
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/defaultsyntaxkit
+     [copy] Copying 16 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/defaultsyntaxkit
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/syntaxkits/flasmsyntaxkit
+     [copy] Copying 16 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/syntaxkits/flasmsyntaxkit
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/syntaxkits/flasm3syntaxkit
+     [copy] Copying 16 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/syntaxkits/flasm3syntaxkit
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/syntaxkits/flasm3methodinfosyntaxkit
+     [copy] Copying 16 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/jsyntaxpane/syntaxkits/flasm3methodinfosyntaxkit
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/lib
+     [copy] Copying 21 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/lib
+    [mkdir] Created dir: /home/travis/build/jindrapetrik/jpexs-decompiler/locales/nsis
+     [copy] Copying 16 files to /home/travis/build/jindrapetrik/jpexs-decompiler/locales/nsis
+      [zip] Building zip: /home/travis/build/jindrapetrik/jpexs-decompiler/releases/ffdec_10.0.0_nightly1655_lang.zip
+
+release:
+
+all:
+
+-upload-check-nightly:
+
+-upload-check-stable:
+
+-upload-check-config:
+
+-upload-do:
+     [echo] Uploading...
+     [java] OK
+
+-upload-fail:
+
+-upload:
+
+git-push:
+
+new-version-nightlybuild:
+
+BUILD SUCCESSFUL
+Total time: 1 minute 53 seconds
+
+travis_time:end:279226a4:start=1498135637700042930,finish=1498135751233537013,duration=113533494083[0K
+[32;1mThe command "./travis/script.sh" exited with 0.[0m
+
+Done. Your build exited with 0.

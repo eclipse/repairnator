@@ -1,0 +1,277 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: i-0ee2a94-precise-production-2-worker-org-docker.travisci.net:221d72b7-f0b0-4730-b870-c9142ea2b2ef
+version: v2.5.0 https://github.com/travis-ci/worker/tree/da3a43228dffc0fcca5a46569ca786b22991979f
+instance: 3bc21d0:travis:java
+startup: 538.873835ms
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: precise
+Build id: 259288936
+Job id: 259288937
+travis-build version: 9af302805
+[34m[1mBuild image provisioning date and time[0m
+Thu Feb  5 15:09:33 UTC 2015
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 12.04.5 LTS
+Release:	12.04
+Codename:	precise
+[34m[1mLinux Version[0m
+3.13.0-29-generic
+[34m[1mCookbooks Version[0m
+a68419e https://github.com/travis-ci/travis-cookbooks/tree/a68419e
+[34m[1mGCC version[0m
+gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mLLVM version[0m
+clang version 3.4 (tags/RELEASE_34/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mPre-installed Ruby versions[0m
+ruby-1.9.3-p551
+[34m[1mPre-installed Node.js versions[0m
+v0.10.36
+[34m[1mPre-installed Go versions[0m
+1.4.1
+[34m[1mRedis version[0m
+redis-server 2.8.19
+[34m[1mriak version[0m
+2.0.2
+[34m[1mMongoDB version[0m
+MongoDB 2.4.12
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mNeo4j version[0m
+1.9.4
+[34m[1mRabbitMQ Version[0m
+3.4.3
+[34m[1mElasticSearch version[0m
+1.4.0
+[34m[1mInstalled Sphinx versions[0m
+2.0.10
+2.1.9
+2.2.6
+[34m[1mDefault Sphinx version[0m
+2.2.6
+[34m[1mInstalled Firefox version[0m
+firefox 31.0esr
+[34m[1mPhantomJS version[0m
+1.9.8
+[34m[1mant -version[0m
+Apache Ant(TM) version 1.8.2 compiled on December 3 2011
+[34m[1mmvn -version[0m
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.7.0_76, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-7-oracle/jre
+Default locale: en_US, platform encoding: ANSI_X3.4-1968
+OS name: "linux", version: "3.13.0-29-generic", arch: "amd64", family: "unix"
+travis_fold:end:system_info[0K
+travis_fold:start:fix.CVE-2015-7547[0K$ export DEBIAN_FRONTEND=noninteractive
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  libc-bin libc-dev-bin libc6-dev
+Suggested packages:
+  glibc-doc
+The following packages will be upgraded:
+  libc-bin libc-dev-bin libc6 libc6-dev
+4 upgraded, 0 newly installed, 0 to remove and 278 not upgraded.
+Need to get 8,856 kB of archives.
+After this operation, 13.3 kB of additional disk space will be used.
+Get:1 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6-dev amd64 2.15-0ubuntu10.18 [2,948 kB]
+Get:2 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-dev-bin amd64 2.15-0ubuntu10.18 [84.5 kB]
+Get:3 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-bin amd64 2.15-0ubuntu10.18 [1,178 kB]
+Get:4 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6 amd64 2.15-0ubuntu10.18 [4,646 kB]
+Fetched 8,856 kB in 0s (35.4 MB/s)
+Preconfiguring packages ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72019 files and directories currently installed.)
+Preparing to replace libc6-dev 2.15-0ubuntu10.10 (using .../libc6-dev_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc6-dev ...
+Preparing to replace libc-dev-bin 2.15-0ubuntu10.10 (using .../libc-dev-bin_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc-dev-bin ...
+Preparing to replace libc-bin 2.15-0ubuntu10.10 (using .../libc-bin_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc-bin ...
+Processing triggers for man-db ...
+Setting up libc-bin (2.15-0ubuntu10.18) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72018 files and directories currently installed.)
+Preparing to replace libc6 2.15-0ubuntu10.10 (using .../libc6_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc6 ...
+Setting up libc6 (2.15-0ubuntu10.18) ...
+Setting up libc-dev-bin (2.15-0ubuntu10.18) ...
+Setting up libc6-dev (2.15-0ubuntu10.18) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+travis_fold:end:fix.CVE-2015-7547[0Ktravis_fold:start:update_libssl1.0.0[0K$ sudo apt-get install ca-certificates libssl1.0.0
+Reading package lists... 0%Reading package lists... 0%Reading package lists... 1%Reading package lists... 10%Reading package lists... 10%Reading package lists... 11%Reading package lists... 11%Reading package lists... 46%Reading package lists... 46%Reading package lists... 47%Reading package lists... 47%Reading package lists... 51%Reading package lists... 58%Reading package lists... 58%Reading package lists... 58%Reading package lists... 58%Reading package lists... 94%Reading package lists... 94%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 95%Reading package lists... 96%Reading package lists... 96%Reading package lists... 96%Reading package lists... 96%Reading package lists... 97%Reading package lists... 97%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... 98%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
+Reading state information... 0%Reading state information... 0%Reading state information... Done
+The following extra packages will be installed:
+  libssl-dev
+The following packages will be upgraded:
+  ca-certificates libssl-dev libssl1.0.0
+3 upgraded, 0 newly installed, 0 to remove and 275 not upgraded.
+Need to get 2,842 kB of archives.
+After this operation, 41.0 kB of additional disk space will be used.
+0% [Working]            Get:1 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libssl-dev amd64 1.0.1-4ubuntu5.39 [1,580 kB]
+            0% [1 libssl-dev 14.1 kB/1,580 kB 1%]                                     56% [Working]             Get:2 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libssl1.0.0 amd64 1.0.1-4ubuntu5.39 [1,054 kB]
+             57% [2 libssl1.0.0 45.1 kB/1,054 kB 4%]                                       93% [Working]             Get:3 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main ca-certificates all 20160104ubuntu0.12.04.1 [208 kB]
+             94% [3 ca-certificates 24.6 kB/208 kB 12%]                                          100% [Working]              Fetched 2,842 kB in 0s (18.6 MB/s)
+Preconfiguring packages ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72018 files and directories currently installed.)
+Preparing to replace libssl-dev 1.0.1-4ubuntu5.21 (using .../libssl-dev_1.0.1-4ubuntu5.39_amd64.deb) ...
+Unpacking replacement libssl-dev ...
+Preparing to replace libssl1.0.0 1.0.1-4ubuntu5.21 (using .../libssl1.0.0_1.0.1-4ubuntu5.39_amd64.deb) ...
+Unpacking replacement libssl1.0.0 ...
+Setting up libssl1.0.0 (1.0.1-4ubuntu5.39) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72018 files and directories currently installed.)
+Preparing to replace ca-certificates 20130906ubuntu0.12.04.1 (using .../ca-certificates_20160104ubuntu0.12.04.1_all.deb) ...
+Unpacking replacement ca-certificates ...
+Processing triggers for man-db ...
+Setting up libssl-dev (1.0.1-4ubuntu5.39) ...
+Setting up ca-certificates (20160104ubuntu0.12.04.1) ...
+Updating certificates in /etc/ssl/certs... 35 added, 26 removed; done.
+Running hooks in /etc/ca-certificates/update.d....
+Adding debian:ACCVRAIZ1.pem
+Adding debian:Atos_TrustedRoot_2011.pem
+Adding debian:CA_WoSign_ECC_Root.pem
+Adding debian:Certification_Authority_of_WoSign_G2.pem
+Adding debian:Certinomis_-_Root_CA.pem
+Adding debian:CFCA_EV_ROOT.pem
+Adding debian:COMODO_RSA_Certification_Authority.pem
+Adding debian:DigiCert_Assured_ID_Root_G2.pem
+Adding debian:DigiCert_Assured_ID_Root_G3.pem
+Adding debian:DigiCert_Global_Root_G2.pem
+Adding debian:DigiCert_Global_Root_G3.pem
+Adding debian:DigiCert_Trusted_Root_G4.pem
+Adding debian:Entrust_Root_Certification_Authority_-_EC1.pem
+Adding debian:Entrust_Root_Certification_Authority_-_G2.pem
+Adding debian:E-Tugra_Certification_Authority.pem
+Adding debian:GlobalSign_ECC_Root_CA_-_R4.pem
+Adding debian:GlobalSign_ECC_Root_CA_-_R5.pem
+Adding debian:IdenTrust_Commercial_Root_CA_1.pem
+Adding debian:IdenTrust_Public_Sector_Root_CA_1.pem
+Adding debian:OISTE_WISeKey_Global_Root_GB_CA.pem
+Adding debian:QuoVadis_Root_CA_1_G3.pem
+Adding debian:QuoVadis_Root_CA_2_G3.pem
+Adding debian:QuoVadis_Root_CA_3_G3.pem
+Adding debian:Staat_der_Nederlanden_EV_Root_CA.pem
+Adding debian:Staat_der_Nederlanden_Root_CA_-_G3.pem
+Adding debian:S-TRUST_Universal_Root_CA.pem
+Adding debian:TeliaSonera_Root_CA_v1.pem
+Adding debian:T-TeleSec_GlobalRoot_Class_2.pem
+Adding debian:TÜRKTRUST_Elektronik_Sertifika_Hizmet_Sağlayıcısı_H5.pem
+Adding debian:TÜRKTRUST_Elektronik_Sertifika_Hizmet_Sağlayıcısı_H6.pem
+Adding debian:TWCA_Global_Root_CA.pem
+Adding debian:USERTrust_ECC_Certification_Authority.pem
+Adding debian:USERTrust_RSA_Certification_Authority.pem
+Adding debian:WoSign_China.pem
+Adding debian:WoSign.pem
+Removing debian:A-Trust-nQual-03.pem
+Removing debian:America_Online_Root_Certification_Authority_1.pem
+Removing debian:America_Online_Root_Certification_Authority_2.pem
+Removing debian:Buypass_Class_3_CA_1.pem
+Removing debian:ComSign_Secured_CA.pem
+Removing debian:Digital_Signature_Trust_Co._Global_CA_1.pem
+Removing debian:Digital_Signature_Trust_Co._Global_CA_3.pem
+Removing debian:E-Guven_Kok_Elektronik_Sertifika_Hizmet_Saglayicisi.pem
+Removing debian:Entrust.net_Secure_Server_CA.pem
+Removing debian:Firmaprofesional_Root_CA.pem
+Removing debian:GTE_CyberTrust_Global_Root.pem
+Removing debian:RSA_Root_Certificate_1.pem
+Removing debian:TC_TrustCenter_Class_2_CA_II.pem
+Removing debian:TC_TrustCenter_Universal_CA_I.pem
+Removing debian:TDC_Internet_Root_CA.pem
+Removing debian:TDC_OCES_Root_CA.pem
+Removing debian:TURKTRUST_Certificate_Services_Provider_Root_1.pem
+Removing debian:TURKTRUST_Certificate_Services_Provider_Root_2.pem
+Removing debian:Thawte_Premium_Server_CA.pem
+Removing debian:Thawte_Server_CA.pem
+Removing debian:UTN_DATACorp_SGC_Root_CA.pem
+Removing debian:ValiCert_Class_1_VA.pem
+Removing debian:ValiCert_Class_2_VA.pem
+Removing debian:Verisign_Class_4_Public_Primary_Certification_Authority_-_G3.pem
+Removing debian:Wells_Fargo_Root_CA.pem
+Removing debian:spi-cacert-2008.pem
+done.
+done.
+travis_fold:end:update_libssl1.0.0[0K$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+travis_fold:start:git.checkout[0Ktravis_time:start:0adf7d10[0K$ git clone --depth=50 --branch=master https://github.com/easemob/emchat-server-examples.git easemob/emchat-server-examples
+Cloning into 'easemob/emchat-server-examples'...
+remote: Counting objects: 980, done.[K
+remote: Compressing objects:   0% (1/464)   [Kremote: Compressing objects:   1% (5/464)   [Kremote: Compressing objects:   2% (10/464)   [Kremote: Compressing objects:   3% (14/464)   [Kremote: Compressing objects:   4% (19/464)   [Kremote: Compressing objects:   5% (24/464)   [Kremote: Compressing objects:   6% (28/464)   [Kremote: Compressing objects:   7% (33/464)   [Kremote: Compressing objects:   8% (38/464)   [Kremote: Compressing objects:   9% (42/464)   [Kremote: Compressing objects:  10% (47/464)   [Kremote: Compressing objects:  11% (52/464)   [Kremote: Compressing objects:  12% (56/464)   [Kremote: Compressing objects:  13% (61/464)   [Kremote: Compressing objects:  14% (65/464)   [Kremote: Compressing objects:  15% (70/464)   [Kremote: Compressing objects:  16% (75/464)   [Kremote: Compressing objects:  17% (79/464)   [Kremote: Compressing objects:  18% (84/464)   [Kremote: Compressing objects:  19% (89/464)   [Kremote: Compressing objects:  20% (93/464)   [Kremote: Compressing objects:  21% (98/464)   [Kremote: Compressing objects:  22% (103/464)   [Kremote: Compressing objects:  23% (107/464)   [Kremote: Compressing objects:  24% (112/464)   [Kremote: Compressing objects:  25% (116/464)   [Kremote: Compressing objects:  26% (121/464)   [Kremote: Compressing objects:  27% (126/464)   [Kremote: Compressing objects:  28% (130/464)   [Kremote: Compressing objects:  29% (135/464)   [Kremote: Compressing objects:  30% (140/464)   [Kremote: Compressing objects:  31% (144/464)   [Kremote: Compressing objects:  32% (149/464)   [Kremote: Compressing objects:  33% (154/464)   [Kremote: Compressing objects:  34% (158/464)   [Kremote: Compressing objects:  35% (163/464)   [Kremote: Compressing objects:  36% (168/464)   [Kremote: Compressing objects:  37% (172/464)   [Kremote: Compressing objects:  38% (177/464)   [Kremote: Compressing objects:  39% (181/464)   [Kremote: Compressing objects:  40% (186/464)   [Kremote: Compressing objects:  41% (191/464)   [Kremote: Compressing objects:  42% (195/464)   [Kremote: Compressing objects:  43% (200/464)   [Kremote: Compressing objects:  44% (205/464)   [Kremote: Compressing objects:  45% (209/464)   [Kremote: Compressing objects:  46% (214/464)   [Kremote: Compressing objects:  47% (219/464)   [Kremote: Compressing objects:  48% (223/464)   [Kremote: Compressing objects:  49% (228/464)   [Kremote: Compressing objects:  50% (232/464)   [Kremote: Compressing objects:  51% (237/464)   [Kremote: Compressing objects:  52% (242/464)   [Kremote: Compressing objects:  53% (246/464)   [Kremote: Compressing objects:  54% (251/464)   [Kremote: Compressing objects:  55% (256/464)   [Kremote: Compressing objects:  56% (260/464)   [Kremote: Compressing objects:  57% (265/464)   [Kremote: Compressing objects:  58% (270/464)   [Kremote: Compressing objects:  59% (274/464)   [Kremote: Compressing objects:  60% (279/464)   [Kremote: Compressing objects:  61% (284/464)   [Kremote: Compressing objects:  62% (288/464)   [Kremote: Compressing objects:  63% (293/464)   [Kremote: Compressing objects:  64% (297/464)   [Kremote: Compressing objects:  65% (302/464)   [Kremote: Compressing objects:  66% (307/464)   [Kremote: Compressing objects:  67% (311/464)   [Kremote: Compressing objects:  68% (316/464)   [Kremote: Compressing objects:  69% (321/464)   [Kremote: Compressing objects:  70% (325/464)   [Kremote: Compressing objects:  71% (330/464)   [Kremote: Compressing objects:  72% (335/464)   [Kremote: Compressing objects:  73% (339/464)   [Kremote: Compressing objects:  74% (344/464)   [Kremote: Compressing objects:  75% (348/464)   [Kremote: Compressing objects:  76% (353/464)   [Kremote: Compressing objects:  77% (358/464)   [Kremote: Compressing objects:  78% (362/464)   [Kremote: Compressing objects:  79% (367/464)   [Kremote: Compressing objects:  80% (372/464)   [Kremote: Compressing objects:  81% (376/464)   [Kremote: Compressing objects:  82% (381/464)   [Kremote: Compressing objects:  83% (386/464)   [Kremote: Compressing objects:  84% (390/464)   [Kremote: Compressing objects:  85% (395/464)   [Kremote: Compressing objects:  86% (400/464)   [Kremote: Compressing objects:  87% (404/464)   [Kremote: Compressing objects:  88% (409/464)   [Kremote: Compressing objects:  89% (413/464)   [Kremote: Compressing objects:  90% (418/464)   [Kremote: Compressing objects:  91% (423/464)   [Kremote: Compressing objects:  92% (427/464)   [Kremote: Compressing objects:  93% (432/464)   [Kremote: Compressing objects:  94% (437/464)   [Kremote: Compressing objects:  95% (441/464)   [Kremote: Compressing objects:  96% (446/464)   [Kremote: Compressing objects:  97% (451/464)   [Kremote: Compressing objects:  98% (455/464)   [Kremote: Compressing objects:  99% (460/464)   [Kremote: Compressing objects: 100% (464/464)   [Kremote: Compressing objects: 100% (464/464), done.[K
+Receiving objects:   0% (1/980)   Receiving objects:   1% (10/980)   Receiving objects:   2% (20/980)   Receiving objects:   3% (30/980)   Receiving objects:   4% (40/980)   Receiving objects:   5% (49/980)   Receiving objects:   6% (59/980)   Receiving objects:   7% (69/980)   Receiving objects:   8% (79/980)   Receiving objects:   9% (89/980)   Receiving objects:  10% (98/980)   Receiving objects:  11% (108/980)   Receiving objects:  12% (118/980)   Receiving objects:  13% (128/980)   Receiving objects:  14% (138/980)   Receiving objects:  15% (147/980)   Receiving objects:  16% (157/980)   Receiving objects:  17% (167/980)   Receiving objects:  18% (177/980)   Receiving objects:  19% (187/980)   Receiving objects:  20% (196/980)   Receiving objects:  21% (206/980)   Receiving objects:  22% (216/980)   Receiving objects:  23% (226/980)   Receiving objects:  24% (236/980)   Receiving objects:  25% (245/980)   Receiving objects:  26% (255/980)   Receiving objects:  27% (265/980)   Receiving objects:  28% (275/980)   Receiving objects:  29% (285/980)   Receiving objects:  30% (294/980)   Receiving objects:  31% (304/980)   Receiving objects:  32% (314/980)   Receiving objects:  33% (324/980)   Receiving objects:  34% (334/980)   Receiving objects:  35% (343/980)   Receiving objects:  36% (353/980)   Receiving objects:  37% (363/980)   Receiving objects:  38% (373/980)   Receiving objects:  39% (383/980)   Receiving objects:  40% (392/980)   Receiving objects:  41% (402/980)   Receiving objects:  42% (412/980)   Receiving objects:  43% (422/980)   Receiving objects:  44% (432/980)   Receiving objects:  45% (441/980)   Receiving objects:  46% (451/980)   Receiving objects:  47% (461/980)   Receiving objects:  48% (471/980)   Receiving objects:  49% (481/980)   Receiving objects:  50% (490/980)   Receiving objects:  51% (500/980)   Receiving objects:  52% (510/980)   Receiving objects:  53% (520/980)   Receiving objects:  54% (530/980)   Receiving objects:  55% (539/980)   Receiving objects:  56% (549/980)   Receiving objects:  57% (559/980)   Receiving objects:  58% (569/980)   Receiving objects:  59% (579/980)   Receiving objects:  60% (588/980)   Receiving objects:  61% (598/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  62% (608/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  63% (618/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  64% (628/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  65% (637/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  66% (647/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  67% (657/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  68% (667/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  69% (677/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  70% (686/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  71% (696/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  72% (706/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  73% (716/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  74% (726/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  75% (735/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  76% (745/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  77% (755/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  78% (765/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  79% (775/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  80% (784/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  81% (794/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  82% (804/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  83% (814/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  84% (824/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  85% (833/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  86% (843/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  87% (853/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  88% (863/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  89% (873/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  90% (882/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  91% (892/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  92% (902/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  93% (912/980), 10.30 MiB | 20.55 MiB/s   remote: Total 980 (delta 383), reused 932 (delta 351), pack-reused 0[K
+Receiving objects:  94% (922/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  95% (931/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  96% (941/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  97% (951/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  98% (961/980), 10.30 MiB | 20.55 MiB/s   Receiving objects:  99% (971/980), 10.30 MiB | 20.55 MiB/s   Receiving objects: 100% (980/980), 10.30 MiB | 20.55 MiB/s   Receiving objects: 100% (980/980), 16.00 MiB | 20.55 MiB/s, done.
+Resolving deltas:   0% (0/383)   Resolving deltas:   1% (4/383)   Resolving deltas:   3% (13/383)   Resolving deltas:   4% (19/383)   Resolving deltas:   6% (24/383)   Resolving deltas:   7% (28/383)   Resolving deltas:   9% (35/383)   Resolving deltas:  10% (42/383)   Resolving deltas:  11% (43/383)   Resolving deltas:  12% (48/383)   Resolving deltas:  13% (51/383)   Resolving deltas:  17% (68/383)   Resolving deltas:  18% (70/383)   Resolving deltas:  21% (82/383)   Resolving deltas:  22% (86/383)   Resolving deltas:  23% (89/383)   Resolving deltas:  26% (103/383)   Resolving deltas:  27% (105/383)   Resolving deltas:  28% (108/383)   Resolving deltas:  29% (112/383)   Resolving deltas:  30% (118/383)   Resolving deltas:  31% (122/383)   Resolving deltas:  33% (127/383)   Resolving deltas:  34% (133/383)   Resolving deltas:  39% (152/383)   Resolving deltas:  40% (154/383)   Resolving deltas:  43% (165/383)   Resolving deltas:  44% (169/383)   Resolving deltas:  45% (175/383)   Resolving deltas:  46% (178/383)   Resolving deltas:  47% (182/383)   Resolving deltas:  48% (185/383)   Resolving deltas:  49% (189/383)   Resolving deltas:  50% (192/383)   Resolving deltas:  51% (196/383)   Resolving deltas:  53% (205/383)   Resolving deltas:  54% (208/383)   Resolving deltas:  55% (213/383)   Resolving deltas:  56% (215/383)   Resolving deltas:  57% (222/383)   Resolving deltas:  59% (227/383)   Resolving deltas:  60% (233/383)   Resolving deltas:  61% (234/383)   Resolving deltas:  62% (238/383)   Resolving deltas:  63% (243/383)   Resolving deltas:  66% (254/383)   Resolving deltas:  69% (265/383)   Resolving deltas:  71% (272/383)   Resolving deltas:  72% (277/383)   Resolving deltas:  73% (282/383)   Resolving deltas:  74% (286/383)   Resolving deltas:  75% (291/383)   Resolving deltas:  76% (293/383)   Resolving deltas:  78% (302/383)   Resolving deltas:  79% (306/383)   Resolving deltas:  80% (309/383)   Resolving deltas:  81% (311/383)   Resolving deltas:  82% (316/383)   Resolving deltas:  83% (319/383)   Resolving deltas:  84% (322/383)   Resolving deltas:  86% (331/383)   Resolving deltas:  87% (334/383)   Resolving deltas:  88% (338/383)   Resolving deltas:  89% (341/383)   Resolving deltas:  90% (345/383)   Resolving deltas:  92% (353/383)   Resolving deltas:  93% (358/383)   Resolving deltas:  94% (361/383)   Resolving deltas:  95% (364/383)   Resolving deltas:  96% (368/383)   Resolving deltas:  97% (373/383)   Resolving deltas:  98% (377/383)   Resolving deltas:  99% (380/383)   Resolving deltas: 100% (383/383)   Resolving deltas: 100% (383/383), done.
+Checking connectivity... done.
+
+travis_time:end:0adf7d10:start=1501491555721869961,finish=1501491557011392202,duration=1289522241[0K$ cd easemob/emchat-server-examples
+$ git checkout -qf 524e5c412464251816545442004d0e5074b58bac
+travis_fold:end:git.checkout[0Ktravis_fold:start:cache.1[0KSetting up build cache
+$ export CASHER_DIR=$HOME/.casher
+travis_time:start:2ed8ed74[0K$ Installing caching utilities
+
+travis_time:end:2ed8ed74:start=1501491560168811395,finish=1501491560206399627,duration=37588232[0Ktravis_time:start:0ff09328[0K
+travis_time:end:0ff09328:start=1501491560212931001,finish=1501491560217418659,duration=4487658[0Ktravis_time:start:1762dc67[0K[32;1mattempting to download cache archive[0m
+[32;1mfetching master/cache-linux-precise-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855--jdk-oraclejdk8.tgz[0m
+[32;1mfound cache[0m
+
+travis_time:end:1762dc67:start=1501491560222665717,finish=1501491560894269553,duration=671603836[0Ktravis_time:start:22bcb769[0K
+travis_time:end:22bcb769:start=1501491560899903885,finish=1501491560904770920,duration=4867035[0Ktravis_time:start:0f7632f2[0K[32;1madding /home/travis/build/easemob/emchat-server-examples/.autoconf to cache[0m
+[32;1mcreating directory /home/travis/build/easemob/emchat-server-examples/.autoconf[0m
+[32;1madding /home/travis/.m2 to cache[0m
+
+travis_time:end:0f7632f2:start=1501491560910193210,finish=1501491562397225489,duration=1487032279[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
+java version "1.8.0_31"
+Java(TM) SE Runtime Environment (build 1.8.0_31-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 25.31-b07, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.8.0_31
+travis_fold:start:install[0Ktravis_time:start:03d26bbe[0K$ true
+
+travis_time:end:03d26bbe:start=1501491562845819789,finish=1501491562850104190,duration=4284401[0Ktravis_fold:end:install[0Ktravis_time:start:1d5e8907[0K$ cd emchat-server-java
+
+travis_time:end:1d5e8907:start=1501491562855870179,finish=1501491562860641097,duration=4770918[0K
+[32;1mThe command "cd emchat-server-java" exited with 0.[0m
+travis_time:start:08802984[0K$ mvn clean install
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=192m; support was removed in 8.0
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Easemob REST Example 0.0.1
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ examples ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ examples ---
+[INFO] Installing /home/travis/build/easemob/emchat-server-examples/emchat-server-java/pom.xml to /home/travis/.m2/repository/com/easemob/rest/examples/0.0.1/examples-0.0.1.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.527 s
+[INFO] Finished at: 2017-07-31T08:59:24+00:00
+[INFO] Final Memory: 15M/491M
+[INFO] ------------------------------------------------------------------------
+
+travis_time:end:08802984:start=1501491562866940277,finish=1501491564976914541,duration=2109974264[0K
+[32;1mThe command "mvn clean install" exited with 0.[0m
+travis_fold:start:cache.2[0Kstore build cache
+travis_time:start:1ffe0cc4[0K
+travis_time:end:1ffe0cc4:start=1501491564982966659,finish=1501491564987617108,duration=4650449[0Ktravis_time:start:03467469[0K[32;1mchange detected (content changed, file is created, or file is deleted):
+/home/travis/.m2/repository/com/easemob/rest/examples/0.0.1/_remote.repositories
+/home/travis/.m2/repository/com/easemob/rest/examples/maven-metadata-local.xml
+
+[0m
+[32;1mchanges detected, packing new archive[0m
+[32;1muploading archive[0m
+
+travis_time:end:03467469:start=1501491564993111145,finish=1501491566655424049,duration=1662312904[0Ktravis_fold:end:cache.2[0K
+Done. Your build exited with 0.
