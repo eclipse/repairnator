@@ -14,7 +14,9 @@ public class MavenLogParser extends JavaLogParser {
 
     //protected static final String MVN_LINE_PATTERN = "^(-------------------------------------------------------|\\[INFO\\] Reactor Summary:)$";
     protected static final String MVN_LINE_PATTERN = "((\\[INFO\\].*)|(\\[ERROR\\].*)|((.*The command ){1}((\"mvn .*)|(\"./mvnw .*)){1}))";
-    private static final String MVN_TESTS_PATTERN = " T E S T S";
+    private static final String MVN_TESTS_PATTERN = "( T E S T S)";
+    // | ([[1;34mINFO[m]  T E S T S)
+    private static final String MVN_RESULTS_PATTERN = "Results :";
     private static final String MVN_TEST_NUMBER_PATTERN = "Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*)(, Skipped: (\\d*))?";
 
     public MavenLogParser() {
@@ -25,7 +27,7 @@ public class MavenLogParser extends JavaLogParser {
         this.passingTests = this.runningTests-notPassing;
     }
 
-    private void parseTestLine(String line) {
+    private Boolean parseTestLine(String line) {
         Pattern mvnTestNumberPattern = Pattern.compile(MVN_TEST_NUMBER_PATTERN);
         Matcher mvnTestNumberMatcher = mvnTestNumberPattern.matcher(line);
 
@@ -39,50 +41,38 @@ public class MavenLogParser extends JavaLogParser {
             if (nbMatch == 5) {
                 this.skippingTests += Integer.parseInt(mvnTestNumberMatcher.group(5));
             }
+
+            return  true;
         }
+        else
+            return false;
     }
 
     @Override
     public TestsInformation parseLog(TravisFold outOfFold) {
-        boolean beginTestHead = false;
-        boolean inTestHead = false;
         boolean inTestBlock = false;
+        boolean inTestResults = false;
 
-        Pattern mvnLinePattern = Pattern.compile(MVN_LINE_PATTERN);
         Pattern mvnTestHeadPattern = Pattern.compile(MVN_TESTS_PATTERN);
-
+        Pattern mvnTestResultsPattern = Pattern.compile(MVN_RESULTS_PATTERN);
         for (String s : outOfFold.getContent()) {
-            Matcher mvnLineMatcher = mvnLinePattern.matcher(s);
-
-            if (!beginTestHead && !inTestHead && mvnLineMatcher.matches()) {
-                beginTestHead = true;
-                inTestBlock = false;
-                continue;
-            }
-
-            if (beginTestHead && !inTestHead && mvnLineMatcher.matches()) {
-                beginTestHead = false;
-                inTestBlock = false;
-                continue;
-            }
-
-            if (beginTestHead && inTestHead && mvnLineMatcher.matches()) {
-                beginTestHead = false;
-                inTestHead = false;
+            Matcher mvnTestResultsMatcher = mvnTestResultsPattern.matcher(s);
+            Matcher mvnTestHeadMatcher = mvnTestHeadPattern.matcher(s);
+            if (!inTestBlock && mvnTestHeadMatcher.matches()) {
                 inTestBlock = true;
                 continue;
             }
-
-            Matcher mvnTestHeadMatcher = mvnTestHeadPattern.matcher(s);
-
-            if (beginTestHead && !inTestHead && mvnTestHeadMatcher.matches()) {
-                inTestHead = true;
-                inTestBlock = false;
+            if (inTestBlock && mvnTestResultsMatcher.matches()) {
+                inTestResults = true;
                 continue;
             }
 
-            if (inTestBlock) {
-                this.parseTestLine(s);
+            if (inTestResults) {
+                if(this.parseTestLine(s)){
+                    inTestBlock = false;
+                    inTestResults = false;
+                }
+
             }
         }
 
