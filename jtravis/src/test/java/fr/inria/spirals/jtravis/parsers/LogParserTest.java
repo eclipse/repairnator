@@ -511,7 +511,7 @@ public class LogParserTest {
 
     /*@Test
     public void testLogParserRecognizeMavenLogsAsMavenLog2() throws IOException {
-        String path = "./src/test/resources/UnkownBuildTool/Fail Test/Maven/";
+        String path = "./src/test/resources/UnkownBuildTool/FailTest/Maven/";
         //String path = "./src/test/resources/maven-logs/";
         File folder = new File(path);
         File[] files = folder.listFiles();
