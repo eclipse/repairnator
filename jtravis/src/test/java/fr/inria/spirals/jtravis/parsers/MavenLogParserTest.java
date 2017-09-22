@@ -45,4 +45,19 @@ public class MavenLogParserTest {
         assertEquals(1114, infoTest.getRunning());
         assertEquals(1110, infoTest.getPassing());
     }
+
+    @Test
+    public void testParsingLog3ReturnsRightInfoTest() throws IOException {
+        String path = "./src/test/resources/maven-logs/log3.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+        TestsInformation infoTest = parser.getTestsInformation();
+
+        assertEquals(1, infoTest.getFailing());
+        assertEquals(0, infoTest.getErrored());
+        assertEquals(12, infoTest.getSkipping());
+        assertEquals(1392, infoTest.getRunning());
+        assertEquals(1379, infoTest.getPassing());
+    }
 }

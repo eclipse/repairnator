@@ -14,10 +14,10 @@ public class MavenLogParser extends JavaLogParser {
 
     //protected static final String MVN_LINE_PATTERN = "^(-------------------------------------------------------|\\[INFO\\] Reactor Summary:)$";
     protected static final String MVN_LINE_PATTERN = "((\\[INFO\\].*)|(\\[ERROR\\].*)|((.*The command ){1}((\"mvn .*)|(\"./mvnw .*)){1}))";
-    private static final String MVN_TESTS_PATTERN = "( T E S T S)";
+    private static final String MVN_TESTS_PATTERN = ".* T E S T S";
     // | ([[1;34mINFO[m]  T E S T S)
-    private static final String MVN_RESULTS_PATTERN = "Results :";
-    private static final String MVN_TEST_NUMBER_PATTERN = "Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*)(, Skipped: (\\d*))?";
+    private static final String MVN_RESULTS_PATTERN = "(.*Results:)|(.*Results :)";
+    private static final String MVN_TEST_NUMBER_PATTERN = ".*Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*)(, Skipped: (\\d*))?";
 
     public MavenLogParser() {
     }
