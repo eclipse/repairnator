@@ -56,7 +56,7 @@ public class LogParser {
             while (reader.ready()) {
                 String line = reader.readLine();
 
-                if (line != null && this.buildTool == BuildTool.UNKNOWN) {
+                if (line != null) {
                     Matcher matcherFoldStart = patternFoldStart.matcher(line);
                     Matcher matcherFoldEnd = patternFoldEnd.matcher(line);
 
@@ -74,15 +74,16 @@ public class LogParser {
 
                     if (fold == null) {
                         this.outOfFold.addContent(line);
-
-                        Matcher mvnMatcher = mvnPattern.matcher(line);
-                        Matcher gradleMatcher = gradlePattern.matcher(line);
-                        if (mvnMatcher.matches()) {
-                            this.logParser = new MavenLogParser();
-                            this.buildTool = BuildTool.MAVEN;
-                        } else if (gradleMatcher.matches()) {
-                            this.logParser = new GradleLogParser();
-                            this.buildTool = BuildTool.GRADLE;
+                        if(this.buildTool == BuildTool.UNKNOWN) {
+                            Matcher mvnMatcher = mvnPattern.matcher(line);
+                            Matcher gradleMatcher = gradlePattern.matcher(line);
+                            if (mvnMatcher.matches()) {
+                                this.logParser = new MavenLogParser();
+                                this.buildTool = BuildTool.MAVEN;
+                            } else if (gradleMatcher.matches()) {
+                                this.logParser = new GradleLogParser();
+                                this.buildTool = BuildTool.GRADLE;
+                            }
                         }
 
                     } else {
