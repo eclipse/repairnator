@@ -113,4 +113,11 @@ public class LogParser {
         }
         return null;
     }
+
+    public List<TestsInformation> getDetailedTestsInformation() {
+        if (this.buildTool == BuildTool.MAVEN) {
+            return this.logParser.parseDetailedLog(this.outOfFold);
+        }
+        return null;
+    }
 }
