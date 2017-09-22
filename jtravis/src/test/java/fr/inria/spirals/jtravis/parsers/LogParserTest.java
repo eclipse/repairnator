@@ -419,33 +419,6 @@ public class LogParserTest {
     }
 
     @Test
-    public void testLogParserRecognizeGradleLogsNotAsMavenLog() throws IOException {
-        String path = "./src/test/resources/UnkownBuildTool/NotTested/Gradle/";
-        //String path = "./src/test/resources/maven-logs/";
-        File folder = new File(path);
-        File[] files = folder.listFiles();
-
-        for(File file : files) {
-            if(file.isFile()) {
-                String fileContent = TestUtils.readFile(file.getPath());
-                LogParser parser = new LogParser(fileContent);
-                System.err.println("file : "+file.getPath());
-                assertNotEquals("Failed file path: "+ file.getPath(),BuildTool.MAVEN, parser.getBuildTool());
-            }
-            else if (file.isDirectory()) {
-                for(File file2 : file.listFiles()) {
-                    if (file2.isFile()) {
-                        String fileContent = TestUtils.readFile(file2.getPath());
-                        LogParser parser = new LogParser(fileContent);
-                        System.err.println("file : "+file2.getPath());
-                        assertNotEquals("Failed file path: "+ file2.getPath(),BuildTool.MAVEN, parser.getBuildTool());
-                    }
-                }
-            }
-        }
-    }
-
-    @Test
     public void testLogParserRecognizeGradleLogsAsGradleLog() throws IOException {
         String path = "./src/test/resources/UnkownBuildTool/NotTested/Gradle/";
         //String path = "./src/test/resources/maven-logs/";
@@ -473,8 +446,8 @@ public class LogParserTest {
     }
 
     @Test
-    public void testLogParserRecognizeMavenLogsNotAsGradleLog() throws IOException {
-        String path = "./src/test/resources/UnkownBuildTool/NotTested/Maven/";
+    public void testLogParserRecognizeNoneAsUnknown() throws IOException {
+        String path = "./src/test/resources/UnkownBuildTool/NotTested/Unknown/";
         //String path = "./src/test/resources/maven-logs/";
         File folder = new File(path);
         File[] files = folder.listFiles();
@@ -484,7 +457,7 @@ public class LogParserTest {
                 String fileContent = TestUtils.readFile(file.getPath());
                 LogParser parser = new LogParser(fileContent);
                 System.err.println("file : "+file.getPath());
-                assertNotEquals("Failed file path: "+ file.getPath(),BuildTool.GRADLE, parser.getBuildTool());
+                assertEquals("Failed file path: "+ file.getPath(),BuildTool.UNKNOWN, parser.getBuildTool());
             }
             else if (file.isDirectory()) {
                 for(File file2 : file.listFiles()) {
@@ -492,39 +465,13 @@ public class LogParserTest {
                         String fileContent = TestUtils.readFile(file2.getPath());
                         LogParser parser = new LogParser(fileContent);
                         System.err.println("file : "+file2.getPath());
-                        assertNotEquals("Failed file path: "+ file2.getPath(),BuildTool.GRADLE, parser.getBuildTool());
+                        assertEquals("Failed file path: "+ file2.getPath(),BuildTool.UNKNOWN, parser.getBuildTool());
                     }
                 }
             }
         }
     }
 
-    /*@Test
-    public void testLogParserRecognizeMavenLogsAsMavenLog2() throws IOException {
-        String path = "./src/test/resources/UnkownBuildTool/FailTest/Maven/";
-        //String path = "./src/test/resources/maven-logs/";
-        File folder = new File(path);
-        File[] files = folder.listFiles();
-
-        for(File file : files) {
-            if(file.isFile()) {
-                String fileContent = TestUtils.readFile(file.getPath());
-                LogParser parser = new LogParser(fileContent);
-                System.err.println("file : "+file.getPath());
-                assertEquals("Failed file path: "+ file.getPath(),BuildTool.MAVEN, parser.getBuildTool());
-            }
-            else if (file.isDirectory()) {
-                for(File file2 : file.listFiles()) {
-                    if (file2.isFile()) {
-                        String fileContent = TestUtils.readFile(file2.getPath());
-                        LogParser parser = new LogParser(fileContent);
-                        System.err.println("file : "+file2.getPath());
-                        assertEquals("Failed file path: "+ file2.getPath(),BuildTool.MAVEN, parser.getBuildTool());
-                    }
-                }
-            }
-        }
-    }*/
 
 
 }

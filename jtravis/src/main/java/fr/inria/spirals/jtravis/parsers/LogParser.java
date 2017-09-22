@@ -56,7 +56,7 @@ public class LogParser {
             while (reader.ready()) {
                 String line = reader.readLine();
 
-                if (line != null) {
+                if (line != null && this.buildTool == BuildTool.UNKNOWN) {
                     Matcher matcherFoldStart = patternFoldStart.matcher(line);
                     Matcher matcherFoldEnd = patternFoldEnd.matcher(line);
 
