@@ -435,4 +435,19 @@ public class BuildHelperTest {
         assertThat(obtainedIds, CoreMatchers.hasItems("1","602","613","615","685"));
     }
 
+    @Test
+    public void testGetBuildFromIdV3() {
+        int buildId = 185719843;
+
+        Build expectedBuild = expectedBuildWithoutPR();
+        expectedBuild.setId(buildId);
+        Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
+        Build obtainedBuildV3 = BuildHelper.getBuildFromIdV3(buildId, null);
+
+        assertEquals(expectedBuild, obtainedBuild);
+        assertEquals(obtainedBuild.getRepositoryId(),obtainedBuildV3.getRepository().getId());
+        assertEquals(obtainedBuild.getCommitId(),obtainedBuildV3.getCommit().getId());
+        assertEquals(obtainedBuild.getJobs().get(0).getId(),obtainedBuildV3.getJobs().get(0).getId());
+    }
+
 }

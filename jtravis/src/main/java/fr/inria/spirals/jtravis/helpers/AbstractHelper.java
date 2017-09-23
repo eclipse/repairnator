@@ -27,6 +27,7 @@ public abstract class AbstractHelper {
 
     private final static String USER_AGENT = "MyClient/1.0.0";
     private final static String ACCEPT_APP = "application/vnd.travis-ci.2+json";
+    private final static String TRAVIS_API_VERSION = "3";
 
     private String endpoint;
     private OkHttpClient client;
@@ -51,6 +52,10 @@ public abstract class AbstractHelper {
 
     private Request.Builder requestBuilder(String url) {
         return new Request.Builder().header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+    }
+
+    private Request.Builder requestBuilderV3(String url) {
+        return new Request.Builder().header("Travis-API-Version",TRAVIS_API_VERSION).header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
     }
 
     private void checkResponse(Response response) throws IOException {
@@ -96,6 +101,21 @@ public abstract class AbstractHelper {
 
     protected String get(String url) throws IOException {
         Request request = this.requestBuilder(url).get().build();
+        Call call = this.client.newCall(request);
+        long dateBegin = new Date().getTime();
+        this.getLogger().debug("Execute get request to the following URL: "+url);
+        Response response = call.execute();
+        long dateEnd = new Date().getTime();
+        this.getLogger().debug("Get request to :"+url+" done after "+(dateEnd-dateBegin)+" ms");
+        checkResponse(response);
+        ResponseBody responseBody = response.body();
+        String result = responseBody.string();
+        response.close();
+        return result;
+    }
+
+    protected String getV3(String url) throws IOException {
+        Request request = this.requestBuilderV3(url).get().build();
         Call call = this.client.newCall(request);
         long dateBegin = new Date().getTime();
         this.getLogger().debug("Execute get request to the following URL: "+url);

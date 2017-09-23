@@ -39,6 +39,12 @@ public class JobHelper extends AbstractHelper {
         return result;
     }
 
+    public static Job createJobFromJsonElementV3(JsonObject jobJson) {
+        Job result = createGson().fromJson(jobJson, Job.class);
+
+        return result;
+    }
+
     public static Job getJobFromId(int jobId) {
         String resourceUrl = getInstance().getEndpoint()+JOB_ENDPOINT+jobId;
 

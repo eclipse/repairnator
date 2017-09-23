@@ -90,6 +90,43 @@ public class BuildHelper extends AbstractHelper {
         }
     }
 
+    public static Build getBuildFromIdV3(int id, Repository parentRepo) {
+        String BUILD_ENDPOINTV3 = "build/";
+        String resourceUrl = getInstance().getEndpoint()+BUILD_ENDPOINTV3+id;
+
+        try {
+            String response = getInstance().getV3(resourceUrl);
+            JsonParser parser = new JsonParser();
+            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
+
+            //JsonObject buildJSON = allAnswer.getAsJsonObject("build");
+            Build build = createGson().fromJson(allAnswer, Build.class);
+
+
+            JsonObject commitJSON = allAnswer.getAsJsonObject("commit");
+            Commit commit = CommitHelper.getCommitFromJsonElement(commitJSON);
+            build.setCommit(commit);
+
+            if (parentRepo != null) {
+                build.setRepository(parentRepo);
+            }
+
+            JsonArray arrayJobs = allAnswer.getAsJsonArray("jobs");
+
+            for (JsonElement jobJSONElement : arrayJobs) {
+                Job job = JobHelper.createJobFromJsonElementV3((JsonObject)jobJSONElement);
+                //build.addJob(job);
+            }
+
+
+
+            return build;
+        } catch (IOException e) {
+            getInstance().getLogger().warn("Error when getting build id "+id+" : "+e.getMessage());
+            return null;
+        }
+    }
+
     private static boolean isAcceptedBuild(Build build, int prNumber, BuildStatus status, String previousBranch) {
         if (prNumber != -1 && build.getPullRequestNumber() != prNumber) {
             return false;
