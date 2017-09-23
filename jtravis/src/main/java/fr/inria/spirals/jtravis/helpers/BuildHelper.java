@@ -9,6 +9,7 @@ import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.Job;
+import fr.inria.spirals.jtravis.entities.Pagination;
 import fr.inria.spirals.jtravis.entities.Repository;
 
 import java.io.IOException;
@@ -91,40 +92,66 @@ public class BuildHelper extends AbstractHelper {
     }
 
     public static Build getBuildFromIdV3(int id, Repository parentRepo) {
-        String BUILD_ENDPOINTV3 = "build/";
-        String resourceUrl = getInstance().getEndpoint()+BUILD_ENDPOINTV3+id;
+        String ENDPOINTV3 = "build/";
+        String resourceUrl = getInstance().getEndpoint()+ENDPOINTV3+id;
 
         try {
             String response = getInstance().getV3(resourceUrl);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
 
-            //JsonObject buildJSON = allAnswer.getAsJsonObject("build");
             Build build = createGson().fromJson(allAnswer, Build.class);
+            build.setCommitId(build.getCommit().getId());
+            build.setRepositoryId(build.getRepository().getId());
 
-
-            JsonObject commitJSON = allAnswer.getAsJsonObject("commit");
-            Commit commit = CommitHelper.getCommitFromJsonElement(commitJSON);
-            build.setCommit(commit);
-
-            if (parentRepo != null) {
-                build.setRepository(parentRepo);
+            List<Integer> jobsId = new ArrayList<Integer>();
+            for (Job jobs : build.getJobs()) {
+                jobsId.add(jobs.getId());
             }
-
-            JsonArray arrayJobs = allAnswer.getAsJsonArray("jobs");
-
-            for (JsonElement jobJSONElement : arrayJobs) {
-                Job job = JobHelper.createJobFromJsonElementV3((JsonObject)jobJSONElement);
-                //build.addJob(job);
-            }
-
-
-
+            build.setJobIds(jobsId);
             return build;
+
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when getting build id "+id+" : "+e.getMessage());
             return null;
         }
+    }
+
+    //@param offset set value to 0 for first request
+    public static void getBuildsFromSlugV3(String slug, List<Build> result, String QueryParameters, int offset) {
+        slug = slug .replace("/","%2F");
+        String ENDPOINTV3 = "repo/"+slug+"/builds";
+        String resourceUrl = getInstance().getEndpoint()+ENDPOINTV3+"?offset="+offset;
+        if(QueryParameters != ""){
+            resourceUrl += "&"+QueryParameters; }
+
+        try {
+            String response = getInstance().getV3(resourceUrl);
+            JsonParser parser = new JsonParser();
+            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
+            JsonObject paginationJSON = allAnswer.getAsJsonObject("@pagination");
+            Pagination pagination = createGson().fromJson(paginationJSON, Pagination.class);
+            JsonArray arrayBuilds = allAnswer.getAsJsonArray("builds");
+            for (JsonElement buildJSONElement : arrayBuilds) {
+
+                Build build = createGson().fromJson(buildJSONElement, Build.class);
+                build.setCommitId(build.getCommit().getId());
+                build.setRepositoryId(build.getRepository().getId());
+
+                List<Integer> jobsId = new ArrayList<Integer>();
+                for (Job jobs : build.getJobs()) {
+                    jobsId.add(jobs.getId());
+                }
+                build.setJobIds(jobsId);
+
+                result.add(build);
+            }
+            if(!pagination.isIs_last()) {
+                getBuildsFromSlugV3(slug, result, QueryParameters, pagination.getOffset()+pagination.getLimit());
+            }
+        }
+        catch (IOException e) { getInstance().getLogger().warn("Error when getting build from slug "+slug+" : "+e.getMessage());}
+
     }
 
     private static boolean isAcceptedBuild(Build build, int prNumber, BuildStatus status, String previousBranch) {
