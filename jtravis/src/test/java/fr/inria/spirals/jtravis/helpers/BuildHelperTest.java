@@ -454,7 +454,7 @@ public class BuildHelperTest {
     public void testGetBuildFromSlugV3() {
         String slug = "surli/failingProject";
         List<Build> builds = new ArrayList<Build>();
-        BuildHelper.getBuildsFromSlugV3(slug, builds,"limit=10",0);
+        BuildHelper.getBuildsFromRepositorySlugV3(slug, builds,"limit=10");
         List<String> obtainedIds = new ArrayList<String>();
 
         for (Build b:builds)

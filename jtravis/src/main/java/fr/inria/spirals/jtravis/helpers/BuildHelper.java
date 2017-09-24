@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Config;
@@ -22,6 +23,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * The helper to deal with Build objects
@@ -118,12 +121,20 @@ public class BuildHelper extends AbstractHelper {
     }
 
     //@param offset set value to 0 for first request
-    public static void getBuildsFromSlugV3(String slug, List<Build> result, String QueryParameters, int offset) {
+    private static void getBuildsFromSlugV3(String slug, List<Build> result, String QueryParameters, int offset, Date younger, Date older, int buildAfter, int buildBefore) {
         slug = slug .replace("/","%2F");
         String ENDPOINTV3 = "repo/"+slug+"/builds";
         String resourceUrl = getInstance().getEndpoint()+ENDPOINTV3+"?offset="+offset;
-        if(QueryParameters != ""){
-            resourceUrl += "&"+QueryParameters; }
+        Boolean byDate = false;
+        Boolean byNumber = false;
+        if(QueryParameters != "")
+            resourceUrl += "&"+QueryParameters;
+
+        if(older != null || younger != null)
+            byDate = true;
+
+        if(!byDate && (buildAfter != 0 || buildBefore != 0))
+            byNumber = true;
 
         try {
             String response = getInstance().getV3(resourceUrl);
@@ -143,15 +154,43 @@ public class BuildHelper extends AbstractHelper {
                     jobsId.add(jobs.getId());
                 }
                 build.setJobIds(jobsId);
+                if(byDate){
+                    if (younger == null && build.getFinishedAt() == null)
+                        result.add(build);
+                    else if(older == null && (build.getFinishedAt() != null && build.getFinishedAt().before(younger)) )
+                        result.add(build);
+                    else if(younger == null && (build.getFinishedAt() != null && build.getFinishedAt().after(older)))
+                        result.add(build);
+                    else if(younger != null && older != null && build.getFinishedAt() != null && build.getFinishedAt().before(younger) && build.getFinishedAt().after(older))
+                        result.add(build);
+                }
+                if(byNumber && build.getNumber() != null && build.getNumber() != ""){
+                    if(buildAfter != 0 && parseInt(build.getNumber())>buildAfter)
+                        result.add(build);
+                    else if(buildBefore != 0 && parseInt(build.getNumber())<buildBefore)
+                        result.add(build);
+                    else if(buildAfter != 0 && buildBefore != 0 && parseInt(build.getNumber())>buildAfter && parseInt(build.getNumber())<buildBefore)
+                        result.add(build);
 
-                result.add(build);
+                }
+                if(!byDate && !byNumber)
+                    result.add(build);
+
             }
             if(!pagination.isIs_last()) {
-                getBuildsFromSlugV3(slug, result, QueryParameters, pagination.getOffset()+pagination.getLimit());
+                getBuildsFromSlugV3(slug, result, QueryParameters, pagination.getOffset()+pagination.getLimit(),younger,older,buildAfter,buildBefore);
             }
         }
         catch (IOException e) { getInstance().getLogger().warn("Error when getting build from slug "+slug+" : "+e.getMessage());}
 
+    }
+
+    public static void getBuildsFromRepositoryIdV3(Integer id, List<Build> result, String QueryParameters) {
+        getBuildsFromSlugV3(id.toString(), result, QueryParameters, 0, null, null, 0, 0);
+    }
+
+    public static void getBuildsFromRepositorySlugV3(String slug, List<Build> result, String QueryParameters) {
+        getBuildsFromSlugV3(slug, result, QueryParameters, 0, null, null, 0, 0);
     }
 
     private static boolean isAcceptedBuild(Build build, int prNumber, BuildStatus status, String previousBranch) {
@@ -273,7 +312,7 @@ public class BuildHelper extends AbstractHelper {
                 }
 
                 if (build.getNumber() != null) {
-                    int buildNumber = Integer.parseInt(build.getNumber());
+                    int buildNumber = parseInt(build.getNumber());
                     if (lastBuildNumber > buildNumber) {
                         lastBuildNumber = buildNumber;
                     }
@@ -339,7 +378,7 @@ public class BuildHelper extends AbstractHelper {
         }
 
         if (buildNumber != null) {
-            return Integer.parseInt(buildNumber);
+            return parseInt(buildNumber);
         } else {
             return 0;
         }
@@ -387,7 +426,7 @@ public class BuildHelper extends AbstractHelper {
                 }
 
                 if (build.getNumber() != null) {
-                    int buildNumber = Integer.parseInt(build.getNumber());
+                    int buildNumber = parseInt(build.getNumber());
                     if (buildNumber > after_number) {
                         if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
                             result.add(build);
@@ -463,7 +502,7 @@ public class BuildHelper extends AbstractHelper {
             Build build = createGson().fromJson(buildJson, Build.class);
 
             if (build.getNumber() != null) {
-                int buildNumber = Integer.parseInt(build.getNumber());
+                int buildNumber = parseInt(build.getNumber());
                 if (lastBuildNumber > buildNumber) {
                     lastBuildNumber = buildNumber;
                 }
@@ -523,7 +562,7 @@ public class BuildHelper extends AbstractHelper {
 
         int after_number = 0;
         try {
-            after_number = Integer.parseInt(build.getNumber());
+            after_number = parseInt(build.getNumber());
         } catch (NumberFormatException e) {
             getInstance().getLogger().error("Error while parsing build number for build id: "+build.getId(),e);
             return null;
@@ -560,7 +599,7 @@ public class BuildHelper extends AbstractHelper {
 
         int after_number = 0;
         try {
-            after_number = Integer.parseInt(build.getNumber());
+            after_number = parseInt(build.getNumber());
         } catch (NumberFormatException e) {
             getInstance().getLogger().error("Error while parsing build number for build id: "+build.getId(),e);
             return null;
