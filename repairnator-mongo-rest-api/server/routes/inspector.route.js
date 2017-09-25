@@ -18,7 +18,7 @@ router.route('/hostnameStats')
 router.route('/statusStats')
   .get(inspectorCtrl.statusStats);
 
-router.route('/statusStats/:nbWeeks')
+router.route('/statusStats/:nbDays')
   .get(inspectorCtrl.statusStatsPeriod);
 
 router.param('nbDays', (req, res, next, nbDays) => {
