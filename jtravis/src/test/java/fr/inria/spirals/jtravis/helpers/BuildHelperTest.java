@@ -452,6 +452,7 @@ public class BuildHelperTest {
         assertEquals(obtainedBuild.getRepositoryId(),obtainedBuildV3.getRepositoryId());
         assertEquals(obtainedBuild.getCommitId(),obtainedBuildV3.getCommitId());
         assertEquals(obtainedBuild.getJobs().get(0).getId(),obtainedBuildV3.getJobs().get(0).getId());
+        Version.setVersion(false);
     }
 
     @Test
@@ -468,6 +469,7 @@ public class BuildHelperTest {
         assertTrue(Version.getVersionV3());
         //Check that retrieved build's numbers are all in the expected build's numbers list
         assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
+        Version.setVersion(false);
     }
 
 }
