@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Job;
+import fr.inria.spirals.jtravis.entities.Repository;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.IOException;
  */
 public class JobHelper extends AbstractHelper {
     public static final String JOB_ENDPOINT = "jobs/";
+    public static final String JOB_ENDPOINTV3 = "job/";
 
     private static JobHelper instance;
 
@@ -33,28 +35,40 @@ public class JobHelper extends AbstractHelper {
     public static Job createJobFromJsonElement(JsonObject jobJson) {
         Job result = createGson().fromJson(jobJson, Job.class);
 
+        if(!Version.getVersionV3()) {
         JsonElement configJSON = jobJson.getAsJsonObject("config");
         Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
         result.setConfig(config);
-        return result;
-    }
-
-    public static Job createJobFromJsonElementV3(JsonObject jobJson) {
-        Job result = createGson().fromJson(jobJson, Job.class);
+        }
 
         return result;
     }
 
     public static Job getJobFromId(int jobId) {
-        String resourceUrl = getInstance().getEndpoint()+JOB_ENDPOINT+jobId;
+        String resourceUrl = "";
+        if(Version.getVersionV3())
+            resourceUrl = getInstance().getEndpoint()+JOB_ENDPOINTV3+jobId;
+        else
+            resourceUrl = getInstance().getEndpoint()+JOB_ENDPOINT+jobId;
 
         try {
             String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
-
-            JsonObject jobJSON = allAnswer.getAsJsonObject("job");
-            return createJobFromJsonElement(jobJSON);
+            if(Version.getVersionV3()) {
+                Job job = createJobFromJsonElement(allAnswer);
+                JsonObject repoJSON = allAnswer.getAsJsonObject("repository");
+                job.setRepositoryId(repoJSON.get("id").getAsInt());
+                JsonObject commitJSON = allAnswer.getAsJsonObject("commit");
+                job.setCommitId(commitJSON.get("id").getAsInt());
+                JsonObject buildJSON = allAnswer.getAsJsonObject("build");
+                job.setBuildId(buildJSON.get("id").getAsInt());
+                return job;
+            }
+            else {
+                JsonObject jobJSON = allAnswer.getAsJsonObject("job");
+                return createJobFromJsonElement(jobJSON);
+            }
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when getting job id "+jobId+" : "+e.getMessage());
             return null;

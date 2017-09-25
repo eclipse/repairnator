@@ -30,7 +30,7 @@ public class JobHelperTest {
         Config expectedConfig = new Config();
         expectedConfig.setLanguage("java");
 
-        expectedJob.setConfig(expectedConfig);
+        //expectedJob.setConfig(expectedConfig);
 
         Job obtainedJob = JobHelper.getJobFromId(185719844);
         assertEquals(expectedJob, obtainedJob);
