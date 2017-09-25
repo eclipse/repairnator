@@ -59,40 +59,19 @@ public class MavenLogParser extends JavaLogParser {
 
     @Override
     public TestsInformation parseLog(TravisFold outOfFold) {
-        boolean inTestBlock = false;
-        boolean inTestResults = false;
-        this.globalResults = new TestsInformation();
-        this.detailedResults = new ArrayList<TestsInformation>();
-
-        Pattern mvnTestHeadPattern = Pattern.compile(MVN_TESTS_PATTERN);
-        Pattern mvnTestResultsPattern = Pattern.compile(MVN_RESULTS_PATTERN);
-        for (String s : outOfFold.getContent()) {
-            Matcher mvnTestResultsMatcher = mvnTestResultsPattern.matcher(s);
-            Matcher mvnTestHeadMatcher = mvnTestHeadPattern.matcher(s);
-            if (!inTestBlock && mvnTestHeadMatcher.matches()) {
-                inTestBlock = true;
-                continue;
-            }
-            if (inTestBlock && mvnTestResultsMatcher.matches()) {
-                inTestResults = true;
-                continue;
-            }
-
-            if (inTestResults) {
-                if(this.parseTestLine(s)){
-                    inTestBlock = false;
-                    inTestResults = false;
-                }
-
-            }
-        }
-
-        this.computePassingTests();
+        if(this.globalResults == null)
+            this.advancedParseLog(outOfFold);
         return this.globalResults;
     }
 
     @Override
     public List<TestsInformation> parseDetailedLog(TravisFold outOfFold) {
+        if(this.detailedResults == null)
+            this.advancedParseLog(outOfFold);
+        return this.detailedResults;
+    }
+
+    private void advancedParseLog(TravisFold outOfFold) {
         boolean inTestBlock = false;
         boolean inTestResults = false;
         this.globalResults = new TestsInformation();
@@ -122,6 +101,5 @@ public class MavenLogParser extends JavaLogParser {
         }
 
         this.computePassingTests();
-        return this.detailedResults;
     }
 }

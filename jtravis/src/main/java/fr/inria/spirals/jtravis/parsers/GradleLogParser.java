@@ -48,7 +48,6 @@ public class GradleLogParser extends JavaLogParser {
     public List<TestsInformation> parseDetailedLog(TravisFold outOfFold) {
         this.globalResults = new TestsInformation();
         this.detailedResults = new ArrayList<TestsInformation>();
-        this.detailedResults.clear();
         return this.detailedResults;
     }
 }
