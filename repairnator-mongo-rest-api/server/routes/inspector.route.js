@@ -22,7 +22,7 @@ router.route('/statusStats/:nbWeeks')
   .get(inspectorCtrl.statusStatsPeriod);
 
 router.param('nbDays', (req, res, next, nbDays) => {
-  req.nbWeeks = nbDays; // eslint-disable-line no-param-reassign
+  req.nbDays = nbDays; // eslint-disable-line no-param-reassign
   next();
 });
 
