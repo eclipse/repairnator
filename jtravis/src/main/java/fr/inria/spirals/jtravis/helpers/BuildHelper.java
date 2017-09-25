@@ -14,6 +14,7 @@ import fr.inria.spirals.jtravis.entities.Pagination;
 import fr.inria.spirals.jtravis.entities.Repository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -115,13 +116,21 @@ public class BuildHelper extends AbstractHelper {
 
     //@param offset set value to 0 for first request
     private static void getBuildsFromSlugV3(String slug, List<Build> result, String QueryParameters, int offset, Date younger, Date older, int buildAfter, int buildBefore) {
-        slug = slug .replace("/","%2F");
-        String ENDPOINTV3 = "repo/"+slug+"/builds";
+        String urlSlug="";
+        try {
+        urlSlug = URLEncoder.encode(slug,"UTF-8");
+        }
+        catch (IOException e) { getInstance().getLogger().warn("Error when getting build from slug "+urlSlug+" : "+e.getMessage());}
+        String ENDPOINTV3 = "repo/"+urlSlug+"/builds";
         String resourceUrl = getInstance().getEndpoint()+ENDPOINTV3+"?offset="+offset;
         Boolean byDate = false;
         Boolean byNumber = false;
+
+
         if(QueryParameters != "")
             resourceUrl += "&"+QueryParameters;
+
+        resourceUrl += "&limit=100";
 
         if(older != null || younger != null)
             byDate = true;
@@ -147,28 +156,35 @@ public class BuildHelper extends AbstractHelper {
                     jobsId.add(jobs.getId());
                 }
                 build.setJobIds(jobsId);
+                Boolean addBuildByDate = false;
+                Boolean addBuildByNumber = false;
                 if(byDate){
                     if (younger == null && build.getFinishedAt() == null)
-                        result.add(build);
+                        addBuildByDate = true;
                     else if(older == null && (build.getFinishedAt() != null && build.getFinishedAt().before(younger)) )
-                        result.add(build);
+                        addBuildByDate = true;
                     else if(younger == null && (build.getFinishedAt() != null && build.getFinishedAt().after(older)))
-                        result.add(build);
+                        addBuildByDate = true;
                     else if(younger != null && older != null && build.getFinishedAt() != null && build.getFinishedAt().before(younger) && build.getFinishedAt().after(older))
-                        result.add(build);
+                        addBuildByDate = true;
                 }
                 if(byNumber && build.getNumber() != null && build.getNumber() != ""){
                     if(buildAfter != 0 && parseInt(build.getNumber())>buildAfter)
-                        result.add(build);
+                        addBuildByNumber = true;
                     else if(buildBefore != 0 && parseInt(build.getNumber())<buildBefore)
-                        result.add(build);
+                        addBuildByNumber = true;
                     else if(buildAfter != 0 && buildBefore != 0 && parseInt(build.getNumber())>buildAfter && parseInt(build.getNumber())<buildBefore)
-                        result.add(build);
-
+                        addBuildByNumber = true;
                 }
+
                 if(!byDate && !byNumber)
                     result.add(build);
-
+                else if(byDate && byNumber && addBuildByDate && addBuildByNumber)
+                    result.add(build);
+                else if(byDate && addBuildByDate && !byNumber)
+                    result.add(build);
+                else if(byNumber && addBuildByNumber && !byDate)
+                    result.add(build);
             }
             if(!pagination.isIs_last()) {
                 getBuildsFromSlugV3(slug, result, QueryParameters, pagination.getOffset()+pagination.getLimit(),younger,older,buildAfter,buildBefore);
