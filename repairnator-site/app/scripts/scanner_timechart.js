@@ -140,7 +140,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
   });
 });
 
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/list', function (data) {
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (data) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
