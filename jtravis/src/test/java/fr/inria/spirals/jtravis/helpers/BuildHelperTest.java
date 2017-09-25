@@ -442,7 +442,11 @@ public class BuildHelperTest {
         Build expectedBuild = expectedBuildWithoutPR();
         expectedBuild.setId(buildId);
         Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
-        Build obtainedBuildV3 = BuildHelper.getBuildFromIdV3(buildId, null);
+        assertFalse(Version.getVersionV3());
+
+        Version.setVersion(true);
+        Build obtainedBuildV3 = BuildHelper.getBuildFromId(buildId, null);
+        assertTrue(Version.getVersionV3());
 
         assertEquals(expectedBuild, obtainedBuild);
         assertEquals(obtainedBuild.getRepositoryId(),obtainedBuildV3.getRepositoryId());
@@ -453,16 +457,15 @@ public class BuildHelperTest {
     @Test
     public void testGetBuildFromSlugV3() {
         String slug = "surli/failingProject";
-        List<Build> builds = new ArrayList<Build>();
-        BuildHelper.getBuildsFromRepositorySlugV3(slug, builds,"limit=10");
+        List<Build> builds = BuildHelper.getBuildsFromSlug(slug);
         List<String> obtainedIds = new ArrayList<String>();
-
+        Version.setVersion(true);
         for (Build b:builds)
         {
             obtainedIds.add(b.getNumber());
         }
         assertNotNull(builds);
-
+        assertTrue(Version.getVersionV3());
         //Check that retrieved build's numbers are all in the expected build's numbers list
         assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
     }

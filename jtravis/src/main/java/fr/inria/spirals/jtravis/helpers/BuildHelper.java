@@ -56,68 +56,61 @@ public class BuildHelper extends AbstractHelper {
     }
 
     public static Build getBuildFromId(int id, Repository parentRepo) {
-        String resourceUrl = getInstance().getEndpoint()+BUILD_ENDPOINT+id;
-
+        String resourceUrl ="";
+        if(Version.getVersionV3())
+        {
+            String ENDPOINTV3 = "build/";
+            resourceUrl= getInstance().getEndpoint()+ENDPOINTV3+id;
+        }
+        else {
+            resourceUrl = getInstance().getEndpoint() + BUILD_ENDPOINT + id;
+        }
         try {
             String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
+            Build build = null;
+            if (Version.getVersionV3()) {
 
-            JsonObject buildJSON = allAnswer.getAsJsonObject("build");
-            Build build = createGson().fromJson(buildJSON, Build.class);
+                build = createGson().fromJson(allAnswer, Build.class);
+                build.setCommitId(build.getCommit().getId());
+                build.setRepositoryId(build.getRepository().getId());
 
-            JsonObject commitJSON = allAnswer.getAsJsonObject("commit");
-            Commit commit = CommitHelper.getCommitFromJsonElement(commitJSON);
-            build.setCommit(commit);
+                List<Integer> jobsId = new ArrayList<Integer>();
+                for (Job jobs : build.getJobs()) {
+                    jobsId.add(jobs.getId());
+                }
+                build.setJobIds(jobsId);
 
-            if (parentRepo != null) {
-                build.setRepository(parentRepo);
+            } else {
+                JsonObject buildJSON = allAnswer.getAsJsonObject("build");
+                build = createGson().fromJson(buildJSON, Build.class);
+
+                JsonObject commitJSON = allAnswer.getAsJsonObject("commit");
+                Commit commit = CommitHelper.getCommitFromJsonElement(commitJSON);
+                build.setCommit(commit);
+
+                if (parentRepo != null) {
+                    build.setRepository(parentRepo);
+                }
+
+                JsonObject configJSON = buildJSON.getAsJsonObject("config");
+                Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
+                build.setConfig(config);
+
+                JsonArray arrayJobs = allAnswer.getAsJsonArray("jobs");
+
+                for (JsonElement jobJSONElement : arrayJobs) {
+                    Job job = JobHelper.createJobFromJsonElement((JsonObject) jobJSONElement);
+                    build.addJob(job);
+                }
             }
-
-            JsonObject configJSON = buildJSON.getAsJsonObject("config");
-            Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
-            build.setConfig(config);
-
-            JsonArray arrayJobs = allAnswer.getAsJsonArray("jobs");
-
-            for (JsonElement jobJSONElement : arrayJobs) {
-                Job job = JobHelper.createJobFromJsonElement((JsonObject)jobJSONElement);
-                build.addJob(job);
-            }
-
-
-
             return build;
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when getting build id "+id+" : "+e.getMessage());
             return null;
         }
-    }
 
-    public static Build getBuildFromIdV3(int id, Repository parentRepo) {
-        String ENDPOINTV3 = "build/";
-        String resourceUrl = getInstance().getEndpoint()+ENDPOINTV3+id;
-
-        try {
-            String response = getInstance().getV3(resourceUrl);
-            JsonParser parser = new JsonParser();
-            JsonObject allAnswer = parser.parse(response).getAsJsonObject();
-
-            Build build = createGson().fromJson(allAnswer, Build.class);
-            build.setCommitId(build.getCommit().getId());
-            build.setRepositoryId(build.getRepository().getId());
-
-            List<Integer> jobsId = new ArrayList<Integer>();
-            for (Job jobs : build.getJobs()) {
-                jobsId.add(jobs.getId());
-            }
-            build.setJobIds(jobsId);
-            return build;
-
-        } catch (IOException e) {
-            getInstance().getLogger().warn("Error when getting build id "+id+" : "+e.getMessage());
-            return null;
-        }
     }
 
     //@param offset set value to 0 for first request
@@ -137,7 +130,7 @@ public class BuildHelper extends AbstractHelper {
             byNumber = true;
 
         try {
-            String response = getInstance().getV3(resourceUrl);
+            String response = getInstance().get(resourceUrl);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
             JsonObject paginationJSON = allAnswer.getAsJsonObject("@pagination");
@@ -183,14 +176,6 @@ public class BuildHelper extends AbstractHelper {
         }
         catch (IOException e) { getInstance().getLogger().warn("Error when getting build from slug "+slug+" : "+e.getMessage());}
 
-    }
-
-    public static void getBuildsFromRepositoryIdV3(Integer id, List<Build> result, String QueryParameters) {
-        getBuildsFromSlugV3(id.toString(), result, QueryParameters, 0, null, null, 0, 0);
-    }
-
-    public static void getBuildsFromRepositorySlugV3(String slug, List<Build> result, String QueryParameters) {
-        getBuildsFromSlugV3(slug, result, QueryParameters, 0, null, null, 0, 0);
     }
 
     private static boolean isAcceptedBuild(Build build, int prNumber, BuildStatus status, String previousBranch) {
@@ -523,8 +508,13 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromSlugWithLimitDate(String slug, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(slug, result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
-        return result;
+        if(Version.getVersionV3()){
+            getBuildsFromSlugV3(slug,result,"",0,null, limitDate, 0, 0);
+        }
+        else {
+            getBuildsFromSlugRecursively(slug, result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
+
+        }return result;
     }
 
     public static List<Build> getBuildsFromSlug(String slug) {
@@ -533,10 +523,16 @@ public class BuildHelper extends AbstractHelper {
 
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
-        getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
+        if(Version.getVersionV3()){
+            getBuildsFromSlugV3(repository.getSlug(),result,"",0,null, limitDate, 0, 0);
+        }
+        else {
 
-        for (Build b : result) {
-            b.setRepository(repository);
+            getBuildsFromSlugRecursively(repository.getSlug(), result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
+
+            for (Build b : result) {
+                b.setRepository(repository);
+            }
         }
         return result;
     }

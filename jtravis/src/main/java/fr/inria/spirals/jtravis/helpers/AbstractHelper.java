@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import fr.inria.spirals.jtravis.helpers.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.gson.FieldNamingPolicy;
@@ -14,6 +15,7 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Date;
 
 /**
@@ -51,11 +53,13 @@ public abstract class AbstractHelper {
     }
 
     private Request.Builder requestBuilder(String url) {
-        return new Request.Builder().header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
-    }
 
-    private Request.Builder requestBuilderV3(String url) {
-        return new Request.Builder().header("Travis-API-Version",TRAVIS_API_VERSION).header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+        if(Version.getVersionV3())
+            return new Request.Builder().header("Travis-API-Version",TRAVIS_API_VERSION).header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+        else
+            return new Request.Builder().header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+
+
     }
 
     private void checkResponse(Response response) throws IOException {
@@ -114,20 +118,6 @@ public abstract class AbstractHelper {
         return result;
     }
 
-    protected String getV3(String url) throws IOException {
-        Request request = this.requestBuilderV3(url).get().build();
-        Call call = this.client.newCall(request);
-        long dateBegin = new Date().getTime();
-        this.getLogger().debug("Execute get request to the following URL: "+url);
-        Response response = call.execute();
-        long dateEnd = new Date().getTime();
-        this.getLogger().debug("Get request to :"+url+" done after "+(dateEnd-dateBegin)+" ms");
-        checkResponse(response);
-        ResponseBody responseBody = response.body();
-        String result = responseBody.string();
-        response.close();
-        return result;
-    }
 
     protected static Gson createGson() {
         return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
