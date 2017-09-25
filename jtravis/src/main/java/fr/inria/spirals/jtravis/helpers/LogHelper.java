@@ -34,10 +34,24 @@ public class LogHelper extends AbstractHelper {
     public static Log getLogFromJob(Job job) {
         if (job.getId() != 0) {
             if (job.getBuildStatus() == BuildStatus.FAILED || job.getBuildStatus() == BuildStatus.PASSED || job.getBuildStatus() == BuildStatus.ERRORED) {
-                String logJobUrl = getInstance().getEndpoint()+JobHelper.JOB_ENDPOINT+job.getId()+LOG_JOB_ENDPOINT;
+                String logJobUrl = "";
+                if(Version.getVersionV3()) {
+                    logJobUrl = getInstance().getEndpoint() + JobHelper.JOB_ENDPOINTV3 + job.getId() + LOG_JOB_ENDPOINT;
+                }
+                else {
+                    logJobUrl = getInstance().getEndpoint() + JobHelper.JOB_ENDPOINT + job.getId() + LOG_JOB_ENDPOINT;
+                }
                 try {
-                    String body = getInstance().rawGet(logJobUrl);
-                    return new Log(job.getId(), body);
+                    String body = "";
+                if(Version.getVersionV3()) {
+                    body = getInstance().get(logJobUrl);
+                    JsonParser parser = new JsonParser();
+                    JsonObject allAnswer = parser.parse(body).getAsJsonObject();
+                    body = allAnswer.get("content").getAsString();
+                }
+                else
+                    body = getInstance().rawGet(logJobUrl);
+                return new Log(job.getId(), body);
                 } catch (IOException e) {
                     getInstance().getLogger().warn("Error when getting log from job id "+job.getId()+" ",e);
                 }

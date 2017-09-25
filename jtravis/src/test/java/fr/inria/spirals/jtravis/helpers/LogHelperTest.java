@@ -36,6 +36,8 @@ public class LogHelperTest {
         int length = 1499916;
 
         Log obtainedLog = LogHelper.getLogFromJob(job);
+
+        assertTrue(Version.getVersionV3());
         assertEquals(185719844, obtainedLog.getJobId());
         assertTrue(obtainedLog.getBody() != null);
         assertEquals(length, obtainedLog.getBody().length());
