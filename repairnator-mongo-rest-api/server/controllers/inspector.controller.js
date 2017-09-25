@@ -52,7 +52,7 @@ function statusStats(req, res, next) {
 }
 
 function statusStatsPeriod(req, res, next) {
-  Inspector.statusStats(req.nbWeeks)
+  Inspector.statusStats(req.nbDays)
     .then(result => res.json(result))
     .catch(e => next(e));
 }
