@@ -435,4 +435,20 @@ public class BuildHelperTest {
         assertThat(obtainedIds, CoreMatchers.hasItems("1","602","613","615","685"));
     }
 
+    @Test
+    public void testDifferentBuildIdsShouldNotGiveSameInFuture() {
+        int build1 = 210419994;
+        int build2 = 207796355;
+
+        Build b1 = BuildHelper.getBuildFromId(build1, null);
+        Build b2 = BuildHelper.getBuildFromId(build2, null);
+
+        assertTrue(b1.getRepository().equals(b2.getRepository()));
+
+        Build futureB1 = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(b1, null);
+        Build futureB2 = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(b2, null);
+
+        assertFalse(futureB1.equals(futureB2));
+    }
+
 }
