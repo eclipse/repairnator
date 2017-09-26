@@ -102,7 +102,7 @@ InspectorSchema.statics = {
       },
       {
         $project: {
-          dayOfReproduction: { $dateToString: { format: '%Y-%m-%d', date: '$buildReproductionDate' } }
+          dayOfReproduction: { $dateToString: { format: '%Y-%m-%d', date: '$buildFinishedDate' } }
         }
       },
       {
