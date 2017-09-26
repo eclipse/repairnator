@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.entities.Config;
@@ -61,7 +61,7 @@ public class BuildHelper extends AbstractHelper {
         String resourceUrl ="";
         if(Version.getVersionV3())
         {
-            resourceUrl= getInstance().getEndpoint()+BUILD_ENDPOINTV3+id;
+            resourceUrl= getInstance().getEndpoint()+BUILD_ENDPOINTV3+id+"?include=build.jobs";
         }
         else {
             resourceUrl = getInstance().getEndpoint() + BUILD_ENDPOINT + id;
@@ -135,7 +135,7 @@ public class BuildHelper extends AbstractHelper {
         if(QueryParameters != "")
             resourceUrl += QueryParameters + "&";
 
-        String finalresourceUrl = resourceUrl + "offset=0&limit=100";
+        String finalresourceUrl = resourceUrl + "offset=0&limit=100?include=build.jobs";
 
         if(older != null || younger != null)
             byDate = true;
@@ -152,9 +152,9 @@ public class BuildHelper extends AbstractHelper {
             JsonObject paginationJSON = allAnswer.getAsJsonObject("@pagination");
             pagination = createGson().fromJson(paginationJSON, Pagination.class);
 
-            pagination.getNext().setHref(resourceUrl + "offset="+pagination.getNext().getOffset()+"&limit=100");
-            pagination.getLast().setHref(resourceUrl + "offset="+pagination.getLast().getOffset()+"&limit=100");
-            pagination.getFirst().setHref(resourceUrl + "offset="+pagination.getFirst().getOffset()+"&limit=100");
+            pagination.getNext().setHref(resourceUrl + "offset="+pagination.getNext().getOffset()+"&limit=100?include=build.jobs");
+            pagination.getLast().setHref(resourceUrl + "offset="+pagination.getLast().getOffset()+"&limit=100?include=build.jobs");
+            pagination.getFirst().setHref(resourceUrl + "offset="+pagination.getFirst().getOffset()+"&limit=100?include=build.jobs");
         }
         catch (IOException e) {
             getInstance().getLogger().warn("Error when getting build from slug " + slug + " : " + e.getMessage());
