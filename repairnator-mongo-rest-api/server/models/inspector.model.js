@@ -86,7 +86,7 @@ InspectorSchema.statics = {
 
   reproducedErrors(nbDays) {
     const ltDateIso = moment().toISOString();
-    const gtDateIso = (nbDays !== 0) ? moment().subtract(nbDays, 'days').toISOString() : moment('01-01-2017', 'DD-MM-YYYY').toISOString();
+    const gtDateIso = (nbDays !== 0) ? moment().subtract(nbDays, 'days').toISOString() : moment('01-02-2017', 'DD-MM-YYYY').toISOString();
 
     return this.aggregate([
       {
