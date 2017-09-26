@@ -2,6 +2,7 @@ package fr.inria.spirals.jtravis.helpers;
 
 import fr.inria.spirals.jtravis.entities.*;
 import org.hamcrest.CoreMatchers;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -433,6 +434,68 @@ public class BuildHelperTest {
         //Check that retrieved build's numbers are all in the expected build's numbers list
         //assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
         assertThat(obtainedIds, CoreMatchers.hasItems("1","602","613","615","685"));
+    }
+
+    @Test
+    public void testGetBuildFromIdV3() {
+        int buildId = 185719843;
+
+        Build expectedBuild = expectedBuildWithoutPR();
+        expectedBuild.setId(buildId);
+
+        Build obtainedBuildV3 = BuildHelper.getBuildFromId(buildId, null);
+        assertTrue(Version.getVersionV3());
+
+        Version.setVersion(false);
+        Build obtainedBuild = BuildHelper.getBuildFromId(buildId, null);
+        assertFalse(Version.getVersionV3());
+
+        assertEquals(expectedBuild, obtainedBuild);
+        assertEquals(obtainedBuild.getRepositoryId(),obtainedBuildV3.getRepositoryId());
+        assertEquals(obtainedBuild.getCommitId(),obtainedBuildV3.getCommitId());
+        assertEquals(obtainedBuild.getJobs().get(0).getId(),obtainedBuildV3.getJobs().get(0).getId());
+    }
+
+    @Test
+    public void testGetBuildFromSlugV3() {
+        String slug = "surli/failingProject";
+        List<Build> builds = BuildHelper.getBuildsFromSlug(slug);
+        List<String> obtainedIds = new ArrayList<String>();
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+        }
+        assertNotNull(builds);
+        assertTrue(Version.getVersionV3());
+        //Check that retrieved build's numbers are all in the expected build's numbers list
+        assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
+    }
+
+    @Test
+    public void testGetBuildsFromRepositoryWithLimitDateV3() {
+        Repository repo = new Repository();
+        repo.setSlug("google/jsonnet");
+        //Retrieve builds done after this date
+        Date limitDate = TestUtils.getDate(2017, 9, 14, 0, 0, 1);
+        List<Build> builds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, limitDate);
+        List<String> obtainedIds = new ArrayList<String>();
+        List<String> unexpectedIds = Arrays.asList("273","274","275");
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+            //Check that the retrieved build number is not among the unexpected
+            assertFalse(unexpectedIds.contains(b.getNumber()));
+        }
+        assertNotNull(builds);
+        assertTrue(Version.getVersionV3());
+        //Check that retrieved build's numbers are all in the expected build's numbers list
+        assertThat(obtainedIds, CoreMatchers.hasItems("685","684","679"));
+    }
+
+    @Before
+    public void setV3() {
+        Version.setVersion(true);
     }
 
 }

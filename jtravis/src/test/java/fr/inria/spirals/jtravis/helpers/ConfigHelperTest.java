@@ -31,6 +31,10 @@ public class ConfigHelperTest {
 
     @Test
     public void testConfigHelperBuildAProperConfigObject() throws IOException {
+
+        //There is no more configuration information in V3 so we set Version to V2
+        Version.setVersion(false);
+
         int buildId = 185719843;
 
         Config expectedConfig = new Config();
@@ -41,5 +45,9 @@ public class ConfigHelperTest {
 
         Config obtainedConfig = ConfigHelper.getConfigFromJsonElement(jsonConfig);
         assertEquals(expectedConfig, obtainedConfig);
+
+        //Back to V3
+        Version.setVersion(true);
     }
+
 }

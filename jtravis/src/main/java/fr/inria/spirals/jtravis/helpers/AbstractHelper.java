@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import fr.inria.spirals.jtravis.helpers.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.gson.FieldNamingPolicy;
@@ -14,6 +15,7 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Date;
 
 /**
@@ -27,6 +29,7 @@ public abstract class AbstractHelper {
 
     private final static String USER_AGENT = "MyClient/1.0.0";
     private final static String ACCEPT_APP = "application/vnd.travis-ci.2+json";
+    private final static String TRAVIS_API_VERSION = "3";
 
     private String endpoint;
     private OkHttpClient client;
@@ -50,7 +53,13 @@ public abstract class AbstractHelper {
     }
 
     private Request.Builder requestBuilder(String url) {
-        return new Request.Builder().header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+
+        if(Version.getVersionV3())
+            return new Request.Builder().header("Travis-API-Version",TRAVIS_API_VERSION).header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+        else
+            return new Request.Builder().header("User-Agent",USER_AGENT).header("Accept", ACCEPT_APP).url(url);
+
+
     }
 
     private void checkResponse(Response response) throws IOException {
@@ -108,6 +117,7 @@ public abstract class AbstractHelper {
         response.close();
         return result;
     }
+
 
     protected static Gson createGson() {
         return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
