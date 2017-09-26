@@ -1,5 +1,4 @@
 $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksData/2', function (dataScanner) {
-  console.log(data);
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
@@ -45,7 +44,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
     }
   }, []);
 
-  $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspector/reproducedBuilds/14', function (dataInspector) {
+  $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/reproducedBuilds/14', function (dataInspector) {
     Highcharts.chart({
       chart: {
         type: 'spline',
@@ -78,8 +77,11 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
         spline: {
           marker: {
             enabled: true
-          }
-        }
+          },
+          dataLabels: {
+            enabled: true
+          },
+        },
       },
 
       series: [
@@ -96,7 +98,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
           name: 'Builds succeed to reproduce',
           data: dataInspector.map( function (d) {
             return [
-              moment(d._id, 'YYYY-MM-DD').toDate(),
+              moment(d._id, 'YYYY-MM-DD').valueOf(),
               d.counted
             ]
           })
