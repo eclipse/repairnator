@@ -22,10 +22,21 @@ public class CommitHelperTest {
         }
 
         public JsonElement getJsonCommitElement(int buildId) throws IOException {
-            String response = this.get(getEndpoint()+BuildHelper.BUILD_ENDPOINT+buildId);
+            String response = "";
+            if(Version.getVersionV3())
+                 response = this.get(getEndpoint()+BuildHelper.BUILD_ENDPOINTV3+buildId);
+            else
+                response = this.get(getEndpoint()+BuildHelper.BUILD_ENDPOINT+buildId);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
-            return allAnswer.getAsJsonObject("commit");
+            if(Version.getVersionV3()) {
+                JsonObject JSONcommit = allAnswer.getAsJsonObject("commit");
+                JsonObject JSONbranch = allAnswer.getAsJsonObject("branch");
+                JSONcommit.add("branch",JSONbranch.get("name"));
+                return JSONcommit;
+            }
+            else
+                return allAnswer.getAsJsonObject("commit");
         }
     }
 
@@ -38,10 +49,12 @@ public class CommitHelperTest {
         expectedCommit.setBranch("master");
         expectedCommit.setMessage("test: add test for method parameter templating (#1064)");
         expectedCommit.setCommittedAt(TestUtils.getDate(2016, 12, 21, 9, 48, 50));
-        expectedCommit.setAuthorName("Martin Monperrus");
-        expectedCommit.setAuthorEmail("monperrus@users.noreply.github.com");
-        expectedCommit.setCommitterName("Simon Urli");
-        expectedCommit.setCommitterEmail("simon.urli@gmail.com");
+        if(!Version.getVersionV3()) {
+            expectedCommit.setAuthorName("Martin Monperrus");
+            expectedCommit.setAuthorEmail("monperrus@users.noreply.github.com");
+            expectedCommit.setCommitterName("Simon Urli");
+            expectedCommit.setCommitterEmail("simon.urli@gmail.com");
+        }
         expectedCommit.setCompareUrl("https://github.com/INRIA/spoon/compare/3c5ab0fe7a89...d283ce5727f4");
 
         Helper helper = new Helper();

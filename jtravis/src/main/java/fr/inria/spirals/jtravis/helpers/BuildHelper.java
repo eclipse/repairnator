@@ -36,6 +36,7 @@ public class BuildHelper extends AbstractHelper {
 
     public static final String BUILD_NAME = "builds";
     public static final String BUILD_ENDPOINT = BUILD_NAME+"/";
+    public static final String BUILD_ENDPOINTV3 = "build/";
 
     private static BuildHelper instance;
 
@@ -60,8 +61,7 @@ public class BuildHelper extends AbstractHelper {
         String resourceUrl ="";
         if(Version.getVersionV3())
         {
-            String ENDPOINTV3 = "build/";
-            resourceUrl= getInstance().getEndpoint()+ENDPOINTV3+id;
+            resourceUrl= getInstance().getEndpoint()+BUILD_ENDPOINTV3+id;
         }
         else {
             resourceUrl = getInstance().getEndpoint() + BUILD_ENDPOINT + id;
@@ -76,6 +76,9 @@ public class BuildHelper extends AbstractHelper {
                 build = createGson().fromJson(allAnswer, Build.class);
                 build.setCommitId(build.getCommit().getId());
                 build.setRepositoryId(build.getRepository().getId());
+
+                JsonObject branch = allAnswer.getAsJsonObject("branch");
+                build.getCommit().setBranch(branch.getAsJsonObject("name").getAsString());
 
                 List<Integer> jobsId = new ArrayList<Integer>();
                 for (Job jobs : build.getJobs()) {
