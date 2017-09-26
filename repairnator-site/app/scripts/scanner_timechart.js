@@ -143,6 +143,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       if (!currentValue.dateLimit || currentValueWeek === currentWeek) {
         return [];
       } else {
+        currentValue.dateLimit = moment().year(2017).week(currentValueWeek).toISOString();
         return [ currentValue ];
       }
     } else {
@@ -178,6 +179,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
         if (currentValueWeek === currentWeek) {
           return [];
         } else {
+          currentValue._id = moment().year(2017).week(currentValueWeek).format('YYYY-MM-DD');
           return [ currentValue ];
         }
       } else {
