@@ -118,22 +118,23 @@ public class BuildHelper extends AbstractHelper {
     }
 
     //@param offset set value to 0 for first request
-    private static void getBuildsFromSlugV3(String slug, List<Build> result, String QueryParameters, int offset, Date younger, Date older, int buildAfter, int buildBefore) {
+    private static void getBuildsFromSlugV3(String slug, List<Build> result, String QueryParameters, List<String> eventTypes, boolean reverseOrder, Date younger, Date older, int buildAfter, int buildBefore, BuildStatus status, int prNumber, String previousBranch) {
         String urlSlug="";
         try {
         urlSlug = URLEncoder.encode(slug,"UTF-8");
         }
         catch (IOException e) { getInstance().getLogger().warn("Error when getting build from slug "+urlSlug+" : "+e.getMessage());}
         String ENDPOINTV3 = "repo/"+urlSlug+"/builds";
-        String resourceUrl = getInstance().getEndpoint()+ENDPOINTV3+"?offset="+offset;
+        String resourceUrl = getInstance().getEndpoint()+ENDPOINTV3 + "?";
+                //+"?offset=0";
         Boolean byDate = false;
         Boolean byNumber = false;
 
 
         if(QueryParameters != "")
-            resourceUrl += "&"+QueryParameters;
+            resourceUrl += QueryParameters + "&";
 
-        resourceUrl += "&limit=100";
+        String finalresourceUrl = resourceUrl + "offset=0&limit=100";
 
         if(older != null || younger != null)
             byDate = true;
@@ -141,60 +142,104 @@ public class BuildHelper extends AbstractHelper {
         if(!byDate && (buildAfter != 0 || buildBefore != 0))
             byNumber = true;
 
+        Pagination pagination = null;
+
         try {
-            String response = getInstance().get(resourceUrl);
+            String response = getInstance().get(finalresourceUrl);
             JsonParser parser = new JsonParser();
             JsonObject allAnswer = parser.parse(response).getAsJsonObject();
             JsonObject paginationJSON = allAnswer.getAsJsonObject("@pagination");
-            Pagination pagination = createGson().fromJson(paginationJSON, Pagination.class);
-            JsonArray arrayBuilds = allAnswer.getAsJsonArray("builds");
-            for (JsonElement buildJSONElement : arrayBuilds) {
+            pagination = createGson().fromJson(paginationJSON, Pagination.class);
 
-                Build build = createGson().fromJson(buildJSONElement, Build.class);
-                build.setCommitId(build.getCommit().getId());
-                build.setRepositoryId(build.getRepository().getId());
-
-                List<Integer> jobsId = new ArrayList<Integer>();
-                for (Job jobs : build.getJobs()) {
-                    jobsId.add(jobs.getId());
-                }
-                build.setJobIds(jobsId);
-                Boolean addBuildByDate = false;
-                Boolean addBuildByNumber = false;
-                if(byDate){
-                    if (younger == null && build.getFinishedAt() == null)
-                        addBuildByDate = true;
-                    else if(older == null && (build.getFinishedAt() != null && build.getFinishedAt().before(younger)) )
-                        addBuildByDate = true;
-                    else if(younger == null && (build.getFinishedAt() != null && build.getFinishedAt().after(older)))
-                        addBuildByDate = true;
-                    else if(younger != null && older != null && build.getFinishedAt() != null && build.getFinishedAt().before(younger) && build.getFinishedAt().after(older))
-                        addBuildByDate = true;
-                }
-                if(byNumber && build.getNumber() != null && build.getNumber() != ""){
-                    if(buildAfter != 0 && parseInt(build.getNumber())>buildAfter)
-                        addBuildByNumber = true;
-                    else if(buildBefore != 0 && parseInt(build.getNumber())<buildBefore)
-                        addBuildByNumber = true;
-                    else if(buildAfter != 0 && buildBefore != 0 && parseInt(build.getNumber())>buildAfter && parseInt(build.getNumber())<buildBefore)
-                        addBuildByNumber = true;
-                }
-
-                if(!byDate && !byNumber)
-                    result.add(build);
-                else if(byDate && byNumber && addBuildByDate && addBuildByNumber)
-                    result.add(build);
-                else if(byDate && addBuildByDate && !byNumber)
-                    result.add(build);
-                else if(byNumber && addBuildByNumber && !byDate)
-                    result.add(build);
-            }
-            if(!pagination.isIs_last()) {
-                getBuildsFromSlugV3(slug, result, QueryParameters, pagination.getOffset()+pagination.getLimit(),younger,older,buildAfter,buildBefore);
-            }
+            pagination.getNext().setHref(resourceUrl + "offset="+pagination.getNext().getOffset()+"&limit=100");
+            pagination.getLast().setHref(resourceUrl + "offset="+pagination.getLast().getOffset()+"&limit=100");
+            pagination.getFirst().setHref(resourceUrl + "offset="+pagination.getFirst().getOffset()+"&limit=100");
         }
-        catch (IOException e) { getInstance().getLogger().warn("Error when getting build from slug "+slug+" : "+e.getMessage());}
+        catch (IOException e) {
+            getInstance().getLogger().warn("Error when getting build from slug " + slug + " : " + e.getMessage());
+        }
 
+        Boolean firstRequest = true;
+        Boolean endRequest = false;
+
+        while (endRequest != true) {
+            if (!reverseOrder && !firstRequest)
+                finalresourceUrl = pagination.getNext().getHref();
+            else if(reverseOrder && firstRequest)
+                finalresourceUrl = pagination.getLast().getHref();
+            else if(reverseOrder && !firstRequest)
+                finalresourceUrl = pagination.getLast().getHref();
+            try {
+                String response = getInstance().get(finalresourceUrl);
+                JsonParser parser = new JsonParser();
+                JsonObject allAnswer = parser.parse(response).getAsJsonObject();
+                JsonObject paginationJSON = allAnswer.getAsJsonObject("@pagination");
+                pagination = createGson().fromJson(paginationJSON, Pagination.class);
+                if(pagination.getNext() != null)
+                    pagination.getNext().setHref(resourceUrl + "offset="+pagination.getNext().getOffset()+"&limit=100");
+                if(pagination.getPrev() != null)
+                    pagination.getPrev().setHref(resourceUrl + "offset="+pagination.getPrev().getOffset()+"&limit=100");
+                pagination.getLast().setHref(resourceUrl + "offset="+pagination.getLast().getOffset()+"&limit=100");
+                pagination.getFirst().setHref(resourceUrl + "offset="+pagination.getFirst().getOffset()+"&limit=100");
+
+
+                JsonArray arrayBuilds = allAnswer.getAsJsonArray("builds");
+                for (JsonElement buildJSONElement : arrayBuilds) {
+
+                    Build build = createGson().fromJson(buildJSONElement, Build.class);
+                    build.setCommitId(build.getCommit().getId());
+                    build.setRepositoryId(build.getRepository().getId());
+                    JsonObject buildJSONObject = buildJSONElement.getAsJsonObject();
+                    JsonObject branch = buildJSONObject.getAsJsonObject("branch");
+                    build.getCommit().setBranch(branch.get("name").getAsString());
+
+                    List<Integer> jobsId = new ArrayList<Integer>();
+                    for (Job jobs : build.getJobs()) {
+                        jobsId.add(jobs.getId());
+                    }
+                    build.setJobIds(jobsId);
+                    Boolean addBuildByDate = false;
+                    Boolean addBuildByNumber = false;
+                    if (byDate) {
+                        if (younger == null && build.getFinishedAt() == null)
+                            addBuildByDate = true;
+                        else if (older == null && (build.getFinishedAt() != null && build.getFinishedAt().before(younger)))
+                            addBuildByDate = true;
+                        else if (younger == null && (build.getFinishedAt() != null && build.getFinishedAt().after(older)))
+                            addBuildByDate = true;
+                        else if (younger != null && older != null && build.getFinishedAt() != null && build.getFinishedAt().before(younger) && build.getFinishedAt().after(older))
+                            addBuildByDate = true;
+                    }
+                    if (byNumber && build.getNumber() != null && build.getNumber() != "") {
+                        if (buildAfter != 0 && parseInt(build.getNumber()) > buildAfter)
+                            addBuildByNumber = true;
+                        else if (buildBefore != 0 && parseInt(build.getNumber()) < buildBefore)
+                            addBuildByNumber = true;
+                        else if (buildAfter != 0 && buildBefore != 0 && parseInt(build.getNumber()) > buildAfter && parseInt(build.getNumber()) < buildBefore)
+                            addBuildByNumber = true;
+                    }
+                    if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
+                        if (!byDate && !byNumber)
+                            result.add(build);
+                        else if (byDate && byNumber && addBuildByDate && addBuildByNumber)
+                            result.add(build);
+                        else if (byDate && addBuildByDate && !byNumber)
+                            result.add(build);
+                        else if (byNumber && addBuildByNumber && !byDate)
+                            result.add(build);
+                    }
+                }
+                firstRequest = false;
+                //if(!pagination.isIs_last()) {
+                //    getBuildsFromSlugV3(slug, result, QueryParameters, pagination.getOffset()+pagination.getLimit(),eventTypes,younger,older,buildAfter,buildBefore, status, prNumber, previousBranch);
+                //}
+
+            } catch (IOException e) {
+                getInstance().getLogger().warn("Error when getting build from slug " + slug + " : " + e.getMessage());
+            }
+            if((!reverseOrder && pagination.getNext() == null)||(reverseOrder && pagination.getPrev() == null))
+                endRequest = true;
+        }
     }
 
     private static boolean isAcceptedBuild(Build build, int prNumber, BuildStatus status, String previousBranch) {
@@ -528,7 +573,7 @@ public class BuildHelper extends AbstractHelper {
     public static List<Build> getBuildsFromSlugWithLimitDate(String slug, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
         if(Version.getVersionV3()){
-            getBuildsFromSlugV3(slug,result,"",0,null, limitDate, 0, 0);
+            getBuildsFromSlugV3(slug,result,"",getEventTypes(),false, limitDate, null, 0,0,null,-1,null);
         }
         else {
             getBuildsFromSlugRecursively(slug, result, limitDate, 0, 0, getEventTypes(), 0, null, -1, false, null);
@@ -543,7 +588,7 @@ public class BuildHelper extends AbstractHelper {
     public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository, Date limitDate) {
         List<Build> result = new ArrayList<Build>();
         if(Version.getVersionV3()){
-            getBuildsFromSlugV3(repository.getSlug(),result,"",0,null, limitDate, 0, 0);
+            getBuildsFromSlugV3(repository.getSlug(),result,"",getEventTypes(),false, limitDate, null, 0,0,null,-1,null);
         }
         else {
 
