@@ -144,15 +144,24 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
+  var currentWeek = moment().week();
+
   var reducedData = data.reduce(function (accumulator, currentValue) {
+    var currentValueWeek = moment(currentValue.dateLimit).week();
+
     if (accumulator.length == 0) {
-      return [ currentValue ];
+      if (currentValueWeek === currentWeek) {
+        return [];
+      } else {
+        return [ currentValue ];
+      }
     } else {
       var previousValue = accumulator[accumulator.length - 1];
-
       var previousValueWeek = moment(previousValue.dateLimit).week();
-      var currentValueWeek = moment(currentValue.dateLimit).week();
 
+      if (currentValueWeek === currentWeek) {
+        return accumulator;
+      }
       if (previousValueWeek === currentValueWeek) {
         for (var attr in previousValue) {
           if (attr.indexOf('total') != -1 && attr.indexOf('totalRepoNumber') == -1) {
@@ -222,8 +231,13 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       width: undefined,
       height: 700
     },
+    exporting: {
+      enabled: true,
+      sourceWidth: 1200,
+      sourceHeight: 600
+    },
     title: {
-      text: 'Number of scanned builds per week'
+      text: 'Number of scanned projects and builds per week'
     },
     xAxis: {
       type: 'datetime',
@@ -238,7 +252,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       type: 'logarithmic',
       minorTickInterval: 1,
       title: {
-        text: 'Number of builds'
+        text: 'Number of builds or projects'
       },
       min: 20
     },
@@ -253,14 +267,14 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
           enabled: true
         },
         dataLabels: {
-          enabled: true
+          enabled: false
         },
       },
     },
 
     series: [
       {
-        name: 'totalRepoNumber',
+        name: 'Scanned repositories',
         data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
@@ -269,7 +283,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
         })
       },
       {
-        name: 'totalScannedBuilds',
+        name: 'Scanned builds',
         data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
@@ -278,7 +292,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
         })
       },
       {
-        name: 'totalJavaBuilds',
+        name: 'Scanned Java builds',
         data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
@@ -287,7 +301,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
         })
       },
       {
-        name: 'totalJavaFailingBuilds',
+        name: 'Scanned Java failing builds',
         data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
@@ -296,7 +310,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
         })
       },
       {
-        name: 'totalJavaFailingBuildsWithFailingTests',
+        name: 'Scanned Java failing builds with failing tests',
         data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
