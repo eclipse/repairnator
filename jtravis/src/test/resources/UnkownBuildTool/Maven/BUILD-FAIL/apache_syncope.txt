@@ -1,0 +1,1158 @@
+travis_fold:start:worker_info
+[0K[33;1mWorker information[0m
+hostname: 2e7b9735-e45b-4c33-8355-54641fa1ea89@1.production-5-worker-org-c-4-gce
+version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
+instance: testing-gce-4e25dd41-69d7-4023-b9cc-bacbbc9e1880:travis-ci-jvm-precise-1491941442 (via amqp)
+startup: 21.268254998s
+travis_fold:end:worker_info
+[0Ktravis_fold:start:system_info
+[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: precise
+Build id: 277706459
+Job id: 277706460
+Runtime kernel version: 3.13.0-115-generic
+travis-build version: 125c5d1fa
+[34m[1mBuild image provisioning date and time[0m
+Tue Apr 11 20:22:39 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 12.04.5 LTS
+Release:	12.04
+Codename:	precise
+[34m[1mLinux Version[0m
+3.13.0-115-generic
+[34m[1mCookbooks Version[0m
+cc4eb5e https://github.com/travis-ci/travis-cookbooks/tree/cc4eb5e
+[34m[1mGit version[0m
+git version 1.8.5.6
+[34m[1mbash version[0m
+GNU bash, version 4.2.25(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+[34m[1mGCC version[0m
+gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mLLVM version[0m
+clang version 3.4 (tags/RELEASE_34/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.6
+[34m[1mPre-installed Node.js versions[0m
+v0.10.36
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mmysql --version[0m
+mysql  Ver 14.14 Distrib 5.5.54, for debian-linux-gnu (x86_64) using readline 6.2
+[34m[1mPre-installed PostgreSQL versions[0m
+9.1.24
+9.2.20
+9.3.16
+9.4.11
+9.5.6
+[34m[1mRedis version[0m
+redis-server 3.0.7
+[34m[1mriak version[0m
+2.0.2
+[34m[1mmemcached version[0m
+1.4.13
+[34m[1mMongoDB version[0m
+MongoDB 2.4.14
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mInstalled Sphinx versions[0m
+2.0.10
+2.1.9
+2.2.6
+[34m[1mDefault Sphinx version[0m
+2.2.6
+[34m[1mInstalled Firefox version[0m
+firefox 38.4.0esr
+[34m[1mPhantomJS version[0m
+1.9.8
+[34m[1mant -version[0m
+Apache Ant(TM) version 1.8.2 compiled on December 3 2011
+[34m[1mmvn -version[0m
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.8.0_121, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en, platform encoding: UTF-8
+OS name: "linux", version: "3.13.0-115-generic", arch: "amd64", family: "unix"
+[34m[1mgradle -version[0m
+
+------------------------------------------------------------
+Gradle 2.2.1
+------------------------------------------------------------
+
+Build time:   2014-11-24 09:45:35 UTC
+Build number: none
+Revision:     6fcb59c06f43a4e6b1bcb401f7686a8601a1fb4a
+
+Groovy:       2.3.6
+Ant:          Apache Ant(TM) version 1.9.3 compiled on December 23 2013
+JVM:          1.8.0_121 (Oracle Corporation 25.121-b13)
+OS:           Linux 3.13.0-115-generic amd64
+
+[34m[1mlein1 version[0m
+WARNING: Clojure jar failed to download from http://build.clojure.org/releases/org/clojure/clojure/1.2.1/clojure-1.2.1.jar
+Downloading Leiningen now...
+WARNING: Clojure jar failed to download from http://build.clojure.org/releases/org/clojure/clojure/1.2.1/clojure-1.2.1.jar
+Using JLine for console I/O; install rlwrap for optimum experience.
+Leiningen 1.7.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mlein2 version[0m
+Downloading Leiningen to /home/travis/.lein/self-installs/home/travis/.lein/leiningen-2.5.1-standalone.jar now...
+Leiningen 2.5.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mlein version[0m
+Downloading Leiningen to /home/travis/.lein/self-installs/home/travis/.lein/leiningen-2.5.1-standalone.jar now...
+Leiningen 2.5.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+travis_fold:end:system_info
+[0K
+W: http://security.ubuntu.com/ubuntu/dists/precise-security/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://downloads-distro.mongodb.org/repo/debian-sysvinit/dists/dist/Release.gpg: Signature by key 492EAFE8CD016A07919F1D2B9ECBEC467F0CEB10 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-updates/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-backports/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise/Release.gpg: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/precise/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/git-core/v1.8/ubuntu/dists/precise/Release.gpg: Signature by key E1DD270288B4E6030699E45FA1715D88E1DF1F24 uses weak digest algorithm (SHA1)
+$ jdk_switcher use openjdk6
+Switching to OpenJDK6 (java-1.6.0-openjdk-amd64), JAVA_HOME will be set to /usr/lib/jvm/java-6-openjdk-amd64
+travis_fold:start:git.checkout
+[0Ktravis_time:start:1bbf0e80
+[0K$ git clone --depth=50 --branch=1_2_X https://github.com/apache/syncope.git apache/syncope
+Cloning into 'apache/syncope'...
+remote: Counting objects: 2406, done.[K
+remote: Compressing objects:   0% (1/1623)   [K
+remote: Compressing objects:   1% (17/1623)   [K
+remote: Compressing objects:   2% (33/1623)   [K
+remote: Compressing objects:   3% (49/1623)   [K
+remote: Compressing objects:   4% (65/1623)   [K
+remote: Compressing objects:   5% (82/1623)   [K
+remote: Compressing objects:   6% (98/1623)   [K
+remote: Compressing objects:   7% (114/1623)   [K
+remote: Compressing objects:   8% (130/1623)   [K
+remote: Compressing objects:   9% (147/1623)   [K
+remote: Compressing objects:  10% (163/1623)   [K
+remote: Compressing objects:  11% (179/1623)   [K
+remote: Compressing objects:  12% (195/1623)   [K
+remote: Compressing objects:  13% (211/1623)   [K
+remote: Compressing objects:  14% (228/1623)   [K
+remote: Compressing objects:  15% (244/1623)   [K
+remote: Compressing objects:  16% (260/1623)   [K
+remote: Compressing objects:  17% (276/1623)   [K
+remote: Compressing objects:  18% (293/1623)   [K
+remote: Compressing objects:  19% (309/1623)   [K
+remote: Compressing objects:  20% (325/1623)   [K
+remote: Compressing objects:  21% (341/1623)   [K
+remote: Compressing objects:  22% (358/1623)   [K
+remote: Compressing objects:  23% (374/1623)   [K
+remote: Compressing objects:  24% (390/1623)   [K
+remote: Compressing objects:  25% (406/1623)   [K
+remote: Compressing objects:  26% (422/1623)   [K
+remote: Compressing objects:  27% (439/1623)   [K
+remote: Compressing objects:  28% (455/1623)   [K
+remote: Compressing objects:  29% (471/1623)   [K
+remote: Compressing objects:  30% (487/1623)   [K
+remote: Compressing objects:  31% (504/1623)   [K
+remote: Compressing objects:  32% (520/1623)   [K
+remote: Compressing objects:  33% (536/1623)   [K
+remote: Compressing objects:  34% (552/1623)   [K
+remote: Compressing objects:  35% (569/1623)   [K
+remote: Compressing objects:  36% (585/1623)   [K
+remote: Compressing objects:  37% (601/1623)   [K
+remote: Compressing objects:  38% (617/1623)   [K
+remote: Compressing objects:  39% (633/1623)   [K
+remote: Compressing objects:  40% (650/1623)   [K
+remote: Compressing objects:  41% (666/1623)   [K
+remote: Compressing objects:  42% (682/1623)   [K
+remote: Compressing objects:  43% (698/1623)   [K
+remote: Compressing objects:  44% (715/1623)   [K
+remote: Compressing objects:  45% (731/1623)   [K
+remote: Compressing objects:  46% (747/1623)   [K
+remote: Compressing objects:  47% (763/1623)   [K
+remote: Compressing objects:  48% (780/1623)   [K
+remote: Compressing objects:  49% (796/1623)   [K
+remote: Compressing objects:  50% (812/1623)   [K
+remote: Compressing objects:  51% (828/1623)   [K
+remote: Compressing objects:  52% (844/1623)   [K
+remote: Compressing objects:  53% (861/1623)   [K
+remote: Compressing objects:  54% (877/1623)   [K
+remote: Compressing objects:  55% (893/1623)   [K
+remote: Compressing objects:  56% (909/1623)   [K
+remote: Compressing objects:  57% (926/1623)   [K
+remote: Compressing objects:  58% (942/1623)   [K
+remote: Compressing objects:  59% (958/1623)   [K
+remote: Compressing objects:  60% (974/1623)   [K
+remote: Compressing objects:  61% (991/1623)   [K
+remote: Compressing objects:  62% (1007/1623)   [K
+remote: Compressing objects:  63% (1023/1623)   [K
+remote: Compressing objects:  64% (1039/1623)   [K
+remote: Compressing objects:  65% (1055/1623)   [K
+remote: Compressing objects:  66% (1072/1623)   [K
+remote: Compressing objects:  67% (1088/1623)   [K
+remote: Compressing objects:  68% (1104/1623)   [K
+remote: Compressing objects:  69% (1120/1623)   [K
+remote: Compressing objects:  70% (1137/1623)   [K
+remote: Compressing objects:  71% (1153/1623)   [K
+remote: Compressing objects:  72% (1169/1623)   [K
+remote: Compressing objects:  73% (1185/1623)   [K
+remote: Compressing objects:  74% (1202/1623)   [K
+remote: Compressing objects:  75% (1218/1623)   [K
+remote: Compressing objects:  76% (1234/1623)   [K
+remote: Compressing objects:  77% (1250/1623)   [K
+remote: Compressing objects:  78% (1266/1623)   [K
+remote: Compressing objects:  79% (1283/1623)   [K
+remote: Compressing objects:  80% (1299/1623)   [K
+remote: Compressing objects:  81% (1315/1623)   [K
+remote: Compressing objects:  82% (1331/1623)   [K
+remote: Compressing objects:  83% (1348/1623)   [K
+remote: Compressing objects:  84% (1364/1623)   [K
+remote: Compressing objects:  85% (1380/1623)   [K
+remote: Compressing objects:  86% (1396/1623)   [K
+remote: Compressing objects:  87% (1413/1623)   [K
+remote: Compressing objects:  88% (1429/1623)   [K
+remote: Compressing objects:  89% (1445/1623)   [K
+remote: Compressing objects:  90% (1461/1623)   [K
+remote: Compressing objects:  91% (1477/1623)   [K
+remote: Compressing objects:  92% (1494/1623)   [K
+remote: Compressing objects:  93% (1510/1623)   [K
+remote: Compressing objects:  94% (1526/1623)   [K
+remote: Compressing objects:  95% (1542/1623)   [K
+remote: Compressing objects:  96% (1559/1623)   [K
+remote: Compressing objects:  97% (1575/1623)   [K
+remote: Compressing objects:  98% (1591/1623)   [K
+remote: Compressing objects:  99% (1607/1623)   [K
+remote: Compressing objects: 100% (1623/1623)   [K
+remote: Compressing objects: 100% (1623/1623), done.[K
+Receiving objects:   0% (1/2406)   
+Receiving objects:   1% (25/2406)   
+Receiving objects:   2% (49/2406)   
+Receiving objects:   3% (73/2406)   
+Receiving objects:   4% (97/2406)   
+Receiving objects:   5% (121/2406)   
+Receiving objects:   6% (145/2406)   
+Receiving objects:   7% (169/2406)   
+Receiving objects:   8% (193/2406)   
+Receiving objects:   9% (217/2406)   
+Receiving objects:  10% (241/2406)   
+Receiving objects:  11% (265/2406)   
+Receiving objects:  12% (289/2406)   
+Receiving objects:  13% (313/2406)   
+Receiving objects:  14% (337/2406)   
+Receiving objects:  15% (361/2406)   
+Receiving objects:  16% (385/2406)   
+Receiving objects:  17% (410/2406)   
+Receiving objects:  18% (434/2406)   
+Receiving objects:  19% (458/2406)   
+Receiving objects:  20% (482/2406)   
+Receiving objects:  21% (506/2406)   
+Receiving objects:  22% (530/2406)   
+Receiving objects:  23% (554/2406)   
+Receiving objects:  24% (578/2406)   
+Receiving objects:  25% (602/2406)   
+Receiving objects:  26% (626/2406)   
+Receiving objects:  27% (650/2406)   
+Receiving objects:  28% (674/2406)   
+Receiving objects:  29% (698/2406)   
+Receiving objects:  30% (722/2406)   
+Receiving objects:  31% (746/2406)   
+Receiving objects:  32% (770/2406)   
+Receiving objects:  33% (794/2406)   
+Receiving objects:  34% (819/2406)   
+Receiving objects:  35% (843/2406)   
+Receiving objects:  36% (867/2406)   
+Receiving objects:  37% (891/2406)   
+Receiving objects:  38% (915/2406)   
+Receiving objects:  39% (939/2406)   
+Receiving objects:  40% (963/2406)   
+Receiving objects:  41% (987/2406)   
+Receiving objects:  42% (1011/2406)   
+Receiving objects:  43% (1035/2406)   
+Receiving objects:  44% (1059/2406)   
+Receiving objects:  45% (1083/2406)   
+Receiving objects:  46% (1107/2406)   
+Receiving objects:  47% (1131/2406)   
+Receiving objects:  48% (1155/2406)   
+Receiving objects:  49% (1179/2406)   
+Receiving objects:  50% (1203/2406)   
+Receiving objects:  51% (1228/2406)   
+Receiving objects:  52% (1252/2406)   
+Receiving objects:  53% (1276/2406)   
+Receiving objects:  54% (1300/2406)   
+Receiving objects:  55% (1324/2406)   
+Receiving objects:  56% (1348/2406)   
+Receiving objects:  57% (1372/2406)   
+Receiving objects:  58% (1396/2406)   
+Receiving objects:  59% (1420/2406)   
+Receiving objects:  60% (1444/2406)   
+Receiving objects:  61% (1468/2406)   
+Receiving objects:  62% (1492/2406)   
+Receiving objects:  63% (1516/2406)   
+Receiving objects:  64% (1540/2406)   
+Receiving objects:  65% (1564/2406)   
+Receiving objects:  66% (1588/2406)   
+Receiving objects:  67% (1613/2406)   
+Receiving objects:  68% (1637/2406)   
+Receiving objects:  69% (1661/2406)   
+Receiving objects:  70% (1685/2406)   
+Receiving objects:  71% (1709/2406)   
+Receiving objects:  72% (1733/2406)   
+Receiving objects:  73% (1757/2406)   
+Receiving objects:  74% (1781/2406)   
+Receiving objects:  75% (1805/2406)   
+Receiving objects:  76% (1829/2406)   
+Receiving objects:  77% (1853/2406)   
+Receiving objects:  78% (1877/2406)   
+Receiving objects:  79% (1901/2406)   
+Receiving objects:  80% (1925/2406)   
+Receiving objects:  81% (1949/2406)   
+Receiving objects:  82% (1973/2406)   
+Receiving objects:  83% (1997/2406)   
+Receiving objects:  84% (2022/2406)   
+Receiving objects:  85% (2046/2406)   
+Receiving objects:  86% (2070/2406)   
+Receiving objects:  87% (2094/2406)   
+Receiving objects:  88% (2118/2406)   
+Receiving objects:  89% (2142/2406)   
+Receiving objects:  90% (2166/2406)   
+Receiving objects:  91% (2190/2406)   
+Receiving objects:  92% (2214/2406)   
+Receiving objects:  93% (2238/2406)   
+Receiving objects:  94% (2262/2406)   
+Receiving objects:  95% (2286/2406)   
+Receiving objects:  96% (2310/2406)   
+Receiving objects:  97% (2334/2406)   
+remote: Total 2406 (delta 1286), reused 1274 (delta 538), pack-reused 0[K
+Receiving objects:  98% (2358/2406)   
+Receiving objects:  99% (2382/2406)   
+Receiving objects: 100% (2406/2406)   
+Receiving objects: 100% (2406/2406), 1.74 MiB | 0 bytes/s, done.
+Resolving deltas:   0% (0/1286)   
+Resolving deltas:   1% (13/1286)   
+Resolving deltas:   2% (32/1286)   
+Resolving deltas:   3% (39/1286)   
+Resolving deltas:   5% (68/1286)   
+Resolving deltas:   6% (78/1286)   
+Resolving deltas:   7% (93/1286)   
+Resolving deltas:   8% (108/1286)   
+Resolving deltas:   9% (116/1286)   
+Resolving deltas:  10% (132/1286)   
+Resolving deltas:  12% (156/1286)   
+Resolving deltas:  13% (172/1286)   
+Resolving deltas:  14% (182/1286)   
+Resolving deltas:  15% (194/1286)   
+Resolving deltas:  16% (216/1286)   
+Resolving deltas:  18% (234/1286)   
+Resolving deltas:  19% (247/1286)   
+Resolving deltas:  20% (264/1286)   
+Resolving deltas:  21% (277/1286)   
+Resolving deltas:  22% (283/1286)   
+Resolving deltas:  23% (296/1286)   
+Resolving deltas:  24% (314/1286)   
+Resolving deltas:  26% (337/1286)   
+Resolving deltas:  27% (349/1286)   
+Resolving deltas:  28% (363/1286)   
+Resolving deltas:  30% (386/1286)   
+Resolving deltas:  33% (430/1286)   
+Resolving deltas:  34% (439/1286)   
+Resolving deltas:  35% (453/1286)   
+Resolving deltas:  36% (463/1286)   
+Resolving deltas:  37% (476/1286)   
+Resolving deltas:  38% (493/1286)   
+Resolving deltas:  39% (504/1286)   
+Resolving deltas:  41% (528/1286)   
+Resolving deltas:  44% (569/1286)   
+Resolving deltas:  45% (579/1286)   
+Resolving deltas:  46% (592/1286)   
+Resolving deltas:  47% (606/1286)   
+Resolving deltas:  48% (625/1286)   
+Resolving deltas:  49% (631/1286)   
+Resolving deltas:  50% (643/1286)   
+Resolving deltas:  51% (656/1286)   
+Resolving deltas:  52% (669/1286)   
+Resolving deltas:  53% (682/1286)   
+Resolving deltas:  55% (710/1286)   
+Resolving deltas:  56% (727/1286)   
+Resolving deltas:  59% (759/1286)   
+Resolving deltas:  60% (773/1286)   
+Resolving deltas:  63% (820/1286)   
+Resolving deltas:  66% (849/1286)   
+Resolving deltas:  67% (863/1286)   
+Resolving deltas:  68% (880/1286)   
+Resolving deltas:  69% (894/1286)   
+Resolving deltas:  70% (903/1286)   
+Resolving deltas:  71% (921/1286)   
+Resolving deltas:  73% (939/1286)   
+Resolving deltas:  74% (953/1286)   
+Resolving deltas:  75% (966/1286)   
+Resolving deltas:  76% (980/1286)   
+Resolving deltas:  77% (992/1286)   
+Resolving deltas:  78% (1004/1286)   
+Resolving deltas:  79% (1023/1286)   
+Resolving deltas:  80% (1038/1286)   
+Resolving deltas:  81% (1045/1286)   
+Resolving deltas:  82% (1055/1286)   
+Resolving deltas:  83% (1072/1286)   
+Resolving deltas:  84% (1088/1286)   
+Resolving deltas:  85% (1096/1286)   
+Resolving deltas:  86% (1106/1286)   
+Resolving deltas:  87% (1119/1286)   
+Resolving deltas:  88% (1133/1286)   
+Resolving deltas:  89% (1145/1286)   
+Resolving deltas:  90% (1158/1286)   
+Resolving deltas:  91% (1171/1286)   
+Resolving deltas:  92% (1184/1286)   
+Resolving deltas:  93% (1197/1286)   
+Resolving deltas:  94% (1213/1286)   
+Resolving deltas:  95% (1224/1286)   
+Resolving deltas:  96% (1236/1286)   
+Resolving deltas:  97% (1249/1286)   
+Resolving deltas:  98% (1261/1286)   
+Resolving deltas: 100% (1286/1286)   
+Resolving deltas: 100% (1286/1286), done.
+Checking connectivity... done.
+
+travis_time:end:1bbf0e80:start=1505904358986132557,finish=1505904360362561366,duration=1376428809
+[0K$ cd apache/syncope
+$ git checkout -qf 59a9d66b90874c64c19fefd2c1cb51c24bb7ec18
+travis_fold:end:git.checkout
+[0K[33;1mDisabling Gradle daemon[0m
+travis_time:start:0e8855d1
+[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+
+travis_time:end:0e8855d1:start=1505904360438515435,finish=1505904360442518274,duration=4002839
+[0K$ export PATH=$JAVA_HOME/bin:$PATH
+travis_fold:start:cache.1
+[0KSetting up build cache
+$ export CASHER_DIR=$HOME/.casher
+travis_time:start:23ed3100
+[0K$ Installing caching utilities
+
+travis_time:end:23ed3100:start=1505904364906891467,finish=1505904365048040645,duration=141149178
+[0Ktravis_time:start:05bcde22
+[0K
+travis_time:end:05bcde22:start=1505904365053032723,finish=1505904365056654580,duration=3621857
+[0Ktravis_time:start:133886c4
+[0K[32;1mattempting to download cache archive[0m
+[32;1mfetching 1_2_X/cache-linux-precise-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855--jdk-openjdk6.tgz[0m
+[32;1mfetching 1_2_X/cache--jdk-openjdk6.tgz[0m
+[32;1mfetching master/cache-linux-precise-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855--jdk-openjdk6.tgz[0m
+[32;1mfetching master/cache--jdk-openjdk6.tgz[0m
+[31;1mcould not download cache[0m
+
+travis_time:end:133886c4:start=1505904365060608168,finish=1505904366282837825,duration=1222229657
+[0Ktravis_time:start:04778278
+[0K
+travis_time:end:04778278:start=1505904366286974934,finish=1505904366290493095,duration=3518161
+[0Ktravis_time:start:00191664
+[0K[32;1madding /home/travis/.m2 to cache[0m
+
+travis_time:end:00191664:start=1505904366294451188,finish=1505904367254353720,duration=959902532
+[0Ktravis_fold:end:cache.1
+[0K$ java -Xmx32m -version
+java version "1.6.0_41"
+OpenJDK Runtime Environment (IcedTea6 1.13.13) (6b41-1.13.13-0ubuntu0.12.04.1)
+OpenJDK 64-Bit Server VM (build 23.41-b41, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.6.0_41
+travis_fold:start:before_install
+[0Ktravis_time:start:0411393c
+[0K$ echo 'MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m"' >~/.mavenrc
+
+travis_time:end:0411393c:start=1505904367818368645,finish=1505904367821805540,duration=3436895
+[0Ktravis_fold:end:before_install
+[0Ktravis_fold:start:install
+[0Ktravis_time:start:10e246ca
+[0K$ mvn --show-version --quiet -P skipTests
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.6.0_41, vendor: Sun Microsystems Inc.
+Java home: /usr/lib/jvm/java-6-openjdk-amd64/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "3.13.0-115-generic", arch: "amd64", family: "unix"
+Sep 20, 2017 10:46:37 AM org.apache.maven.wagon.providers.http.httpclient.impl.execchain.RetryExec execute
+INFO: I/O exception (java.net.SocketException) caught when processing request to {s}->https://repo.maven.apache.org:443: Connection reset
+Sep 20, 2017 10:46:37 AM org.apache.maven.wagon.providers.http.httpclient.impl.execchain.RetryExec execute
+INFO: Retrying request to {s}->https://repo.maven.apache.org:443
+Sep 20, 2017 10:46:49 AM org.apache.maven.wagon.providers.http.httpclient.impl.execchain.RetryExec execute
+INFO: I/O exception (java.net.SocketException) caught when processing request to {s}->https://repo.maven.apache.org:443: Connection reset
+Sep 20, 2017 10:46:49 AM org.apache.maven.wagon.providers.http.httpclient.impl.execchain.RetryExec execute
+INFO: Retrying request to {s}->https://repo.maven.apache.org:443
+[info] Copying manifest...
+373  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AccountPolicy".
+1035  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.PasswordPolicy"
+1038  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.SyncPolicy"
+1140  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.SyncopeUser".
+1197  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.AbstractAttr"
+1241  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.user.USchema"
+1246  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.user.UDerSchema"
+1252  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.user.UVirSchema"
+1261  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.AbstractAttrTemplate"
+1278  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.membership.MSchema"
+1290  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.membership.MDerSchema"
+1292  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.membership.MVirSchema"
+1296  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.role.RSchema"
+1298  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.role.RDerSchema"
+1299  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.role.RVirSchema"
+1431  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractMappingItem$1".
+1435  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MDerAttrTemplate".
+1452  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSubject".
+1456  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ReportExec".
+1479  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UDerSchema".
+1487  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CAttrUniqueValue".
+1490  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.conf.CSchema"
+1527  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RVirSchema".
+1534  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PropagationTask".
+1569  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttrUniqueValue".
+1592  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SyncPolicy".
+1601  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RDerSchema".
+1608  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UVirAttr".
+1632  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MVirSchema".
+1637  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSysInfo".
+1665  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Task".
+1694  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttrTemplate".
+1748  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PushPolicy".
+1749  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.PushPolicy"
+1765  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PasswordPolicy".
+1773  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.SyncopeConf".
+1821  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractExec".
+1841  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttr".
+1863  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractDerAttr".
+1875  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttrTemplate".
+1890  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MDerSchema".
+1896  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RVirAttrTemplate".
+1907  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Entitlement".
+1920  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrTemplate".
+1932  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RVirAttr".
+1952  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CAttr".
+1979  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttributable".
+1987  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractVirSchema".
+2004  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttrUniqueValue".
+2027  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrValue$1".
+2030  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UMappingItem".
+2043  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ExternalResource".
+2084  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractNormalSchema".
+2115  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.SyncopeRole".
+2176  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RDerAttr".
+2189  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RSchema".
+2193  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UAttrValue".
+2207  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Policy".
+2223  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrValue".
+2252  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.NotificationTask".
+2271  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Notification".
+2298  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CSchema".
+2301  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Report".
+2323  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractVirAttr".
+2336  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrUniqueValue".
+2337  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttr".
+2350  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MSchema".
+2354  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UAttr".
+2372  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MVirAttr".
+2388  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RMapping".
+2411  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RMappingItem".
+2427  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UVirSchema".
+2433  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSchema".
+2434  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UMapping".
+2457  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SecurityQuestion".
+2472  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SyncTask".
+2517  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ReportletConfInstance".
+2555  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.TaskExec".
+2573  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractMappingItem".
+2596  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ConnPoolConf".
+2615  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttr".
+2631  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractDerSchema".
+2655  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.USchema".
+2660  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractBaseBean".
+2663  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttrValue".
+2681  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ConnInstance".
+2703  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CAttrValue".
+2715  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.Membership".
+2738  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UDerAttr".
+2747  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SyncopeLogger".
+2760  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MDerAttr".
+2770  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RDerAttrTemplate".
+2780  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MVirAttrTemplate".
+2788  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttrValue".
+2800  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UAttrUniqueValue".
+2816  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSyncTask".
+2818  syncopePersistenceUnit  WARN   [main] openjpa.Enhance - The type "org.apache.syncope.core.persistence.beans.AbstractSyncTask" must have a no-args constructor. Adding a public no-args constructor.
+2835  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PushTask".
+2854  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractMapping".
+2867  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SchedTask".
+2883  syncopePersistenceUnit  INFO   [main] openjpa.Tool - No metadata was found for 7 classes; they have been enhanced as persistence-aware. If you intended for any of these classes to be persistence-capable, then this means that OpenJPA could not find any metadata for those classes. This can happen if the directory containing your metadata is not in your CLASSPATH, or if your metadata files are not named properly. See the documentation on metadata placement for more information. Persistence-aware classes: [class org.apache.syncope.core.persistence.beans.AbstractAttrUniqueValue, class org.apache.syncope.core.persistence.beans.AbstractAttrValue$1, class org.apache.syncope.core.persistence.beans.AbstractBaseBean, class org.apache.syncope.core.persistence.beans.AbstractMappingItem$1, class org.apache.syncope.core.persistence.beans.AbstractAttributable, class org.apache.syncope.core.persistence.beans.AbstractSchema, class org.apache.syncope.core.persistence.beans.AbstractSubject]
+[info] Copying manifest...
+[info] Copying manifest...
+Sep 20, 2017 10:49:32 AM com.izforge.izpack.core.container.PlatformProvider provide
+INFO: Detected platform: ubuntu_linux,version=3.13.0-115-generic,arch=x64,symbolicName=null,javaVersion=1.6.0_41
+Sep 20, 2017 10:49:32 AM com.izforge.izpack.compiler.CompilerConfig addInfo
+INFO: Adding uninstaller
+Setting the installer information
+Setting the GUI preferences
+Adding langpack: eng
+Adding resource: flag.eng
+Adding resource: installer.jar
+Adding resource: Installer.image
+Adding resource: welcome_background
+Adding resource: HTMLHelloPanel.welcome
+Adding resource: LicencePanel.licence
+Adding resource: HTMLInfoPanel.info
+Adding resource: userInputSpec.xml
+Adding resource: userInputLang.xml_eng
+Adding resource: userInputLang.xml_ita
+Adding resource: ProcessPanel.Spec.xml
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/../syncope-installer-1.2.11-SNAPSHOT.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/commons-logging-1.1.3.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/commons-codec-1.10.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/commons-io-2.4.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/httpclient-4.3.6.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/httpmime-4.3.6.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/httpcore-4.3.3.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/jackson-databind-2.4.6.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/jackson-core-2.4.6.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/jackson-annotations-2.4.6.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/maven-invoker-3.0.0.jar
+Adding content of jar: /home/travis/build/apache/syncope/installer/target/staging/lib/plexus-utils-3.0.24.jar
+Adding panel: welcome :: Classname : com.izforge.izpack.panels.htmlhello.HTMLHelloPanel
+Adding panel: license :: Classname : com.izforge.izpack.panels.licence.LicencePanel
+Adding panel: info :: Classname : com.izforge.izpack.panels.htmlinfo.HTMLInfoPanel
+Adding panel: install_dir :: Classname : com.izforge.izpack.panels.target.TargetPanel
+Adding panel: archetype :: Classname : com.izforge.izpack.panels.userinput.UserInputPanel
+Adding panel: persistence :: Classname : com.izforge.izpack.panels.userinput.UserInputPanel
+Adding panel: persistence_advanced :: Classname : com.izforge.izpack.panels.userinput.UserInputPanel
+Adding panel: container :: Classname : com.izforge.izpack.panels.userinput.UserInputPanel
+Adding panel: container_advanced :: Classname : com.izforge.izpack.panels.userinput.UserInputPanel
+Adding panel: archetype_proc :: Classname : com.izforge.izpack.panels.process.ProcessPanel
+Adding panel: finish :: Classname : com.izforge.izpack.panels.simplefinish.SimpleFinishPanel
+[ Begin ]
+
+Copying the skeleton installer
+Copying 12 files into installer
+Merging 0 jars into installer
+Writing 1 Pack into installer
+Writing Pack 0: Apache Syncope
+
+[ End ]
+
+travis_time:end:10e246ca:start=1505904367826270389,finish=1505904589927763903,duration=222101493514
+[0Ktravis_fold:end:install
+[0Ktravis_time:start:1c188c29
+[0K$ mvn --show-version --quiet clean install -Dinvoker.streamLogs=true
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.6.0_41, vendor: Sun Microsystems Inc.
+Java home: /usr/lib/jvm/java-6-openjdk-amd64/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "3.13.0-115-generic", arch: "amd64", family: "unix"
+[info] Copying manifest...
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.apache.syncope.common.JSONTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.496 sec - in org.apache.syncope.common.JSONTest
+Running org.apache.syncope.common.search.SyncopeFiqlParserTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.12 sec - in org.apache.syncope.common.search.SyncopeFiqlParserTest
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.apache.syncope.client.ConcurrencyTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.845 sec - in org.apache.syncope.client.ConcurrencyTest
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+
+363  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CAttr".
+1102  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.AbstractAttr"
+1162  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.conf.CSchema"
+1255  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttrUniqueValue".
+1261  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.membership.MSchema"
+1271  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.AbstractAttrTemplate"
+1289  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.PasswordPolicy"
+1305  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.membership.MDerSchema"
+1307  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.membership.MVirSchema"
+1308  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.role.RSchema"
+1309  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.role.RDerSchema"
+1310  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.role.RVirSchema"
+1311  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.SyncPolicy"
+1312  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.user.USchema"
+1313  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.user.UDerSchema"
+1314  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.user.UVirSchema"
+1353  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Policy".
+1384  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractNormalSchema".
+1432  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.SyncopeRole".
+1538  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PasswordPolicy".
+1544  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MSchema".
+1550  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ConnInstance".
+1598  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UAttrUniqueValue".
+1630  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CAttrUniqueValue".
+1662  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.NotificationTask".
+1717  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MVirAttrTemplate".
+1757  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Entitlement".
+1798  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrTemplate".
+1832  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ExternalResource".
+1885  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PropagationTask".
+1910  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractDerSchema".
+1925  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PushPolicy".
+1926  syncopePersistenceUnit  WARN   [main] openjpa.Runtime - Found no persistent property in "org.apache.syncope.core.persistence.beans.PushPolicy"
+1930  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.TaskExec".
+1945  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractVirSchema".
+1965  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SyncTask".
+1999  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MVirAttr".
+2020  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UVirSchema".
+2026  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UDerAttr".
+2041  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RVirAttrTemplate".
+2053  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UAttrValue".
+2073  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ReportletConfInstance".
+2096  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ReportExec".
+2124  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractMappingItem".
+2162  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttrValue".
+2180  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttrValue".
+2197  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttrUniqueValue".
+2221  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttributable".
+2229  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MDerSchema".
+2233  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSubject".
+2237  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MDerAttr".
+2252  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Notification".
+2280  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SyncPolicy".
+2286  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSyncTask".
+2290  syncopePersistenceUnit  WARN   [main] openjpa.Enhance - The type "org.apache.syncope.core.persistence.beans.AbstractSyncTask" must have a no-args constructor. Adding a public no-args constructor.
+2307  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CSchema".
+2313  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttr".
+2350  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RMapping".
+2372  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractDerAttr".
+2384  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.PushTask".
+2398  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RDerAttr".
+2412  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractMapping".
+2424  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttr".
+2444  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.SyncopeConf".
+2469  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SyncopeLogger".
+2490  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttr".
+2507  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SchedTask".
+2523  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RSchema".
+2529  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrValue$1".
+2531  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UMappingItem".
+2548  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.SyncopeUser".
+2617  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Task".
+2634  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrValue".
+2662  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MAttrTemplate".
+2678  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MDerAttrTemplate".
+2692  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RDerSchema".
+2697  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.ConnPoolConf".
+2718  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UAttr".
+2752  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RDerAttrTemplate".
+2762  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.SecurityQuestion".
+2771  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractVirAttr".
+2782  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RVirAttr".
+2795  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.Membership".
+2841  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractAttrUniqueValue".
+2842  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.conf.CAttrValue".
+2855  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSysInfo".
+2868  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractExec".
+2883  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.USchema".
+2887  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UVirAttr".
+2900  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UMapping".
+2917  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RAttrTemplate".
+2926  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.user.UDerSchema".
+2930  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.membership.MVirSchema".
+2933  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractMappingItem$1".
+2934  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractBaseBean".
+2938  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AccountPolicy".
+2947  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RVirSchema".
+2952  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.Report".
+2967  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.role.RMappingItem".
+2979  syncopePersistenceUnit  INFO   [main] openjpa.Tool - Enhancer running on type "class org.apache.syncope.core.persistence.beans.AbstractSchema".
+2980  syncopePersistenceUnit  INFO   [main] openjpa.Tool - No metadata was found for 7 classes; they have been enhanced as persistence-aware. If you intended for any of these classes to be persistence-capable, then this means that OpenJPA could not find any metadata for those classes. This can happen if the directory containing your metadata is not in your CLASSPATH, or if your metadata files are not named properly. See the documentation on metadata placement for more information. Persistence-aware classes: [class org.apache.syncope.core.persistence.beans.AbstractAttributable, class org.apache.syncope.core.persistence.beans.AbstractAttrValue$1, class org.apache.syncope.core.persistence.beans.AbstractSubject, class org.apache.syncope.core.persistence.beans.AbstractMappingItem$1, class org.apache.syncope.core.persistence.beans.AbstractSchema, class org.apache.syncope.core.persistence.beans.AbstractBaseBean, class org.apache.syncope.core.persistence.beans.AbstractAttrUniqueValue]
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.apache.syncope.core.connid.PasswordGeneratorTest
+*** buffer overflow detected ***: /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java terminated
+======= Backtrace: =========
+/lib/x86_64-linux-gnu/libc.so.6(__fortify_fail+0x37)[0x7f800ccacdb7]
+/lib/x86_64-linux-gnu/libc.so.6(+0x10bcb0)[0x7f800ccabcb0]
+/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libnet.so(Java_java_net_Inet4AddressImpl_getLocalHostName+0x1a0)[0x7f8000017df0]
+[0x7f80010136b0]
+======= Memory map: ========
+00400000-00409000 r-xp 00000000 08:01 528073                             /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java
+00608000-00609000 r--p 00008000 08:01 528073                             /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java
+00609000-0060a000 rw-p 00009000 08:01 528073                             /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java
+01bb6000-01bd7000 rw-p 00000000 00:00 0                                  [heap]
+a0000000-b0000000 rw-p 00000000 00:00 0 
+b0000000-c0000000 rw-p 00000000 00:00 0 
+c0000000-d5560000 rw-p 00000000 00:00 0 
+d5560000-eaab0000 rw-p 00000000 00:00 0 
+eaab0000-f5550000 rw-p 00000000 00:00 0 
+f5550000-100000000 rw-p 00000000 00:00 0 
+7f7fcc000000-7f7fcc021000 rw-p 00000000 00:00 0 
+7f7fcc021000-7f7fd0000000 ---p 00000000 00:00 0 
+7f7fd0000000-7f7fd0021000 rw-p 00000000 00:00 0 
+7f7fd0021000-7f7fd4000000 ---p 00000000 00:00 0 
+7f7fd4000000-7f7fd4021000 rw-p 00000000 00:00 0 
+7f7fd4021000-7f7fd8000000 ---p 00000000 00:00 0 
+7f7fd8000000-7f7fd8021000 rw-p 00000000 00:00 0 
+7f7fd8021000-7f7fdc000000 ---p 00000000 00:00 0 
+7f7fdc000000-7f7fdc3ab000 rw-p 00000000 00:00 0 
+7f7fdc3ab000-7f7fe0000000 ---p 00000000 00:00 0 
+7f7fe0000000-7f7fe0323000 rw-p 00000000 00:00 0 
+7f7fe0323000-7f7fe4000000 ---p 00000000 00:00 0 
+7f7fe4000000-7f7fe4021000 rw-p 00000000 00:00 0 
+7f7fe4021000-7f7fe8000000 ---p 00000000 00:00 0 
+7f7fe8000000-7f7fe8021000 rw-p 00000000 00:00 0 
+7f7fe8021000-7f7fec000000 ---p 00000000 00:00 0 
+7f7fec000000-7f7fec021000 rw-p 00000000 00:00 0 
+7f7fec021000-7f7ff0000000 ---p 00000000 00:00 0 
+7f7ff0000000-7f7ff0021000 rw-p 00000000 00:00 0 
+7f7ff0021000-7f7ff4000000 ---p 00000000 00:00 0 
+7f7ff4000000-7f7ff4021000 rw-p 00000000 00:00 0 
+7f7ff4021000-7f7ff8000000 ---p 00000000 00:00 0 
+7f7ff88ed000-7f7ff8905000 r-xp 00000000 08:01 2489                       /lib/x86_64-linux-gnu/libresolv-2.15.so
+7f7ff8905000-7f7ff8b05000 ---p 00018000 08:01 2489                       /lib/x86_64-linux-gnu/libresolv-2.15.so
+7f7ff8b05000-7f7ff8b06000 r--p 00018000 08:01 2489                       /lib/x86_64-linux-gnu/libresolv-2.15.so
+7f7ff8b06000-7f7ff8b07000 rw-p 00019000 08:01 2489                       /lib/x86_64-linux-gnu/libresolv-2.15.so
+7f7ff8b07000-7f7ff8b09000 rw-p 00000000 00:00 0 
+7f7ff8b09000-7f7ff8b10000 r-xp 00000000 08:01 2494                       /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7f7ff8b10000-7f7ff8d0f000 ---p 00007000 08:01 2494                       /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7f7ff8d0f000-7f7ff8d10000 r--p 00006000 08:01 2494                       /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7f7ff8d10000-7f7ff8d11000 rw-p 00007000 08:01 2494                       /lib/x86_64-linux-gnu/libnss_dns-2.15.so
+7f7ff8d11000-7f7ffc000000 rw-p 00000000 00:00 0 
+7f7ffc000000-7f7ffc021000 rw-p 00000000 00:00 0 
+7f7ffc021000-7f8000000000 ---p 00000000 00:00 0 
+7f8000011000-7f8000027000 r-xp 00000000 08:01 528102                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libnet.so
+7f8000027000-7f8000226000 ---p 00016000 08:01 528102                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libnet.so
+7f8000226000-7f8000227000 r--p 00015000 08:01 528102                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libnet.so
+7f8000227000-7f8000228000 rw-p 00016000 08:01 528102                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libnet.so
+7f8000228000-7f800022f000 r-xp 00000000 08:01 528108                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libmanagement.so
+7f800022f000-7f800042e000 ---p 00007000 08:01 528108                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libmanagement.so
+7f800042e000-7f800042f000 r--p 00006000 08:01 528108                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libmanagement.so
+7f800042f000-7f8000430000 rw-p 00007000 08:01 528108                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libmanagement.so
+7f8000430000-7f8000437000 r--s 00054000 08:01 528050                     /usr/lib/jvm/java-6-openjdk-common/jre/lib/resources.jar
+7f8000494000-7f8000495000 rw-p 00000000 00:00 0 
+7f8000495000-7f8000498000 r--s 00010000 08:01 1052184                    /home/travis/.m2/repository/org/apache/maven/surefire/surefire-junit4/2.19.1/surefire-junit4-2.19.1.jar
+7f8000498000-7f800049a000 r--s 0000e000 08:01 1053470                    /home/travis/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar
+7f800049a000-7f80004a2000 r--s 00084000 08:01 1053469                    /home/travis/.m2/repository/com/sun/mail/javax.mail/1.5.2/javax.mail-1.5.2.jar
+7f80004a2000-7f80004a8000 r--s 00035000 08:01 1053466                    /home/travis/.m2/repository/com/icegreen/greenmail/1.4.1/greenmail-1.4.1.jar
+7f80004a8000-7f80004b6000 r--s 0007c000 08:01 1053464                    /home/travis/.m2/repository/org/springframework/spring-test/4.2.9.RELEASE/spring-test-4.2.9.RELEASE.jar
+7f80004b6000-7f80004c4000 r--s 00194000 08:01 924918                     /home/travis/.m2/repository/com/h2database/h2/1.4.190/h2-1.4.190.jar
+7f80004c4000-7f80004c6000 r--s 00009000 08:01 1048883                    /home/travis/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
+7f80004c6000-7f80004cc000 r--s 00036000 08:01 1048881                    /home/travis/.m2/repository/junit/junit/4.11/junit-4.11.jar
+7f80004cc000-7f80004ce000 r--s 00004000 08:01 925532                     /home/travis/build/apache/syncope/client/target/syncope-client-1.2.11-SNAPSHOT.jar
+7f80004ce000-7f80004d0000 r--s 0000f000 08:01 1053461                    /home/travis/.m2/repository/org/webjars/highlightjs/8.0-3/highlightjs-8.0-3.jar
+7f80004d0000-7f80004db000 r--s 0008d000 08:01 1053459                    /home/travis/.m2/repository/org/webjars/jquery-ui/1.10.4/jquery-ui-1.10.4.jar
+7f80004db000-7f80004dc000 r--s 0002b000 08:01 1053457                    /home/travis/.m2/repository/org/webjars/jquery/1.11.1/jquery-1.11.1.jar
+7f80004dc000-7f80004e0000 r--s 0001c000 08:01 1053456                    /home/travis/.m2/repository/org/jasypt/jasypt/1.9.2/jasypt-1.9.2.jar
+7f80004e0000-7f80004e2000 r--s 00002000 08:01 1053316                    /home/travis/.m2/repository/net/tirasa/connid/slf4j-logging/1.4.1.0/slf4j-logging-1.4.1.0.jar
+7f80004e2000-7f80004eb000 r--s 00050000 08:01 1050937                    /home/travis/.m2/repository/net/tirasa/connid/connector-framework-internal/1.4.1.0/connector-framework-internal-1.4.1.0.jar
+7f80004eb000-7f80004f2000 r--s 0002f000 08:01 1050884                    /home/travis/.m2/repository/net/tirasa/connid/connector-framework/1.4.1.0/connector-framework-1.4.1.0.jar
+7f80004f2000-7f80004f4000 r--s 00003000 08:01 925047                     /home/travis/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.23/jcl-over-slf4j-1.7.23.jar
+7f80004f4000-7f80004f6000 r--s 0000e000 08:01 1050950                    /home/travis/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar
+7f80004f6000-7f80004f8000 r--s 00004000 08:01 1053452                    /home/travis/.m2/repository/org/apache/logging/log4j/log4j-slf4j-impl/2.3/log4j-slf4j-impl-2.3.jar
+7f80004f8000-7f80004fb000 r--s 00012000 08:01 1053451                    /home/travis/.m2/repository/com/lmax/disruptor/3.3.5/disruptor-3.3.5.jar
+7f80004fb000-7f800050c000 r--s 000b9000 08:01 1053448                    /home/travis/.m2/repository/org/apache/logging/log4j/log4j-core/2.3/log4j-core-2.3.jar
+7f800050c000-7f800050e000 r--s 00009000 08:01 1052632                    /home/travis/.m2/repository/org/slf4j/slf4j-api/1.7.23/slf4j-api-1.7.23.jar
+7f800050e000-7f8000519000 r--s 000e5000 08:01 1052194                    /home/travis/build/apache/syncope/common/target/syncope-common-1.2.11-SNAPSHOT-javadoc.jar
+7f8000519000-7f800051d000 r--s 0001e000 08:01 1051783                    /home/travis/.m2/repository/org/apache/logging/log4j/log4j-api/2.3/log4j-api-2.3.jar
+7f800051d000-7f8000522000 r--s 0002e000 08:01 1052008                    /home/travis/build/apache/syncope/common/target/syncope-common-1.2.11-SNAPSHOT.jar
+7f8000522000-7f800058e000 r--s 00689000 08:01 1050939                    /home/travis/.m2/repository/org/codehaus/groovy/groovy-all/2.3.10/groovy-all-2.3.10.jar
+7f800058e000-7f8000590000 r--s 0000d000 08:01 1053446                    /home/travis/.m2/repository/com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar
+7f8000590000-7f8000592000 r--s 0000c000 08:01 1053444                    /home/travis/.m2/repository/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar
+7f8000592000-7f8000596000 r--s 0000c000 08:01 1051756                    /home/travis/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar
+7f8000596000-7f80005a4000 r--s 0008d000 08:01 1053442                    /home/travis/.m2/repository/org/hibernate/hibernate-validator/5.1.3.Final/hibernate-validator-5.1.3.Final.jar
+7f80005a4000-7f80005a7000 r--s 00015000 08:01 1053441                    /home/travis/.m2/repository/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar
+7f80005a7000-7f80005aa000 r--s 00025000 08:01 1053436                    /home/travis/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar
+7f80005aa000-7f80005b6000 r--s 000bf000 08:01 1053435                    /home/travis/.m2/repository/org/apache/openjpa/openjpa-persistence/2.3.0/openjpa-persistence-2.3.0.jar
+7f80005b6000-7f80005ba000 r--s 00022000 08:01 1053434                    /home/travis/.m2/repository/org/apache/openjpa/openjpa-persistence-jdbc/2.3.0/openjpa-persistence-jdbc-2.3.0.jar
+7f80005ba000-7f80005bd000 r--s 0001d000 08:01 1053433                    /home/travis/.m2/repository/org/apache/xbean/xbean-asm4-shaded/3.14/xbean-asm4-shaded-3.14.jar
+7f80005bd000-7f80005be000 r--s 00003000 08:01 1053429                    /home/travis/.m2/repository/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1.1/geronimo-jta_1.1_spec-1.1.1.jar
+7f80005be000-7f80005c0000 r--s 00006000 08:01 1053427                    /home/travis/.m2/repository/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar
+7f80005c0000-7f80005c3000 r--s 00030000 08:01 1053424                    /home/travis/.m2/repository/net/sourceforge/serp/serp/1.14.1/serp-1.14.1.jar
+7f80005c3000-7f80005cc000 r--s 0006b000 08:01 1053423                    /home/travis/.m2/repository/org/apache/openjpa/openjpa-lib/2.3.0/openjpa-lib-2.3.0.jar
+7f80005cc000-7f80005de000 r--s 00153000 08:01 1053420                    /home/travis/.m2/repository/org/apache/openjpa/openjpa-kernel/2.3.0/openjpa-kernel-2.3.0.jar
+7f80005de000-7f80005ec000 r--s 00151000 08:01 1053419                    /home/travis/.m2/repository/org/apache/openjpa/openjpa-jdbc/2.3.0/openjpa-jdbc-2.3.0.jar
+7f80005ec000-7f80005f1000 r--s 00019000 08:01 1053418                    /home/travis/.m2/repository/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.1/geronimo-jpa_2.0_spec-1.1.jar
+7f80005f1000-7f80005fa000 r--s 0002d000 08:01 1053417                    /home/travis/.m2/repository/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar
+7f80005fa000-7f8000613000 r--s 00135000 08:01 1053412                    /home/travis/.m2/repository/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar
+7f8000613000-7f8000616000 r--s 00041000 08:01 1051250                    /home/travis/.m2/repository/xalan/serializer/2.7.1/serializer-2.7.1.jar
+7f8000616000-7f800063b000 r--s 002e3000 08:01 1051248                    /home/travis/.m2/repository/xalan/xalan/2.7.1/xalan-2.7.1.jar
+7f800063b000-7f800063d000 r--s 0000d000 08:01 1053411                    /home/travis/.m2/repository/org/apache/avalon/framework/avalon-framework-impl/4.3.1/avalon-framework-impl-4.3.1.jar
+7f800063d000-7f8000640000 r--s 00006000 08:01 1053410                    /home/travis/.m2/repository/org/apache/avalon/framework/avalon-framework-api/4.3.1/avalon-framework-api-4.3.1.jar
+7f8000640000-7f8000643000 r--s 00012000 08:01 925045                     /home/travis/.m2/repository/commons-io/commons-io/1.3.1/commons-io-1.3.1.jar
+7f8000643000-7f8000644000 r--s 00002000 08:01 1053409                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-ext/1.7/batik-ext-1.7.jar
+7f8000644000-7f8000646000 r--s 0000f000 08:01 1053404                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-extension/1.7/batik-extension-1.7.jar
+7f8000646000-7f800064b000 r--s 00030000 08:01 1053403                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-svggen/1.7/batik-svggen-1.7.jar
+7f800064b000-7f800064e000 r--s 0001b000 08:01 1053402                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-transcoder/1.7/batik-transcoder-1.7.jar
+7f800064e000-7f8000652000 r--s 00038000 08:01 1053399                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-gvt/1.7/batik-gvt-1.7.jar
+7f8000652000-7f800065a000 r--s 0005b000 08:01 1053397                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-awt-util/1.7/batik-awt-util-1.7.jar
+7f800065a000-7f800065b000 r--s 00007000 08:01 1053396                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-xml/1.7/batik-xml-1.7.jar
+7f800065b000-7f8000663000 r--s 00074000 08:01 1053394                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-js/1.7/batik-js-1.7.jar
+7f8000663000-7f8000665000 r--s 0000d000 08:01 1053391                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-script/1.7/batik-script-1.7.jar
+7f8000665000-7f800066f000 r--s 0007f000 08:01 1053388                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-bridge/1.7/batik-bridge-1.7.jar
+7f800066f000-7f8000674000 r--s 00010000 08:01 1053387                    /home/travis/.m2/repository/xml-apis/xml-apis-ext/1.3.04/xml-apis-ext-1.3.04.jar
+7f8000674000-7f8000677000 r--s 0001d000 08:01 1053386                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-util/1.7/batik-util-1.7.jar
+7f8000677000-7f8000679000 r--s 00010000 08:01 1053382                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-parser/1.7/batik-parser-1.7.jar
+7f8000679000-7f800067d000 r--s 00027000 08:01 1053381                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-dom/1.7/batik-dom-1.7.jar
+7f800067d000-7f8000684000 r--s 00045000 08:01 1053378                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-css/1.7/batik-css-1.7.jar
+7f8000684000-7f8000687000 r--s 00015000 08:01 1053376                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-anim/1.7/batik-anim-1.7.jar
+7f8000687000-7f8000694000 r--s 00086000 08:01 1053374                    /home/travis/.m2/repository/org/apache/xmlgraphics/batik-svg-dom/1.7/batik-svg-dom-1.7.jar
+7f8000694000-7f800069e000 r--s 00089000 08:01 1053373                    /home/travis/.m2/repository/org/apache/xmlgraphics/xmlgraphics-commons/1.5/xmlgraphics-commons-1.5.jar
+7f800069e000-7f80006d7000 r--s 00329000 08:01 1053370                    /home/travis/.m2/repository/org/apache/xmlgraphics/fop/1.1/fop-1.1.jar
+7f80006d7000-7f80006d9000 r--s 00009000 08:01 1053369                    /home/travis/.m2/repository/org/apache/cocoon/optional/cocoon-optional/3.0.0-alpha-3/cocoon-optional-3.0.0-alpha-3.jar
+7f80006d9000-7f80006db000 r--s 0000b000 08:01 1053368                    /home/travis/.m2/repository/org/apache/cocoon/cocoon-xml/2.0.2/cocoon-xml-2.0.2.jar
+7f80006db000-7f80006dd000 r--s 0000b000 08:01 1053367                    /home/travis/.m2/repository/org/apache/cocoon/pipeline/cocoon-pipeline/3.0.0-alpha-3/cocoon-pipeline-3.0.0-alpha-3.jar
+7f80006dd000-7f80006e0000 r--s 00019000 08:01 1053366                    /home/travis/.m2/repository/org/apache/cocoon/sax/cocoon-sax/3.0.0-alpha-3/cocoon-sax-3.0.0-alpha-3.jar
+7f80006e0000-7f80006ea000 r--s 00098000 08:01 1053360                    /home/travis/.m2/repository/org/quartz-scheduler/quartz/2.2.3/quartz-2.2.3.jar
+7f80006ea000-7f80006ec000 r--s 0000e000 08:01 923745                     /home/travis/.m2/repository/oro/oro/2.0.8/oro-2.0.8.jar
+7f80006ec000-7f80006f4000 r--s 00068000 08:01 1050185                    /home/travis/.m2/repository/dom4j/dom4j/1.1/dom4j-1.1.jar
+7f80006f4000-7f80006f7000 r--s 0001f000 08:01 1050179                    /home/travis/.m2/repository/commons-validator/commons-validator/1.3.1/commons-validator-1.3.1.jar
+7f80006f7000-7f80006f9000 r--s 00014000 08:01 1050177                    /home/travis/.m2/repository/commons-chain/commons-chain/1.1/commons-chain-1.1.jar
+7f80006f9000-7f80006fd000 r--s 00020000 08:01 1050176                    /home/travis/.m2/repository/commons-digester/commons-digester/1.8/commons-digester-1.8.jar
+7f80006fd000-7f8000702000 r--s 0002a000 08:01 1049325                    /home/travis/.m2/repository/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar
+7f8000702000-7f8000708000 r--s 0004f000 08:01 1050175                    /home/travis/.m2/repository/org/apache/velocity/velocity-tools/2.0/velocity-tools-2.0.jar
+7f8000708000-7f800070c000 r--s 0003c000 08:01 1049502                    /home/travis/.m2/repository/commons-lang/commons-lang/2.4/commons-lang-2.4.jar
+7f800070c000-7f800071a000 r--s 0007f000 08:01 1049501                    /home/travis/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar
+7f800071a000-7f8000722000 r--s 00066000 08:01 1049500                    /home/travis/.m2/repository/org/apache/velocity/velocity/1.7/velocity-1.7.jar
+7f8000722000-7f8000725000 r--s 0001c000 08:01 1053358                    /home/travis/.m2/repository/com/fasterxml/jackson/module/jackson-module-afterburner/2.4.6/jackson-module-afterburner-2.4.6.jar
+7f8000725000-7f8000726000 r--s 00007000 08:01 1052628                    /home/travis/.m2/repository/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.4.6/jackson-module-jaxb-annotations-2.4.6.jar
+7f8000726000-7f8000727000 r--s 00006000 08:01 1052626                    /home/travis/.m2/repository/com/fasterxml/jackson/jaxrs/jackson-jaxrs-base/2.4.6/jackson-jaxrs-base-2.4.6.jar
+7f8000727000-7f8000729000 r--s 00003000 08:01 1052630                    /home/travis/.m2/repository/com/fasterxml/jackson/jaxrs/jackson-jaxrs-json-provider/2.4.6/jackson-jaxrs-json-provider-2.4.6.jar
+7f8000729000-7f8000742000 r--s 001af000 08:01 1053357                    /home/travis/.m2/repository/org/aspectj/aspectjweaver/1.8.9/aspectjweaver-1.8.9.jar
+7f8000742000-7f8000749000 r--s 0005c000 08:01 1053354                    /home/travis/.m2/repository/org/springframework/security/spring-security-config/3.2.10.RELEASE/spring-security-config-3.2.10.RELEASE.jar
+7f8000749000-7f8000753000 r--s 0004b000 08:01 1053352                    /home/travis/.m2/repository/org/springframework/security/spring-security-web/3.2.10.RELEASE/spring-security-web-3.2.10.RELEASE.jar
+7f8000753000-7f8000755000 r--s 00000000 08:01 924547                     /home/travis/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar
+7f8000755000-7f8000761000 r--s 0004f000 08:01 1053351                    /home/travis/.m2/repository/org/springframework/security/spring-security-core/3.2.10.RELEASE/spring-security-core-3.2.10.RELEASE.jar
+7f8000761000-7f8000766000 r--s 0003c000 08:01 1050933                    /home/travis/.m2/repository/org/springframework/spring-expression/4.2.9.RELEASE/spring-expression-4.2.9.RELEASE.jar
+7f8000766000-7f8000768000 r--s 00013000 08:01 1053348                    /home/travis/.m2/repository/org/springframework/spring-oxm/4.2.9.RELEASE/spring-oxm-4.2.9.RELEASE.jar
+7f8000768000-7f8000779000 r--s 000ab000 08:01 1050927                    /home/travis/.m2/repository/org/springframework/spring-web/4.2.9.RELEASE/spring-web-4.2.9.RELEASE.jar
+7f8000779000-7f8000783000 r--s 00068000 08:01 1053347                    /home/travis/.m2/repository/org/springframework/spring-orm/4.2.9.RELEASE/spring-orm-4.2.9.RELEASE.jar
+7f8000783000-7f800078d000 r--s 0005e000 08:01 1050924                    /home/travis/.m2/repository/org/springframework/spring-jdbc/4.2.9.RELEASE/spring-jdbc-4.2.9.RELEASE.jar
+7f800078d000-7f8000794000 r--s 0003a000 08:01 1050925                    /home/travis/.m2/repository/org/springframework/spring-tx/4.2.9.RELEASE/spring-tx-4.2.9.RELEASE.jar
+7f8000794000-7f8000799000 r--s 00027000 08:01 1053346                    /home/travis/.m2/repository/org/springframework/spring-context-support/4.2.9.RELEASE/spring-context-support-4.2.9.RELEASE.jar
+7f8000799000-7f80007a2000 r--s 00052000 08:01 1050930                    /home/travis/.m2/repository/org/springframework/spring-aop/4.2.9.RELEASE/spring-aop-4.2.9.RELEASE.jar
+7f80007a2000-7f80007ba000 r--s 000f4000 08:01 1050931                    /home/travis/.m2/repository/org/springframework/spring-context/4.2.9.RELEASE/spring-context-4.2.9.RELEASE.jar
+7f80007ba000-7f80007c7000 r--s 000a6000 08:01 1050922                    /home/travis/.m2/repository/org/springframework/spring-beans/4.2.9.RELEASE/spring-beans-4.2.9.RELEASE.jar
+7f80007c7000-7f80007dd000 r--s 000f6000 08:01 1050919                    /home/travis/.m2/repository/org/springframework/spring-core/4.2.9.RELEASE/spring-core-4.2.9.RELEASE.jar
+7f80007dd000-7f80007e0000 r--s 00024000 08:01 1052624                    /home/travis/.m2/repository/org/apache/cxf/cxf-rt-rs-client/3.0.15/cxf-rt-rs-client-3.0.15.jar
+7f80007e0000-7f80007e2000 r--s 00015000 08:01 1051774                    /home/travis/.m2/repository/org/apache/cxf/cxf-rt-rs-service-description/3.0.15/cxf-rt-rs-service-description-3.0.15.jar
+7f80007e2000-7f80007e6000 r--s 0001e000 08:01 1051772                    /home/travis/.m2/repository/org/apache/cxf/cxf-rt-rs-extension-search/3.0.15/cxf-rt-rs-extension-search-3.0.15.jar
+7f80007e6000-7f80007eb000 r--s 00051000 08:01 1051771                    /home/travis/.m2/repository/org/apache/cxf/cxf-rt-transports-http/3.0.15/cxf-rt-transports-http-3.0.15.jar
+7f80007eb000-7f80007ed000 r--s 00005000 08:01 924974                     /home/travis/.m2/repository/javax/annotation/javax.annotation-api/1.2/javax.annotation-api-1.2.jar
+7f80007ed000-7f80007f1000 r--s 00018000 08:01 1051762                    /home/travis/.m2/repository/javax/ws/rs/javax.ws.rs-api/2.0/javax.ws.rs-api-2.0.jar
+7f80007f1000-7f80007f6000 r--s 00026000 08:01 1051768                    /home/travis/.m2/repository/org/apache/ws/xmlschema/xmlschema-core/2.2.2/xmlschema-core-2.2.2.jar
+7f80007f6000-7f80007fa000 r--s 00024000 08:01 1051767                    /home/travis/.m2/repository/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.jar
+7f80007fa000-7f8000800000 r--s 00071000 08:01 1051764                    /home/travis/.m2/repository/org/codehaus/woodstox/woodstox-core-asl/4.4.1/woodstox-core-asl-4.4.1.jar
+7f8000800000-7f8000817000 r--s 00131000 08:01 1051759                    /home/travis/.m2/repository/org/apache/cxf/cxf-core/3.0.15/cxf-core-3.0.15.jar
+7f8000817000-7f800081f000 r--s 0008d000 08:01 1051761                    /home/travis/.m2/repository/org/apache/cxf/cxf-rt-frontend-jaxrs/3.0.15/cxf-rt-frontend-jaxrs-3.0.15.jar
+7f800081f000-7f8000830000 r--s 000f7000 08:01 1051777                    /home/travis/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.4.6/jackson-databind-2.4.6.jar
+7f8000830000-7f8000833000 ---p 00000000 00:00 0 
+7f8000833000-7f8000931000 rw-p 00000000 00:00 0                          [stack:5444]
+7f8000931000-7f8000934000 ---p 00000000 00:00 0 
+7f8000934000-7f8000a32000 rw-p 00000000 00:00 0                          [stack:5443]
+7f8000a32000-7f8000a33000 ---p 00000000 00:00 0 
+7f8000a33000-7f8000b33000 rw-p 00000000 00:00 0                          [stack:5442]
+7f8000b33000-7f8000b36000 ---p 00000000 00:00 0 
+7f8000b36000-7f8000c34000 rw-p 00000000 00:00 0                          [stack:5441]
+7f8000c34000-7f8000c37000 ---p 00000000 00:00 0 
+7f8000c37000-7f8000d35000 rw-p 00000000 00:00 0                          [stack:5440]
+7f8000d35000-7f8001000000 r--p 00000000 08:01 3190                       /usr/lib/locale/locale-archive
+7f8001000000-7f8001270000 rwxp 00000000 00:00 0 
+7f8001270000-7f8004857000 rw-p 00000000 00:00 0 
+7f8004857000-7f8008000000 ---p 00000000 00:00 0 
+7f8008000000-7f8008005000 r--s 00054000 08:01 1053344                    /home/travis/.m2/repository/math/geom2d/javaGeom/0.11.1/javaGeom-0.11.1.jar
+7f8008005000-7f8008008000 r--s 00007000 08:01 1051778                    /home/travis/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.4.6/jackson-annotations-2.4.6.jar
+7f8008008000-7f800800c000 r--s 00034000 08:01 1051781                    /home/travis/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.4.6/jackson-core-2.4.6.jar
+7f800800c000-7f800800f000 r--s 00014000 08:01 1053340                    /home/travis/.m2/repository/org/activiti/activiti-bpmn-model/5.16.6/activiti-bpmn-model-5.16.6.jar
+7f800800f000-7f8008011000 r--s 00011000 08:01 1053339                    /home/travis/.m2/repository/org/activiti/activiti-json-converter/5.16.6/activiti-json-converter-5.16.6.jar
+7f8008011000-7f8008013000 r--s 00007000 08:01 1053337                    /home/travis/.m2/repository/org/activiti/activiti-spring/5.16.6/activiti-spring-5.16.6.jar
+7f8008013000-7f8008023000 r--s 0007c000 08:01 1053336                    /home/travis/.m2/repository/joda-time/joda-time/2.1/joda-time-2.1.jar
+7f8008023000-7f8008030000 r--s 000a2000 08:01 1053334                    /home/travis/.m2/repository/org/mybatis/mybatis/3.2.5/mybatis-3.2.5.jar
+7f8008030000-7f8008037000 r--s 0005e000 08:01 924976                     /home/travis/.m2/repository/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar
+7f8008037000-7f8008039000 r--s 0000f000 08:01 1053329                    /home/travis/.m2/repository/org/activiti/activiti-image-generator/5.16.6/activiti-image-generator-5.16.6.jar
+7f8008039000-7f800803b000 r--s 0000c000 08:01 1053328                    /home/travis/.m2/repository/org/activiti/activiti-process-validation/5.16.6/activiti-process-validation-5.16.6.jar
+7f800803b000-7f800803f000 r--s 00028000 08:01 1053326                    /home/travis/.m2/repository/org/activiti/activiti-bpmn-converter/5.16.6/activiti-bpmn-converter-5.16.6.jar
+7f800803f000-7f8008063000 r--s 0016d000 08:01 1053319                    /home/travis/.m2/repository/org/activiti/activiti-engine/5.16.6/activiti-engine-5.16.6.jar
+7f8008063000-7f8008069000 r--s 0003c000 08:01 925043                     /home/travis/.m2/repository/org/apache/commons/commons-jexl/2.1.1/commons-jexl-2.1.1.jar
+7f8008069000-7f800806e000 r--s 00037000 08:01 1053317                    /home/travis/.m2/repository/org/apache/geronimo/javamail/geronimo-javamail_1.4_provider/1.8.3/geronimo-javamail_1.4_provider-1.8.3.jar
+7f800806e000-7f8008073000 r--s 00032000 08:01 1053320                    /home/travis/.m2/repository/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.7.1/geronimo-javamail_1.4_spec-1.7.1.jar
+7f8008073000-7f8008075000 r--s 0000d000 08:01 1053315                    /home/travis/.m2/repository/javax/el/javax.el-api/3.0-b02/javax.el-api-3.0-b02.jar
+7f8008075000-7f800807f000 r--s 0005c000 08:01 1053318                    /home/travis/.m2/repository/javax/servlet/jstl/1.2/jstl-1.2.jar
+7f800807f000-7f8008082000 r--s 0000a000 08:01 1053312                    /home/travis/.m2/repository/javax/servlet/jsp/jsp-api/2.2/jsp-api-2.2.jar
+7f8008082000-7f8008085000 r--s 00012000 08:01 1050883                    /home/travis/.m2/repository/javax/servlet/javax.servlet-api/3.0.1/javax.servlet-api-3.0.1.jar
+7f8008085000-7f800808a000 r--s 0002b000 08:01 1051099                    /home/travis/.m2/repository/org/apache/maven/surefire/surefire-api/2.19.1/surefire-api-2.19.1.jar
+7f800808a000-7f800808e000 r--s 00042000 08:01 528047                     /usr/lib/jvm/java-6-openjdk-common/jre/lib/jsse.jar
+7f800808e000-7f8008090000 r--s 0000a000 08:01 1051096                    /home/travis/.m2/repository/org/apache/maven/surefire/surefire-booter/2.19.1/surefire-booter-2.19.1.jar
+7f8008090000-7f8008093000 r--s 0003a000 08:01 527969                     /usr/lib/jvm/java-6-openjdk-common/jre/lib/ext/sunpkcs11.jar
+7f8008093000-7f8008097000 r--s 00031000 08:01 527968                     /usr/lib/jvm/java-6-openjdk-common/jre/lib/ext/sunjce_provider.jar
+7f8008097000-7f800809a000 r--s 00078000 08:01 527970                     /usr/lib/jvm/java-6-openjdk-common/jre/lib/ext/localedata.jar
+7f800809a000-7f800809d000 ---p 00000000 00:00 0 
+7f800809d000-7f800819b000 rw-p 00000000 00:00 0                          [stack:5439]
+7f800819b000-7f800819e000 ---p 00000000 00:00 0 
+7f800819e000-7f800829c000 rw-p 00000000 00:00 0                          [stack:5438]
+7f800829c000-7f800829f000 ---p 00000000 00:00 0 
+7f800829f000-7f800839d000 rw-p 00000000 00:00 0                          [stack:5437]
+7f800839d000-7f80083a0000 ---p 00000000 00:00 0 
+7f80083a0000-7f800849e000 rw-p 00000000 00:00 0                          [stack:5436]
+7f800849e000-7f800849f000 ---p 00000000 00:00 0 
+7f800849f000-7f8008f3f000 rw-p 00000000 00:00 0                          [stack:5435]
+7f8008f3f000-7f80090da000 r--s 01a69000 08:01 528120                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/rt.jar
+7f80090da000-7f8009cda000 rw-p 00000000 00:00 0 
+7f8009cda000-7f8009cdb000 ---p 00000000 00:00 0 
+7f8009cdb000-7f8009ddb000 rw-p 00000000 00:00 0                          [stack:5434]
+7f8009ddb000-7f8009ddc000 ---p 00000000 00:00 0 
+7f8009ddc000-7f8009f5c000 rw-p 00000000 00:00 0                          [stack:5433]
+7f8009f5c000-7f8009fdc000 rw-p 00000000 00:00 0 
+7f8009fdc000-7f800a087000 rw-p 00000000 00:00 0 
+7f800a087000-7f800a132000 rw-p 00000000 00:00 0 
+7f800a132000-7f800a1b2000 rw-p 00000000 00:00 0 
+7f800a1b2000-7f800a232000 rw-p 00000000 00:00 0 
+7f800a232000-7f800a2dd000 rw-p 00000000 00:00 0 
+7f800a2dd000-7f800a387000 rw-p 00000000 00:00 0 
+7f800a387000-7f800a3dd000 rw-p 00000000 00:00 0 
+7f800a3dd000-7f800a432000 rw-p 00000000 00:00 0 
+7f800a432000-7f800a433000 rw-p 00000000 00:00 0 
+7f800a433000-7f800a43a000 r-xp 00000000 08:01 528087                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libzip.so
+7f800a43a000-7f800a63a000 ---p 00007000 08:01 528087                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libzip.so
+7f800a63a000-7f800a63b000 r--p 00007000 08:01 528087                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libzip.so
+7f800a63b000-7f800a63c000 rw-p 00008000 08:01 528087                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libzip.so
+7f800a63c000-7f800a647000 r-xp 00000000 08:01 2394                       /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7f800a647000-7f800a846000 ---p 0000b000 08:01 2394                       /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7f800a846000-7f800a847000 r--p 0000a000 08:01 2394                       /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7f800a847000-7f800a848000 rw-p 0000b000 08:01 2394                       /lib/x86_64-linux-gnu/libnss_files-2.15.so
+7f800a848000-7f800a852000 r-xp 00000000 08:01 2397                       /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7f800a852000-7f800aa52000 ---p 0000a000 08:01 2397                       /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7f800aa52000-7f800aa53000 r--p 0000a000 08:01 2397                       /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7f800aa53000-7f800aa54000 rw-p 0000b000 08:01 2397                       /lib/x86_64-linux-gnu/libnss_nis-2.15.so
+7f800aa54000-7f800aa6b000 r-xp 00000000 08:01 2548                       /lib/x86_64-linux-gnu/libnsl-2.15.so
+7f800aa6b000-7f800ac6a000 ---p 00017000 08:01 2548                       /lib/x86_64-linux-gnu/libnsl-2.15.so
+7f800ac6a000-7f800ac6b000 r--p 00016000 08:01 2548                       /lib/x86_64-linux-gnu/libnsl-2.15.so
+7f800ac6b000-7f800ac6c000 rw-p 00017000 08:01 2548                       /lib/x86_64-linux-gnu/libnsl-2.15.so
+7f800ac6c000-7f800ac6e000 rw-p 00000000 00:00 0 
+7f800ac6e000-7f800ac76000 r-xp 00000000 08:01 2462                       /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7f800ac76000-7f800ae75000 ---p 00008000 08:01 2462                       /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7f800ae75000-7f800ae76000 r--p 00007000 08:01 2462                       /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7f800ae76000-7f800ae77000 rw-p 00008000 08:01 2462                       /lib/x86_64-linux-gnu/libnss_compat-2.15.so
+7f800ae77000-7f800aea4000 r-xp 00000000 08:01 528113                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libjava.so
+7f800aea4000-7f800b0a3000 ---p 0002d000 08:01 528113                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libjava.so
+7f800b0a3000-7f800b0a4000 r--p 0002c000 08:01 528113                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libjava.so
+7f800b0a4000-7f800b0a7000 rw-p 0002d000 08:01 528113                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libjava.so
+7f800b0a7000-7f800b0b5000 r-xp 00000000 08:01 528093                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libverify.so
+7f800b0b5000-7f800b2b4000 ---p 0000e000 08:01 528093                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libverify.so
+7f800b2b4000-7f800b2b6000 r--p 0000d000 08:01 528093                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libverify.so
+7f800b2b6000-7f800b2b7000 rw-p 0000f000 08:01 528093                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/libverify.so
+7f800b2b7000-7f800b2be000 r-xp 00000000 08:01 2461                       /lib/x86_64-linux-gnu/librt-2.15.so
+7f800b2be000-7f800b4bd000 ---p 00007000 08:01 2461                       /lib/x86_64-linux-gnu/librt-2.15.so
+7f800b4bd000-7f800b4be000 r--p 00006000 08:01 2461                       /lib/x86_64-linux-gnu/librt-2.15.so
+7f800b4be000-7f800b4bf000 rw-p 00007000 08:01 2461                       /lib/x86_64-linux-gnu/librt-2.15.so
+7f800b4bf000-7f800b4d4000 r-xp 00000000 08:01 2518                       /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f800b4d4000-7f800b6d3000 ---p 00015000 08:01 2518                       /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f800b6d3000-7f800b6d4000 r--p 00014000 08:01 2518                       /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f800b6d4000-7f800b6d5000 rw-p 00015000 08:01 2518                       /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f800b6d5000-7f800b7d0000 r-xp 00000000 08:01 2384                       /lib/x86_64-linux-gnu/libm-2.15.so
+7f800b7d0000-7f800b9cf000 ---p 000fb000 08:01 2384                       /lib/x86_64-linux-gnu/libm-2.15.so
+7f800b9cf000-7f800b9d0000 r--p 000fa000 08:01 2384                       /lib/x86_64-linux-gnu/libm-2.15.so
+7f800b9d0000-7f800b9d1000 rw-p 000fb000 08:01 2384                       /lib/x86_64-linux-gnu/libm-2.15.so
+7f800b9d1000-7f800bab3000 r-xp 00000000 08:01 5436                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.16
+7f800bab3000-7f800bcb2000 ---p 000e2000 08:01 5436                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.16
+7f800bcb2000-7f800bcba000 r--p 000e1000 08:01 5436                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.16
+7f800bcba000-7f800bcbc000 rw-p 000e9000 08:01 5436                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.16
+7f800bcbc000-7f800bcd1000 rw-p 00000000 00:00 0 
+7f800bcd1000-7f800c6bc000 r-xp 00000000 08:01 528105                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libjvm.so
+7f800c6bc000-7f800c8bb000 ---p 009eb000 08:01 528105                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libjvm.so
+7f800c8bb000-7f800c93a000 r--p 009ea000 08:01 528105                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libjvm.so
+7f800c93a000-7f800c95d000 rw-p 00a69000 08:01 528105                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server/libjvm.so
+7f800c95d000-7f800c989000 rw-p 00000000 00:00 0 
+7f800c989000-7f800c99f000 r-xp 00000000 08:01 2468                       /lib/x86_64-linux-gnu/libz.so.1.2.3.4
+7f800c99f000-7f800cb9e000 ---p 00016000 08:01 2468                       /lib/x86_64-linux-gnu/libz.so.1.2.3.4
+7f800cb9e000-7f800cb9f000 r--p 00015000 08:01 2468                       /lib/x86_64-linux-gnu/libz.so.1.2.3.4
+7f800cb9f000-7f800cba0000 rw-p 00016000 08:01 2468                       /lib/x86_64-linux-gnu/libz.so.1.2.3.4
+7f800cba0000-7f800cd57000 r-xp 00000000 08:01 2533                       /lib/x86_64-linux-gnu/libc-2.15.so
+7f800cd57000-7f800cf56000 ---p 001b7000 08:01 2533                       /lib/x86_64-linux-gnu/libc-2.15.so
+7f800cf56000-7f800cf5a000 r--p 001b6000 08:01 2533                       /lib/x86_64-linux-gnu/libc-2.15.so
+7f800cf5a000-7f800cf5c000 rw-p 001ba000 08:01 2533                       /lib/x86_64-linux-gnu/libc-2.15.so
+7f800cf5c000-7f800cf61000 rw-p 00000000 00:00 0 
+7f800cf61000-7f800cf63000 r-xp 00000000 08:01 2501                       /lib/x86_64-linux-gnu/libdl-2.15.so
+7f800cf63000-7f800d163000 ---p 00002000 08:01 2501                       /lib/x86_64-linux-gnu/libdl-2.15.so
+7f800d163000-7f800d164000 r--p 00002000 08:01 2501                       /lib/x86_64-linux-gnu/libdl-2.15.so
+7f800d164000-7f800d165000 rw-p 00003000 08:01 2501                       /lib/x86_64-linux-gnu/libdl-2.15.so
+7f800d165000-7f800d169000 r-xp 00000000 08:01 528096                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/jli/libjli.so
+7f800d169000-7f800d368000 ---p 00004000 08:01 528096                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/jli/libjli.so
+7f800d368000-7f800d369000 r--p 00003000 08:01 528096                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/jli/libjli.so
+7f800d369000-7f800d36a000 rw-p 00004000 08:01 528096                     /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/jli/libjli.so
+7f800d36a000-7f800d382000 r-xp 00000000 08:01 2449                       /lib/x86_64-linux-gnu/libpthread-2.15.so
+7f800d382000-7f800d581000 ---p 00018000 08:01 2449                       /lib/x86_64-linux-gnu/libpthread-2.15.so
+7f800d581000-7f800d582000 r--p 00017000 08:01 2449                       /lib/x86_64-linux-gnu/libpthread-2.15.so
+7f800d582000-7f800d583000 rw-p 00018000 08:01 2449                       /lib/x86_64-linux-gnu/libpthread-2.15.so
+7f800d583000-7f800d587000 rw-p 00000000 00:00 0 
+7f800d587000-7f800d5a9000 r-xp 00000000 08:01 2465                       /lib/x86_64-linux-gnu/ld-2.15.so
+7f800d5a9000-7f800d5aa000 r--s 00007000 08:01 1053330                    /home/travis/.m2/repository/org/apache/commons/commons-email/1.2/commons-email-1.2.jar
+7f800d5aa000-7f800d5dc000 rw-p 00000000 00:00 0 
+7f800d5dc000-7f800d692000 rw-p 00000000 00:00 0 
+7f800d692000-7f800d695000 ---p 00000000 00:00 0 
+7f800d695000-7f800d798000 rw-p 00000000 00:00 0                          [stack:5432]
+7f800d798000-7f800d799000 r--s 00003000 08:01 1054052                    /home/travis/build/apache/syncope/core/target/surefire/surefirebooter6327339243034981293.jar
+7f800d799000-7f800d79a000 r--s 00007000 08:01 29214                      /usr/share/java/java-atk-wrapper.jar
+7f800d79a000-7f800d79b000 r--s 00002000 08:01 527966                     /usr/lib/jvm/java-6-openjdk-common/jre/lib/ext/dnsns.jar
+7f800d79b000-7f800d79d000 r--s 0000f000 08:01 527967                     /usr/lib/jvm/java-6-openjdk-common/jre/lib/ext/pulse-java.jar
+7f800d79d000-7f800d7a5000 rw-s 00000000 08:01 925100                     /tmp/hsperfdata_travis/5428
+7f800d7a5000-7f800d7a6000 rw-p 00000000 00:00 0 
+7f800d7a6000-7f800d7a7000 r--p 00000000 00:00 0 
+7f800d7a7000-7f800d7a9000 rw-p 00000000 00:00 0 
+7f800d7a9000-7f800d7aa000 r--p 00022000 08:01 2465                       /lib/x86_64-linux-gnu/ld-2.15.so
+7f800d7aa000-7f800d7ac000 rw-p 00023000 08:01 2465                       /lib/x86_64-linux-gnu/ld-2.15.so
+7fffa2d95000-7fffa2dcb000 rw-p 00000000 00:00 0                          [stack]
+7fffa2df1000-7fffa2df3000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+Aborted (core dumped)
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.19.1:test (default-test) on project syncope-core: Execution default-test of goal org.apache.maven.plugins:maven-surefire-plugin:2.19.1:test failed: The forked VM terminated without properly saying goodbye. VM crash or System.exit called?
+[ERROR] Command was /bin/sh -c cd /home/travis/build/apache/syncope/core && /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java -Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -jar /home/travis/build/apache/syncope/core/target/surefire/surefirebooter6327339243034981293.jar /home/travis/build/apache/syncope/core/target/surefire/surefire7279292468262236635tmp /home/travis/build/apache/syncope/core/target/surefire/surefire_06331731086823078825tmp
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <goals> -rf :syncope-core
+
+travis_time:end:1c188c29:start=1505904589934010555,finish=1505904669679875683,duration=79745865128
+[0K
+[31;1mThe command "mvn --show-version --quiet clean install -Dinvoker.streamLogs=true" exited with 1.[0m
+travis_fold:start:cache.2
+[0Kstore build cache
+travis_time:start:0c2588ec
+[0K
+travis_time:end:0c2588ec:start=1505904669684518491,finish=1505904669688254298,duration=3735807
+[0Ktravis_time:start:1675c48a
+[0K[32;1mchanges detected, packing new archive[0m
+.
+.
+.
+.
+[32;1muploading archive[0m
+
+travis_time:end:1675c48a:start=1505904669692476263,finish=1505904706422760305,duration=36730284042
+[0Ktravis_fold:end:cache.2
+[0K
+Done. Your build exited with 1.
+

@@ -1,0 +1,1231 @@
+travis_fold:start:worker_info
+[0K[33;1mWorker information[0m
+hostname: 6070ac2c-9e1c-4aa9-a2a6-4db0121cf173@1.production-1-worker-org-b-7-gce
+version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
+instance: testing-gce-78324eb1-9857-4516-b0b5-563e8b32a088:travis-ci-garnet-trusty-1505154324 (via amqp)
+startup: 21.770397172s
+travis_fold:end:worker_info
+[0Ktravis_fold:start:system_info
+[0K[33;1mBuild system information[0m
+Build language: java
+Build group: edge
+Build dist: trusty
+Build id: 277619532
+Job id: 277619533
+Runtime kernel version: 4.4.0-93-generic
+travis-build version: 125c5d1fa
+[34m[1mBuild image provisioning date and time[0m
+Mon Sep 11 18:53:43 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 14.04.5 LTS
+Release:	14.04
+Codename:	trusty
+[34m[1mCookbooks Version[0m
+fa6555e https://github.com/travis-ci/travis-cookbooks/tree/fa6555e
+[34m[1mgit version[0m
+git version 2.14.1
+[34m[1mbash version[0m
+GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
+[34m[1mgcc version[0m
+gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+Copyright (C) 2013 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mdocker version[0m
+Client:
+ Version:      17.06.1-ce
+ API version:  1.30
+ Go version:   go1.8.3
+ Git commit:   874a737
+ Built:        Thu Aug 17 22:53:09 2017
+ OS/Arch:      linux/amd64
+
+Server:
+ Version:      17.06.1-ce
+ API version:  1.30 (minimum version 1.12)
+ Go version:   go1.8.3
+ Git commit:   874a737
+ Built:        Thu Aug 17 22:51:03 2017
+ OS/Arch:      linux/amd64
+ Experimental: false
+[34m[1mclang version[0m
+clang version 3.9.0 (tags/RELEASE_390/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /usr/local/clang-3.9.0/bin
+[34m[1mjq version[0m
+jq-1.5
+[34m[1mbats version[0m
+Bats 0.4.0
+[34m[1mshellcheck version[0m
+0.4.6
+[34m[1mshfmt version[0m
+v2.0.0
+[34m[1mccache version[0m
+ccache version 3.1.9
+
+Copyright (C) 2002-2007 Andrew Tridgell
+Copyright (C) 2009-2011 Joel Rosdahl
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 3 of the License, or (at your option) any later
+version.
+[34m[1mcmake version[0m
+cmake version 3.2.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+[34m[1mheroku version[0m
+heroku-cli/6.14.20-737bba7 (linux-x64) node-v8.4.0
+[34m[1mimagemagick version[0m
+Version: ImageMagick 6.7.7-10 2017-07-31 Q16 http://www.imagemagick.org
+[34m[1mmd5deep version[0m
+4.2
+[34m[1mmercurial version[0m
+Mercurial Distributed SCM (version 4.2.2)
+(see https://mercurial-scm.org for more information)
+
+Copyright (C) 2005-2017 Matt Mackall and others
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+[34m[1mmysql version[0m
+mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
+[34m[1mopenssl version[0m
+OpenSSL 1.0.1f 6 Jan 2014
+[34m[1mpacker version[0m
+Packer v1.0.2
+
+Your version of Packer is out of date! The latest version
+is 1.0.4. You can update by downloading from www.packer.io
+[34m[1mpostgresql client version[0m
+psql (PostgreSQL) 9.6.5
+[34m[1mragel version[0m
+Ragel State Machine Compiler version 6.8 Feb 2013
+Copyright (c) 2001-2009 by Adrian Thurston
+[34m[1msubversion version[0m
+svn, version 1.8.8 (r1568071)
+   compiled Aug 10 2017, 17:20:39 on x86_64-pc-linux-gnu
+
+Copyright (C) 2013 The Apache Software Foundation.
+This software consists of contributions made by many people;
+see the NOTICE file for more information.
+Subversion is open source software, see http://subversion.apache.org/
+
+The following repository access (RA) modules are available:
+
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - with Cyrus SASL authentication
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
+  - using serf 1.3.3
+  - handles 'http' scheme
+  - handles 'https' scheme
+
+[34m[1msudo version[0m
+Sudo version 1.8.9p5
+Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
+Sudoers policy plugin version 1.8.9p5
+Sudoers file grammar version 43
+
+Sudoers path: /etc/sudoers
+Authentication methods: 'pam'
+Syslog facility if syslog is being used for logging: authpriv
+Syslog priority to use when user authenticates successfully: notice
+Syslog priority to use when user authenticates unsuccessfully: alert
+Send mail if the user is not in sudoers
+Use a separate timestamp for each user/tty combo
+Lecture user the first time they run sudo
+Root may run sudo
+Allow some information gathering to give useful error messages
+Require fully-qualified hostnames in the sudoers file
+Visudo will honor the EDITOR environment variable
+Set the LOGNAME and USER environment variables
+Length at which to wrap log file lines (0 for no wrap): 80
+Authentication timestamp timeout: 15.0 minutes
+Password prompt timeout: 0.0 minutes
+Number of tries to enter a password: 3
+Umask to use or 0777 to use user's: 022
+Path to mail program: /usr/sbin/sendmail
+Flags for mail program: -t
+Address to send mail to: root
+Subject line for mail messages: *** SECURITY information for %h ***
+Incorrect password message: Sorry, try again.
+Path to authentication timestamp dir: /var/lib/sudo
+Default password prompt: [sudo] password for %p: 
+Default user to run commands as: root
+Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+Path to the editor for use by visudo: /usr/bin/editor
+When to require a password for 'list' pseudocommand: any
+When to require a password for 'verify' pseudocommand: all
+File descriptors >= 3 will be closed before executing a command
+Environment variables to check for sanity:
+	TZ
+	TERM
+	LINGUAS
+	LC_*
+	LANGUAGE
+	LANG
+	COLORTERM
+Environment variables to remove:
+	RUBYOPT
+	RUBYLIB
+	PYTHONUSERBASE
+	PYTHONINSPECT
+	PYTHONPATH
+	PYTHONHOME
+	TMPPREFIX
+	ZDOTDIR
+	READNULLCMD
+	NULLCMD
+	FPATH
+	PERL5DB
+	PERL5OPT
+	PERL5LIB
+	PERLLIB
+	PERLIO_DEBUG 
+	JAVA_TOOL_OPTIONS
+	SHELLOPTS
+	GLOBIGNORE
+	PS4
+	BASH_ENV
+	ENV
+	TERMCAP
+	TERMPATH
+	TERMINFO_DIRS
+	TERMINFO
+	_RLD*
+	LD_*
+	PATH_LOCALE
+	NLSPATH
+	HOSTALIASES
+	RES_OPTIONS
+	LOCALDOMAIN
+	CDPATH
+	IFS
+Environment variables to preserve:
+	JAVA_HOME
+	TRAVIS
+	CI
+	DEBIAN_FRONTEND
+	XAUTHORIZATION
+	XAUTHORITY
+	PS2
+	PS1
+	PATH
+	LS_COLORS
+	KRB5CCNAME
+	HOSTNAME
+	HOME
+	DISPLAY
+	COLORS
+Locale to use while parsing sudoers: C
+Directory in which to store input/output logs: /var/log/sudo-io
+File in which to store the input/output log: %{seq}
+Add an entry to the utmp/utmpx file when allocating a pty
+PAM service name to use
+PAM service name to use for login shells
+Create a new PAM session for the command to run in
+Maximum I/O log sequence number: 0
+
+Local IP address and netmask pairs:
+	10.240.0.13/255.255.255.255
+	172.17.0.1/255.255.0.0
+
+Sudoers I/O plugin version 1.8.9p5
+[34m[1mgzip version[0m
+gzip 1.6
+Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
+Copyright (C) 1993 Jean-loup Gailly.
+This is free software.  You may redistribute copies of it under the terms of
+the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jean-loup Gailly.
+[34m[1mzip version[0m
+Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
+This is Zip 3.0 (July 5th 2008), by Info-ZIP.
+Currently maintained by E. Gordon.  Please send bug reports to
+the authors using the web page at www.info-zip.org; see README for details.
+
+Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
+as of above date; see http://www.info-zip.org/ for other sites.
+
+Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
+
+Zip special compilation options:
+	USE_EF_UT_TIME       (store Universal Time)
+	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
+	    bzip2 code and library copyright (c) Julian R Seward
+	    (See the bzip2 license for terms of use)
+	SYMLINK_SUPPORT      (symbolic links supported)
+	LARGE_FILE_SUPPORT   (can read and write large files on file system)
+	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
+	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
+	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
+	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
+	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
+
+Encryption notice:
+	The encryption code of this program is not copyrighted and is
+	put in the public domain.  It was originally written in Europe
+	and, to the best of our knowledge, can be freely distributed
+	in both source and object forms from any country, including
+	the USA under License Exception TSU of the U.S. Export
+	Administration Regulations (section 740.13(e)) of 6 June 2002.
+
+Zip environment options:
+             ZIP:  [none]
+          ZIPOPT:  [none]
+[34m[1mvim version[0m
+VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
+Included patches: 1-52
+Extra patches: 8.0.0056
+Modified by pkg-vim-maintainers@lists.alioth.debian.org
+Compiled by buildd@
+Huge version without GUI.  Features included (+) or not (-):
++acl             +farsi           +mouse_netterm   +syntax
++arabic          +file_in_path    +mouse_sgr       +tag_binary
++autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
+-balloon_eval    +float           +mouse_urxvt     -tag_any_white
+-browse          +folding         +mouse_xterm     -tcl
+++builtin_terms  -footer          +multi_byte      +terminfo
++byte_offset     +fork()          +multi_lang      +termresponse
++cindent         +gettext         -mzscheme        +textobjects
+-clientserver    -hangul_input    +netbeans_intg   +title
+-clipboard       +iconv           +path_extra      -toolbar
++cmdline_compl   +insert_expand   -perl            +user_commands
++cmdline_hist    +jumplist        +persistent_undo +vertsplit
++cmdline_info    +keymap          +postscript      +virtualedit
++comments        +langmap         +printer         +visual
++conceal         +libcall         +profile         +visualextra
++cryptv          +linebreak       +python          +viminfo
++cscope          +lispindent      -python3         +vreplace
++cursorbind      +listcmds        +quickfix        +wildignore
++cursorshape     +localmap        +reltime         +wildmenu
++dialog_con      -lua             +rightleft       +windows
++diff            +menu            -ruby            +writebackup
++digraphs        +mksession       +scrollbind      -X11
+-dnd             +modify_fname    +signs           -xfontset
+-ebcdic          +mouse           +smartindent     -xim
++emacs_tags      -mouseshape      -sniff           -xsmp
++eval            +mouse_dec       +startuptime     -xterm_clipboard
++ex_extra        +mouse_gpm       +statusline      -xterm_save
++extra_search    -mouse_jsbterm   -sun_workshop    -xpm
+   system vimrc file: "$VIM/vimrc"
+     user vimrc file: "$HOME/.vimrc"
+ 2nd user vimrc file: "~/.vim/vimrc"
+      user exrc file: "$HOME/.exrc"
+  fall-back for $VIM: "/usr/share/vim"
+Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
+Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
+[34m[1miptables version[0m
+iptables v1.4.21
+[34m[1mcurl version[0m
+curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
+[34m[1mwget version[0m
+GNU Wget 1.15 built on linux-gnu.
+[34m[1mrsync version[0m
+rsync  version 3.1.0  protocol version 31
+[34m[1mgimme version[0m
+v1.2.0
+[34m[1mnvm version[0m
+0.33.4
+[34m[1mperlbrew version[0m
+/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
+[34m[1mphpenv version[0m
+rbenv 1.1.1-6-g2d7cefe
+[34m[1mrvm version[0m
+rvm 1.29.3 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
+[34m[1mdefault ruby version[0m
+ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mElasticSearch version[0m
+5.5.0
+[34m[1mInstalled Firefox version[0m
+firefox 55.0.2
+[34m[1mMongoDB version[0m
+MongoDB 3.2.16
+[34m[1mPre-installed PostgreSQL versions[0m
+9.2.23
+9.3.19
+9.4.14
+9.5.9
+9.6.5
+[34m[1mRabbitMQ Version[0m
+3.6.12
+[34m[1mRedis version[0m
+redis-server 4.0.1
+[34m[1mriak version[0m
+2.2.3
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mant version[0m
+Apache Ant(TM) version 1.9.3 compiled on April 8 2014
+[34m[1mmvn version[0m
+Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
+Maven home: /usr/local/maven-3.5.0
+Java version: 1.8.0_144, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.4.0-81-generic", arch: "amd64", family: "unix"
+[34m[1mgradle version[0m
+
+------------------------------------------------------------
+Gradle 4.0.1
+------------------------------------------------------------
+
+Build time:   2017-07-07 14:02:41 UTC
+Revision:     38e5dc0f772daecca1d2681885d3d85414eb6826
+
+Groovy:       2.4.11
+Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+JVM:          1.8.0_144 (Oracle Corporation 25.144-b01)
+OS:           Linux 4.4.0-81-generic amd64
+
+[34m[1mlein version[0m
+WARNING: You're currently running as root; probably by accident.
+Press control-C to abort or Enter to continue as root.
+Set LEIN_ROOT to disable this warning.
+Leiningen 2.7.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mPre-installed Node.js versions[0m
+v4.8.4
+v6.11.3
+v8.4
+v8.4.0
+[34m[1mphpenv versions[0m
+  system
+  5.6
+* 5.6.31 (set by /home/travis/.phpenv/version)
+  7.0
+  7.0.22
+  hhvm
+  hhvm-stable
+[34m[1mcomposer --version[0m
+Composer version 1.4.2 2017-05-17 08:17:52
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.7
+ruby-2.3.4
+ruby-2.4.1
+travis_fold:end:system_info
+[0K
+W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+travis_fold:start:git.checkout
+[0Ktravis_time:start:0af9cd00
+[0K$ git clone --depth=50 --branch=master https://github.com/twitter/heron.git twitter/heron
+Cloning into 'twitter/heron'...
+remote: Counting objects: 4286, done.[K
+remote: Compressing objects:   0% (1/2984)   [K
+remote: Compressing objects:   1% (30/2984)   [K
+remote: Compressing objects:   2% (60/2984)   [K
+remote: Compressing objects:   3% (90/2984)   [K
+remote: Compressing objects:   4% (120/2984)   [K
+remote: Compressing objects:   5% (150/2984)   [K
+remote: Compressing objects:   6% (180/2984)   [K
+remote: Compressing objects:   7% (209/2984)   [K
+remote: Compressing objects:   8% (239/2984)   [K
+remote: Compressing objects:   9% (269/2984)   [K
+remote: Compressing objects:  10% (299/2984)   [K
+remote: Compressing objects:  11% (329/2984)   [K
+remote: Compressing objects:  12% (359/2984)   [K
+remote: Compressing objects:  13% (388/2984)   [K
+remote: Compressing objects:  14% (418/2984)   [K
+remote: Compressing objects:  15% (448/2984)   [K
+remote: Compressing objects:  16% (478/2984)   [K
+remote: Compressing objects:  17% (508/2984)   [K
+remote: Compressing objects:  18% (538/2984)   [K
+remote: Compressing objects:  19% (567/2984)   [K
+remote: Compressing objects:  20% (597/2984)   [K
+remote: Compressing objects:  21% (627/2984)   [K
+remote: Compressing objects:  22% (657/2984)   [K
+remote: Compressing objects:  23% (687/2984)   [K
+remote: Compressing objects:  24% (717/2984)   [K
+remote: Compressing objects:  25% (746/2984)   [K
+remote: Compressing objects:  26% (776/2984)   [K
+remote: Compressing objects:  27% (806/2984)   [K
+remote: Compressing objects:  28% (836/2984)   [K
+remote: Compressing objects:  29% (866/2984)   [K
+remote: Compressing objects:  30% (896/2984)   [K
+remote: Compressing objects:  31% (926/2984)   [K
+remote: Compressing objects:  32% (955/2984)   [K
+remote: Compressing objects:  33% (985/2984)   [K
+remote: Compressing objects:  34% (1015/2984)   [K
+remote: Compressing objects:  35% (1045/2984)   [K
+remote: Compressing objects:  36% (1075/2984)   [K
+remote: Compressing objects:  37% (1105/2984)   [K
+remote: Compressing objects:  38% (1134/2984)   [K
+remote: Compressing objects:  39% (1164/2984)   [K
+remote: Compressing objects:  40% (1194/2984)   [K
+remote: Compressing objects:  41% (1224/2984)   [K
+remote: Compressing objects:  42% (1254/2984)   [K
+remote: Compressing objects:  43% (1284/2984)   [K
+remote: Compressing objects:  44% (1313/2984)   [K
+remote: Compressing objects:  45% (1343/2984)   [K
+remote: Compressing objects:  46% (1373/2984)   [K
+remote: Compressing objects:  47% (1403/2984)   [K
+remote: Compressing objects:  48% (1433/2984)   [K
+remote: Compressing objects:  49% (1463/2984)   [K
+remote: Compressing objects:  50% (1492/2984)   [K
+remote: Compressing objects:  51% (1522/2984)   [K
+remote: Compressing objects:  52% (1552/2984)   [K
+remote: Compressing objects:  53% (1582/2984)   [K
+remote: Compressing objects:  54% (1612/2984)   [K
+remote: Compressing objects:  55% (1642/2984)   [K
+remote: Compressing objects:  56% (1672/2984)   [K
+remote: Compressing objects:  57% (1701/2984)   [K
+remote: Compressing objects:  58% (1731/2984)   [K
+remote: Compressing objects:  59% (1761/2984)   [K
+remote: Compressing objects:  60% (1791/2984)   [K
+remote: Compressing objects:  61% (1821/2984)   [K
+remote: Compressing objects:  62% (1851/2984)   [K
+remote: Compressing objects:  63% (1880/2984)   [K
+remote: Compressing objects:  64% (1910/2984)   [K
+remote: Compressing objects:  65% (1940/2984)   [K
+remote: Compressing objects:  66% (1970/2984)   [K
+remote: Compressing objects:  67% (2000/2984)   [K
+remote: Compressing objects:  68% (2030/2984)   [K
+remote: Compressing objects:  69% (2059/2984)   [K
+remote: Compressing objects:  70% (2089/2984)   [K
+remote: Compressing objects:  71% (2119/2984)   [K
+remote: Compressing objects:  72% (2149/2984)   [K
+remote: Compressing objects:  73% (2179/2984)   [K
+remote: Compressing objects:  74% (2209/2984)   [K
+remote: Compressing objects:  75% (2238/2984)   [K
+remote: Compressing objects:  76% (2268/2984)   [K
+remote: Compressing objects:  77% (2298/2984)   [K
+remote: Compressing objects:  78% (2328/2984)   [K
+remote: Compressing objects:  79% (2358/2984)   [K
+remote: Compressing objects:  80% (2388/2984)   [K
+remote: Compressing objects:  81% (2418/2984)   [K
+remote: Compressing objects:  82% (2447/2984)   [K
+remote: Compressing objects:  83% (2477/2984)   [K
+remote: Compressing objects:  84% (2507/2984)   [K
+remote: Compressing objects:  85% (2537/2984)   [K
+remote: Compressing objects:  86% (2567/2984)   [K
+remote: Compressing objects:  87% (2597/2984)   [K
+remote: Compressing objects:  88% (2626/2984)   [K
+remote: Compressing objects:  89% (2656/2984)   [K
+remote: Compressing objects:  90% (2686/2984)   [K
+remote: Compressing objects:  91% (2716/2984)   [K
+remote: Compressing objects:  92% (2746/2984)   [K
+remote: Compressing objects:  93% (2776/2984)   [K
+remote: Compressing objects:  94% (2805/2984)   [K
+remote: Compressing objects:  95% (2835/2984)   [K
+remote: Compressing objects:  96% (2865/2984)   [K
+remote: Compressing objects:  97% (2895/2984)   [K
+remote: Compressing objects:  98% (2925/2984)   [K
+remote: Compressing objects:  99% (2955/2984)   [K
+remote: Compressing objects: 100% (2984/2984)   [K
+remote: Compressing objects: 100% (2984/2984), done.[K
+Receiving objects:   0% (1/4286)   
+Receiving objects:   1% (43/4286)   
+Receiving objects:   2% (86/4286)   
+Receiving objects:   3% (129/4286)   
+Receiving objects:   4% (172/4286)   
+Receiving objects:   5% (215/4286)   
+Receiving objects:   6% (258/4286)   
+Receiving objects:   7% (301/4286)   
+Receiving objects:   8% (343/4286)   
+Receiving objects:   9% (386/4286)   
+Receiving objects:  10% (429/4286)   
+Receiving objects:  11% (472/4286)   
+Receiving objects:  12% (515/4286)   
+Receiving objects:  13% (558/4286)   
+Receiving objects:  14% (601/4286)   
+Receiving objects:  15% (643/4286)   
+Receiving objects:  16% (686/4286)   
+Receiving objects:  17% (729/4286)   
+Receiving objects:  18% (772/4286)   
+Receiving objects:  19% (815/4286)   
+Receiving objects:  20% (858/4286)   
+Receiving objects:  21% (901/4286)   
+Receiving objects:  22% (943/4286)   
+Receiving objects:  23% (986/4286)   
+Receiving objects:  24% (1029/4286)   
+Receiving objects:  25% (1072/4286)   
+Receiving objects:  26% (1115/4286)   
+Receiving objects:  27% (1158/4286)   
+Receiving objects:  28% (1201/4286)   
+Receiving objects:  29% (1243/4286)   
+Receiving objects:  30% (1286/4286)   
+Receiving objects:  31% (1329/4286)   
+Receiving objects:  32% (1372/4286)   
+Receiving objects:  33% (1415/4286)   
+Receiving objects:  34% (1458/4286)   
+Receiving objects:  35% (1501/4286)   
+Receiving objects:  36% (1543/4286)   
+Receiving objects:  37% (1586/4286)   
+Receiving objects:  38% (1629/4286)   
+Receiving objects:  39% (1672/4286)   
+Receiving objects:  40% (1715/4286)   
+Receiving objects:  41% (1758/4286)   
+Receiving objects:  42% (1801/4286)   
+Receiving objects:  43% (1843/4286)   
+Receiving objects:  44% (1886/4286)   
+Receiving objects:  45% (1929/4286)   
+Receiving objects:  46% (1972/4286)   
+Receiving objects:  47% (2015/4286)   
+Receiving objects:  48% (2058/4286)   
+Receiving objects:  49% (2101/4286)   
+Receiving objects:  50% (2143/4286)   
+Receiving objects:  51% (2186/4286)   
+Receiving objects:  52% (2229/4286)   
+Receiving objects:  53% (2272/4286)   
+Receiving objects:  54% (2315/4286)   
+Receiving objects:  55% (2358/4286)   
+Receiving objects:  56% (2401/4286)   
+Receiving objects:  57% (2444/4286)   
+Receiving objects:  58% (2486/4286)   
+Receiving objects:  59% (2529/4286)   
+Receiving objects:  60% (2572/4286)   
+Receiving objects:  61% (2615/4286)   
+Receiving objects:  62% (2658/4286)   
+Receiving objects:  63% (2701/4286)   
+Receiving objects:  64% (2744/4286)   
+Receiving objects:  65% (2786/4286)   
+Receiving objects:  66% (2829/4286)   
+Receiving objects:  67% (2872/4286)   
+Receiving objects:  68% (2915/4286)   
+Receiving objects:  69% (2958/4286)   
+Receiving objects:  70% (3001/4286)   
+Receiving objects:  71% (3044/4286)   
+Receiving objects:  72% (3086/4286)   
+Receiving objects:  73% (3129/4286)   
+Receiving objects:  74% (3172/4286)   
+Receiving objects:  75% (3215/4286)   
+Receiving objects:  76% (3258/4286)   
+Receiving objects:  77% (3301/4286)   
+Receiving objects:  78% (3344/4286)   
+Receiving objects:  79% (3386/4286)   
+Receiving objects:  80% (3429/4286)   
+Receiving objects:  81% (3472/4286)   
+Receiving objects:  82% (3515/4286)   
+Receiving objects:  83% (3558/4286)   
+Receiving objects:  84% (3601/4286)   
+Receiving objects:  85% (3644/4286)   
+Receiving objects:  86% (3686/4286)   
+Receiving objects:  87% (3729/4286)   
+Receiving objects:  88% (3772/4286)   
+Receiving objects:  88% (3798/4286), 20.15 MiB | 20.15 MiB/s   
+Receiving objects:  88% (3798/4286), 41.86 MiB | 20.93 MiB/s   
+Receiving objects:  89% (3815/4286), 41.86 MiB | 20.93 MiB/s   
+Receiving objects:  90% (3858/4286), 41.86 MiB | 20.93 MiB/s   
+Receiving objects:  91% (3901/4286), 52.89 MiB | 21.15 MiB/s   
+Receiving objects:  92% (3944/4286), 52.89 MiB | 21.15 MiB/s   
+Receiving objects:  93% (3986/4286), 52.89 MiB | 21.15 MiB/s   
+Receiving objects:  94% (4029/4286), 52.89 MiB | 21.15 MiB/s   
+Receiving objects:  95% (4072/4286), 52.89 MiB | 21.15 MiB/s   
+Receiving objects:  96% (4115/4286), 52.89 MiB | 21.15 MiB/s   
+Receiving objects:  97% (4158/4286), 52.89 MiB | 21.15 MiB/s   
+Receiving objects:  97% (4163/4286), 63.71 MiB | 21.24 MiB/s   
+Receiving objects:  98% (4201/4286), 63.71 MiB | 21.24 MiB/s   
+remote: Total 4286 (delta 1422), reused 2677 (delta 795), pack-reused 0[K
+Receiving objects:  99% (4244/4286), 63.71 MiB | 21.24 MiB/s   
+Receiving objects: 100% (4286/4286), 63.71 MiB | 21.24 MiB/s   
+Receiving objects: 100% (4286/4286), 65.45 MiB | 21.26 MiB/s, done.
+Resolving deltas:   0% (0/1422)   
+Resolving deltas:   1% (15/1422)   
+Resolving deltas:   2% (30/1422)   
+Resolving deltas:   3% (44/1422)   
+Resolving deltas:   4% (63/1422)   
+Resolving deltas:   5% (72/1422)   
+Resolving deltas:   6% (89/1422)   
+Resolving deltas:   7% (107/1422)   
+Resolving deltas:   8% (114/1422)   
+Resolving deltas:   9% (128/1422)   
+Resolving deltas:  10% (144/1422)   
+Resolving deltas:  11% (159/1422)   
+Resolving deltas:  12% (172/1422)   
+Resolving deltas:  13% (185/1422)   
+Resolving deltas:  14% (200/1422)   
+Resolving deltas:  15% (215/1422)   
+Resolving deltas:  16% (232/1422)   
+Resolving deltas:  17% (242/1422)   
+Resolving deltas:  18% (258/1422)   
+Resolving deltas:  19% (275/1422)   
+Resolving deltas:  20% (287/1422)   
+Resolving deltas:  21% (306/1422)   
+Resolving deltas:  22% (323/1422)   
+Resolving deltas:  23% (328/1422)   
+Resolving deltas:  24% (342/1422)   
+Resolving deltas:  25% (356/1422)   
+Resolving deltas:  26% (371/1422)   
+Resolving deltas:  27% (385/1422)   
+Resolving deltas:  28% (400/1422)   
+Resolving deltas:  29% (414/1422)   
+Resolving deltas:  30% (432/1422)   
+Resolving deltas:  31% (448/1422)   
+Resolving deltas:  33% (475/1422)   
+Resolving deltas:  34% (484/1422)   
+Resolving deltas:  35% (503/1422)   
+Resolving deltas:  36% (518/1422)   
+Resolving deltas:  37% (530/1422)   
+Resolving deltas:  38% (542/1422)   
+Resolving deltas:  40% (571/1422)   
+Resolving deltas:  41% (589/1422)   
+Resolving deltas:  42% (598/1422)   
+Resolving deltas:  43% (612/1422)   
+Resolving deltas:  44% (632/1422)   
+Resolving deltas:  45% (640/1422)   
+Resolving deltas:  46% (656/1422)   
+Resolving deltas:  47% (673/1422)   
+Resolving deltas:  48% (683/1422)   
+Resolving deltas:  49% (698/1422)   
+Resolving deltas:  50% (711/1422)   
+Resolving deltas:  51% (727/1422)   
+Resolving deltas:  53% (757/1422)   
+Resolving deltas:  54% (772/1422)   
+Resolving deltas:  55% (784/1422)   
+Resolving deltas:  56% (797/1422)   
+Resolving deltas:  57% (811/1422)   
+Resolving deltas:  58% (825/1422)   
+Resolving deltas:  59% (841/1422)   
+Resolving deltas:  60% (855/1422)   
+Resolving deltas:  61% (868/1422)   
+Resolving deltas:  62% (882/1422)   
+Resolving deltas:  63% (896/1422)   
+Resolving deltas:  64% (911/1422)   
+Resolving deltas:  65% (925/1422)   
+Resolving deltas:  66% (939/1422)   
+Resolving deltas:  67% (954/1422)   
+Resolving deltas:  68% (967/1422)   
+Resolving deltas:  69% (985/1422)   
+Resolving deltas:  70% (996/1422)   
+Resolving deltas:  71% (1011/1422)   
+Resolving deltas:  72% (1024/1422)   
+Resolving deltas:  73% (1039/1422)   
+Resolving deltas:  74% (1053/1422)   
+Resolving deltas:  75% (1069/1422)   
+Resolving deltas:  76% (1083/1422)   
+Resolving deltas:  77% (1097/1422)   
+Resolving deltas:  78% (1111/1422)   
+Resolving deltas:  79% (1124/1422)   
+Resolving deltas:  80% (1139/1422)   
+Resolving deltas:  81% (1156/1422)   
+Resolving deltas:  82% (1167/1422)   
+Resolving deltas:  83% (1181/1422)   
+Resolving deltas:  84% (1198/1422)   
+Resolving deltas:  85% (1209/1422)   
+Resolving deltas:  86% (1230/1422)   
+Resolving deltas:  87% (1238/1422)   
+Resolving deltas:  88% (1260/1422)   
+Resolving deltas:  89% (1266/1422)   
+Resolving deltas:  90% (1281/1422)   
+Resolving deltas:  91% (1296/1422)   
+Resolving deltas:  92% (1309/1422)   
+Resolving deltas:  93% (1331/1422)   
+Resolving deltas:  94% (1338/1422)   
+Resolving deltas:  95% (1352/1422)   
+Resolving deltas:  96% (1366/1422)   
+Resolving deltas:  97% (1380/1422)   
+Resolving deltas:  98% (1395/1422)   
+Resolving deltas:  99% (1408/1422)   
+Resolving deltas: 100% (1422/1422)   
+Resolving deltas: 100% (1422/1422), done.
+
+travis_time:end:0af9cd00:start=1505886210136541912,finish=1505886215197583216,duration=5061041304
+[0K$ cd twitter/heron
+$ git checkout -qf 9a4d39ed1c02ff2231e65839447524a037d2cd36
+travis_fold:end:git.checkout
+[0Ktravis_fold:start:git.submodule
+[0Ktravis_time:start:114f3b36
+[0K$ git submodule update --init --recursive
+Submodule 'website/public' (https://github.com/twitter/heron.git) registered for path 'website/public'
+Cloning into '/home/travis/build/twitter/heron/website/public'...
+Submodule path 'website/public': checked out '00df5d61078c90da1eb41ffc5a792fd6cc936919'
+
+travis_time:end:114f3b36:start=1505886215511864176,finish=1505886228198961643,duration=12687097467
+[0Ktravis_fold:end:git.submodule
+[0Ktravis_fold:start:apt
+[0K[33;1mAdding APT Sources (BETA)[0m
+$ export DEBIAN_FRONTEND=noninteractive
+travis_time:start:10a90e7c
+[0K$ sudo -E apt-add-repository -y "ppa:ubuntu-toolchain-r/test"
+gpg: keyring `/tmp/tmp8oz9y6tx/secring.gpg' created
+gpg: keyring `/tmp/tmp8oz9y6tx/pubring.gpg' created
+gpg: requesting key BA9EF27F from hkp server keyserver.ubuntu.com
+gpg: /tmp/tmp8oz9y6tx/trustdb.gpg: trustdb created
+gpg: key BA9EF27F: public key "Launchpad Toolchain builds" imported
+gpg: Total number processed: 1
+gpg:               imported: 1  (RSA: 1)
+OK
+
+travis_time:end:10a90e7c:start=1505886228205180677,finish=1505886229824220767,duration=1619040090
+[0K[33;1mInstalling APT Packages (BETA)[0m
+$ export DEBIAN_FRONTEND=noninteractive
+travis_time:start:091575a5
+[0K$ sudo -E apt-get -yq update &>> ~/apt-get-update.log
+
+travis_time:end:091575a5:start=1505886229828962862,finish=1505886234875006783,duration=5046043921
+[0Ktravis_time:start:0dc508f0
+[0K$ sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install gcc-4.8 g++-4.8 python2.7 wget pkg-config zip zlib1g-dev
+Reading package lists...
+Building dependency tree...
+Reading state information...
+pkg-config is already the newest version (0.26-1ubuntu4).
+pkg-config set to manually installed.
+zip is already the newest version (3.0-8).
+zlib1g-dev is already the newest version (1:1.2.8.dfsg-1ubuntu1).
+zlib1g-dev set to manually installed.
+python2.7 is already the newest version (2.7.6-8ubuntu0.3).
+wget is already the newest version (1.15-1ubuntu1.14.04.2).
+The following additional packages will be installed:
+  cpp-4.8 gcc-4.8-base gcc-7-base libasan0 libatomic1 libgcc-4.8-dev libgomp1
+  libisl15 libitm1 libmpfr4 libquadmath0 libstdc++-4.8-dev libstdc++6 libtsan0
+Suggested packages:
+  gcc-4.8-locales g++-4.8-multilib gcc-4.8-doc libstdc++6-4.8-dbg
+  gcc-4.8-multilib libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg
+  libasan0-dbg libtsan0-dbg libquadmath0-dbg libstdc++-4.8-doc
+The following NEW packages will be installed:
+  gcc-7-base libisl15
+The following packages will be upgraded:
+  cpp-4.8 g++-4.8 gcc-4.8 gcc-4.8-base libasan0 libatomic1 libgcc-4.8-dev
+  libgomp1 libitm1 libmpfr4 libquadmath0 libstdc++-4.8-dev libstdc++6 libtsan0
+14 upgraded, 2 newly installed, 0 to remove and 32 not upgraded.
+Need to get 32.2 MB of archives.
+After this operation, 2,905 kB of additional disk space will be used.
+Get:1 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 gcc-7-base amd64 7.2.0-1ubuntu1~14.04 [17.6 kB]
+Get:2 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libstdc++6 amd64 7.2.0-1ubuntu1~14.04 [305 kB]
+Get:3 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libgomp1 amd64 7.2.0-1ubuntu1~14.04 [75.8 kB]
+Get:4 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libitm1 amd64 7.2.0-1ubuntu1~14.04 [27.5 kB]
+Get:5 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libatomic1 amd64 7.2.0-1ubuntu1~14.04 [9,012 B]
+Get:6 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libtsan0 amd64 7.2.0-1ubuntu1~14.04 [271 kB]
+Get:7 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libquadmath0 amd64 7.2.0-1ubuntu1~14.04 [132 kB]
+Get:8 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 g++-4.8 amd64 4.8.5-2ubuntu1~14.04.1 [18.1 MB]
+Get:9 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libstdc++-4.8-dev amd64 4.8.5-2ubuntu1~14.04.1 [1,051 kB]
+Get:10 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libgcc-4.8-dev amd64 4.8.5-2ubuntu1~14.04.1 [1,687 kB]
+Get:11 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libisl15 amd64 0.15-3~14.04 [507 kB]
+Get:12 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libmpfr4 amd64 3.1.3-1~14.04 [178 kB]
+Get:13 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 gcc-4.8 amd64 4.8.5-2ubuntu1~14.04.1 [5,067 kB]
+Get:14 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 cpp-4.8 amd64 4.8.5-2ubuntu1~14.04.1 [4,601 kB]
+Get:15 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 libasan0 amd64 4.8.5-2ubuntu1~14.04.1 [63.1 kB]
+Get:16 http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu trusty/main amd64 gcc-4.8-base amd64 4.8.5-2ubuntu1~14.04.1 [15.4 kB]
+Fetched 32.2 MB in 1min 52s (286 kB/s)
+Selecting previously unselected package gcc-7-base:amd64.
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 92761 files and directories currently installed.)
+Preparing to unpack .../gcc-7-base_7.2.0-1ubuntu1~14.04_amd64.deb ...
+Unpacking gcc-7-base:amd64 (7.2.0-1ubuntu1~14.04) ...
+Processing triggers for ccache (3.1.9-1) ...
+Updating symlinks in /usr/lib/ccache ...
+Setting up gcc-7-base:amd64 (7.2.0-1ubuntu1~14.04) ...
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 92768 files and directories currently installed.)
+Preparing to unpack .../libstdc++6_7.2.0-1ubuntu1~14.04_amd64.deb ...
+Unpacking libstdc++6:amd64 (7.2.0-1ubuntu1~14.04) over (4.8.4-2ubuntu1~14.04.3) ...
+Setting up libstdc++6:amd64 (7.2.0-1ubuntu1~14.04) ...
+Processing triggers for libc-bin (2.19-0ubuntu6.13) ...
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 92769 files and directories currently installed.)
+Preparing to unpack .../libgomp1_7.2.0-1ubuntu1~14.04_amd64.deb ...
+Unpacking libgomp1:amd64 (7.2.0-1ubuntu1~14.04) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../libitm1_7.2.0-1ubuntu1~14.04_amd64.deb ...
+Unpacking libitm1:amd64 (7.2.0-1ubuntu1~14.04) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../libatomic1_7.2.0-1ubuntu1~14.04_amd64.deb ...
+Unpacking libatomic1:amd64 (7.2.0-1ubuntu1~14.04) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../libtsan0_7.2.0-1ubuntu1~14.04_amd64.deb ...
+Unpacking libtsan0:amd64 (7.2.0-1ubuntu1~14.04) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../libquadmath0_7.2.0-1ubuntu1~14.04_amd64.deb ...
+Unpacking libquadmath0:amd64 (7.2.0-1ubuntu1~14.04) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../g++-4.8_4.8.5-2ubuntu1~14.04.1_amd64.deb ...
+Unpacking g++-4.8 (4.8.5-2ubuntu1~14.04.1) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../libstdc++-4.8-dev_4.8.5-2ubuntu1~14.04.1_amd64.deb ...
+Unpacking libstdc++-4.8-dev:amd64 (4.8.5-2ubuntu1~14.04.1) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../libgcc-4.8-dev_4.8.5-2ubuntu1~14.04.1_amd64.deb ...
+Unpacking libgcc-4.8-dev:amd64 (4.8.5-2ubuntu1~14.04.1) over (4.8.4-2ubuntu1~14.04.3) ...
+Selecting previously unselected package libisl15:amd64.
+Preparing to unpack .../libisl15_0.15-3~14.04_amd64.deb ...
+Unpacking libisl15:amd64 (0.15-3~14.04) ...
+Preparing to unpack .../libmpfr4_3.1.3-1~14.04_amd64.deb ...
+Unpacking libmpfr4:amd64 (3.1.3-1~14.04) over (3.1.2-1) ...
+Preparing to unpack .../gcc-4.8_4.8.5-2ubuntu1~14.04.1_amd64.deb ...
+Unpacking gcc-4.8 (4.8.5-2ubuntu1~14.04.1) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../cpp-4.8_4.8.5-2ubuntu1~14.04.1_amd64.deb ...
+Unpacking cpp-4.8 (4.8.5-2ubuntu1~14.04.1) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../libasan0_4.8.5-2ubuntu1~14.04.1_amd64.deb ...
+Unpacking libasan0:amd64 (4.8.5-2ubuntu1~14.04.1) over (4.8.4-2ubuntu1~14.04.3) ...
+Preparing to unpack .../gcc-4.8-base_4.8.5-2ubuntu1~14.04.1_amd64.deb ...
+Unpacking gcc-4.8-base:amd64 (4.8.5-2ubuntu1~14.04.1) over (4.8.4-2ubuntu1~14.04.3) ...
+Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Processing triggers for ccache (3.1.9-1) ...
+Updating symlinks in /usr/lib/ccache ...
+Setting up libgomp1:amd64 (7.2.0-1ubuntu1~14.04) ...
+Setting up libitm1:amd64 (7.2.0-1ubuntu1~14.04) ...
+Setting up libatomic1:amd64 (7.2.0-1ubuntu1~14.04) ...
+Setting up libtsan0:amd64 (7.2.0-1ubuntu1~14.04) ...
+Setting up libquadmath0:amd64 (7.2.0-1ubuntu1~14.04) ...
+Setting up gcc-4.8-base:amd64 (4.8.5-2ubuntu1~14.04.1) ...
+Setting up libisl15:amd64 (0.15-3~14.04) ...
+Setting up libmpfr4:amd64 (3.1.3-1~14.04) ...
+Setting up cpp-4.8 (4.8.5-2ubuntu1~14.04.1) ...
+Setting up libasan0:amd64 (4.8.5-2ubuntu1~14.04.1) ...
+Setting up libgcc-4.8-dev:amd64 (4.8.5-2ubuntu1~14.04.1) ...
+Setting up gcc-4.8 (4.8.5-2ubuntu1~14.04.1) ...
+Setting up libstdc++-4.8-dev:amd64 (4.8.5-2ubuntu1~14.04.1) ...
+Setting up g++-4.8 (4.8.5-2ubuntu1~14.04.1) ...
+Processing triggers for libc-bin (2.19-0ubuntu6.13) ...
+W: --force-yes is deprecated, use one of the options starting with --allow instead.
+
+travis_time:end:0dc508f0:start=1505886234879467545,finish=1505886354234227575,duration=119354760030
+[0Ktravis_fold:end:apt
+[0K
+[33;1mSetting environment variables from .travis.yml[0m
+$ export CC=gcc-4.8
+$ export CXX=g++-4.8
+$ export CPP=cpp-4.8
+$ export CXXCPP=cpp-4.8
+
+[33;1mDisabling Gradle daemon[0m
+travis_time:start:0d864931
+[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+
+travis_time:end:0d864931:start=1505886354243734465,finish=1505886354248775787,duration=5041322
+[0K$ export PATH=$JAVA_HOME/bin:$PATH
+$ java -Xmx32m -version
+java version "1.8.0_144"
+Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
+Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.8.0_144
+travis_fold:start:before_install.1
+[0Ktravis_time:start:2de7d5a0
+[0K$ wget -q 'https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel-0.5.4-installer-linux-x86_64.sh'
+
+travis_time:end:2de7d5a0:start=1505886354953239996,finish=1505886362478699106,duration=7525459110
+[0Ktravis_fold:end:before_install.1
+[0Ktravis_fold:start:before_install.2
+[0Ktravis_time:start:0308b6aa
+[0K$ chmod +x bazel-0.5.4-installer-linux-x86_64.sh
+
+travis_time:end:0308b6aa:start=1505886362483386627,finish=1505886362487855529,duration=4468902
+[0Ktravis_fold:end:before_install.2
+[0Ktravis_fold:start:before_install.3
+[0Ktravis_time:start:0521a28c
+[0K$ ./bazel-0.5.4-installer-linux-x86_64.sh --user
+Bazel installer
+---------------
+
+Bazel is bundled with software licensed under the GPLv2 with Classpath exception.
+You can find the sources next to the installer on our release page:
+   https://github.com/bazelbuild/bazel/releases
+
+# Release 0.5.4 (2017-08-25)
+
+Baseline: 6563b2d42d29196432d5fcafa0144b8371fbb028
+
+Cherry picks:
+   + d4fa181f8607c35230b7efa1ce94188b51508962:
+     Use getExecPathString when getting bash_main_file
+   + 837e1b3d4859140d29aaa6bbab8fbb008e6d701e:
+     Windows, sh_bin. launcher: export runfiles envvars
+   + fe9ba893c0ebec19228086356af5fa8d81f2809b:
+     grpc: Consolidate gRPC code from BES and Remote Execution. Fixes
+     #3460, #3486
+   + e8d4366cd374fba92f1425de0d475411c8defda4:
+     Automated rollback of commit
+     496d3ded0bce12b7371a93e1183ba30e6aa88032.
+   + 242a43449dd44a22857f6ce95f7cc6a7e134d298:
+     bes,remote: update default auth scope.
+   + 793b409eeae2b42be7fed58251afa87b5733ca4d:
+     Windows, sh_bin. launcher: fix manifest path
+   + 7e4fbbe4ab3915a57b2187408c3909e5cd6c6013:
+     Add --windows_exe_launcher option
+   + 91fb38e92ace6cf14ce5da6527d71320b4e3f3d2:
+     remote_worker: Serialize fork() calls. Fixes #3356
+   + b79a9fcd40f448d3aebb2b93a2ebe80d09b38408:
+     Quote python_path and launcher in
+     python_stub_template_windows.txt
+   + 4a2e17f85fc8450aa084b201c5f24b30010c5987:
+     Add build_windows_jni.sh back
+   + ce61d638197251f71ed90db74843b55d9c2e9ae5:
+     don't use methods and classes removed in upstream dx RELNOTES:
+     update dexing tools to Android SDK 26.0.1
+   + 5393a4996d701fa192964a35cbb75e558a0599c0:
+     Make Bazel enforce requirement on build-tools 26.0.1 or later.
+   + 5fac03570f80856c063c6019f5beb3bdc1672dee:
+     Fix --verbose_failures w/ sandboxing to print the full command
+     line
+   + f7bd1acf1f96bb7e3e19edb9483d9e07eb5af070:
+     Only patch in C++ compile features when they are not already
+     defined in crosstool
+   + d7f5c120417bc2d2344dfb285322355f225d9153:
+     Bump python-gflags to 3.1.0, take two
+   + 3cb136d5451e9d8af58f9a99990cad0592df101a:
+     Add python to bazel's dockerfiles
+
+New features:
+
+  - Do not disable fully dynamic linking with ThinLTO when invoked
+    via LIPO options.
+
+Important changes:
+
+  - Ignore --glibc in the Android transition.
+  - Remove --experimental_android_use_singlejar_for_multidex.
+  - nocopts now also filter copts
+  - The Build Event Service (BES) client now properly supports
+    Google Applicaton Default Credentials.
+  - update dexing tools to Android SDK 26.0.1
+  - Bazel Android support now requires build-tools 26.0.1 or later.
+  - Fix a bug in the remote_worker that would at times make it crash on Linux. See #3356
+  - The java_proto_library rule now supports generated sources. See #2265
+
+## Build informations
+   - [Commit](https://github.com/bazelbuild/bazel/commit/67f23f5)
+Uncompressing......Extracting Bazel installation...
+...............
+.
+
+Bazel is now installed!
+
+Make sure you have "/home/travis/bin" in your path. You can also activate bash
+completion by adding the following line to your :
+  source /home/travis/.bazel/bin/bazel-complete.bash
+
+See http://bazel.build/docs/getting-started.html to start a new project!
+
+travis_time:end:0521a28c:start=1505886362492279310,finish=1505886373505500336,duration=11013221026
+[0Ktravis_fold:end:before_install.3
+[0Ktravis_fold:start:before_script
+[0Ktravis_time:start:169c4e09
+[0K$ sudo pip install wheel
+[33mThe directory '/home/travis/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+[33mThe directory '/home/travis/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.[0m
+Requirement already satisfied: wheel in /usr/local/lib/python2.7/dist-packages
+/usr/local/lib/python2.7/dist-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:318: SNIMissingWarning: An HTTPS request has been made, but the SNI (Subject Name Indication) extension to TLS is not available on this platform. This may cause the server to present an incorrect TLS certificate, which can cause validation failures. You can upgrade to a newer version of Python to solve this. For more information, see https://urllib3.readthedocs.io/en/latest/security.html#snimissingwarning.
+  SNIMissingWarning
+/usr/local/lib/python2.7/dist-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:122: InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. You can upgrade to a newer version of Python to solve this. For more information, see https://urllib3.readthedocs.io/en/latest/security.html#insecureplatformwarning.
+  InsecurePlatformWarning
+
+travis_time:end:169c4e09:start=1505886373510579162,finish=1505886375412853739,duration=1902274577
+[0Ktravis_fold:end:before_script
+[0Ktravis_time:start:00b4508e
+[0K$ which gcc-4.8
+/usr/bin/gcc-4.8
+
+travis_time:end:00b4508e:start=1505886375417567759,finish=1505886375422271041,duration=4703282
+[0K
+[32;1mThe command "which gcc-4.8" exited with 0.[0m
+travis_time:start:0003a140
+[0K$ gcc --version
+gcc (Ubuntu 4.8.5-2ubuntu1~14.04.1) 4.8.5
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+travis_time:end:0003a140:start=1505886375427127748,finish=1505886375432385447,duration=5257699
+[0K
+[32;1mThe command "gcc --version" exited with 0.[0m
+travis_time:start:1b0c75ed
+[0K$ which g++-4.8
+/usr/bin/g++-4.8
+
+travis_time:end:1b0c75ed:start=1505886375437078271,finish=1505886375441795488,duration=4717217
+[0K
+[32;1mThe command "which g++-4.8" exited with 0.[0m
+travis_time:start:01f10093
+[0K$ g++ --version
+g++ (Ubuntu 4.8.5-2ubuntu1~14.04.1) 4.8.5
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+travis_time:end:01f10093:start=1505886375446563049,finish=1505886375451751168,duration=5188119
+[0K
+[32;1mThe command "g++ --version" exited with 0.[0m
+travis_time:start:09aa2d10
+[0K$ which python
+/opt/pyenv/shims/python
+
+travis_time:end:09aa2d10:start=1505886375457232613,finish=1505886375462090211,duration=4857598
+[0K
+[32;1mThe command "which python" exited with 0.[0m
+travis_time:start:0dbf47f0
+[0K$ python -V
+Python 2.7.6
+
+travis_time:end:0dbf47f0:start=1505886375466983567,finish=1505886375511137318,duration=44153751
+[0K
+[32;1mThe command "python -V" exited with 0.[0m
+travis_time:start:08a86738
+[0K$ which python2.7
+/opt/pyenv/shims/python2.7
+
+travis_time:end:08a86738:start=1505886375516130083,finish=1505886375520995358,duration=4865275
+[0K
+[32;1mThe command "which python2.7" exited with 0.[0m
+travis_time:start:17b6380f
+[0K$ python2.7 -V
+Python 2.7.6
+
+travis_time:end:17b6380f:start=1505886375526122814,finish=1505886375563206210,duration=37083396
+[0K
+[32;1mThe command "python2.7 -V" exited with 0.[0m
+travis_time:start:105eac88
+[0K$ scripts/travis/ci.sh
+===> Starting scripts/travis/build.sh at 2017-09-20 05:46:15
+Using ubuntu platform
+HERON_BUILD_VERSION 0.15.2-34-g9a4d39e
+HERON_BUILD_SCM_REVISION 9a4d39ed1c02ff2231e65839447524a037d2cd36
+HERON_BUILD_HOST testing-gce-78324eb1-9857-4516-b0b5-563e8b32a088
+HERON_BUILD_TIME Wed Sep 20 05:46:15 UTC 2017
+HERON_BUILD_TIMESTAMP 1505886375000
+HERON_BUILD_USER travis
+HERON_BUILD_RELEASE_STATUS Clean
+Platform Linux
+Using C compiler          :	/usr/bin/gcc-4.8 (4.8.5)
+Using C++ compiler        :	/usr/bin/g++-4.8 (4.8.5)
+Using C preprocessor      :	/usr/bin/cpp-4.8 (4.8.5)
+Using C++ preprocessor    :	/usr/bin/cpp-4.8 (4.8.5)
+Using linker              :	/usr/bin/ld.bfd
+Using Automake            :	/usr/bin/automake-1.14 (1.14.1)
+Using Autoconf            :	/usr/bin/autoconf (2.69)
+Using Make                :	/usr/bin/make (3.81)
+Using CMake               :	/usr/bin/cmake (3.2.2)
+Using Python              :	/usr/bin/python2.7 (2.7.6)
+Using Libtool             :	/usr/bin/libtool (2.4.2)
+Using archiver            :	/usr/bin/ar
+Using coverage tool       :	/usr/bin/gcov-4.8
+Using dwp                 :	/usr/bin/dwp
+Using nm                  :	/usr/bin/nm
+Using objcopy             :	/usr/bin/objcopy
+Using objdump             :	/usr/bin/objdump
+Using strip               :	/usr/bin/strip
+Wrote the environment exec file scripts/compile/env_exec.sh
+===> Starting heron build at 2017-09-20 05:46:16
+['bazel', '--bazelrc=tools/travis/bazel.rc', 'build', '--config=ubuntu', 'heron/...'] writing to: heron_build.txt
+
+3 seconds 3 log lines
+13 seconds 51 log lines
+14 seconds 54 log lines
+ ['bazel', '--bazelrc=tools/travis/bazel.rc', 'build', '--config=ubuntu', 'heron/...'] finished with errcode: 1
+INFO: Reading 'startup' options from /home/travis/build/twitter/heron/tools/travis/bazel.rc: --host_jvm_args=-Xmx2500m --host_jvm_args=-Xms2500m --batch
+WARNING: Running Bazel server needs to be killed, because the startup options are different.
+____(09-20 05:46:19.713) Loading package: heron/common/src/cpp/setup
+____(09-20 05:46:19.752) Loading package: heron/common/src/python
+____(09-20 05:46:19.782) Loading package: heron/healthmgr/src/java
+____(09-20 05:46:21.541) Loading package: @bazel_tools//tools/cpp
+____(09-20 05:46:21.724) Loading package: @bazel_tools//tools/jdk
+____(09-20 05:46:21.790) Loading package: @local_config_xcode//
+____(09-20 05:46:21.948) Loading package: @local_jdk//
+____(09-20 05:46:23.268) Loading package: @local_config_cc//
+____(09-20 05:46:23.653) Loading complete.  Analyzing...
+____(09-20 05:46:24.541) Loading package: @bazel_tools//tools/test
+____(09-20 05:46:24.581) Loading package: tools/rules/pex
+____(09-20 05:46:24.634) Loading package: third_party/java
+____(09-20 05:46:24.689) Loading package: tools/java
+____(09-20 05:46:24.723) Loading package: tools/java/src/com/twitter/bazel/checkstyle
+____(09-20 05:46:24.761) Loading package: third_party/python/pylint
+____(09-20 05:46:24.857) Loading package: third_party/thrift
+____(09-20 05:46:24.910) Loading package: @bazel_tools//tools/genrule
+____(09-20 05:46:24.979) Loading package: scripts/packages
+____(09-20 05:46:25.201) Loading package: heronpy/proto
+____(09-20 05:46:25.374) Loading package: third_party/libevent
+____(09-20 05:46:25.437) Loading package: @bazel_tools//tools/coverage
+____(09-20 05:46:25.499) Loading package: @bazel_tools//src/tools/launcher
+____(09-20 05:46:25.536) Loading package: third_party/zookeeper
+____(09-20 05:46:26.643) Loading package: @aopalliance_aopalliance//jar
+____(09-20 05:46:26.752) Loading package: @org_slf4j_slf4j_jdk14//jar
+____(09-20 05:46:26.861) Loading package: @org_powermock_powermock_module_junit4_common//jar
+____(09-20 05:46:26.927) Loading package: @org_apache_reef_reef_utils//jar
+____(09-20 05:46:27.035) Loading package: @javax_inject_javax_inject//jar
+____(09-20 05:46:27.079) Loading package: @org_eclipse_jetty_continuation//jar
+____(09-20 05:46:27.135) Loading package: @org_powermock_powermock_api_support//jar
+____(09-20 05:46:27.165) Loading package: @javax_inject//jar
+____(09-20 05:46:27.206) Loading package: @hk2_aopalliance_repackaged//jar
+____(09-20 05:46:27.299) Loading package: @hk2_osgi_resource_locator//jar
+____(09-20 05:46:27.392) Loading package: @com_google_inject_extensions_guice_assistedinject//jar
+____(09-20 05:46:27.450) Loading package: @com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar
+____(09-20 05:46:27.490) Loading package: @org_objenesis_objenesis//jar
+____(09-20 05:46:27.576) Loading package: @com_fasterxml_jackson_core_jackson_annotations//jar
+____(09-20 05:46:27.822) Loading package: @commons_logging_commons_logging//jar
+____(09-20 05:46:27.908) Loading package: @commons_cli_commons_cli//jar
+____(09-20 05:46:27.947) Loading package: @org_apache_reef_reef_runtime_yarn//jar
+____(09-20 05:46:28.067) Loading package: @org_glassfish_jersey_ext_jersey_entity_filtering//jar
+____(09-20 05:46:28.466) Loading package: @org_eclipse_jetty_security//jar
+____(09-20 05:46:28.685) Loading package: @org_powermock_powermock_core//jar
+____(09-20 05:46:28.824) Loading package: @javax_ws_rs_api//jar
+____(09-20 05:46:29.069) Loading package: @javax_ws_rs_javax_ws_rs_api//jar
+____(09-20 05:46:29.248) Loading package: @org_powermock_powermock_api_mockito//jar
+____(09-20 05:46:29.284) Loading package: @org_eclipse_jetty_http//jar
+____(09-20 05:46:29.473) Loading package: @com_esotericsoftware_kryo//jar
+____(09-20 05:46:30.020) Failed to connect to https://pypi.python.org/packages/d4/0c/9840c08189e030873387a73b90ada981885010dd9aea134d6de30cd24cb8/virtualenv-15.1.0.tar.gz trying again in 100ms
+ERROR: (09-20 05:46:30.860) /home/travis/build/twitter/heron/heron/healthmgr/src/java/BUILD:48:1: no such package '@com_google_inject_guice//jar': Failed to fetch Maven dependency: Could not transfer artifact com.google.inject:guice:jar:4.0 from/to com_google_inject_guice (http://central.maven.org/maven2/): Connection reset and referenced by '//heron/healthmgr/src/java:healthmgr-java'.
+ERROR: (09-20 05:46:30.915) Analysis of target '//heron/healthmgr/src/java:healthmgr-java' failed; build aborted.
+____(09-20 05:46:30.917) Elapsed time: 12.948s
+
+travis_time:end:105eac88:start=1505886375568036605,finish=1505886390953204094,duration=15385167489
+[0K
+[31;1mThe command "scripts/travis/ci.sh" exited with 1.[0m
+
+Done. Your build exited with 1.
+

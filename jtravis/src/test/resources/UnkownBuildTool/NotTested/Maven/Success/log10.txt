@@ -1,0 +1,474 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: f84c8cfb-acc5-4377-874c-81ce0cf782fe@1.production-1-worker-org-b-2-gce
+version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
+instance: testing-gce-dadd8cac-a3b0-4e45-8d24-b3e0066f0bf2:travis-ci-jvm-precise-1491941442 (via amqp)
+startup: 21.132205559s
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: precise
+Build id: 276081077
+Job id: 276081078
+Runtime kernel version: 3.13.0-115-generic
+travis-build version: ec7da3751
+[34m[1mBuild image provisioning date and time[0m
+Tue Apr 11 20:22:39 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 12.04.5 LTS
+Release:	12.04
+Codename:	precise
+[34m[1mLinux Version[0m
+3.13.0-115-generic
+[34m[1mCookbooks Version[0m
+cc4eb5e https://github.com/travis-ci/travis-cookbooks/tree/cc4eb5e
+[34m[1mGit version[0m
+git version 1.8.5.6
+[34m[1mbash version[0m
+GNU bash, version 4.2.25(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2011 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+[34m[1mGCC version[0m
+gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mLLVM version[0m
+clang version 3.4 (tags/RELEASE_34/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.6
+[34m[1mPre-installed Node.js versions[0m
+v0.10.36
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mmysql --version[0m
+mysql  Ver 14.14 Distrib 5.5.54, for debian-linux-gnu (x86_64) using readline 6.2
+[34m[1mPre-installed PostgreSQL versions[0m
+9.1.24
+9.2.20
+9.3.16
+9.4.11
+9.5.6
+[34m[1mRedis version[0m
+redis-server 3.0.7
+[34m[1mriak version[0m
+2.0.2
+[34m[1mmemcached version[0m
+1.4.13
+[34m[1mMongoDB version[0m
+MongoDB 2.4.14
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mInstalled Sphinx versions[0m
+2.0.10
+2.1.9
+2.2.6
+[34m[1mDefault Sphinx version[0m
+2.2.6
+[34m[1mInstalled Firefox version[0m
+firefox 38.4.0esr
+[34m[1mPhantomJS version[0m
+1.9.8
+[34m[1mant -version[0m
+Apache Ant(TM) version 1.8.2 compiled on December 3 2011
+[34m[1mmvn -version[0m
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.8.0_121, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en, platform encoding: UTF-8
+OS name: "linux", version: "3.13.0-115-generic", arch: "amd64", family: "unix"
+[34m[1mgradle -version[0m
+
+------------------------------------------------------------
+Gradle 2.2.1
+------------------------------------------------------------
+
+Build time:   2014-11-24 09:45:35 UTC
+Build number: none
+Revision:     6fcb59c06f43a4e6b1bcb401f7686a8601a1fb4a
+
+Groovy:       2.3.6
+Ant:          Apache Ant(TM) version 1.9.3 compiled on December 23 2013
+JVM:          1.8.0_121 (Oracle Corporation 25.121-b13)
+OS:           Linux 3.13.0-115-generic amd64
+
+[34m[1mlein1 version[0m
+WARNING: Clojure jar failed to download from http://build.clojure.org/releases/org/clojure/clojure/1.2.1/clojure-1.2.1.jar
+Downloading Leiningen now...
+WARNING: Clojure jar failed to download from http://build.clojure.org/releases/org/clojure/clojure/1.2.1/clojure-1.2.1.jar
+Using JLine for console I/O; install rlwrap for optimum experience.
+Leiningen 1.7.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mlein2 version[0m
+Downloading Leiningen to /home/travis/.lein/self-installs/home/travis/.lein/leiningen-2.5.1-standalone.jar now...
+Leiningen 2.5.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mlein version[0m
+Downloading Leiningen to /home/travis/.lein/self-installs/home/travis/.lein/leiningen-2.5.1-standalone.jar now...
+Leiningen 2.5.1 on Java 1.7.0_80 Java HotSpot(TM) 64-Bit Server VM
+travis_fold:end:system_info[0K
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-updates/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise-backports/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://us-central1.gce.archive.ubuntu.com/ubuntu/dists/precise/Release.gpg: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://security.ubuntu.com/ubuntu/dists/precise-security/InRelease: Signature by key 630239CC130E1A7FD81A27B140976EAF437D05B5 uses weak digest algorithm (SHA1)
+W: http://downloads-distro.mongodb.org/repo/debian-sysvinit/dists/dist/Release.gpg: Signature by key 492EAFE8CD016A07919F1D2B9ECBEC467F0CEB10 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/precise/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/git-core/v1.8/ubuntu/dists/precise/Release.gpg: Signature by key E1DD270288B4E6030699E45FA1715D88E1DF1F24 uses weak digest algorithm (SHA1)
+$ jdk_switcher use oraclejdk7
+Switching to Oracle JDK7 (java-7-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-7-oracle
+travis_fold:start:git.checkout[0Ktravis_time:start:0a5640ad[0K$ git clone --depth=50 https://github.com/damianszczepanik/cucumber-reporting.git damianszczepanik/cucumber-reporting
+Cloning into 'damianszczepanik/cucumber-reporting'...
+remote: Counting objects: 930, done.[K
+remote: Compressing objects:   0% (1/454)   [Kremote: Compressing objects:   1% (5/454)   [Kremote: Compressing objects:   2% (10/454)   [Kremote: Compressing objects:   3% (14/454)   [Kremote: Compressing objects:   4% (19/454)   [Kremote: Compressing objects:   5% (23/454)   [Kremote: Compressing objects:   6% (28/454)   [Kremote: Compressing objects:   7% (32/454)   [Kremote: Compressing objects:   8% (37/454)   [Kremote: Compressing objects:   9% (41/454)   [Kremote: Compressing objects:  10% (46/454)   [Kremote: Compressing objects:  11% (50/454)   [Kremote: Compressing objects:  12% (55/454)   [Kremote: Compressing objects:  13% (60/454)   [Kremote: Compressing objects:  14% (64/454)   [Kremote: Compressing objects:  15% (69/454)   [Kremote: Compressing objects:  16% (73/454)   [Kremote: Compressing objects:  17% (78/454)   [Kremote: Compressing objects:  18% (82/454)   [Kremote: Compressing objects:  19% (87/454)   [Kremote: Compressing objects:  20% (91/454)   [Kremote: Compressing objects:  21% (96/454)   [Kremote: Compressing objects:  22% (100/454)   [Kremote: Compressing objects:  23% (105/454)   [Kremote: Compressing objects:  24% (109/454)   [Kremote: Compressing objects:  25% (114/454)   [Kremote: Compressing objects:  26% (119/454)   [Kremote: Compressing objects:  27% (123/454)   [Kremote: Compressing objects:  28% (128/454)   [Kremote: Compressing objects:  29% (132/454)   [Kremote: Compressing objects:  30% (137/454)   [Kremote: Compressing objects:  31% (141/454)   [Kremote: Compressing objects:  32% (146/454)   [Kremote: Compressing objects:  33% (150/454)   [Kremote: Compressing objects:  34% (155/454)   [Kremote: Compressing objects:  35% (159/454)   [Kremote: Compressing objects:  36% (164/454)   [Kremote: Compressing objects:  37% (168/454)   [Kremote: Compressing objects:  38% (173/454)   [Kremote: Compressing objects:  39% (178/454)   [Kremote: Compressing objects:  40% (182/454)   [Kremote: Compressing objects:  41% (187/454)   [Kremote: Compressing objects:  42% (191/454)   [Kremote: Compressing objects:  43% (196/454)   [Kremote: Compressing objects:  44% (200/454)   [Kremote: Compressing objects:  45% (205/454)   [Kremote: Compressing objects:  46% (209/454)   [Kremote: Compressing objects:  47% (214/454)   [Kremote: Compressing objects:  48% (218/454)   [Kremote: Compressing objects:  49% (223/454)   [Kremote: Compressing objects:  50% (227/454)   [Kremote: Compressing objects:  51% (232/454)   [Kremote: Compressing objects:  52% (237/454)   [Kremote: Compressing objects:  53% (241/454)   [Kremote: Compressing objects:  54% (246/454)   [Kremote: Compressing objects:  55% (250/454)   [Kremote: Compressing objects:  56% (255/454)   [Kremote: Compressing objects:  57% (259/454)   [Kremote: Compressing objects:  58% (264/454)   [Kremote: Compressing objects:  59% (268/454)   [Kremote: Compressing objects:  60% (273/454)   [Kremote: Compressing objects:  61% (277/454)   [Kremote: Compressing objects:  62% (282/454)   [Kremote: Compressing objects:  63% (287/454)   [Kremote: Compressing objects:  64% (291/454)   [Kremote: Compressing objects:  65% (296/454)   [Kremote: Compressing objects:  66% (300/454)   [Kremote: Compressing objects:  67% (305/454)   [Kremote: Compressing objects:  68% (309/454)   [Kremote: Compressing objects:  69% (314/454)   [Kremote: Compressing objects:  70% (318/454)   [Kremote: Compressing objects:  71% (323/454)   [Kremote: Compressing objects:  72% (327/454)   [Kremote: Compressing objects:  73% (332/454)   [Kremote: Compressing objects:  74% (336/454)   [Kremote: Compressing objects:  75% (341/454)   [Kremote: Compressing objects:  76% (346/454)   [Kremote: Compressing objects:  77% (350/454)   [Kremote: Compressing objects:  78% (355/454)   [Kremote: Compressing objects:  79% (359/454)   [Kremote: Compressing objects:  80% (364/454)   [Kremote: Compressing objects:  81% (368/454)   [Kremote: Compressing objects:  82% (373/454)   [Kremote: Compressing objects:  83% (377/454)   [Kremote: Compressing objects:  84% (382/454)   [Kremote: Compressing objects:  85% (386/454)   [Kremote: Compressing objects:  86% (391/454)   [Kremote: Compressing objects:  87% (395/454)   [Kremote: Compressing objects:  88% (400/454)   [Kremote: Compressing objects:  89% (405/454)   [Kremote: Compressing objects:  90% (409/454)   [Kremote: Compressing objects:  91% (414/454)   [Kremote: Compressing objects:  92% (418/454)   [Kremote: Compressing objects:  93% (423/454)   [Kremote: Compressing objects:  94% (427/454)   [Kremote: Compressing objects:  95% (432/454)   [Kremote: Compressing objects:  96% (436/454)   [Kremote: Compressing objects:  97% (441/454)   [Kremote: Compressing objects:  98% (445/454)   [Kremote: Compressing objects:  99% (450/454)   [Kremote: Compressing objects: 100% (454/454)   [Kremote: Compressing objects: 100% (454/454), done.[K
+Receiving objects:   0% (1/930)   Receiving objects:   1% (10/930)   Receiving objects:   2% (19/930)   Receiving objects:   3% (28/930)   Receiving objects:   4% (38/930)   Receiving objects:   5% (47/930)   Receiving objects:   6% (56/930)   Receiving objects:   7% (66/930)   Receiving objects:   8% (75/930)   Receiving objects:   9% (84/930)   Receiving objects:  10% (93/930)   Receiving objects:  11% (103/930)   Receiving objects:  12% (112/930)   Receiving objects:  13% (121/930)   Receiving objects:  14% (131/930)   Receiving objects:  15% (140/930)   Receiving objects:  16% (149/930)   Receiving objects:  17% (159/930)   Receiving objects:  18% (168/930)   Receiving objects:  19% (177/930)   Receiving objects:  20% (186/930)   Receiving objects:  21% (196/930)   Receiving objects:  22% (205/930)   Receiving objects:  23% (214/930)   Receiving objects:  24% (224/930)   Receiving objects:  25% (233/930)   Receiving objects:  26% (242/930)   Receiving objects:  27% (252/930)   Receiving objects:  28% (261/930)   Receiving objects:  29% (270/930)   Receiving objects:  30% (279/930)   Receiving objects:  31% (289/930)   Receiving objects:  32% (298/930)   Receiving objects:  33% (307/930)   Receiving objects:  34% (317/930)   Receiving objects:  35% (326/930)   Receiving objects:  36% (335/930)   Receiving objects:  37% (345/930)   Receiving objects:  38% (354/930)   Receiving objects:  39% (363/930)   Receiving objects:  40% (372/930)   Receiving objects:  41% (382/930)   Receiving objects:  42% (391/930)   Receiving objects:  43% (400/930)   Receiving objects:  44% (410/930)   Receiving objects:  45% (419/930)   Receiving objects:  46% (428/930)   Receiving objects:  47% (438/930)   Receiving objects:  48% (447/930)   Receiving objects:  49% (456/930)   Receiving objects:  50% (465/930)   Receiving objects:  51% (475/930)   Receiving objects:  52% (484/930)   Receiving objects:  53% (493/930)   Receiving objects:  54% (503/930)   Receiving objects:  55% (512/930)   Receiving objects:  56% (521/930)   Receiving objects:  57% (531/930)   Receiving objects:  58% (540/930)   Receiving objects:  59% (549/930)   Receiving objects:  60% (558/930)   Receiving objects:  61% (568/930)   Receiving objects:  62% (577/930)   Receiving objects:  63% (586/930)   Receiving objects:  64% (596/930)   Receiving objects:  65% (605/930)   Receiving objects:  66% (614/930)   Receiving objects:  67% (624/930)   Receiving objects:  68% (633/930)   Receiving objects:  69% (642/930)   Receiving objects:  70% (651/930)   Receiving objects:  71% (661/930)   Receiving objects:  72% (670/930)   Receiving objects:  73% (679/930)   Receiving objects:  74% (689/930)   Receiving objects:  75% (698/930)   Receiving objects:  76% (707/930)   Receiving objects:  77% (717/930)   Receiving objects:  78% (726/930)   Receiving objects:  79% (735/930)   Receiving objects:  80% (744/930)   Receiving objects:  81% (754/930)   Receiving objects:  82% (763/930)   Receiving objects:  83% (772/930)   Receiving objects:  84% (782/930)   Receiving objects:  85% (791/930)   Receiving objects:  86% (800/930)   Receiving objects:  87% (810/930)   Receiving objects:  88% (819/930)   Receiving objects:  89% (828/930)   Receiving objects:  90% (837/930)   Receiving objects:  91% (847/930)   Receiving objects:  92% (856/930)   Receiving objects:  93% (865/930)   Receiving objects:  94% (875/930)   Receiving objects:  95% (884/930)   Receiving objects:  96% (893/930)   Receiving objects:  97% (903/930)   Receiving objects:  98% (912/930)   Receiving objects:  99% (921/930)   remote: Total 930 (delta 435), reused 734 (delta 356), pack-reused 0[K
+Receiving objects: 100% (930/930)   Receiving objects: 100% (930/930), 1.14 MiB | 0 bytes/s, done.
+Resolving deltas:   0% (0/435)   Resolving deltas:   1% (5/435)   Resolving deltas:   3% (14/435)   Resolving deltas:   6% (30/435)   Resolving deltas:   7% (31/435)   Resolving deltas:   8% (35/435)   Resolving deltas:   9% (40/435)   Resolving deltas:  10% (47/435)   Resolving deltas:  11% (49/435)   Resolving deltas:  12% (55/435)   Resolving deltas:  14% (62/435)   Resolving deltas:  19% (83/435)   Resolving deltas:  20% (88/435)   Resolving deltas:  22% (100/435)   Resolving deltas:  25% (109/435)   Resolving deltas:  31% (136/435)   Resolving deltas:  32% (142/435)   Resolving deltas:  34% (148/435)   Resolving deltas:  35% (155/435)   Resolving deltas:  37% (162/435)   Resolving deltas:  38% (169/435)   Resolving deltas:  42% (185/435)   Resolving deltas:  44% (195/435)   Resolving deltas:  45% (200/435)   Resolving deltas:  46% (203/435)   Resolving deltas:  51% (225/435)   Resolving deltas:  53% (231/435)   Resolving deltas:  54% (237/435)   Resolving deltas:  55% (243/435)   Resolving deltas:  56% (247/435)   Resolving deltas:  57% (248/435)   Resolving deltas:  58% (253/435)   Resolving deltas:  60% (261/435)   Resolving deltas:  61% (267/435)   Resolving deltas:  62% (271/435)   Resolving deltas:  63% (275/435)   Resolving deltas:  64% (279/435)   Resolving deltas:  65% (284/435)   Resolving deltas:  66% (289/435)   Resolving deltas:  67% (293/435)   Resolving deltas:  69% (301/435)   Resolving deltas:  70% (305/435)   Resolving deltas:  71% (310/435)   Resolving deltas:  72% (315/435)   Resolving deltas:  73% (321/435)   Resolving deltas:  74% (322/435)   Resolving deltas:  75% (327/435)   Resolving deltas:  76% (331/435)   Resolving deltas:  77% (337/435)   Resolving deltas:  78% (340/435)   Resolving deltas:  79% (345/435)   Resolving deltas:  80% (351/435)   Resolving deltas:  81% (353/435)   Resolving deltas:  85% (372/435)   Resolving deltas:  86% (376/435)   Resolving deltas:  87% (381/435)   Resolving deltas:  88% (387/435)   Resolving deltas:  89% (389/435)   Resolving deltas:  90% (393/435)   Resolving deltas:  91% (397/435)   Resolving deltas:  92% (401/435)   Resolving deltas:  93% (405/435)   Resolving deltas:  94% (409/435)   Resolving deltas:  95% (414/435)   Resolving deltas:  97% (425/435)   Resolving deltas:  98% (427/435)   Resolving deltas: 100% (435/435)   Resolving deltas: 100% (435/435), done.
+Checking connectivity... done.
+
+travis_time:end:0a5640ad:start=1505513786532950607,finish=1505513787550963897,duration=1018013290[0K$ cd damianszczepanik/cucumber-reporting
+travis_time:start:0110e8ff[0K$ git fetch origin +refs/pull/665/merge:
+remote: Counting objects: 442, done.[K
+remote: Compressing objects:   0% (1/134)   [Kremote: Compressing objects:   1% (2/134)   [Kremote: Compressing objects:   2% (3/134)   [Kremote: Compressing objects:   3% (5/134)   [Kremote: Compressing objects:   4% (6/134)   [Kremote: Compressing objects:   5% (7/134)   [Kremote: Compressing objects:   6% (9/134)   [Kremote: Compressing objects:   7% (10/134)   [Kremote: Compressing objects:   8% (11/134)   [Kremote: Compressing objects:   9% (13/134)   [Kremote: Compressing objects:  10% (14/134)   [Kremote: Compressing objects:  11% (15/134)   [Kremote: Compressing objects:  12% (17/134)   [Kremote: Compressing objects:  13% (18/134)   [Kremote: Compressing objects:  14% (19/134)   [Kremote: Compressing objects:  15% (21/134)   [Kremote: Compressing objects:  16% (22/134)   [Kremote: Compressing objects:  17% (23/134)   [Kremote: Compressing objects:  18% (25/134)   [Kremote: Compressing objects:  19% (26/134)   [Kremote: Compressing objects:  20% (27/134)   [Kremote: Compressing objects:  21% (29/134)   [Kremote: Compressing objects:  22% (30/134)   [Kremote: Compressing objects:  23% (31/134)   [Kremote: Compressing objects:  24% (33/134)   [Kremote: Compressing objects:  25% (34/134)   [Kremote: Compressing objects:  26% (35/134)   [Kremote: Compressing objects:  27% (37/134)   [Kremote: Compressing objects:  28% (38/134)   [Kremote: Compressing objects:  29% (39/134)   [Kremote: Compressing objects:  30% (41/134)   [Kremote: Compressing objects:  31% (42/134)   [Kremote: Compressing objects:  32% (43/134)   [Kremote: Compressing objects:  33% (45/134)   [Kremote: Compressing objects:  34% (46/134)   [Kremote: Compressing objects:  35% (47/134)   [Kremote: Compressing objects:  36% (49/134)   [Kremote: Compressing objects:  37% (50/134)   [Kremote: Compressing objects:  38% (51/134)   [Kremote: Compressing objects:  39% (53/134)   [Kremote: Compressing objects:  40% (54/134)   [Kremote: Compressing objects:  41% (55/134)   [Kremote: Compressing objects:  42% (57/134)   [Kremote: Compressing objects:  43% (58/134)   [Kremote: Compressing objects:  44% (59/134)   [Kremote: Compressing objects:  45% (61/134)   [Kremote: Compressing objects:  46% (62/134)   [Kremote: Compressing objects:  47% (63/134)   [Kremote: Compressing objects:  48% (65/134)   [Kremote: Compressing objects:  49% (66/134)   [Kremote: Compressing objects:  50% (67/134)   [Kremote: Compressing objects:  51% (69/134)   [Kremote: Compressing objects:  52% (70/134)   [Kremote: Compressing objects:  53% (72/134)   [Kremote: Compressing objects:  54% (73/134)   [Kremote: Compressing objects:  55% (74/134)   [Kremote: Compressing objects:  56% (76/134)   [Kremote: Compressing objects:  57% (77/134)   [Kremote: Compressing objects:  58% (78/134)   [Kremote: Compressing objects:  59% (80/134)   [Kremote: Compressing objects:  60% (81/134)   [Kremote: Compressing objects:  61% (82/134)   [Kremote: Compressing objects:  62% (84/134)   [Kremote: Compressing objects:  63% (85/134)   [Kremote: Compressing objects:  64% (86/134)   [Kremote: Compressing objects:  65% (88/134)   [Kremote: Compressing objects:  66% (89/134)   [Kremote: Compressing objects:  67% (90/134)   [Kremote: Compressing objects:  68% (92/134)   [Kremote: Compressing objects:  69% (93/134)   [Kremote: Compressing objects:  70% (94/134)   [Kremote: Compressing objects:  71% (96/134)   [Kremote: Compressing objects:  72% (97/134)   [Kremote: Compressing objects:  73% (98/134)   [Kremote: Compressing objects:  74% (100/134)   [Kremote: Compressing objects:  75% (101/134)   [Kremote: Compressing objects:  76% (102/134)   [Kremote: Compressing objects:  77% (104/134)   [Kremote: Compressing objects:  78% (105/134)   [Kremote: Compressing objects:  79% (106/134)   [Kremote: Compressing objects:  80% (108/134)   [Kremote: Compressing objects:  81% (109/134)   [Kremote: Compressing objects:  82% (110/134)   [Kremote: Compressing objects:  83% (112/134)   [Kremote: Compressing objects:  84% (113/134)   [Kremote: Compressing objects:  85% (114/134)   [Kremote: Compressing objects:  86% (116/134)   [Kremote: Compressing objects:  87% (117/134)   [Kremote: Compressing objects:  88% (118/134)   [Kremote: Compressing objects:  89% (120/134)   [Kremote: Compressing objects:  90% (121/134)   [Kremote: Compressing objects:  91% (122/134)   [Kremote: Compressing objects:  92% (124/134)   [Kremote: Compressing objects:  93% (125/134)   [Kremote: Compressing objects:  94% (126/134)   [Kremote: Compressing objects:  95% (128/134)   [Kremote: Compressing objects:  96% (129/134)   [Kremote: Compressing objects:  97% (130/134)   [Kremote: Compressing objects:  98% (132/134)   [Kremote: Compressing objects:  99% (133/134)   [Kremote: Compressing objects: 100% (134/134)   [Kremote: Compressing objects: 100% (134/134), done.[K
+Receiving objects:   0% (1/442)   Receiving objects:   1% (5/442)   Receiving objects:   2% (9/442)   Receiving objects:   3% (14/442)   Receiving objects:   4% (18/442)   Receiving objects:   5% (23/442)   Receiving objects:   6% (27/442)   Receiving objects:   7% (31/442)   Receiving objects:   8% (36/442)   Receiving objects:   9% (40/442)   Receiving objects:  10% (45/442)   Receiving objects:  11% (49/442)   Receiving objects:  12% (54/442)   Receiving objects:  13% (58/442)   Receiving objects:  14% (62/442)   Receiving objects:  15% (67/442)   Receiving objects:  16% (71/442)   Receiving objects:  17% (76/442)   Receiving objects:  18% (80/442)   Receiving objects:  19% (84/442)   Receiving objects:  20% (89/442)   Receiving objects:  21% (93/442)   Receiving objects:  22% (98/442)   Receiving objects:  23% (102/442)   Receiving objects:  24% (107/442)   Receiving objects:  25% (111/442)   Receiving objects:  26% (115/442)   Receiving objects:  27% (120/442)   Receiving objects:  28% (124/442)   Receiving objects:  29% (129/442)   Receiving objects:  30% (133/442)   Receiving objects:  31% (138/442)   Receiving objects:  32% (142/442)   Receiving objects:  33% (146/442)   Receiving objects:  34% (151/442)   Receiving objects:  35% (155/442)   Receiving objects:  36% (160/442)   Receiving objects:  37% (164/442)   Receiving objects:  38% (168/442)   Receiving objects:  39% (173/442)   Receiving objects:  40% (177/442)   Receiving objects:  41% (182/442)   Receiving objects:  42% (186/442)   Receiving objects:  43% (191/442)   Receiving objects:  44% (195/442)   Receiving objects:  45% (199/442)   Receiving objects:  46% (204/442)   Receiving objects:  47% (208/442)   Receiving objects:  48% (213/442)   remote: Total 442 (delta 266), reused 402 (delta 236), pack-reused 0[K
+Receiving objects:  49% (217/442)   Receiving objects:  50% (221/442)   Receiving objects:  51% (226/442)   Receiving objects:  52% (230/442)   Receiving objects:  53% (235/442)   Receiving objects:  54% (239/442)   Receiving objects:  55% (244/442)   Receiving objects:  56% (248/442)   Receiving objects:  57% (252/442)   Receiving objects:  58% (257/442)   Receiving objects:  59% (261/442)   Receiving objects:  60% (266/442)   Receiving objects:  61% (270/442)   Receiving objects:  62% (275/442)   Receiving objects:  63% (279/442)   Receiving objects:  64% (283/442)   Receiving objects:  65% (288/442)   Receiving objects:  66% (292/442)   Receiving objects:  67% (297/442)   Receiving objects:  68% (301/442)   Receiving objects:  69% (305/442)   Receiving objects:  70% (310/442)   Receiving objects:  71% (314/442)   Receiving objects:  72% (319/442)   Receiving objects:  73% (323/442)   Receiving objects:  74% (328/442)   Receiving objects:  75% (332/442)   Receiving objects:  76% (336/442)   Receiving objects:  77% (341/442)   Receiving objects:  78% (345/442)   Receiving objects:  79% (350/442)   Receiving objects:  80% (354/442)   Receiving objects:  81% (359/442)   Receiving objects:  82% (363/442)   Receiving objects:  83% (367/442)   Receiving objects:  84% (372/442)   Receiving objects:  85% (376/442)   Receiving objects:  86% (381/442)   Receiving objects:  87% (385/442)   Receiving objects:  88% (389/442)   Receiving objects:  89% (394/442)   Receiving objects:  90% (398/442)   Receiving objects:  91% (403/442)   Receiving objects:  92% (407/442)   Receiving objects:  93% (412/442)   Receiving objects:  94% (416/442)   Receiving objects:  95% (420/442)   Receiving objects:  96% (425/442)   Receiving objects:  97% (429/442)   Receiving objects:  98% (434/442)   Receiving objects:  99% (438/442)   Receiving objects: 100% (442/442)   Receiving objects: 100% (442/442), 67.19 KiB | 0 bytes/s, done.
+Resolving deltas:   0% (0/266)   Resolving deltas:   1% (4/266)   Resolving deltas:   4% (11/266)   Resolving deltas:   7% (20/266)   Resolving deltas:  12% (32/266)   Resolving deltas:  13% (35/266)   Resolving deltas:  15% (40/266)   Resolving deltas:  17% (46/266)   Resolving deltas:  18% (48/266)   Resolving deltas:  19% (52/266)   Resolving deltas:  20% (54/266)   Resolving deltas:  23% (63/266)   Resolving deltas:  24% (64/266)   Resolving deltas:  26% (70/266)   Resolving deltas:  27% (72/266)   Resolving deltas:  29% (78/266)   Resolving deltas:  30% (82/266)   Resolving deltas:  32% (86/266)   Resolving deltas:  33% (88/266)   Resolving deltas:  34% (92/266)   Resolving deltas:  35% (95/266)   Resolving deltas:  36% (97/266)   Resolving deltas:  37% (101/266)   Resolving deltas:  39% (105/266)   Resolving deltas:  40% (107/266)   Resolving deltas:  42% (112/266)   Resolving deltas:  44% (119/266)   Resolving deltas:  47% (127/266)   Resolving deltas:  51% (138/266)   Resolving deltas:  53% (142/266)   Resolving deltas:  54% (145/266)   Resolving deltas:  55% (147/266)   Resolving deltas:  56% (149/266)   Resolving deltas:  57% (154/266)   Resolving deltas:  60% (162/266)   Resolving deltas:  61% (163/266)   Resolving deltas:  62% (167/266)   Resolving deltas:  63% (168/266)   Resolving deltas:  65% (173/266)   Resolving deltas:  66% (177/266)   Resolving deltas:  67% (179/266)   Resolving deltas:  69% (185/266)   Resolving deltas:  70% (187/266)   Resolving deltas:  71% (190/266)   Resolving deltas:  74% (197/266)   Resolving deltas:  75% (200/266)   Resolving deltas:  76% (203/266)   Resolving deltas:  77% (207/266)   Resolving deltas:  78% (210/266)   Resolving deltas:  79% (212/266)   Resolving deltas:  80% (213/266)   Resolving deltas:  82% (220/266)   Resolving deltas:  83% (223/266)   Resolving deltas:  84% (225/266)   Resolving deltas:  86% (229/266)   Resolving deltas:  87% (233/266)   Resolving deltas:  89% (237/266)   Resolving deltas:  90% (241/266)   Resolving deltas:  91% (243/266)   Resolving deltas:  95% (253/266)   Resolving deltas:  96% (256/266)   Resolving deltas:  97% (260/266)   Resolving deltas:  98% (263/266)   Resolving deltas: 100% (266/266)   Resolving deltas: 100% (266/266), completed with 63 local objects.
+From https://github.com/damianszczepanik/cucumber-reporting
+ * branch            refs/pull/665/merge -> FETCH_HEAD
+
+travis_time:end:0110e8ff:start=1505513787555999757,finish=1505513788311778048,duration=755778291[0K$ git checkout -qf FETCH_HEAD
+travis_fold:end:git.checkout[0K
+[33;1mEncrypted environment variables have been removed for security reasons.[0m
+[33;1mSee https://docs.travis-ci.com/user/pull-requests/#Pull-Requests-and-Security-Restrictions[0m
+[33;1mDisabling Gradle daemon[0m
+travis_time:start:09b73898[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+
+travis_time:end:09b73898:start=1505513788340878062,finish=1505513788345065262,duration=4187200[0K$ export PATH=$JAVA_HOME/bin:$PATH
+travis_fold:start:cache.1[0KSetting up build cache
+$ export CASHER_DIR=$HOME/.casher
+travis_time:start:021cd779[0K$ Installing caching utilities
+
+travis_time:end:021cd779:start=1505513792610194866,finish=1505513792746856090,duration=136661224[0Ktravis_time:start:25eedd77[0K
+travis_time:end:25eedd77:start=1505513792751923436,finish=1505513792755452508,duration=3529072[0Ktravis_time:start:0183677d[0K[32;1mattempting to download cache archive[0m
+[32;1mfetching PR.665/cache-linux-precise-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855--jdk-oraclejdk7.tgz[0m
+[32;1mfound cache[0m
+
+travis_time:end:0183677d:start=1505513792759568099,finish=1505513794099254657,duration=1339686558[0Ktravis_time:start:1e90c96c[0K
+travis_time:end:1e90c96c:start=1505513794103551436,finish=1505513794107264956,duration=3713520[0Ktravis_time:start:0c8dffc3[0K[32;1madding /home/travis/.m2 to cache[0m
+[32;1madding /home/travis/.sonar/cache to cache[0m
+[32;1mcreating directory /home/travis/.sonar/cache[0m
+
+travis_time:end:0c8dffc3:start=1505513794111451397,finish=1505513796205246888,duration=2093795491[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
+java version "1.7.0_80"
+Java(TM) SE Runtime Environment (build 1.7.0_80-b15)
+Java HotSpot(TM) 64-Bit Server VM (build 24.80-b11, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.7.0_80
+travis_fold:start:before_install[0Ktravis_time:start:19767b2a[0K$ sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+## Managed by Chef on packer-58ed3843-8935-63b2-85d5-21ea41f2dc87.c.eco-emissary-99515.internal :heart_eyes_cat:
+## cookbook:: travis_build_environment
+##     file:: templates/default/etc/cloud/templates/hosts.tmpl.erb
+
+127.0.1.1 ip4-loopback precise64
+
+127.0.0.1 localhost nettuno travis vagrant  testing-gce-dadd8cac-a3b0-4e45-8d24-b3e0066f0bf2
+travis_time:end:19767b2a:start=1505513796778751037,finish=1505513796801515368,duration=22764331[0Ktravis_fold:end:before_install[0Ktravis_fold:start:install[0Ktravis_time:start:1b106a61[0K$ mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.7.0_80, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-7-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "3.13.0-115-generic", arch: "amd64", family: "unix"
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building cucumber-reporting 3.10.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] Downloading: http://repo.maven.apache.org/maven2/org/apache/commons/commons-text/1.1/commons-text-1.1.pom
+[INFO] Downloaded: http://repo.maven.apache.org/maven2/org/apache/commons/commons-text/1.1/commons-text-1.1.pom (15 KB at 117.1 KB/sec)
+[INFO] Downloading: http://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.pom
+[INFO] Downloaded: http://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.pom (23 KB at 616.2 KB/sec)
+[INFO] Downloading: http://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/41/commons-parent-41.pom
+[INFO] Downloaded: http://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/41/commons-parent-41.pom (64 KB at 1130.7 KB/sec)
+[INFO] Downloading: http://repo.maven.apache.org/maven2/org/apache/commons/commons-text/1.1/commons-text-1.1.jar
+[INFO] Downloading: http://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar
+[INFO] Downloaded: http://repo.maven.apache.org/maven2/org/apache/commons/commons-text/1.1/commons-text-1.1.jar (127 KB at 2683.4 KB/sec)
+[INFO] Downloaded: http://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar (469 KB at 4110.8 KB/sec)
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.0:enforce (enforce-maven) @ cucumber-reporting ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (default) @ cucumber-reporting ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/damianszczepanik/cucumber-reporting/target/jacoco.exec
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ cucumber-reporting ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 57 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ cucumber-reporting ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 47 source files to /home/travis/build/damianszczepanik/cucumber-reporting/target/classes
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/main/java/net/masterthought/cucumber/sorting/SortingFactory.java: /home/travis/build/damianszczepanik/cucumber-reporting/src/main/java/net/masterthought/cucumber/sorting/SortingFactory.java uses unchecked or unsafe operations.
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/main/java/net/masterthought/cucumber/sorting/SortingFactory.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ cucumber-reporting ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 7 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ cucumber-reporting ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 80 source files to /home/travis/build/damianszczepanik/cucumber-reporting/target/test-classes
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/test/java/net/masterthought/cucumber/generators/FailuresOverviewPageTest.java: /home/travis/build/damianszczepanik/cucumber-reporting/src/test/java/net/masterthought/cucumber/generators/FailuresOverviewPageTest.java uses unchecked or unsafe operations.
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/test/java/net/masterthought/cucumber/generators/FailuresOverviewPageTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.20:test (default-test) @ cucumber-reporting ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report (report) @ cucumber-reporting ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ cucumber-reporting ---
+[INFO] Building jar: /home/travis/build/damianszczepanik/cucumber-reporting/target/cucumber-reporting-3.10.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-source-plugin:2.4:jar-no-fork (attach-sources) @ cucumber-reporting ---
+[INFO] Building jar: /home/travis/build/damianszczepanik/cucumber-reporting/target/cucumber-reporting-3.10.1-SNAPSHOT-sources.jar
+[INFO] 
+[INFO] --- maven-javadoc-plugin:2.10.4:jar (attach-javadocs) @ cucumber-reporting ---
+[INFO] Skipping javadoc generation
+[INFO] 
+[INFO] --- maven-failsafe-plugin:2.20:integration-test (default) @ cucumber-reporting ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-failsafe-plugin:2.20:verify (default) @ cucumber-reporting ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ cucumber-reporting ---
+[INFO] Installing /home/travis/build/damianszczepanik/cucumber-reporting/target/cucumber-reporting-3.10.1-SNAPSHOT.jar to /home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/cucumber-reporting-3.10.1-SNAPSHOT.jar
+[INFO] Installing /home/travis/build/damianszczepanik/cucumber-reporting/pom.xml to /home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/cucumber-reporting-3.10.1-SNAPSHOT.pom
+[INFO] Installing /home/travis/build/damianszczepanik/cucumber-reporting/target/cucumber-reporting-3.10.1-SNAPSHOT-sources.jar to /home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/cucumber-reporting-3.10.1-SNAPSHOT-sources.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 12.358 s
+[INFO] Finished at: 2017-09-15T22:16:51+00:00
+[INFO] Final Memory: 34M/219M
+[INFO] ------------------------------------------------------------------------
+
+travis_time:end:1b106a61:start=1505513796806594918,finish=1505513811530067935,duration=14723473017[0Ktravis_fold:end:install[0K[33;1msonarqube addon has been renamed to sonarcloud. Please update your configuration.[0m
+travis_fold:start:sonarcloud.addon[0K[33;1mSonarCloud addon[0m
+addon hash: 23baed938124b62a45592fb9dfa3cc87
+[33;1mPreparing SonarQube Scanner CLI[0m
+Archive:  /home/travis/.sonarscanner/sonar-scanner.zip
+   creating: /home/travis/.sonarscanner/sonar-scanner-2.8/
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner.bat  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner-debug  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/lib/sonar-scanner-cli-2.8.jar  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/conf/sonar-scanner.properties  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-runner.bat  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-runner  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner-debug.bat  
+$ export SONAR_SCANNER_HOME=$HOME/.sonarscanner/sonar-scanner-2.8
+[33;1mNot installing SonarSource build-wrapper because it's a Java or Javascript project[0m
+[33;1mSkipping SonarCloud Scan because it is not running in a secure environment[0m
+$ export SONARQUBE_SKIPPED=true
+travis_fold:end:sonarcloud.addon[0Ktravis_time:start:2dfb6202[0K$ mvn clean test
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building cucumber-reporting 3.10.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ cucumber-reporting ---
+[INFO] Deleting /home/travis/build/damianszczepanik/cucumber-reporting/target
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.0:enforce (enforce-maven) @ cucumber-reporting ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (default) @ cucumber-reporting ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/damianszczepanik/cucumber-reporting/target/jacoco.exec
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ cucumber-reporting ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 57 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ cucumber-reporting ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 47 source files to /home/travis/build/damianszczepanik/cucumber-reporting/target/classes
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/main/java/net/masterthought/cucumber/sorting/SortingFactory.java: /home/travis/build/damianszczepanik/cucumber-reporting/src/main/java/net/masterthought/cucumber/sorting/SortingFactory.java uses unchecked or unsafe operations.
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/main/java/net/masterthought/cucumber/sorting/SortingFactory.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ cucumber-reporting ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 7 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ cucumber-reporting ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 80 source files to /home/travis/build/damianszczepanik/cucumber-reporting/target/test-classes
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/test/java/net/masterthought/cucumber/generators/FailuresOverviewPageTest.java: /home/travis/build/damianszczepanik/cucumber-reporting/src/test/java/net/masterthought/cucumber/generators/FailuresOverviewPageTest.java uses unchecked or unsafe operations.
+[INFO] /home/travis/build/damianszczepanik/cucumber-reporting/src/test/java/net/masterthought/cucumber/generators/FailuresOverviewPageTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.20:test (default-test) @ cucumber-reporting ---
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running net.masterthought.cucumber.UtilTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.631 s - in net.masterthought.cucumber.UtilTest
+[INFO] Running net.masterthought.cucumber.json.ElementTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.585 s - in net.masterthought.cucumber.json.ElementTest
+[INFO] Running net.masterthought.cucumber.json.MatchTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 s - in net.masterthought.cucumber.json.MatchTest
+[INFO] Running net.masterthought.cucumber.json.RowTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s - in net.masterthought.cucumber.json.RowTest
+[INFO] Running net.masterthought.cucumber.json.FeatureTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.602 s - in net.masterthought.cucumber.json.FeatureTest
+[INFO] Running net.masterthought.cucumber.json.DocStringTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in net.masterthought.cucumber.json.DocStringTest
+[INFO] Running net.masterthought.cucumber.json.ResultTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.22 s - in net.masterthought.cucumber.json.ResultTest
+[INFO] Running net.masterthought.cucumber.json.EmbeddingTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s - in net.masterthought.cucumber.json.EmbeddingTest
+[INFO] Running net.masterthought.cucumber.json.OutputTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s - in net.masterthought.cucumber.json.OutputTest
+[INFO] Running net.masterthought.cucumber.json.support.StepObjectTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.03 s - in net.masterthought.cucumber.json.support.StepObjectTest
+[INFO] Running net.masterthought.cucumber.json.support.TagObjectTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.361 s - in net.masterthought.cucumber.json.support.TagObjectTest
+[INFO] Running net.masterthought.cucumber.json.support.StatusTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in net.masterthought.cucumber.json.support.StatusTest
+[INFO] Running net.masterthought.cucumber.json.StepTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.363 s - in net.masterthought.cucumber.json.StepTest
+[INFO] Running net.masterthought.cucumber.json.TagTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.114 s - in net.masterthought.cucumber.json.TagTest
+[INFO] Running net.masterthought.cucumber.json.HookTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.227 s - in net.masterthought.cucumber.json.HookTest
+[INFO] Running net.masterthought.cucumber.json.deserializers.StatusDeserializerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.162 s - in net.masterthought.cucumber.json.deserializers.StatusDeserializerTest
+[INFO] Running net.masterthought.cucumber.ConfigurationTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s - in net.masterthought.cucumber.ConfigurationTest
+[INFO] Running net.masterthought.cucumber.generators.FeaturesOverviewPageTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.35 s - in net.masterthought.cucumber.generators.FeaturesOverviewPageTest
+[INFO] Running net.masterthought.cucumber.generators.EscapeHtmlReferenceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s - in net.masterthought.cucumber.generators.EscapeHtmlReferenceTest
+[INFO] Running net.masterthought.cucumber.generators.TrendsOverviewPageTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s - in net.masterthought.cucumber.generators.TrendsOverviewPageTest
+[INFO] Running net.masterthought.cucumber.generators.StepsOverviewPageTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s - in net.masterthought.cucumber.generators.StepsOverviewPageTest
+[INFO] Running net.masterthought.cucumber.generators.AbstractPageTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.979 s - in net.masterthought.cucumber.generators.AbstractPageTest
+[INFO] Running net.masterthought.cucumber.generators.FeatureReportPageTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 s - in net.masterthought.cucumber.generators.FeatureReportPageTest
+[INFO] Running net.masterthought.cucumber.generators.TagsOverviewPageTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s - in net.masterthought.cucumber.generators.TagsOverviewPageTest
+[INFO] Running net.masterthought.cucumber.generators.ErrorPageTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s - in net.masterthought.cucumber.generators.ErrorPageTest
+[INFO] Running net.masterthought.cucumber.generators.TagReportPageTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in net.masterthought.cucumber.generators.TagReportPageTest
+[INFO] Running net.masterthought.cucumber.generators.FailuresOverviewPageTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s - in net.masterthought.cucumber.generators.FailuresOverviewPageTest
+[INFO] Running net.masterthought.cucumber.generators.OverviewReportTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in net.masterthought.cucumber.generators.OverviewReportTest
+[INFO] Running net.masterthought.cucumber.TrendsTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in net.masterthought.cucumber.TrendsTest
+[INFO] Running net.masterthought.cucumber.ReportBuilderTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.655 s - in net.masterthought.cucumber.ReportBuilderTest
+[INFO] Running net.masterthought.cucumber.ReportResultTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s - in net.masterthought.cucumber.ReportResultTest
+[INFO] Running net.masterthought.cucumber.sorting.FeaturesAlphabeticalComparatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s - in net.masterthought.cucumber.sorting.FeaturesAlphabeticalComparatorTest
+[INFO] Running net.masterthought.cucumber.sorting.StepObjectAlphabeticalComparatorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in net.masterthought.cucumber.sorting.StepObjectAlphabeticalComparatorTest
+[INFO] Running net.masterthought.cucumber.sorting.TagObjectAlphabeticalComparatorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in net.masterthought.cucumber.sorting.TagObjectAlphabeticalComparatorTest
+[INFO] Running net.masterthought.cucumber.sorting.SortingFactoryTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.132 s - in net.masterthought.cucumber.sorting.SortingFactoryTest
+[INFO] Running net.masterthought.cucumber.EmptyReportableTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s - in net.masterthought.cucumber.EmptyReportableTest
+[INFO] Running net.masterthought.cucumber.ValidationExceptionTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in net.masterthought.cucumber.ValidationExceptionTest
+[INFO] Running net.masterthought.cucumber.util.CounterTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in net.masterthought.cucumber.util.CounterTest
+[INFO] Running net.masterthought.cucumber.util.UtilTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in net.masterthought.cucumber.util.UtilTest
+[INFO] Running net.masterthought.cucumber.ReportParserTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s - in net.masterthought.cucumber.ReportParserTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 302, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report (report) @ cucumber-reporting ---
+[INFO] Loading execution data file /home/travis/build/damianszczepanik/cucumber-reporting/target/jacoco.exec
+[INFO] Analyzed bundle 'cucumber-reporting' with 45 classes
+[WARNING] Classes in bundle 'cucumber-reporting' do no match with execution data. For report generation the same class files must be used as at runtime.
+[WARNING] Execution data for class net/masterthought/cucumber/sorting/SortingMethod does not match.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 25.591 s
+[INFO] Finished at: 2017-09-15T22:17:18+00:00
+[INFO] Final Memory: 25M/228M
+[INFO] ------------------------------------------------------------------------
+
+travis_time:end:2dfb6202:start=1505513811717430648,finish=1505513839152194991,duration=27434764343[0K
+[32;1mThe command "mvn clean test" exited with 0.[0m
+travis_fold:start:cache.2[0Kstore build cache
+travis_time:start:05825f58[0K
+travis_time:end:05825f58:start=1505513839157049106,finish=1505513839160873198,duration=3824092[0Ktravis_time:start:01fb5620[0K[32;1mchange detected (content changed, file is created, or file is deleted):
+/home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/cucumber-reporting-3.10.1-SNAPSHOT.jar
+/home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/cucumber-reporting-3.10.1-SNAPSHOT.pom
+/home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/cucumber-reporting-3.10.1-SNAPSHOT-sources.jar
+/home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/net/masterthought/cucumber-reporting/3.10.1-SNAPSHOT/_remote.repositories
+/home/travis/.m2/repository/net/masterthought/cucumber-reporting/maven-metadata-local.xml
+/home/travis/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar
+/home/travis/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar.sha1
+/home/travis/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.pom
+/home/travis/.m2/repository/org/apache/commons/commons-lang3/3.5/comm
+[0m
+[32;1m...
+[0m
+[32;1mchanges detected, packing new archive[0m
+[32;1muploading archive[0m
+
+travis_time:end:01fb5620:start=1505513839165103560,finish=1505513842747512297,duration=3582408737[0Ktravis_fold:end:cache.2[0Ktravis_fold:start:after_success[0Ktravis_time:start:0a9c5f3f[0K$ bash <(curl -s https://codecov.io/bash)
+
+  _____          _
+ / ____|        | |
+| |     ___   __| | ___  ___ _____   __
+| |    / _ \ / _` |/ _ \/ __/ _ \ \ / /
+| |___| (_) | (_| |  __/ (_| (_) \ V /
+ \_____\___/ \__,_|\___|\___\___/ \_/
+                              Bash-d109cc7
+
+
+[0;90m==>[0m Travis CI detected.
+    [0;90mproject root:[0m .
+    [0;32mYaml not found, that's ok! Learn more at[0m [0;36mhttp://docs.codecov.io/docs/codecov-yaml[0m
+[0;90m==>[0m Running gcov in . [0;90m(disable via -X gcov)[0m
+[0;90m==>[0m Python coveragepy not found
+[0;90m==>[0m Searching for coverage reports in:
+    [0;32m+[0m .
+    [0;90m->[0m Found 1 reports
+[0;90m==>[0m Detecting git/mercurial file structure
+[0;90m==>[0m Appending build variables
+    [0;32m+[0m TRAVIS_OS_NAME
+    [0;32m+[0m TRAVIS_JDK_VERSION
+[0;90m==>[0m Reading reports
+    [0;32m+[0m ./target/site/jacoco/jacoco.xml [0;90mbytes=178469[0m
+[0;90m==>[0m Appending adjustments
+    [0;36mhttp://docs.codecov.io/docs/fixing-reports[0m
+    [0;90m->[0m No adjustments found
+[0;90m==>[0m Uploading reports
+    [0;90murl:[0m https://codecov.io
+    [0;90mquery:[0m branch=master&commit=2e238ed7266b131a8ba9d2c0d569435f38e7d3af&build=1812.1&build_url=&name=&tag=&slug=damianszczepanik%2Fcucumber-reporting&yaml=&service=travis&flags=&pr=665&job=276081078
+    [0;90m->[0m Pinging Codecov
+    [0;90m->[0m Uploading to S3 https://codecov.s3.amazonaws.com
+    [0;32m->[0m View reports at [0;36mhttps://codecov.io/github/damianszczepanik/cucumber-reporting/commit/863da4998c922ddc9f156f7ce1b2e3773e74d9b8[0m
+
+travis_time:end:0a9c5f3f:start=1505513842751904963,finish=1505513844155960387,duration=1404055424[0Ktravis_fold:end:after_success[0K
+Done. Your build exited with 0.
