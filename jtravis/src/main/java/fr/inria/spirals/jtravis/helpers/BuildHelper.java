@@ -78,8 +78,9 @@ public class BuildHelper extends AbstractHelper {
                 build.setRepositoryId(build.getRepository().getId());
 
                 JsonObject branch = allAnswer.getAsJsonObject("branch");
-                build.getCommit().setBranch(branch.getAsJsonObject("name").getAsString());
-
+                build.getCommit().setBranch(branch.get("name").getAsString());
+                if(build.getPullRequestNumber() != 0)
+                    build.setPullRequest(true);
                 List<Integer> jobsId = new ArrayList<Integer>();
                 for (Job jobs : build.getJobs()) {
                     jobsId.add(jobs.getId());
