@@ -21,6 +21,12 @@ router.route('/statusStats')
 router.route('/statusStats/:nbDays')
   .get(inspectorCtrl.statusStatsPeriod);
 
+router.route('/reproducedBuilds')
+  .get(inspectorCtrl.reproducedBuildsAll);
+
+router.route('/reproducedBuilds/:nbDays')
+  .get(inspectorCtrl.reproducedBuilds);
+
 router.param('nbDays', (req, res, next, nbDays) => {
   req.nbDays = nbDays; // eslint-disable-line no-param-reassign
   next();

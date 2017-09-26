@@ -84,6 +84,43 @@ InspectorSchema.statics = {
     ]).exec();
   },
 
+  reproducedErrors(nbDays) {
+    const ltDateIso = moment().toISOString();
+    const gtDateIso = (nbDays !== 0) ? moment().subtract(nbDays, 'days').toISOString() : moment('01-01-2017', 'DD-MM-YYYY').toISOString();
+
+    return this.aggregate([
+      {
+        $match: {
+          buildFinishedDate: {
+            $gte: new Date(gtDateIso),
+            $lt: new Date(ltDateIso)
+          },
+          typeOfFailures: {
+            $ne: null
+          }
+        }
+      },
+      {
+        $project: {
+          dayOfReproduction: { $dateToString: { format: '%Y-%m-%d', date: '$buildReproductionDate' } }
+        }
+      },
+      {
+        $group: {
+          _id: '$dayOfReproduction',
+          counted: {
+            $sum: 1
+          }
+        }
+      },
+      {
+        $sort: {
+          _id: 1
+        }
+      }
+    ]).exec();
+  },
+
   statusStats(nbDays) {
     const ltDateIso = moment().toISOString();
     const gtDateIso = (nbDays !== 0) ? moment().subtract(nbDays, 'days').toISOString() : moment('01-01-2017', 'DD-MM-YYYY').toISOString();

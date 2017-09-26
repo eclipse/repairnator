@@ -1,4 +1,4 @@
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksData/2', function (data) {
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksData/2', function (dataScanner) {
   console.log(data);
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
@@ -25,7 +25,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
    },
    */
 
-  var reducedData = data.reduce(function (accumulator, currentValue) {
+  var reducedData = dataScanner.reduce(function (accumulator, currentValue) {
     if (accumulator.length == 0) {
       return [ currentValue ];
     } else {
@@ -45,98 +45,64 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
     }
   }, []);
 
-  Highcharts.chart({
-    chart: {
-      type: 'spline',
-      renderTo: htmlElement[0]
-    },
-    title: {
-      text: 'Number of scanned builds'
-    },
-    xAxis: {
-      type: 'datetime',
-      dateTimeLabelFormats: { // don't display the dummy year
-        day:'%A, %b %e',
+  $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspector/reproducedBuilds/14', function (dataInspector) {
+    Highcharts.chart({
+      chart: {
+        type: 'spline',
+        renderTo: htmlElement[0]
       },
       title: {
-        text: 'Date'
-      }
-    },
-    yAxis: {
-      title: {
-        text: 'Number of builds'
+        text: 'Number of scanned and reproduced builds on the last 2 weeks'
       },
-      min: 0
-    },
-    tooltip: {
-      headerFormat: '<b>{series.name}</b><br>',
-      pointFormat: '{point.x:%A, %b %e}: {point.y} builds'
-    },
-
-    plotOptions: {
-      spline: {
-        marker: {
-          enabled: true
+      xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+          day:'%A, %b %e',
+        },
+        title: {
+          text: 'Date'
         }
-      }
-    },
+      },
+      yAxis: {
+        title: {
+          text: 'Number of builds'
+        },
+        min: 0
+      },
+      tooltip: {
+        headerFormat: '<b>{series.name}</b><br>',
+        pointFormat: '{point.x:%A, %b %e}: {point.y} builds'
+      },
 
-    series: [
-      {
-        name: 'totalRepoNumber',
-        data: reducedData.map( function (d) {
-          return [
-            Date.parse(d.dateLimit),
-            d.totalRepoNumber
-          ]
-        })
+      plotOptions: {
+        spline: {
+          marker: {
+            enabled: true
+          }
+        }
       },
-      {
-        name: 'totalScannedBuilds',
-        data: reducedData.map( function (d) {
-          return [
-            Date.parse(d.dateLimit),
-            d.totalScannedBuilds
-          ]
-        })
-      },
-      {
-        name: 'totalJavaBuilds',
-        data: reducedData.map( function (d) {
-          return [
-            Date.parse(d.dateLimit),
-            d.totalJavaBuilds
-          ]
-        })
-      },
-      {
-        name: 'totalJavaPassingBuilds',
-        data: reducedData.map( function (d) {
-          return [
-            Date.parse(d.dateLimit),
-            d.totalJavaPassingBuilds
-          ]
-        })
-      },
-      {
-        name: 'totalJavaFailingBuilds',
-        data: reducedData.map( function (d) {
-          return [
-            Date.parse(d.dateLimit),
-            d.totalJavaFailingBuilds
-          ]
-        })
-      },
-      {
-        name: 'totalJavaFailingBuildsWithFailingTests',
-        data: reducedData.map( function (d) {
-          return [
-            Date.parse(d.dateLimit),
-            d.totalJavaFailingBuildsWithFailingTests
-          ]
-        })
-      }
-    ]
+
+      series: [
+        {
+          name: 'Builds to reproduce',
+          data: reducedData.map( function (d) {
+            return [
+              Date.parse(d.dateLimit),
+              d.totalJavaFailingBuildsWithFailingTests
+            ]
+          })
+        },
+        {
+          name: 'Builds succeed to reproduce',
+          data: dataInspector.map( function (d) {
+            return [
+              moment(d._id, 'YYYY-MM-DD').toDate(),
+              d.counted
+            ]
+          })
+        }
+      ]
+    });
   });
 });
 
