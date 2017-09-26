@@ -6,7 +6,8 @@
     "modernizr": "~2.8.1",
     "jquery": "^3.2.1",
     "d3": "^4.7.4",
-    "highcharts": "^5.0.10"
+    "highcharts": "^5.0.10",
+    "moment": "momentjs#^2.18.1"
   },
   "overrides": {
     "bootstrap-sass": {

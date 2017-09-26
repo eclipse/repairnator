@@ -144,6 +144,29 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
+  var reducedData = data.reduce(function (accumulator, currentValue) {
+    if (accumulator.length == 0) {
+      return [ currentValue ];
+    } else {
+      var previousValue = accumulator[accumulator.length - 1];
+
+      var previousValueWeek = moment(previousValue.dateLimit).week();
+      var currentValueWeek = moment(currentValue.dateLimit).week();
+
+      if (previousValueWeek === currentValueWeek) {
+        for (var attr in previousValue) {
+          if (attr.indexOf('total') != -1 && attr.indexOf('totalRepoNumber') == -1) {
+            previousValue[attr] += currentValue[attr];
+          }
+        }
+      } else {
+        accumulator.push(currentValue);
+      }
+
+      return accumulator;
+    }
+  }, []);
+
   /*
    {
    '_id': '58e22490cefc9665e4354cde',
@@ -166,28 +189,58 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
    },
    */
 
+  (function (H) {
+    // Pass error messages
+    H.Axis.prototype.allowNegativeLog = true;
+
+    // Override conversions
+    H.Axis.prototype.log2lin = function (num) {
+      var isNegative = num < 0,
+        adjustedNum = Math.abs(num),
+        result;
+      if (adjustedNum < 10) {
+        adjustedNum += (10 - adjustedNum) / 10;
+      }
+      result = Math.log(adjustedNum) / Math.LN10;
+      return isNegative ? -result : result;
+    };
+    H.Axis.prototype.lin2log = function (num) {
+      var isNegative = num < 0,
+        absNum = Math.abs(num),
+        result = Math.pow(10, absNum);
+      if (result < 10) {
+        result = (10 * (result - 1)) / (10 - 1);
+      }
+      return isNegative ? -result : result;
+    };
+  }(Highcharts));
+
   Highcharts.chart({
     chart: {
       type: 'spline',
-      renderTo: htmlElement[0]
+      renderTo: htmlElement[0],
+      width: undefined,
+      height: 700
     },
     title: {
-      text: 'Number of scanned builds'
+      text: 'Number of scanned builds per week'
     },
     xAxis: {
       type: 'datetime',
       dateTimeLabelFormats: { // don't display the dummy year
-        day:'%A, %b %e',
+        week:'%e %b %Y',
       },
       title: {
         text: 'Date'
       }
     },
     yAxis: {
+      type: 'logarithmic',
+      minorTickInterval: 1,
       title: {
         text: 'Number of builds'
       },
-      min: 0
+      min: 20
     },
     tooltip: {
       headerFormat: '<b>{series.name}</b><br>',
@@ -198,14 +251,17 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       spline: {
         marker: {
           enabled: true
-        }
-      }
+        },
+        dataLabels: {
+          enabled: true
+        },
+      },
     },
 
     series: [
       {
         name: 'totalRepoNumber',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalRepoNumber
@@ -214,7 +270,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       },
       {
         name: 'totalScannedBuilds',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalScannedBuilds
@@ -223,7 +279,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       },
       {
         name: 'totalJavaBuilds',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalJavaBuilds
@@ -231,17 +287,8 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
         })
       },
       {
-        name: 'totalJavaPassingBuilds',
-        data: data.map( function (d) {
-          return [
-            Date.parse(d.dateLimit),
-            d.totalJavaPassingBuilds
-          ]
-        })
-      },
-      {
         name: 'totalJavaFailingBuilds',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalJavaFailingBuilds
@@ -250,7 +297,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       },
       {
         name: 'totalJavaFailingBuildsWithFailingTests',
-        data: data.map( function (d) {
+        data: reducedData.map( function (d) {
           return [
             Date.parse(d.dateLimit),
             d.totalJavaFailingBuildsWithFailingTests
