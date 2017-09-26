@@ -89,7 +89,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
           name: 'Builds to reproduce',
           data: reducedData.map( function (d) {
             return [
-              Date.parse(d.dateLimit),
+              moment(d.dateLimit).hour(0).minute(0).second(0).valueOf(),
               d.totalJavaFailingBuildsWithFailingTests
             ]
           })
