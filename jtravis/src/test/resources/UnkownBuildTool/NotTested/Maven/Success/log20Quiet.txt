@@ -1,0 +1,904 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: 8cd95130-1b3b-421b-b1e5-01708f3e6df7@1.production-1-worker-org-c-6-gce
+version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
+instance: testing-gce-6221ee06-a143-425a-ae84-bca0c03c9431:travis-ci-garnet-trusty-1503972833 (via amqp)
+startup: 22.213131026s
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: trusty
+Build id: 278100935
+Job id: 278100936
+Runtime kernel version: 4.4.0-93-generic
+travis-build version: 125c5d1fa
+[34m[1mBuild image provisioning date and time[0m
+Tue Aug 29 02:48:34 UTC 2017
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 14.04.5 LTS
+Release:	14.04
+Codename:	trusty
+[34m[1mCookbooks Version[0m
+4642454 https://github.com/travis-ci/travis-cookbooks/tree/4642454
+[34m[1mgit version[0m
+git version 2.14.1
+[34m[1mbash version[0m
+GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
+[34m[1mgcc version[0m
+gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
+Copyright (C) 2013 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mdocker version[0m
+Client:
+ Version:      17.03.1-ce
+ API version:  1.27
+ Go version:   go1.7.5
+ Git commit:   c6d412e
+ Built:        Mon Mar 27 17:10:36 2017
+ OS/Arch:      linux/amd64
+
+Server:
+ Version:      17.03.1-ce
+ API version:  1.27 (minimum version 1.12)
+ Go version:   go1.7.5
+ Git commit:   c6d412e
+ Built:        Mon Mar 27 17:10:36 2017
+ OS/Arch:      linux/amd64
+ Experimental: false
+[34m[1mclang version[0m
+clang version 3.9.0 (tags/RELEASE_390/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /usr/local/clang-3.9.0/bin
+[34m[1mjq version[0m
+jq-1.5
+[34m[1mbats version[0m
+Bats 0.4.0
+[34m[1mshellcheck version[0m
+0.4.6
+[34m[1mshfmt version[0m
+v1.3.1
+[34m[1mccache version[0m
+ccache version 3.1.9
+
+Copyright (C) 2002-2007 Andrew Tridgell
+Copyright (C) 2009-2011 Joel Rosdahl
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 3 of the License, or (at your option) any later
+version.
+[34m[1mcmake version[0m
+cmake version 3.2.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+[34m[1mheroku version[0m
+heroku-cli/6.13.19-6cd27b3 (linux-x64) node-v8.3.0
+[34m[1mimagemagick version[0m
+Version: ImageMagick 6.7.7-10 2017-07-31 Q16 http://www.imagemagick.org
+[34m[1mmd5deep version[0m
+4.2
+[34m[1mmercurial version[0m
+Mercurial Distributed SCM (version 4.2.2)
+(see https://mercurial-scm.org for more information)
+
+Copyright (C) 2005-2017 Matt Mackall and others
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+[34m[1mmysql version[0m
+mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
+[34m[1mopenssl version[0m
+OpenSSL 1.0.1f 6 Jan 2014
+[34m[1mpacker version[0m
+Packer v1.0.2
+
+Your version of Packer is out of date! The latest version
+is 1.0.4. You can update by downloading from www.packer.io
+[34m[1mpostgresql client version[0m
+psql (PostgreSQL) 9.6.4
+[34m[1mragel version[0m
+Ragel State Machine Compiler version 6.8 Feb 2013
+Copyright (c) 2001-2009 by Adrian Thurston
+[34m[1msubversion version[0m
+svn, version 1.8.8 (r1568071)
+   compiled Aug 10 2017, 17:20:39 on x86_64-pc-linux-gnu
+
+Copyright (C) 2013 The Apache Software Foundation.
+This software consists of contributions made by many people;
+see the NOTICE file for more information.
+Subversion is open source software, see http://subversion.apache.org/
+
+The following repository access (RA) modules are available:
+
+* ra_svn : Module for accessing a repository using the svn network protocol.
+  - with Cyrus SASL authentication
+  - handles 'svn' scheme
+* ra_local : Module for accessing a repository on local disk.
+  - handles 'file' scheme
+* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
+  - using serf 1.3.3
+  - handles 'http' scheme
+  - handles 'https' scheme
+
+[34m[1msudo version[0m
+Sudo version 1.8.9p5
+Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
+Sudoers policy plugin version 1.8.9p5
+Sudoers file grammar version 43
+
+Sudoers path: /etc/sudoers
+Authentication methods: 'pam'
+Syslog facility if syslog is being used for logging: authpriv
+Syslog priority to use when user authenticates successfully: notice
+Syslog priority to use when user authenticates unsuccessfully: alert
+Send mail if the user is not in sudoers
+Use a separate timestamp for each user/tty combo
+Lecture user the first time they run sudo
+Root may run sudo
+Allow some information gathering to give useful error messages
+Require fully-qualified hostnames in the sudoers file
+Visudo will honor the EDITOR environment variable
+Set the LOGNAME and USER environment variables
+Length at which to wrap log file lines (0 for no wrap): 80
+Authentication timestamp timeout: 15.0 minutes
+Password prompt timeout: 0.0 minutes
+Number of tries to enter a password: 3
+Umask to use or 0777 to use user's: 022
+Path to mail program: /usr/sbin/sendmail
+Flags for mail program: -t
+Address to send mail to: root
+Subject line for mail messages: *** SECURITY information for %h ***
+Incorrect password message: Sorry, try again.
+Path to authentication timestamp dir: /var/lib/sudo
+Default password prompt: [sudo] password for %p: 
+Default user to run commands as: root
+Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+Path to the editor for use by visudo: /usr/bin/editor
+When to require a password for 'list' pseudocommand: any
+When to require a password for 'verify' pseudocommand: all
+File descriptors >= 3 will be closed before executing a command
+Environment variables to check for sanity:
+	TZ
+	TERM
+	LINGUAS
+	LC_*
+	LANGUAGE
+	LANG
+	COLORTERM
+Environment variables to remove:
+	RUBYOPT
+	RUBYLIB
+	PYTHONUSERBASE
+	PYTHONINSPECT
+	PYTHONPATH
+	PYTHONHOME
+	TMPPREFIX
+	ZDOTDIR
+	READNULLCMD
+	NULLCMD
+	FPATH
+	PERL5DB
+	PERL5OPT
+	PERL5LIB
+	PERLLIB
+	PERLIO_DEBUG 
+	JAVA_TOOL_OPTIONS
+	SHELLOPTS
+	GLOBIGNORE
+	PS4
+	BASH_ENV
+	ENV
+	TERMCAP
+	TERMPATH
+	TERMINFO_DIRS
+	TERMINFO
+	_RLD*
+	LD_*
+	PATH_LOCALE
+	NLSPATH
+	HOSTALIASES
+	RES_OPTIONS
+	LOCALDOMAIN
+	CDPATH
+	IFS
+Environment variables to preserve:
+	JAVA_HOME
+	TRAVIS
+	CI
+	DEBIAN_FRONTEND
+	XAUTHORIZATION
+	XAUTHORITY
+	PS2
+	PS1
+	PATH
+	LS_COLORS
+	KRB5CCNAME
+	HOSTNAME
+	HOME
+	DISPLAY
+	COLORS
+Locale to use while parsing sudoers: C
+Directory in which to store input/output logs: /var/log/sudo-io
+File in which to store the input/output log: %{seq}
+Add an entry to the utmp/utmpx file when allocating a pty
+PAM service name to use
+PAM service name to use for login shells
+Create a new PAM session for the command to run in
+Maximum I/O log sequence number: 0
+
+Local IP address and netmask pairs:
+	10.240.0.10/255.255.255.255
+	172.17.0.1/255.255.0.0
+
+Sudoers I/O plugin version 1.8.9p5
+[34m[1mgzip version[0m
+gzip 1.6
+Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
+Copyright (C) 1993 Jean-loup Gailly.
+This is free software.  You may redistribute copies of it under the terms of
+the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jean-loup Gailly.
+[34m[1mzip version[0m
+Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
+This is Zip 3.0 (July 5th 2008), by Info-ZIP.
+Currently maintained by E. Gordon.  Please send bug reports to
+the authors using the web page at www.info-zip.org; see README for details.
+
+Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
+as of above date; see http://www.info-zip.org/ for other sites.
+
+Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
+
+Zip special compilation options:
+	USE_EF_UT_TIME       (store Universal Time)
+	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
+	    bzip2 code and library copyright (c) Julian R Seward
+	    (See the bzip2 license for terms of use)
+	SYMLINK_SUPPORT      (symbolic links supported)
+	LARGE_FILE_SUPPORT   (can read and write large files on file system)
+	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
+	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
+	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
+	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
+	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
+
+Encryption notice:
+	The encryption code of this program is not copyrighted and is
+	put in the public domain.  It was originally written in Europe
+	and, to the best of our knowledge, can be freely distributed
+	in both source and object forms from any country, including
+	the USA under License Exception TSU of the U.S. Export
+	Administration Regulations (section 740.13(e)) of 6 June 2002.
+
+Zip environment options:
+             ZIP:  [none]
+          ZIPOPT:  [none]
+[34m[1mvim version[0m
+VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
+Included patches: 1-52
+Extra patches: 8.0.0056
+Modified by pkg-vim-maintainers@lists.alioth.debian.org
+Compiled by buildd@
+Huge version without GUI.  Features included (+) or not (-):
++acl             +farsi           +mouse_netterm   +syntax
++arabic          +file_in_path    +mouse_sgr       +tag_binary
++autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
+-balloon_eval    +float           +mouse_urxvt     -tag_any_white
+-browse          +folding         +mouse_xterm     -tcl
+++builtin_terms  -footer          +multi_byte      +terminfo
++byte_offset     +fork()          +multi_lang      +termresponse
++cindent         +gettext         -mzscheme        +textobjects
+-clientserver    -hangul_input    +netbeans_intg   +title
+-clipboard       +iconv           +path_extra      -toolbar
++cmdline_compl   +insert_expand   -perl            +user_commands
++cmdline_hist    +jumplist        +persistent_undo +vertsplit
++cmdline_info    +keymap          +postscript      +virtualedit
++comments        +langmap         +printer         +visual
++conceal         +libcall         +profile         +visualextra
++cryptv          +linebreak       +python          +viminfo
++cscope          +lispindent      -python3         +vreplace
++cursorbind      +listcmds        +quickfix        +wildignore
++cursorshape     +localmap        +reltime         +wildmenu
++dialog_con      -lua             +rightleft       +windows
++diff            +menu            -ruby            +writebackup
++digraphs        +mksession       +scrollbind      -X11
+-dnd             +modify_fname    +signs           -xfontset
+-ebcdic          +mouse           +smartindent     -xim
++emacs_tags      -mouseshape      -sniff           -xsmp
++eval            +mouse_dec       +startuptime     -xterm_clipboard
++ex_extra        +mouse_gpm       +statusline      -xterm_save
++extra_search    -mouse_jsbterm   -sun_workshop    -xpm
+   system vimrc file: "$VIM/vimrc"
+     user vimrc file: "$HOME/.vimrc"
+ 2nd user vimrc file: "~/.vim/vimrc"
+      user exrc file: "$HOME/.exrc"
+  fall-back for $VIM: "/usr/share/vim"
+Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
+Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
+[34m[1miptables version[0m
+iptables v1.4.21
+[34m[1mcurl version[0m
+curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
+[34m[1mwget version[0m
+GNU Wget 1.15 built on linux-gnu.
+[34m[1mrsync version[0m
+rsync  version 3.1.0  protocol version 31
+[34m[1mgimme version[0m
+v1.2.0
+[34m[1mnvm version[0m
+0.33.2
+[34m[1mperlbrew version[0m
+/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
+[34m[1mphpenv version[0m
+rbenv 1.1.1-4-g4ebd1bd
+[34m[1mrvm version[0m
+rvm 1.29.2 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io/]
+[34m[1mdefault ruby version[0m
+ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mElasticSearch version[0m
+5.5.0
+[34m[1mInstalled Firefox version[0m
+firefox 55.0.2
+[34m[1mMongoDB version[0m
+MongoDB 3.2.16
+[34m[1mPre-installed PostgreSQL versions[0m
+9.2.22
+9.3.18
+9.4.13
+9.5.8
+9.6.4
+[34m[1mRabbitMQ Version[0m
+3.6.11
+[34m[1mRedis version[0m
+redis-server 4.0.1
+[34m[1mriak version[0m
+2.2.3
+[34m[1mPre-installed Go versions[0m
+1.7.4
+[34m[1mant version[0m
+Apache Ant(TM) version 1.9.3 compiled on April 8 2014
+[34m[1mmvn version[0m
+Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
+Maven home: /usr/local/maven-3.5.0
+Java version: 1.8.0_144, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.4.0-81-generic", arch: "amd64", family: "unix"
+[34m[1mgradle version[0m
+
+------------------------------------------------------------
+Gradle 4.0.1
+------------------------------------------------------------
+
+Build time:   2017-07-07 14:02:41 UTC
+Revision:     38e5dc0f772daecca1d2681885d3d85414eb6826
+
+Groovy:       2.4.11
+Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+JVM:          1.8.0_144 (Oracle Corporation 25.144-b01)
+OS:           Linux 4.4.0-81-generic amd64
+
+[34m[1mlein version[0m
+WARNING: You're currently running as root; probably by accident.
+Press control-C to abort or Enter to continue as root.
+Set LEIN_ROOT to disable this warning.
+Leiningen 2.7.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
+[34m[1mPre-installed Node.js versions[0m
+v4.8.4
+v6.11.2
+v6.9.4
+v7.4.0
+v8.4
+[34m[1mphpenv versions[0m
+  system
+  5.6
+* 5.6.31 (set by /home/travis/.phpenv/version)
+  7.0
+  7.0.22
+  hhvm
+  hhvm-stable
+[34m[1mcomposer --version[0m
+Composer version 1.4.2 2017-05-17 08:17:52
+[34m[1mPre-installed Ruby versions[0m
+ruby-2.2.7
+ruby-2.3.4
+ruby-2.4.1
+travis_fold:end:system_info[0K
+W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
+W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
+$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+travis_fold:start:git.checkout[0Ktravis_time:start:0607495c[0K$ git clone --depth=50 --branch=master https://github.com/apache/hive.git apache/hive
+Cloning into 'apache/hive'...
+remote: Counting objects: 19347, done.[K
+remote: Compressing objects:   0% (1/14694)   [Kremote: Compressing objects:   1% (147/14694)   [Kremote: Compressing objects:   2% (294/14694)   [Kremote: Compressing objects:   3% (441/14694)   [Kremote: Compressing objects:   4% (588/14694)   [Kremote: Compressing objects:   5% (735/14694)   [Kremote: Compressing objects:   6% (882/14694)   [Kremote: Compressing objects:   7% (1029/14694)   [Kremote: Compressing objects:   8% (1176/14694)   [Kremote: Compressing objects:   9% (1323/14694)   [Kremote: Compressing objects:  10% (1470/14694)   [Kremote: Compressing objects:  11% (1617/14694)   [Kremote: Compressing objects:  12% (1764/14694)   [Kremote: Compressing objects:  13% (1911/14694)   [Kremote: Compressing objects:  13% (2001/14694)   [Kremote: Compressing objects:  14% (2058/14694)   [Kremote: Compressing objects:  15% (2205/14694)   [Kremote: Compressing objects:  16% (2352/14694)   [Kremote: Compressing objects:  17% (2498/14694)   [Kremote: Compressing objects:  18% (2645/14694)   [Kremote: Compressing objects:  19% (2792/14694)   [Kremote: Compressing objects:  20% (2939/14694)   [Kremote: Compressing objects:  21% (3086/14694)   [Kremote: Compressing objects:  22% (3233/14694)   [Kremote: Compressing objects:  23% (3380/14694)   [Kremote: Compressing objects:  24% (3527/14694)   [Kremote: Compressing objects:  25% (3674/14694)   [Kremote: Compressing objects:  26% (3821/14694)   [Kremote: Compressing objects:  26% (3885/14694)   [Kremote: Compressing objects:  27% (3968/14694)   [Kremote: Compressing objects:  28% (4115/14694)   [Kremote: Compressing objects:  29% (4262/14694)   [Kremote: Compressing objects:  30% (4409/14694)   [Kremote: Compressing objects:  31% (4556/14694)   [Kremote: Compressing objects:  32% (4703/14694)   [Kremote: Compressing objects:  33% (4850/14694)   [Kremote: Compressing objects:  34% (4996/14694)   [Kremote: Compressing objects:  35% (5143/14694)   [Kremote: Compressing objects:  36% (5290/14694)   [Kremote: Compressing objects:  37% (5437/14694)   [Kremote: Compressing objects:  38% (5584/14694)   [Kremote: Compressing objects:  39% (5731/14694)   [Kremote: Compressing objects:  40% (5878/14694)   [Kremote: Compressing objects:  40% (5995/14694)   [Kremote: Compressing objects:  41% (6025/14694)   [Kremote: Compressing objects:  42% (6172/14694)   [Kremote: Compressing objects:  43% (6319/14694)   [Kremote: Compressing objects:  44% (6466/14694)   [Kremote: Compressing objects:  45% (6613/14694)   [Kremote: Compressing objects:  46% (6760/14694)   [Kremote: Compressing objects:  47% (6907/14694)   [Kremote: Compressing objects:  48% (7054/14694)   [Kremote: Compressing objects:  49% (7201/14694)   [Kremote: Compressing objects:  50% (7347/14694)   [Kremote: Compressing objects:  51% (7494/14694)   [Kremote: Compressing objects:  52% (7641/14694)   [Kremote: Compressing objects:  53% (7788/14694)   [Kremote: Compressing objects:  54% (7935/14694)   [Kremote: Compressing objects:  55% (8082/14694)   [Kremote: Compressing objects:  56% (8229/14694)   [Kremote: Compressing objects:  57% (8376/14694)   [Kremote: Compressing objects:  58% (8523/14694)   [Kremote: Compressing objects:  59% (8670/14694)   [Kremote: Compressing objects:  59% (8806/14694)   [Kremote: Compressing objects:  60% (8817/14694)   [Kremote: Compressing objects:  61% (8964/14694)   [Kremote: Compressing objects:  62% (9111/14694)   [Kremote: Compressing objects:  63% (9258/14694)   [Kremote: Compressing objects:  64% (9405/14694)   [Kremote: Compressing objects:  65% (9552/14694)   [Kremote: Compressing objects:  66% (9699/14694)   [Kremote: Compressing objects:  67% (9845/14694)   [Kremote: Compressing objects:  68% (9992/14694)   [Kremote: Compressing objects:  69% (10139/14694)   [Kremote: Compressing objects:  70% (10286/14694)   [Kremote: Compressing objects:  71% (10433/14694)   [Kremote: Compressing objects:  72% (10580/14694)   [Kremote: Compressing objects:  73% (10727/14694)   [Kremote: Compressing objects:  74% (10874/14694)   [Kremote: Compressing objects:  75% (11021/14694)   [Kremote: Compressing objects:  76% (11168/14694)   [Kremote: Compressing objects:  77% (11315/14694)   [Kremote: Compressing objects:  78% (11462/14694)   [Kremote: Compressing objects:  79% (11609/14694)   [Kremote: Compressing objects:  80% (11756/14694)   [Kremote: Compressing objects:  81% (11903/14694)   [Kremote: Compressing objects:  82% (12050/14694)   [Kremote: Compressing objects:  83% (12197/14694)   [Kremote: Compressing objects:  84% (12343/14694)   [Kremote: Compressing objects:  85% (12490/14694)   [Kremote: Compressing objects:  86% (12637/14694)   [Kremote: Compressing objects:  87% (12784/14694)   [Kremote: Compressing objects:  88% (12931/14694)   [Kremote: Compressing objects:  89% (13078/14694)   [Kremote: Compressing objects:  90% (13225/14694)   [Kremote: Compressing objects:  91% (13372/14694)   [Kremote: Compressing objects:  92% (13519/14694)   [Kremote: Compressing objects:  93% (13666/14694)   [Kremote: Compressing objects:  94% (13813/14694)   [Kremote: Compressing objects:  95% (13960/14694)   [Kremote: Compressing objects:  96% (14107/14694)   [Kremote: Compressing objects:  97% (14254/14694)   [Kremote: Compressing objects:  98% (14401/14694)   [Kremote: Compressing objects:  99% (14548/14694)   [Kremote: Compressing objects: 100% (14694/14694)   [Kremote: Compressing objects: 100% (14694/14694), done.[K
+Receiving objects:   0% (1/19347)   Receiving objects:   1% (194/19347)   Receiving objects:   2% (387/19347)   Receiving objects:   3% (581/19347)   Receiving objects:   4% (774/19347)   Receiving objects:   5% (968/19347)   Receiving objects:   6% (1161/19347)   Receiving objects:   7% (1355/19347)   Receiving objects:   8% (1548/19347)   Receiving objects:   9% (1742/19347)   Receiving objects:  10% (1935/19347)   Receiving objects:  11% (2129/19347)   Receiving objects:  12% (2322/19347)   Receiving objects:  13% (2516/19347)   Receiving objects:  14% (2709/19347)   Receiving objects:  15% (2903/19347)   Receiving objects:  16% (3096/19347)   Receiving objects:  17% (3289/19347)   Receiving objects:  18% (3483/19347)   Receiving objects:  19% (3676/19347)   Receiving objects:  20% (3870/19347)   Receiving objects:  21% (4063/19347)   Receiving objects:  22% (4257/19347)   Receiving objects:  23% (4450/19347)   Receiving objects:  24% (4644/19347)   Receiving objects:  25% (4837/19347)   Receiving objects:  26% (5031/19347)   Receiving objects:  27% (5224/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  28% (5418/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  29% (5611/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  30% (5805/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  31% (5998/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  32% (6192/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  33% (6385/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  34% (6578/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  35% (6772/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  36% (6965/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  37% (7159/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  38% (7352/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  39% (7546/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  40% (7739/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  41% (7933/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  42% (8126/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  43% (8320/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  44% (8513/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  45% (8707/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  46% (8900/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  47% (9094/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  48% (9287/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  49% (9481/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  50% (9674/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  51% (9867/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  52% (10061/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  53% (10254/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  54% (10448/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  55% (10641/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  56% (10835/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  57% (11028/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  58% (11222/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  59% (11415/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  60% (11609/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  61% (11802/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  61% (11942/19347), 8.11 MiB | 16.22 MiB/s   Receiving objects:  62% (11996/19347), 13.59 MiB | 13.59 MiB/s   Receiving objects:  63% (12189/19347), 13.59 MiB | 13.59 MiB/s   Receiving objects:  64% (12383/19347), 13.59 MiB | 13.59 MiB/s   Receiving objects:  65% (12576/19347), 13.59 MiB | 13.59 MiB/s   Receiving objects:  66% (12770/19347), 13.59 MiB | 13.59 MiB/s   Receiving objects:  67% (12963/19347), 13.59 MiB | 13.59 MiB/s   Receiving objects:  68% (13156/19347), 15.59 MiB | 10.38 MiB/s   Receiving objects:  69% (13350/19347), 15.59 MiB | 10.38 MiB/s   Receiving objects:  70% (13543/19347), 15.59 MiB | 10.38 MiB/s   Receiving objects:  71% (13737/19347), 15.59 MiB | 10.38 MiB/s   Receiving objects:  72% (13930/19347), 15.59 MiB | 10.38 MiB/s   Receiving objects:  73% (14124/19347), 15.59 MiB | 10.38 MiB/s   Receiving objects:  73% (14192/19347), 15.59 MiB | 10.38 MiB/s   Receiving objects:  74% (14317/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  75% (14511/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  76% (14704/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  77% (14898/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  78% (15091/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  79% (15285/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  80% (15478/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  81% (15672/19347), 17.72 MiB | 8.85 MiB/s   Receiving objects:  82% (15865/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  83% (16059/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  84% (16252/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  85% (16445/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  86% (16639/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  87% (16832/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  88% (17026/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  89% (17219/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  90% (17413/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  91% (17606/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  92% (17800/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  92% (17854/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  93% (17993/19347), 19.10 MiB | 7.60 MiB/s   Receiving objects:  94% (18187/19347), 22.70 MiB | 7.54 MiB/s   Receiving objects:  95% (18380/19347), 22.70 MiB | 7.54 MiB/s   Receiving objects:  96% (18574/19347), 22.70 MiB | 7.54 MiB/s   Receiving objects:  97% (18767/19347), 22.70 MiB | 7.54 MiB/s   Receiving objects:  98% (18961/19347), 22.70 MiB | 7.54 MiB/s   Receiving objects:  99% (19154/19347), 22.70 MiB | 7.54 MiB/s   Receiving objects: 100% (19347/19347), 22.70 MiB | 7.54 MiB/s   Receiving objects: 100% (19347/19347), 22.97 MiB | 7.42 MiB/s, done.
+remote: Total 19347 (delta 7599), reused 8471 (delta 3247), pack-reused 0[K
+Resolving deltas:   0% (0/7599)   Resolving deltas:   1% (80/7599)   Resolving deltas:   2% (152/7599)   Resolving deltas:   3% (237/7599)   Resolving deltas:   4% (305/7599)   Resolving deltas:   5% (380/7599)   Resolving deltas:   6% (461/7599)   Resolving deltas:   7% (533/7599)   Resolving deltas:   8% (609/7599)   Resolving deltas:   9% (687/7599)   Resolving deltas:  10% (771/7599)   Resolving deltas:  11% (839/7599)   Resolving deltas:  12% (912/7599)   Resolving deltas:  13% (1006/7599)   Resolving deltas:  14% (1064/7599)   Resolving deltas:  15% (1143/7599)   Resolving deltas:  16% (1216/7599)   Resolving deltas:  17% (1293/7599)   Resolving deltas:  18% (1370/7599)   Resolving deltas:  19% (1450/7599)   Resolving deltas:  20% (1520/7599)   Resolving deltas:  21% (1596/7599)   Resolving deltas:  22% (1673/7599)   Resolving deltas:  23% (1748/7599)   Resolving deltas:  24% (1833/7599)   Resolving deltas:  25% (1904/7599)   Resolving deltas:  26% (1976/7599)   Resolving deltas:  27% (2063/7599)   Resolving deltas:  28% (2129/7599)   Resolving deltas:  29% (2215/7599)   Resolving deltas:  30% (2288/7599)   Resolving deltas:  31% (2357/7599)   Resolving deltas:  32% (2434/7599)   Resolving deltas:  33% (2509/7599)   Resolving deltas:  34% (2585/7599)   Resolving deltas:  35% (2660/7599)   Resolving deltas:  36% (2739/7599)   Resolving deltas:  37% (2813/7599)   Resolving deltas:  38% (2890/7599)   Resolving deltas:  39% (2965/7599)   Resolving deltas:  40% (3040/7599)   Resolving deltas:  41% (3123/7599)   Resolving deltas:  42% (3192/7599)   Resolving deltas:  43% (3271/7599)   Resolving deltas:  44% (3346/7599)   Resolving deltas:  45% (3420/7599)   Resolving deltas:  46% (3498/7599)   Resolving deltas:  47% (3574/7599)   Resolving deltas:  48% (3652/7599)   Resolving deltas:  49% (3724/7599)   Resolving deltas:  50% (3800/7599)   Resolving deltas:  51% (3877/7599)   Resolving deltas:  52% (3953/7599)   Resolving deltas:  53% (4028/7599)   Resolving deltas:  54% (4104/7599)   Resolving deltas:  55% (4180/7599)   Resolving deltas:  56% (4260/7599)   Resolving deltas:  57% (4333/7599)   Resolving deltas:  58% (4415/7599)   Resolving deltas:  59% (4484/7599)   Resolving deltas:  60% (4574/7599)   Resolving deltas:  61% (4659/7599)   Resolving deltas:  62% (4712/7599)   Resolving deltas:  63% (4791/7599)   Resolving deltas:  64% (4864/7599)   Resolving deltas:  65% (4965/7599)   Resolving deltas:  66% (5021/7599)   Resolving deltas:  67% (5116/7599)   Resolving deltas:  68% (5175/7599)   Resolving deltas:  69% (5250/7599)   Resolving deltas:  70% (5321/7599)   Resolving deltas:  71% (5396/7599)   Resolving deltas:  72% (5472/7599)   Resolving deltas:  73% (5549/7599)   Resolving deltas:  74% (5637/7599)   Resolving deltas:  75% (5700/7599)   Resolving deltas:  76% (5777/7599)   Resolving deltas:  77% (5854/7599)   Resolving deltas:  78% (5931/7599)   Resolving deltas:  79% (6013/7599)   Resolving deltas:  80% (6080/7599)   Resolving deltas:  81% (6160/7599)   Resolving deltas:  82% (6233/7599)   Resolving deltas:  83% (6309/7599)   Resolving deltas:  84% (6384/7599)   Resolving deltas:  85% (6460/7599)   Resolving deltas:  86% (6539/7599)   Resolving deltas:  87% (6612/7599)   Resolving deltas:  88% (6692/7599)   Resolving deltas:  89% (6765/7599)   Resolving deltas:  90% (6840/7599)   Resolving deltas:  91% (6916/7599)   Resolving deltas:  92% (6993/7599)   Resolving deltas:  93% (7069/7599)   Resolving deltas:  94% (7145/7599)   Resolving deltas:  95% (7220/7599)   Resolving deltas:  96% (7306/7599)   Resolving deltas:  97% (7383/7599)   Resolving deltas:  98% (7450/7599)   Resolving deltas:  99% (7524/7599)   Resolving deltas: 100% (7599/7599)   Resolving deltas: 100% (7599/7599), done.
+
+travis_time:end:0607495c:start=1505984872783600381,finish=1505984883285391201,duration=10501790820[0K$ cd apache/hive
+$ git checkout -qf 3e8ae68ebf6037c2375a5d536eea5081fb33b8c7
+travis_fold:end:git.checkout[0K
+[33;1mSetting environment variables from .travis.yml[0m
+$ export MAVEN_SKIP_RC=true
+$ export MAVEN_OPTS="-Xmx2g"
+
+[33;1mDisabling Gradle daemon[0m
+travis_time:start:092844c6[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+
+travis_time:end:092844c6:start=1505984884030917353,finish=1505984884035093888,duration=4176535[0K$ export PATH=$JAVA_HOME/bin:$PATH
+travis_fold:start:cache.1[0KSetting up build cache
+$ export CASHER_DIR=$HOME/.casher
+travis_time:start:01de6e3d[0K$ Installing caching utilities
+
+travis_time:end:01de6e3d:start=1505984887447568123,finish=1505984887593061823,duration=145493700[0Ktravis_time:start:020c3088[0K
+travis_time:end:020c3088:start=1505984887598359584,finish=1505984887601993615,duration=3634031[0Ktravis_time:start:05d40f62[0K[32;1mattempting to download cache archive[0m
+[32;1mfetching master/cache-linux-trusty-b864c2b1443464d1a6cd33565c531b83128346345448dd7c3ba74a947e085db5--jdk-oraclejdk8.tgz[0m
+[32;1mfound cache[0m
+
+travis_time:end:05d40f62:start=1505984887606364681,finish=1505984893455566906,duration=5849202225[0Ktravis_time:start:0c90b7f9[0K
+travis_time:end:0c90b7f9:start=1505984893459939717,finish=1505984893463642902,duration=3703185[0Ktravis_time:start:03c34642[0K[32;1madding /home/travis/.m2 to cache[0m
+
+travis_time:end:03c34642:start=1505984893468181302,finish=1505984903294419810,duration=9826238508[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
+java version "1.8.0_144"
+Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
+Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.8.0_144
+travis_fold:start:before_install[0Ktravis_time:start:12cb2620[0K$ sed -i.bak -e 's|https://nexus.codehaus.org/snapshots/|https://oss.sonatype.org/content/repositories/codehaus-snapshots/|g' ~/.m2/settings.xml
+
+travis_time:end:12cb2620:start=1505984903961834691,finish=1505984903967011898,duration=5177207[0Ktravis_fold:end:before_install[0Ktravis_fold:start:install[0Ktravis_time:start:035a7aa0[0K$ true
+
+travis_time:end:035a7aa0:start=1505984903971646451,finish=1505984903975322863,duration=3676412[0Ktravis_fold:end:install[0Ktravis_time:start:36b99e98[0K$ mvn clean install -DskipTests -T 4 -q -Pitests
+protoc-jar: protoc version: 250, detected platform: linux/amd64
+protoc-jar: executing: [/tmp/protoc6784170675848028581.exe, -I/home/travis/build/apache/hive/standalone-metastore/src/main/protobuf/org/apache/hadoop/hive/metastore, --java_out=/home/travis/build/apache/hive/standalone-metastore/target/generated-sources, /home/travis/build/apache/hive/standalone-metastore/src/main/protobuf/org/apache/hadoop/hive/metastore/metastore.proto]
+DataNucleus Enhancer (version 4.1.17) for API "JDO"
+DataNucleus Enhancer : Classpath
+>>  /usr/local/maven-3.5.0/boot/plexus-classworlds-2.5.2.jar
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MDatabase
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MFieldSchema
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MType
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MTable
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MConstraint
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MSerDeInfo
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MOrder
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MColumnDescriptor
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MStringList
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MStorageDescriptor
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MPartition
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MIndex
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MRole
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MRoleMap
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MGlobalPrivilege
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MDBPrivilege
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MTablePrivilege
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MPartitionPrivilege
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MTableColumnPrivilege
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MPartitionColumnPrivilege
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MPartitionEvent
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MMasterKey
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MDelegationToken
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MTableColumnStatistics
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MPartitionColumnStatistics
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MVersionTable
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MMetastoreDBProperties
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MResourceUri
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MFunction
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MNotificationLog
+ENHANCED (Persistable) : org.apache.hadoop.hive.metastore.model.MNotificationNextId
+DataNucleus Enhancer completed with success for 31 classes. Timings : input=385 ms, enhance=334 ms, total=719 ms. Consult the log for full details
+ANTLR Parser Generator  Version 3.5.2
+Output file /home/travis/build/apache/hive/metastore/target/generated-sources/antlr3/org/apache/hadoop/hive/metastore/parser/FilterParser.java does not exist: must build /home/travis/build/apache/hive/metastore/src/java/org/apache/hadoop/hive/metastore/parser/Filter.g
+org/apache/hadoop/hive/metastore/parser/Filter.g
+ANTLR Parser Generator  Version 3.5.2
+Output file /home/travis/build/apache/hive/ql/target/generated-sources/antlr3/org/apache/hadoop/hive/ql/parse/HiveLexer.java does not exist: must build /home/travis/build/apache/hive/ql/src/java/org/apache/hadoop/hive/ql/parse/HiveLexer.g
+org/apache/hadoop/hive/ql/parse/HiveLexer.g
+Output file /home/travis/build/apache/hive/ql/target/generated-sources/antlr3/org/apache/hadoop/hive/ql/parse/HiveParser.java does not exist: must build /home/travis/build/apache/hive/ql/src/java/org/apache/hadoop/hive/ql/parse/HiveParser.g
+org/apache/hadoop/hive/ql/parse/HiveParser.g
+Output file /home/travis/build/apache/hive/ql/target/generated-sources/antlr3/org/apache/hadoop/hive/ql/parse/HintParser.java does not exist: must build /home/travis/build/apache/hive/ql/src/java/org/apache/hadoop/hive/ql/parse/HintParser.g
+org/apache/hadoop/hive/ql/parse/HintParser.g
+Generating vector expression code
+Generating vector expression test code
+[[1;31mERROR[m] ResourceManager : unable to find resource 'VM_global_library.vm' in any resource loader.
+Loading source files for package org.apache.hive.hcatalog.templeton...
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/ExecBean.java]]
+[parsing completed 109ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/CompleteDelegator.java]]
+[parsing completed 30ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/EnqueueBean.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/HcatDelegator.java]]
+[parsing completed 71ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/JobItemBean.java]]
+[parsing completed 17ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/StatusDelegator.java]]
+[parsing completed 3ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/PartitionDesc.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/AppConfig.java]]
+[parsing completed 33ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/QueueException.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/JarDelegator.java]]
+[parsing completed 12ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/ExecServiceImpl.java]]
+[parsing completed 21ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/ColumnDesc.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/NotAuthorizedException.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/TableDesc.java]]
+[parsing completed 10ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/JobCallable.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/DatabaseDesc.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/JobRequestExecutor.java]]
+[parsing completed 3ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/PigDelegator.java]]
+[parsing completed 3ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/DeleteDelegator.java]]
+[parsing completed 10ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/UgiFactory.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/MaxByteArrayOutputStream.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/ListDelegator.java]]
+[parsing completed 3ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/GroupPermissionsDesc.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/Server.java]]
+[parsing completed 73ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/ProxyUserSupport.java]]
+[parsing completed 8ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/ExecService.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/CompleteBean.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/BadParam.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/QueueStatusBean.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/StreamingDelegator.java]]
+[parsing completed 13ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/SqoopDelegator.java]]
+[parsing completed 2ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/SimpleExceptionMapper.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/LauncherDelegator.java]]
+[parsing completed 30ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/CatchallExceptionMapper.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/HiveDelegator.java]]
+[parsing completed 13ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/CallbackFailedException.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/TempletonDelegator.java]]
+[parsing completed 2ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/Main.java]]
+[parsing completed 3ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/SimpleWebException.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/BusyException.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/SecureProxySupport.java]]
+[parsing completed 14ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/TooManyRequestsException.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/JsonBuilder.java]]
+[parsing completed 14ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/WadlConfig.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/VersionDelegator.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/TableLikeDesc.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/TablePropertyDesc.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/HcatException.java]]
+[parsing completed 0ms]
+Loading source files for package org.apache.hive.hcatalog.templeton.tool...
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/PigJobIDParser.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/JobState.java]]
+[parsing completed 23ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/NullSplit.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/JobIDParser.java]]
+[parsing completed 5ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/ZooKeeperCleanup.java]]
+[parsing completed 2ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/TempletonControllerJob.java]]
+[parsing completed 2ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/HDFSCleanup.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/DelegationTokenCache.java]]
+[parsing completed 14ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/HiveJobIDParser.java]]
+[parsing completed 7ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/NotFoundException.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/JobSubmissionConstants.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/SingleInputFormat.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/HDFSStorage.java]]
+[parsing completed 2ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/LogRetriever.java]]
+[parsing completed 11ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/TempletonStorage.java]]
+[parsing completed 10ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/TrivialExecService.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/JobStateTracker.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/NullRecordReader.java]]
+[parsing completed 1ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/JarJobIDParser.java]]
+[parsing completed 0ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/TempletonUtils.java]]
+[parsing completed 28ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/ZooKeeperStorage.java]]
+[parsing completed 2ms]
+[parsing started RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java/org/apache/hive/hcatalog/templeton/tool/LaunchMapper.java]]
+[parsing completed 10ms]
+Constructing Javadoc information...
+[search path for source files: /home/travis/build/apache/hive/hcatalog/webhcat/svr/src/main/java,/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/generated-sources/annotations]
+[search path for class files: /usr/lib/jvm/java-8-oracle/jre/lib/resources.jar,/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar,/usr/lib/jvm/java-8-oracle/jre/lib/sunrsasign.jar,/usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar,/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar,/usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar,/usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar,/usr/lib/jvm/java-8-oracle/jre/classes,/usr/lib/jvm/java-8-oracle/jre/lib/ext/dnsns.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/sunjce_provider.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/cldrdata.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/zipfs.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/nashorn.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/localedata.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/sunpkcs11.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/jfxrt.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/sunec.jar,/usr/lib/jvm/java-8-oracle/jre/lib/ext/jaccess.jar,/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes,/home/travis/.m2/repository/org/apache/hbase/hbase-server/1.1.1/hbase-server-1.1.1.jar,/home/travis/.m2/repository/org/roaringbitmap/RoaringBitmap/0.5.11/RoaringBitmap-0.5.11.jar,/home/travis/.m2/repository/org/json4s/json4s-ast_2.11/3.2.11/json4s-ast_2.11-3.2.11.jar,/home/travis/.m2/repository/com/twitter/chill-java/0.8.0/chill-java-0.8.0.jar,/home/travis/.m2/repository/org/codehaus/jettison/jettison/1.1/jettison-1.1.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-server/9.3.8.v20160314/jetty-server-9.3.8.v20160314.jar,/home/travis/build/apache/hive/shims/common/target/hive-shims-common-3.0.0-SNAPSHOT.jar,/home/travis/build/apache/hive/shims/0.23/target/hive-shims-0.23-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-client/1.1.1/hbase-client-1.1.1.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-client/2.8.0/hadoop-client-2.8.0.jar,/home/travis/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-procedure/1.1.1/hbase-procedure-1.1.1.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-annotations/1.1.1/hbase-annotations-1.1.1.jar,/home/travis/.m2/repository/com/esotericsoftware/kryo-shaded/3.0.3/kryo-shaded-3.0.3.jar,/home/travis/.m2/repository/de/ruedigermoeller/fst/2.24/fst-2.24.jar,/home/travis/.m2/repository/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar,/home/travis/.m2/repository/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar,/home/travis/.m2/repository/io/airlift/aircompressor/0.3/aircompressor-0.3.jar,/home/travis/.m2/repository/org/json4s/json4s-jackson_2.11/3.2.11/json4s-jackson_2.11-3.2.11.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-client/9.3.8.v20160314/jetty-client-9.3.8.v20160314.jar,/home/travis/.m2/repository/com/fasterxml/jackson/module/jackson-module-paranamer/2.6.5/jackson-module-paranamer-2.6.5.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-server-web-proxy/2.8.0/hadoop-yarn-server-web-proxy-2.8.0.jar,/home/travis/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.6.5/jackson-core-2.6.5.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-app/2.8.0/hadoop-mapreduce-client-app-2.8.0.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-common/2.8.0/hadoop-mapreduce-client-common-2.8.0.jar,/home/travis/.m2/repository/org/codehaus/janino/janino/2.7.6/janino-2.7.6.jar,/home/travis/.m2/repository/org/apache/curator/curator-framework/2.7.1/curator-framework-2.7.1.jar,/home/travis/.m2/repository/org/slf4j/jul-to-slf4j/1.7.10/jul-to-slf4j-1.7.10.jar,/home/travis/.m2/repository/com/jolbox/bonecp/0.8.0.RELEASE/bonecp-0.8.0.RELEASE.jar,/home/travis/build/apache/hive/hcatalog/core/target/hive-hcatalog-core-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-servlet/9.3.8.v20160314/jetty-servlet-9.3.8.v20160314.jar,/home/travis/.m2/repository/org/json4s/json4s-core_2.11/3.2.11/json4s-core_2.11-3.2.11.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-http/9.3.8.v20160314/jetty-http-9.3.8.v20160314.jar,/home/travis/.m2/repository/org/apache/logging/log4j/log4j-slf4j-impl/2.8.2/log4j-slf4j-impl-2.8.2.jar,/home/travis/.m2/repository/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.1/scala-parser-combinators_2.11-1.0.1.jar,/home/travis/.m2/repository/javax/transaction/jta/1.1/jta-1.1.jar,/home/travis/.m2/repository/org/apache/logging/log4j/log4j-web/2.8.2/log4j-web-2.8.2.jar,/home/travis/.m2/repository/org/apache/curator/curator-client/2.7.1/curator-client-2.7.1.jar,/home/travis/.m2/repository/org/scala-lang/scala-compiler/2.11.0/scala-compiler-2.11.0.jar,/home/travis/.m2/repository/commons-digester/commons-digester/1.8/commons-digester-1.8.jar,/home/travis/.m2/repository/org/apache/avro/avro-mapred/1.7.7/avro-mapred-1.7.7-hadoop2.jar,/home/travis/.m2/repository/org/datanucleus/javax.jdo/3.2.0-m3/javax.jdo-3.2.0-m3.jar,/home/travis/.m2/repository/org/jruby/jcodings/jcodings/1.0.8/jcodings-1.0.8.jar,/home/travis/.m2/repository/com/github/joshelser/dropwizard-metrics-hadoop-metrics2-reporter/0.1.2/dropwizard-metrics-hadoop-metrics2-reporter-0.1.2.jar,/home/travis/.m2/repository/io/dropwizard/metrics/metrics-core/3.1.0/metrics-core-3.1.0.jar,/home/travis/.m2/repository/net/razorvine/pyrolite/4.9/pyrolite-4.9.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-api/2.8.0/hadoop-yarn-api-2.8.0.jar,/home/travis/.m2/repository/com/lmax/disruptor/3.3.0/disruptor-3.3.0.jar,/home/travis/.m2/repository/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-jobclient/2.8.0/hadoop-mapreduce-client-jobclient-2.8.0.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-hadoop2-compat/1.1.1/hbase-hadoop2-compat-1.1.1.jar,/home/travis/.m2/repository/org/apache/avro/avro-ipc/1.7.7/avro-ipc-1.7.7-tests.jar,/home/travis/.m2/repository/org/apache/calcite/avatica/avatica-core/1.10.0/avatica-core-1.10.0.jar,/home/travis/.m2/repository/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar,/home/travis/.m2/repository/org/apache/directory/api/api-util/1.0.0-M20/api-util-1.0.0-M20.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-client/2.8.0/hadoop-yarn-client-2.8.0.jar,/home/travis/.m2/repository/org/codehaus/janino/commons-compiler/2.7.6/commons-compiler-2.7.6.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-prefix-tree/1.1.1/hbase-prefix-tree-1.1.1.jar,/home/travis/.m2/repository/org/apache/calcite/avatica/avatica/1.10.0/avatica-1.10.0.jar,/home/travis/.m2/repository/org/apache/curator/curator-recipes/2.7.1/curator-recipes-2.7.1.jar,/home/travis/.m2/repository/org/apache/orc/orc-core/1.3.3/orc-core-1.3.3.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-server-resourcemanager/2.8.0/hadoop-yarn-server-resourcemanager-2.8.0.jar,/home/travis/.m2/repository/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8.jar,/home/travis/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-xml/9.3.8.v20160314/jetty-xml-9.3.8.v20160314.jar,/home/travis/.m2/repository/org/mortbay/jetty/jetty-util/6.1.26/jetty-util-6.1.26.jar,/home/travis/.m2/repository/org/codehaus/jackson/jackson-jaxrs/1.9.13/jackson-jaxrs-1.9.13.jar,/home/travis/.m2/repository/org/codehaus/jackson/jackson-core-asl/1.9.13/jackson-core-asl-1.9.13.jar,/home/travis/.m2/repository/org/apache/calcite/calcite-core/1.13.0/calcite-core-1.13.0.jar,/home/travis/.m2/repository/co/cask/tephra/tephra-api/0.6.0/tephra-api-0.6.0.jar,/home/travis/.m2/repository/org/apache/twill/twill-core/0.6.0-incubating/twill-core-0.6.0-incubating.jar,/home/travis/.m2/repository/xerces/xercesImpl/2.9.1/xercesImpl-2.9.1.jar,/home/travis/.m2/repository/org/mortbay/jetty/jetty/6.1.26/jetty-6.1.26.jar,/home/travis/build/apache/hive/metastore/target/hive-metastore-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/net/jpountz/lz4/lz4/1.3.0/lz4-1.3.0.jar,/home/travis/.m2/repository/org/apache/commons/commons-math/2.2/commons-math-2.2.jar,/home/travis/.m2/repository/org/datanucleus/datanucleus-core/4.1.17/datanucleus-core-4.1.17.jar,/home/travis/.m2/repository/org/apache/ant/ant-launcher/1.9.1/ant-launcher-1.9.1.jar,/home/travis/.m2/repository/org/apache/avro/avro-ipc/1.7.7/avro-ipc-1.7.7.jar,/home/travis/.m2/repository/com/sun/jersey/jersey-json/1.14/jersey-json-1.14.jar,/home/travis/build/apache/hive/shims/scheduler/target/hive-shims-scheduler-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/jline/jline/2.12/jline-2.12.jar,/home/travis/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar,/home/travis/.m2/repository/com/google/guava/guava/14.0.1/guava-14.0.1.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-hdfs/2.8.0/hadoop-hdfs-2.8.0.jar,/home/travis/.m2/repository/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6-tests.jar,/home/travis/.m2/repository/it/unimi/dsi/fastutil/6.5.6/fastutil-6.5.6.jar,/home/travis/.m2/repository/org/scala-lang/scala-reflect/2.11.7/scala-reflect-2.11.7.jar,/home/travis/.m2/repository/commons-daemon/commons-daemon/1.0.13/commons-daemon-1.0.13.jar,/home/travis/.m2/repository/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-shuffle/2.8.0/hadoop-mapreduce-client-shuffle-2.8.0.jar,/home/travis/.m2/repository/org/scalatest/scalatest_2.11/2.2.6/scalatest_2.11-2.2.6.jar,/home/travis/.m2/repository/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar,/home/travis/.m2/repository/net/hydromatic/aggdesigner-algorithm/6.0/aggdesigner-algorithm-6.0.jar,/home/travis/.m2/repository/io/dropwizard/metrics/metrics-jvm/3.1.0/metrics-jvm-3.1.0.jar,/home/travis/.m2/repository/org/jruby/joni/joni/2.1.2/joni-2.1.2.jar,/home/travis/.m2/repository/co/cask/tephra/tephra-hbase-compat-1.0/0.6.0/tephra-hbase-compat-1.0-0.6.0.jar,/home/travis/.m2/repository/com/tdunning/json/1.8/json-1.8.jar,/home/travis/.m2/repository/com/sun/jersey/jersey-client/1.9/jersey-client-1.9.jar,/home/travis/build/apache/hive/standalone-metastore/target/hive-standalone-metastore-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/io/netty/netty-all/4.0.29.Final/netty-all-4.0.29.Final.jar,/home/travis/.m2/repository/net/minidev/json-smart/1.1.1/json-smart-1.1.1.jar,/home/travis/build/apache/hive/llap-common/target/hive-llap-common-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/com/twitter/chill_2.11/0.8.0/chill_2.11-0.8.0.jar,/home/travis/.m2/repository/org/apache/parquet/parquet-hadoop-bundle/1.9.0/parquet-hadoop-bundle-1.9.0.jar,/home/travis/.m2/repository/com/googlecode/javaewah/JavaEWAH/0.3.2/JavaEWAH-0.3.2.jar,/home/travis/.m2/repository/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar,/home/travis/build/apache/hive/service-rpc/target/hive-service-rpc-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-common/1.1.1/hbase-common-1.1.1-tests.jar,/home/travis/.m2/repository/org/apache/calcite/calcite-druid/1.13.0/calcite-druid-1.13.0.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-server-applicationhistoryservice/2.8.0/hadoop-yarn-server-applicationhistoryservice-2.8.0.jar,/home/travis/.m2/repository/org/datanucleus/datanucleus-api-jdo/4.2.4/datanucleus-api-jdo-4.2.4.jar,/home/travis/.m2/repository/com/nimbusds/nimbus-jose-jwt/3.9/nimbus-jose-jwt-3.9.jar,/home/travis/.m2/repository/org/apache/directory/server/apacheds-kerberos-codec/2.0.0-M15/apacheds-kerberos-codec-2.0.0-M15.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-hdfs-client/2.8.0/hadoop-hdfs-client-2.8.0.jar,/home/travis/.m2/repository/org/datanucleus/datanucleus-rdbms/4.1.19/datanucleus-rdbms-4.1.19.jar,/home/travis/.m2/repository/org/apache/directory/server/apacheds-i18n/2.0.0-M15/apacheds-i18n-2.0.0-M15.jar,/home/travis/.m2/repository/org/apache/curator/curator-test/2.7.1/curator-test-2.7.1.jar,/home/travis/.m2/repository/com/esotericsoftware/minlog/1.3.0/minlog-1.3.0.jar,/home/travis/.m2/repository/tomcat/jasper-compiler/5.5.12/jasper-compiler-5.5.12.jar,/home/travis/.m2/repository/org/xerial/snappy/snappy-java/1.0.5/snappy-java-1.0.5.jar,/home/travis/.m2/repository/co/cask/tephra/tephra-core/0.6.0/tephra-core-0.6.0.jar,/home/travis/.m2/repository/com/ning/compress-lzf/1.0.3/compress-lzf-1.0.3.jar,/home/travis/build/apache/hive/serde/target/hive-serde-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar,/home/travis/.m2/repository/com/squareup/okhttp/okhttp/2.4.0/okhttp-2.4.0.jar,/home/travis/.m2/repository/oro/oro/2.0.8/oro-2.0.8.jar,/home/travis/.m2/repository/org/slf4j/slf4j-api/1.7.10/slf4j-api-1.7.10.jar,/home/travis/.m2/repository/org/apache/slider/slider-core/0.92.0-incubating/slider-core-0.92.0-incubating.jar,/home/travis/.m2/repository/org/apache/velocity/velocity/1.5/velocity-1.5.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-server-common/2.8.0/hadoop-yarn-server-common-2.8.0.jar,/home/travis/.m2/repository/com/beust/jcommander/1.30/jcommander-1.30.jar,/home/travis/.m2/repository/com/jcraft/jsch/0.1.51/jsch-0.1.51.jar,/home/travis/.m2/repository/javolution/javolution/5.5.1/javolution-5.5.1.jar,/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/scala-lang/modules/scala-xml_2.11/1.0.2/scala-xml_2.11-1.0.2.jar,/home/travis/build/apache/hive/storage-api/target/hive-storage-api-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/apache/logging/log4j/log4j-1.2-api/2.8.2/log4j-1.2-api-2.8.2.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-io/9.3.8.v20160314/jetty-io-9.3.8.v20160314.jar,/home/travis/.m2/repository/org/apache/orc/orc-tools/1.3.3/orc-tools-1.3.3.jar,/home/travis/.m2/repository/org/objenesis/objenesis/2.1/objenesis-2.1.jar,/home/travis/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-hadoop-compat/1.1.1/hbase-hadoop-compat-1.1.1.jar,/home/travis/.m2/repository/com/sun/jersey/contribs/wadl-resourcedoc-doclet/1.4/wadl-resourcedoc-doclet-1.4.jar,/home/travis/.m2/repository/com/google/protobuf/protobuf-java/2.5.0/protobuf-java-2.5.0.jar,/home/travis/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.6.0/jackson-annotations-2.6.0.jar,/home/travis/.m2/repository/org/apache/xbean/xbean-asm5-shaded/4.4/xbean-asm5-shaded-4.4.jar,/home/travis/.m2/repository/com/clearspring/analytics/stream/2.7.0/stream-2.7.0.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-common/2.8.0/hadoop-yarn-common-2.8.0.jar,/home/travis/build/apache/hive/llap-server/target/hive-llap-server-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/codehaus/groovy/groovy-all/2.4.11/groovy-all-2.4.11.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-util/9.3.8.v20160314/jetty-util-9.3.8.v20160314.jar,/home/travis/.m2/repository/javax/xml/bind/jaxb-api/2.2.2/jaxb-api-2.2.2.jar,/home/travis/.m2/repository/com/thoughtworks/paranamer/paranamer/2.3/paranamer-2.3.jar,/home/travis/.m2/repository/com/google/inject/guice/3.0/guice-3.0.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-webapp/9.3.8.v20160314/jetty-webapp-9.3.8.v20160314.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-annotations/2.8.0/hadoop-annotations-2.8.0.jar,/home/travis/.m2/repository/org/apache/logging/log4j/log4j-core/2.8.2/log4j-core-2.8.2.jar,/home/travis/.m2/repository/org/apache/thrift/libthrift/0.9.3/libthrift-0.9.3.jar,/home/travis/build/apache/hive/llap-client/target/hive-llap-client-3.0.0-SNAPSHOT.jar,/home/travis/build/apache/hive/vector-code-gen/target/hive-vector-code-gen-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/apache/twill/twill-discovery-core/0.6.0-incubating/twill-discovery-core-0.6.0-incubating.jar,/home/travis/build/apache/hive/service/target/hive-service-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar,/home/travis/.m2/repository/org/apache/spark/spark-network-common_2.11/2.0.0/spark-network-common_2.11-2.0.0.jar,/home/travis/.m2/repository/org/apache/avro/avro/1.7.7/avro-1.7.7.jar,/home/travis/.m2/repository/org/apache/twill/twill-api/0.6.0-incubating/twill-api-0.6.0-incubating.jar,/home/travis/.m2/repository/javax/jdo/jdo-api/3.0.1/jdo-api-3.0.1.jar,/home/travis/.m2/repository/com/jamesmurty/utils/java-xmlbuilder/0.4/java-xmlbuilder-0.4.jar,/home/travis/.m2/repository/org/jamon/jamon-runtime/2.3.1/jamon-runtime-2.3.1.jar,/home/travis/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2.3-1/jaxb-impl-2.2.3-1.jar,/home/travis/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2.3-1/jaxb-api.jar,/home/travis/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2.3-1/activation.jar,/home/travis/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2.3-1/jsr173_1.0_api.jar,/home/travis/.m2/repository/com/sun/xml/bind/jaxb-impl/2.2.3-1/jaxb1-impl.jar,/home/travis/.m2/repository/org/apache/twill/twill-zookeeper/0.6.0-incubating/twill-zookeeper-0.6.0-incubating.jar,/home/travis/.m2/repository/org/apache/mesos/mesos/0.21.1/mesos-0.21.1-shaded-protobuf.jar,/home/travis/.m2/repository/io/dropwizard/metrics/metrics-graphite/3.1.2/metrics-graphite-3.1.2.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-common/1.1.1/hbase-common-1.1.1.jar,/home/travis/.m2/repository/org/apache/spark/spark-unsafe_2.11/2.0.0/spark-unsafe_2.11-2.0.0.jar,/home/travis/.m2/repository/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar,/home/travis/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar,/home/travis/.m2/repository/org/spark-project/spark/unused/1.0.0/unused-1.0.0.jar,/home/travis/build/apache/hive/llap-common/target/hive-llap-common-3.0.0-SNAPSHOT-tests.jar,/home/travis/.m2/repository/org/apache/calcite/calcite-linq4j/1.13.0/calcite-linq4j-1.13.0.jar,/home/travis/.m2/repository/javax/servlet/jsp/javax.servlet.jsp-api/2.3.1/javax.servlet.jsp-api-2.3.1.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_cs.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_de_DE.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_es.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_fr.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_hu.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_it.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_ja_JP.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_ko_KR.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_pl.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_pt_BR.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_ru.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_zh_CN.jar,/home/travis/.m2/repository/org/apache/derby/derby/10.10.2.0/derbyLocale_zh_TW.jar,/home/travis/.m2/repository/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar,/home/travis/build/apache/hive/ql/target/hive-exec-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/apache/spark/spark-launcher_2.11/2.0.0/spark-launcher_2.11-2.0.0.jar,/home/travis/.m2/repository/org/jodd/jodd-core/3.5.2/jodd-core-3.5.2.jar,/home/travis/.m2/repository/org/apache/logging/log4j/log4j-api/2.8.2/log4j-api-2.8.2.jar,/home/travis/.m2/repository/org/scala-lang/scalap/2.11.0/scalap-2.11.0.jar,/home/travis/.m2/repository/commons-configuration/commons-configuration/1.6/commons-configuration-1.6.jar,/home/travis/.m2/repository/commons-net/commons-net/3.1/commons-net-3.1.jar,/home/travis/.m2/repository/net/java/dev/jets3t/jets3t/0.9.0/jets3t-0.9.0.jar,/home/travis/.m2/repository/org/apache/thrift/libfb303/0.9.3/libfb303-0.9.3.jar,/home/travis/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar,/home/travis/.m2/repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar,/home/travis/.m2/repository/stax/stax-api/1.0.1/stax-api-1.0.1.jar,/home/travis/.m2/repository/commons-beanutils/commons-beanutils-core/1.8.0/commons-beanutils-core-1.8.0.jar,/home/travis/.m2/repository/io/dropwizard/metrics/metrics-json/3.1.0/metrics-json-3.1.0.jar,/home/travis/.m2/repository/org/mortbay/jetty/jetty-sslengine/6.1.26/jetty-sslengine-6.1.26.jar,/home/travis/.m2/repository/org/antlr/ST4/4.0.4/ST4-4.0.4.jar,/home/travis/build/apache/hive/shims/aggregator/target/hive-shims-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/apache/ivy/ivy/2.2.0/ivy-2.2.0.jar,/home/travis/.m2/repository/io/netty/netty/3.7.0.Final/netty-3.7.0.Final.jar,/usr/lib/jvm/java-8-oracle/jre/../lib/tools.jar,/home/travis/.m2/repository/javax/transaction/transaction-api/1.1/transaction-api-1.1.jar,/home/travis/.m2/repository/org/apache/commons/commons-lang3/3.2/commons-lang3-3.2.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-security/9.3.8.v20160314/jetty-security-9.3.8.v20160314.jar,/home/travis/.m2/repository/commons-io/commons-io/2.4/commons-io-2.4.jar,/home/travis/.m2/repository/com/sun/jersey/jersey-server/1.14/jersey-server-1.14.jar,/home/travis/.m2/repository/com/sun/jersey/jersey-servlet/1.14/jersey-servlet-1.14.jar,/home/travis/.m2/repository/com/squareup/okio/okio/1.4.0/okio-1.4.0.jar,/home/travis/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar,/home/travis/.m2/repository/com/google/inject/extensions/guice-servlet/3.0/guice-servlet-3.0.jar,/home/travis/.m2/repository/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar,/home/travis/.m2/repository/org/apache/directory/api/api-asn1-api/1.0.0-M20/api-asn1-api-1.0.0-M20.jar,/home/travis/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-archives/2.8.0/hadoop-archives-2.8.0.jar,/home/travis/build/apache/hive/spark-client/target/spark-client-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/fusesource/leveldbjni/leveldbjni-all/1.8/leveldbjni-all-1.8.jar,/home/travis/.m2/repository/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar,/home/travis/.m2/repository/org/apache/spark/spark-network-shuffle_2.11/2.0.0/spark-network-shuffle_2.11-2.0.0.jar,/home/travis/.m2/repository/com/github/stephenc/findbugs/findbugs-annotations/1.3.9-1/findbugs-annotations-1.3.9-1.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-yarn-registry/2.8.0/hadoop-yarn-registry-2.8.0.jar,/home/travis/build/apache/hive/cli/target/hive-cli-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16.jar,/home/travis/.m2/repository/tomcat/jasper-runtime/5.5.12/jasper-runtime-5.5.12.jar,/home/travis/.m2/repository/org/apache/hbase/hbase-protocol/1.1.1/hbase-protocol-1.1.1.jar,/home/travis/.m2/repository/xmlenc/xmlenc/0.52/xmlenc-0.52.jar,/home/travis/.m2/repository/joda-time/joda-time/2.1/joda-time-2.1.jar,/home/travis/.m2/repository/org/apache/commons/commons-math3/3.1.1/commons-math3-3.1.1.jar,/home/travis/.m2/repository/org/apache/htrace/htrace-core/3.1.0-incubating/htrace-core-3.1.0-incubating.jar,/home/travis/.m2/repository/org/apache/twill/twill-discovery-api/0.6.0-incubating/twill-discovery-api-0.6.0-incubating.jar,/home/travis/.m2/repository/net/sf/py4j/py4j/0.10.1/py4j-0.10.1.jar,/home/travis/.m2/repository/com/fasterxml/jackson/module/jackson-module-scala_2.11/2.6.5/jackson-module-scala_2.11-2.6.5.jar,/home/travis/.m2/repository/net/jcip/jcip-annotations/1.0/jcip-annotations-1.0.jar,/home/travis/.m2/repository/commons-cli/commons-cli/1.2/commons-cli-1.2.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar,/home/travis/.m2/repository/net/sf/jpam/jpam/1.1/jpam-1.1.jar,/home/travis/.m2/repository/com/sun/jersey/contribs/jersey-guice/1.9/jersey-guice-1.9.jar,/home/travis/.m2/repository/org/apache/commons/commons-compress/1.9/commons-compress-1.9.jar,/home/travis/.m2/repository/org/apache/twill/twill-common/0.6.0-incubating/twill-common-0.6.0-incubating.jar,/home/travis/.m2/repository/org/yaml/snakeyaml/1.16/snakeyaml-1.16.jar,/home/travis/.m2/repository/org/apache/hadoop/hadoop-auth/2.8.0/hadoop-auth-2.8.0.jar,/home/travis/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.6.5/jackson-databind-2.6.5.jar,/home/travis/.m2/repository/org/apache/htrace/htrace-core4/4.0.1-incubating/htrace-core4-4.0.1-incubating.jar,/home/travis/.m2/repository/org/apache/spark/spark-tags_2.11/2.0.0/spark-tags_2.11-2.0.0.jar,/home/travis/.m2/repository/org/apache/calcite/avatica/avatica-metrics/1.10.0/avatica-metrics-1.10.0.jar,/home/travis/.m2/repository/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar,/home/travis/.m2/repository/org/apache/ant/ant/1.9.1/ant-1.9.1.jar,/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar,/home/travis/.m2/repository/org/eclipse/jetty/jetty-rewrite/9.3.8.v20160314/jetty-rewrite-9.3.8.v20160314.jar,/home/travis/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.16/jcl-over-slf4j-1.7.16.jar,/home/travis/.m2/repository/com/google/inject/extensions/guice-assistedinject/3.0/guice-assistedinject-3.0.jar,/home/travis/.m2/repository/com/zaxxer/HikariCP/2.6.1/HikariCP-2.6.1.jar,/home/travis/build/apache/hive/llap-tez/target/hive-llap-tez-3.0.0-SNAPSHOT.jar,/home/travis/.m2/repository/org/apache/spark/spark-core_2.11/2.0.0/spark-core_2.11-2.0.0.jar,/home/travis/.m2/repository/org/codehaus/jackson/jackson-xc/1.9.13/jackson-xc-1.9.13.jar,/home/travis/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar,/home/travis/.m2/repository/org/apache/commons/commons-exec/1.1/commons-exec-1.1.jar,/home/travis/.m2/repository/asm/asm/3.1/asm-3.1.jar]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Object.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/String.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/IOException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/net/URL.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Date.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/calcite/avatica/avatica/1.10.0/avatica-1.10.0.jar(org/slf4j/Logger.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/calcite/avatica/avatica/1.10.0/avatica-1.10.0.jar(org/slf4j/LoggerFactory.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/classification/InterfaceAudience.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/conf/HiveConf.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/metastore/target/hive-metastore-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/metastore/IMetaStoreClient.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/hcatalog/core/target/hive-hcatalog-core-3.0.0-SNAPSHOT.jar(org/apache/hive/hcatalog/common/HCatUtil.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/classification/InterfaceAudience$Private.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/File.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/ArrayList.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Arrays.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Collection.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Collections.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/List.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Map.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/conf/Configuration.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/fs/Path.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/conf/HiveConfUtil.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/util/StringUtils.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/util/VersionInfo.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Iterable.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/io/Writable.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-http/9.3.8.v20160314/jetty-http-9.3.8.v20160314.jar(org/eclipse/jetty/http/HttpStatus.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/HashMap.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/core/MediaType.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/core/Response.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar(org/codehaus/jackson/map/ObjectMapper.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Exception.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Throwable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/Serializable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Enum.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Comparable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/net/URI.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/commons/commons-exec/1.1/commons-exec-1.1.jar(org/apache/commons/exec/ExecuteException.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.jar(org/apache/commons/lang/StringUtils.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/fs/FileStatus.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/fs/FileSystem.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/ql/target/hive-exec-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/ql/ErrorMsg.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/security/PrivilegedExceptionAction.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/ExecutionException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/TimeoutException.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/shims/common/target/hive-shims-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/shims/HadoopShimsSecure.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/shims/common/target/hive-shims-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/shims/ShimLoader.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/shims/common/target/hive-shims-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/shims/HadoopShims.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/shims/common/target/hive-shims-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/shims/HadoopShims$WebHCatJTShim.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/security/UserGroupInformation.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/ql/target/hive-exec-3.0.0-SNAPSHOT.jar(org/apache/commons/lang3/StringUtils.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/util/ToolRunner.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(javax/xml/bind/annotation/XmlRootElement.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/CancellationException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/RejectedExecutionException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/SynchronousQueue.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/ThreadPoolExecutor.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/TimeUnit.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/Future.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/conf/Configured.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/io/NullWritable.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/io/Text.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapred/JobClient.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapred/JobConf.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/Job.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/JobID.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/lib/output/NullOutputFormat.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/security/token/delegation/DelegationTokenIdentifier.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/security/token/Token.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/util/Tool.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/thrift/libthrift/0.9.3/libthrift-0.9.3.jar(org/apache/thrift/TException.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/conf/Configurable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/Callable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/InterruptedException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Boolean.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/ClassNotFoundException.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapred/JobStatus.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapred/JobProfile.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Long.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/JavaUtils.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapred/JobID.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/FileNotFoundException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/net/URISyntaxException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/BufferedReader.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/ByteArrayOutputStream.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/InputStream.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/InputStreamReader.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/OutputStream.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/PrintWriter.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Map$Entry.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/Semaphore.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/commons/commons-exec/1.1/commons-exec-1.1.jar(org/apache/commons/exec/CommandLine.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/commons/commons-exec/1.1/commons-exec-1.1.jar(org/apache/commons/exec/DefaultExecutor.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/commons/commons-exec/1.1/commons-exec-1.1.jar(org/apache/commons/exec/ExecuteWatchdog.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/commons/commons-exec/1.1/commons-exec-1.1.jar(org/apache/commons/exec/PumpStreamHandler.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/util/Shell.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Thread.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Runnable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/ConcurrentHashMap.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/Closeable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/AutoCloseable.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/Flushable.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar(org/apache/commons/logging/Log.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar(org/apache/commons/logging/LogFactory.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/net/InetAddress.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/net/UnknownHostException.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/text/MessageFormat.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/regex/Matcher.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/regex/Pattern.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar(javax/servlet/http/HttpServletRequest.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/DELETE.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/FormParam.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/GET.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/POST.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/PUT.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/Path.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/PathParam.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/Produces.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/QueryParam.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/core/Context.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/core/SecurityContext.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/core/UriInfo.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-auth/2.8.0/hadoop-auth-2.8.0.jar(org/apache/hadoop/security/authentication/client/PseudoAuthenticator.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/security/Groups.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/HashSet.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Set.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/ext/ExceptionMapper.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/ext/Provider.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-server/1.14/jersey-server-1.14.jar(com/sun/jersey/api/NotFoundException.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-server/1.14/jersey-server-1.14.jar(com/sun/jersey/api/core/PackagesResourceConfig.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-servlet/1.14/jersey-servlet-1.14.jar(com/sun/jersey/spi/container/servlet/ServletContainer.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/FileInputStream.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/EnumSet.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/ql/target/hive-exec-3.0.0-SNAPSHOT.jar(org/apache/commons/lang3/ArrayUtils.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/classification/InterfaceStability.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-hdfs/2.8.0/hadoop-hdfs-2.8.0.jar(org/apache/hadoop/hdfs/web/AuthFilter.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/shims/common/target/hive-shims-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/shims/Utils.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-auth/2.8.0/hadoop-auth-2.8.0.jar(org/apache/hadoop/security/authentication/server/PseudoAuthenticationHandler.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/util/GenericOptionsParser.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-rewrite/9.3.8.v20160314/jetty-rewrite-9.3.8.v20160314.jar(org/eclipse/jetty/rewrite/handler/RedirectPatternRule.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-rewrite/9.3.8.v20160314/jetty-rewrite-9.3.8.v20160314.jar(org/eclipse/jetty/rewrite/handler/RewriteHandler.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-server/9.3.8.v20160314/jetty-server-9.3.8.v20160314.jar(org/eclipse/jetty/server/Handler.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-server/9.3.8.v20160314/jetty-server-9.3.8.v20160314.jar(org/eclipse/jetty/server/Server.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-server/9.3.8.v20160314/jetty-server-9.3.8.v20160314.jar(org/eclipse/jetty/server/ServerConnector.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-server/9.3.8.v20160314/jetty-server-9.3.8.v20160314.jar(org/eclipse/jetty/server/handler/HandlerList.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-servlet/9.3.8.v20160314/jetty-servlet-9.3.8.v20160314.jar(org/eclipse/jetty/servlet/FilterHolder.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-servlet/9.3.8.v20160314/jetty-servlet-9.3.8.v20160314.jar(org/eclipse/jetty/servlet/ServletContextHandler.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-servlet/9.3.8.v20160314/jetty-servlet-9.3.8.v20160314.jar(org/eclipse/jetty/servlet/ServletHolder.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-xml/9.3.8.v20160314/jetty-xml-9.3.8.v20160314.jar(org/eclipse/jetty/xml/XmlConfiguration.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/slf4j/jul-to-slf4j/1.7.10/jul-to-slf4j-1.7.10.jar(org/slf4j/bridge/SLF4JBridgeHandler.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar(javax/servlet/DispatcherType.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/classification/InterfaceAudience$LimitedPrivate.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/classification/InterfaceStability$Unstable.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/standalone-metastore/target/hive-standalone-metastore-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/metastore/api/MetaException.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-common/2.8.0/hadoop-common-2.8.0.jar(org/apache/hadoop/security/Credentials.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Integer.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-server/1.14/jersey-server-1.14.jar(com/sun/jersey/api/wadl/config/WadlGeneratorConfig.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-server/1.14/jersey-server-1.14.jar(com/sun/jersey/api/wadl/config/WadlGeneratorDescription.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-server/1.14/jersey-server-1.14.jar(com/sun/jersey/server/wadl/generators/resourcedoc/WadlGeneratorResourceDocSupport.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hive/common/util/HiveVersionInfo.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/DataInput.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/DataOutput.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/InputSplit.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/curator/curator-framework/2.7.1/curator-framework-2.7.1.jar(org/apache/curator/framework/CuratorFramework.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/classification/InterfaceStability$Evolving.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/InputFormat.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/JobContext.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/RecordReader.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/TaskAttemptContext.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/io/OutputStreamWriter.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/net/URLConnection.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapred/RunningJob.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/StringTokenizer.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Process.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/StringBuilder.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar(org/apache/zookeeper/CreateMode.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar(org/apache/zookeeper/KeeperException.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar(org/apache/zookeeper/ZooDefs.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar(org/apache/zookeeper/ZooDefs$Ids.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/net/URLDecoder.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Enumeration.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Properties.class)]]
+[loading ZipFileIndexFileObject[/home/travis/build/apache/hive/common/target/hive-common-3.0.0-SNAPSHOT.jar(org/apache/hadoop/hive/common/LogUtils.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Class.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/curator/curator-framework/2.7.1/curator-framework-2.7.1.jar(org/apache/curator/framework/CuratorFrameworkFactory.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/curator/curator-client/2.7.1/curator-client-2.7.1.jar(org/apache/curator/retry/ExponentialBackoffRetry.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/Mapper.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/Iterator.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/LinkedList.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/ExecutorService.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/util/concurrent/Executors.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.8.0/hadoop-mapreduce-client-core-2.8.0.jar(org/apache/hadoop/mapreduce/Mapper$Context.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/annotation/Annotation.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-annotations/2.8.0/hadoop-annotations-2.8.0.jar(org/apache/hadoop/classification/InterfaceAudience.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/apache/hadoop/hadoop-annotations/2.8.0/hadoop-annotations-2.8.0.jar(org/apache/hadoop/classification/InterfaceAudience$LimitedPrivate.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/annotation/Retention.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/annotation/RetentionPolicy.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/annotation/Target.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/annotation/ElementType.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/Override.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/SuppressWarnings.class)]]
+[loading ZipFileIndexFileObject[/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(sun/misc/Contended.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/com/sun/jersey/jersey-core/1.14/jersey-core-1.14.jar(javax/ws/rs/HttpMethod.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-util/9.3.8.v20160314/jetty-util-9.3.8.v20160314.jar(org/eclipse/jetty/util/annotation/ManagedObject.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-util/9.3.8.v20160314/jetty-util-9.3.8.v20160314.jar(org/eclipse/jetty/util/annotation/ManagedAttribute.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-util/9.3.8.v20160314/jetty-util-9.3.8.v20160314.jar(org/eclipse/jetty/util/annotation/ManagedOperation.class)]]
+[loading ZipFileIndexFileObject[/home/travis/.m2/repository/org/eclipse/jetty/jetty-util/9.3.8.v20160314/jetty-util-9.3.8.v20160314.jar(org/eclipse/jetty/util/annotation/Name.class)]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/SecureProxySupport$3.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/SecureProxySupport$2.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/SecureProxySupport$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/LauncherDelegator$2.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/HcatDelegator$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/ListDelegator$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/HcatException$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/StatusDelegator$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/ListDelegator$2.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/LauncherDelegator$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/tool/TempletonControllerJob$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/tool/LogRetriever$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/tool/TempletonControllerJob$1$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/tool/HDFSStorage$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/tool/TempletonUtils$1.class]]
+[loading RegularFileObject[/home/travis/build/apache/hive/hcatalog/webhcat/svr/target/classes/org/apache/hive/hcatalog/templeton/tool/ZooKeeperStorage$1.class]]
+[done in 8940 ms]
+
+travis_time:end:36b99e98:start=1505984903979939599,finish=1505985239649369116,duration=335669429517[0K
+[32;1mThe command "mvn clean install -DskipTests -T 4 -q -Pitests" exited with 0.[0m
+travis_fold:start:cache.2[0Kstore build cache
+travis_time:start:00ba1c98[0K
+travis_time:end:00ba1c98:start=1505985239657346863,finish=1505985239663326554,duration=5979691[0Ktravis_time:start:13de305f[0K[32;1mchange detected (content changed, file is created, or file is deleted):
+/home/travis/.m2/repository/org/apache/directory/client/ldap/ldap-client-api/0.1-SNAPSHOT/ldap-client-api-0.1-SNAPSHOT.pom.lastUpdated
+/home/travis/.m2/repository/org/apache/directory/client/ldap/ldap-client-api/0.1-SNAPSHOT/resolver-status.properties
+/home/travis/.m2/repository/org/apache/hive/hcatalog/hive-hcatalog/3.0.0-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/org/apache/hive/hcatalog/hive-hcatalog/3.0.0-SNAPSHOT/_remote.repositories
+/home/travis/.m2/repository/org/apache/hive/hcatalog/hive-hcatalog-core/3.0.0-SNAPSHOT/hive-hcatalog-core-3.0.0-SNAPSHOT.jar
+/home/travis/.m2/repository/org/apache/hive/hcatalog/hive-hcatalog-core/3.0.0-SNAPSHOT/hive-hcatalog-core-3.0.0-SNAPSHOT.pom
+/home/travis/.m2/repository/org/apache/hive/hcatalog/hive-hcatalog-core/3.0.0-SNAPSHOT/hive-hcatalog-core-3.0.0-SNAPSHOT-tests.jar
+/home/travis/.m2/repository/org/apache/hive/hcatalog/hive-hcatalog-core/3.0.0-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/org/apache/hive/hc
+[0m
+[32;1m...
+[0m
+[32;1mchanges detected, packing new archive[0m
+.
+.
+.
+.
+[32;1muploading archive[0m
+
+travis_time:end:13de305f:start=1505985239670329422,finish=1505985270794465239,duration=31124135817[0Ktravis_fold:end:cache.2[0K
+Done. Your build exited with 0.

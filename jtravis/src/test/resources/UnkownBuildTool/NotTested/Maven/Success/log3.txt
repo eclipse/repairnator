@@ -1,0 +1,1002 @@
+travis_fold:start:worker_info[0K[33;1mWorker information[0m
+hostname: i-01d24c9-precise-production-2-worker-org-docker.travisci.net:625d5705-e2fc-4cfd-af92-a86df6754044
+version: v2.5.0 https://github.com/travis-ci/worker/tree/da3a43228dffc0fcca5a46569ca786b22991979f
+instance: 926de63:travis:java
+startup: 683.368023ms
+travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
+Build language: java
+Build group: stable
+Build dist: precise
+Build id: 229991866
+Job id: 229991870
+travis-build version: 66bd59b85
+[34m[1mBuild image provisioning date and time[0m
+Thu Feb  5 15:09:33 UTC 2015
+[34m[1mOperating System Details[0m
+Distributor ID:	Ubuntu
+Description:	Ubuntu 12.04.5 LTS
+Release:	12.04
+Codename:	precise
+[34m[1mLinux Version[0m
+3.13.0-29-generic
+[34m[1mCookbooks Version[0m
+a68419e https://github.com/travis-ci/travis-cookbooks/tree/a68419e
+[34m[1mGCC version[0m
+gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+[34m[1mLLVM version[0m
+clang version 3.4 (tags/RELEASE_34/final)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+[34m[1mPre-installed Ruby versions[0m
+ruby-1.9.3-p551
+[34m[1mPre-installed Node.js versions[0m
+v0.10.36
+[34m[1mPre-installed Go versions[0m
+1.4.1
+[34m[1mRedis version[0m
+redis-server 2.8.19
+[34m[1mriak version[0m
+2.0.2
+[34m[1mMongoDB version[0m
+MongoDB 2.4.12
+[34m[1mCouchDB version[0m
+couchdb 1.6.1
+[34m[1mNeo4j version[0m
+1.9.4
+[34m[1mRabbitMQ Version[0m
+3.4.3
+[34m[1mElasticSearch version[0m
+1.4.0
+[34m[1mInstalled Sphinx versions[0m
+2.0.10
+2.1.9
+2.2.6
+[34m[1mDefault Sphinx version[0m
+2.2.6
+[34m[1mInstalled Firefox version[0m
+firefox 31.0esr
+[34m[1mPhantomJS version[0m
+1.9.8
+[34m[1mant -version[0m
+Apache Ant(TM) version 1.8.2 compiled on December 3 2011
+[34m[1mmvn -version[0m
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.7.0_76, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-7-oracle/jre
+Default locale: en_US, platform encoding: ANSI_X3.4-1968
+OS name: "linux", version: "3.13.0-29-generic", arch: "amd64", family: "unix"
+travis_fold:end:system_info[0K
+travis_fold:start:fix.CVE-2015-7547[0K$ export DEBIAN_FRONTEND=noninteractive
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  libc-bin libc-dev-bin libc6-dev
+Suggested packages:
+  glibc-doc
+The following packages will be upgraded:
+  libc-bin libc-dev-bin libc6 libc6-dev
+4 upgraded, 0 newly installed, 0 to remove and 278 not upgraded.
+Need to get 8,856 kB of archives.
+After this operation, 13.3 kB of additional disk space will be used.
+Get:1 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6-dev amd64 2.15-0ubuntu10.18 [2,948 kB]
+Get:2 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-dev-bin amd64 2.15-0ubuntu10.18 [84.5 kB]
+Get:3 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc-bin amd64 2.15-0ubuntu10.18 [1,178 kB]
+Get:4 http://us.archive.ubuntu.com/ubuntu/ precise-updates/main libc6 amd64 2.15-0ubuntu10.18 [4,646 kB]
+Fetched 8,856 kB in 0s (32.9 MB/s)
+Preconfiguring packages ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72019 files and directories currently installed.)
+Preparing to replace libc6-dev 2.15-0ubuntu10.10 (using .../libc6-dev_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc6-dev ...
+Preparing to replace libc-dev-bin 2.15-0ubuntu10.10 (using .../libc-dev-bin_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc-dev-bin ...
+Preparing to replace libc-bin 2.15-0ubuntu10.10 (using .../libc-bin_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc-bin ...
+Processing triggers for man-db ...
+Setting up libc-bin (2.15-0ubuntu10.18) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 72018 files and directories currently installed.)
+Preparing to replace libc6 2.15-0ubuntu10.10 (using .../libc6_2.15-0ubuntu10.18_amd64.deb) ...
+Unpacking replacement libc6 ...
+Setting up libc6 (2.15-0ubuntu10.18) ...
+Setting up libc-dev-bin (2.15-0ubuntu10.18) ...
+Setting up libc6-dev (2.15-0ubuntu10.18) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+travis_fold:end:fix.CVE-2015-7547[0Ktravis_fold:start:git.checkout[0Ktravis_time:start:055edf30[0K$ git clone --depth=50 --branch=master https://github.com/jcgay/maven-color.git jcgay/maven-color
+Cloning into 'jcgay/maven-color'...
+remote: Counting objects: 809, done.[K
+remote: Compressing objects:   0% (1/313)   [Kremote: Compressing objects:   1% (4/313)   [Kremote: Compressing objects:   2% (7/313)   [Kremote: Compressing objects:   3% (10/313)   [Kremote: Compressing objects:   4% (13/313)   [Kremote: Compressing objects:   5% (16/313)   [Kremote: Compressing objects:   6% (19/313)   [Kremote: Compressing objects:   7% (22/313)   [Kremote: Compressing objects:   8% (26/313)   [Kremote: Compressing objects:   9% (29/313)   [Kremote: Compressing objects:  10% (32/313)   [Kremote: Compressing objects:  11% (35/313)   [Kremote: Compressing objects:  12% (38/313)   [Kremote: Compressing objects:  13% (41/313)   [Kremote: Compressing objects:  14% (44/313)   [Kremote: Compressing objects:  15% (47/313)   [Kremote: Compressing objects:  16% (51/313)   [Kremote: Compressing objects:  17% (54/313)   [Kremote: Compressing objects:  18% (57/313)   [Kremote: Compressing objects:  19% (60/313)   [Kremote: Compressing objects:  20% (63/313)   [Kremote: Compressing objects:  21% (66/313)   [Kremote: Compressing objects:  22% (69/313)   [Kremote: Compressing objects:  23% (72/313)   [Kremote: Compressing objects:  24% (76/313)   [Kremote: Compressing objects:  25% (79/313)   [Kremote: Compressing objects:  26% (82/313)   [Kremote: Compressing objects:  27% (85/313)   [Kremote: Compressing objects:  28% (88/313)   [Kremote: Compressing objects:  29% (91/313)   [Kremote: Compressing objects:  30% (94/313)   [Kremote: Compressing objects:  31% (98/313)   [Kremote: Compressing objects:  32% (101/313)   [Kremote: Compressing objects:  33% (104/313)   [Kremote: Compressing objects:  34% (107/313)   [Kremote: Compressing objects:  35% (110/313)   [Kremote: Compressing objects:  36% (113/313)   [Kremote: Compressing objects:  37% (116/313)   [Kremote: Compressing objects:  38% (119/313)   [Kremote: Compressing objects:  39% (123/313)   [Kremote: Compressing objects:  40% (126/313)   [Kremote: Compressing objects:  41% (129/313)   [Kremote: Compressing objects:  42% (132/313)   [Kremote: Compressing objects:  43% (135/313)   [Kremote: Compressing objects:  44% (138/313)   [Kremote: Compressing objects:  45% (141/313)   [Kremote: Compressing objects:  46% (144/313)   [Kremote: Compressing objects:  47% (148/313)   [Kremote: Compressing objects:  48% (151/313)   [Kremote: Compressing objects:  49% (154/313)   [Kremote: Compressing objects:  50% (157/313)   [Kremote: Compressing objects:  51% (160/313)   [Kremote: Compressing objects:  52% (163/313)   [Kremote: Compressing objects:  53% (166/313)   [Kremote: Compressing objects:  54% (170/313)   [Kremote: Compressing objects:  55% (173/313)   [Kremote: Compressing objects:  56% (176/313)   [Kremote: Compressing objects:  57% (179/313)   [Kremote: Compressing objects:  58% (182/313)   [Kremote: Compressing objects:  59% (185/313)   [Kremote: Compressing objects:  60% (188/313)   [Kremote: Compressing objects:  61% (191/313)   [Kremote: Compressing objects:  62% (195/313)   [Kremote: Compressing objects:  63% (198/313)   [Kremote: Compressing objects:  64% (201/313)   [Kremote: Compressing objects:  65% (204/313)   [Kremote: Compressing objects:  66% (207/313)   [Kremote: Compressing objects:  67% (210/313)   [Kremote: Compressing objects:  68% (213/313)   [Kremote: Compressing objects:  69% (216/313)   [Kremote: Compressing objects:  70% (220/313)   [Kremote: Compressing objects:  71% (223/313)   [Kremote: Compressing objects:  72% (226/313)   [Kremote: Compressing objects:  73% (229/313)   [Kremote: Compressing objects:  74% (232/313)   [Kremote: Compressing objects:  75% (235/313)   [Kremote: Compressing objects:  76% (238/313)   [Kremote: Compressing objects:  77% (242/313)   [Kremote: Compressing objects:  78% (245/313)   [Kremote: Compressing objects:  79% (248/313)   [Kremote: Compressing objects:  80% (251/313)   [Kremote: Compressing objects:  81% (254/313)   [Kremote: Compressing objects:  82% (257/313)   [Kremote: Compressing objects:  83% (260/313)   [Kremote: Compressing objects:  84% (263/313)   [Kremote: Compressing objects:  85% (267/313)   [Kremote: Compressing objects:  86% (270/313)   [Kremote: Compressing objects:  87% (273/313)   [Kremote: Compressing objects:  88% (276/313)   [Kremote: Compressing objects:  89% (279/313)   [Kremote: Compressing objects:  90% (282/313)   [Kremote: Compressing objects:  91% (285/313)   [Kremote: Compressing objects:  92% (288/313)   [Kremote: Compressing objects:  93% (292/313)   [Kremote: Compressing objects:  94% (295/313)   [Kremote: Compressing objects:  95% (298/313)   [Kremote: Compressing objects:  96% (301/313)   [Kremote: Compressing objects:  97% (304/313)   [Kremote: Compressing objects:  98% (307/313)   [Kremote: Compressing objects:  99% (310/313)   [Kremote: Compressing objects: 100% (313/313)   [Kremote: Compressing objects: 100% (313/313), done.[K
+Receiving objects:   0% (1/809)   Receiving objects:   1% (9/809)   Receiving objects:   2% (17/809)   Receiving objects:   3% (25/809)   Receiving objects:   4% (33/809)   Receiving objects:   5% (41/809)   Receiving objects:   6% (49/809)   Receiving objects:   7% (57/809)   Receiving objects:   8% (65/809)   Receiving objects:   9% (73/809)   Receiving objects:  10% (81/809)   Receiving objects:  11% (89/809)   Receiving objects:  12% (98/809)   Receiving objects:  13% (106/809)   Receiving objects:  14% (114/809)   Receiving objects:  15% (122/809)   Receiving objects:  16% (130/809)   Receiving objects:  17% (138/809)   Receiving objects:  18% (146/809)   Receiving objects:  19% (154/809)   Receiving objects:  20% (162/809)   Receiving objects:  21% (170/809)   Receiving objects:  22% (178/809)   Receiving objects:  23% (187/809)   Receiving objects:  24% (195/809)   Receiving objects:  25% (203/809)   Receiving objects:  26% (211/809)   Receiving objects:  27% (219/809)   Receiving objects:  28% (227/809)   Receiving objects:  29% (235/809)   Receiving objects:  30% (243/809)   Receiving objects:  31% (251/809)   Receiving objects:  32% (259/809)   Receiving objects:  33% (267/809)   Receiving objects:  34% (276/809)   Receiving objects:  35% (284/809)   Receiving objects:  36% (292/809)   Receiving objects:  37% (300/809)   Receiving objects:  38% (308/809)   Receiving objects:  39% (316/809)   remote: Total 809 (delta 235), reused 755 (delta 196), pack-reused 0[K
+Receiving objects:  40% (324/809)   Receiving objects:  41% (332/809)   Receiving objects:  42% (340/809)   Receiving objects:  43% (348/809)   Receiving objects:  44% (356/809)   Receiving objects:  45% (365/809)   Receiving objects:  46% (373/809)   Receiving objects:  47% (381/809)   Receiving objects:  48% (389/809)   Receiving objects:  49% (397/809)   Receiving objects:  50% (405/809)   Receiving objects:  51% (413/809)   Receiving objects:  52% (421/809)   Receiving objects:  53% (429/809)   Receiving objects:  54% (437/809)   Receiving objects:  55% (445/809)   Receiving objects:  56% (454/809)   Receiving objects:  57% (462/809)   Receiving objects:  58% (470/809)   Receiving objects:  59% (478/809)   Receiving objects:  60% (486/809)   Receiving objects:  61% (494/809)   Receiving objects:  62% (502/809)   Receiving objects:  63% (510/809)   Receiving objects:  64% (518/809)   Receiving objects:  65% (526/809)   Receiving objects:  66% (534/809)   Receiving objects:  67% (543/809)   Receiving objects:  68% (551/809)   Receiving objects:  69% (559/809)   Receiving objects:  70% (567/809)   Receiving objects:  71% (575/809)   Receiving objects:  72% (583/809)   Receiving objects:  73% (591/809)   Receiving objects:  74% (599/809)   Receiving objects:  75% (607/809)   Receiving objects:  76% (615/809)   Receiving objects:  77% (623/809)   Receiving objects:  78% (632/809)   Receiving objects:  79% (640/809)   Receiving objects:  80% (648/809)   Receiving objects:  81% (656/809)   Receiving objects:  82% (664/809)   Receiving objects:  83% (672/809)   Receiving objects:  84% (680/809)   Receiving objects:  85% (688/809)   Receiving objects:  86% (696/809)   Receiving objects:  87% (704/809)   Receiving objects:  88% (712/809)   Receiving objects:  89% (721/809)   Receiving objects:  90% (729/809)   Receiving objects:  91% (737/809)   Receiving objects:  92% (745/809)   Receiving objects:  93% (753/809)   Receiving objects:  94% (761/809)   Receiving objects:  95% (769/809)   Receiving objects:  96% (777/809)   Receiving objects:  97% (785/809)   Receiving objects:  98% (793/809)   Receiving objects:  99% (801/809)   Receiving objects: 100% (809/809)   Receiving objects: 100% (809/809), 86.37 KiB | 0 bytes/s, done.
+Resolving deltas:   0% (0/235)   Resolving deltas:   1% (3/235)   Resolving deltas:   2% (5/235)   Resolving deltas:   4% (10/235)   Resolving deltas:   5% (13/235)   Resolving deltas:   7% (18/235)   Resolving deltas:   8% (19/235)   Resolving deltas:  10% (24/235)   Resolving deltas:  11% (27/235)   Resolving deltas:  21% (51/235)   Resolving deltas:  23% (56/235)   Resolving deltas:  24% (58/235)   Resolving deltas:  27% (65/235)   Resolving deltas:  29% (69/235)   Resolving deltas:  32% (77/235)   Resolving deltas:  33% (78/235)   Resolving deltas:  57% (136/235)   Resolving deltas:  60% (141/235)   Resolving deltas:  61% (144/235)   Resolving deltas:  62% (147/235)   Resolving deltas:  63% (149/235)   Resolving deltas:  64% (152/235)   Resolving deltas:  65% (153/235)   Resolving deltas:  68% (161/235)   Resolving deltas:  69% (164/235)   Resolving deltas:  70% (166/235)   Resolving deltas:  71% (167/235)   Resolving deltas:  72% (170/235)   Resolving deltas:  73% (173/235)   Resolving deltas:  74% (176/235)   Resolving deltas:  75% (177/235)   Resolving deltas:  87% (206/235)   Resolving deltas:  88% (207/235)   Resolving deltas:  89% (210/235)   Resolving deltas:  90% (212/235)   Resolving deltas:  91% (214/235)   Resolving deltas:  92% (217/235)   Resolving deltas:  99% (233/235)   Resolving deltas: 100% (235/235)   Resolving deltas: 100% (235/235), done.
+Checking connectivity... done.
+
+travis_time:end:055edf30:start=1494255282562496763,finish=1494255282995924617,duration=433427854[0K$ cd jcgay/maven-color
+$ git checkout -qf b91412133f4189883d70694dce512aeaf0638e16
+travis_fold:end:git.checkout[0Ktravis_fold:start:cache.1[0KSetting up build cache
+$ export CASHER_DIR=$HOME/.casher
+travis_time:start:1b5c8d52[0K$ Installing caching utilities
+
+travis_time:end:1b5c8d52:start=1494255288873281548,finish=1494255288909214243,duration=35932695[0Ktravis_time:start:1299fe87[0K
+travis_time:end:1299fe87:start=1494255288915407123,finish=1494255288919960041,duration=4552918[0Ktravis_time:start:19ac5124[0K[32;1mattempting to download cache archive[0m
+[32;1mfetching master/cache-linux-precise-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.tgz[0m
+[32;1mfound cache[0m
+
+travis_time:end:19ac5124:start=1494255288924870125,finish=1494255293381137708,duration=4456267583[0Ktravis_time:start:050f67e0[0K
+travis_time:end:050f67e0:start=1494255293389527264,finish=1494255293396595859,duration=7068595[0Ktravis_time:start:1ebe6dc8[0K[32;1madding /home/travis/.m2/repository to cache[0m
+[32;1madding /home/travis/.sonar/cache to cache[0m
+[32;1mcreating directory /home/travis/.sonar/cache[0m
+
+travis_time:end:1ebe6dc8:start=1494255293402704901,finish=1494255299015018815,duration=5612313914[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
+java version "1.7.0_76"
+Java(TM) SE Runtime Environment (build 1.7.0_76-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 24.76-b04, mixed mode)
+$ javac -J-Xmx32m -version
+javac 1.7.0_76
+travis_fold:start:before_install.1[0Ktravis_time:start:2214ffb7[0K$ jdk_switcher use openjdk6
+Switching to OpenJDK6 (java-1.6.0-openjdk-amd64), JAVA_HOME will be set to /usr/lib/jvm/java-6-openjdk-amd64
+
+travis_time:end:2214ffb7:start=1494255300810592191,finish=1494255300828743592,duration=18151401[0Ktravis_fold:end:before_install.1[0Ktravis_fold:start:before_install.2[0Ktravis_time:start:19d6c44d[0K$ sed -i "s|\[JDK6\]|$JAVA_HOME|g" etc/toolchains.xml
+
+travis_time:end:19d6c44d:start=1494255300835155562,finish=1494255300842363921,duration=7208359[0Ktravis_fold:end:before_install.2[0Ktravis_fold:start:before_install.3[0Ktravis_time:start:04c1f5a2[0K$ jdk_switcher use oraclejdk8
+Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
+
+travis_time:end:04c1f5a2:start=1494255300849428747,finish=1494255300865963515,duration=16534768[0Ktravis_fold:end:before_install.3[0Ktravis_fold:start:install[0Ktravis_time:start:21b15a02[0K$ mvn install -DskipTests=true -B -V -t etc/toolchains.xml
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=192m; support was removed in 8.0
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T17:29:23+00:00)
+Maven home: /usr/local/maven
+Java version: 1.8.0_31, vendor: Oracle Corporation
+Java home: /usr/lib/jvm/java-8-oracle/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.8.12-040812-generic", arch: "amd64", family: "unix"
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] maven-color
+[INFO] maven-color-core
+[INFO] maven-color-gossip
+[INFO] maven-color-coverage-report
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color ---
+[INFO] Installing com.github.jcgay.maven.color:maven-color:2.0.1-SNAPSHOT at end
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-core 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-core ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-core ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ maven-color-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/travis/build/jcgay/maven-color/maven-color-core/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ maven-color-core ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 11 source files to /home/travis/build/jcgay/maven-color/maven-color-core/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ maven-color-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 6 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ maven-color-core ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files to /home/travis/build/jcgay/maven-color/maven-color-core/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.19.1:test (default-test) @ maven-color-core ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:3.0.2:jar (default-jar) @ maven-color-core ---
+[INFO] Building jar: /home/travis/build/jcgay/maven-color/maven-color-core/target/maven-color-core-2.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color-core ---
+[INFO] Installing com.github.jcgay.maven.color:maven-color-core:2.0.1-SNAPSHOT at end
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-gossip 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-gossip ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-gossip ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ maven-color-gossip ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ maven-color-gossip ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /home/travis/build/jcgay/maven-color/maven-color-gossip/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ maven-color-gossip ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/travis/build/jcgay/maven-color/maven-color-gossip/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ maven-color-gossip ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /home/travis/build/jcgay/maven-color/maven-color-gossip/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.19.1:test (default-test) @ maven-color-gossip ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:3.0.2:jar (default-jar) @ maven-color-gossip ---
+[INFO] Building jar: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-assembly-plugin:3.0.0:single (make-assembly) @ maven-color-gossip ---
+[INFO] Reading assembly descriptor: src/main/assembly/bundle.xml
+[INFO] Building tar: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.tar.gz
+[INFO] Building zip: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.zip
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color-gossip ---
+[INFO] Installing com.github.jcgay.maven.color:maven-color-gossip:2.0.1-SNAPSHOT at end
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-coverage-report 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-coverage-report ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-coverage-report ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color-coverage-report ---
+[INFO] Installing /home/travis/build/jcgay/maven-color/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color/2.0.1-SNAPSHOT/maven-color-2.0.1-SNAPSHOT.pom
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-core/target/maven-color-core-2.0.1-SNAPSHOT.jar to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/maven-color-core-2.0.1-SNAPSHOT.jar
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-core/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/maven-color-core-2.0.1-SNAPSHOT.pom
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT.jar to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT.jar
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT.pom
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.tar.gz to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT-bundle.tar.gz
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.zip to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT-bundle.zip
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-coverage-report/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-coverage-report/2.0.1-SNAPSHOT/maven-color-coverage-report-2.0.1-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] maven-color ........................................ SUCCESS [  1.574 s]
+[INFO] maven-color-core ................................... SUCCESS [  4.930 s]
+[INFO] maven-color-gossip ................................. SUCCESS [  5.965 s]
+[INFO] maven-color-coverage-report ........................ SUCCESS [  0.071 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 13.244 s
+[INFO] Finished at: 2017-05-08T14:55:17+00:00
+[INFO] Final Memory: 17M/360M
+[INFO] ------------------------------------------------------------------------
+
+travis_time:end:21b15a02:start=1494255300874861150,finish=1494255321512625676,duration=20637764526[0Ktravis_fold:end:install[0Ktravis_fold:start:sonarqube.addon[0K[33;1mSonarQube addon[0m
+addon hash: 8df3d17bba1cf7304f3348cfb8a08f06
+[33;1mPreparing SonarQube Scanner CLI[0m
+Archive:  /home/travis/.sonarscanner/sonar-scanner.zip
+   creating: /home/travis/.sonarscanner/sonar-scanner-2.8/
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner.bat  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner-debug  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/lib/sonar-scanner-cli-2.8.jar  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/conf/sonar-scanner.properties  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-runner.bat  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-runner  
+  inflating: /home/travis/.sonarscanner/sonar-scanner-2.8/bin/sonar-scanner-debug.bat  
+$ export SONAR_SCANNER_HOME=$HOME/.sonarscanner/sonar-scanner-2.8
+[33;1mNot installing SonarSource build-wrapper because it's a Java or Javascript project[0m
+[33;1mPreparing SonarQube Scanner parameters[0m
+travis_fold:end:sonarqube.addon[0Ktravis_time:start:209694f0[0K$ mvn package sonar:sonar -Prun-coverage -B -t etc/toolchains.xml
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=192m; support was removed in 8.0
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] maven-color
+[INFO] maven-color-core
+[INFO] maven-color-gossip
+[INFO] maven-color-coverage-report
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/target/jacoco.exec
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-core 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-core ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-core ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color-core ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/maven-color-core/target/jacoco.exec
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ maven-color-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/travis/build/jcgay/maven-color/maven-color-core/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ maven-color-core ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ maven-color-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 6 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ maven-color-core ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.19.1:test (default-test) @ maven-color-core ---
+[INFO] Toolchain in maven-surefire-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.github.jcgay.maven.color.core.ColorActivationTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.456 sec - in com.github.jcgay.maven.color.core.ColorActivationTest
+Running com.github.jcgay.maven.color.core.DefaultColorizationTest
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.27 sec - in com.github.jcgay.maven.color.core.DefaultColorizationTest
+Running com.github.jcgay.maven.color.core.ColorConfigurationTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.189 sec - in com.github.jcgay.maven.color.core.ColorConfigurationTest
+Running com.github.jcgay.maven.color.core.version.CurrentMavenVersionTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec - in com.github.jcgay.maven.color.core.version.CurrentMavenVersionTest
+
+Results :
+
+Tests run: 36, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:3.0.2:jar (default-jar) @ maven-color-core ---
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-gossip 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-gossip ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-gossip ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color-gossip ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/maven-color-gossip/target/jacoco.exec
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ maven-color-gossip ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ maven-color-gossip ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ maven-color-gossip ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/travis/build/jcgay/maven-color/maven-color-gossip/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ maven-color-gossip ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.19.1:test (default-test) @ maven-color-gossip ---
+[INFO] Toolchain in maven-surefire-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.github.jcgay.maven.color.gossip.MavenColorRendererTest
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.682 sec - in com.github.jcgay.maven.color.gossip.MavenColorRendererTest
+
+Results :
+
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:3.0.2:jar (default-jar) @ maven-color-gossip ---
+[INFO] 
+[INFO] --- maven-assembly-plugin:3.0.0:single (make-assembly) @ maven-color-gossip ---
+[INFO] Reading assembly descriptor: src/main/assembly/bundle.xml
+[INFO] Building tar: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.tar.gz
+[INFO] Building zip: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.zip
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-coverage-report 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-coverage-report ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-coverage-report ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color-coverage-report ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/maven-color-coverage-report/target/jacoco.exec
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- sonar-maven-plugin:3.3.0.603:sonar (default-cli) @ maven-color ---
+[INFO] User cache: /home/travis/.sonar/cache
+[INFO] Load global settings
+[INFO] Load global settings (done) | time=746ms
+[INFO] User cache: /home/travis/.sonar/cache
+[INFO] Load plugins index
+[INFO] Load plugins index (done) | time=9ms
+[INFO] SonarQube version: 6.3.2
+[INFO] Default locale: "en_US", source code encoding: "UTF-8"
+[INFO] Process project properties
+[INFO] Load project repositories
+[INFO] Load project repositories (done) | time=177ms
+[INFO] Execute project builders
+[INFO] Execute project builders (done) | time=1ms
+[INFO] Load quality profiles
+[INFO] Load quality profiles (done) | time=20ms
+[INFO] Load active rules
+[INFO] Load active rules (done) | time=966ms
+[INFO] Load metrics repository
+[INFO] Load metrics repository (done) | time=198ms
+[INFO] Publish mode
+[INFO] Project key: com.github.jcgay.maven.color:maven-color
+[INFO] Organization key: jcgay-github
+[INFO] -------------  Scan maven-color-core
+[INFO] Load server rules
+[INFO] Load server rules (done) | time=169ms
+[INFO] Initializer GenericCoverageSensor
+[INFO] Initializer GenericCoverageSensor (done) | time=0ms
+[INFO] Base dir: /home/travis/build/jcgay/maven-color/maven-color-core
+[INFO] Working dir: /home/travis/build/jcgay/maven-color/maven-color-core/target/sonar
+[INFO] Source paths: pom.xml, src/main/java
+[INFO] Test paths: src/test/java
+[INFO] Source encoding: UTF-8, default locale: en_US
+[INFO] Index files
+[INFO] 16 files indexed
+[INFO] Quality profile for java: Sonar way
+[INFO] Quality profile for xml: Sonar way
+[INFO] Sensor JavaSquidSensor [java]
+[INFO] Configured Java source version (sonar.java.source): 6
+[INFO] JavaClasspath initialization
+[INFO] JavaClasspath initialization (done) | time=12ms
+[INFO] JavaTestClasspath initialization
+[INFO] JavaTestClasspath initialization (done) | time=1ms
+[INFO] Java Main Files AST scan
+[INFO] 11 source files to be analyzed
+[INFO] Java Main Files AST scan (done) | time=2723ms
+[INFO] 11/11 source files have been analyzed
+[INFO] Java Test Files AST scan
+[INFO] 4 source files to be analyzed
+[INFO] Java Test Files AST scan (done) | time=680ms
+[INFO] 4/4 source files have been analyzed
+[INFO] Sensor JavaSquidSensor [java] (done) | time=4025ms
+[INFO] Sensor SurefireSensor [java]
+[INFO] parsing /home/travis/build/jcgay/maven-color/maven-color-core/target/surefire-reports
+[INFO] Sensor SurefireSensor [java] (done) | time=191ms
+[INFO] Sensor JaCoCoSensor [java]
+[INFO] Analysing /home/travis/build/jcgay/maven-color/maven-color-core/target/jacoco.exec
+[INFO] No information about coverage per test.
+[INFO] Sensor JaCoCoSensor [java] (done) | time=129ms
+[INFO] Sensor SonarJavaXmlFileSensor [java]
+[INFO] 1 source files to be analyzed
+[INFO] Sensor SonarJavaXmlFileSensor [java] (done) | time=622ms
+[INFO] 1/1 source files have been analyzed
+[INFO] Sensor XML Sensor [xml]
+[INFO] Sensor XML Sensor [xml] (done) | time=219ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=0ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=1ms
+[INFO] Sensor Unit Test Results Import [vbnet]
+[INFO] Sensor Unit Test Results Import [vbnet] (done) | time=0ms
+[INFO] Sensor Analyzer for "php.ini" files [php]
+[INFO] Sensor Analyzer for "php.ini" files [php] (done) | time=4ms
+[INFO] Sensor Zero Coverage Sensor
+[INFO] Sensor Zero Coverage Sensor (done) | time=40ms
+[INFO] Sensor Code Colorizer Sensor
+[INFO] Sensor Code Colorizer Sensor (done) | time=1ms
+[INFO] Sensor CPD Block Indexer
+[INFO] org.sonar.scanner.cpd.deprecated.JavaCpdBlockIndexer@4c56e671 is used for java
+[INFO] org.sonar.scanner.cpd.deprecated.DefaultCpdBlockIndexer@349ff599 is used for xml
+[INFO] Sensor CPD Block Indexer (done) | time=41ms
+[INFO] SCM provider for this project is: git
+[INFO] 1 files to be analyzed
+[INFO] 1/1 files analyzed
+[INFO] -------------  Scan maven-color-gossip
+[INFO] Initializer GenericCoverageSensor
+[INFO] Initializer GenericCoverageSensor (done) | time=0ms
+[INFO] Base dir: /home/travis/build/jcgay/maven-color/maven-color-gossip
+[INFO] Working dir: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/sonar
+[INFO] Source paths: pom.xml, src/main/java
+[INFO] Test paths: src/test/java
+[INFO] Source encoding: UTF-8, default locale: en_US
+[INFO] Index files
+[INFO] 4 files indexed
+[INFO] Quality profile for java: Sonar way
+[INFO] Quality profile for xml: Sonar way
+[INFO] Sensor JavaSquidSensor [java]
+[INFO] Configured Java source version (sonar.java.source): 6
+[INFO] JavaClasspath initialization
+[INFO] JavaClasspath initialization (done) | time=2ms
+[INFO] JavaTestClasspath initialization
+[INFO] JavaTestClasspath initialization (done) | time=4ms
+[INFO] Java Main Files AST scan
+[INFO] 2 source files to be analyzed
+[INFO] 2/2 source files have been analyzed
+[INFO] Java Main Files AST scan (done) | time=442ms
+[INFO] Java Test Files AST scan
+[INFO] 1 source files to be analyzed
+[INFO] Java Test Files AST scan (done) | time=251ms
+[INFO] 1/1 source files have been analyzed
+[INFO] Sensor JavaSquidSensor [java] (done) | time=719ms
+[INFO] Sensor SurefireSensor [java]
+[INFO] parsing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/surefire-reports
+[INFO] Sensor SurefireSensor [java] (done) | time=46ms
+[INFO] Sensor JaCoCoSensor [java]
+[INFO] Analysing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/jacoco.exec
+[INFO] No information about coverage per test.
+[INFO] Sensor JaCoCoSensor [java] (done) | time=37ms
+[INFO] Sensor SonarJavaXmlFileSensor [java]
+[INFO] 1 source files to be analyzed
+[INFO] Sensor SonarJavaXmlFileSensor [java] (done) | time=269ms
+[INFO] 1/1 source files have been analyzed
+[INFO] Sensor XML Sensor [xml]
+[INFO] Sensor XML Sensor [xml] (done) | time=33ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=0ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=1ms
+[INFO] Sensor Unit Test Results Import [vbnet]
+[INFO] Sensor Unit Test Results Import [vbnet] (done) | time=0ms
+[INFO] Sensor Analyzer for "php.ini" files [php]
+[INFO] Sensor Analyzer for "php.ini" files [php] (done) | time=1ms
+[INFO] Sensor Zero Coverage Sensor
+[INFO] Sensor Zero Coverage Sensor (done) | time=15ms
+[INFO] Sensor Code Colorizer Sensor
+[INFO] Sensor Code Colorizer Sensor (done) | time=1ms
+[INFO] Sensor CPD Block Indexer
+[INFO] org.sonar.scanner.cpd.deprecated.JavaCpdBlockIndexer@7318d347 is used for java
+[INFO] org.sonar.scanner.cpd.deprecated.DefaultCpdBlockIndexer@5fc27e3f is used for xml
+[INFO] Sensor CPD Block Indexer (done) | time=4ms
+[INFO] SCM provider for this project is: git
+[INFO] 1 files to be analyzed
+[INFO] 1/1 files analyzed
+[INFO] -------------  Scan maven-color-coverage-report
+[INFO] Initializer GenericCoverageSensor
+[INFO] Initializer GenericCoverageSensor (done) | time=0ms
+[INFO] Base dir: /home/travis/build/jcgay/maven-color/maven-color-coverage-report
+[INFO] Working dir: /home/travis/build/jcgay/maven-color/maven-color-coverage-report/target/sonar
+[INFO] Source paths: pom.xml
+[INFO] Source encoding: UTF-8, default locale: en_US
+[INFO] Index files
+[INFO] 1 file indexed
+[INFO] Quality profile for xml: Sonar way
+[INFO] Sensor SonarJavaXmlFileSensor [java]
+[INFO] 1 source files to be analyzed
+[INFO] Sensor SonarJavaXmlFileSensor [java] (done) | time=89ms
+[INFO] 1/1 source files have been analyzed
+[INFO] Sensor XML Sensor [xml]
+[INFO] Sensor XML Sensor [xml] (done) | time=24ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=1ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=0ms
+[INFO] Sensor Unit Test Results Import [vbnet]
+[INFO] Sensor Unit Test Results Import [vbnet] (done) | time=0ms
+[INFO] Sensor Analyzer for "php.ini" files [php]
+[INFO] Sensor Analyzer for "php.ini" files [php] (done) | time=0ms
+[INFO] Sensor Zero Coverage Sensor
+[INFO] Sensor Zero Coverage Sensor (done) | time=1ms
+[INFO] Sensor Code Colorizer Sensor
+[INFO] Sensor Code Colorizer Sensor (done) | time=0ms
+[INFO] Sensor CPD Block Indexer
+[INFO] org.sonar.scanner.cpd.deprecated.DefaultCpdBlockIndexer@2700252f is used for xml
+[INFO] Sensor CPD Block Indexer (done) | time=1ms
+[INFO] SCM provider for this project is: git
+[INFO] 1 files to be analyzed
+[INFO] 1/1 files analyzed
+[INFO] -------------  Scan maven-color
+[INFO] Initializer GenericCoverageSensor
+[INFO] Initializer GenericCoverageSensor (done) | time=0ms
+[INFO] Base dir: /home/travis/build/jcgay/maven-color
+[INFO] Working dir: /home/travis/build/jcgay/maven-color/target/sonar
+[INFO] Source encoding: UTF-8, default locale: en_US
+[INFO] Sensor SonarJavaXmlFileSensor [java]
+[INFO] Sensor SonarJavaXmlFileSensor [java] (done) | time=0ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=0ms
+[INFO] Sensor Coverage Report Import [vbnet]
+[INFO] Sensor Coverage Report Import [vbnet] (done) | time=0ms
+[INFO] Sensor Unit Test Results Import [vbnet]
+[INFO] Sensor Unit Test Results Import [vbnet] (done) | time=0ms
+[INFO] Sensor Analyzer for "php.ini" files [php]
+[INFO] Sensor Analyzer for "php.ini" files [php] (done) | time=1ms
+[INFO] Sensor Zero Coverage Sensor
+[INFO] Sensor Zero Coverage Sensor (done) | time=0ms
+[INFO] Sensor Code Colorizer Sensor
+[INFO] Sensor Code Colorizer Sensor (done) | time=0ms
+[INFO] Sensor CPD Block Indexer
+[INFO] Sensor CPD Block Indexer (done) | time=0ms
+[INFO] Calculating CPD for 8 files
+[INFO] CPD calculation finished
+[INFO] Analysis report generated in 181ms, dir size=171 KB
+[INFO] Analysis reports compressed in 55ms, zip size=73 KB
+[INFO] Analysis report uploaded in 85ms
+[INFO] ANALYSIS SUCCESSFUL, you can browse https://sonarqube.com/dashboard/index/com.github.jcgay.maven.color:maven-color
+[INFO] Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+[INFO] More about the report processing at https://sonarqube.com/api/ce/task?id=AVvojzWpBe8n0M01bkdR
+[INFO] Task total time: 12.813 s
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] maven-color ........................................ SUCCESS [ 16.163 s]
+[INFO] maven-color-core ................................... SUCCESS [  5.295 s]
+[INFO] maven-color-gossip ................................. SUCCESS [  4.213 s]
+[INFO] maven-color-coverage-report ........................ SUCCESS [  0.011 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 27.849 s
+[INFO] Finished at: 2017-05-08T14:55:50+00:00
+[INFO] Final Memory: 56M/427M
+[INFO] ------------------------------------------------------------------------
+
+travis_time:end:209694f0:start=1494255321559958034,finish=1494255351484885733,duration=29924927699[0K
+[32;1mThe command "mvn package sonar:sonar -Prun-coverage -B -t etc/toolchains.xml" exited with 0.[0m
+travis_fold:start:cache.2[0Kstore build cache
+travis_time:start:1833f228[0K
+travis_time:end:1833f228:start=1494255351491439580,finish=1494255351495969829,duration=4530249[0Ktravis_time:start:0b82094f[0K[32;1mchange detected (content changed, file is created, or file is deleted):
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color/2.0.1-SNAPSHOT/maven-color-2.0.1-SNAPSHOT.pom
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color/2.0.1-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color/2.0.1-SNAPSHOT/_remote.repositories
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/maven-color-core-2.0.1-SNAPSHOT.jar
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/maven-color-core-2.0.1-SNAPSHOT.pom
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/maven-metadata-local.xml
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/_remote.repositories
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/maven-metadata-local.xml
+/home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-coverage-report/2.0.1-SNAPSHOT
+[0m
+[32;1m...
+[0m
+[32;1mchanges detected, packing new archive[0m
+.
+.
+[32;1muploading archive[0m
+
+travis_time:end:0b82094f:start=1494255351501386188,finish=1494255380155323043,duration=28653936855[0Ktravis_fold:end:cache.2[0Ktravis_fold:start:after_success[0Ktravis_time:start:0c38a21c[0K$ mvn install coveralls:report -Prun-coverage -t etc/toolchains.xml
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=192m; support was removed in 8.0
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] maven-color
+[INFO] maven-color-core
+[INFO] maven-color-gossip
+[INFO] maven-color-coverage-report
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/target/jacoco.exec
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report (generate-report) @ maven-color ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color ---
+[INFO] Installing com.github.jcgay.maven.color:maven-color:2.0.1-SNAPSHOT at end
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-core 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-core ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-core ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color-core ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/maven-color-core/target/jacoco.exec
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ maven-color-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/travis/build/jcgay/maven-color/maven-color-core/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ maven-color-core ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ maven-color-core ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 6 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ maven-color-core ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.19.1:test (default-test) @ maven-color-core ---
+[INFO] Toolchain in maven-surefire-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.github.jcgay.maven.color.core.ColorActivationTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.443 sec - in com.github.jcgay.maven.color.core.ColorActivationTest
+Running com.github.jcgay.maven.color.core.DefaultColorizationTest
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.276 sec - in com.github.jcgay.maven.color.core.DefaultColorizationTest
+Running com.github.jcgay.maven.color.core.ColorConfigurationTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.063 sec - in com.github.jcgay.maven.color.core.ColorConfigurationTest
+Running com.github.jcgay.maven.color.core.version.CurrentMavenVersionTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec - in com.github.jcgay.maven.color.core.version.CurrentMavenVersionTest
+
+Results :
+
+Tests run: 36, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:3.0.2:jar (default-jar) @ maven-color-core ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report (generate-report) @ maven-color-core ---
+[INFO] Loading execution data file /home/travis/build/jcgay/maven-color/maven-color-core/target/jacoco.exec
+[INFO] Analyzed bundle 'maven-color-core' with 11 classes
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color-core ---
+[INFO] Installing com.github.jcgay.maven.color:maven-color-core:2.0.1-SNAPSHOT at end
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-gossip 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-gossip ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-gossip ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color-gossip ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/maven-color-gossip/target/jacoco.exec
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ maven-color-gossip ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ maven-color-gossip ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ maven-color-gossip ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/travis/build/jcgay/maven-color/maven-color-gossip/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ maven-color-gossip ---
+[INFO] Toolchain in maven-compiler-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.19.1:test (default-test) @ maven-color-gossip ---
+[INFO] Toolchain in maven-surefire-plugin: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.github.jcgay.maven.color.gossip.MavenColorRendererTest
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.672 sec - in com.github.jcgay.maven.color.gossip.MavenColorRendererTest
+
+Results :
+
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:3.0.2:jar (default-jar) @ maven-color-gossip ---
+[INFO] 
+[INFO] --- maven-assembly-plugin:3.0.0:single (make-assembly) @ maven-color-gossip ---
+[INFO] Reading assembly descriptor: src/main/assembly/bundle.xml
+[INFO] Building tar: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.tar.gz
+[INFO] Building zip: /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.zip
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report (generate-report) @ maven-color-gossip ---
+[INFO] Loading execution data file /home/travis/build/jcgay/maven-color/maven-color-gossip/target/jacoco.exec
+[INFO] Analyzed bundle 'maven-color-gossip' with 3 classes
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color-gossip ---
+[INFO] Installing com.github.jcgay.maven.color:maven-color-gossip:2.0.1-SNAPSHOT at end
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color-coverage-report 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-maven) @ maven-color-coverage-report ---
+[INFO] 
+[INFO] --- maven-toolchains-plugin:1.1:toolchain (default) @ maven-color-coverage-report ---
+[INFO] Required toolchain: jdk [ version='1.6' ]
+[INFO] Found matching toolchain for type jdk: JDK[/usr/lib/jvm/java-6-openjdk-amd64]
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (prepare-agent) @ maven-color-coverage-report ---
+[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/jcgay/maven-color/maven-color-coverage-report/target/jacoco.exec
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report (generate-report) @ maven-color-coverage-report ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report-aggregate (generate-aggregate-report) @ maven-color-coverage-report ---
+[INFO] Loading execution data file /home/travis/build/jcgay/maven-color/maven-color-core/target/jacoco.exec
+[INFO] Loading execution data file /home/travis/build/jcgay/maven-color/maven-color-gossip/target/jacoco.exec
+[INFO] Analyzed bundle 'maven-color-core' with 11 classes
+[INFO] Analyzed bundle 'maven-color-gossip' with 3 classes
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ maven-color-coverage-report ---
+[INFO] Installing /home/travis/build/jcgay/maven-color/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color/2.0.1-SNAPSHOT/maven-color-2.0.1-SNAPSHOT.pom
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-core/target/maven-color-core-2.0.1-SNAPSHOT.jar to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/maven-color-core-2.0.1-SNAPSHOT.jar
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-core/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-core/2.0.1-SNAPSHOT/maven-color-core-2.0.1-SNAPSHOT.pom
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT.jar to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT.jar
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT.pom
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.tar.gz to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT-bundle.tar.gz
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-gossip/target/maven-color-gossip-2.0.1-SNAPSHOT-bundle.zip to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-gossip/2.0.1-SNAPSHOT/maven-color-gossip-2.0.1-SNAPSHOT-bundle.zip
+[INFO] Installing /home/travis/build/jcgay/maven-color/maven-color-coverage-report/pom.xml to /home/travis/.m2/repository/com/github/jcgay/maven/color/maven-color-coverage-report/2.0.1-SNAPSHOT/maven-color-coverage-report-2.0.1-SNAPSHOT.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building maven-color 2.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- coveralls-maven-plugin:4.3.0:report (default-cli) @ maven-color ---
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.pom
+3/7 KB   5/7 KB   7/7 KB            Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.pom (7 KB at 3.6 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-client/4.5.2/httpcomponents-client-4.5.2.pom
+3/16 KB   5/16 KB   8/16 KB   11/16 KB   13/16 KB   16/16 KB              Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-client/4.5.2/httpcomponents-client-4.5.2.pom (16 KB at 493.7 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.pom
+3/6 KB     5/6 KB   6/6 KB            Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.pom (6 KB at 105.7 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-core/4.4.4/httpcomponents-core-4.4.4.pom
+3/13 KB   5/13 KB   8/13 KB   11/13 KB   13/13 KB              Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-core/4.4.4/httpcomponents-core-4.4.4.pom (13 KB at 662.7 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.pom
+3/12 KB    5/12 KB   8/12 KB   11/12 KB   12/12 KB              Downloaded: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.pom (12 KB at 331.5 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/32/commons-parent-32.pom
+3/52 KB    5/52 KB   8/52 KB   11/52 KB   13/52 KB   16/52 KB   19/52 KB   21/52 KB   24/52 KB   27/52 KB   29/52 KB   32/52 KB   36/52 KB   40/52 KB   44/52 KB   48/52 KB   52/52 KB   52/52 KB              Downloaded: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/32/commons-parent-32.pom (52 KB at 769.3 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpmime/4.5.2/httpmime-4.5.2.pom
+3/5 KB     5/5 KB            Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpmime/4.5.2/httpmime-4.5.2.pom (5 KB at 179.6 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.pom
+3/19 KB   5/19 KB   8/19 KB   11/19 KB   14/19 KB   16/19 KB   19/19 KB   19/19 KB              Downloaded: https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.pom (19 KB at 694.7 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/34/commons-parent-34.pom
+3/55 KB    5/55 KB   8/55 KB   11/55 KB   14/55 KB   16/55 KB   19/55 KB   21/55 KB   24/55 KB   27/55 KB   30/55 KB   32/55 KB   36/55 KB   40/55 KB   44/55 KB   48/55 KB   52/55 KB   55/55 KB              Downloaded: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/34/commons-parent-34.pom (55 KB at 1655.5 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.8.3/jackson-core-2.8.3.pom
+3/6 KB     5/6 KB   6/6 KB            Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.8.3/jackson-core-2.8.3.pom (6 KB at 311.1 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-parent/2.8/jackson-parent-2.8.pom
+3/8 KB   5/8 KB   8/8 KB   8/8 KB            Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-parent/2.8/jackson-parent-2.8.pom (8 KB at 598.9 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/oss-parent/27/oss-parent-27.pom
+3/20 KB   5/20 KB   8/20 KB   11/20 KB   13/20 KB   16/20 KB   19/20 KB   20/20 KB              Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/oss-parent/27/oss-parent-27.pom (20 KB at 710.3 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.8.3/jackson-annotations-2.8.3.pom
+2/2 KB              Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.8.3/jackson-annotations-2.8.3.pom (2 KB at 138.8 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.8.3/jackson-databind-2.8.3.pom
+3/6 KB   5/6 KB   6/6 KB            Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.8.3/jackson-databind-2.8.3.pom (6 KB at 378.5 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r.pom
+3/10 KB   5/10 KB   8/10 KB   10/10 KB              Downloaded: https://repo.maven.apache.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r.pom (10 KB at 580.0 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/eclipse/jgit/org.eclipse.jgit-parent/4.5.0.201609210915-r/org.eclipse.jgit-parent-4.5.0.201609210915-r.pom
+3/27 KB    5/27 KB   8/27 KB   11/27 KB   14/27 KB   16/27 KB   19/27 KB   21/27 KB   24/27 KB   27/27 KB   27/27 KB              Downloaded: https://repo.maven.apache.org/maven2/org/eclipse/jgit/org.eclipse.jgit-parent/4.5.0.201609210915-r/org.eclipse.jgit-parent-4.5.0.201609210915-r.pom (27 KB at 1148.9 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/jcraft/jsch/0.1.53/jsch-0.1.53.pom
+3/4 KB     4/4 KB            Downloaded: https://repo.maven.apache.org/maven2/com/jcraft/jsch/0.1.53/jsch-0.1.53.pom (4 KB at 287.2 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/oss/oss-parent/6/oss-parent-6.pom
+3/5 KB   5/5 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/oss/oss-parent/6/oss-parent-6.pom (5 KB at 428.9 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/googlecode/javaewah/JavaEWAH/0.7.9/JavaEWAH-0.7.9.pom
+3/5 KB   5/5 KB            Downloaded: https://repo.maven.apache.org/maven2/com/googlecode/javaewah/JavaEWAH/0.7.9/JavaEWAH-0.7.9.pom (5 KB at 31.9 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/oss/oss-parent/5/oss-parent-5.pom
+3/4 KB   4/4 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/oss/oss-parent/5/oss-parent-5.pom (4 KB at 398.6 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.pom
+3/3 KB   3/3 KB            Downloaded: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.pom (3 KB at 193.6 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.7.21/slf4j-parent-1.7.21.pom
+3/14 KB   5/14 KB   8/14 KB   11/14 KB   14/14 KB   14/14 KB              Downloaded: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.7.21/slf4j-parent-1.7.21.pom (14 KB at 879.2 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/2.0.7/plexus-utils-2.0.7.pom
+3/3 KB     3/3 KB            Downloaded: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/2.0.7/plexus-utils-2.0.7.pom (3 KB at 124.8 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-plexus/1.4.3.2/sisu-inject-plexus-1.4.3.2.pom
+3/6 KB   5/6 KB   6/6 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-plexus/1.4.3.2/sisu-inject-plexus-1.4.3.2.pom (6 KB at 424.0 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-plexus/1.4.3.2/guice-plexus-1.4.3.2.pom
+3/3 KB   3/3 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-plexus/1.4.3.2/guice-plexus-1.4.3.2.pom (3 KB at 227.9 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-bean/1.4.3.2/guice-bean-1.4.3.2.pom
+3/3 KB   3/3 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-bean/1.4.3.2/guice-bean-1.4.3.2.pom (3 KB at 102.8 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject/1.4.3.2/sisu-inject-1.4.3.2.pom
+2/2 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject/1.4.3.2/sisu-inject-1.4.3.2.pom (2 KB at 106.9 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-parent/1.4.3.2/sisu-parent-1.4.3.2.pom
+3/8 KB   5/8 KB   8/8 KB   8/8 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-parent/1.4.3.2/sisu-parent-1.4.3.2.pom (8 KB at 328.9 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-bean/1.4.3.2/sisu-inject-bean-1.4.3.2.pom
+3/6 KB   5/6 KB   6/6 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-bean/1.4.3.2/sisu-inject-bean-1.4.3.2.pom (6 KB at 398.1 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-guice/2.9.2/sisu-guice-2.9.2.pom
+3/8 KB   5/8 KB   8/8 KB            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-guice/2.9.2/sisu-guice-2.9.2.pom (8 KB at 358.8 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-parent/2.9.2/guice-parent-2.9.2.pom
+3/12 KB   5/12 KB   8/12 KB   11/12 KB   12/12 KB              Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/inject/guice-parent/2.9.2/guice-parent-2.9.2.pom (12 KB at 797.1 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.21/jcl-over-slf4j-1.7.21.pom
+963/963 B               Downloaded: https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.21/jcl-over-slf4j-1.7.21.pom (963 B at 85.5 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar
+Downloading: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.jar
+Downloading: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpmime/4.5.2/httpmime-4.5.2.jar
+Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.8.3/jackson-core-2.8.3.jar
+3/320 KB    5/320 KB   8/320 KB   11/320 KB   13/320 KB   16/320 KB   19/320 KB   21/320 KB   24/320 KB   27/320 KB   29/320 KB   32/320 KB   36/320 KB   40/320 KB   44/320 KB   48/320 KB   3/720 KB   48/320 KB   5/720 KB   48/320 KB   3/258 KB   5/720 KB   48/320 KB   3/258 KB   8/720 KB   48/320 KB   5/258 KB   8/720 KB   48/320 KB   5/258 KB   11/720 KB   48/320 KB   5/258 KB   3/41 KB   11/720 KB   48/320 KB   8/258 KB   3/41 KB   11/720 KB   48/320 KB   8/258 KB   3/41 KB   13/720 KB   48/320 KB   8/258 KB   5/41 KB   13/720 KB   48/320 KB   8/258 KB   5/41 KB   16/720 KB   48/320 KB   8/258 KB   5/41 KB   19/720 KB   48/320 KB   8/258 KB   5/41 KB   19/720 KB   52/320 KB   8/258 KB   5/41 KB   19/720 KB   56/320 KB   8/258 KB   5/41 KB   19/720 KB   60/320 KB   8/258 KB   5/41 KB   19/720 KB   64/320 KB   8/258 KB   8/41 KB   19/720 KB   64/320 KB   8/258 KB   8/41 KB   21/720 KB   64/320 KB   11/258 KB   8/41 KB   21/720 KB   64/320 KB   11/258 KB   8/41 KB   24/720 KB   64/320 KB   11/258 KB   11/41 KB   24/720 KB   64/320 KB   13/258 KB   11/41 KB   24/720 KB   64/320 KB   13/258 KB   11/41 KB   27/720 KB   64/320 KB   16/258 KB   11/41 KB   27/720 KB   64/320 KB   16/258 KB   11/41 KB   29/720 KB   64/320 KB   16/258 KB   13/41 KB   29/720 KB   64/320 KB   19/258 KB   13/41 KB   29/720 KB   64/320 KB   21/258 KB   13/41 KB   29/720 KB   64/320 KB   21/258 KB   16/41 KB   29/720 KB   64/320 KB   21/258 KB   16/41 KB   32/720 KB   64/320 KB   24/258 KB   16/41 KB   32/720 KB   64/320 KB   24/258 KB   19/41 KB   32/720 KB   64/320 KB   27/258 KB   19/41 KB   32/720 KB   64/320 KB   29/258 KB   19/41 KB   32/720 KB   64/320 KB   29/258 KB   21/41 KB   32/720 KB   64/320 KB   29/258 KB   21/41 KB   32/720 KB   68/320 KB   32/258 KB   21/41 KB   32/720 KB   68/320 KB   32/258 KB   21/41 KB   32/720 KB   72/320 KB   32/258 KB   21/41 KB   32/720 KB   76/320 KB   32/258 KB   21/41 KB   32/720 KB   80/320 KB   32/258 KB   24/41 KB   32/720 KB   80/320 KB   32/258 KB   24/41 KB   36/720 KB   80/320 KB   32/258 KB   24/41 KB   40/720 KB   80/320 KB   32/258 KB   24/41 KB   44/720 KB   80/320 KB   32/258 KB   24/41 KB   48/720 KB   80/320 KB   32/258 KB   27/41 KB   48/720 KB   80/320 KB   32/258 KB   29/41 KB   48/720 KB   80/320 KB   36/258 KB   29/41 KB   48/720 KB   80/320 KB   40/258 KB   29/41 KB   48/720 KB   80/320 KB   44/258 KB   29/41 KB   48/720 KB   80/320 KB   48/258 KB   29/41 KB   48/720 KB   80/320 KB   48/258 KB   32/41 KB   48/720 KB   80/320 KB   48/258 KB   32/41 KB   52/720 KB   80/320 KB   48/258 KB   32/41 KB   52/720 KB   84/320 KB   48/258 KB   32/41 KB   56/720 KB   84/320 KB   48/258 KB   32/41 KB   56/720 KB   88/320 KB   48/258 KB   32/41 KB   60/720 KB   88/320 KB   48/258 KB   32/41 KB   60/720 KB   92/320 KB   48/258 KB   32/41 KB   64/720 KB   92/320 KB   48/258 KB   32/41 KB   64/720 KB   96/320 KB   52/258 KB   32/41 KB   64/720 KB   96/320 KB   56/258 KB   32/41 KB   64/720 KB   96/320 KB   60/258 KB   32/41 KB   64/720 KB   96/320 KB   64/258 KB   32/41 KB   64/720 KB   96/320 KB   64/258 KB   32/41 KB   68/720 KB   96/320 KB   64/258 KB   32/41 KB   72/720 KB   96/320 KB   64/258 KB   32/41 KB   76/720 KB   96/320 KB   64/258 KB   32/41 KB   80/720 KB   96/320 KB   64/258 KB   32/41 KB   80/720 KB   100/320 KB   64/258 KB   32/41 KB   80/720 KB   104/320 KB   64/258 KB   36/41 KB   80/720 KB   108/320 KB   64/258 KB   40/41 KB   80/720 KB   108/320 KB   64/258 KB   41/41 KB   80/720 KB   108/320 KB   64/258 KB   36/41 KB   80/720 KB   108/320 KB   64/258 KB   41/41 KB   80/720 KB   112/320 KB   64/258 KB   41/41 KB   84/720 KB   112/320 KB   64/258 KB   41/41 KB   88/720 KB   112/320 KB   64/258 KB   41/41 KB   92/720 KB   112/320 KB   3/275 KB   64/258 KB   41/41 KB   92/720 KB   112/320 KB   3/275 KB   64/258 KB   41/41 KB   96/720 KB   112/320 KB   3/275 KB                                                              Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpmime/4.5.2/httpmime-4.5.2.jar (41 KB at 308.2 KB/sec)
+68/258 KB   96/720 KB   112/320 KB   3/275 KB              Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.8.3/jackson-annotations-2.8.3.jar
+72/258 KB   96/720 KB   112/320 KB   3/275 KB   76/258 KB   96/720 KB   112/320 KB   3/275 KB   76/258 KB   96/720 KB   112/320 KB   5/275 KB   80/258 KB   96/720 KB   112/320 KB   5/275 KB   80/258 KB   96/720 KB   112/320 KB   8/275 KB   80/258 KB   96/720 KB   116/320 KB   8/275 KB   80/258 KB   96/720 KB   120/320 KB   8/275 KB   80/258 KB   96/720 KB   124/320 KB   8/275 KB   80/258 KB   96/720 KB   128/320 KB   8/275 KB   80/258 KB   96/720 KB   128/320 KB   11/275 KB   80/258 KB   96/720 KB   128/320 KB   13/275 KB   80/258 KB   96/720 KB   128/320 KB   16/275 KB   80/258 KB   96/720 KB   128/320 KB   19/275 KB   84/258 KB   96/720 KB   128/320 KB   19/275 KB   88/258 KB   96/720 KB   128/320 KB   19/275 KB   92/258 KB   96/720 KB   128/320 KB   19/275 KB   96/258 KB   96/720 KB   128/320 KB   19/275 KB   96/258 KB   96/720 KB   128/320 KB   21/275 KB   96/258 KB   96/720 KB   132/320 KB   21/275 KB   96/258 KB   96/720 KB   136/320 KB   21/275 KB   96/258 KB   96/720 KB   140/320 KB   21/275 KB   96/258 KB   96/720 KB   144/320 KB   21/275 KB   96/258 KB   96/720 KB   144/320 KB   24/275 KB   96/258 KB   96/720 KB   144/320 KB   27/275 KB   96/258 KB   96/720 KB   144/320 KB   29/275 KB   96/258 KB   96/720 KB   144/320 KB   32/275 KB   100/258 KB   4/55 KB   96/720 KB   148/320 KB   32/275 KB   100/258 KB   4/55 KB   96/720 KB   148/320 KB   32/275 KB   100/258 KB   8/55 KB   96/720 KB   148/320 KB   32/275 KB   104/258 KB   8/55 KB   96/720 KB   148/320 KB   32/275 KB   104/258 KB   12/55 KB   96/720 KB   148/320 KB   32/275 KB   108/258 KB   12/55 KB   96/720 KB   148/320 KB   32/275 KB   108/258 KB   16/55 KB   96/720 KB   148/320 KB   32/275 KB   112/258 KB   16/55 KB   96/720 KB   148/320 KB   32/275 KB   112/258 KB   16/55 KB   96/720 KB   148/320 KB   36/275 KB   112/258 KB   16/55 KB   96/720 KB   148/320 KB   40/275 KB   112/258 KB   16/55 KB   96/720 KB   148/320 KB   44/275 KB   112/258 KB   16/55 KB   96/720 KB   148/320 KB   48/275 KB   100/258 KB   4/55 KB   96/720 KB   148/320 KB   32/275 KB   112/258 KB   16/55 KB   96/720 KB   152/320 KB   48/275 KB   112/258 KB   16/55 KB   96/720 KB   156/320 KB   48/275 KB   112/258 KB   16/55 KB   96/720 KB   160/320 KB   48/275 KB   112/258 KB   16/55 KB   100/720 KB   160/320 KB   48/275 KB   112/258 KB   16/55 KB   104/720 KB   160/320 KB   48/275 KB   112/258 KB   16/55 KB   108/720 KB   160/320 KB   48/275 KB   112/258 KB   16/55 KB   112/720 KB   160/320 KB   48/275 KB   112/258 KB   20/55 KB   112/720 KB   160/320 KB   48/275 KB   112/258 KB   24/55 KB   112/720 KB   160/320 KB   48/275 KB   112/258 KB   28/55 KB   112/720 KB   160/320 KB   48/275 KB   112/258 KB   32/55 KB   112/720 KB   160/320 KB   48/275 KB   116/258 KB   32/55 KB   112/720 KB   160/320 KB   48/275 KB   120/258 KB   32/55 KB   112/720 KB   160/320 KB   48/275 KB   124/258 KB   32/55 KB   112/720 KB   160/320 KB   48/275 KB   128/258 KB   32/55 KB   112/720 KB   160/320 KB   48/275 KB   128/258 KB   32/55 KB   112/720 KB   160/320 KB   52/275 KB   128/258 KB   32/55 KB   112/720 KB   160/320 KB   56/275 KB   128/258 KB   32/55 KB   112/720 KB   160/320 KB   60/275 KB   128/258 KB   32/55 KB   112/720 KB   160/320 KB   64/275 KB   128/258 KB   32/55 KB   112/720 KB   164/320 KB   64/275 KB   128/258 KB   32/55 KB   112/720 KB   168/320 KB   64/275 KB   128/258 KB   32/55 KB   112/720 KB   172/320 KB   64/275 KB   128/258 KB   32/55 KB   112/720 KB   176/320 KB   64/275 KB   128/258 KB   32/55 KB   116/720 KB   176/320 KB   64/275 KB   128/258 KB   32/55 KB   120/720 KB   176/320 KB   64/275 KB   128/258 KB   32/55 KB   124/720 KB   176/320 KB   64/275 KB   128/258 KB   32/55 KB   128/720 KB   176/320 KB   64/275 KB   128/258 KB   36/55 KB   128/720 KB   176/320 KB   64/275 KB   128/258 KB   40/55 KB   128/720 KB   176/320 KB   64/275 KB   128/258 KB   44/55 KB   128/720 KB   176/320 KB   64/275 KB   128/258 KB   48/55 KB   128/720 KB   176/320 KB   68/275 KB   128/258 KB   48/55 KB   128/720 KB   180/320 KB   68/275 KB   128/258 KB   48/55 KB   128/720 KB   184/320 KB   68/275 KB   128/258 KB   48/55 KB   128/720 KB   188/320 KB   68/275 KB   128/258 KB   48/55 KB   128/720 KB   192/320 KB   68/275 KB   132/258 KB   48/55 KB   128/720 KB   192/320 KB   68/275 KB   136/258 KB   48/55 KB   128/720 KB   192/320 KB   68/275 KB   140/258 KB   48/55 KB   128/720 KB   192/320 KB   68/275 KB   144/258 KB   48/55 KB   128/720 KB   192/320 KB   68/275 KB   128/258 KB   48/55 KB   128/720 KB   176/320 KB   68/275 KB   144/258 KB   48/55 KB   128/720 KB   192/320 KB   72/275 KB   144/258 KB   48/55 KB   128/720 KB   192/320 KB   76/275 KB   144/258 KB   48/55 KB   128/720 KB   192/320 KB   80/275 KB   144/258 KB   48/55 KB   132/720 KB   192/320 KB   80/275 KB   144/258 KB   48/55 KB   136/720 KB   192/320 KB   80/275 KB   144/258 KB   48/55 KB   140/720 KB   192/320 KB   80/275 KB   144/258 KB   48/55 KB   144/720 KB   192/320 KB   80/275 KB   144/258 KB   48/55 KB   144/720 KB   196/320 KB   80/275 KB   144/258 KB   48/55 KB   144/720 KB   200/320 KB   80/275 KB   144/258 KB   48/55 KB   144/720 KB   204/320 KB   80/275 KB   144/258 KB   48/55 KB   144/720 KB   208/320 KB   80/275 KB   144/258 KB   48/55 KB   148/720 KB   208/320 KB   80/275 KB   144/258 KB   48/55 KB   148/720 KB   208/320 KB   84/275 KB   144/258 KB   48/55 KB   152/720 KB   208/320 KB   84/275 KB   144/258 KB   48/55 KB   156/720 KB   208/320 KB   84/275 KB   144/258 KB   48/55 KB   156/720 KB   208/320 KB   88/275 KB   144/258 KB   48/55 KB   160/720 KB   208/320 KB   88/275 KB   144/258 KB   48/55 KB   160/720 KB   208/320 KB   92/275 KB   144/258 KB   48/55 KB   160/720 KB   208/320 KB   96/275 KB   148/258 KB   48/55 KB   160/720 KB   208/320 KB   96/275 KB   152/258 KB   48/55 KB   160/720 KB   208/320 KB   96/275 KB   156/258 KB   48/55 KB   160/720 KB   208/320 KB   96/275 KB   160/258 KB   48/55 KB   160/720 KB   208/320 KB   96/275 KB   160/258 KB   52/55 KB   160/720 KB   208/320 KB   96/275 KB   160/258 KB   55/55 KB   160/720 KB   208/320 KB   96/275 KB   160/258 KB   55/55 KB   160/720 KB   212/320 KB   96/275 KB   160/258 KB   55/55 KB   160/720 KB   216/320 KB   96/275 KB   160/258 KB   55/55 KB   160/720 KB   220/320 KB   96/275 KB   160/258 KB   55/55 KB   160/720 KB   224/320 KB   96/275 KB   160/258 KB   55/55 KB   164/720 KB   224/320 KB   96/275 KB   160/258 KB   55/55 KB   168/720 KB   224/320 KB   96/275 KB   160/258 KB   55/55 KB   172/720 KB   224/320 KB   96/275 KB   160/258 KB   55/55 KB   176/720 KB   224/320 KB   96/275 KB   160/258 KB   55/55 KB   176/720 KB   224/320 KB   100/275 KB   160/258 KB   55/55 KB   176/720 KB   224/320 KB   104/275 KB   160/258 KB   55/55 KB   176/720 KB   224/320 KB   108/275 KB   160/258 KB   55/55 KB   176/720 KB   224/320 KB   112/275 KB                                                                  Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.8.3/jackson-annotations-2.8.3.jar (55 KB at 310.5 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.8.3/jackson-databind-2.8.3.jar
+160/258 KB   176/720 KB   228/320 KB   112/275 KB              160/258 KB   176/720 KB   232/320 KB   112/275 KB   160/258 KB   176/720 KB   236/320 KB   112/275 KB   160/258 KB   176/720 KB   240/320 KB   112/275 KB   164/258 KB   176/720 KB   240/320 KB   112/275 KB   168/258 KB   176/720 KB   240/320 KB   112/275 KB   172/258 KB   176/720 KB   240/320 KB   112/275 KB   176/258 KB   176/720 KB   240/320 KB   112/275 KB   176/258 KB   180/720 KB   240/320 KB   112/275 KB   176/258 KB   184/720 KB   240/320 KB   112/275 KB   176/258 KB   188/720 KB   240/320 KB   112/275 KB   176/258 KB   192/720 KB   240/320 KB   112/275 KB   176/258 KB   192/720 KB   240/320 KB   116/275 KB   176/258 KB   192/720 KB   240/320 KB   120/275 KB   176/258 KB   192/720 KB   240/320 KB   124/275 KB   176/258 KB   192/720 KB   240/320 KB   128/275 KB   176/258 KB   192/720 KB   244/320 KB   128/275 KB   176/258 KB   192/720 KB   248/320 KB   128/275 KB   176/258 KB   192/720 KB   252/320 KB   128/275 KB   176/258 KB   192/720 KB   256/320 KB   128/275 KB   176/258 KB   196/720 KB   256/320 KB   128/275 KB   176/258 KB   200/720 KB   256/320 KB   128/275 KB   176/258 KB   204/720 KB   256/320 KB   128/275 KB   176/258 KB   208/720 KB   256/320 KB   128/275 KB   176/258 KB   208/720 KB   256/320 KB   132/275 KB   176/258 KB   208/720 KB   256/320 KB   136/275 KB   176/258 KB   208/720 KB   256/320 KB   140/275 KB   176/258 KB   208/720 KB   256/320 KB   144/275 KB   176/258 KB   208/720 KB   260/320 KB   144/275 KB   176/258 KB   208/720 KB   264/320 KB   144/275 KB   176/258 KB   208/720 KB   268/320 KB   144/275 KB   176/258 KB   208/720 KB   272/320 KB   144/275 KB   176/258 KB   208/720 KB   272/320 KB   148/275 KB   176/258 KB   208/720 KB   272/320 KB   152/275 KB   176/258 KB   208/720 KB   272/320 KB   156/275 KB   176/258 KB   208/720 KB   272/320 KB   160/275 KB   180/258 KB   208/720 KB   272/320 KB   160/275 KB   184/258 KB   208/720 KB   272/320 KB   160/275 KB   188/258 KB   212/720 KB   272/320 KB   160/275 KB   188/258 KB   212/720 KB   272/320 KB   160/275 KB   192/258 KB   212/720 KB   272/320 KB   160/275 KB   192/258 KB   216/720 KB   272/320 KB   160/275 KB   192/258 KB   220/720 KB   272/320 KB   160/275 KB   192/258 KB   224/720 KB   272/320 KB   160/275 KB   192/258 KB   224/720 KB   4/1205 KB   272/320 KB   160/275 KB   192/258 KB   224/720 KB   8/1205 KB   276/320 KB   160/275 KB   192/258 KB   224/720 KB   12/1205 KB   276/320 KB   160/275 KB   192/258 KB   224/720 KB   16/1205 KB   276/320 KB   160/275 KB   192/258 KB   224/720 KB   4/1205 KB   276/320 KB   160/275 KB   192/258 KB   224/720 KB   16/1205 KB   280/320 KB   160/275 KB   192/258 KB   224/720 KB   16/1205 KB   284/320 KB   160/275 KB   192/258 KB   224/720 KB   16/1205 KB   288/320 KB   160/275 KB   192/258 KB   224/720 KB   16/1205 KB   288/320 KB   164/275 KB   192/258 KB   224/720 KB   16/1205 KB   288/320 KB   168/275 KB   192/258 KB   224/720 KB   16/1205 KB   288/320 KB   172/275 KB   192/258 KB   224/720 KB   16/1205 KB   288/320 KB   176/275 KB   192/258 KB   228/720 KB   16/1205 KB   288/320 KB   176/275 KB   192/258 KB   232/720 KB   16/1205 KB   288/320 KB   176/275 KB   192/258 KB   236/720 KB   16/1205 KB   288/320 KB   176/275 KB   192/258 KB   240/720 KB   16/1205 KB   288/320 KB   176/275 KB   196/258 KB   240/720 KB   16/1205 KB   288/320 KB   176/275 KB   200/258 KB   240/720 KB   16/1205 KB   288/320 KB   176/275 KB   204/258 KB   240/720 KB   16/1205 KB   288/320 KB   176/275 KB   208/258 KB   240/720 KB   16/1205 KB   288/320 KB   176/275 KB   208/258 KB   240/720 KB   16/1205 KB   292/320 KB   176/275 KB   208/258 KB   240/720 KB   16/1205 KB   296/320 KB   176/275 KB   208/258 KB   240/720 KB   16/1205 KB   300/320 KB   176/275 KB   208/258 KB   240/720 KB   16/1205 KB   304/320 KB   176/275 KB   208/258 KB   240/720 KB   16/1205 KB   304/320 KB   180/275 KB   208/258 KB   240/720 KB   16/1205 KB   304/320 KB   184/275 KB   208/258 KB   240/720 KB   16/1205 KB   304/320 KB   188/275 KB   208/258 KB   240/720 KB   16/1205 KB   304/320 KB   192/275 KB   208/258 KB   244/720 KB   16/1205 KB   304/320 KB   192/275 KB   208/258 KB   248/720 KB   16/1205 KB   304/320 KB   192/275 KB   208/258 KB   252/720 KB   16/1205 KB   304/320 KB   192/275 KB   208/258 KB   256/720 KB   16/1205 KB   304/320 KB   192/275 KB   208/258 KB   256/720 KB   16/1205 KB   308/320 KB   192/275 KB   208/258 KB   256/720 KB   16/1205 KB   312/320 KB   192/275 KB   208/258 KB   256/720 KB   20/1205 KB   312/320 KB   192/275 KB   208/258 KB   256/720 KB   20/1205 KB   316/320 KB   192/275 KB   208/258 KB   256/720 KB   20/1205 KB   320/320 KB   192/275 KB   208/258 KB   256/720 KB   24/1205 KB   320/320 KB   192/275 KB   208/258 KB   256/720 KB   28/1205 KB   320/320 KB   192/275 KB   208/258 KB   256/720 KB   32/1205 KB   320/320 KB   192/275 KB   212/258 KB   256/720 KB   32/1205 KB   320/320 KB   192/275 KB   216/258 KB   256/720 KB   32/1205 KB   320/320 KB   192/275 KB   216/258 KB   256/720 KB   32/1205 KB   320/320 KB   196/275 KB   220/258 KB   256/720 KB   32/1205 KB   320/320 KB   196/275 KB   220/258 KB   256/720 KB   32/1205 KB   320/320 KB   200/275 KB   224/258 KB   256/720 KB   32/1205 KB   320/320 KB   200/275 KB   224/258 KB   256/720 KB   32/1205 KB   320/320 KB   204/275 KB   224/258 KB   256/720 KB   32/1205 KB   320/320 KB   208/275 KB   224/258 KB   260/720 KB   32/1205 KB   320/320 KB   208/275 KB   224/258 KB   264/720 KB   32/1205 KB   320/320 KB   208/275 KB   224/258 KB   268/720 KB   32/1205 KB   320/320 KB   208/275 KB   224/258 KB   272/720 KB   32/1205 KB   320/320 KB   208/275 KB                                                                    Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar (320 KB at 1512.2 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r.jar
+224/258 KB   272/720 KB   32/1205 KB   212/275 KB                224/258 KB   272/720 KB   32/1205 KB   216/275 KB   224/258 KB   272/720 KB   32/1205 KB   220/275 KB   224/258 KB   272/720 KB   32/1205 KB   224/275 KB   228/258 KB   272/720 KB   32/1205 KB   224/275 KB   232/258 KB   272/720 KB   32/1205 KB   224/275 KB   236/258 KB   272/720 KB   32/1205 KB   224/275 KB   236/258 KB   272/720 KB   36/1205 KB   224/275 KB   240/258 KB   272/720 KB   36/1205 KB   224/275 KB   240/258 KB   272/720 KB   40/1205 KB   224/275 KB   240/258 KB   272/720 KB   44/1205 KB   224/275 KB   240/258 KB   272/720 KB   48/1205 KB   224/275 KB   240/258 KB   276/720 KB   48/1205 KB   224/275 KB   240/258 KB   280/720 KB   48/1205 KB   224/275 KB   240/258 KB   284/720 KB   48/1205 KB   224/275 KB   240/258 KB   288/720 KB   48/1205 KB   224/275 KB   240/258 KB   292/720 KB   48/1205 KB   224/275 KB   240/258 KB   296/720 KB   48/1205 KB   224/275 KB   240/258 KB   300/720 KB   48/1205 KB   224/275 KB   240/258 KB   304/720 KB   48/1205 KB   224/275 KB   244/258 KB   304/720 KB   48/1205 KB   224/275 KB   248/258 KB   304/720 KB   48/1205 KB   224/275 KB   252/258 KB   304/720 KB   48/1205 KB   224/275 KB   256/258 KB   304/720 KB   48/1205 KB   224/275 KB   256/258 KB   304/720 KB   48/1205 KB   228/275 KB   256/258 KB   304/720 KB   52/1205 KB   232/275 KB   256/258 KB   304/720 KB   52/1205 KB   232/275 KB   258/258 KB   304/720 KB   52/1205 KB   236/275 KB   258/258 KB   304/720 KB   52/1205 KB   236/275 KB   258/258 KB   304/720 KB   56/1205 KB   236/275 KB   258/258 KB   304/720 KB   56/1205 KB   240/275 KB   258/258 KB   304/720 KB   60/1205 KB   240/275 KB   258/258 KB   304/720 KB   64/1205 KB   240/275 KB   258/258 KB   308/720 KB   64/1205 KB   240/275 KB   258/258 KB   312/720 KB   64/1205 KB   240/275 KB   258/258 KB   316/720 KB   64/1205 KB   240/275 KB   258/258 KB   320/720 KB   64/1205 KB   240/275 KB                                                       Downloaded: https://repo.maven.apache.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.jar (258 KB at 1135.6 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/jcraft/jsch/0.1.53/jsch-0.1.53.jar
+320/720 KB   64/1205 KB   244/275 KB                320/720 KB   64/1205 KB   248/275 KB   320/720 KB   64/1205 KB   252/275 KB   320/720 KB   64/1205 KB   256/275 KB   320/720 KB   68/1205 KB   256/275 KB   320/720 KB   72/1205 KB   256/275 KB   320/720 KB   76/1205 KB   256/275 KB   320/720 KB   80/1205 KB   256/275 KB   324/720 KB   80/1205 KB   256/275 KB   328/720 KB   80/1205 KB   256/275 KB   332/720 KB   80/1205 KB   256/275 KB   336/720 KB   80/1205 KB   256/275 KB   336/720 KB   80/1205 KB   260/275 KB   336/720 KB   80/1205 KB   264/275 KB   336/720 KB   80/1205 KB   268/275 KB   336/720 KB   80/1205 KB   272/275 KB   336/720 KB   80/1205 KB   1/274 KB   272/275 KB   336/720 KB   80/1205 KB   1/274 KB   275/275 KB   336/720 KB   80/1205 KB   4/274 KB   275/275 KB   340/720 KB   80/1205 KB   4/274 KB   275/275 KB   344/720 KB   80/1205 KB   4/274 KB   275/275 KB   348/720 KB   80/1205 KB   4/274 KB   275/275 KB   352/720 KB   80/1205 KB   4/274 KB   275/275 KB   352/720 KB   80/1205 KB   6/274 KB   275/275 KB   352/720 KB   80/1205 KB   9/274 KB   275/275 KB   352/720 KB   84/1205 KB   9/274 KB   275/275 KB   352/720 KB   88/1205 KB   9/274 KB   275/275 KB   352/720 KB   92/1205 KB   9/274 KB   275/275 KB   352/720 KB   96/1205 KB   9/274 KB   275/275 KB   352/720 KB   96/1205 KB   12/274 KB   275/275 KB   352/720 KB   96/1205 KB   14/274 KB   275/275 KB   352/720 KB   96/1205 KB   17/274 KB   275/275 KB   356/720 KB   96/1205 KB   17/274 KB   275/275 KB   360/720 KB   96/1205 KB   17/274 KB   275/275 KB   360/720 KB   96/1205 KB   20/274 KB   275/275 KB   364/720 KB   96/1205 KB   20/274 KB   275/275 KB   368/720 KB   96/1205 KB   20/274 KB   275/275 KB   368/720 KB   96/1205 KB   22/274 KB   275/275 KB   368/720 KB   96/1205 KB   25/274 KB   275/275 KB   368/720 KB   96/1205 KB   28/274 KB   275/275 KB   368/720 KB   100/1205 KB   28/274 KB   275/275 KB   368/720 KB   104/1205 KB   28/274 KB   275/275 KB   368/720 KB   108/1205 KB   28/274 KB   275/275 KB   368/720 KB   112/1205 KB   28/274 KB   275/275 KB                                                       372/720 KB   112/1205 KB   28/274 KB                Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.8.3/jackson-core-2.8.3.jar (275 KB at 1111.3 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/com/googlecode/javaewah/JavaEWAH/0.7.9/JavaEWAH-0.7.9.jar
+376/720 KB   112/1205 KB   30/274 KB   376/720 KB   112/1205 KB   28/274 KB   380/720 KB   112/1205 KB   30/274 KB   384/720 KB   112/1205 KB   30/274 KB   384/720 KB   112/1205 KB   33/274 KB   384/720 KB   112/1205 KB   33/274 KB   4/2324 KB   384/720 KB   112/1205 KB   33/274 KB   8/2324 KB   384/720 KB   112/1205 KB   33/274 KB   12/2324 KB   384/720 KB   112/1205 KB   33/274 KB   16/2324 KB   384/720 KB   116/1205 KB   33/274 KB   16/2324 KB   384/720 KB   120/1205 KB   33/274 KB   16/2324 KB   384/720 KB   124/1205 KB   33/274 KB   16/2324 KB   384/720 KB   128/1205 KB   33/274 KB   16/2324 KB   388/720 KB   128/1205 KB   33/274 KB   16/2324 KB   392/720 KB   128/1205 KB   33/274 KB   16/2324 KB   396/720 KB   128/1205 KB   33/274 KB   16/2324 KB   400/720 KB   128/1205 KB   33/274 KB   16/2324 KB   400/720 KB   128/1205 KB   37/274 KB   16/2324 KB   400/720 KB   128/1205 KB   41/274 KB   16/2324 KB   400/720 KB   128/1205 KB   45/274 KB   16/2324 KB   400/720 KB   128/1205 KB   49/274 KB   16/2324 KB   400/720 KB   128/1205 KB   49/274 KB   20/2324 KB   400/720 KB   128/1205 KB   49/274 KB   24/2324 KB   400/720 KB   128/1205 KB   49/274 KB   28/2324 KB   400/720 KB   128/1205 KB   49/274 KB   32/2324 KB   400/720 KB   132/1205 KB   49/274 KB   32/2324 KB   400/720 KB   136/1205 KB   49/274 KB   32/2324 KB   400/720 KB   140/1205 KB   49/274 KB   32/2324 KB   400/720 KB   144/1205 KB   49/274 KB   32/2324 KB   400/720 KB   144/1205 KB   49/274 KB   4/123 KB   32/2324 KB   400/720 KB   144/1205 KB   49/274 KB   8/123 KB   32/2324 KB   400/720 KB   144/1205 KB   49/274 KB   12/123 KB   32/2324 KB   400/720 KB   144/1205 KB   49/274 KB   16/123 KB   32/2324 KB   404/720 KB   144/1205 KB   49/274 KB   16/123 KB   32/2324 KB   408/720 KB   144/1205 KB   49/274 KB   16/123 KB   32/2324 KB   412/720 KB   144/1205 KB   49/274 KB   16/123 KB   32/2324 KB   416/720 KB   144/1205 KB   49/274 KB   16/123 KB   32/2324 KB   416/720 KB   144/1205 KB   49/274 KB   20/123 KB   32/2324 KB   416/720 KB   144/1205 KB   53/274 KB   20/123 KB   32/2324 KB   416/720 KB   144/1205 KB   53/274 KB   24/123 KB   32/2324 KB   416/720 KB   144/1205 KB   57/274 KB   24/123 KB   32/2324 KB   416/720 KB   144/1205 KB   57/274 KB   28/123 KB   32/2324 KB   416/720 KB   144/1205 KB   61/274 KB   28/123 KB   32/2324 KB   416/720 KB   144/1205 KB   61/274 KB   32/123 KB   32/2324 KB   416/720 KB   148/1205 KB   65/274 KB   32/123 KB   32/2324 KB   416/720 KB   148/1205 KB   65/274 KB   32/123 KB   32/2324 KB   416/720 KB   152/1205 KB   65/274 KB   32/123 KB   32/2324 KB   416/720 KB   156/1205 KB   65/274 KB   32/123 KB   32/2324 KB   416/720 KB   160/1205 KB   65/274 KB   32/123 KB   32/2324 KB   416/720 KB   160/1205 KB   65/274 KB   32/123 KB   36/2324 KB   416/720 KB   160/1205 KB   65/274 KB   32/123 KB   40/2324 KB   416/720 KB   160/1205 KB   65/274 KB   32/123 KB   44/2324 KB   416/720 KB   160/1205 KB   65/274 KB   32/123 KB   48/2324 KB   416/720 KB   160/1205 KB   65/274 KB   36/123 KB   48/2324 KB   416/720 KB   160/1205 KB   65/274 KB   40/123 KB   48/2324 KB   416/720 KB   160/1205 KB   65/274 KB   44/123 KB   48/2324 KB   416/720 KB   160/1205 KB   65/274 KB   48/123 KB   48/2324 KB   420/720 KB   160/1205 KB   65/274 KB   48/123 KB   48/2324 KB   424/720 KB   160/1205 KB   65/274 KB   48/123 KB   48/2324 KB   428/720 KB   160/1205 KB   65/274 KB   48/123 KB   48/2324 KB   432/720 KB   160/1205 KB   65/274 KB   48/123 KB   48/2324 KB   432/720 KB   160/1205 KB   65/274 KB   48/123 KB   52/2324 KB   432/720 KB   160/1205 KB   65/274 KB   48/123 KB   56/2324 KB   432/720 KB   160/1205 KB   65/274 KB   48/123 KB   60/2324 KB   432/720 KB   160/1205 KB   65/274 KB   48/123 KB   64/2324 KB   432/720 KB   160/1205 KB   69/274 KB   48/123 KB   64/2324 KB   432/720 KB   160/1205 KB   73/274 KB   48/123 KB   64/2324 KB   432/720 KB   160/1205 KB   77/274 KB   48/123 KB   64/2324 KB   432/720 KB   164/1205 KB   77/274 KB   48/123 KB   64/2324 KB   432/720 KB   164/1205 KB   81/274 KB   48/123 KB   64/2324 KB   432/720 KB   168/1205 KB   81/274 KB   48/123 KB   64/2324 KB   432/720 KB   172/1205 KB   81/274 KB   48/123 KB   64/2324 KB   432/720 KB   176/1205 KB   81/274 KB   48/123 KB   64/2324 KB   432/720 KB   176/1205 KB   81/274 KB   52/123 KB   64/2324 KB   432/720 KB   176/1205 KB   81/274 KB   56/123 KB   64/2324 KB   432/720 KB   176/1205 KB   81/274 KB   60/123 KB   64/2324 KB   432/720 KB   176/1205 KB   81/274 KB   64/123 KB   64/2324 KB   436/720 KB   176/1205 KB   81/274 KB   64/123 KB   64/2324 KB   440/720 KB   176/1205 KB   81/274 KB   64/123 KB   64/2324 KB   444/720 KB   176/1205 KB   81/274 KB   64/123 KB   64/2324 KB   448/720 KB   176/1205 KB   81/274 KB   64/123 KB   64/2324 KB   448/720 KB   176/1205 KB   81/274 KB   64/123 KB   68/2324 KB   448/720 KB   176/1205 KB   81/274 KB   64/123 KB   72/2324 KB   448/720 KB   176/1205 KB   81/274 KB   68/123 KB   72/2324 KB   448/720 KB   176/1205 KB   81/274 KB   68/123 KB   76/2324 KB   448/720 KB   176/1205 KB   81/274 KB   72/123 KB   76/2324 KB   448/720 KB   176/1205 KB   81/274 KB   72/123 KB   80/2324 KB   448/720 KB   176/1205 KB   81/274 KB   76/123 KB   80/2324 KB   448/720 KB   176/1205 KB   81/274 KB   80/123 KB   80/2324 KB   448/720 KB   176/1205 KB   85/274 KB   80/123 KB   80/2324 KB   448/720 KB   176/1205 KB   89/274 KB   80/123 KB   80/2324 KB   448/720 KB   176/1205 KB   93/274 KB   80/123 KB   80/2324 KB   448/720 KB   176/1205 KB   97/274 KB   80/123 KB   80/2324 KB   448/720 KB   180/1205 KB   97/274 KB   80/123 KB   80/2324 KB   448/720 KB   184/1205 KB   97/274 KB   80/123 KB   80/2324 KB   448/720 KB   188/1205 KB   97/274 KB   80/123 KB   80/2324 KB   448/720 KB   192/1205 KB   97/274 KB   80/123 KB   80/2324 KB   452/720 KB   192/1205 KB   97/274 KB   80/123 KB   80/2324 KB   456/720 KB   192/1205 KB   97/274 KB   80/123 KB   80/2324 KB   460/720 KB   192/1205 KB   97/274 KB   80/123 KB   80/2324 KB   464/720 KB   192/1205 KB   97/274 KB   80/123 KB   80/2324 KB   464/720 KB   192/1205 KB   97/274 KB   80/123 KB   84/2324 KB   464/720 KB   192/1205 KB   97/274 KB   80/123 KB   88/2324 KB   464/720 KB   192/1205 KB   97/274 KB   80/123 KB   92/2324 KB   464/720 KB   192/1205 KB   97/274 KB   80/123 KB   96/2324 KB   464/720 KB   192/1205 KB   97/274 KB   84/123 KB   96/2324 KB   464/720 KB   192/1205 KB   97/274 KB   88/123 KB   96/2324 KB   464/720 KB   192/1205 KB   97/274 KB   92/123 KB   96/2324 KB   464/720 KB   192/1205 KB   97/274 KB   96/123 KB   96/2324 KB   464/720 KB   192/1205 KB   101/274 KB   96/123 KB   96/2324 KB   464/720 KB   192/1205 KB   105/274 KB   96/123 KB   96/2324 KB   464/720 KB   192/1205 KB   109/274 KB   96/123 KB   96/2324 KB   464/720 KB   192/1205 KB   113/274 KB   96/123 KB   96/2324 KB   468/720 KB   192/1205 KB   113/274 KB   96/123 KB   96/2324 KB   468/720 KB   196/1205 KB   113/274 KB   96/123 KB   96/2324 KB   472/720 KB   196/1205 KB   113/274 KB   96/123 KB   96/2324 KB   472/720 KB   200/1205 KB   113/274 KB   96/123 KB   96/2324 KB   476/720 KB   200/1205 KB   113/274 KB   96/123 KB   96/2324 KB   476/720 KB   204/1205 KB   113/274 KB   96/123 KB   96/2324 KB   480/720 KB   204/1205 KB   113/274 KB   96/123 KB   96/2324 KB   480/720 KB   208/1205 KB   113/274 KB   96/123 KB   96/2324 KB   480/720 KB   208/1205 KB   113/274 KB   96/123 KB   100/2324 KB   480/720 KB   208/1205 KB   113/274 KB   96/123 KB   104/2324 KB   480/720 KB   208/1205 KB   113/274 KB   96/123 KB   108/2324 KB   480/720 KB   208/1205 KB   113/274 KB   96/123 KB   112/2324 KB   480/720 KB   208/1205 KB   113/274 KB   100/123 KB   112/2324 KB   480/720 KB   208/1205 KB   113/274 KB   104/123 KB   112/2324 KB   480/720 KB   208/1205 KB   113/274 KB   108/123 KB   112/2324 KB   480/720 KB   208/1205 KB   113/274 KB   112/123 KB   112/2324 KB   480/720 KB   208/1205 KB   113/274 KB   116/123 KB   112/2324 KB   480/720 KB   208/1205 KB   113/274 KB   120/123 KB   112/2324 KB   480/720 KB   208/1205 KB   113/274 KB   123/123 KB   112/2324 KB   480/720 KB   208/1205 KB   117/274 KB   123/123 KB   112/2324 KB   480/720 KB   208/1205 KB   121/274 KB   123/123 KB   112/2324 KB   484/720 KB   208/1205 KB   121/274 KB   123/123 KB   112/2324 KB   484/720 KB   208/1205 KB   125/274 KB   123/123 KB   112/2324 KB   484/720 KB   208/1205 KB   129/274 KB   123/123 KB   112/2324 KB   488/720 KB   208/1205 KB   129/274 KB   123/123 KB   112/2324 KB   492/720 KB   208/1205 KB   129/274 KB   123/123 KB   112/2324 KB   496/720 KB   208/1205 KB   129/274 KB   123/123 KB   112/2324 KB   496/720 KB   212/1205 KB   129/274 KB   123/123 KB   112/2324 KB   496/720 KB   216/1205 KB   129/274 KB   123/123 KB   112/2324 KB   496/720 KB   220/1205 KB   129/274 KB   123/123 KB   112/2324 KB   496/720 KB   220/1205 KB   129/274 KB   123/123 KB   116/2324 KB   496/720 KB   224/1205 KB   129/274 KB   123/123 KB   116/2324 KB   496/720 KB   224/1205 KB   129/274 KB   123/123 KB   120/2324 KB   496/720 KB   224/1205 KB   129/274 KB   123/123 KB   124/2324 KB   496/720 KB   224/1205 KB   129/274 KB   123/123 KB   128/2324 KB                                                                      Downloaded: https://repo.maven.apache.org/maven2/com/googlecode/javaewah/JavaEWAH/0.7.9/JavaEWAH-0.7.9.jar (123 KB at 410.1 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/2.0.7/plexus-utils-2.0.7.jar
+500/720 KB   224/1205 KB   129/274 KB   128/2324 KB                504/720 KB   224/1205 KB   129/274 KB   128/2324 KB   508/720 KB   224/1205 KB   129/274 KB   128/2324 KB   512/720 KB   224/1205 KB   129/274 KB   128/2324 KB   512/720 KB   224/1205 KB   129/274 KB   132/2324 KB   512/720 KB   224/1205 KB   129/274 KB   136/2324 KB   512/720 KB   224/1205 KB   129/274 KB   140/2324 KB   512/720 KB   224/1205 KB   129/274 KB   144/2324 KB   512/720 KB   224/1205 KB   133/274 KB   144/2324 KB   512/720 KB   224/1205 KB   137/274 KB   144/2324 KB   512/720 KB   224/1205 KB   141/274 KB   144/2324 KB   512/720 KB   224/1205 KB   145/274 KB   144/2324 KB   512/720 KB   228/1205 KB   145/274 KB   144/2324 KB   512/720 KB   232/1205 KB   145/274 KB   144/2324 KB   512/720 KB   236/1205 KB   145/274 KB   144/2324 KB   512/720 KB   240/1205 KB   145/274 KB   144/2324 KB   512/720 KB   240/1205 KB   145/274 KB   148/2324 KB   512/720 KB   240/1205 KB   145/274 KB   152/2324 KB   512/720 KB   240/1205 KB   145/274 KB   156/2324 KB   512/720 KB   240/1205 KB   145/274 KB   160/2324 KB   512/720 KB   244/1205 KB   145/274 KB   160/2324 KB   512/720 KB   248/1205 KB   145/274 KB   160/2324 KB   512/720 KB   252/1205 KB   145/274 KB   160/2324 KB   512/720 KB   252/1205 KB   149/274 KB   160/2324 KB   512/720 KB   256/1205 KB   149/274 KB   160/2324 KB   516/720 KB   256/1205 KB   149/274 KB   160/2324 KB   516/720 KB   256/1205 KB   153/274 KB   160/2324 KB   520/720 KB   256/1205 KB   153/274 KB   160/2324 KB   520/720 KB   256/1205 KB   157/274 KB   160/2324 KB   524/720 KB   256/1205 KB   157/274 KB   160/2324 KB   524/720 KB   256/1205 KB   161/274 KB   160/2324 KB   528/720 KB   256/1205 KB   161/274 KB   160/2324 KB   528/720 KB   256/1205 KB   161/274 KB   164/2324 KB   528/720 KB   256/1205 KB   161/274 KB   168/2324 KB   528/720 KB   256/1205 KB   161/274 KB   172/2324 KB   528/720 KB   256/1205 KB   161/274 KB   176/2324 KB   528/720 KB   260/1205 KB   161/274 KB   176/2324 KB   528/720 KB   264/1205 KB   161/274 KB   176/2324 KB   528/720 KB   268/1205 KB   161/274 KB   176/2324 KB   528/720 KB   272/1205 KB   161/274 KB   176/2324 KB   4/219 KB   528/720 KB   272/1205 KB   161/274 KB   176/2324 KB   8/219 KB   528/720 KB   272/1205 KB   161/274 KB   176/2324 KB   12/219 KB   528/720 KB   272/1205 KB   161/274 KB   176/2324 KB   16/219 KB   528/720 KB   272/1205 KB   161/274 KB   176/2324 KB   16/219 KB   532/720 KB   272/1205 KB   161/274 KB   176/2324 KB   16/219 KB   536/720 KB   272/1205 KB   161/274 KB   176/2324 KB   16/219 KB   540/720 KB   272/1205 KB   161/274 KB   176/2324 KB   16/219 KB   544/720 KB   272/1205 KB   161/274 KB   176/2324 KB   16/219 KB   544/720 KB   272/1205 KB   161/274 KB   180/2324 KB   16/219 KB   544/720 KB   272/1205 KB   161/274 KB   184/2324 KB   16/219 KB   544/720 KB   272/1205 KB   161/274 KB   188/2324 KB   16/219 KB   544/720 KB   272/1205 KB   161/274 KB   192/2324 KB   16/219 KB   544/720 KB   272/1205 KB   165/274 KB   192/2324 KB   16/219 KB   544/720 KB   272/1205 KB   169/274 KB   192/2324 KB   16/219 KB   544/720 KB   272/1205 KB   173/274 KB   192/2324 KB   16/219 KB   544/720 KB   272/1205 KB   177/274 KB   192/2324 KB   16/219 KB   548/720 KB   272/1205 KB   177/274 KB   192/2324 KB   16/219 KB   552/720 KB   272/1205 KB   177/274 KB   192/2324 KB   16/219 KB   556/720 KB   272/1205 KB   177/274 KB   192/2324 KB   16/219 KB   560/720 KB   272/1205 KB   177/274 KB   192/2324 KB   16/219 KB   560/720 KB   276/1205 KB   177/274 KB   192/2324 KB   16/219 KB   560/720 KB   280/1205 KB   177/274 KB   192/2324 KB   16/219 KB   560/720 KB   284/1205 KB   177/274 KB   192/2324 KB   16/219 KB   560/720 KB   288/1205 KB   177/274 KB   192/2324 KB   16/219 KB   560/720 KB   288/1205 KB   177/274 KB   196/2324 KB   20/219 KB   560/720 KB   288/1205 KB   177/274 KB   196/2324 KB   20/219 KB   560/720 KB   288/1205 KB   177/274 KB   200/2324 KB   24/219 KB   560/720 KB   288/1205 KB   177/274 KB   200/2324 KB   28/219 KB   560/720 KB   288/1205 KB   177/274 KB   200/2324 KB   32/219 KB   560/720 KB   288/1205 KB   177/274 KB   200/2324 KB   32/219 KB   560/720 KB   288/1205 KB   177/274 KB   204/2324 KB   32/219 KB   560/720 KB   288/1205 KB   177/274 KB   208/2324 KB   32/219 KB   564/720 KB   288/1205 KB   177/274 KB   208/2324 KB   32/219 KB   568/720 KB   288/1205 KB   177/274 KB   208/2324 KB   32/219 KB   572/720 KB   288/1205 KB   177/274 KB   208/2324 KB   32/219 KB   576/720 KB   288/1205 KB   177/274 KB   208/2324 KB   32/219 KB   576/720 KB   288/1205 KB   181/274 KB   208/2324 KB   32/219 KB   576/720 KB   288/1205 KB   185/274 KB   208/2324 KB   32/219 KB   576/720 KB   288/1205 KB   189/274 KB   208/2324 KB   32/219 KB   576/720 KB   288/1205 KB   193/274 KB   208/2324 KB   32/219 KB   576/720 KB   292/1205 KB   193/274 KB   208/2324 KB   32/219 KB   576/720 KB   296/1205 KB   193/274 KB   208/2324 KB   32/219 KB   576/720 KB   300/1205 KB   193/274 KB   208/2324 KB   32/219 KB   576/720 KB   304/1205 KB   193/274 KB   208/2324 KB   32/219 KB   580/720 KB   304/1205 KB   193/274 KB   208/2324 KB   32/219 KB   584/720 KB   304/1205 KB   193/274 KB   208/2324 KB   32/219 KB   588/720 KB   304/1205 KB   193/274 KB   208/2324 KB   32/219 KB   592/720 KB   304/1205 KB   193/274 KB   208/2324 KB   36/219 KB   592/720 KB   304/1205 KB   193/274 KB   208/2324 KB   40/219 KB   592/720 KB   304/1205 KB   193/274 KB   208/2324 KB   44/219 KB   592/720 KB   304/1205 KB   193/274 KB   208/2324 KB   48/219 KB   592/720 KB   304/1205 KB   193/274 KB   208/2324 KB   48/219 KB   596/720 KB   304/1205 KB   193/274 KB   208/2324 KB   48/219 KB   600/720 KB   304/1205 KB   193/274 KB   208/2324 KB   48/219 KB   604/720 KB   304/1205 KB   193/274 KB   208/2324 KB   48/219 KB   608/720 KB   304/1205 KB   193/274 KB   208/2324 KB   48/219 KB   608/720 KB   308/1205 KB   193/274 KB   208/2324 KB   48/219 KB   608/720 KB   312/1205 KB   193/274 KB   208/2324 KB   48/219 KB   608/720 KB   316/1205 KB   193/274 KB   208/2324 KB   48/219 KB   608/720 KB   320/1205 KB   193/274 KB   208/2324 KB   48/219 KB   608/720 KB   320/1205 KB   197/274 KB   208/2324 KB   48/219 KB   608/720 KB   320/1205 KB   201/274 KB   208/2324 KB   48/219 KB   608/720 KB   320/1205 KB   205/274 KB   208/2324 KB   48/219 KB   608/720 KB   320/1205 KB   209/274 KB   208/2324 KB   52/219 KB   608/720 KB   320/1205 KB   209/274 KB   208/2324 KB   56/219 KB   608/720 KB   320/1205 KB   209/274 KB   208/2324 KB   60/219 KB   608/720 KB   320/1205 KB   209/274 KB   208/2324 KB   64/219 KB   608/720 KB   320/1205 KB   209/274 KB   208/2324 KB   64/219 KB   612/720 KB   320/1205 KB   209/274 KB   208/2324 KB   64/219 KB   616/720 KB   320/1205 KB   209/274 KB   208/2324 KB   64/219 KB   620/720 KB   320/1205 KB   209/274 KB   208/2324 KB   64/219 KB   624/720 KB   320/1205 KB   209/274 KB   208/2324 KB   64/219 KB   624/720 KB   324/1205 KB   209/274 KB   208/2324 KB   64/219 KB   624/720 KB   328/1205 KB   209/274 KB   208/2324 KB   64/219 KB   624/720 KB   332/1205 KB   209/274 KB   208/2324 KB   64/219 KB   624/720 KB   336/1205 KB   209/274 KB   208/2324 KB   64/219 KB   628/720 KB   336/1205 KB   209/274 KB   208/2324 KB   64/219 KB   632/720 KB   336/1205 KB   209/274 KB   208/2324 KB   64/219 KB   636/720 KB   336/1205 KB   209/274 KB   208/2324 KB   64/219 KB   640/720 KB   336/1205 KB   209/274 KB   208/2324 KB   68/219 KB   640/720 KB   336/1205 KB   209/274 KB   208/2324 KB   72/219 KB   640/720 KB   336/1205 KB   209/274 KB   208/2324 KB   76/219 KB   640/720 KB   336/1205 KB   209/274 KB   208/2324 KB   80/219 KB   640/720 KB   336/1205 KB   209/274 KB   208/2324 KB   80/219 KB   640/720 KB   336/1205 KB   213/274 KB   208/2324 KB   80/219 KB   640/720 KB   336/1205 KB   217/274 KB   208/2324 KB   80/219 KB   640/720 KB   336/1205 KB   221/274 KB   208/2324 KB   80/219 KB   640/720 KB   336/1205 KB   225/274 KB   208/2324 KB   80/219 KB   644/720 KB   336/1205 KB   225/274 KB   208/2324 KB   80/219 KB   648/720 KB   336/1205 KB   225/274 KB   208/2324 KB   80/219 KB   652/720 KB   336/1205 KB   225/274 KB   208/2324 KB   80/219 KB   656/720 KB   336/1205 KB   225/274 KB   208/2324 KB   80/219 KB   656/720 KB   336/1205 KB   225/274 KB   212/2324 KB   80/219 KB   656/720 KB   336/1205 KB   225/274 KB   216/2324 KB   80/219 KB   656/720 KB   336/1205 KB   225/274 KB   220/2324 KB   80/219 KB   656/720 KB   336/1205 KB   225/274 KB   224/2324 KB   80/219 KB   656/720 KB   340/1205 KB   225/274 KB   224/2324 KB   80/219 KB   656/720 KB   344/1205 KB   225/274 KB   224/2324 KB   80/219 KB   656/720 KB   348/1205 KB   225/274 KB   224/2324 KB   80/219 KB   656/720 KB   352/1205 KB   225/274 KB   224/2324 KB   84/219 KB   656/720 KB   352/1205 KB   225/274 KB   224/2324 KB   88/219 KB   656/720 KB   352/1205 KB   225/274 KB   224/2324 KB   92/219 KB   656/720 KB   352/1205 KB   225/274 KB   224/2324 KB   96/219 KB   656/720 KB   352/1205 KB   225/274 KB   224/2324 KB   96/219 KB   660/720 KB   352/1205 KB   225/274 KB   224/2324 KB   96/219 KB   664/720 KB   352/1205 KB   225/274 KB   224/2324 KB   96/219 KB   668/720 KB   352/1205 KB   225/274 KB   224/2324 KB   96/219 KB   672/720 KB   352/1205 KB   225/274 KB   224/2324 KB   96/219 KB   672/720 KB   352/1205 KB   229/274 KB   224/2324 KB   96/219 KB   672/720 KB   352/1205 KB   233/274 KB   224/2324 KB   96/219 KB   672/720 KB   352/1205 KB   237/274 KB   224/2324 KB   96/219 KB   672/720 KB   352/1205 KB   241/274 KB   224/2324 KB   96/219 KB   672/720 KB   352/1205 KB   241/274 KB   228/2324 KB   96/219 KB   672/720 KB   352/1205 KB   241/274 KB   232/2324 KB   96/219 KB   672/720 KB   352/1205 KB   241/274 KB   236/2324 KB   96/219 KB   672/720 KB   352/1205 KB   241/274 KB   240/2324 KB   96/219 KB   672/720 KB   356/1205 KB   241/274 KB   240/2324 KB   96/219 KB   672/720 KB   360/1205 KB   241/274 KB   240/2324 KB   96/219 KB   672/720 KB   364/1205 KB   241/274 KB   240/2324 KB   96/219 KB   672/720 KB   368/1205 KB   241/274 KB   240/2324 KB   96/219 KB   676/720 KB   368/1205 KB   241/274 KB   240/2324 KB   96/219 KB   680/720 KB   368/1205 KB   241/274 KB   240/2324 KB   96/219 KB   684/720 KB   368/1205 KB   241/274 KB   240/2324 KB   96/219 KB   688/720 KB   368/1205 KB   241/274 KB   240/2324 KB   100/219 KB   688/720 KB   368/1205 KB   241/274 KB   240/2324 KB   104/219 KB   688/720 KB   368/1205 KB   241/274 KB   240/2324 KB   108/219 KB   688/720 KB   368/1205 KB   241/274 KB   240/2324 KB   112/219 KB   688/720 KB   368/1205 KB   241/274 KB   240/2324 KB   112/219 KB   688/720 KB   368/1205 KB   245/274 KB   240/2324 KB   112/219 KB   688/720 KB   368/1205 KB   249/274 KB   240/2324 KB   112/219 KB   688/720 KB   368/1205 KB   253/274 KB   240/2324 KB   112/219 KB   688/720 KB   368/1205 KB   257/274 KB   240/2324 KB   112/219 KB   692/720 KB   368/1205 KB   257/274 KB   240/2324 KB   112/219 KB   696/720 KB   368/1205 KB   257/274 KB   240/2324 KB   112/219 KB   700/720 KB   368/1205 KB   257/274 KB   240/2324 KB   112/219 KB   704/720 KB   368/1205 KB   257/274 KB   240/2324 KB   112/219 KB   704/720 KB   368/1205 KB   257/274 KB   244/2324 KB   112/219 KB   704/720 KB   368/1205 KB   257/274 KB   248/2324 KB   112/219 KB   704/720 KB   368/1205 KB   257/274 KB   252/2324 KB   112/219 KB   704/720 KB   368/1205 KB   257/274 KB   256/2324 KB   112/219 KB   704/720 KB   372/1205 KB   257/274 KB   256/2324 KB   112/219 KB   704/720 KB   376/1205 KB   257/274 KB   256/2324 KB   112/219 KB   704/720 KB   380/1205 KB   257/274 KB   256/2324 KB   112/219 KB   704/720 KB   384/1205 KB   257/274 KB   256/2324 KB   112/219 KB   708/720 KB   384/1205 KB   257/274 KB   256/2324 KB   112/219 KB   712/720 KB   384/1205 KB   257/274 KB   256/2324 KB   112/219 KB   716/720 KB   384/1205 KB   257/274 KB   256/2324 KB   112/219 KB   720/720 KB   384/1205 KB   257/274 KB   256/2324 KB   116/219 KB   720/720 KB   384/1205 KB   257/274 KB   256/2324 KB   120/219 KB   720/720 KB   384/1205 KB   257/274 KB   256/2324 KB   124/219 KB   720/720 KB   384/1205 KB   257/274 KB   256/2324 KB   128/219 KB   720/720 KB   384/1205 KB   257/274 KB   256/2324 KB   128/219 KB   720/720 KB   384/1205 KB   261/274 KB   256/2324 KB   128/219 KB   720/720 KB   384/1205 KB   265/274 KB   256/2324 KB   128/219 KB   720/720 KB   384/1205 KB   269/274 KB   256/2324 KB   128/219 KB   720/720 KB   384/1205 KB   273/274 KB   256/2324 KB   128/219 KB   720/720 KB   384/1205 KB   274/274 KB   256/2324 KB   128/219 KB   720/720 KB   388/1205 KB   274/274 KB   256/2324 KB   128/219 KB   720/720 KB   392/1205 KB   274/274 KB   256/2324 KB   128/219 KB   720/720 KB   396/1205 KB   274/274 KB   256/2324 KB   128/219 KB   720/720 KB   400/1205 KB   274/274 KB   256/2324 KB                                                                      Downloaded: https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar (720 KB at 1928.7 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-bean/1.4.3.2/sisu-inject-bean-1.4.3.2.jar
+132/219 KB   400/1205 KB   274/274 KB   256/2324 KB                136/219 KB   400/1205 KB   274/274 KB   256/2324 KB   140/219 KB   400/1205 KB   274/274 KB   256/2324 KB   144/219 KB   400/1205 KB   274/274 KB   256/2324 KB   144/219 KB   400/1205 KB   274/274 KB   260/2324 KB                                                         144/219 KB   400/1205 KB   264/2324 KB                Downloaded: https://repo.maven.apache.org/maven2/com/jcraft/jsch/0.1.53/jsch-0.1.53.jar (274 KB at 735.6 KB/sec)
+144/219 KB   400/1205 KB   268/2324 KB   Downloading: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-guice/2.9.2/sisu-guice-2.9.2-no_aop.jar
+144/219 KB   400/1205 KB   272/2324 KB   144/219 KB   404/1205 KB   272/2324 KB   144/219 KB   408/1205 KB   272/2324 KB   144/219 KB   412/1205 KB   272/2324 KB   144/219 KB   416/1205 KB   272/2324 KB   148/219 KB   416/1205 KB   272/2324 KB   152/219 KB   416/1205 KB   272/2324 KB   156/219 KB   416/1205 KB   272/2324 KB   160/219 KB   416/1205 KB   272/2324 KB   160/219 KB   416/1205 KB   276/2324 KB   160/219 KB   416/1205 KB   280/2324 KB   160/219 KB   416/1205 KB   284/2324 KB   160/219 KB   416/1205 KB   288/2324 KB   160/219 KB   420/1205 KB   288/2324 KB   160/219 KB   424/1205 KB   288/2324 KB   160/219 KB   428/1205 KB   288/2324 KB   160/219 KB   432/1205 KB   288/2324 KB   164/219 KB   432/1205 KB   288/2324 KB   168/219 KB   432/1205 KB   288/2324 KB   172/219 KB   432/1205 KB   288/2324 KB   176/219 KB   432/1205 KB   288/2324 KB   176/219 KB   436/1205 KB   288/2324 KB   176/219 KB   440/1205 KB   288/2324 KB   176/219 KB   444/1205 KB   288/2324 KB   176/219 KB   448/1205 KB   288/2324 KB   176/219 KB   4/157 KB   448/1205 KB   288/2324 KB   176/219 KB   8/157 KB   448/1205 KB   288/2324 KB   176/219 KB   12/157 KB   448/1205 KB   288/2324 KB   176/219 KB   16/157 KB   448/1205 KB   288/2324 KB   176/219 KB   16/157 KB   448/1205 KB   292/2324 KB   176/219 KB   16/157 KB   448/1205 KB   296/2324 KB   176/219 KB   16/157 KB   448/1205 KB   300/2324 KB   176/219 KB   16/157 KB   448/1205 KB   304/2324 KB   176/219 KB   16/157 KB   4/469 KB   448/1205 KB   304/2324 KB   176/219 KB   16/157 KB   8/469 KB   448/1205 KB   304/2324 KB   176/219 KB   16/157 KB   12/469 KB   448/1205 KB   304/2324 KB   176/219 KB   16/157 KB   16/469 KB   448/1205 KB   304/2324 KB   180/219 KB   16/157 KB   16/469 KB   448/1205 KB   304/2324 KB   184/219 KB   16/157 KB   16/469 KB   448/1205 KB   304/2324 KB   188/219 KB   16/157 KB   16/469 KB   448/1205 KB   304/2324 KB   192/219 KB   16/157 KB   16/469 KB   448/1205 KB   304/2324 KB   192/219 KB   16/157 KB   16/469 KB   452/1205 KB   304/2324 KB   192/219 KB   16/157 KB   16/469 KB   456/1205 KB   304/2324 KB   192/219 KB   16/157 KB   16/469 KB   460/1205 KB   304/2324 KB   192/219 KB   16/157 KB   16/469 KB   464/1205 KB   304/2324 KB   192/219 KB   16/157 KB   16/469 KB   464/1205 KB   308/2324 KB   192/219 KB   16/157 KB   16/469 KB   464/1205 KB   312/2324 KB   192/219 KB   16/157 KB   16/469 KB   464/1205 KB   316/2324 KB   192/219 KB   16/157 KB   16/469 KB   464/1205 KB   320/2324 KB   192/219 KB   20/157 KB   16/469 KB   464/1205 KB   320/2324 KB   192/219 KB   24/157 KB   16/469 KB   464/1205 KB   320/2324 KB   192/219 KB   28/157 KB   16/469 KB   464/1205 KB   320/2324 KB   192/219 KB   32/157 KB   16/469 KB   464/1205 KB   320/2324 KB   192/219 KB   32/157 KB   16/469 KB   468/1205 KB   320/2324 KB   192/219 KB   32/157 KB   16/469 KB   472/1205 KB   320/2324 KB   192/219 KB   32/157 KB   16/469 KB   476/1205 KB   320/2324 KB   192/219 KB   32/157 KB   16/469 KB   480/1205 KB   320/2324 KB   192/219 KB   32/157 KB   20/469 KB   480/1205 KB   320/2324 KB   196/219 KB   32/157 KB   20/469 KB   480/1205 KB   320/2324 KB   196/219 KB   32/157 KB   24/469 KB   480/1205 KB   320/2324 KB   200/219 KB   32/157 KB   24/469 KB   480/1205 KB   320/2324 KB   204/219 KB   32/157 KB   28/469 KB   480/1205 KB   320/2324 KB   204/219 KB   32/157 KB   32/469 KB   480/1205 KB   320/2324 KB   204/219 KB   32/157 KB   32/469 KB   480/1205 KB   320/2324 KB   208/219 KB   32/157 KB   32/469 KB   480/1205 KB   320/2324 KB   208/219 KB   32/157 KB   32/469 KB   480/1205 KB   324/2324 KB   208/219 KB   32/157 KB   32/469 KB   480/1205 KB   328/2324 KB   208/219 KB   32/157 KB   32/469 KB   480/1205 KB   332/2324 KB   208/219 KB   32/157 KB   32/469 KB   480/1205 KB   336/2324 KB   208/219 KB   36/157 KB   32/469 KB   480/1205 KB   336/2324 KB   208/219 KB   40/157 KB   32/469 KB   480/1205 KB   336/2324 KB   208/219 KB   44/157 KB   32/469 KB   480/1205 KB   336/2324 KB   208/219 KB   48/157 KB   32/469 KB   480/1205 KB   336/2324 KB   208/219 KB   48/157 KB   32/469 KB   484/1205 KB   336/2324 KB   208/219 KB   48/157 KB   32/469 KB   488/1205 KB   336/2324 KB   208/219 KB   48/157 KB   32/469 KB   492/1205 KB   336/2324 KB   208/219 KB   48/157 KB   32/469 KB   496/1205 KB   336/2324 KB   212/219 KB   48/157 KB   32/469 KB   496/1205 KB   336/2324 KB   216/219 KB   48/157 KB   32/469 KB   496/1205 KB   336/2324 KB   219/219 KB   48/157 KB   32/469 KB   496/1205 KB   336/2324 KB   219/219 KB   48/157 KB   36/469 KB   496/1205 KB   336/2324 KB   219/219 KB   48/157 KB   40/469 KB   496/1205 KB   336/2324 KB   219/219 KB   48/157 KB   44/469 KB   496/1205 KB   336/2324 KB   219/219 KB   48/157 KB   48/469 KB   496/1205 KB   336/2324 KB   219/219 KB   48/157 KB   48/469 KB   496/1205 KB   340/2324 KB   219/219 KB   48/157 KB   48/469 KB   496/1205 KB   344/2324 KB   219/219 KB   48/157 KB   48/469 KB   500/1205 KB   344/2324 KB   219/219 KB   48/157 KB   48/469 KB   500/1205 KB   348/2324 KB   219/219 KB   48/157 KB   48/469 KB   504/1205 KB   348/2324 KB   219/219 KB   48/157 KB   48/469 KB   508/1205 KB   348/2324 KB   219/219 KB   48/157 KB   48/469 KB   508/1205 KB   352/2324 KB   219/219 KB   48/157 KB   48/469 KB   512/1205 KB   352/2324 KB   219/219 KB   52/157 KB   48/469 KB   512/1205 KB   352/2324 KB                                                                    56/157 KB   48/469 KB   512/1205 KB   352/2324 KB                Downloaded: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/2.0.7/plexus-utils-2.0.7.jar (219 KB at 536.0 KB/sec)
+60/157 KB   48/469 KB   512/1205 KB   352/2324 KB   Downloading: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar
+64/157 KB   48/469 KB   512/1205 KB   352/2324 KB   64/157 KB   52/469 KB   512/1205 KB   352/2324 KB   64/157 KB   56/469 KB   512/1205 KB   352/2324 KB   64/157 KB   60/469 KB   512/1205 KB   352/2324 KB   64/157 KB   64/469 KB   512/1205 KB   352/2324 KB   64/157 KB   64/469 KB   516/1205 KB   352/2324 KB   64/157 KB   64/469 KB   520/1205 KB   352/2324 KB   64/157 KB   64/469 KB   524/1205 KB   352/2324 KB   64/157 KB   64/469 KB   528/1205 KB   352/2324 KB   64/157 KB   64/469 KB   528/1205 KB   356/2324 KB   64/157 KB   64/469 KB   528/1205 KB   360/2324 KB   64/157 KB   64/469 KB   528/1205 KB   364/2324 KB   64/157 KB   64/469 KB   528/1205 KB   368/2324 KB   68/157 KB   64/469 KB   528/1205 KB   368/2324 KB   72/157 KB   64/469 KB   528/1205 KB   368/2324 KB   76/157 KB   64/469 KB   528/1205 KB   368/2324 KB   80/157 KB   64/469 KB   528/1205 KB   368/2324 KB   80/157 KB   64/469 KB   532/1205 KB   368/2324 KB   80/157 KB   64/469 KB   536/1205 KB   368/2324 KB   80/157 KB   64/469 KB   540/1205 KB   368/2324 KB   80/157 KB   64/469 KB   544/1205 KB   368/2324 KB   80/157 KB   68/469 KB   544/1205 KB   368/2324 KB   80/157 KB   72/469 KB   544/1205 KB   368/2324 KB   80/157 KB   76/469 KB   544/1205 KB   368/2324 KB   80/157 KB   80/469 KB   544/1205 KB   368/2324 KB   80/157 KB   80/469 KB   544/1205 KB   372/2324 KB   80/157 KB   80/469 KB   544/1205 KB   376/2324 KB   80/157 KB   80/469 KB   544/1205 KB   380/2324 KB   80/157 KB   80/469 KB   544/1205 KB   384/2324 KB   84/157 KB   80/469 KB   544/1205 KB   384/2324 KB   88/157 KB   80/469 KB   544/1205 KB   384/2324 KB   92/157 KB   80/469 KB   544/1205 KB   384/2324 KB   96/157 KB   80/469 KB   544/1205 KB   384/2324 KB   100/157 KB   80/469 KB   544/1205 KB   384/2324 KB   104/157 KB   80/469 KB   544/1205 KB   384/2324 KB   108/157 KB   80/469 KB   544/1205 KB   384/2324 KB   112/157 KB   80/469 KB   544/1205 KB   384/2324 KB   112/157 KB   80/469 KB   544/1205 KB   388/2324 KB   112/157 KB   80/469 KB   544/1205 KB   392/2324 KB   112/157 KB   80/469 KB   544/1205 KB   396/2324 KB   112/157 KB   80/469 KB   544/1205 KB   400/2324 KB   116/157 KB   80/469 KB   544/1205 KB   400/2324 KB   120/157 KB   80/469 KB   544/1205 KB   400/2324 KB   124/157 KB   80/469 KB   544/1205 KB   400/2324 KB   128/157 KB   80/469 KB   544/1205 KB   400/2324 KB   128/157 KB   80/469 KB   544/1205 KB   404/2324 KB   128/157 KB   80/469 KB   544/1205 KB   408/2324 KB   128/157 KB   80/469 KB   544/1205 KB   412/2324 KB   128/157 KB   80/469 KB   544/1205 KB   416/2324 KB   128/157 KB   80/469 KB   544/1205 KB   4/41 KB   416/2324 KB   128/157 KB   80/469 KB   544/1205 KB   8/41 KB   416/2324 KB   128/157 KB   80/469 KB   544/1205 KB   12/41 KB   416/2324 KB   128/157 KB   80/469 KB   544/1205 KB   16/41 KB   416/2324 KB   132/157 KB   80/469 KB   544/1205 KB   16/41 KB   416/2324 KB   136/157 KB   80/469 KB   544/1205 KB   16/41 KB   416/2324 KB   140/157 KB   80/469 KB   544/1205 KB   16/41 KB   416/2324 KB   144/157 KB   80/469 KB   544/1205 KB   16/41 KB   416/2324 KB   144/157 KB   80/469 KB   544/1205 KB   16/41 KB   420/2324 KB   144/157 KB   80/469 KB   544/1205 KB   16/41 KB   424/2324 KB   144/157 KB   80/469 KB   544/1205 KB   16/41 KB   428/2324 KB   144/157 KB   80/469 KB   544/1205 KB   16/41 KB   432/2324 KB   144/157 KB   84/469 KB   544/1205 KB   16/41 KB   432/2324 KB   144/157 KB   88/469 KB   544/1205 KB   16/41 KB   432/2324 KB   144/157 KB   92/469 KB   544/1205 KB   16/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   16/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   20/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   24/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   28/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   32/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   36/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   40/41 KB   432/2324 KB   144/157 KB   96/469 KB   544/1205 KB   41/41 KB   432/2324 KB   148/157 KB   96/469 KB   544/1205 KB   41/41 KB   432/2324 KB   152/157 KB   96/469 KB   544/1205 KB   41/41 KB   432/2324 KB   156/157 KB   96/469 KB   544/1205 KB   41/41 KB   432/2324 KB   157/157 KB   96/469 KB   544/1205 KB   41/41 KB   432/2324 KB   157/157 KB   96/469 KB   544/1205 KB   41/41 KB   436/2324 KB   157/157 KB   96/469 KB   544/1205 KB   41/41 KB   440/2324 KB   157/157 KB   96/469 KB   544/1205 KB   41/41 KB   444/2324 KB   157/157 KB   96/469 KB   544/1205 KB   41/41 KB   448/2324 KB                                                                   Downloaded: https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar (41 KB at 83.6 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.21/jcl-over-slf4j-1.7.21.jar
+157/157 KB   100/469 KB   544/1205 KB   448/2324 KB                                                                   104/469 KB   544/1205 KB   448/2324 KB                Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-inject-bean/1.4.3.2/sisu-inject-bean-1.4.3.2.jar (157 KB at 325.0 KB/sec)
+108/469 KB   544/1205 KB   448/2324 KB   112/469 KB   544/1205 KB   448/2324 KB   112/469 KB   544/1205 KB   452/2324 KB   112/469 KB   544/1205 KB   456/2324 KB   112/469 KB   548/1205 KB   460/2324 KB   112/469 KB   548/1205 KB   460/2324 KB   112/469 KB   548/1205 KB   464/2324 KB   112/469 KB   552/1205 KB   464/2324 KB   112/469 KB   556/1205 KB   464/2324 KB   112/469 KB   560/1205 KB   464/2324 KB   112/469 KB   560/1205 KB   468/2324 KB   112/469 KB   560/1205 KB   472/2324 KB   112/469 KB   560/1205 KB   476/2324 KB   112/469 KB   564/1205 KB   476/2324 KB   112/469 KB   564/1205 KB   480/2324 KB   112/469 KB   568/1205 KB   480/2324 KB   112/469 KB   572/1205 KB   480/2324 KB   112/469 KB   576/1205 KB   480/2324 KB   112/469 KB   576/1205 KB   480/2324 KB   4/17 KB   112/469 KB   576/1205 KB   480/2324 KB   8/17 KB   112/469 KB   576/1205 KB   480/2324 KB   12/17 KB   112/469 KB   576/1205 KB   480/2324 KB   16/17 KB   112/469 KB   576/1205 KB   480/2324 KB   17/17 KB   112/469 KB   576/1205 KB   484/2324 KB   17/17 KB   112/469 KB   576/1205 KB   488/2324 KB   17/17 KB   112/469 KB   576/1205 KB   492/2324 KB   17/17 KB   112/469 KB   576/1205 KB   496/2324 KB   17/17 KB   116/469 KB   576/1205 KB   496/2324 KB   17/17 KB   120/469 KB   576/1205 KB   496/2324 KB   17/17 KB   124/469 KB   576/1205 KB   496/2324 KB   17/17 KB   128/469 KB   576/1205 KB   496/2324 KB   17/17 KB                                                       Downloaded: https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.21/jcl-over-slf4j-1.7.21.jar (17 KB at 32.2 KB/sec)
+128/469 KB   580/1205 KB   496/2324 KB              128/469 KB   584/1205 KB   496/2324 KB   128/469 KB   588/1205 KB   496/2324 KB   128/469 KB   592/1205 KB   496/2324 KB   132/469 KB   592/1205 KB   496/2324 KB   136/469 KB   592/1205 KB   496/2324 KB   140/469 KB   592/1205 KB   496/2324 KB   144/469 KB   592/1205 KB   496/2324 KB   144/469 KB   592/1205 KB   500/2324 KB   144/469 KB   592/1205 KB   504/2324 KB   144/469 KB   592/1205 KB   508/2324 KB   144/469 KB   592/1205 KB   512/2324 KB   144/469 KB   596/1205 KB   512/2324 KB   144/469 KB   600/1205 KB   512/2324 KB   144/469 KB   604/1205 KB   512/2324 KB   144/469 KB   608/1205 KB   512/2324 KB   148/469 KB   608/1205 KB   512/2324 KB   152/469 KB   608/1205 KB   512/2324 KB   156/469 KB   608/1205 KB   512/2324 KB   160/469 KB   608/1205 KB   512/2324 KB   160/469 KB   608/1205 KB   516/2324 KB   160/469 KB   608/1205 KB   520/2324 KB   160/469 KB   608/1205 KB   524/2324 KB   160/469 KB   608/1205 KB   528/2324 KB   160/469 KB   612/1205 KB   528/2324 KB   160/469 KB   616/1205 KB   528/2324 KB   160/469 KB   620/1205 KB   528/2324 KB   160/469 KB   624/1205 KB   528/2324 KB   164/469 KB   624/1205 KB   528/2324 KB   168/469 KB   624/1205 KB   528/2324 KB   172/469 KB   624/1205 KB   528/2324 KB   176/469 KB   624/1205 KB   528/2324 KB   176/469 KB   624/1205 KB   532/2324 KB   176/469 KB   624/1205 KB   536/2324 KB   176/469 KB   624/1205 KB   540/2324 KB   176/469 KB   624/1205 KB   544/2324 KB   176/469 KB   628/1205 KB   544/2324 KB   176/469 KB   632/1205 KB   544/2324 KB   176/469 KB   636/1205 KB   544/2324 KB   176/469 KB   640/1205 KB   544/2324 KB   180/469 KB   640/1205 KB   544/2324 KB   184/469 KB   640/1205 KB   544/2324 KB   188/469 KB   640/1205 KB   544/2324 KB   192/469 KB   640/1205 KB   544/2324 KB   192/469 KB   640/1205 KB   548/2324 KB   192/469 KB   640/1205 KB   552/2324 KB   192/469 KB   640/1205 KB   556/2324 KB   192/469 KB   640/1205 KB   560/2324 KB   192/469 KB   644/1205 KB   560/2324 KB   192/469 KB   648/1205 KB   560/2324 KB   192/469 KB   652/1205 KB   560/2324 KB   192/469 KB   656/1205 KB   560/2324 KB   196/469 KB   656/1205 KB   564/2324 KB   196/469 KB   656/1205 KB   564/2324 KB   200/469 KB   656/1205 KB   564/2324 KB   200/469 KB   656/1205 KB   568/2324 KB   204/469 KB   656/1205 KB   568/2324 KB   204/469 KB   656/1205 KB   572/2324 KB   208/469 KB   656/1205 KB   572/2324 KB   208/469 KB   656/1205 KB   576/2324 KB   208/469 KB   660/1205 KB   576/2324 KB   208/469 KB   664/1205 KB   576/2324 KB   208/469 KB   668/1205 KB   576/2324 KB   208/469 KB   672/1205 KB   576/2324 KB   208/469 KB   672/1205 KB   580/2324 KB   208/469 KB   672/1205 KB   584/2324 KB   208/469 KB   672/1205 KB   588/2324 KB   208/469 KB   672/1205 KB   592/2324 KB   212/469 KB   672/1205 KB   592/2324 KB   216/469 KB   672/1205 KB   592/2324 KB   220/469 KB   672/1205 KB   592/2324 KB   224/469 KB   672/1205 KB   592/2324 KB   224/469 KB   676/1205 KB   592/2324 KB   224/469 KB   680/1205 KB   592/2324 KB   224/469 KB   684/1205 KB   592/2324 KB   224/469 KB   688/1205 KB   592/2324 KB   224/469 KB   688/1205 KB   596/2324 KB   224/469 KB   688/1205 KB   600/2324 KB   224/469 KB   688/1205 KB   604/2324 KB   224/469 KB   688/1205 KB   608/2324 KB   228/469 KB   688/1205 KB   608/2324 KB   232/469 KB   688/1205 KB   608/2324 KB   236/469 KB   688/1205 KB   608/2324 KB   240/469 KB   688/1205 KB   608/2324 KB   240/469 KB   692/1205 KB   608/2324 KB   240/469 KB   696/1205 KB   608/2324 KB   240/469 KB   700/1205 KB   608/2324 KB   240/469 KB   704/1205 KB   608/2324 KB   240/469 KB   704/1205 KB   612/2324 KB   240/469 KB   704/1205 KB   616/2324 KB   240/469 KB   704/1205 KB   620/2324 KB   240/469 KB   704/1205 KB   624/2324 KB   244/469 KB   704/1205 KB   624/2324 KB   248/469 KB   704/1205 KB   624/2324 KB   252/469 KB   704/1205 KB   624/2324 KB   256/469 KB   704/1205 KB   624/2324 KB   256/469 KB   708/1205 KB   624/2324 KB   256/469 KB   712/1205 KB   624/2324 KB   256/469 KB   716/1205 KB   624/2324 KB   256/469 KB   720/1205 KB   624/2324 KB   256/469 KB   720/1205 KB   628/2324 KB   256/469 KB   720/1205 KB   632/2324 KB   256/469 KB   720/1205 KB   636/2324 KB   256/469 KB   720/1205 KB   640/2324 KB   260/469 KB   720/1205 KB   640/2324 KB   264/469 KB   720/1205 KB   640/2324 KB   268/469 KB   720/1205 KB   640/2324 KB   272/469 KB   720/1205 KB   640/2324 KB   272/469 KB   724/1205 KB   640/2324 KB   272/469 KB   728/1205 KB   640/2324 KB   272/469 KB   732/1205 KB   640/2324 KB   272/469 KB   736/1205 KB   640/2324 KB   272/469 KB   736/1205 KB   644/2324 KB   272/469 KB   736/1205 KB   648/2324 KB   272/469 KB   736/1205 KB   652/2324 KB   272/469 KB   736/1205 KB   656/2324 KB   276/469 KB   736/1205 KB   656/2324 KB   280/469 KB   736/1205 KB   656/2324 KB   284/469 KB   736/1205 KB   656/2324 KB   288/469 KB   736/1205 KB   656/2324 KB   288/469 KB   740/1205 KB   656/2324 KB   288/469 KB   744/1205 KB   656/2324 KB   288/469 KB   748/1205 KB   656/2324 KB   288/469 KB   752/1205 KB   656/2324 KB   288/469 KB   752/1205 KB   660/2324 KB   288/469 KB   752/1205 KB   664/2324 KB   288/469 KB   752/1205 KB   668/2324 KB   288/469 KB   752/1205 KB   672/2324 KB   292/469 KB   752/1205 KB   672/2324 KB   296/469 KB   752/1205 KB   672/2324 KB   300/469 KB   752/1205 KB   672/2324 KB   304/469 KB   752/1205 KB   672/2324 KB   304/469 KB   756/1205 KB   672/2324 KB   304/469 KB   760/1205 KB   672/2324 KB   304/469 KB   764/1205 KB   672/2324 KB   304/469 KB   768/1205 KB   672/2324 KB   304/469 KB   768/1205 KB   676/2324 KB   304/469 KB   768/1205 KB   680/2324 KB   304/469 KB   768/1205 KB   684/2324 KB   304/469 KB   768/1205 KB   688/2324 KB   308/469 KB   768/1205 KB   688/2324 KB   312/469 KB   768/1205 KB   688/2324 KB   316/469 KB   768/1205 KB   688/2324 KB   320/469 KB   768/1205 KB   688/2324 KB   320/469 KB   772/1205 KB   688/2324 KB   320/469 KB   776/1205 KB   688/2324 KB   320/469 KB   780/1205 KB   688/2324 KB   320/469 KB   784/1205 KB   688/2324 KB   320/469 KB   784/1205 KB   692/2324 KB   320/469 KB   784/1205 KB   696/2324 KB   320/469 KB   784/1205 KB   700/2324 KB   320/469 KB   784/1205 KB   704/2324 KB   324/469 KB   784/1205 KB   704/2324 KB   328/469 KB   784/1205 KB   704/2324 KB   332/469 KB   784/1205 KB   704/2324 KB   336/469 KB   784/1205 KB   704/2324 KB   336/469 KB   784/1205 KB   708/2324 KB   336/469 KB   784/1205 KB   712/2324 KB   336/469 KB   784/1205 KB   716/2324 KB   336/469 KB   784/1205 KB   720/2324 KB   336/469 KB   788/1205 KB   720/2324 KB   336/469 KB   792/1205 KB   720/2324 KB   336/469 KB   796/1205 KB   720/2324 KB   336/469 KB   800/1205 KB   720/2324 KB   340/469 KB   800/1205 KB   720/2324 KB   344/469 KB   800/1205 KB   720/2324 KB   344/469 KB   800/1205 KB   724/2324 KB   348/469 KB   800/1205 KB   724/2324 KB   348/469 KB   800/1205 KB   728/2324 KB   352/469 KB   800/1205 KB   728/2324 KB   352/469 KB   800/1205 KB   732/2324 KB   352/469 KB   800/1205 KB   736/2324 KB   352/469 KB   804/1205 KB   736/2324 KB   352/469 KB   808/1205 KB   736/2324 KB   352/469 KB   812/1205 KB   736/2324 KB   352/469 KB   816/1205 KB   736/2324 KB   352/469 KB   816/1205 KB   740/2324 KB   352/469 KB   816/1205 KB   744/2324 KB   352/469 KB   816/1205 KB   748/2324 KB   352/469 KB   816/1205 KB   752/2324 KB   356/469 KB   816/1205 KB   752/2324 KB   360/469 KB   816/1205 KB   752/2324 KB   364/469 KB   816/1205 KB   752/2324 KB   368/469 KB   816/1205 KB   752/2324 KB   368/469 KB   816/1205 KB   756/2324 KB   368/469 KB   816/1205 KB   760/2324 KB   368/469 KB   816/1205 KB   764/2324 KB   368/469 KB   816/1205 KB   768/2324 KB   368/469 KB   820/1205 KB   768/2324 KB   368/469 KB   824/1205 KB   768/2324 KB   368/469 KB   828/1205 KB   768/2324 KB   368/469 KB   832/1205 KB   768/2324 KB   372/469 KB   832/1205 KB   768/2324 KB   376/469 KB   832/1205 KB   768/2324 KB   380/469 KB   832/1205 KB   768/2324 KB   384/469 KB   832/1205 KB   768/2324 KB   384/469 KB   832/1205 KB   772/2324 KB   384/469 KB   832/1205 KB   776/2324 KB   384/469 KB   832/1205 KB   780/2324 KB   384/469 KB   832/1205 KB   784/2324 KB   384/469 KB   836/1205 KB   784/2324 KB   384/469 KB   840/1205 KB   784/2324 KB   384/469 KB   844/1205 KB   784/2324 KB   384/469 KB   848/1205 KB   784/2324 KB   384/469 KB   848/1205 KB   788/2324 KB   384/469 KB   848/1205 KB   792/2324 KB   384/469 KB   848/1205 KB   796/2324 KB   384/469 KB   848/1205 KB   800/2324 KB   388/469 KB   848/1205 KB   800/2324 KB   392/469 KB   848/1205 KB   800/2324 KB   396/469 KB   848/1205 KB   800/2324 KB   400/469 KB   848/1205 KB   800/2324 KB   400/469 KB   852/1205 KB   800/2324 KB   400/469 KB   856/1205 KB   800/2324 KB   400/469 KB   860/1205 KB   800/2324 KB   400/469 KB   864/1205 KB   800/2324 KB   400/469 KB   864/1205 KB   804/2324 KB   400/469 KB   864/1205 KB   808/2324 KB   400/469 KB   864/1205 KB   812/2324 KB   400/469 KB   864/1205 KB   816/2324 KB   404/469 KB   864/1205 KB   816/2324 KB   408/469 KB   864/1205 KB   816/2324 KB   412/469 KB   864/1205 KB   816/2324 KB   416/469 KB   864/1205 KB   816/2324 KB   416/469 KB   864/1205 KB   820/2324 KB   416/469 KB   864/1205 KB   824/2324 KB   416/469 KB   864/1205 KB   828/2324 KB   416/469 KB   864/1205 KB   832/2324 KB   416/469 KB   868/1205 KB   832/2324 KB   416/469 KB   872/1205 KB   832/2324 KB   416/469 KB   876/1205 KB   832/2324 KB   416/469 KB   880/1205 KB   832/2324 KB   420/469 KB   880/1205 KB   832/2324 KB   424/469 KB   880/1205 KB   832/2324 KB   428/469 KB   880/1205 KB   832/2324 KB   432/469 KB   880/1205 KB   832/2324 KB   432/469 KB   880/1205 KB   836/2324 KB   432/469 KB   880/1205 KB   840/2324 KB   432/469 KB   880/1205 KB   844/2324 KB   432/469 KB   880/1205 KB   848/2324 KB   432/469 KB   884/1205 KB   848/2324 KB   432/469 KB   888/1205 KB   848/2324 KB   432/469 KB   892/1205 KB   848/2324 KB   432/469 KB   896/1205 KB   848/2324 KB   432/469 KB   896/1205 KB   852/2324 KB   432/469 KB   896/1205 KB   856/2324 KB   432/469 KB   896/1205 KB   860/2324 KB   432/469 KB   896/1205 KB   864/2324 KB   436/469 KB   896/1205 KB   864/2324 KB   440/469 KB   896/1205 KB   864/2324 KB   444/469 KB   896/1205 KB   864/2324 KB   448/469 KB   896/1205 KB   864/2324 KB   448/469 KB   900/1205 KB   864/2324 KB   448/469 KB   904/1205 KB   864/2324 KB   448/469 KB   908/1205 KB   864/2324 KB   448/469 KB   912/1205 KB   864/2324 KB   448/469 KB   912/1205 KB   868/2324 KB   448/469 KB   912/1205 KB   872/2324 KB   448/469 KB   912/1205 KB   876/2324 KB   448/469 KB   912/1205 KB   880/2324 KB   452/469 KB   912/1205 KB   880/2324 KB   456/469 KB   912/1205 KB   880/2324 KB   460/469 KB   912/1205 KB   880/2324 KB   464/469 KB   912/1205 KB   880/2324 KB   468/469 KB   912/1205 KB   880/2324 KB   468/469 KB   912/1205 KB   884/2324 KB   469/469 KB   912/1205 KB   884/2324 KB   469/469 KB   912/1205 KB   888/2324 KB   469/469 KB   912/1205 KB   892/2324 KB   469/469 KB   912/1205 KB   896/2324 KB   469/469 KB   916/1205 KB   896/2324 KB   469/469 KB   920/1205 KB   896/2324 KB   469/469 KB   924/1205 KB   896/2324 KB   469/469 KB   928/1205 KB   896/2324 KB                                            Downloaded: https://repo.maven.apache.org/maven2/org/sonatype/sisu/sisu-guice/2.9.2/sisu-guice-2.9.2-no_aop.jar (469 KB at 704.6 KB/sec)
+928/1205 KB   900/2324 KB                928/1205 KB   904/2324 KB   928/1205 KB   908/2324 KB   928/1205 KB   912/2324 KB   932/1205 KB   912/2324 KB   936/1205 KB   912/2324 KB   940/1205 KB   912/2324 KB   944/1205 KB   912/2324 KB   944/1205 KB   916/2324 KB   944/1205 KB   920/2324 KB   944/1205 KB   924/2324 KB   944/1205 KB   928/2324 KB   948/1205 KB   928/2324 KB   952/1205 KB   928/2324 KB   956/1205 KB   928/2324 KB   960/1205 KB   928/2324 KB   960/1205 KB   932/2324 KB   960/1205 KB   936/2324 KB   960/1205 KB   940/2324 KB   960/1205 KB   944/2324 KB   964/1205 KB   944/2324 KB   968/1205 KB   944/2324 KB   972/1205 KB   944/2324 KB   976/1205 KB   944/2324 KB   976/1205 KB   948/2324 KB   976/1205 KB   952/2324 KB   976/1205 KB   956/2324 KB   976/1205 KB   960/2324 KB   980/1205 KB   960/2324 KB   984/1205 KB   960/2324 KB   988/1205 KB   960/2324 KB   992/1205 KB   960/2324 KB   992/1205 KB   964/2324 KB   992/1205 KB   968/2324 KB   992/1205 KB   972/2324 KB   992/1205 KB   976/2324 KB   996/1205 KB   976/2324 KB   1000/1205 KB   976/2324 KB   1004/1205 KB   976/2324 KB   1008/1205 KB   976/2324 KB   1008/1205 KB   980/2324 KB   1008/1205 KB   984/2324 KB   1008/1205 KB   988/2324 KB   1012/1205 KB   988/2324 KB   1012/1205 KB   992/2324 KB   1016/1205 KB   992/2324 KB   1020/1205 KB   992/2324 KB   1024/1205 KB   992/2324 KB   1024/1205 KB   996/2324 KB   1028/1205 KB   996/2324 KB   1032/1205 KB   996/2324 KB   1036/1205 KB   996/2324 KB   1040/1205 KB   996/2324 KB   1040/1205 KB   1000/2324 KB   1040/1205 KB   1004/2324 KB   1040/1205 KB   1008/2324 KB   1044/1205 KB   1008/2324 KB   1048/1205 KB   1008/2324 KB   1052/1205 KB   1008/2324 KB   1056/1205 KB   1008/2324 KB   1056/1205 KB   1012/2324 KB   1056/1205 KB   1016/2324 KB   1056/1205 KB   1020/2324 KB   1056/1205 KB   1024/2324 KB   1060/1205 KB   1024/2324 KB   1064/1205 KB   1024/2324 KB   1068/1205 KB   1024/2324 KB   1072/1205 KB   1024/2324 KB   1072/1205 KB   1028/2324 KB   1072/1205 KB   1032/2324 KB   1072/1205 KB   1036/2324 KB   1072/1205 KB   1040/2324 KB   1076/1205 KB   1040/2324 KB   1080/1205 KB   1040/2324 KB   1084/1205 KB   1040/2324 KB   1088/1205 KB   1040/2324 KB   1088/1205 KB   1044/2324 KB   1088/1205 KB   1048/2324 KB   1088/1205 KB   1052/2324 KB   1088/1205 KB   1056/2324 KB   1092/1205 KB   1056/2324 KB   1096/1205 KB   1056/2324 KB   1100/1205 KB   1056/2324 KB   1104/1205 KB   1056/2324 KB   1104/1205 KB   1060/2324 KB   1104/1205 KB   1064/2324 KB   1104/1205 KB   1068/2324 KB   1104/1205 KB   1072/2324 KB   1108/1205 KB   1072/2324 KB   1112/1205 KB   1072/2324 KB   1116/1205 KB   1072/2324 KB   1120/1205 KB   1072/2324 KB   1120/1205 KB   1076/2324 KB   1120/1205 KB   1080/2324 KB   1120/1205 KB   1084/2324 KB   1120/1205 KB   1088/2324 KB   1124/1205 KB   1088/2324 KB   1128/1205 KB   1088/2324 KB   1132/1205 KB   1088/2324 KB   1136/1205 KB   1088/2324 KB   1136/1205 KB   1092/2324 KB   1136/1205 KB   1096/2324 KB   1136/1205 KB   1100/2324 KB   1136/1205 KB   1104/2324 KB   1140/1205 KB   1104/2324 KB   1144/1205 KB   1104/2324 KB   1148/1205 KB   1104/2324 KB   1152/1205 KB   1104/2324 KB   1152/1205 KB   1108/2324 KB   1152/1205 KB   1112/2324 KB   1152/1205 KB   1116/2324 KB   1152/1205 KB   1120/2324 KB   1156/1205 KB   1120/2324 KB   1160/1205 KB   1120/2324 KB   1164/1205 KB   1120/2324 KB   1168/1205 KB   1120/2324 KB   1168/1205 KB   1124/2324 KB   1168/1205 KB   1128/2324 KB   1168/1205 KB   1132/2324 KB   1168/1205 KB   1136/2324 KB   1172/1205 KB   1136/2324 KB   1176/1205 KB   1136/2324 KB   1180/1205 KB   1136/2324 KB   1184/1205 KB   1136/2324 KB   1184/1205 KB   1140/2324 KB   1184/1205 KB   1144/2324 KB   1184/1205 KB   1148/2324 KB   1184/1205 KB   1152/2324 KB   1188/1205 KB   1152/2324 KB   1192/1205 KB   1152/2324 KB   1196/1205 KB   1152/2324 KB   1200/1205 KB   1152/2324 KB   1204/1205 KB   1152/2324 KB   1205/1205 KB   1152/2324 KB   1205/1205 KB   1156/2324 KB   1205/1205 KB   1160/2324 KB   1205/1205 KB   1164/2324 KB   1205/1205 KB   1168/2324 KB                                 Downloaded: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.8.3/jackson-databind-2.8.3.jar (1205 KB at 1550.6 KB/sec)
+1172/2324 KB                  1176/2324 KB   1180/2324 KB   1184/2324 KB   1188/2324 KB   1192/2324 KB   1196/2324 KB   1200/2324 KB   1204/2324 KB   1208/2324 KB   1212/2324 KB   1216/2324 KB   1220/2324 KB   1224/2324 KB   1228/2324 KB   1232/2324 KB   1236/2324 KB   1240/2324 KB   1244/2324 KB   1248/2324 KB   1252/2324 KB   1256/2324 KB   1260/2324 KB   1264/2324 KB   1268/2324 KB   1272/2324 KB   1276/2324 KB   1280/2324 KB   1284/2324 KB   1288/2324 KB   1292/2324 KB   1296/2324 KB   1300/2324 KB   1304/2324 KB   1308/2324 KB   1312/2324 KB   1316/2324 KB   1320/2324 KB   1324/2324 KB   1328/2324 KB   1332/2324 KB   1336/2324 KB   1340/2324 KB   1344/2324 KB   1348/2324 KB   1352/2324 KB   1356/2324 KB   1360/2324 KB   1364/2324 KB   1368/2324 KB   1372/2324 KB   1376/2324 KB   1380/2324 KB   1384/2324 KB   1388/2324 KB   1392/2324 KB   1396/2324 KB   1400/2324 KB   1404/2324 KB   1408/2324 KB   1412/2324 KB   1416/2324 KB   1420/2324 KB   1424/2324 KB   1428/2324 KB   1432/2324 KB   1436/2324 KB   1440/2324 KB   1444/2324 KB   1448/2324 KB   1452/2324 KB   1456/2324 KB   1460/2324 KB   1464/2324 KB   1468/2324 KB   1472/2324 KB   1476/2324 KB   1480/2324 KB   1484/2324 KB   1488/2324 KB   1492/2324 KB   1496/2324 KB   1500/2324 KB   1504/2324 KB   1508/2324 KB   1512/2324 KB   1516/2324 KB   1520/2324 KB   1524/2324 KB   1528/2324 KB   1532/2324 KB   1536/2324 KB   1540/2324 KB   1544/2324 KB   1548/2324 KB   1552/2324 KB   1556/2324 KB   1560/2324 KB   1564/2324 KB   1568/2324 KB   1572/2324 KB   1576/2324 KB   1580/2324 KB   1584/2324 KB   1588/2324 KB   1592/2324 KB   1596/2324 KB   1600/2324 KB   1604/2324 KB   1608/2324 KB   1612/2324 KB   1616/2324 KB   1620/2324 KB   1624/2324 KB   1628/2324 KB   1632/2324 KB   1636/2324 KB   1640/2324 KB   1644/2324 KB   1648/2324 KB   1652/2324 KB   1656/2324 KB   1660/2324 KB   1664/2324 KB   1668/2324 KB   1672/2324 KB   1676/2324 KB   1680/2324 KB   1684/2324 KB   1688/2324 KB   1692/2324 KB   1696/2324 KB   1700/2324 KB   1704/2324 KB   1708/2324 KB   1712/2324 KB   1716/2324 KB   1720/2324 KB   1724/2324 KB   1728/2324 KB   1732/2324 KB   1736/2324 KB   1740/2324 KB   1744/2324 KB   1748/2324 KB   1752/2324 KB   1756/2324 KB   1760/2324 KB   1764/2324 KB   1768/2324 KB   1772/2324 KB   1776/2324 KB   1780/2324 KB   1784/2324 KB   1788/2324 KB   1792/2324 KB   1796/2324 KB   1800/2324 KB   1804/2324 KB   1808/2324 KB   1812/2324 KB   1816/2324 KB   1820/2324 KB   1824/2324 KB   1828/2324 KB   1832/2324 KB   1836/2324 KB   1840/2324 KB   1844/2324 KB   1848/2324 KB   1852/2324 KB   1856/2324 KB   1860/2324 KB   1864/2324 KB   1868/2324 KB   1872/2324 KB   1876/2324 KB   1880/2324 KB   1884/2324 KB   1888/2324 KB   1892/2324 KB   1896/2324 KB   1900/2324 KB   1904/2324 KB   1908/2324 KB   1912/2324 KB   1916/2324 KB   1920/2324 KB   1924/2324 KB   1928/2324 KB   1932/2324 KB   1936/2324 KB   1940/2324 KB   1944/2324 KB   1948/2324 KB   1952/2324 KB   1956/2324 KB   1960/2324 KB   1964/2324 KB   1968/2324 KB   1972/2324 KB   1976/2324 KB   1980/2324 KB   1984/2324 KB   1988/2324 KB   1992/2324 KB   1996/2324 KB   2000/2324 KB   2004/2324 KB   2008/2324 KB   2012/2324 KB   2016/2324 KB   2020/2324 KB   2024/2324 KB   2028/2324 KB   2032/2324 KB   2036/2324 KB   2040/2324 KB   2044/2324 KB   2048/2324 KB   2052/2324 KB   2056/2324 KB   2060/2324 KB   2064/2324 KB   2068/2324 KB   2072/2324 KB   2076/2324 KB   2080/2324 KB   2084/2324 KB   2088/2324 KB   2092/2324 KB   2096/2324 KB   2100/2324 KB   2104/2324 KB   2108/2324 KB   2112/2324 KB   2116/2324 KB   2120/2324 KB   2124/2324 KB   2128/2324 KB   2132/2324 KB   2136/2324 KB   2140/2324 KB   2144/2324 KB   2148/2324 KB   2152/2324 KB   2156/2324 KB   2160/2324 KB   2164/2324 KB   2168/2324 KB   2172/2324 KB   2176/2324 KB   2180/2324 KB   2184/2324 KB   2188/2324 KB   2192/2324 KB   2196/2324 KB   2200/2324 KB   2204/2324 KB   2208/2324 KB   2212/2324 KB   2216/2324 KB   2220/2324 KB   2224/2324 KB   2228/2324 KB   2232/2324 KB   2236/2324 KB   2240/2324 KB   2244/2324 KB   2248/2324 KB   2252/2324 KB   2256/2324 KB   2260/2324 KB   2264/2324 KB   2268/2324 KB   2272/2324 KB   2276/2324 KB   2280/2324 KB   2284/2324 KB   2288/2324 KB   2292/2324 KB   2296/2324 KB   2300/2324 KB   2304/2324 KB   2308/2324 KB   2312/2324 KB   2316/2324 KB   2320/2324 KB   2324/2324 KB                  Downloaded: https://repo.maven.apache.org/maven2/org/eclipse/jgit/org.eclipse.jgit/4.5.0.201609210915-r/org.eclipse.jgit-4.5.0.201609210915-r.jar (2324 KB at 1795.5 KB/sec)
+[INFO] Starting Coveralls job for travis-ci (229991870)
+[INFO] Git commit b914121 in master
+[INFO] Writing Coveralls data to /home/travis/build/jcgay/maven-color/target/coveralls.json...
+[INFO] Processing coverage report from /home/travis/build/jcgay/maven-color/maven-color-core/target/site/jacoco/jacoco.xml
+[INFO] Processing coverage report from /home/travis/build/jcgay/maven-color/maven-color-gossip/target/site/jacoco/jacoco.xml
+[INFO] Successfully wrote Coveralls data in 174ms
+[INFO] Gathered code coverage metrics for 11 source files with 601 lines of code:
+[INFO] - 182 relevant lines
+[INFO] - 127 covered lines
+[INFO] - 55 missed lines
+[INFO] Submitting Coveralls data to API
+[INFO] Successfully submitted Coveralls data in 784ms for Job #137.1
+[INFO] https://coveralls.io/jobs/25518960
+[INFO] *** It might take hours for Coveralls to update the actual coverage numbers for a job
+[INFO]     If you see question marks in the report, please be patient
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] maven-color ........................................ SUCCESS [  6.952 s]
+[INFO] maven-color-core ................................... SUCCESS [  5.829 s]
+[INFO] maven-color-gossip ................................. SUCCESS [  4.106 s]
+[INFO] maven-color-coverage-report ........................ SUCCESS [  0.313 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 20.681 s
+[INFO] Finished at: 2017-05-08T14:56:43+00:00
+[INFO] Final Memory: 36M/452M
+[INFO] ------------------------------------------------------------------------
+
+travis_time:end:0c38a21c:start=1494255380164351831,finish=1494255409588785193,duration=29424433362[0Ktravis_fold:end:after_success[0K
+Done. Your build exited with 0.
