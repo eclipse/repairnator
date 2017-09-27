@@ -18,11 +18,17 @@ router.route('/hostnameStats')
 router.route('/statusStats')
   .get(inspectorCtrl.statusStats);
 
-router.route('/statusStats/:nbWeeks')
+router.route('/statusStats/:nbDays')
   .get(inspectorCtrl.statusStatsPeriod);
 
-router.param('nbWeeks', (req, res, next, nbWeeks) => {
-  req.nbWeeks = nbWeeks; // eslint-disable-line no-param-reassign
+router.route('/reproducedBuilds')
+  .get(inspectorCtrl.reproducedBuildsAll);
+
+router.route('/reproducedBuilds/:nbDays')
+  .get(inspectorCtrl.reproducedBuilds);
+
+router.param('nbDays', (req, res, next, nbDays) => {
+  req.nbDays = nbDays; // eslint-disable-line no-param-reassign
   next();
 });
 

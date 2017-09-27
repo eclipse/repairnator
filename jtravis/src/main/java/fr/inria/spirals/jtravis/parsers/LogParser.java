@@ -74,15 +74,16 @@ public class LogParser {
 
                     if (fold == null) {
                         this.outOfFold.addContent(line);
-
-                        Matcher mvnMatcher = mvnPattern.matcher(line);
-                        Matcher gradleMatcher = gradlePattern.matcher(line);
-                        if (mvnMatcher.matches()) {
-                            this.logParser = new MavenLogParser();
-                            this.buildTool = BuildTool.MAVEN;
-                        } else if (gradleMatcher.matches()) {
-                            this.logParser = new GradleLogParser();
-                            this.buildTool = BuildTool.GRADLE;
+                        if(this.buildTool == BuildTool.UNKNOWN) {
+                            Matcher mvnMatcher = mvnPattern.matcher(line);
+                            Matcher gradleMatcher = gradlePattern.matcher(line);
+                            if (mvnMatcher.matches()) {
+                                this.logParser = new MavenLogParser();
+                                this.buildTool = BuildTool.MAVEN;
+                            } else if (gradleMatcher.matches()) {
+                                this.logParser = new GradleLogParser();
+                                this.buildTool = BuildTool.GRADLE;
+                            }
                         }
 
                     } else {
@@ -110,6 +111,13 @@ public class LogParser {
     public TestsInformation getTestsInformation() {
         if (this.buildTool != BuildTool.UNKNOWN) {
             return this.logParser.parseLog(this.outOfFold);
+        }
+        return null;
+    }
+
+    public List<TestsInformation> getDetailedTestsInformation() {
+        if (this.buildTool == BuildTool.MAVEN) {
+            return this.logParser.parseDetailedLog(this.outOfFold);
         }
         return null;
     }

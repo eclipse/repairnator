@@ -10,7 +10,12 @@ COPY configure_git.sh /root/
 COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
 
-RUN echo "Europe/Paris" > /etc/timezone && apt-get update && apt-get install cloc -y && chmod +x /root/*.sh && /root/configure_git.sh && /root/build_repairnator.sh
+RUN chmod +x /root/*.sh
+RUN echo "Europe/Paris" > /etc/timezone 
+RUN apt-get update 
+RUN apt-get install cloc -y 
+RUN /root/configure_git.sh 
+RUN /root/build_repairnator.sh
 
 ENV M2_HOME=$MAVEN_HOME
 ENV GITHUB_LOGIN=

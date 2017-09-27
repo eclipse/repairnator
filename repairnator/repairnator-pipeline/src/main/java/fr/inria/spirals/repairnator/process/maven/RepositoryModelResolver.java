@@ -87,11 +87,15 @@ class RepositoryModelResolver implements ModelResolver {
                     .build();
 
             Response response = client.newCall(request).execute();
-            localRepoFile.getParentFile().mkdirs();
-            FileWriter out = new FileWriter(localRepoFile);
-            out.write(response.body().string());
-            out.flush();
-            out.close();
+
+            if (response.code() == 200) {
+                localRepoFile.getParentFile().mkdirs();
+                FileWriter out = new FileWriter(localRepoFile);
+                out.write(response.body().string());
+                out.flush();
+                out.close();
+                return;
+            }
         }
     }
 

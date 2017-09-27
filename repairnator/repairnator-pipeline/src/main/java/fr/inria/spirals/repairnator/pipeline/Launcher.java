@@ -9,6 +9,7 @@ import fr.inria.spirals.jtravis.entities.BuildStatus;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.GithubTokenHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -387,6 +388,7 @@ public class Launcher {
             LOGGER.info("The email notifier engine will be used.");
 
             notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
+            ErrorNotifier.getInstance(notifierEngines);
         } else {
             LOGGER.info("The email notifier engine won't be used.");
         }

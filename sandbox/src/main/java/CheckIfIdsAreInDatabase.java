@@ -56,7 +56,6 @@ public class CheckIfIdsAreInDatabase {
             long total = collection.count(
                     and(
                             gt("buildReproductionDate", limitDateMay.getTime()),
-                            lt("buildReproductionDate", limitDateNow.getTime()),
                             eq("previousBuildId", buildId)
                     )
             );

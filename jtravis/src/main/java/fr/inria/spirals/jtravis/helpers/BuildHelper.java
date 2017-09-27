@@ -165,6 +165,15 @@ public class BuildHelper extends AbstractHelper {
             return buildArray;
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when trying to get builds and commits from "+resourceUrl+" : "+e.getMessage());
+            if (e.getMessage().equals("timeout")) {
+                getInstance().getLogger().warn("Timeout reached. Try to sleep 2 seconds and execute again the request.");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                return getBuildsAndCommits(resourceUrl, commits, sortBuilds);
+            }
         }
         return new JsonArray();
     }
@@ -236,7 +245,7 @@ public class BuildHelper extends AbstractHelper {
             dateReached = true;
         }
 
-        if (limitDate != null && !dateReached) {
+        if (!dateReached) {
             getBuildsFromSlugRecursively(slug, result, limitDate, lastBuildNumber, original_after_number, eventTypes, limitNumber, status, prNumber, onlyAfterNumber, previousBranch);
         } else {
             eventTypes.remove(0);
@@ -281,10 +290,12 @@ public class BuildHelper extends AbstractHelper {
         }
     }
 
+    private static final int CONSTANT_NB_OCC_FOR_FUTURE = 20;
+
     /**
      * Search recursively for a build AFTER a given build, so in its future. Take the same parameters as #getBuildsFromSlugRecursively
      * @param slug
-     * @param result
+     * @param resultByEventTypes
      * @param after_number
      * @param originalAfterNumber
      * @param eventTypes
@@ -294,25 +305,27 @@ public class BuildHelper extends AbstractHelper {
      * @param limitNumber
      * @param stop_condition_in_future
      */
-    private static void getBuildsFromSlugRecursivelyInFuture(String slug, List<Build> result, int after_number, int originalAfterNumber, List<String> eventTypes, BuildStatus status, int prNumber, String previousBranch, int limitNumber, int stop_condition_in_future) {
+    private static void getBuildsFromSlugRecursivelyInFuture(String slug, Map<String, List<Build>> resultByEventTypes, int after_number, int originalAfterNumber, List<String> eventTypes, BuildStatus status, int prNumber, String previousBranch, int limitNumber, int stop_condition_in_future) {
         if (eventTypes.isEmpty()) {
             return;
         }
 
+        String currentEventType = eventTypes.get(0);
+
         if (stop_condition_in_future == -1) {
-            stop_condition_in_future = computeStopCondition(slug, eventTypes.get(0));
+            stop_condition_in_future = computeStopCondition(slug, currentEventType);
         }
 
         boolean dateReached;
+        int lastBuildNumber = after_number;
 
         if (stop_condition_in_future >= after_number || stop_condition_in_future == 0) {
-            String resourceUrl = getResourceUrl(slug, eventTypes.get(0), after_number+20);
+            String resourceUrl = getResourceUrl(slug, currentEventType, after_number+CONSTANT_NB_OCC_FOR_FUTURE);
             dateReached = false;
 
             Map<Integer, Commit> commits = new HashMap<Integer,Commit>();
 
             JsonArray buildArray = getBuildsAndCommits(resourceUrl, commits, true);
-            int lastBuildNumber = after_number;
 
             for (JsonElement buildJson : buildArray) {
                 Build build = createGson().fromJson(buildJson, Build.class);
@@ -326,6 +339,10 @@ public class BuildHelper extends AbstractHelper {
                     int buildNumber = Integer.parseInt(build.getNumber());
                     if (buildNumber > after_number) {
                         if (isAcceptedBuild(build, prNumber, status, previousBranch)) {
+                            if (!resultByEventTypes.containsKey(currentEventType)) {
+                                resultByEventTypes.put(currentEventType, new ArrayList<Build>());
+                            }
+                            List<Build> result = resultByEventTypes.get(currentEventType);
                             result.add(build);
                         }
                         if (buildNumber > lastBuildNumber) {
@@ -336,10 +353,17 @@ public class BuildHelper extends AbstractHelper {
 
                 }
 
-                if (limitNumber != 0 && result.size() >= limitNumber) {
-                    dateReached = true;
-                    break;
+                if (limitNumber != 0) {
+                    List<Build> result = resultByEventTypes.get(currentEventType);
+                    if (result != null && result.size() >= limitNumber) {
+                        dateReached = true;
+                        break;
+                    }
                 }
+            }
+
+            if (lastBuildNumber == after_number) {
+                lastBuildNumber += 20;
             }
 
             if (stop_condition_in_future == 0) {
@@ -361,10 +385,10 @@ public class BuildHelper extends AbstractHelper {
         }
 
         if (!dateReached) {
-            getBuildsFromSlugRecursivelyInFuture(slug, result, after_number+20, originalAfterNumber, eventTypes, status, prNumber, previousBranch, limitNumber, stop_condition_in_future);
+            getBuildsFromSlugRecursivelyInFuture(slug, resultByEventTypes, lastBuildNumber, originalAfterNumber, eventTypes, status, prNumber, previousBranch, limitNumber, stop_condition_in_future);
         } else {
             eventTypes.remove(0);
-            getBuildsFromSlugRecursivelyInFuture(slug, result, originalAfterNumber, originalAfterNumber, eventTypes, status, prNumber, previousBranch, limitNumber, -1);
+            getBuildsFromSlugRecursivelyInFuture(slug, resultByEventTypes, originalAfterNumber, originalAfterNumber, eventTypes, status, prNumber, previousBranch, limitNumber, -1);
         }
     }
 
@@ -434,7 +458,7 @@ public class BuildHelper extends AbstractHelper {
         return result;
     }
 
-    public static List<Build> getBuildsFromRepositoryWithLimitDate(Repository repository) {
+    public static List<Build> getBuildsFromRepository(Repository repository) {
         return getBuildsFromRepositoryWithLimitDate(repository, null);
     }
 
@@ -490,6 +514,7 @@ public class BuildHelper extends AbstractHelper {
         String slug = build.getRepository().getSlug();
         List<Build> results = new ArrayList<Build>();
 
+
         int after_number = 0;
         try {
             after_number = Integer.parseInt(build.getNumber());
@@ -512,7 +537,13 @@ public class BuildHelper extends AbstractHelper {
 
         int limitNumber = 1;
 
-        getBuildsFromSlugRecursivelyInFuture(slug, results, after_number, after_number, eventTypes, status, prNumber, build.getCommit().getBranch(), limitNumber, -1);
+        Map<String, List<Build>> resultsByEventTypes = new HashMap<>();
+        getBuildsFromSlugRecursivelyInFuture(slug, resultsByEventTypes, after_number, after_number, eventTypes, status, prNumber, build.getCommit().getBranch(), limitNumber, -1);
+
+        for (List<Build> tempResults : resultsByEventTypes.values()) {
+            results.addAll(tempResults);
+        }
+
         if (results.size() > 0) {
             if (results.size() > 1) {
                 Collections.sort(results);

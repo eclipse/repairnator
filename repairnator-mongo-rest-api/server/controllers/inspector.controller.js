@@ -52,7 +52,7 @@ function statusStats(req, res, next) {
 }
 
 function statusStatsPeriod(req, res, next) {
-  Inspector.statusStats(req.nbWeeks)
+  Inspector.statusStats(req.nbDays)
     .then(result => res.json(result))
     .catch(e => next(e));
 }
@@ -63,4 +63,16 @@ function nbUniqueBuilds(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod };
+function reproducedBuildsAll(req, res, next) {
+  Inspector.reproducedErrors(0)
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+function reproducedBuilds(req, res, next) {
+  Inspector.reproducedErrors(req.nbDays)
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll };

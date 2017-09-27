@@ -31,7 +31,7 @@ public class UpdateDataForSpecifyingLastReproduction {
         MongoCollection collection = database.getCollection(collectionName);
 
         Calendar limitDateMay = Calendar.getInstance();
-        limitDateMay.set(2017, Calendar.MAY, 01);
+        limitDateMay.set(2017, Calendar.MAY, 10);
 
         final List<ObjectId> updatedDocs = new ArrayList<>();
 

@@ -27,9 +27,8 @@ function get(req, res) {
  * @returns {User[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  Scanner.list({ limit, skip })
-    .then(users => res.json(users))
+  Scanner.list()
+    .then(result => res.json(result))
     .catch(e => next(e));
 }
 

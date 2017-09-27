@@ -61,17 +61,13 @@ ScannerSchema.statics = {
       });
   },
 
-  /**
-   * List users in descending order of 'createdAt' timestamp.
-   * @param {number} skip - Number of users to be skipped.
-   * @param {number} limit - Limit number of users to be returned.
-   * @returns {Promise<User[]>}
-   */
-  list({ skip = 0, limit = 50 } = {}) {
-    return this.find()
-      .sort({ dateBegin: -1 })
-      .skip(+skip)
-      .limit(+limit)
+  list() {
+    return this.find({
+      totalRepoNumber: {
+        $gt: 1
+      }
+    })
+      .sort({ dateLimit: -1 })
       .exec();
   },
 
@@ -80,7 +76,7 @@ ScannerSchema.statics = {
     const gtDateIso = moment().subtract(1, 'months').toISOString();
 
     return this.find({
-      dateBegin: {
+      dateLimit: {
         $gte: gtDateIso,
         $lt: ltDateIso
       },
@@ -95,7 +91,7 @@ ScannerSchema.statics = {
     const gtDateIso = moment().subtract(nbWeeks, 'weeks').toISOString();
 
     return this.find({
-      dateBegin: {
+      dateLimit: {
         $gte: gtDateIso,
         $lt: ltDateIso
       },

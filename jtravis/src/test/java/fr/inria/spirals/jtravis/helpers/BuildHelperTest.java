@@ -1,16 +1,21 @@
 package fr.inria.spirals.jtravis.helpers;
 
 import fr.inria.spirals.jtravis.entities.*;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by urli on 22/12/2016.
@@ -240,7 +245,7 @@ public class BuildHelperTest {
 
     @Test
     public void testGetTheLastBuildNumberOfADate() {
-        Date date = TestUtils.getDate(2017, 03, 16, 22, 59, 59);
+        Date date = TestUtils.getDate(2017, 3, 16, 22, 59, 59);
 
         String slug = "Spirals-Team/librepair";
 
@@ -253,7 +258,7 @@ public class BuildHelperTest {
 
     @Test
     public void testGetTheLastBuildNumberOfADate2() {
-        Date date = TestUtils.getDate(2017, 03, 14, 22, 59, 59);
+        Date date = TestUtils.getDate(2017, 3, 14, 22, 59, 59);
 
         String slug = "Spirals-Team/librepair";
 
@@ -269,9 +274,9 @@ public class BuildHelperTest {
         Repository repo = new Repository();
         repo.setSlug("Spirals-Team/librepair");
 
-        Date initialDate = TestUtils.getDate(2017, 03, 13, 23, 00, 00);
+        Date initialDate = TestUtils.getDate(2017, 3, 13, 23, 0, 0);
 
-        Date finalDate = TestUtils.getDate(2017, 03, 16, 22, 59, 59);
+        Date finalDate = TestUtils.getDate(2017, 3, 16, 22, 59, 59);
         List<Build> builds = BuildHelper.getBuildsFromRepositoryInTimeInterval(repo, initialDate, finalDate);
 
         assertTrue(builds != null);
@@ -290,9 +295,9 @@ public class BuildHelperTest {
         Repository repo = new Repository();
         repo.setSlug("INRIA/spoon");
 
-        Date initialDate = TestUtils.getDate(2017, 06, 26, 20, 00, 00);
+        Date initialDate = TestUtils.getDate(2017, 6, 26, 20, 0, 0);
 
-        Date finalDate = TestUtils.getDate(2017, 06, 26, 21, 00, 00);
+        Date finalDate = TestUtils.getDate(2017, 6, 26, 21, 0, 0);
         List<Build> builds = BuildHelper.getBuildsFromRepositoryInTimeInterval(repo, initialDate, finalDate);
 
         assertTrue(builds != null);
@@ -344,6 +349,106 @@ public class BuildHelperTest {
 
         assertNotNull(obtained);
         assertEquals("21420", obtained.getNumber());
+    }
+
+    @Test
+    public void testGetBuildsFromSlugWithLimitDate() {
+        String slug = "surli/failingProject";
+        //Retrieve builds done after this date
+        Date limitDate = TestUtils.getDate(2017, 9, 14, 0, 0, 1);
+
+        List<Build> builds = BuildHelper.getBuildsFromSlugWithLimitDate(slug, limitDate);
+        List<String> obtainedIds = new ArrayList<String>();
+        //Unexpected build's numbers
+        List<String> unexpectedIds = Arrays.asList("273","274","275");
+
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+            //Check that the retrieved build number is not among the unexpected
+            assertFalse(unexpectedIds.contains(b.getNumber()));
+        }
+        assertNotNull(builds);
+
+        //Check that retrieved build's numbers are all in the expected build's numbers list
+        assertThat(obtainedIds, CoreMatchers.hasItems("373","374","375"));
+    }
+
+    @Test
+    public void testGetBuildsFromSlug() {
+        String slug = "surli/failingProject";
+
+        List<Build> builds = BuildHelper.getBuildsFromSlug(slug);
+        List<String> obtainedIds = new ArrayList<String>();
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+        }
+        assertNotNull(builds);
+
+        //Check that retrieved build's numbers are all in the expected build's numbers list
+        assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
+    }
+
+    @Test
+    public void testGetBuildsFromRepositoryWithLimitDate() {
+        Repository repo = new Repository();
+        repo.setSlug("google/jsonnet");
+        //Retrieve builds done after this date
+        Date limitDate = TestUtils.getDate(2017, 9, 14, 0, 0, 1);
+
+        List<Build> builds = BuildHelper.getBuildsFromRepositoryWithLimitDate(repo, limitDate);
+        List<String> obtainedIds = new ArrayList<String>();
+        List<String> unexpectedIds = Arrays.asList("273","274","275");
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+            //Check that the retrieved build number is not among the unexpected
+            assertFalse(unexpectedIds.contains(b.getNumber()));
+        }
+        assertNotNull(builds);
+
+        //Check that retrieved build's numbers are all in the expected build's numbers list
+        assertThat(obtainedIds, CoreMatchers.hasItems("685","684","679"));
+    }
+
+    @Test
+    public void testGetBuildsFromRepository() {
+        Repository repo = new Repository();
+        //repo.setSlug("surli/failingProject");
+        repo.setSlug("google/jsonnet");
+
+        List<Build> builds = BuildHelper.getBuildsFromRepository(repo);
+        List<String> obtainedIds = new ArrayList<String>();
+
+        for (Build b:builds)
+        {
+            obtainedIds.add(b.getNumber());
+        }
+        assertNotNull(builds);
+
+        //Check that retrieved build's numbers are all in the expected build's numbers list
+        //assertThat(obtainedIds, CoreMatchers.hasItems("1","373","374","375"));
+        assertThat(obtainedIds, CoreMatchers.hasItems("1","602","613","615","685"));
+    }
+
+    @Test
+    public void testDifferentBuildIdsShouldNotGiveSameInFuture() {
+        int build1 = 210419994;
+        int build2 = 207796355;
+
+        Build b1 = BuildHelper.getBuildFromId(build1, null);
+        Build b2 = BuildHelper.getBuildFromId(build2, null);
+
+        assertTrue(b1.getRepository().equals(b2.getRepository()));
+
+        Build futureB1 = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(b1, null);
+        Build futureB2 = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(b2, null);
+
+        assertFalse(futureB1.equals(futureB2));
     }
 
 }
