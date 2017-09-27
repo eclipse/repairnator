@@ -165,6 +165,15 @@ public class BuildHelper extends AbstractHelper {
             return buildArray;
         } catch (IOException e) {
             getInstance().getLogger().warn("Error when trying to get builds and commits from "+resourceUrl+" : "+e.getMessage());
+            if (e.getMessage().equals("timeout")) {
+                getInstance().getLogger().warn("Timeout reached. Try to sleep 2 seconds and execute again the request.");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                return getBuildsAndCommits(resourceUrl, commits, sortBuilds);
+            }
         }
         return new JsonArray();
     }

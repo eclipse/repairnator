@@ -1,6 +1,5 @@
 package fr.inria.spirals.jtravis.parsers;
 
-import com.sun.javafx.scene.web.Debugger;
 import fr.inria.spirals.jtravis.TestUtils;
 import fr.inria.spirals.jtravis.entities.*;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
