@@ -462,6 +462,10 @@ public class BuildHelper extends AbstractHelper {
         return getBuildsFromRepositoryWithLimitDate(repository, null);
     }
 
+    public static Build getLastBuildOfSameBranchOfStatusBeforeBuild(Build build, BuildStatus status) {
+        return BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, status, false);
+    }
+
     /**
      * Return the last build before the given build which respect the given status and which is from the same PR if it's a PR build. If given status is null, it will return the last build before.
      * If no build is found, it returns null.
@@ -469,13 +473,16 @@ public class BuildHelper extends AbstractHelper {
      * @param status
      * @return
      */
-    public static Build getLastBuildOfSameBranchOfStatusBeforeBuild(Build build, BuildStatus status) {
+    public static Build getLastBuildOfSameBranchOfStatusBeforeBuild(Build build, BuildStatus status, boolean skipDateLimit) {
         String slug = build.getRepository().getSlug();
         List<Build> results = new ArrayList<Build>();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, -1);
-        Date limitDate = calendar.getTime();
+        Date limitDate = null;
+        if (!skipDateLimit) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.YEAR, -1);
+            limitDate = calendar.getTime();
+        }
 
         int after_number = 0;
         try {
