@@ -274,3 +274,6 @@ Tencent/angel
 zxing/zxing
 iluwatar/java-design-patterns
 surli/failingProject
+vespa-engine/vespa
+qiujiayu/AutoLoadCache
+apache/rocketmq

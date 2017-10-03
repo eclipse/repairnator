@@ -40,6 +40,7 @@ public class GetTrendingsFromGithub {
 
         List<String> results = new ArrayList<String>();
 
+        System.out.println("Nb trendings: "+h3.size());
         for (Element project : h3) {
             String link = project.getElementsByTag("a").get(0).attr("href");
 
