@@ -273,3 +273,4 @@ alibaba/dubbo
 Tencent/angel
 zxing/zxing
 iluwatar/java-design-patterns
+surli/failingProject
