@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
 
-    private static final String MVN_TEST_PATTERN = "^Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*), Skipped: (\\d*)(, Time elapsed: ([\\d\\.]*) sec (<<< FAILURE! )?- in ([\\w\\.]*))?$";
+    private static final String MVN_TEST_PATTERN = "Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*), Skipped: (\\d*)(, Time elapsed: ([\\d\\.]*) sec (<<< FAILURE! )?- in ([\\w\\.]*))?$";
     private static final String MVN_GOAL_FAILED_WITH_TEST_FAILURE = "There are test failures";
 
     private Pattern mvnGoalFailPattern;
@@ -69,7 +69,7 @@ public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
 
         Matcher matcher = this.mvnTestPattern.matcher(s.trim());
 
-        if (matcher.matches()) {
+        if (matcher.find()) {
             this.runningTests += Integer.parseInt(matcher.group(1));
             int failing = Integer.parseInt(matcher.group(2));
 
@@ -88,7 +88,7 @@ public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
         }
 
         matcher = this.mvnGoalFailPattern.matcher(s.trim());
-        if (matcher.matches()) {
+        if (matcher.find()) {
             this.failingWithTest = true;
         }
     }
