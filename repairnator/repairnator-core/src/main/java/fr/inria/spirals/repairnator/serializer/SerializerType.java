@@ -10,6 +10,7 @@ public enum SerializerType {
     TIMES("times","Duration Data!A1:P1"),
     TIMES4BEARS("times4bears","Duration Data!A1:T1"),
     NOPOL("nopol","Nopol Stats!A1:T1"),
+    NPEFIX("npefix","NPEFix!A1:Z1"),
 
     // dockerpool
     TREATEDBUILD("treatedbuild","Treated Build Tracking!A1:G1"),
