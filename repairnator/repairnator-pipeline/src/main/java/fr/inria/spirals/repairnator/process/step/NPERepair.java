@@ -76,6 +76,7 @@ public class NPERepair extends AbstractStep {
                     try {
                         JsonParser jsonParser = new JsonParser();
                         JsonElement root = jsonParser.parse(new FileReader(patchesFiles));
+                        this.getInspector().getJobStatus().setNpeFixResults(root);
 
                         List<String> npePatches = new ArrayList<String>();
 
