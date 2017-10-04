@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
+import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
@@ -26,6 +27,7 @@ public class JobStatus {
 
     private List<NopolInformation> nopolInformations;
     private List<String> npeFixPatches;
+    private JsonElement npeFixResults;
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
     private String pomDirPath;
@@ -203,5 +205,13 @@ public class JobStatus {
 
     public void setFatalError(Throwable fatalError) {
         this.fatalError = fatalError;
+    }
+
+    public JsonElement getNpeFixResults() {
+        return npeFixResults;
+    }
+
+    public void setNpeFixResults(JsonElement npeFixResults) {
+        this.npeFixResults = npeFixResults;
     }
 }
