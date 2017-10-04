@@ -93,6 +93,7 @@ public class MavenHelper {
         properties.setProperty("rat.skip", "true");
         properties.setProperty("license.skip", "true");
         properties.setProperty("findbugs.skip", "true");
+        properties.setProperty("gpg.skip", "true");
         request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
