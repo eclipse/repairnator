@@ -10,6 +10,7 @@ import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.GithubTokenHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
+import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
 import fr.inria.spirals.repairnator.serializer.NPEFixSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -382,6 +383,7 @@ public class Launcher {
         }
         serializers.add(new NopolSerializer(this.engines));
         serializers.add(new NPEFixSerializer(this.engines));
+        serializers.add(new AstorSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
 
         List<NotifierEngine> notifierEngines = new ArrayList<>();

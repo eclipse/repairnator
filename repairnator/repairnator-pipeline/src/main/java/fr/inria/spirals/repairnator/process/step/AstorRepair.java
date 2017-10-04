@@ -1,13 +1,21 @@
 package fr.inria.spirals.repairnator.process.step;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import fr.inria.astor.core.entities.ProgramVariant;
+import fr.inria.astor.core.setup.ConfigurationProperties;
 import fr.inria.main.AstorOutputStatus;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.states.PipelineState;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +72,7 @@ public class AstorRepair extends AbstractStep {
         // todo explicit java 8
 
         astorArgs.add("-parameters");
-        astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000");
+        astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.astor.log");
 
         astorArgs.add("-maxtime");
         astorArgs.add("100");
@@ -94,6 +102,26 @@ public class AstorRepair extends AbstractStep {
 
         jobStatus.setAstorPatches(astorPatches);
         jobStatus.setAstorStatus(status);
+
+        String jsonpath = astorMain.getEngine().getProjectFacade().getProperties().getWorkingDirRoot() + File.separator + ConfigurationProperties.getProperty("jsonoutputname") + ".json";
+
+        File jsonResultFile = new File(jsonpath);
+        if (jsonResultFile.exists()) {
+
+            try {
+                FileUtils.copyFile(jsonResultFile, new File(this.getInspector().getRepoLocalPath()+"/repairnator.astor.results.json"));
+            } catch (IOException e) {
+                this.addStepError("Error while moving astor JSON results", e);
+            }
+
+            JsonParser jsonParser = new JsonParser();
+            try {
+                JsonElement root = jsonParser.parse(new FileReader(jsonResultFile));
+                this.getInspector().getJobStatus().setAstorResults(root);
+            } catch (FileNotFoundException e) {
+                this.addStepError("Error while reading astor JSON results", e);
+            }
+        }
 
         if (astorPatches.isEmpty()) {
             this.setPipelineState(PipelineState.ASTOR_NOTPATCHED);

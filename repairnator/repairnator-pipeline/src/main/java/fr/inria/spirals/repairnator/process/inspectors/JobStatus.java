@@ -30,6 +30,7 @@ public class JobStatus {
     private List<NopolInformation> nopolInformations;
     private List<String> npeFixPatches;
 
+    private JsonElement astorResults;
     private List<String> astorPatches;
     private AstorOutputStatus astorStatus;
 
@@ -236,5 +237,13 @@ public class JobStatus {
 
     public void setNpeFixResults(JsonElement npeFixResults) {
         this.npeFixResults = npeFixResults;
+    }
+
+    public JsonElement getAstorResults() {
+        return astorResults;
+    }
+
+    public void setAstorResults(JsonElement astorResults) {
+        this.astorResults = astorResults;
     }
 }
