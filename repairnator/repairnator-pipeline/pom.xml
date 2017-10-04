@@ -42,6 +42,11 @@
             <artifactId>maven-model-builder</artifactId>
             <version>3.3.9</version>
         </dependency>
+        <dependency>
+            <groupId>org.inria.sacha.automaticRepair</groupId>
+            <artifactId>astor</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

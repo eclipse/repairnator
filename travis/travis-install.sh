@@ -48,3 +48,16 @@ then
     echo "Error while installing NPEfix"
     exit 1
 fi
+
+cd ../..
+git clone https://github.com/SpoonLabs/astor.git
+cd astor
+
+mvn clean
+mvn install -DskipTests=true
+
+if [[ $? != 0 ]]
+then
+    echo "Error while installing Astor"
+    exit 1
+fi

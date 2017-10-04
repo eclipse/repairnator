@@ -148,6 +148,7 @@ public class ProjectInspector {
                     .setNextStep(new NPERepair(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this, false))
+                    .setNextStep(new AstorRepair(this))
                     .setNextStep(new NopolRepair(this))
                     .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))
