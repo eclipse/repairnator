@@ -73,10 +73,8 @@ public class AstorRepair extends AbstractStep {
             //astorArgs.add("-loglevel");
             //astorArgs.add("DEBUG");
 
-            // todo explicit java 8
-
             astorArgs.add("-parameters");
-            astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.astor.log");
+            astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.astor.log");
 
             astorArgs.add("-maxtime");
             astorArgs.add("100");
