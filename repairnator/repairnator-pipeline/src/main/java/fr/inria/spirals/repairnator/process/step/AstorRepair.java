@@ -102,6 +102,8 @@ public class AstorRepair extends AbstractStep {
                 this.addStepError("Error while executing astor with args: "+ StringUtils.join(astorArgs,","), e);
             }
 
+            jobStatus.addFileToPush("repairnator.astor.log");
+
             jobStatus.setAstorPatches(astorPatches);
             jobStatus.setAstorStatus(status);
 
@@ -123,6 +125,8 @@ public class AstorRepair extends AbstractStep {
                 } catch (FileNotFoundException e) {
                     this.addStepError("Error while reading astor JSON results", e);
                 }
+
+                jobStatus.addFileToPush("repairnator.astor.results.json");
             }
 
             if (astorPatches.isEmpty()) {

@@ -201,6 +201,8 @@ public class NopolRepair extends AbstractStep {
 
             File nopolProperties = new File(this.getInspector().getRepoLocalPath()+"/repairnator.nopol.results");
 
+            this.getInspector().getJobStatus().addFileToPush("repairnator.nopol.results");
+
             File patchDir = new File(this.getInspector().getRepoLocalPath()+"/repairnatorPatches");
 
             patchDir.mkdir();

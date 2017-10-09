@@ -69,6 +69,8 @@ public class NPERepair extends AbstractStep {
                         this.addStepError("Error while moving NPE fix results", e);
                     }
 
+                    this.getInspector().getJobStatus().addFileToPush("repairnator.npefix.results");
+
                     boolean effectivelyPatched = false;
                     File patchDir = new File(this.getInspector().getRepoLocalPath()+"/repairnatorPatches");
 

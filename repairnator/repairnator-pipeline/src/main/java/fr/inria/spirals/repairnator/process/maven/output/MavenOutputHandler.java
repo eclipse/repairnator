@@ -32,6 +32,7 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
         String filename = "repairnator.maven." + name.toLowerCase() + ".log";
         String filePath = inspector.getRepoLocalPath() + "/" + filename;
 
+        inspector.getJobStatus().addFileToPush(filename);
         try {
             this.fileWriter = new FileWriter(filePath);
         } catch (IOException e) {
