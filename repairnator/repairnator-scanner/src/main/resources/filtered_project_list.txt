@@ -277,3 +277,5 @@ surli/failingProject
 vespa-engine/vespa
 qiujiayu/AutoLoadCache
 apache/rocketmq
+lennartkoopmann/nzyme
+uber/AthenaX
