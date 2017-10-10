@@ -86,7 +86,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                     return;
                 }
 
-                gitHelper.addAndCommitRepairnatorLogAndProperties(git, "After getting PR information");
+                gitHelper.addAndCommitRepairnatorLogAndProperties(this.getInspector().getJobStatus(), git, "After getting PR information");
 
                 String repository = this.inspector.getRepoSlug();
                 this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");

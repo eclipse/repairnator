@@ -52,6 +52,8 @@ public class JobStatus {
 
     private Metrics metrics;
 
+    private List<String> createdFilesToPush;
+
     public JobStatus(String pomDirPath) {
         this.pipelineState = PipelineState.NONE;
         this.stepErrors = new HashMap<>();
@@ -59,6 +61,7 @@ public class JobStatus {
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
+        this.createdFilesToPush = new ArrayList<>();
     }
 
     public PipelineState getPipelineState() {
@@ -245,5 +248,13 @@ public class JobStatus {
 
     public void setAstorResults(JsonElement astorResults) {
         this.astorResults = astorResults;
+    }
+
+    public void addFileToPush(String filePath) {
+        this.createdFilesToPush.add(filePath);
+    }
+
+    public List<String> getCreatedFilesToPush() {
+        return createdFilesToPush;
     }
 }

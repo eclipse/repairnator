@@ -4,6 +4,7 @@ import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.Commit;
 import fr.inria.spirals.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import okhttp3.Call;
@@ -80,7 +81,7 @@ public class GitHelper {
         return null;
     }
 
-    public boolean addAndCommitRepairnatorLogAndProperties(Git git, String commitMsg) {
+    public boolean addAndCommitRepairnatorLogAndProperties(JobStatus status, Git git, String commitMsg) {
         if (!RepairnatorConfig.getInstance().isPush()) {
             return false;
         }
@@ -95,13 +96,13 @@ public class GitHelper {
                 filesChanged.addAll(gitStatus.getUntracked());
                 filesChanged.addAll(gitStatus.getUntrackedFolders());
 
-                List<String> filesToAdd = new ArrayList<>();
+                List<String> filesToAdd = new ArrayList<>(status.getCreatedFilesToPush());
                 List<String> filesToCheckout = new ArrayList<>();
                 for (String fileName : filesChanged) {
-                    if (fileName.contains("repairnator")) {
-                        filesToAdd.add(fileName);
-                    } else {
+                    if (!fileName.contains("repairnator")) {
                         filesToCheckout.add(fileName);
+                    } else {
+                        filesToAdd.add(fileName);
                     }
                 }
 
@@ -163,7 +164,7 @@ public class GitHelper {
      */
     private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
-            addAndCommitRepairnatorLogAndProperties(git, "Commit done before retrieving a commit from GH API.");
+            addAndCommitRepairnatorLogAndProperties(step.getInspector().getJobStatus(), git, "Commit done before retrieving a commit from GH API.");
             GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
 
