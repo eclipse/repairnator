@@ -185,7 +185,7 @@ public class TestProjectInspector {
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
-        verify(notifierEngine, times(1)).notify(anyString(), anyString());
+        verify(notifierEngine, times(3)).notify(anyString(), anyString()); // notify for Astor, NPEFix and Nopol
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.NOPOL));
 
@@ -286,7 +286,7 @@ public class TestProjectInspector {
         assertThat(jobStatus.isHasBeenPatched(), is(true));
         assertThat(jobStatus.getNpeFixPatches().size(), is(6));
 
-        verify(notifierEngine, times(1)).notify(anyString(), anyString());
+        verify(notifierEngine, times(2)).notify(anyString(), anyString()); // Nopol and NPEFix
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.NOPOL));
 
