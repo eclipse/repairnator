@@ -131,11 +131,19 @@ public class GitHelper {
                 }
 
                 this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
-                AddCommand addCommand = git.add();
-                for (String file : filesToAdd) {
-                    addCommand.addFilepattern(file);
+
+                // add force is not supported by JGit...
+                ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", StringUtils.join(filesToAdd, " "))
+                        .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+
+                try {
+                    Process p = processBuilder.start();
+                    p.waitFor();
+                } catch (InterruptedException|IOException e) {
+                    this.getLogger().error("Error while executing git command to add files: " + e);
+                    return false;
                 }
-                addCommand.call();
+
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
                         .setAuthor(personIdent).call();
