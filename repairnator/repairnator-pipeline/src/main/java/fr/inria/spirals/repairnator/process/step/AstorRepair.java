@@ -62,7 +62,7 @@ public class AstorRepair extends AbstractStep {
             astorArgs.add(jobStatus.getFailingModulePath());
 
             astorArgs.add("-srcjavafolder");
-            astorArgs.add(jobStatus.getRepairSourceDir()[0].getAbsolutePath());
+            astorArgs.add(jobStatus.getRepairSourceDir()[0].getPath());
 
             astorArgs.add("-stopfirst");
             astorArgs.add("true");
