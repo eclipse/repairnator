@@ -61,8 +61,9 @@ public class AstorRepair extends AbstractStep {
             astorArgs.add("-location");
             astorArgs.add(jobStatus.getFailingModulePath());
 
+            String relativeSourcePath = new File(this.getInspector().getRepoLocalPath()).toURI().relativize(jobStatus.getRepairSourceDir()[0].toURI()).getPath();
             astorArgs.add("-srcjavafolder");
-            astorArgs.add(jobStatus.getRepairSourceDir()[0].getPath());
+            astorArgs.add(relativeSourcePath);
 
             astorArgs.add("-stopfirst");
             astorArgs.add("true");
@@ -107,27 +108,35 @@ public class AstorRepair extends AbstractStep {
             jobStatus.setAstorPatches(astorPatches);
             jobStatus.setAstorStatus(status);
 
-            String jsonpath = astorMain.getEngine().getProjectFacade().getProperties().getWorkingDirRoot() + File.separator + ConfigurationProperties.getProperty("jsonoutputname") + ".json";
-
-            File jsonResultFile = new File(jsonpath);
-            if (jsonResultFile.exists()) {
-
-                try {
-                    FileUtils.copyFile(jsonResultFile, new File(this.getInspector().getRepoLocalPath()+"/repairnator.astor.results.json"));
-                } catch (IOException e) {
-                    this.addStepError("Error while moving astor JSON results", e);
-                }
-
-                JsonParser jsonParser = new JsonParser();
-                try {
-                    JsonElement root = jsonParser.parse(new FileReader(jsonResultFile));
-                    this.getInspector().getJobStatus().setAstorResults(root);
-                } catch (FileNotFoundException e) {
-                    this.addStepError("Error while reading astor JSON results", e);
-                }
-
-                jobStatus.addFileToPush("repairnator.astor.results.json");
+            String jsonpath;
+            try {
+                jsonpath = astorMain.getEngine().getProjectFacade().getProperties().getWorkingDirRoot() + File.separator + ConfigurationProperties.getProperty("jsonoutputname") + ".json";
+            } catch (NullPointerException e) {
+                jsonpath = null;
             }
+
+            if (jsonpath != null) {
+                File jsonResultFile = new File(jsonpath);
+                if (jsonResultFile.exists()) {
+
+                    try {
+                        FileUtils.copyFile(jsonResultFile, new File(this.getInspector().getRepoLocalPath()+"/repairnator.astor.results.json"));
+                    } catch (IOException e) {
+                        this.addStepError("Error while moving astor JSON results", e);
+                    }
+
+                    JsonParser jsonParser = new JsonParser();
+                    try {
+                        JsonElement root = jsonParser.parse(new FileReader(jsonResultFile));
+                        this.getInspector().getJobStatus().setAstorResults(root);
+                    } catch (FileNotFoundException e) {
+                        this.addStepError("Error while reading astor JSON results", e);
+                    }
+
+                    jobStatus.addFileToPush("repairnator.astor.results.json");
+                }
+            }
+
 
             if (astorPatches.isEmpty()) {
                 this.setPipelineState(PipelineState.ASTOR_NOTPATCHED);
