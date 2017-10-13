@@ -61,7 +61,7 @@ public class AstorRepair extends AbstractStep {
             astorArgs.add("-location");
             astorArgs.add(jobStatus.getFailingModulePath());
 
-            String relativeSourcePath = new File(this.getInspector().getRepoLocalPath()).toURI().relativize(jobStatus.getRepairSourceDir()[0].toURI()).getPath();
+            String relativeSourcePath = new File(jobStatus.getFailingModulePath()).toURI().relativize(jobStatus.getRepairSourceDir()[0].toURI()).getPath();
             astorArgs.add("-srcjavafolder");
             astorArgs.add(relativeSourcePath);
 
