@@ -1,9 +1,15 @@
+* https://github.com/surli/bugs-collection/tree/airlift-airlift-202365700-20170216-201829
 * https://github.com/surli/bugs-collection/tree/apache-httpcomponents-core-202486632-20170217-185349
 * https://github.com/surli/bugs-collection/tree/apache-pdfbox-202398719-20170217-131140
 * https://github.com/surli/bugs-collection/tree/apache-pdfbox-202398785-20170217-131557
 * https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-202538093-20170217-091817
 * https://github.com/surli/bugs-collection/tree/brettwooldridge-HikariCP-202846590-20170218-041355
 * https://github.com/surli/bugs-collection/tree/DiUS-java-faker-203263025-20170219-233644
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-203306015-20170220-035522
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-204682356-20170223-190453
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-202613662-20170217-143538
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-202613698-20170217-143558
+* https://github.com/surli/bugs-collection/tree/geotools-geotools-203116807-20170219-111012
 * https://github.com/surli/bugs-collection/tree/google-error-prone-202363212-20170216-214129
 * https://github.com/surli/bugs-collection/tree/google-error-prone-202511779-20170217-071046
 * https://github.com/surli/bugs-collection/tree/google-error-prone-202850608-20170218-050120
@@ -14,6 +20,7 @@
 * https://github.com/surli/bugs-collection/tree/INRIA-spoon-203780350-20170221-131611
 * https://github.com/surli/bugs-collection/tree/joel-costigliola-assertj-core-203109069-20170219-094343
 * https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-202888637-20170218-102033
+* https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-204137363-20170222-113427
 * https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-204598001-20170223-152058
 * https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-204268519-20170222-181904
 * https://github.com/surli/bugs-collection/tree/owlcs-owlapi-204105870-20170222-092224

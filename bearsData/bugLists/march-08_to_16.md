@@ -1,7 +1,10 @@
 * https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-209001942-20170308-161152
 * https://github.com/surli/bugs-collection/tree/AxonFramework-AxonFramework-209391860-20170309-163738
 * https://github.com/surli/bugs-collection/tree/CloudSlang-cloud-slang-211407112-20170315-170953
+* https://github.com/surli/bugs-collection/tree/CloudSlang-cloud-slang-211407128-20170315-171624
 * https://github.com/surli/bugs-collection/tree/code4craft-webmagic-209979669-20170311-044342
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-elastic-job-208912520-20170308-111018
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-elastic-job-209260358-20170309-103307
 * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-208887726-20170308-094614
 * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-209308955-20170309-122019
 * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-209667540-20170310-095304
@@ -32,4 +35,6 @@
 * https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-208900204-20170308-101944
 * https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-209806963-20170310-173655
 * https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-210844747-20170314-075049
+* https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-210845272-20170314-075532
+* https://github.com/surli/bugs-collection/tree/spring-projects-spring-data-commons-210845278-20170314-075739
 * https://github.com/surli/bugs-collection/tree/tananaev-traccar-210805595-20170314-041225

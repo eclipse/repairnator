@@ -1,9 +1,13 @@
 * https://github.com/surli/bugs-collection/tree/brettwooldridge-HikariCP-189217673-20170105-162855
+* https://github.com/surli/bugs-collection/tree/brettwooldridge-HikariCP-189771670-20170107-131115
 * https://github.com/surli/bugs-collection/tree/brettwooldridge-HikariCP-189802471-20170107-162256
 * https://github.com/surli/bugs-collection/tree/CloudSlang-cloud-slang-188457974-20170103-092543
+* https://github.com/surli/bugs-collection/tree/CorfuDB-CorfuDB-188737533-20170104-044238
 * https://github.com/surli/bugs-collection/tree/CorfuDB-CorfuDB-189043821-20170105-022444
 * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-189476479-20170106-122734
 * https://github.com/surli/bugs-collection/tree/fabric8io-docker-maven-plugin-188341607-20170102-215813
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-188574532-20170103-172354
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-188574628-20170103-174109
 * https://github.com/surli/bugs-collection/tree/INRIA-spoon-188570626-20170103-170921
 * https://github.com/surli/bugs-collection/tree/INRIA-spoon-188570662-20170103-170916
 * https://github.com/surli/bugs-collection/tree/INRIA-spoon-189186902-20170105-145841
@@ -16,5 +20,7 @@
 * https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-188279663-20170102-174706
 * https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-188283103-20170102-180112
 * https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-188876237-20170104-162400
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-189127191-20170105-110328
 * https://github.com/surli/bugs-collection/tree/sakaiproject-sakai-189545107-20170106-171949
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-188474474-20170103-104906
 * https://github.com/surli/bugs-collection/tree/tananaev-traccar-189629472-20170106-215254
