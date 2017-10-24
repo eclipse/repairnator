@@ -1,20 +1,26 @@
-Analyze started: 2017-08-03_105128
+Analyze started: 2017-10-24_142747
 Considered repository: https://github.com/surli/bugs-collection
+FasterXML-jackson-databind-198387397-20170204-195701 [OK]
+FasterXML-jackson-databind-198387901-20170204-195947 [OK]
 apache-opennlp-198362767-20170204-231510 [OK]
-AsyncHttpClient-async-http-client-199393627-20170207-225243 [OK]
+joel-costigliola-assertj-core-198756452-20170206-090031 [FAILURE] (patch reproduction - status = 1)
+AsyncHttpClient-async-http-client-199393627-20170207-225243 [FAILURE] (patch reproduction - status = 1)
 airlift-airlift-199058829-20170207-025514 [FAILURE] (patch reproduction - status = 1)
 INRIA-spoon-197568565-20170202-093121 [OK]
-INRIA-spoon-197674087-20170202-162743 [OK]
 google-error-prone-199115933-20170207-082608 [OK]
 google-error-prone-199117909-20170207-083554 [OK]
+INRIA-spoon-197674087-20170202-162743 [OK]
 phoenixnap-springmvc-raml-plugin-198771382-20170206-101146 [OK]
-phoenixnap-springmvc-raml-plugin-198800641-20170206-120939 [OK]
 languagetool-org-languagetool-198134688-20170203-211927 [OK]
-tananaev-traccar-199065600-20170207-032720 [OK]
+phoenixnap-springmvc-raml-plugin-198800641-20170206-120939 [OK]
+owlcs-owlapi-197568283-20170202-092945 [OK]
+tananaev-traccar-198488474-20170205-064746 [OK]
+prometheus-client_java-198832977-20170206-142002 [FAILURE] (bug reproduction - status = 0)
 languagetool-org-languagetool-198289744-20170204-111513 [OK]
-rest-assured-rest-assured-198741142-20170206-072342 [OK]
+tananaev-traccar-199065600-20170207-032720 [OK]
 languagetool-org-languagetool-198396274-20170204-205109 [OK]
+rest-assured-rest-assured-198741142-20170206-072342 [OK]
 oVirt-ovirt-engine-197223122-20170201-093421 [OK]
 languagetool-org-languagetool-198649899-20170205-220735 [OK]
 languagetool-org-languagetool-199396287-20170207-230305 [OK]
-Analyze finished: 2017-08-03_111519
+Analyze finished: 2017-10-24_144937
