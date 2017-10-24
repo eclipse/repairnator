@@ -1,20 +1,34 @@
-Analyze started: 2017-08-03_102433
+Analyze started: 2017-10-24_134942
 Considered repository: https://github.com/surli/bugs-collection
-FasterXML-jackson-databind-195777970-20170127-074320 [OK]
+FasterXML-jackson-databind-195044059-20170125-040217 [OK]
+FasterXML-jackson-databind-195069327-20170125-064552 [OK]
+FasterXML-jackson-databind-195044326-20170125-040431 [OK]
 FasterXML-jackson-databind-195433804-20170126-065819 [OK]
+FasterXML-jackson-databind-195777970-20170127-074320 [OK]
+apache-pdfbox-196326741-20170129-141446 [OK]
+apache-pdfbox-196329896-20170129-143446 [OK]
 brettwooldridge-HikariCP-194696936-20170124-042357 [FAILURE] (bug reproduction - status = 0)
-IQSS-dataverse-194874155-20170124-172620 [OK]
+graphhopper-graphhopper-195584866-20170126-174047 [FAILURE] (patch reproduction - status = 1)
+dangdangdotcom-sharding-jdbc-195429824-20170126-062105 [OK]
 AxonFramework-AxonFramework-195492579-20170126-120910 [OK]
-qos-ch-slf4j-195421925-20170126-052412 [FAILURE] (bug reproduction - status = 0)
+IQSS-dataverse-194874155-20170124-172620 [OK]
+IQSS-dataverse-194904112-20170124-185458 [OK]
+IQSS-dataverse-196007858-20170127-222512 [OK]
+OWASP-java-html-sanitizer-195576669-20170126-170947 [OK]
+owlcs-owlapi-196327422-20170129-140655 [OK]
+OpenGamma-Strata-196641047-20170130-173511 [OK]
+INRIA-spoon-196966996-20170131-155013 [OK]
+relayrides-pushy-197064752-20170131-203006 [OK]
+square-retrofit-196654518-20170130-181037 [OK]
 tananaev-traccar-194695079-20170124-040824 [OK]
+owlcs-owlapi-196387284-20170129-195026 [OK]
 tananaev-traccar-195455832-20170126-092107 [OK]
 tipsy-j2html-196345192-20170129-155050 [OK]
-INRIA-spoon-196966996-20170131-155013 [OK]
-OpenGamma-Strata-196641047-20170130-173511 [OK]
-unic-neba-195364051-20170125-234531 [OK]
+TridentSDK-TridentSDK-196081151-20170128-060807 [OK]
 konsoletyper-teavm-194955933-20170124-220645 [OK]
+unic-neba-195364051-20170125-234531 [OK]
 konsoletyper-teavm-194960761-20170124-222912 [OK]
 konsoletyper-teavm-196200926-20170128-210018 [OK]
-geotools-geotools-195930442-20170127-180632 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-195930442-20170127-180632 [FAILURE] (bug reproduction timeout)
 geotools-geotools-195930177-20170127-180402 [FAILURE] (patch reproduction - status = 1)
-Analyze finished: 2017-08-03_104842
+Analyze finished: 2017-10-24_142457
