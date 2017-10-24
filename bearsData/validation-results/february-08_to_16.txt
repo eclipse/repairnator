@@ -1,20 +1,38 @@
-Analyze started: 2017-08-03_111746
+Analyze started: 2017-10-24_145135
 Considered repository: https://github.com/surli/bugs-collection
+apache-opennlp-200074927-20170210-031853 [OK]
+apache-opennlp-201807115-20170215-210347 [OK]
+apache-pdfbox-200469937-20170211-034835 [OK]
+apache-pdfbox-200468887-20170211-034203 [OK]
 fabric8io-docker-maven-plugin-200121516-20170209-213648 [OK]
 AxonFramework-AxonFramework-201069901-20170213-104541 [OK]
+brettwooldridge-HikariCP-200227067-20170210-043253 [OK]
+CorfuDB-CorfuDB-201221284-20170213-192940 [FAILURE] (bug reproduction - status = 0)
+airlift-airlift-199455329-20170208-022322 [FAILURE] (patch reproduction - status = 1)
+joel-costigliola-assertj-core-200820735-20170212-094005 [OK]
+joel-costigliola-assertj-core-201441809-20170214-101738 [FAILURE] (patch reproduction - status = 1)
 INRIA-spoon-200108848-20170209-210623 [OK]
+google-error-prone-201383661-20170214-050754 [OK]
 konsoletyper-teavm-200463937-20170210-205224 [OK]
 konsoletyper-teavm-200487091-20170210-220924 [OK]
-languagetool-org-languagetool-199557977-20170208-112049 [OK]
-languagetool-org-languagetool-199579811-20170208-124913 [OK]
-phoenixnap-springmvc-raml-plugin-201822031-20170215-114524 [OK]
-tananaev-traccar-199856643-20170209-050001 [OK]
+geotools-geotools-201870550-20170215-152314 [FAILURE] (patch reproduction - status = 1)
 konsoletyper-teavm-200608912-20170211-105128 [FAILURE] (bug reproduction - status = 0)
-tananaev-traccar-201725578-20170215-023857 [OK]
-geotools-geotools-200471521-20170210-212700 [FAILURE] (bug reproduction timeout)
-geotools-geotools-201830222-20170215-124919 [FAILURE] (bug reproduction timeout)
+languagetool-org-languagetool-199557977-20170208-112049 [OK]
+phoenixnap-springmvc-raml-plugin-201161981-20170213-163046 [OK]
+phoenixnap-springmvc-raml-plugin-201822031-20170215-114524 [OK]
 geotools-geotools-200453405-20170210-203142 [FAILURE] (bug reproduction timeout)
+geotools-geotools-200471521-20170210-212700 [FAILURE] (bug reproduction timeout)
 geotools-geotools-201573360-20170214-182354 [FAILURE] (bug reproduction timeout)
+geotools-geotools-201830222-20170215-124919 [FAILURE] (bug reproduction timeout)
+languagetool-org-languagetool-199579811-20170208-124913 [OK]
+square-retrofit-201301493-20170213-233338 [OK]
+square-retrofit-201302298-20170213-233734 [OK]
+tananaev-traccar-199856643-20170209-050001 [OK]
+spring-projects-spring-data-commons-201125485-20170213-143437 [OK]
+tananaev-traccar-200758664-20170212-001808 [OK]
+tananaev-traccar-201013389-20170213-044640 [OK]
+tananaev-traccar-201725578-20170215-023857 [OK]
+spring-projects-spring-data-commons-201125498-20170213-144002 [OK]
 languagetool-org-languagetool-199807997-20170209-004156 [OK]
 konsoletyper-teavm-200737013-20170211-224537 [OK]
-Analyze finished: 2017-08-03_120222
+Analyze finished: 2017-10-24_154046
