@@ -1,35 +1,51 @@
-Analyze started: 2017-08-03_161715
+Analyze started: 2017-10-24_171402
 Considered repository: https://github.com/surli/bugs-collection
-FasterXML-jackson-databind-208840427-20170308-045647 [OK]
 apache-opennlp-207136984-20170304-010354 [OK]
+dangdangdotcom-sharding-jdbc-207019937-20170302-160441 [OK]
+dangdangdotcom-sharding-jdbc-206571512-20170301-124738 [OK]
 CloudSlang-cloud-slang-208513758-20170307-100911 [OK]
+CorfuDB-CorfuDB-207818994-20170305-043055 [FAILURE] (bug reproduction - status = 0)
 AxonFramework-AxonFramework-207143564-20170302-215509 [OK]
-AxonFramework-AxonFramework-209001942-20170308-161152 [OK]
-google-error-prone-206415065-20170301-021253 [OK]
-geotools-geotools-207295203-20170303-104200 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-206964326-20170302-130057 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-206544447-20170301-112617 [FAILURE] (patch reproduction - status = 1)
+CorfuDB-CorfuDB-206847614-20170302-034253 [OK]
+dangdangdotcom-elastic-job-206509630-20170301-085236 [OK]
+geotools-geotools-206544447-20170301-112617 [FAILURE] (bug reproduction timeout)
+geotools-geotools-206568573-20170301-125005 [FAILURE] (bug reproduction timeout)
+geotools-geotools-206568666-20170301-125451 [FAILURE] (bug reproduction timeout)
+geotools-geotools-206964326-20170302-130057 [FAILURE] (bug reproduction timeout)
+geotools-geotools-207295203-20170303-104200 [FAILURE] (bug reproduction timeout)
 graphhopper-graphhopper-206564536-20170301-121037 [FAILURE] (patch reproduction - status = 1)
-GwtMaterialDesign-gwt-material-207325835-20170303-122543 [OK]
-geotools-geotools-207701019-20170304-173622 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-207701263-20170304-173723 [FAILURE] (patch reproduction - status = 1)
 geotools-geotools-207295301-20170303-104552 [FAILURE] (bug reproduction timeout)
-google-error-prone-207191589-20170303-002402 [OK]
 geotools-geotools-207700946-20170304-172951 [FAILURE] (bug reproduction timeout)
-google-error-prone-208833066-20170308-042532 [OK]
+GwtMaterialDesign-gwt-material-206458054-20170301-033144 [OK]
+geotools-geotools-207701019-20170304-173622 [FAILURE] (bug reproduction timeout)
+GwtMaterialDesign-gwt-material-207325835-20170303-122543 [OK]
+hypercube1024-firefly-207237999-20170303-040724 [FAILURE] (bug reproduction - status = 0)
+GwtMaterialDesign-gwt-material-207325857-20170303-122303 [OK]
+google-error-prone-206415065-20170301-021253 [OK]
+google-error-prone-207191589-20170303-002402 [OK]
+INRIA-spoon-207361743-20170303-145353 [OK]
+HubSpot-Singularity-208769544-20170307-234639 [OK]
 phoenixnap-springmvc-raml-plugin-206505191-20170301-082426 [FAILURE] (patch reproduction - status = 1)
 phoenixnap-springmvc-raml-plugin-206689412-20170301-183329 [FAILURE] (patch reproduction - status = 1)
+languagetool-org-languagetool-207488295-20170303-211345 [OK]
 phoenixnap-springmvc-raml-plugin-207006501-20170302-150633 [FAILURE] (patch reproduction - status = 1)
-phoenixnap-springmvc-raml-plugin-208900204-20170308-101944 [FAILURE] (patch reproduction - status = 1)
-HubSpot-Singularity-208769544-20170307-234639 [OK]
-INRIA-spoon-207361743-20170303-145353 [OK]
-languagetool-org-languagetool-208924346-20170308-115130 [OK]
+prometheus-client_java-207106309-20170302-195712 [FAILURE] (bug reproduction - status = 0)
 oVirt-ovirt-engine-206552510-20170301-141618 [OK]
-spring-projects-spring-data-commons-208573790-20170307-135540 [OK]
 oVirt-ovirt-engine-206553152-20170301-152327 [OK]
-tananaev-traccar-206851755-20170302-035523 [OK]
-spring-projects-spring-data-commons-208573806-20170307-135707 [OK]
-oVirt-ovirt-engine-206553844-20170301-160826 [OK]
+geotools-geotools-207701263-20170304-173723 [FAILURE] (patch reproduction - status = 1)
 oVirt-ovirt-engine-206553274-20170301-151736 [OK]
+oVirt-ovirt-engine-206553844-20170301-160826 [OK]
+geotools-geotools-208197767-20170306-150013 [FAILURE] (patch reproduction - status = 1)
+spring-projects-spring-data-commons-206643702-20170301-164028 [OK]
+spring-projects-spring-data-commons-206643745-20170301-164317 [OK]
+spring-projects-spring-data-commons-206643835-20170301-165042 [OK]
+tananaev-traccar-206851755-20170302-035523 [OK]
+sakaiproject-sakai-207076986-20170302-184527 [FAILURE] (bug reproduction - status = 0)
+spring-projects-spring-data-commons-208573790-20170307-135540 [OK]
+tananaev-traccar-207563891-20170304-013036 [OK]
+spring-projects-spring-data-commons-208573806-20170307-135707 [OK]
+spring-cloud-spring-cloud-aws-207107820-20170302-200246 [OK]
+sakaiproject-sakai-208364571-20170306-224852 [OK]
 sakaiproject-sakai-207448875-20170303-190836 [OK]
-Analyze finished: 2017-08-03_170924
+spring-cloud-spring-cloud-aws-207203151-20170303-010406 [OK]
+Analyze finished: 2017-10-24_182014
