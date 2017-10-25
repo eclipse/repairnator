@@ -1,31 +1,44 @@
-Analyze started: 2017-08-04_122842
+Analyze started: 2017-10-25_145112
 Considered repository: https://github.com/surli/bugs-collection
-alibaba-fastjson-218805396-20170405-112212 [OK]
+alibaba-fastjson-218926026-20170405-173818 [OK]
 alibaba-fastjson-217796138-20170402-164933 [OK]
 alibaba-fastjson-219207210-20170406-112240 [OK]
-AxonFramework-AxonFramework-218902195-20170405-163820 [FAILURE] (patch reproduction - status = 1)
+alibaba-fastjson-218805396-20170405-112212 [OK]
+alibaba-fastjson-218478144-20170404-162012 [OK]
+alibaba-fastjson-218449961-20170404-150623 [OK]
+AxonFramework-AxonFramework-218785678-20170405-101727 [FAILURE] (patch reproduction - status = 1)
 apache-pdfbox-218525074-20170404-181657 [OK]
-AxonFramework-AxonFramework-218785678-20170405-101727 [FAILURE] (bug reproduction - status = 0)
+AxonFramework-AxonFramework-218902195-20170405-163820 [FAILURE] (patch reproduction - status = 1)
+CloudSlang-cloud-slang-218426840-20170404-135428 [OK]
 Flipkart-foxtrot-218233956-20170403-230300 [OK]
 Flipkart-foxtrot-219638047-20170407-130445 [OK]
+HubSpot-Singularity-219027226-20170405-222951 [FAILURE] (bug reproduction - status = 0)
+HubSpot-Singularity-217387859-20170401-013140 [OK]
+HubSpot-Singularity-219036670-20170405-230939 [FAILURE] (patch reproduction - status = 1)
+HubSpot-Singularity-219318068-20170406-173322 [FAILURE] (bug reproduction - status = 0)
 hypercube1024-firefly-217554387-20170401-181133 [FAILURE] (patch reproduction - status = 1)
-hypercube1024-firefly-217936884-20170403-055243 [FAILURE] (patch reproduction - status = 1)
-hypercube1024-firefly-219603247-20170407-105821 [FAILURE] (bug reproduction - status = 0)
-HubSpot-Singularity-219036670-20170405-230939 [OK]
-jpush-jpush-api-java-client-218726227-20170405-050843 [OK]
 HubSpot-Singularity-219036703-20170405-230713 [FAILURE] (patch reproduction - status = 1)
+hypercube1024-firefly-219603247-20170407-105821 [FAILURE] (bug reproduction - status = 0)
+hypercube1024-firefly-217936884-20170403-055243 [OK]
 HubSpot-Singularity-219036756-20170405-230737 [OK]
-HubSpot-Singularity-219859842-20170407-233442 [OK]
-pac4j-vertx-pac4j-219580211-20170407-093510 [OK]
+jpush-jpush-api-java-client-218726227-20170405-050843 [OK]
+jpush-jpush-api-java-client-218726495-20170405-051213 [OK]
+geotools-geotools-218891762-20170405-163553 [FAILURE] (patch reproduction - status = 1)
+IQSS-dataverse-218653354-20170405-000213 [OK]
+geotools-geotools-219565066-20170407-085110 [FAILURE] (patch reproduction - status = 1)
+HubSpot-Singularity-219859842-20170407-233442 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-219788727-20170407-201415 [FAILURE] (patch reproduction - status = 1)
 phoenixnap-springmvc-raml-plugin-217972670-20170403-095035 [FAILURE] (patch reproduction - status = 1)
 phoenixnap-springmvc-raml-plugin-219254578-20170406-141521 [FAILURE] (patch reproduction - status = 1)
-INRIA-spoon-218096069-20170403-164935 [OK]
+pac4j-vertx-pac4j-219580211-20170407-093510 [OK]
+tananaev-traccar-217413927-20170401-031246 [OK]
+owlcs-owlapi-217370067-20170401-002944 [OK]
 tananaev-traccar-217431352-20170401-051515 [OK]
+INRIA-spoon-218096069-20170403-164935 [OK]
 tananaev-traccar-217633533-20170402-001752 [OK]
-HubSpot-Singularity-219860403-20170407-233600 [OK]
 ThreeTen-threeten-extra-217651782-20170402-020653 [OK]
-killbill-killbill-218313159-20170404-055019 [OK]
-geotools-geotools-218891762-20170405-163553 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-219565066-20170407-085110 [FAILURE] (patch reproduction - status = 1)
+relayrides-pushy-218151176-20170403-194556 [OK]
+HubSpot-Singularity-219860403-20170407-233600 [OK]
+killbill-killbill-218313159-20170404-055019 [FAILURE] (patch reproduction - status = 1)
 languagetool-org-languagetool-217604877-20170401-220049 [OK]
-Analyze finished: 2017-08-04_130003
+Analyze finished: 2017-10-25_152642
