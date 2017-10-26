@@ -1,32 +1,40 @@
-Analyze started: 2017-08-04_132104
+Analyze started: 2017-10-25_154029
 Considered repository: https://github.com/surli/bugs-collection
+alibaba-fastjson-222022029-20170414-114847 [OK]
 FasterXML-jackson-databind-221903238-20170414-001416 [OK]
 code4craft-webmagic-220011371-20170408-141228 [OK]
-FasterXML-jackson-databind-221918095-20170414-010840 [OK]
-alibaba-fastjson-222313668-20170415-112736 [OK]
 apache-opennlp-222060824-20170414-144808 [OK]
-JavaMoney-jsr354-api-221859688-20170413-215847 [OK]
+alibaba-fastjson-222020421-20170414-114305 [OK]
+alibaba-fastjson-222313668-20170415-112736 [OK]
+FasterXML-jackson-databind-221918095-20170414-010840 [OK]
+apache-httpcore-222382291-20170415-183552 [OK]
 apache-httpcore-222387913-20170415-190536 [OK]
-apache-httpcore-222382291-20170415-183552 [FAILURE] (patch reproduction - status = 1)
-HubSpot-Singularity-221025256-20170411-184023 [FAILURE] (bug reproduction - status = 0)
+JavaMoney-jsr354-api-221859688-20170413-215847 [OK]
+killbill-killbill-219864396-20170408-083702 [OK]
 HubSpot-Singularity-222177137-20170414-212929 [FAILURE] (bug reproduction - status = 0)
 google-error-prone-220719638-20170410-230307 [OK]
-languagetool-org-languagetool-220111079-20170408-224341 [OK]
+HubSpot-Singularity-220658440-20170410-201908 [OK]
+HubSpot-Singularity-220658510-20170410-202752 [OK]
 HubSpot-Singularity-220603314-20170410-175209 [OK]
+HubSpot-Singularity-220603397-20170410-174802 [OK]
 lukas-krecan-JsonUnit-220662652-20170410-201341 [OK]
-languagetool-org-languagetool-220128314-20170409-000639 [OK]
-mpatric-mp3agic-221449900-20170412-201133 [OK]
 MoriTanosuke-glacieruploader-221672026-20170413-120552 [OK]
-phoenixnap-springmvc-raml-plugin-220885377-20170411-112028 [FAILURE] (patch reproduction - status = 1)
-languagetool-org-languagetool-220720125-20170410-230301 [OK]
-languagetool-org-languagetool-221097657-20170411-221422 [OK]
+mpatric-mp3agic-221449900-20170412-201133 [OK]
+languagetool-org-languagetool-220111079-20170408-224341 [OK]
+languagetool-org-languagetool-220128314-20170409-000639 [OK]
 OWASP-java-html-sanitizer-220087638-20170408-204418 [OK]
+phoenixnap-springmvc-raml-plugin-220885377-20170411-112028 [FAILURE] (patch reproduction - status = 1)
 spring-projects-spring-data-commons-221232057-20170412-083058 [FAILURE] (patch reproduction - status = 1)
-tipsy-j2html-221850001-20170413-212219 [OK]
+relayrides-pushy-222268111-20170415-042153 [OK]
 tananaev-traccar-220224837-20170409-114917 [OK]
-ThreeTen-threeten-extra-221018321-20170411-180516 [OK]
 square-wire-220407711-20170410-044549 [OK]
-languagetool-org-languagetool-222079817-20170414-160320 [OK]
+languagetool-org-languagetool-220720125-20170410-230301 [OK]
+tananaev-traccar-220735965-20170410-234143 [OK]
+tipsy-j2html-221850001-20170413-212219 [OK]
+ThreeTen-threeten-extra-221018321-20170411-180516 [OK]
+languagetool-org-languagetool-221097657-20170411-221422 [OK]
 languagetool-org-languagetool-221864164-20170413-221212 [OK]
 oVirt-ovirt-engine-220090576-20170408-212845 [OK]
-Analyze finished: 2017-08-04_134613
+languagetool-org-languagetool-222079817-20170414-160320 [OK]
+geotools-geotools-221797372-20170413-192114 [FAILURE] (patch reproduction - status = 1)
+Analyze finished: 2017-10-25_161255
