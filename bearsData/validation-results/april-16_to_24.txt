@@ -1,28 +1,38 @@
-Analyze started: 2017-08-04_134743
+Analyze started: 2017-10-26_095404
 Considered repository: https://github.com/surli/bugs-collection
-FasterXML-jackson-databind-223291136-20170418-215123 [OK]
-FasterXML-jackson-databind-223291913-20170418-215411 [OK]
+alibaba-fastjson-224959893-20170423-201226 [OK]
 DiUS-java-faker-224205148-20170421-053934 [OK]
 apache-commons-lang-224269231-20170421-105710 [OK]
 asciidoctor-asciidoctor-maven-plugin-223196089-20170418-172027 [OK]
+FasterXML-jackson-databind-223291136-20170418-215123 [OK]
+FasterXML-jackson-databind-223291913-20170418-215411 [OK]
 apache-pdfbox-224033281-20170420-185223 [OK]
-AsyncHttpClient-async-http-client-223984929-20170420-165228 [OK]
-AsyncHttpClient-async-http-client-224015156-20170420-180607 [OK]
-languagetool-org-languagetool-222578596-20170416-180308 [OK]
+cdk-cdk-224042939-20170420-192323 [FAILURE] (patch reproduction - status = 1)
+AsyncHttpClient-async-http-client-223984929-20170420-165228 [FAILURE] (patch reproduction - status = 1)
+AsyncHttpClient-async-http-client-224015156-20170420-180607 [FAILURE] (patch reproduction - status = 1)
 languagetool-org-languagetool-222586490-20170416-184829 [OK]
-languagetool-org-languagetool-222608868-20170416-220309 [OK]
+languagetool-org-languagetool-222578596-20170416-180308 [OK]
+geotools-geotools-223765658-20170420-020505 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-222999789-20170418-051100 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-223013336-20170418-063200 [FAILURE] (patch reproduction - status = 1)
 phoenixnap-springmvc-raml-plugin-223559406-20170419-153903 [FAILURE] (patch reproduction - status = 1)
+languagetool-org-languagetool-222608868-20170416-220309 [OK]
 phoenixnap-springmvc-raml-plugin-223898069-20170420-121624 [FAILURE] (patch reproduction - status = 1)
-spring-projects-spring-data-commons-223489974-20170419-132008 [OK]
-spring-projects-spring-data-solr-223067212-20170418-103832 [OK]
+geotools-geotools-223144851-20170418-154214 [FAILURE] (patch reproduction - status = 1)
+relayrides-pushy-222469502-20170416-031407 [OK]
+geotools-geotools-223307455-20170418-231652 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-224438095-20170421-200927 [FAILURE] (patch reproduction - status = 1)
 tananaev-traccar-222479725-20170416-045446 [OK]
 tananaev-traccar-222667430-20170417-024526 [OK]
+tananaev-traccar-222691288-20170417-055335 [OK]
+spring-projects-spring-data-commons-223489974-20170419-132008 [OK]
+spring-projects-spring-data-solr-223067212-20170418-103832 [OK]
 tipsy-j2html-222516081-20170416-103825 [OK]
-geotools-geotools-223765658-20170420-020505 [FAILURE] (patch reproduction - status = 1)
+tananaev-traccar-222697545-20170417-063937 [OK]
+languagetool-org-languagetool-224750996-20170422-215253 [OK]
 ThreeTen-threeten-extra-222555973-20170416-155453 [OK]
+languagetool-org-languagetool-224745763-20170422-212908 [OK]
 oVirt-ovirt-engine-224254169-20170421-101943 [OK]
-geotools-geotools-222999789-20170418-051100 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-223144851-20170418-154214 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-224438095-20170421-200927 [FAILURE] (patch reproduction - status = 1)
-geotools-geotools-223307455-20170418-231652 [FAILURE] (patch reproduction - status = 1)
-Analyze finished: 2017-08-04_142106
+sakaiproject-sakai-223888148-20170420-115526 [FAILURE] (bug reproduction - status = 0)
+sakaiproject-sakai-223852197-20170420-093454 [FAILURE] (bug reproduction - status = 0)
+Analyze finished: 2017-10-26_103604
