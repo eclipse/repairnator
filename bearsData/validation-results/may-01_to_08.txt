@@ -1,24 +1,36 @@
-Analyze started: 2017-08-04_144712
+Analyze started: 2017-10-26_125100
 Considered repository: https://github.com/surli/bugs-collection
-FasterXML-jackson-databind-228873360-20170504-215336 [OK]
+alibaba-fastjson-227950309-20170502-151913 [OK]
+alibaba-fastjson-228267731-20170503-113550 [OK]
+alibaba-fastjson-229631517-20170507-113735 [OK]
 alibaba-fastjson-229402287-20170506-113647 [OK]
 alibaba-fastjson-229053418-20170505-113639 [OK]
 apache-pdfbox-227679872-20170501-203151 [OK]
+FasterXML-jackson-databind-228873360-20170504-215336 [OK]
+apache-commons-math-228558805-20170504-023325 [OK]
 dangdangdotcom-sharding-jdbc-229075574-20170505-130437 [OK]
-google-error-prone-228489663-20170503-221736 [OK]
+cdk-cdk-227551139-20170501-120557 [OK]
+cdk-cdk-229407678-20170506-121542 [FAILURE] (bug reproduction - status = 0)
+cdk-cdk-229414210-20170506-130408 [OK]
+Flipkart-foxtrot-229151199-20170505-165048 [OK]
 google-error-prone-228826878-20170504-194055 [OK]
-HubSpot-Singularity-227968370-20170502-163113 [OK]
-google-error-prone-229531379-20170506-225808 [OK]
+google-error-prone-228489663-20170503-221736 [OK]
 google-error-prone-229255500-20170505-213927 [OK]
-languagetool-org-languagetool-228431437-20170503-192941 [OK]
-square-retrofit-228716687-20170504-143904 [OK]
-tananaev-traccar-229298433-20170505-234727 [OK]
-OpenGamma-Strata-228770658-20170504-170413 [OK]
-owlcs-owlapi-228511209-20170503-231613 [OK]
+google-error-prone-229531379-20170506-225808 [OK]
+HubSpot-Singularity-227968370-20170502-163113 [OK]
 owlcs-owlapi-228511125-20170503-231731 [OK]
-tipsy-j2html-227634351-20170501-180741 [OK]
+OpenGamma-Strata-228770658-20170504-170413 [OK]
+PebbleTemplates-pebble-228162055-20170503-020903 [FAILURE] (patch reproduction - status = 1)
+PebbleTemplates-pebble-229340534-20170506-030621 [FAILURE] (patch reproduction - status = 1)
 languagetool-org-languagetool-227456892-20170501-005600 [OK]
-languagetool-org-languagetool-228852371-20170504-205412 [OK]
-languagetool-org-languagetool-228831865-20170504-195423 [OK]
+PebbleTemplates-pebble-229433383-20170506-145733 [FAILURE] (patch reproduction - status = 1)
+tananaev-traccar-229298433-20170505-234727 [OK]
+square-retrofit-228716687-20170504-143904 [OK]
+tipsy-j2html-227634351-20170501-180741 [OK]
+owlcs-owlapi-228511209-20170503-231613 [OK]
+geotools-geotools-228817382-20170504-193115 [FAILURE] (patch reproduction - status = 1)
+languagetool-org-languagetool-228431437-20170503-192941 [OK]
 geotools-geotools-227668513-20170501-202249 [FAILURE] (patch reproduction - status = 1)
-Analyze finished: 2017-08-04_151708
+languagetool-org-languagetool-228831865-20170504-195423 [OK]
+languagetool-org-languagetool-228852371-20170504-205412 [OK]
+Analyze finished: 2017-10-26_132058

@@ -1,20 +1,27 @@
- * https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-228873360-20170504-215336 
- * https://github.com/surli/bugs-collection/tree/alibaba-fastjson-229402287-20170506-113647 
- * https://github.com/surli/bugs-collection/tree/alibaba-fastjson-229053418-20170505-113639 
- * https://github.com/surli/bugs-collection/tree/apache-pdfbox-227679872-20170501-203151 
- * https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-229075574-20170505-130437 
- * https://github.com/surli/bugs-collection/tree/google-error-prone-228489663-20170503-221736 
- * https://github.com/surli/bugs-collection/tree/google-error-prone-228826878-20170504-194055 
- * https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-227968370-20170502-163113 
- * https://github.com/surli/bugs-collection/tree/google-error-prone-229531379-20170506-225808 
- * https://github.com/surli/bugs-collection/tree/google-error-prone-229255500-20170505-213927 
- * https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-228431437-20170503-192941 
- * https://github.com/surli/bugs-collection/tree/square-retrofit-228716687-20170504-143904 
- * https://github.com/surli/bugs-collection/tree/tananaev-traccar-229298433-20170505-234727 
- * https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-228770658-20170504-170413 
- * https://github.com/surli/bugs-collection/tree/owlcs-owlapi-228511209-20170503-231613 
- * https://github.com/surli/bugs-collection/tree/owlcs-owlapi-228511125-20170503-231731 
- * https://github.com/surli/bugs-collection/tree/tipsy-j2html-227634351-20170501-180741 
- * https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-227456892-20170501-005600 
- * https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-228852371-20170504-205412 
- * https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-228831865-20170504-195423 
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-227950309-20170502-151913 
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-228267731-20170503-113550 
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-229631517-20170507-113735 
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-229402287-20170506-113647 
+* https://github.com/surli/bugs-collection/tree/alibaba-fastjson-229053418-20170505-113639 
+* https://github.com/surli/bugs-collection/tree/apache-pdfbox-227679872-20170501-203151 
+* https://github.com/surli/bugs-collection/tree/FasterXML-jackson-databind-228873360-20170504-215336 
+* https://github.com/surli/bugs-collection/tree/apache-commons-math-228558805-20170504-023325 
+* https://github.com/surli/bugs-collection/tree/dangdangdotcom-sharding-jdbc-229075574-20170505-130437 
+* https://github.com/surli/bugs-collection/tree/cdk-cdk-227551139-20170501-120557 
+* https://github.com/surli/bugs-collection/tree/cdk-cdk-229414210-20170506-130408 
+* https://github.com/surli/bugs-collection/tree/Flipkart-foxtrot-229151199-20170505-165048 
+* https://github.com/surli/bugs-collection/tree/google-error-prone-228826878-20170504-194055 
+* https://github.com/surli/bugs-collection/tree/google-error-prone-228489663-20170503-221736 
+* https://github.com/surli/bugs-collection/tree/google-error-prone-229255500-20170505-213927 
+* https://github.com/surli/bugs-collection/tree/google-error-prone-229531379-20170506-225808 
+* https://github.com/surli/bugs-collection/tree/HubSpot-Singularity-227968370-20170502-163113 
+* https://github.com/surli/bugs-collection/tree/owlcs-owlapi-228511125-20170503-231731 
+* https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-228770658-20170504-170413 
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-227456892-20170501-005600 
+* https://github.com/surli/bugs-collection/tree/tananaev-traccar-229298433-20170505-234727 
+* https://github.com/surli/bugs-collection/tree/square-retrofit-228716687-20170504-143904 
+* https://github.com/surli/bugs-collection/tree/tipsy-j2html-227634351-20170501-180741 
+* https://github.com/surli/bugs-collection/tree/owlcs-owlapi-228511209-20170503-231613 
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-228431437-20170503-192941 
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-228831865-20170504-195423 
+* https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-228852371-20170504-205412 
