@@ -1,20 +1,43 @@
-Analyze started: 2017-08-04_152207
+Analyze started: 2017-10-26_144647
 Considered repository: https://github.com/surli/bugs-collection
-FasterXML-jackson-dataformat-xml-231035641-20170511-074942 [OK]
+alibaba-fastjson-230685801-20170510-113857 [OK]
+apache-opennlp-231208360-20170511-174057 [OK]
+apache-opennlp-231224901-20170511-182652 [OK]
 alibaba-fastjson-230277356-20170509-113904 [OK]
+FasterXML-jackson-dataformat-xml-231035641-20170511-074942 [OK]
 apache-pdfbox-231179680-20170511-162430 [OK]
 apache-pdfbox-231035412-20170511-075209 [OK]
-dangdangdotcom-sharding-jdbc-230708565-20170510-130737 [OK]
-OWASP-java-html-sanitizer-231634556-20170512-185643 [OK]
+airlift-airlift-230081289-20170508-211721 [FAILURE] (bug reproduction - status = 0)
 dangdangdotcom-sharding-jdbc-231497969-20170512-121937 [OK]
-square-javapoet-231862123-20170513-145452 [OK]
+dangdangdotcom-sharding-jdbc-230708565-20170510-130737 [OK]
+AsyncHttpClient-async-http-client-231302718-20170511-221950 [FAILURE] (patch reproduction - status = 1)
 CorfuDB-CorfuDB-231543852-20170512-150030 [FAILURE] (bug reproduction - status = 0)
-square-retrofit-231247660-20170511-192847 [OK]
-spring-projects-spring-data-commons-231307769-20170511-223138 [OK]
-AsyncHttpClient-async-http-client-231302718-20170511-221950 [OK]
-square-retrofit-231764479-20170513-024517 [OK]
-square-retrofit-231765304-20170513-025134 [OK]
-spring-projects-spring-data-commons-231817930-20170513-101928 [OK]
 HubSpot-Singularity-230046970-20170508-194727 [OK]
+HubSpot-Singularity-230047031-20170508-194939 [OK]
+HubSpot-Singularity-230896295-20170510-214906 [OK]
+OWASP-java-html-sanitizer-231634556-20170512-185643 [OK]
+geotools-geotools-231737937-20170513-004642 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-231883514-20170513-171750 [FAILURE] (patch reproduction - status = 1)
+HubSpot-Singularity-230896502-20170510-214815 [OK]
+spring-projects-spring-data-commons-231307769-20170511-223138 [OK]
 languagetool-org-languagetool-232140479-20170514-193914 [OK]
-Analyze finished: 2017-08-04_153804
+spring-projects-spring-data-commons-231307778-20170511-223412 [OK]
+spring-projects-spring-data-commons-231817930-20170513-101928 [OK]
+geotools-geotools-231883604-20170513-171747 [FAILURE] (bug reproduction timeout)
+spring-projects-spring-data-commons-232460974-20170515-165418 [OK]
+square-javapoet-231862123-20170513-145452 [OK]
+geotools-geotools-231883680-20170513-171745 [FAILURE] (bug reproduction timeout)
+square-javapoet-231864737-20170513-150831 [OK]
+spring-projects-spring-data-commons-232461006-20170515-165834 [OK]
+square-retrofit-231229994-20170511-183736 [OK]
+square-retrofit-231230026-20170511-183748 [OK]
+square-retrofit-231247660-20170511-192847 [OK]
+square-retrofit-231764479-20170513-024517 [OK]
+square-retrofit-231763794-20170513-023858 [OK]
+geotools-geotools-231738439-20170513-004912 [FAILURE] (patch reproduction - status = 1)
+square-retrofit-231765304-20170513-025134 [OK]
+square-retrofit-231918120-20170513-194501 [OK]
+square-retrofit-231920537-20170513-195902 [OK]
+sakaiproject-sakai-230828769-20170510-183929 [OK]
+sakaiproject-sakai-231623712-20170512-184012 [OK]
+Analyze finished: 2017-10-26_153052
