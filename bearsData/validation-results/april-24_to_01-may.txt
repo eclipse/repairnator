@@ -1,30 +1,43 @@
-Analyze started: 2017-08-04_142229
+Analyze started: 2017-10-26_104530
 Considered repository: https://github.com/surli/bugs-collection
-cdk-cdk-225774986-20170425-232324 [FAILURE] (patch reproduction - status = 1)
-cdk-cdk-227345051-20170430-141329 [FAILURE] (patch reproduction - status = 1)
+alibaba-fastjson-225484456-20170425-074708 [OK]
 alibaba-fastjson-225533047-20170425-113124 [OK]
+alibaba-fastjson-225483415-20170425-074055 [OK]
 apache-httpcomponents-core-225146191-20170424-121809 [OK]
 apache-httpcore-225146191-20170424-121809 [OK]
-AxonFramework-AxonFramework-226420762-20170427-164411 [FAILURE] (patch reproduction - status = 1)
-hypercube1024-firefly-225189056-20170424-143246 [FAILURE] (bug reproduction - status = 0)
-hypercube1024-firefly-225231523-20170424-162934 [FAILURE] (bug reproduction - status = 0)
+FasterXML-jackson-databind-226639126-20170428-030819 [OK]
+FasterXML-jackson-databind-226666085-20170428-053756 [OK]
+FasterXML-jackson-databind-226673064-20170428-061609 [OK]
+cdk-cdk-227345051-20170430-141329 [FAILURE] (patch reproduction - status = 1)
 FasterXML-jackson-databind-226908526-20170428-195833 [OK]
-hypercube1024-firefly-225184688-20170424-141844 [OK]
-AsyncHttpClient-async-http-client-226000201-20170426-151800 [FAILURE] (bug reproduction - status = 0)
+cdk-cdk-225774986-20170425-232324 [FAILURE] (patch reproduction - status = 1)
+AxonFramework-AxonFramework-226420762-20170427-164411 [OK]
 AxonFramework-AxonFramework-226421456-20170427-164539 [OK]
-phoenixnap-springmvc-raml-plugin-226405221-20170427-160006 [FAILURE] (patch reproduction - status = 1)
+hypercube1024-firefly-225184688-20170424-141844 [OK]
+AsyncHttpClient-async-http-client-226000201-20170426-151800 [FAILURE] (patch reproduction - status = 1)
+hypercube1024-firefly-225189056-20170424-143246 [FAILURE] (bug reproduction - status = 0)
+hypercube1024-firefly-225229465-20170424-162419 [OK]
+hypercube1024-firefly-225231523-20170424-162934 [FAILURE] (bug reproduction - status = 0)
+IQSS-dataverse-225720573-20170425-204410 [FAILURE] (patch reproduction - status = 1)
 INRIA-spoon-227073271-20170429-085520 [OK]
-rest-assured-rest-assured-226732800-20170428-110410 [OK]
 google-error-prone-225307442-20170424-195449 [OK]
-oVirt-ovirt-engine-227350671-20170430-150823 [OK]
+geotools-geotools-226470083-20170427-190226 [FAILURE] (patch reproduction - status = 1)
 languagetool-org-languagetool-226519676-20170427-205557 [OK]
-rest-assured-rest-assured-226742994-20170428-113242 [OK]
-tananaev-traccar-225061986-20170424-055301 [OK]
+PebbleTemplates-pebble-225231496-20170424-162959 [FAILURE] (patch reproduction - status = 1)
+PebbleTemplates-pebble-225231850-20170424-163107 [FAILURE] (patch reproduction - status = 1)
+languagetool-org-languagetool-226512398-20170427-203435 [OK]
+phoenixnap-springmvc-raml-plugin-226405221-20170427-160006 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-225656241-20170425-180907 [FAILURE] (patch reproduction - status = 1)
 languagetool-org-languagetool-226922107-20170428-204246 [OK]
+geotools-geotools-225125694-20170424-115526 [FAILURE] (patch reproduction - status = 1)
+tananaev-traccar-225061986-20170424-055301 [OK]
+geotools-geotools-225117945-20170424-112539 [FAILURE] (patch reproduction - status = 1)
+tananaev-traccar-226678972-20170428-064712 [OK]
 uwolfer-gerrit-rest-java-client-225300973-20170424-192737 [OK]
 xjodoin-torpedoquery-225658803-20170425-174920 [OK]
-tananaev-traccar-226678972-20170428-064712 [OK]
-languagetool-org-languagetool-226512398-20170427-203435 [OK]
+rest-assured-rest-assured-226732800-20170428-110410 [OK]
+geotools-geotools-226751864-20170428-123015 [FAILURE] (patch reproduction - status = 1)
+rest-assured-rest-assured-226742994-20170428-113242 [OK]
+oVirt-ovirt-engine-227350671-20170430-150823 [OK]
 spring-cloud-spring-cloud-aws-227119343-20170429-135008 [OK]
-geotools-geotools-226470083-20170427-190226 [FAILURE] (patch reproduction - status = 1)
-Analyze finished: 2017-08-04_144546
+Analyze finished: 2017-10-26_112153
