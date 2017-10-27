@@ -1,18 +1,44 @@
-Analyze started: 2017-08-04_154223
+Analyze started: 2017-10-26_153449
 Considered repository: https://github.com/surli/bugs-collection
+apache-opennlp-232825997-20170516-154029 [OK]
 alibaba-fastjson-235163072-20170523-114409 [OK]
-CorfuDB-CorfuDB-235333742-20170523-201948 [FAILURE] (bug reproduction - status = 0)
+CorfuDB-CorfuDB-233426575-20170518-004815 [FAILURE] (bug reproduction - status = 0)
 CorfuDB-CorfuDB-233071199-20170517-043829 [FAILURE] (bug reproduction - status = 0)
+CorfuDB-CorfuDB-235333742-20170523-201948 [FAILURE] (bug reproduction - status = 0)
+AsyncHttpClient-async-http-client-234754147-20170522-115212 [FAILURE] (patch reproduction - status = 1)
 FasterXML-jackson-dataformat-xml-233445479-20170518-020804 [OK]
-dangdangdotcom-sharding-jdbc-235283969-20170523-180234 [OK]
-AsyncHttpClient-async-http-client-234754147-20170522-115212 [OK]
-prometheus-client_java-234804588-20170522-143333 [OK]
+FasterXML-jackson-databind-234147085-20170519-221231 [OK]
+CorfuDB-CorfuDB-234407411-20170520-232130 [OK]
 CorfuDB-CorfuDB-235333726-20170523-202023 [OK]
-tananaev-traccar-233583193-20170518-125426 [OK]
-TridentSDK-TridentSDK-234222478-20170520-035202 [OK]
-CorfuDB-CorfuDB-234407411-20170520-232130 [FAILURE] (patch reproduction - status = 1)
-IQSS-dataverse-234166081-20170519-231253 [OK]
+dangdangdotcom-sharding-jdbc-235283969-20170523-180234 [OK]
 CorfuDB-CorfuDB-233070969-20170517-043809 [OK]
+CorfuDB-CorfuDB-233881407-20170519-062407 [FAILURE] (bug reproduction - status = 0)
 CorfuDB-CorfuDB-235390751-20170523-225802 [OK]
+geotools-geotools-234847410-20170522-170907 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-234842874-20170522-165533 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-234373723-20170520-204647 [FAILURE] (patch reproduction - status = 1)
+geotools-geotools-234373424-20170520-204141 [FAILURE] (patch reproduction - status = 1)
+IQSS-dataverse-234166081-20170519-231253 [OK]
+geotools-geotools-234853919-20170522-172051 [FAILURE] (patch reproduction - status = 1)
+PebbleTemplates-pebble-233041338-20170517-015507 [FAILURE] (patch reproduction - status = 1)
+PebbleTemplates-pebble-233041803-20170517-015603 [FAILURE] (patch reproduction - status = 1)
+PebbleTemplates-pebble-234887687-20170522-182227 [FAILURE] (patch reproduction - status = 1)
+prometheus-client_java-234804588-20170522-143333 [FAILURE] (patch reproduction - status = 1)
+IQSS-dataverse-234178598-20170519-235800 [OK]
+geotools-geotools-234848903-20170522-170806 [FAILURE] (bug reproduction timeout)
+geotools-geotools-234849629-20170522-171316 [FAILURE] (bug reproduction timeout)
+spring-projects-spring-data-commons-233538403-20170518-102028 [OK]
+tananaev-traccar-233096632-20170517-070302 [OK]
+tananaev-traccar-233583193-20170518-125426 [OK]
+tananaev-traccar-233585117-20170518-130611 [OK]
+tananaev-traccar-233868407-20170519-044959 [OK]
+tananaev-traccar-234772304-20170522-124118 [OK]
+TridentSDK-TridentSDK-234222478-20170520-035202 [OK]
+geotools-geotools-234855160-20170522-172746 [FAILURE] (patch reproduction - status = 1)
+sakaiproject-sakai-232751016-20170516-114325 [OK]
 sakaiproject-sakai-233703615-20170518-183917 [OK]
-Analyze finished: 2017-08-04_160356
+sakaiproject-sakai-233703640-20170518-184049 [OK]
+geotools-geotools-235184360-20170523-132545 [FAILURE] (bug reproduction timeout)
+geotools-geotools-235208850-20170523-150214 [FAILURE] (bug reproduction timeout)
+geotools-geotools-235208994-20170523-150045 [FAILURE] (patch reproduction - status = 1)
+Analyze finished: 2017-10-26_164042
