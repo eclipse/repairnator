@@ -1,0 +1,10 @@
+#!/bin/bash
+
+LAUNCH_SCRIPT=
+LOG_DIR=
+
+TMP_ID_FILE=/tmp/`uuidgen`
+
+echo $2 > $TMP_ID_FILE
+$LAUNCH_SCRIPT $TMP_ID_FILE &> $LOG_DIR/`date "+%Y-%m-%d_%H%M%S`-$2-$3-$4.log
+rm $TMP_ID_FILE
