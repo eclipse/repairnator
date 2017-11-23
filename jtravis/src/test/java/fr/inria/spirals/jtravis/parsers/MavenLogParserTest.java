@@ -101,6 +101,16 @@ public class MavenLogParserTest {
         assertEquals(0,  infoTest.get(2).getSkipping());
         assertEquals(0,  infoTest.get(2).getErrored());
         assertEquals(39, infoTest.get(2).getPassing());
+    }
 
+    @Test
+    public void testComputeTestDurationInSpoonLog() throws IOException {
+        String path = "./src/test/resources/maven-logs/spoon_build_log.txt";
+
+        String fileContent = TestUtils.readFile(path);
+        LogParser parser = new LogParser(fileContent);
+        TestsInformation infoTest = parser.getTestsInformation();
+
+        assertEquals((Double)31.135, infoTest.getDurationByTest().get("spoon.test.main.MainTest"));
     }
 }

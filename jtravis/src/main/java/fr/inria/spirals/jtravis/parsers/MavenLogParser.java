@@ -20,6 +20,7 @@ public class MavenLogParser extends JavaLogParser {
     // | ([[1;34mINFO[m]  T E S T S)
     private static final String MVN_RESULTS_PATTERN = "(.*Results:)|(.*Results :)";
     private static final String MVN_TEST_NUMBER_PATTERN = ".*Tests run: (\\d*), Failures: (\\d*), Errors: (\\d*)(, Skipped: (\\d*))?";
+    private static final String MVN_TEST_DURATION_PATTERN = ".+Time elapsed: ([\\d\\.]+) s(?:ec)? - in (.+)";
 
     public MavenLogParser() {
     }
@@ -31,7 +32,15 @@ public class MavenLogParser extends JavaLogParser {
 
     private Boolean parseTestLine(String line) {
         Pattern mvnTestNumberPattern = Pattern.compile(MVN_TEST_NUMBER_PATTERN);
+        Pattern mvnTestDurationPattern = Pattern.compile(MVN_TEST_DURATION_PATTERN);
+        Matcher mvnTestDurationMatcher = mvnTestDurationPattern.matcher(line);
         Matcher mvnTestNumberMatcher = mvnTestNumberPattern.matcher(line);
+
+        if (mvnTestDurationMatcher.matches()) {
+            Double duration = Double.parseDouble(mvnTestDurationMatcher.group(1));
+            String testName = mvnTestDurationMatcher.group(2);
+            this.globalResults.addTestDuration(testName, duration);
+        }
 
         if (mvnTestNumberMatcher.matches()) {
             int nbMatch = mvnTestNumberMatcher.groupCount();
@@ -52,9 +61,9 @@ public class MavenLogParser extends JavaLogParser {
             res.setPassing(res.getRunning() - (res.getFailing()+res.getErrored()+res.getSkipping()));
             this.detailedResults.add(res);
             return  true;
-        }
-        else
+        } else {
             return false;
+        }
     }
 
     @Override
@@ -79,24 +88,38 @@ public class MavenLogParser extends JavaLogParser {
 
         Pattern mvnTestHeadPattern = Pattern.compile(MVN_TESTS_PATTERN);
         Pattern mvnTestResultsPattern = Pattern.compile(MVN_RESULTS_PATTERN);
+        Pattern mvnTestDurationPattern = Pattern.compile(MVN_TEST_DURATION_PATTERN);
+
         for (String s : outOfFold.getContent()) {
-            Matcher mvnTestResultsMatcher = mvnTestResultsPattern.matcher(s);
-            Matcher mvnTestHeadMatcher = mvnTestHeadPattern.matcher(s);
-            if (!inTestBlock && mvnTestHeadMatcher.matches()) {
-                inTestBlock = true;
-                continue;
-            }
-            if (inTestBlock && mvnTestResultsMatcher.matches()) {
-                inTestResults = true;
+
+            if (!inTestBlock) {
+                Matcher mvnTestHeadMatcher = mvnTestHeadPattern.matcher(s);
+                if (mvnTestHeadMatcher.matches()) {
+                    inTestBlock = true;
+                }
                 continue;
             }
 
-            if (inTestResults) {
-                if(this.parseTestLine(s)){
-                    inTestBlock = false;
-                    inTestResults = false;
+            if (!inTestResults) {
+                Matcher mvnTestResultsMatcher = mvnTestResultsPattern.matcher(s);
+
+                if (mvnTestResultsMatcher.matches()) {
+                    inTestResults = true;
+                    continue;
                 }
 
+                Matcher mvnTestDurationMatcher = mvnTestDurationPattern.matcher(s);
+                if (mvnTestDurationMatcher.matches()) {
+                    Double duration = Double.parseDouble(mvnTestDurationMatcher.group(1));
+                    String testName = mvnTestDurationMatcher.group(2);
+                    this.globalResults.addTestDuration(testName, duration);
+                }
+                continue;
+            }
+
+            if (this.parseTestLine(s)) {
+                inTestBlock = false;
+                inTestResults = false;
             }
         }
 
