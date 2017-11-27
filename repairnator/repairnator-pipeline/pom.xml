@@ -33,7 +33,7 @@
             <version>2.19.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>fr.inria.lille.adam</groupId>
+            <groupId>fr.inria.gforge.spirals</groupId>
             <artifactId>nopol</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
