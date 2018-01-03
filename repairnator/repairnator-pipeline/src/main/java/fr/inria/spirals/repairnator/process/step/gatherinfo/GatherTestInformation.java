@@ -116,7 +116,7 @@ public class GatherTestInformation extends AbstractStep {
                             for (ReportTestCase testCase : testSuite.getTestCases()) {
                                 if (testCase.hasFailure()) {
                                     this.failureNames.add(testCase.getFailureType());
-                                    FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.isError());
+                                    FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.hasError());
                                     FailureLocation failureLocation = null;
 
                                     for (FailureLocation location : this.failureLocations) {
@@ -132,7 +132,7 @@ public class GatherTestInformation extends AbstractStep {
                                     }
                                     failureLocation.addFailure(typeTof);
 
-                                    if (testCase.isError()) {
+                                    if (testCase.hasError()) {
                                         failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
                                     } else {
                                         failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
