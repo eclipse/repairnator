@@ -7,7 +7,6 @@ jdk: openjdk8
 before_install:
   - chmod +x -R travis/
 
-install: "./travis/travis-install.sh"
 script: "./travis/travis-run.sh"
 
 cache:

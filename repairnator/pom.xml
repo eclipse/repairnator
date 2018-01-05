@@ -16,6 +16,19 @@
         <module>repairnator-checkbranches</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>tdurieux.github.io/maven-repository</id>
+            <name>tdurieux.github.io maven-repository</name>
+            <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
+        </repository>
+        <repository>
+            <id>tdurieux.github.io/maven-repository</id>
+            <name>tdurieux.github.io maven-repository</name>
+            <url>https://tdurieux.github.io/maven-repository/releases/</url>
+        </repository>
+    </repositories>
+
     <properties>
         <default.encoding>UTF-8</default.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
