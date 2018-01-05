@@ -12,3 +12,6 @@ script: "./travis/travis-run.sh"
 cache:
   directories:
     - $HOME/.m2
+
+before_cache:
+  - rm -f $HOME/.m2/repository/fr/inria/spirals
