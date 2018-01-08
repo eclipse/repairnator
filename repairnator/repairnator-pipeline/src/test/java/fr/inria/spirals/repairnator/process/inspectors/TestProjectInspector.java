@@ -25,6 +25,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -144,6 +145,7 @@ public class TestProjectInspector {
         assertThat(iterator.hasNext(), is(false));
     }
 
+    @Ignore
     @Test
     public void testPatchFailingProjectM70() throws IOException, GitAPIException {
         int buildId = 269201915; // surli/failingProject only-one-failing
