@@ -7,9 +7,11 @@ jdk: openjdk8
 before_install:
   - chmod +x -R travis/
 
-install: "./travis/travis-install.sh"
 script: "./travis/travis-run.sh"
 
 cache:
   directories:
     - $HOME/.m2
+
+before_cache:
+  - rm -f $HOME/.m2/repository/fr/inria/spirals
