@@ -9,13 +9,6 @@ git clone https://github.com/Spirals-Team/librepair.git
 
 echo "LibRepair repository cloned."
 
-cp librepair/travis/travis-install.sh .
-chmod +x travis-install.sh
-
-./travis-install.sh
-
-echo "All dependencies installed for repairnator."
-
 cd librepair/jtravis
 mvn clean install -DskipTests=true
 
