@@ -365,8 +365,10 @@ public class Launcher {
             }
 
             // switch off push mechanism in case of test project
+            // and switch off serialization
             if (buggyBuild.getRepository().getSlug().toLowerCase().equals(TEST_PROJECT)) {
                 this.config.setPush(false);
+                this.engines.clear();
             }
         }
     }
