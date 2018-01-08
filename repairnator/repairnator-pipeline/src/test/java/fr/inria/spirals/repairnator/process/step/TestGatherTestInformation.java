@@ -17,6 +17,7 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -151,7 +152,7 @@ public class TestGatherTestInformation {
 
         Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
 
-        assertThat(failureNames.contains("java.lang.StringIndexOutOfBoundsException"), is(true));
+        assertThat("failure names"+ StringUtils.join(failureNames.toArray()), failureNames.contains("java.lang.StringIndexOutOfBoundsException"), is(true));
         assertThat(failureNames.size(), is(1));
 
         assertThat(jobStatus.getFailureLocations().size(), is(1));
