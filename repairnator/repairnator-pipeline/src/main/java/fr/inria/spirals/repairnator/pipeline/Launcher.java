@@ -53,6 +53,7 @@ import java.util.List;
  */
 public class Launcher {
 
+    private final static String TEST_PROJECT = "surli/failingproject";
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
@@ -361,6 +362,11 @@ public class Launcher {
                 this.buildToBeInspected = new BuildToBeInspected(buggyBuild, nextPassing, ScannedBuildStatus.FAILING_AND_PASSING, runId);
             } else {
                 this.buildToBeInspected = new BuildToBeInspected(buggyBuild, null, ScannedBuildStatus.ONLY_FAIL, runId);
+            }
+
+            // switch off push mechanism in case of test project
+            if (buggyBuild.getRepository().getSlug().toLowerCase().equals(TEST_PROJECT)) {
+                this.config.setPush(false);
             }
         }
     }
