@@ -53,7 +53,7 @@ import java.util.List;
  */
 public class Launcher {
 
-    private final static String TEST_PROJECT = "surli/failingproject";
+    private static final String TEST_PROJECT = "surli/failingproject";
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
