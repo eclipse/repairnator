@@ -29,6 +29,10 @@ if [[ 1 -eq 1 ]]; then
             echo "Master branch ignored"
         elif [ "$branchname" == "HEAD" ]; then
             echo "Head ref ignored"
+        elif [[ "$branchname" == "surli-failingProject"* ]]; then
+            echo "Branch detected from surli/failingProject: $branchname"
+            export OLD_BRANCHES="$OLD_BRANCHES $branchname"
+            export COUNTER=$((COUNTER+1))
         else
             echo "Treating branch $branchname"
             git checkout $branchname
