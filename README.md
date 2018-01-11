@@ -12,3 +12,7 @@ This repository contains three main projects:
   * [RepairNator](https://github.com/Spirals-Team/librepair/tree/master/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
   * [travisFilter](https://github.com/Spirals-Team/librepair/tree/master/travisFilter) is a really small project intented to filter quickly set of Github project to detect if they're using Travis or not.
   * [sandbox](https://github.com/Spirals-Team/librepair/tree/master/sandbox) TODO
+
+# Scripts
+
+ `librepair/resources/clean_old_branches.sh` removes bad branches from https://github.com/Spirals-Team/librepair-experiments
