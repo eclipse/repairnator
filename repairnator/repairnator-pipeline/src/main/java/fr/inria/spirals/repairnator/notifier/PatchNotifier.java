@@ -103,7 +103,7 @@ public class PatchNotifier extends AbstractNotifier {
             text += "You may find several information on the following about those patches: \n";
 
 
-            if (status.getNopolInformations() != null && !status.getNopolInformations().isEmpty() && !this.alreadyNotifiedForNopol) {
+            if (status.getNopolInformations() != null && !status.getNopolPatches().isEmpty() && !this.alreadyNotifiedForNopol) {
                 text += this.notifyForNopol(status);
 
                 this.notifyEngines("[NOPOL] "+subject, text);

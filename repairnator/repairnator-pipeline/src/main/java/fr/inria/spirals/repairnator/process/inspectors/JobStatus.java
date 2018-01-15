@@ -28,6 +28,7 @@ public class JobStatus {
     private File[] testDir;
 
     private List<NopolInformation> nopolInformations;
+    private List<String> nopolPatches;
     private List<String> npeFixPatches;
 
     private JsonElement astorResults;
@@ -62,6 +63,9 @@ public class JobStatus {
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
         this.createdFilesToPush = new ArrayList<>();
+        this.nopolPatches = new ArrayList<>();
+        this.astorPatches = new ArrayList<>();
+        this.npeFixPatches = new ArrayList<>();
     }
 
     public PipelineState getPipelineState() {
@@ -256,5 +260,13 @@ public class JobStatus {
 
     public List<String> getCreatedFilesToPush() {
         return createdFilesToPush;
+    }
+
+    public List<String> getNopolPatches() {
+        return nopolPatches;
+    }
+
+    public void setNopolPatches(List<String> nopolPatches) {
+        this.nopolPatches = nopolPatches;
     }
 }

@@ -258,6 +258,13 @@ public class NopolRepair extends AbstractStep {
             }
             this.setPipelineState(PipelineState.NOPOL_PATCHED);
             this.getInspector().getJobStatus().setHasBeenPatched(true);
+            List<String> nopolPatches = new ArrayList<>();
+            for (NopolInformation information : this.nopolInformations) {
+                for (Patch p : information.getPatches()) {
+                    nopolPatches.add(p.asString());
+                }
+            }
+            this.getInspector().getJobStatus().setNopolPatches(nopolPatches);
         } else {
             this.addStepError("No classpath or sources directory has been given. Nopol can't be launched.");
         }
