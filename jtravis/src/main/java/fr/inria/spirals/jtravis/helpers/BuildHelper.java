@@ -480,7 +480,7 @@ public class BuildHelper extends AbstractHelper {
         Date limitDate = null;
         if (!skipDateLimit) {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.YEAR, -1);
+            calendar.add(Calendar.YEAR, -2);
             limitDate = calendar.getTime();
         }
 
