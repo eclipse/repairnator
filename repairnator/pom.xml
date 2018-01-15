@@ -14,6 +14,7 @@
         <module>repairnator-scanner</module>
         <module>repairnator-dockerpool</module>
         <module>repairnator-checkbranches</module>
+        <module>repairnator-realtime</module>
     </modules>
 
     <repositories>

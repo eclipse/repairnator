@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -8,6 +9,8 @@ import fr.inria.spirals.jtravis.entities.Job;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The helper to deal with job objects
@@ -33,9 +36,11 @@ public class JobHelper extends AbstractHelper {
     public static Job createJobFromJsonElement(JsonObject jobJson) {
         Job result = createGson().fromJson(jobJson, Job.class);
 
-        JsonElement configJSON = jobJson.getAsJsonObject("config");
-        Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
-        result.setConfig(config);
+        if (jobJson.has("config")) {
+            JsonElement configJSON = jobJson.getAsJsonObject("config");
+            Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
+            result.setConfig(config);
+        }
         return result;
     }
 
@@ -53,6 +58,23 @@ public class JobHelper extends AbstractHelper {
             getInstance().getLogger().warn("Error when getting job id "+jobId+" : "+e.getMessage());
             return null;
         }
+    }
 
+    public static List<Job> getJobList() {
+        String resourceUrl = getInstance().getEndpoint()+JOB_ENDPOINT;
+
+        try {
+            String response = getInstance().get(resourceUrl);
+            JsonParser parser = new JsonParser();
+            JsonArray allAnswers = parser.parse(response).getAsJsonObject().getAsJsonArray("jobs");
+            List<Job> results = new ArrayList<>();
+            for (JsonElement jobJson : allAnswers) {
+                results.add(createJobFromJsonElement((JsonObject) jobJson));
+            }
+            return results;
+        } catch (IOException e) {
+            getInstance().getLogger().warn("Error while getting list of jobs : "+e.getMessage());
+        }
+        return null;
     }
 }

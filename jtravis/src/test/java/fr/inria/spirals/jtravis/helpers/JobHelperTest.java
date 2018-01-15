@@ -1,12 +1,15 @@
 package fr.inria.spirals.jtravis.helpers;
 
+import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Job;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by urli on 22/12/2016.
@@ -35,4 +38,36 @@ public class JobHelperTest {
         Job obtainedJob = JobHelper.getJobFromId(185719844);
         assertEquals(expectedJob, obtainedJob);
     }
+
+    @Test
+    public void testGetJobList() {
+        int minId = 329043061;
+
+        List<Job> jobs = JobHelper.getJobList();
+        assertTrue(jobs.size() > 1);
+        assertTrue(jobs.get(0).getId() > minId);
+    }
+
+    @Test
+	public void testJobListIsOrdered() {
+		List<Job> jobs = JobHelper.getJobList();
+
+		Job firstJob = jobs.get(0);
+		Job lastJob = jobs.get(jobs.size()-1);
+
+		if (firstJob.getBuildId() != lastJob.getBuildId()) {
+			Build firstBuild = BuildHelper.getBuildFromId(firstJob.getBuildId(), null);
+			Build lastBuild = BuildHelper.getBuildFromId(lastJob.getBuildId(), null);
+
+			if (firstBuild.getStartedAt() != null && lastBuild.getStartedAt() != null) {
+				assertTrue(firstBuild.getStartedAt().after(lastBuild.getStartedAt()));
+			} else {
+				assertTrue(firstBuild.getCommit().getCommittedAt().getTime() >= lastBuild.getCommit().getCommittedAt().getTime());
+			}
+
+		} else {
+			assertTrue(firstJob.getJobNumber() > lastJob.getJobNumber());
+		}
+
+	}
 }
