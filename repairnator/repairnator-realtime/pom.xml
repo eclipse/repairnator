@@ -11,5 +11,12 @@
 
     <artifactId>repairnator-realtime</artifactId>
 
+    <dependencies>
+        <dependency>
+            <artifactId>repairnator-dockerpool</artifactId>
+            <groupId>fr.inria.spirals</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

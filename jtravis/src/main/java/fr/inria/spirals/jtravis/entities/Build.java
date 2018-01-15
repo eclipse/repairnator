@@ -1,5 +1,6 @@
 package fr.inria.spirals.jtravis.entities;
 
+import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.JobHelper;
 import fr.inria.spirals.jtravis.helpers.PRInformationHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
@@ -29,6 +30,19 @@ public class Build extends BuildPojo implements Comparable<Build> {
     public Build() {
         super();
         this.jobs = new ArrayList<Job>();
+    }
+
+    public void refreshStatus() {
+        this.jobs.clear();
+        this.completeLog = null;
+        this.buildTool = null;
+
+        Build b = BuildHelper.getBuildFromId(this.getId(), null);
+        this.setState(b.getState());
+        this.setStartedAt(b.getStartedAt());
+        this.setFinishedAt(b.getFinishedAt());
+        this.setDuration(b.getDuration());
+        this.setJobIds(b.getJobIds());
     }
 
     public BuildStatus getBuildStatus() {

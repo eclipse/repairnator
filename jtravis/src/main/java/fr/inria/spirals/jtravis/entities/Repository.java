@@ -3,6 +3,8 @@ package fr.inria.spirals.jtravis.entities;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.pojos.RepositoryPojo;
 
+import java.util.Date;
+
 /**
  * Business object to deal with repository in Travis CI API
  * A repository can lazily get its last build.
@@ -12,6 +14,7 @@ import fr.inria.spirals.jtravis.pojos.RepositoryPojo;
 public class Repository extends RepositoryPojo {
     private Build lastBuild;
     private Build lastBuildOnMaster;
+    private Date lastAccess;
 
     /**
      * Get the last build of the current repository. If onMaster is specified it will only look for builds created by push on master or cron.
@@ -47,6 +50,13 @@ public class Repository extends RepositoryPojo {
             }
             return this.lastBuild;
         }
+    }
 
+    public Date getLastAccess() {
+        return lastAccess;
+    }
+
+    public void updateLastAccess() {
+        this.lastAccess = new Date();
     }
 }
