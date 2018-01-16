@@ -35,21 +35,21 @@ public class InspectBuilds implements Runnable {
     }
 
     public boolean maxSubmittedBuildsReached() {
-    	return (this.nbSubmittedBuilds >= this.maxSubmittedBuilds);
-	}
+        return (this.nbSubmittedBuilds >= this.maxSubmittedBuilds);
+    }
 
     public void submitNewBuild(Build build) {
         if (this.maxSubmittedBuilds == -1) {
             throw new RuntimeException("You must set maxSubmittedBuilds before running this.");
         }
         if (this.nbSubmittedBuilds < this.maxSubmittedBuilds) {
-        	if (this.waitingBuilds.contains(build)) {
-				this.waitingBuilds.add(build);
-				synchronized (this) {
-					this.nbSubmittedBuilds++;
-				}
-				LOGGER.info("New build submitted (id: "+build.getId()+") Total: "+this.nbSubmittedBuilds+" | Limit: "+maxSubmittedBuilds+")");
-			}
+            if (this.waitingBuilds.contains(build)) {
+                this.waitingBuilds.add(build);
+                synchronized (this) {
+                    this.nbSubmittedBuilds++;
+                }
+                LOGGER.info("New build submitted (id: "+build.getId()+") Total: "+this.nbSubmittedBuilds+" | Limit: "+maxSubmittedBuilds+")");
+            }
         } else {
             LOGGER.debug("Build submission ignored. (total reached)");
         }
@@ -57,12 +57,12 @@ public class InspectBuilds implements Runnable {
 
     @Override
     public void run() {
-    	LOGGER.debug("Start running inspect builds....");
+        LOGGER.debug("Start running inspect builds....");
         if (this.sleepTime == -1) {
             throw new RuntimeException("You must set sleepTime before running this.");
         }
         while (true) {
-        	LOGGER.info("Refresh all inspected build status (nb builds: "+this.nbSubmittedBuilds+")");
+            LOGGER.info("Refresh all inspected build status (nb builds: "+this.nbSubmittedBuilds+")");
             for (Build build : this.waitingBuilds) {
                 build.refreshStatus();
                 if (build.getFinishedAt() != null) {

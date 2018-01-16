@@ -25,7 +25,7 @@ public class InspectJobs implements Runnable {
 
     @Override
     public void run() {
-    	LOGGER.debug("Start running inspect Jobs...");
+        LOGGER.debug("Start running inspect Jobs...");
         if (sleepTime == -1) {
             throw new RuntimeException("Sleep time has to be set before running this.");
         }
@@ -40,13 +40,13 @@ public class InspectJobs implements Runnable {
             }
 
             if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached()) {
-            	LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
-				try {
-					Thread.sleep(sleepTime * 1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+                LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
+                try {
+                    Thread.sleep(sleepTime * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

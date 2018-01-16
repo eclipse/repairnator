@@ -80,7 +80,7 @@ public class RTScanner {
 
             this.blacklistWriter = new FileWriter(blackListFile, true);
         } catch (IOException e) {
-			LOGGER.error("Error while initializing blacklist", e);
+            LOGGER.error("Error while initializing blacklist", e);
         }
         LOGGER.info("Blacklist initialized with: "+this.blackListedRepository.size()+" entries");
     }
@@ -95,26 +95,26 @@ public class RTScanner {
     }
 
     private void addInBlacklistRepository(Repository repository) {
-		this.blackListedRepository.add(repository.getId());
-		try {
-			this.blacklistWriter.append("\n");
-			this.blacklistWriter.append(repository.getSlug());
-			this.blacklistWriter.flush();
-		} catch (IOException e) {
-			LOGGER.error("Error while writing entry in blacklist");
-		}
-	}
+        this.blackListedRepository.add(repository.getId());
+        try {
+            this.blacklistWriter.append("\n");
+            this.blacklistWriter.append(repository.getSlug());
+            this.blacklistWriter.flush();
+        } catch (IOException e) {
+            LOGGER.error("Error while writing entry in blacklist");
+        }
+    }
 
-	private void addInWhitelistRepository(Repository repository) {
-		this.whiteListedRepository.add(repository.getId());
-		try {
-			this.whitelistWriter.append("\n");
-			this.whitelistWriter.append(repository.getSlug());
-			this.whitelistWriter.flush();
-		} catch (IOException e) {
-			LOGGER.error("Error while writing entry in whitelist");
-		}
-	}
+    private void addInWhitelistRepository(Repository repository) {
+        this.whiteListedRepository.add(repository.getId());
+        try {
+            this.whitelistWriter.append("\n");
+            this.whitelistWriter.append(repository.getSlug());
+            this.whitelistWriter.flush();
+        } catch (IOException e) {
+            LOGGER.error("Error while writing entry in whitelist");
+        }
+    }
 
     public boolean isRepositoryInteresting(int repositoryId) {
         if (this.blackListedRepository.contains(repositoryId)) {
@@ -132,31 +132,31 @@ public class RTScanner {
 
         if (masterBuild == null) {
             LOGGER.info("No successful build found in "+repository.getSlug()+" (id: "+repositoryId+"). It will blacklisted for further call.");
-           	this.addInBlacklistRepository(repository);
+            this.addInBlacklistRepository(repository);
             return false;
         } else {
             if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
                 LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using java ("+masterBuild.getConfig().getLanguage()+"). It will blacklisted for further call.");
-				this.addInBlacklistRepository(repository);
+                this.addInBlacklistRepository(repository);
                 return false;
             }
 
             if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
                 LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is using gradle. It will blacklisted for further call.");
-				this.addInBlacklistRepository(repository);
+                this.addInBlacklistRepository(repository);
                 return false;
             } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
-            	LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") build tool is not known. It will be blacklisted for further call.");
-				this.addInBlacklistRepository(repository);
-            	return false;
-			}
+                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") build tool is not known. It will be blacklisted for further call.");
+                this.addInBlacklistRepository(repository);
+                return false;
+            }
 
             if (!masterBuild.getJobs().isEmpty()) {
                 Job firstJob = masterBuild.getJobs().get(0);
                 Log jobLog = firstJob.getLog();
                 if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
                     LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-					this.addInWhitelistRepository(repository);
+                    this.addInWhitelistRepository(repository);
                     return true;
                 } else {
                     LOGGER.info("No test found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
