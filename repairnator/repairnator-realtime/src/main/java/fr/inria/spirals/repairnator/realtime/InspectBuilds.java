@@ -51,10 +51,12 @@ public class InspectBuilds implements Runnable {
 
     @Override
     public void run() {
+    	LOGGER.debug("Start running inspect builds....");
         if (this.sleepTime == -1) {
             throw new RuntimeException("You must set sleepTime before running this.");
         }
         while (true) {
+        	LOGGER.info("Refresh all inspected build status (nb builds: "+this.nbSubmittedBuilds+")");
             for (Build build : this.waitingBuilds) {
                 build.refreshStatus();
                 if (build.getFinishedAt() != null) {

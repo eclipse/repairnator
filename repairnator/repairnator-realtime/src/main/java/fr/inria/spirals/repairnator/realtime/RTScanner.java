@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class RTScanner {
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final BuildRunner buildRunner;
+    private FileWriter blacklistWriter;
+    private FileWriter whitelistWriter;
     private boolean running;
 
     public RTScanner() {
@@ -56,8 +59,10 @@ public class RTScanner {
                     this.whiteListedRepository.add(repository.getId());
                 }
             }
+
+            this.whitelistWriter = new FileWriter(whiteListFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error while initializing whitelist", e);
         }
         LOGGER.info("Whitelist initialized with: "+this.whiteListedRepository.size()+" entries");
     }
@@ -72,29 +77,53 @@ public class RTScanner {
                     this.blackListedRepository.add(repository.getId());
                 }
             }
+
+            this.blacklistWriter = new FileWriter(blackListFile);
         } catch (IOException e) {
-            e.printStackTrace();
+			LOGGER.error("Error while initializing blacklist", e);
         }
-        LOGGER.info("Blacklist initialized with: "+this.whiteListedRepository.size()+" entries");
+        LOGGER.info("Blacklist initialized with: "+this.blackListedRepository.size()+" entries");
     }
 
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            new Thread(this.inspectBuilds).run();
-            new Thread(this.inspectJobs).run();
+            new Thread(this.inspectBuilds).start();
+            new Thread(this.inspectJobs).start();
             this.running = true;
         }
     }
 
+    private void addInBlacklistRepository(Repository repository) {
+		this.blackListedRepository.add(repository.getId());
+		try {
+			this.blacklistWriter.append("\n");
+			this.blacklistWriter.append(repository.getSlug());
+			this.blacklistWriter.flush();
+		} catch (IOException e) {
+			LOGGER.error("Error while writing entry in blacklist");
+		}
+	}
+
+	private void addInWhitelistRepository(Repository repository) {
+		this.whiteListedRepository.add(repository.getId());
+		try {
+			this.whitelistWriter.append("\n");
+			this.whitelistWriter.append(repository.getSlug());
+			this.whitelistWriter.flush();
+		} catch (IOException e) {
+			LOGGER.error("Error while writing entry in whitelist");
+		}
+	}
+
     public boolean isRepositoryInteresting(int repositoryId) {
         if (this.blackListedRepository.contains(repositoryId)) {
-            LOGGER.info("Repo already blacklisted (id: "+repositoryId+")");
+            LOGGER.debug("Repo already blacklisted (id: "+repositoryId+")");
             return false;
         }
 
         if (this.whiteListedRepository.contains(repositoryId)) {
-            LOGGER.info("Repo already whitelisted (id: "+repositoryId+")");
+            LOGGER.debug("Repo already whitelisted (id: "+repositoryId+")");
             return true;
         }
 
@@ -102,19 +131,19 @@ public class RTScanner {
         Build masterBuild = BuildHelper.getLastBuildFromMaster(repository);
 
         if (masterBuild == null) {
-            LOGGER.debug("No build found in "+repository.getSlug()+" (id: "+repositoryId+"). It will blacklisted for further call.");
-            this.blackListedRepository.add(repositoryId);
+            LOGGER.info("No build found in "+repository.getSlug()+" (id: "+repositoryId+"). It will blacklisted for further call.");
+           	this.addInBlacklistRepository(repository);
             return false;
         } else {
             if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
-                LOGGER.debug("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using java ("+masterBuild.getConfig().getLanguage()+"). It will blacklisted for further call.");
-                this.blackListedRepository.add(repositoryId);
+                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using java ("+masterBuild.getConfig().getLanguage()+"). It will blacklisted for further call.");
+				this.addInBlacklistRepository(repository);
                 return false;
             }
 
             if (masterBuild.getBuildTool() != BuildTool.MAVEN) {
-                LOGGER.debug("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using maven ("+masterBuild.getBuildTool()+"). It will blacklisted for further call.");
-                this.blackListedRepository.add(repositoryId);
+                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using maven ("+masterBuild.getBuildTool()+"). It will blacklisted for further call.");
+				this.addInBlacklistRepository(repository);
                 return false;
             }
 
@@ -123,13 +152,13 @@ public class RTScanner {
                 Log jobLog = firstJob.getLog();
                 if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
                     LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-                    this.whiteListedRepository.add(repositoryId);
+					this.addInWhitelistRepository(repository);
                     return true;
                 } else {
-                    LOGGER.debug("No test found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
+                    LOGGER.info("No test found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
                 }
             } else {
-                LOGGER.debug("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
+                LOGGER.info("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
             }
         }
 

@@ -25,6 +25,7 @@ public class InspectJobs implements Runnable {
 
     @Override
     public void run() {
+    	LOGGER.debug("Start running inspect Jobs...");
         if (sleepTime == -1) {
             throw new RuntimeException("Sleep time has to be set before running this.");
         }
@@ -33,7 +34,7 @@ public class InspectJobs implements Runnable {
 
             LOGGER.info("Retrieved "+jobList.size()+" jobs");
             for (Job job : jobList) {
-                if (this.rtScanner.isRepositoryInteresting(job.getBuildId())) {
+                if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
                     this.rtScanner.submitWaitingBuild(job.getBuildId());
                 }
             }
