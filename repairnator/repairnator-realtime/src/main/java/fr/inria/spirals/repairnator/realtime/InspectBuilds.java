@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,9 @@ public class InspectBuilds implements Runnable {
 
     public static final int BUILD_SLEEP_TIME = 10;
     public static final int LIMIT_SUBMITTED_BUILDS = 100;
+    private static final int NB_ELEMENT_TRAVIS_JOB = 250; // the number of elements returned by Travis Job endpoint
 
+    private CircularFifoQueue<Integer> observedBuilds = new CircularFifoQueue<>(NB_ELEMENT_TRAVIS_JOB);
     private Deque<Build> waitingBuilds = new ConcurrentLinkedDeque<>();
     private int nbSubmittedBuilds;
     private RTScanner rtScanner;
@@ -43,7 +46,8 @@ public class InspectBuilds implements Runnable {
             throw new RuntimeException("You must set maxSubmittedBuilds before running this.");
         }
         if (this.nbSubmittedBuilds < this.maxSubmittedBuilds) {
-            if (!this.waitingBuilds.contains(build)) {
+            if (!this.observedBuilds.contains(build.getId())) {
+                this.observedBuilds.add(build.getId());
                 this.waitingBuilds.add(build);
                 synchronized (this) {
                     this.nbSubmittedBuilds++;

@@ -299,3 +299,14 @@ mcfongtw/flink
 datastax/java-driver
 dellemc-symphony/identity-service-api
 itarverne/qrcodify
+apache/qpid-jms
+SAP/cloud-mta-java-common
+oracle/opengrok
+mibutec/popperfw
+openbase/bco.stage
+jgroups-extras/jgroups-azure
+openbase/bco.manager
+openbase/bco.psc
+JanusGraph/janusgraph
+openbase/bco.registry
+jruby/joni
