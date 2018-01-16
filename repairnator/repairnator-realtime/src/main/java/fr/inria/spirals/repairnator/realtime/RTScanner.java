@@ -146,7 +146,8 @@ public class RTScanner {
 				this.addInBlacklistRepository(repository);
                 return false;
             } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
-            	LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") build tool is not known. It is not considered right now.");
+            	LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") build tool is not known. It will be blacklisted for further call.");
+				this.addInBlacklistRepository(repository);
             	return false;
 			}
 

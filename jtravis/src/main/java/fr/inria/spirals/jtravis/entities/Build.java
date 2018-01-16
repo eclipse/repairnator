@@ -6,6 +6,8 @@ import fr.inria.spirals.jtravis.helpers.PRInformationHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.jtravis.parsers.LogParser;
 import fr.inria.spirals.jtravis.pojos.BuildPojo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.List;
  * @author Simon Urli
  */
 public class Build extends BuildPojo implements Comparable<Build> {
+    private final static Logger LOGGER = LoggerFactory.getLogger(Build.class);
+
     private Repository repository;
     private PRInformation prInformation;
     private Commit commit;
@@ -33,16 +37,19 @@ public class Build extends BuildPojo implements Comparable<Build> {
     }
 
     public void refreshStatus() {
-        this.jobs.clear();
-        this.completeLog = null;
-        this.buildTool = null;
-
         Build b = BuildHelper.getBuildFromId(this.getId(), null);
-        this.setState(b.getState());
-        this.setStartedAt(b.getStartedAt());
-        this.setFinishedAt(b.getFinishedAt());
-        this.setDuration(b.getDuration());
-        this.setJobIds(b.getJobIds());
+        if (!this.getState().equals(b.getState())) {
+            this.jobs.clear();
+            this.completeLog = null;
+            this.buildTool = null;
+            this.setState(b.getState());
+            LOGGER.debug("New status for build id: "+this.getId()+" : "+this.getBuildStatus());
+
+            this.setStartedAt(b.getStartedAt());
+            this.setFinishedAt(b.getFinishedAt());
+            this.setDuration(b.getDuration());
+            this.setJobIds(b.getJobIds());
+        }
     }
 
     public BuildStatus getBuildStatus() {

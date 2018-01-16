@@ -10,7 +10,7 @@ import java.util.List;
 public class InspectJobs implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectJobs.class);
 
-    public static final int JOB_SLEEP_TIME = 10;
+    public static final int JOB_SLEEP_TIME = 60;
     private RTScanner rtScanner;
     private int sleepTime;
 
@@ -39,11 +39,14 @@ public class InspectJobs implements Runnable {
                 }
             }
 
-            /*try {
-                Thread.sleep(sleepTime * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
+            if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached()) {
+            	LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
+				try {
+					Thread.sleep(sleepTime * 1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
         }
     }
 }

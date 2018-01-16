@@ -34,6 +34,10 @@ public class InspectBuilds implements Runnable {
         this.maxSubmittedBuilds = maxSubmittedBuilds;
     }
 
+    public boolean maxSubmittedBuildsReached() {
+    	return (this.nbSubmittedBuilds >= this.maxSubmittedBuilds);
+	}
+
     public void submitNewBuild(Build build) {
         if (this.maxSubmittedBuilds == -1) {
             throw new RuntimeException("You must set maxSubmittedBuilds before running this.");

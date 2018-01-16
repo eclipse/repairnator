@@ -31,13 +31,11 @@ JSQLParser/JSqlParser
 JodaOrg/joda-beans
 LiveRamp/hank
 MariaDB/mariadb-connector-j
-Mashape/unirest-java
 MoriTanosuke/glacieruploader
 Multiverse/Multiverse-Core
 NLPchina/elasticsearch-sql
 OWASP/java-html-sanitizer
 OpenGamma/Strata
-OpenGrok/OpenGrok
 OpenSextant/SolrTextTagger
 OpenTSDB/opentsdb
 OrbitzWorldwide/consul-client
@@ -168,7 +166,6 @@ linqs/psl
 logstash/logstash-logback-encoder
 lukas-krecan/JsonUnit
 matsim-org/matsim
-mdeverdelhan/ta4j
 mitreid-connect/OpenID-Connect-Java-Spring-Server
 modcluster/mod_cluster
 neoremind/fluent-validator
@@ -256,7 +253,6 @@ undera/jmeter-plugins
 windy1/google-places-api-java
 wix/wix-embedded-mysql
 wro4j/wro4j
-wu-sheng/sky-walking
 x-stream/xstream
 xetorthio/jedis
 xmlunit/xmlunit
@@ -290,3 +286,4 @@ zhangch1991425/twilio_twilio-java_0
 zhangch1991425/twilio_twilio-java_4
 zhangch1991425/twilio_twilio-java_3
 ga4gh/dockstore
+FlakyTestDetection/jackrabbit-oak
