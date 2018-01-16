@@ -287,3 +287,12 @@ zhangch1991425/twilio_twilio-java_4
 zhangch1991425/twilio_twilio-java_3
 ga4gh/dockstore
 FlakyTestDetection/jackrabbit-oak
+pgjdbc/pgjdbc-jre7
+libpasta/libpasta-java
+mreutegg/jackrabbit-oak
+algolia/algoliasearch-client-java-2
+pgjdbc/pgjdbc-jre6
+fact-project/fact-tools
+dannil/scb-java-client
+openbase/bco.authentication
+mcfongtw/flink
