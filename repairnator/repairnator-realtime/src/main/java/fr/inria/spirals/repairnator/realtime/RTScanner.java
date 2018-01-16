@@ -60,7 +60,7 @@ public class RTScanner {
                 }
             }
 
-            this.whitelistWriter = new FileWriter(whiteListFile);
+            this.whitelistWriter = new FileWriter(whiteListFile, true);
         } catch (IOException e) {
             LOGGER.error("Error while initializing whitelist", e);
         }
@@ -78,7 +78,7 @@ public class RTScanner {
                 }
             }
 
-            this.blacklistWriter = new FileWriter(blackListFile);
+            this.blacklistWriter = new FileWriter(blackListFile, true);
         } catch (IOException e) {
 			LOGGER.error("Error while initializing blacklist", e);
         }
