@@ -118,7 +118,7 @@ public class RTScanner {
 
     public boolean isRepositoryInteresting(int repositoryId) {
         if (this.blackListedRepository.contains(repositoryId)) {
-            LOGGER.debug("Repo already blacklisted (id: "+repositoryId+")");
+            //LOGGER.debug("Repo already blacklisted (id: "+repositoryId+")");
             return false;
         }
 

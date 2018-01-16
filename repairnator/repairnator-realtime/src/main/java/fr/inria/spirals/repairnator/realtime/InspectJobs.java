@@ -32,14 +32,15 @@ public class InspectJobs implements Runnable {
         while (true) {
             List<Job> jobList = JobHelper.getJobList();
 
-            LOGGER.info("Retrieved "+jobList.size()+" jobs");
-            for (Job job : jobList) {
-                if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
-                    this.rtScanner.submitWaitingBuild(job.getBuildId());
+            if (jobList != null) {
+                LOGGER.info("Retrieved "+jobList.size()+" jobs");
+                for (Job job : jobList) {
+                    if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
+                        this.rtScanner.submitWaitingBuild(job.getBuildId());
+                    }
                 }
             }
-
-            if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached()) {
+            if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || jobList == null) {
                 LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
                 try {
                     Thread.sleep(sleepTime * 1000);
