@@ -29,10 +29,8 @@ public class RTLauncher {
 	private final LauncherMode launcherMode;
 	private JSAP jsap;
 	private JSAPResult arguments;
-	private String accessToken;
 	private List<SerializerEngine> engines;
 	private RepairnatorConfig config;
-	private EndProcessNotifier endProcessNotifier;
 
 	private RTLauncher(String[] args) throws JSAPException {
 		this.defineArgs();
@@ -263,8 +261,6 @@ public class RTLauncher {
 			} else {
 				LOGGER.info("The email notifier engine won't be used.");
 			}
-
-			this.endProcessNotifier = new EndProcessNotifier(notifierEngines, "dockerpool - (runid: "+this.config.getRunId()+")");
 		}
 	}
 
