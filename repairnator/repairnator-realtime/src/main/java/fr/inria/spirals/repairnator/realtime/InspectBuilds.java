@@ -43,11 +43,13 @@ public class InspectBuilds implements Runnable {
             throw new RuntimeException("You must set maxSubmittedBuilds before running this.");
         }
         if (this.nbSubmittedBuilds < this.maxSubmittedBuilds) {
-            this.waitingBuilds.add(build);
-            synchronized (this) {
-                this.nbSubmittedBuilds++;
-            }
-            LOGGER.info("New build submitted (Total: "+this.nbSubmittedBuilds+" | Limit: "+maxSubmittedBuilds+")");
+        	if (this.waitingBuilds.contains(build)) {
+				this.waitingBuilds.add(build);
+				synchronized (this) {
+					this.nbSubmittedBuilds++;
+				}
+				LOGGER.info("New build submitted (id: "+build.getId()+") Total: "+this.nbSubmittedBuilds+" | Limit: "+maxSubmittedBuilds+")");
+			}
         } else {
             LOGGER.debug("Build submission ignored. (total reached)");
         }

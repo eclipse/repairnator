@@ -296,3 +296,6 @@ fact-project/fact-tools
 dannil/scb-java-client
 openbase/bco.authentication
 mcfongtw/flink
+datastax/java-driver
+dellemc-symphony/identity-service-api
+itarverne/qrcodify

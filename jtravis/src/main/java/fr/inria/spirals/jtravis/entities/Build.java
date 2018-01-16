@@ -43,7 +43,7 @@ public class Build extends BuildPojo implements Comparable<Build> {
             this.completeLog = null;
             this.buildTool = null;
             this.setState(b.getState());
-            LOGGER.debug("New status for build id: "+this.getId()+" : "+this.getBuildStatus());
+            LOGGER.warn("New status for build id: "+this.getId()+" : "+this.getBuildStatus());
 
             this.setStartedAt(b.getStartedAt());
             this.setFinishedAt(b.getFinishedAt());
