@@ -128,10 +128,10 @@ public class RTScanner {
         }
 
         Repository repository = RepositoryHelper.getRepositoryFromId(repositoryId);
-        Build masterBuild = BuildHelper.getLastBuildFromMaster(repository);
+        Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false);
 
         if (masterBuild == null) {
-            LOGGER.info("No build found in "+repository.getSlug()+" (id: "+repositoryId+"). It will blacklisted for further call.");
+            LOGGER.info("No successful build found in "+repository.getSlug()+" (id: "+repositoryId+"). It will blacklisted for further call.");
            	this.addInBlacklistRepository(repository);
             return false;
         } else {
@@ -141,11 +141,14 @@ public class RTScanner {
                 return false;
             }
 
-            if (masterBuild.getBuildTool() != BuildTool.MAVEN) {
-                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using maven ("+masterBuild.getBuildTool()+"). It will blacklisted for further call.");
+            if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
+                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is using gradle. It will blacklisted for further call.");
 				this.addInBlacklistRepository(repository);
                 return false;
-            }
+            } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
+            	LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") build tool is not known. It is not considered right now.");
+            	return false;
+			}
 
             if (!masterBuild.getJobs().isEmpty()) {
                 Job firstJob = masterBuild.getJobs().get(0);

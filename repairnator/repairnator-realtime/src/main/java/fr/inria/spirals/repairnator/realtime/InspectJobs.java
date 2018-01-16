@@ -39,11 +39,11 @@ public class InspectJobs implements Runnable {
                 }
             }
 
-            try {
+            /*try {
                 Thread.sleep(sleepTime * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 }

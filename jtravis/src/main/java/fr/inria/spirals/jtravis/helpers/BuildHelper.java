@@ -561,7 +561,31 @@ public class BuildHelper extends AbstractHelper {
         }
     }
 
+    public static Build getLastSuccessfulBuildFromMaster(Repository repository, boolean withCron) {
+        String slug = repository.getSlug();
+        List<Build> results = new ArrayList<Build>();
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -10);
+        Date limitDate = calendar.getTime();
+
+        int limitNumber = 1;
+        List<String> eventTypes = new ArrayList<String>();
+        if (withCron) {
+            eventTypes.add("cron");
+        }
+        eventTypes.add("push");
+        int prNumber = -1;
+
+        getBuildsFromSlugRecursively(slug, results, limitDate, 0, 0, eventTypes, limitNumber, BuildStatus.PASSED, prNumber, false, null);
+
+
+        if (results.size() > 0) {
+            return results.get(0);
+        } else {
+            return null;
+        }
+    }
 
     public static Build getLastBuildFromMaster(Repository repository) {
         String slug = repository.getSlug();
