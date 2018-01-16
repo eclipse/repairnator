@@ -43,7 +43,7 @@ public class InspectBuilds implements Runnable {
             throw new RuntimeException("You must set maxSubmittedBuilds before running this.");
         }
         if (this.nbSubmittedBuilds < this.maxSubmittedBuilds) {
-            if (this.waitingBuilds.contains(build)) {
+            if (!this.waitingBuilds.contains(build)) {
                 this.waitingBuilds.add(build);
                 synchronized (this) {
                     this.nbSubmittedBuilds++;
