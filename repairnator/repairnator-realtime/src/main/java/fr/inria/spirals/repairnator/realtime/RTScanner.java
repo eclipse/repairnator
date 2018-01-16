@@ -123,7 +123,7 @@ public class RTScanner {
         }
 
         if (this.whiteListedRepository.contains(repositoryId)) {
-            LOGGER.debug("Repo already whitelisted (id: "+repositoryId+")");
+            //LOGGER.debug("Repo already whitelisted (id: "+repositoryId+")");
             return true;
         }
 
