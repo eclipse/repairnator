@@ -281,3 +281,12 @@ lennartkoopmann/nzyme
 uber/AthenaX
 apache/parquet-mr
 RBMHTechnology/vind
+jruby/jruby
+SUSE/salt-netapi-client
+bjornkpu/HouseholdManager-Team3
+thomastmts/gilded-rose
+zhangch1991425/twilio_twilio-java_1
+zhangch1991425/twilio_twilio-java_0
+zhangch1991425/twilio_twilio-java_4
+zhangch1991425/twilio_twilio-java_3
+ga4gh/dockstore
