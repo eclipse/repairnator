@@ -45,6 +45,10 @@ public class RunnablePipelineContainer implements Runnable {
         this.createOutputDir = createOutputDir;
     }
 
+    public int getBuildId() {
+        return buildId;
+    }
+
     @Override
     public void run() {
         String containerId = null;
