@@ -35,6 +35,8 @@ export CHECK_BRANCH_REPOSITORY= # Repository to use for check branches script
 export JOB_SLEEP_TIME=10
 export BUILD_SLEEP_TIME=10
 export LIMIT_INSPECTED_BUILDS=100
+export WHITELIST_PATH=
+export BLACKLIST_PATH=
 
 export DOCKER_CHECKBRANCHES_TAG=surli/checkbranches:latest
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator # Path of the local cloned repository for repairnator
