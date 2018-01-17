@@ -35,7 +35,7 @@ public class RTScanner {
     private BlacklistedSerializer blacklistedSerializer;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
-		this.engines = engines;
+        this.engines = engines;
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.buildRunner = new BuildRunner(this);
