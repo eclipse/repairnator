@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Job;
 import okhttp3.ResponseBody;
@@ -34,14 +35,19 @@ public class JobHelper extends AbstractHelper {
     }
 
     public static Job createJobFromJsonElement(JsonObject jobJson) {
-        Job result = createGson().fromJson(jobJson, Job.class);
+        try {
+            Job result = createGson().fromJson(jobJson, Job.class);
 
-        if (jobJson.has("config")) {
-            JsonElement configJSON = jobJson.getAsJsonObject("config");
-            Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
-            result.setConfig(config);
+            if (jobJson.has("config")) {
+                JsonElement configJSON = jobJson.getAsJsonObject("config");
+                Config config = ConfigHelper.getConfigFromJsonElement(configJSON);
+                result.setConfig(config);
+            }
+            return result;
+        } catch (JsonSyntaxException jsonSyntaxException) {
+            getInstance().getLogger().error("Error while creating job node: ", jsonSyntaxException);
+            return null;
         }
-        return result;
     }
 
     public static Job getJobFromId(int jobId) {
@@ -69,7 +75,10 @@ public class JobHelper extends AbstractHelper {
             JsonArray allAnswers = parser.parse(response).getAsJsonObject().getAsJsonArray("jobs");
             List<Job> results = new ArrayList<>();
             for (JsonElement jobJson : allAnswers) {
-                results.add(createJobFromJsonElement((JsonObject) jobJson));
+                Job job = createJobFromJsonElement((JsonObject) jobJson);
+                if (job != null) {
+                    results.add(job);
+                }
             }
             return results;
         } catch (IOException e) {
