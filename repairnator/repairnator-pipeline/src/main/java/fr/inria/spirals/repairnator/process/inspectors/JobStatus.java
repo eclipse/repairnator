@@ -255,7 +255,9 @@ public class JobStatus {
     }
 
     public void addFileToPush(String filePath) {
-        this.createdFilesToPush.add(filePath);
+        if (!this.createdFilesToPush.contains(filePath)) {
+            this.createdFilesToPush.add(filePath);
+        }
     }
 
     public List<String> getCreatedFilesToPush() {

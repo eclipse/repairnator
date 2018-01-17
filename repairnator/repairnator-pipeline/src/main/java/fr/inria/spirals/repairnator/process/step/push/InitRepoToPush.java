@@ -48,16 +48,19 @@ public class InitRepoToPush extends AbstractStep {
                 Git git = Git.init().setDirectory(targetDir).call();
                 git.add().addFilepattern(".").call();
 
-                // add force is not supported by JGit...
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", StringUtils.join(this.getInspector().getJobStatus().getCreatedFilesToPush(), " "))
-                        .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+                for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
+                    // add force is not supported by JGit...
+                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", fileToPush)
+                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
 
-                try {
-                    Process p = processBuilder.start();
-                    p.waitFor();
-                } catch (InterruptedException|IOException e) {
-                    this.getLogger().error("Error while executing git command to add files: " + e);
+                    try {
+                        Process p = processBuilder.start();
+                        p.waitFor();
+                    } catch (InterruptedException|IOException e) {
+                        this.getLogger().error("Error while executing git command to add files: " + e);
+                    }
                 }
+
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 String message = "Bug commit from the following repository "+this.getInspector().getRepoSlug()+"\n";
