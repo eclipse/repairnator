@@ -49,6 +49,19 @@ public class Job extends JobPojo {
         return buildTool;
     }
 
+    public int getJobNumber() {
+        if (this.getNumber() == null) {
+            return -1;
+        }
+
+        String[] numbers = this.getNumber().split("\\.");
+        if (numbers.length != 2) {
+            return -1;
+        }
+
+        return Integer.parseInt(numbers[1]);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

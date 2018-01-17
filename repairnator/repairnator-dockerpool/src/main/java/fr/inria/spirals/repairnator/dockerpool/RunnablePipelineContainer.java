@@ -31,10 +31,11 @@ public class RunnablePipelineContainer implements Runnable {
     private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
     private boolean skipDelete;
     private boolean createOutputDir;
+    private AbstractPoolManager poolManager;
 
 
-    public RunnablePipelineContainer(String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
-
+    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
+        this.poolManager = poolManager;
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
@@ -44,10 +45,14 @@ public class RunnablePipelineContainer implements Runnable {
         this.createOutputDir = createOutputDir;
     }
 
+    public int getBuildId() {
+        return buildId;
+    }
+
     @Override
     public void run() {
         String containerId = null;
-        DockerClient docker = Launcher.docker;
+        DockerClient docker = this.poolManager.getDockerClient();
         try {
             LOGGER.info("Start to build and run container for build id "+buildId);
 
@@ -108,7 +113,7 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.error("Error while creating or running the container for build id "+buildId, e);
             serialize("ERROR");
         }
-        Launcher.submittedRunnablePipelineContainers.remove(this);
+        this.poolManager.removeSubmittedRunnablePipelineContainer(this);
     }
 
     private void killDockerContainer(DockerClient docker, String containerId) {

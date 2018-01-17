@@ -7,11 +7,6 @@ import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
-import com.spotify.docker.client.DefaultDockerClient;
-import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.exceptions.DockerCertificateException;
-import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -27,7 +22,6 @@ import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine
 import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.ManageGoogleAccessToken;
-import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
@@ -40,7 +34,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by urli on 13/03/2017.
  */
-public class Launcher {
+public class Launcher extends AbstractPoolManager {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private final LauncherMode launcherMode;
     private JSAP jsap;
@@ -57,9 +50,6 @@ public class Launcher {
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
-
-    public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
-    public static DockerClient docker;
 
     private void defineArgs() throws JSAPException {
         // Verbose output
@@ -265,29 +255,6 @@ public class Launcher {
         return result;
     }
 
-    private String findDockerImage() {
-        try {
-            docker = DefaultDockerClient.fromEnv().build();
-
-            List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.allImages());
-
-            String imageId = null;
-            for (Image image : allImages) {
-                if (image.repoTags() != null && image.repoTags().contains(this.arguments.getString("imageName"))) {
-                    imageId = image.id();
-                    break;
-                }
-            }
-
-            if (imageId == null) {
-                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+this.arguments.getString("imageName")+"\": no image has been found.");
-            }
-            return imageId;
-        } catch (DockerCertificateException|InterruptedException|DockerException e) {
-            throw new RuntimeException("Error while looking for the docker image",e);
-        }
-    }
-
     private void runPool() throws IOException {
         String runId = this.arguments.getString("runId");
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "dockerPool");
@@ -299,18 +266,19 @@ public class Launcher {
 
         endProcessSerializer.setNbBuilds(buildIds.size());
 
-        String imageId = this.findDockerImage();
+        String imageId = this.findDockerImage(this.arguments.getString("imageName"));
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        String dockerOutputDir = this.arguments.getString("logDirectory");
+        this.setDockerOutputDir(this.arguments.getString("logDirectory"));
+        this.setRunId(runId);
+        this.setCreateOutputDir(this.arguments.getBoolean("createOutputDir"));
+        this.setSkipDelete(this.arguments.getBoolean("skipDelete"));
+        this.setEngines(this.engines);
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (Integer builId : buildIds) {
-            TreatedBuildTracking treatedBuildTracking = new TreatedBuildTracking(this.engines, this.arguments.getString("runId"), builId);
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, builId, dockerOutputDir, treatedBuildTracking, this.arguments.getBoolean("skipDelete"), this.arguments.getBoolean("createOutputDir"));
-            submittedRunnablePipelineContainers.add(runnablePipelineContainer);
-            executorService.submit(runnablePipelineContainer);
+            executorService.submit(this.submitBuild(imageId, builId));
         }
 
         executorService.shutdown();
@@ -331,7 +299,7 @@ public class Launcher {
             endProcessSerializer.setStatus("interrupted");
         }
 
-        docker.close();
+        this.getDockerClient().close();
         endProcessSerializer.serialize();
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();

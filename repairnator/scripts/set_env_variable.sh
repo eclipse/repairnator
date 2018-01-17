@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#### STANDARD CONFIGURATION ####
+
+export RUN_ID_SUFFIX= # A suffix to add to the run id.
 export M2_HOME= # Path to maven home directory
 export GITHUB_LOGIN= # Github Login to use github API
 export GITHUB_OAUTH= # Github personal token (https://github.com/settings/tokens)
@@ -21,15 +24,21 @@ export NOTIFY_TO= # email adresses separated by comma
 export DOCKER_TAG=surli/librepair:latest # Tag of the docker image to use for pipeline
 export LOOK_FROM_DATE= # Use with the following one, when wanting to scan a period of time
 export LOOK_TO_DATE=
-
-export CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers
 export SKIP_LAUNCH_REPAIRNATOR=0 # Skip the launch of docker pool: it will only launch the scanner. Note that if a list of build is passed as parameter, this option is overriden.
 export NOTIFY_ENDPROCESS=0 # If set to 1, the end of dockerpool and scan will send a notification using smtp and notify_to information
-export RUN_ID_SUFFIX= # A suffix to add to the run id.
+export CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers
 
 export CHECK_BRANCH_REPOSITORY= # Repository to use for check branches script
-export DOCKER_CHECKBRANCHES_TAG=surli/checkbranches:latest
 
+##### CONFIGURATION FOR REALTIME SCANNER ####
+
+export JOB_SLEEP_TIME=10
+export BUILD_SLEEP_TIME=10
+export LIMIT_INSPECTED_BUILDS=100
+export WHITELIST_PATH=
+export BLACKLIST_PATH=
+
+export DOCKER_CHECKBRANCHES_TAG=surli/checkbranches:latest
 export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator # Path of the local cloned repository for repairnator
 export GOOGLE_SECRET_PATH=$HOME_REPAIR/client_secret.json # Path of the google secret if spreadsheet is used
 
@@ -45,3 +54,6 @@ export REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H
 
 export REPAIRNATOR_CHECKBRANCHES_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-checkbranches/target/repairnator-checkbranches-*-jar-with-dependencies.jar" # full name of the scanner jar
 export REPAIRNATOR_CHECKBRANCHES_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-checkbranches.jar
+
+export REPAIRNATOR_REALTIME_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-realtime/target/repairnator-realtime-*-jar-with-dependencies.jar" # full name of the scanner jar
+export REPAIRNATOR_REALTIME_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-realtime.jar

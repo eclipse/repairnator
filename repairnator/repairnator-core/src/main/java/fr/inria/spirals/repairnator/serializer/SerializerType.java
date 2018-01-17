@@ -22,7 +22,9 @@ public enum SerializerType {
     SCANNER("scanner","Scanner Data!A1:N1"),
     SCANNER4BEARS("scanner4bears","Scanner Data!A1:P1"),
     HARDWARE_INFO("hardwareInfo","Hardware Info!A:V"),
-    METRICS("bearmetrics","Bear Metrics!A:Z")
+    METRICS("bearmetrics","Bear Metrics!A:Z"),
+    RTSCANNER("rtscanner","RTScanner!A:Z"),
+    BLACKLISTED("blacklisted", "Blacklisted!A:Z")
     ;
 
     private String filename;
