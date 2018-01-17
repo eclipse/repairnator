@@ -268,7 +268,7 @@ public class RTLauncher {
         String runId = this.arguments.getString("runId");
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
-        RTScanner rtScanner = new RTScanner();
+        RTScanner rtScanner = new RTScanner(runId, this.engines);
         rtScanner.getInspectBuilds().setMaxSubmittedBuilds(this.arguments.getInt("maxinspectedbuilds"));
         rtScanner.getInspectBuilds().setSleepTime(this.arguments.getInt("buildsleeptime"));
         rtScanner.getInspectJobs().setSleepTime(this.arguments.getInt("jobsleeptime"));

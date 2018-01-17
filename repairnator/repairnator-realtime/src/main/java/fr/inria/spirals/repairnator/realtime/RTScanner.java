@@ -7,6 +7,8 @@ import fr.inria.spirals.jtravis.entities.Log;
 import fr.inria.spirals.jtravis.entities.Repository;
 import fr.inria.spirals.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
+import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +30,27 @@ public class RTScanner {
     private FileWriter blacklistWriter;
     private FileWriter whitelistWriter;
     private boolean running;
+    private String runId;
+    private List<SerializerEngine> engines;
+    private BlacklistedSerializer blacklistedSerializer;
 
-    public RTScanner() {
+    public RTScanner(String runId, List<SerializerEngine> engines) {
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.buildRunner = new BuildRunner(this);
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
+        this.runId = runId;
+        this.engines = engines;
+        this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+    }
+
+    public List<SerializerEngine> getEngines() {
+        return engines;
+    }
+
+    public String getRunId() {
+        return runId;
     }
 
     public BuildRunner getBuildRunner() {
@@ -132,21 +148,25 @@ public class RTScanner {
 
         if (masterBuild == null) {
             LOGGER.info("No successful build found in "+repository.getSlug()+" (id: "+repositoryId+"). It will blacklisted for further call.");
+            this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.NO_SUCCESSFUL_BUILD, "");
             this.addInBlacklistRepository(repository);
             return false;
         } else {
             if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
                 LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using java ("+masterBuild.getConfig().getLanguage()+"). It will blacklisted for further call.");
+                this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
                 this.addInBlacklistRepository(repository);
                 return false;
             }
 
             if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
                 LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is using gradle. It will blacklisted for further call.");
+                this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
                 this.addInBlacklistRepository(repository);
                 return false;
             } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
                 LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") build tool is not known. It will be blacklisted for further call.");
+                this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
                 this.addInBlacklistRepository(repository);
                 return false;
             }

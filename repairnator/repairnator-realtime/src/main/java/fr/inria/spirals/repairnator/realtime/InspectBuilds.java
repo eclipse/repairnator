@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.spirals.jtravis.entities.Build;
 import fr.inria.spirals.jtravis.entities.BuildStatus;
+import fr.inria.spirals.repairnator.realtime.serializer.WatchedBuildSerializer;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,13 @@ public class InspectBuilds implements Runnable {
     private RTScanner rtScanner;
     private int sleepTime;
     private int maxSubmittedBuilds;
+    private WatchedBuildSerializer watchedBuildSerializer;
 
     public InspectBuilds(RTScanner rtScanner) {
         this.rtScanner = rtScanner;
         this.sleepTime = -1;
         this.maxSubmittedBuilds = -1;
+        this.watchedBuildSerializer = new WatchedBuildSerializer(this.rtScanner.getEngines(), this.rtScanner);
     }
 
     public void setSleepTime(int sleepTime) {
@@ -74,6 +77,7 @@ public class InspectBuilds implements Runnable {
                     if (build.getBuildStatus() == BuildStatus.FAILED) {
                         this.rtScanner.submitBuildToExecution(build);
                     }
+                    this.watchedBuildSerializer.serialize(build);
                     this.waitingBuilds.remove(build);
                     synchronized (this) {
                         this.nbSubmittedBuilds--;
