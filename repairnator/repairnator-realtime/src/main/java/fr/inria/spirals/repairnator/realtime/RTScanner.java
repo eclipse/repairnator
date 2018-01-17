@@ -35,13 +35,13 @@ public class RTScanner {
     private BlacklistedSerializer blacklistedSerializer;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
+		this.engines = engines;
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.buildRunner = new BuildRunner(this);
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
-        this.engines = engines;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
     }
 
