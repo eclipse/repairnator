@@ -43,10 +43,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by urli on 09/03/2017.
@@ -64,6 +66,19 @@ public class Launcher {
 
 
     public Launcher(String[] args) throws JSAPException {
+        InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
+        Properties properties = new Properties();
+        if (propertyStream != null) {
+            try {
+                properties.load(propertyStream);
+            } catch (IOException e) {
+                LOGGER.error("Error while loading property file", e);
+            }
+            LOGGER.info("PIPELINE VERSION: "+properties.getProperty("PIPELINE_VERSION"));
+        } else {
+            LOGGER.info("No information about PIPELINE VERSION has been found.");
+        }
+
         this.defineArgs();
         this.arguments = jsap.parse(args);
         this.checkArguments();
