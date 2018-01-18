@@ -280,7 +280,7 @@ public class RTLauncher {
         buildRunner.setCreateOutputDir(this.arguments.getBoolean("createOutputDir"));
         buildRunner.setSkipDelete(this.arguments.getBoolean("skipDelete"));
         buildRunner.setEngines(this.engines);
-        buildRunner.initDockerImage(this.arguments.getString("imageName"));
+        buildRunner.setDockerImageName(this.arguments.getString("imageName"));
         buildRunner.initExecutorService(this.arguments.getInt("threads"));
 
 
