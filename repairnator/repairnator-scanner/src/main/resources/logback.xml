@@ -4,7 +4,7 @@
 			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n </pattern>
 		</encoder>
 	</appender>
-
+	<logger name="org.mongodb.driver" level="warn" />
 	<logger name="fr.inria.spirals.jtravis.helpers" level="info" />
 	<logger name="fr.inria.spirals.repairnator" level="info" />
 	<logger name="fr.inria.lille.nopol" level="info" />

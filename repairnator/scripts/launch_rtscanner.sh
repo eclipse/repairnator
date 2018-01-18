@@ -22,7 +22,6 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
-
 mkdir $REPAIR_OUTPUT_PATH
 
 if [ -z "$RUN_ID_SUFFIX" ]; then
@@ -63,4 +62,4 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
 fi
 
 echo "Supplementary args for realtime scanner $args"
-java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID $args &> $LOG_DIR/realtime.log
+java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID $args &> /dev/null
