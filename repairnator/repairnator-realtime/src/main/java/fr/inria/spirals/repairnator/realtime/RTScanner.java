@@ -17,13 +17,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RTScanner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
+    private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
     private final List<Integer> blackListedRepository;
     private final List<Integer> whiteListedRepository;
+    private final Map<Integer,Date> tempBlackList;
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final BuildRunner buildRunner;
@@ -38,6 +43,7 @@ public class RTScanner {
         this.engines = engines;
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
+        this.tempBlackList = new HashMap<>();
         this.buildRunner = new BuildRunner(this);
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
@@ -108,7 +114,9 @@ public class RTScanner {
         }
     }
 
-    private void addInBlacklistRepository(Repository repository) {
+    private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
+        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
+        this.blacklistedSerializer.serialize(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
         try {
             this.blacklistWriter.append(repository.getId()+"");
@@ -130,6 +138,12 @@ public class RTScanner {
         }
     }
 
+    private void addInTempBlackList(Repository repository, String comment) {
+        Date expirationDate = new Date(new Date().toInstant().plusSeconds(DURATION_IN_TEMP_BLACKLIST).toEpochMilli());
+        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is temporary blacklisted (expiration date: "+expirationDate.toString()+"). Reason: "+comment);
+        this.tempBlackList.put(repository.getId(), expirationDate);
+    }
+
     public boolean isRepositoryInteresting(int repositoryId) {
         if (this.blackListedRepository.contains(repositoryId)) {
             //LOGGER.debug("Repo already blacklisted (id: "+repositoryId+")");
@@ -141,31 +155,31 @@ public class RTScanner {
             return true;
         }
 
+        if (this.tempBlackList.containsKey(repositoryId)) {
+            if (this.tempBlackList.get(repositoryId).after(new Date())) {
+                return false;
+            } else {
+                this.tempBlackList.remove(repositoryId);
+            }
+        }
+
         Repository repository = RepositoryHelper.getRepositoryFromId(repositoryId);
         Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false);
 
         if (masterBuild == null) {
-            LOGGER.info("No successful build found in "+repository.getSlug()+" (id: "+repositoryId+"). It will blacklisted for further call.");
-            this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.NO_SUCCESSFUL_BUILD, "");
-            this.addInBlacklistRepository(repository);
+            this.addInTempBlackList(repository, "No successful build found.");
             return false;
         } else {
             if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
-                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is not using java ("+masterBuild.getConfig().getLanguage()+"). It will blacklisted for further call.");
-                this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
-                this.addInBlacklistRepository(repository);
+                this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
                 return false;
             }
 
             if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
-                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") is using gradle. It will blacklisted for further call.");
-                this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
-                this.addInBlacklistRepository(repository);
+                this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
                 return false;
             } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
-                LOGGER.info("Repository "+repository.getSlug()+" (id: "+repositoryId+") build tool is not known. It will be blacklisted for further call.");
-                this.blacklistedSerializer.serialize(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
-                this.addInBlacklistRepository(repository);
+                this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
                 return false;
             }
 
@@ -177,7 +191,7 @@ public class RTScanner {
                     this.addInWhitelistRepository(repository);
                     return true;
                 } else {
-                    LOGGER.info("No test found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
+                    this.addInTempBlackList(repository, "No test found");
                 }
             } else {
                 LOGGER.info("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
