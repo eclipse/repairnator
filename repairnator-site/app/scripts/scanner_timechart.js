@@ -134,16 +134,21 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
    },
    */
 
-  var currentWeek = moment().week();
+  var currentYear = moment().year();
+  var currentWeek = moment().isoWeek();
+  var currentWeekYear = currentWeek+1000*currentYear;
 
   var reducedDataScanner = dataScanner.reduce(function (accumulator, currentValue) {
-    var currentValueWeek = moment(currentValue.dateLimit).week();
+    var currentValueYear = moment(currentValue.dateLimit).year();
+    var currentValueWeek = moment(currentValue.dateLimit).isoWeek();
+
+    var currentValueWeekYear = currentValueWeek+1000*currentValueYear;
 
     if (accumulator.length == 0) {
-      if (!currentValue.dateLimit || currentValueWeek === currentWeek) {
+      if (!currentValue.dateLimit || currentValueWeekYear === currentWeekYear) {
         return [];
       } else {
-        currentValue.dateLimit = moment().year(2017).week(currentValueWeek).toISOString();
+        currentValue.dateLimit = moment().year(currentValueYear).isoWeek(currentValueWeek).toISOString();
         return [ currentValue ];
       }
     } else {
@@ -151,18 +156,21 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       if (!currentValue.dateLimit) {
         return accumulator;
       }
-      var previousValueWeek = moment(previousValue.dateLimit).week();
-      if (currentValueWeek === currentWeek) {
+      var previousValueYear = moment(previousValue.dateLimit).year();
+      var previousValueWeek = moment(previousValue.dateLimit).isoWeek();
+      var previousValueWeekYear = previousValueWeek+1000*previousValueYear;
+
+      if (currentValueWeekYear === currentWeekYear) {
         return accumulator;
       }
-      if (previousValueWeek === currentValueWeek) {
+      if (previousValueWeekYear === currentValueWeekYear) {
         for (var attr in previousValue) {
           if (attr.indexOf('total') != -1 && attr.indexOf('totalRepoNumber') == -1) {
             previousValue[attr] += currentValue[attr];
           }
         }
       } else {
-        currentValue.dateLimit = moment().year(2017).week(currentValueWeek).toISOString();
+        currentValue.dateLimit = moment().year(currentValueYear).isoWeek(currentValueWeek).toISOString();
         accumulator.push(currentValue);
       }
 
@@ -173,25 +181,30 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
   $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/reproducedBuilds/', function (dataInspector) {
 
     var reducedDataInspector = dataInspector.reduce(function (accumulator, currentValue) {
-      var currentValueWeek = moment(currentValue._id, 'YYYY-MM-DD').week();
+      var currentValueWeek = moment(currentValue._id, 'YYYY-MM-DD').isoWeek();
+      var currentValueYear = moment(currentValue._id, 'YYYY-MM-DD').year();
+      var currentValueWeekYear = currentValueWeek+1000*currentValueYear;
 
       if (accumulator.length == 0) {
-        if (currentValueWeek === currentWeek) {
+        if (currentValueWeekYear === currentWeekYear) {
           return [];
         } else {
-          currentValue._id = moment().year(2017).week(currentValueWeek).format('YYYY-MM-DD');
+          currentValue._id = moment().year(currentValueYear).isoWeek(currentValueWeek).format('YYYY-MM-DD');
           return [ currentValue ];
         }
       } else {
         var previousValue = accumulator[accumulator.length - 1];
-        if (currentValueWeek === currentWeek) {
+        if (currentValueWeekYear === currentWeekYear) {
           return accumulator;
         }
-        var previousValueWeek = moment(previousValue._id, 'YYYY-MM-DD').week();
-        if (previousValueWeek === currentValueWeek) {
+        var previousValueWeek = moment(previousValue._id, 'YYYY-MM-DD').isoWeek();
+        var previousValueYear = moment(previousValue._id, 'YYYY-MM-DD').year();
+        var previousValueWeekYear = previousValueWeek+1000*previousValueYear;
+
+        if (previousValueWeekYear === currentValueWeekYear) {
           previousValue.counted += currentValue.counted;
         } else {
-          currentValue._id = moment().year(2017).week(currentValueWeek).format('YYYY-MM-DD');
+          currentValue._id = moment().year(currentValueYear).isoWeek(currentValueWeek).format('YYYY-MM-DD');
           accumulator.push(currentValue);
         }
 
@@ -208,8 +221,11 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
       },
       xAxis: {
         type: 'datetime',
-        dateTimeLabelFormats: { // don't display the dummy year
-          day:'%A, %b %e',
+        dateTimeLabelFormats: {
+          day: '%e. %b',
+          week: '%e. %b',
+          month: '%b \'%y',
+          year: '%Y'
         },
         title: {
           text: 'Date'
@@ -265,33 +281,39 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
-  var currentWeek = moment().week();
+  var currentWeek = moment().isoWeek();
+  var currentYear = moment().year();
+  var currentWeekYear = currentWeek+1000*currentYear;
 
   var reducedData = data.reduce(function (accumulator, currentValue) {
-    var currentValueWeek = moment(currentValue.dateLimit).week();
+    var currentValueWeek = moment(currentValue.dateLimit).isoWeek();
+    var currentValueYear = moment(currentValue.dateLimit).year();
+    var currentValueWeekYear = currentValueWeek+1000*currentValueYear;
 
     if (accumulator.length == 0) {
-      if (currentValueWeek === currentWeek) {
+      if (currentValueWeekYear === currentWeekYear) {
         return [];
       } else {
-        currentValue.dateLimit = moment().year(2017).week(currentValueWeek).toISOString();
+        currentValue.dateLimit = moment().year(currentValueYear).isoWeek(currentValueWeek).toISOString();
         return [ currentValue ];
       }
     } else {
       var previousValue = accumulator[accumulator.length - 1];
-      var previousValueWeek = moment(previousValue.dateLimit).week();
+      var previousValueWeek = moment(previousValue.dateLimit).isoWeek();
+      var previousValueYear = moment(previousValue.dateLimit).year();
+      var previousValueWeekYear = previousValueWeek+1000*previousValueYear;
 
-      if (currentValueWeek === currentWeek) {
+      if (currentValueWeekYear === currentWeekYear) {
         return accumulator;
       }
-      if (previousValueWeek === currentValueWeek) {
+      if (previousValueWeekYear === currentValueWeekYear) {
         for (var attr in previousValue) {
           if (attr.indexOf('total') != -1 && attr.indexOf('totalRepoNumber') == -1) {
             previousValue[attr] += currentValue[attr];
           }
         }
       } else {
-        currentValue.dateLimit = moment().year(2017).week(currentValueWeek).toISOString();
+        currentValue.dateLimit = moment().year(currentValueYear).isoWeek(currentValueWeek).toISOString();
         accumulator.push(currentValue);
       }
 
@@ -364,8 +386,11 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
     },
     xAxis: {
       type: 'datetime',
-      dateTimeLabelFormats: { // don't display the dummy year
-        week:'%e %b %Y',
+      dateTimeLabelFormats: {
+        day: '%e. %b',
+        week: '%e. %b',
+        month: '%b \'%y',
+        year: '%Y'
       },
       title: {
         text: 'Date'
