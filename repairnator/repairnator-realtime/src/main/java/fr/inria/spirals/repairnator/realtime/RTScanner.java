@@ -69,10 +69,9 @@ public class RTScanner {
         LOGGER.info("Init whitelist repository...");
         try {
             List<String> lines = Files.readAllLines(whiteListFile.toPath());
-            for (String repoName : lines) {
-                Repository repository = RepositoryHelper.getRepositoryFromSlug(repoName);
-                if (repository != null) {
-                    this.whiteListedRepository.add(repository.getId());
+            for (String repoId : lines) {
+                if (!repoId.trim().isEmpty()) {
+                    this.whiteListedRepository.add(Integer.parseInt(repoId));
                 }
             }
 
@@ -87,10 +86,9 @@ public class RTScanner {
         LOGGER.info("Init blacklist repository...");
         try {
             List<String> lines = Files.readAllLines(blackListFile.toPath());
-            for (String repoName : lines) {
-                Repository repository = RepositoryHelper.getRepositoryFromSlug(repoName);
-                if (repository != null) {
-                    this.blackListedRepository.add(repository.getId());
+            for (String repoId : lines) {
+                if (!repoId.trim().isEmpty()) {
+                    this.blackListedRepository.add(Integer.parseInt(repoId));
                 }
             }
 
@@ -113,8 +111,8 @@ public class RTScanner {
     private void addInBlacklistRepository(Repository repository) {
         this.blackListedRepository.add(repository.getId());
         try {
+            this.blacklistWriter.append(repository.getId()+"");
             this.blacklistWriter.append("\n");
-            this.blacklistWriter.append(repository.getSlug());
             this.blacklistWriter.flush();
         } catch (IOException e) {
             LOGGER.error("Error while writing entry in blacklist");
@@ -124,8 +122,8 @@ public class RTScanner {
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
         try {
+            this.whitelistWriter.append(repository.getId()+"");
             this.whitelistWriter.append("\n");
-            this.whitelistWriter.append(repository.getSlug());
             this.whitelistWriter.flush();
         } catch (IOException e) {
             LOGGER.error("Error while writing entry in whitelist");
