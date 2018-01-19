@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
+import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.util.List;
@@ -37,8 +38,9 @@ public class PatchNotifier extends AbstractNotifier {
                     "\t\t Concerned class: "+location.getClassName()+" ("+location.getNbFailures()+" failures / "+location.getNbErrors()+" errors)\n";
 
             for (int j = 0; j < Math.min(10, nopolInformation.getPatches().size()); j++) {
-                Patch patch = nopolInformation.getPatches().get(j);
-                details += "\t\t Proposed patch #"+j+" in "+patch.getSourceLocation().toString()+" : "+patch.asString()+"\n";
+                PatchAndDiff patchAndDiff = nopolInformation.getPatches().get(j);
+                Patch patch = patchAndDiff.getPatch();
+                details += "\t\t Proposed patch #"+j+" in "+patch.getSourceLocation().toString()+" : "+patchAndDiff.getDiff()+"\n";
             }
 
             details += "\n\n";

@@ -7,6 +7,7 @@ import fr.inria.lille.repair.common.synth.StatementType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
+import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
@@ -14,6 +15,7 @@ import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import spoon.reflect.factory.Factory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -129,12 +131,13 @@ public class NopolRepair extends AbstractStep {
                     long beforeNopol = new Date().getTime();
 
                     final NoPol nopol = new NoPol(nopolContext);
-                    List<Patch> patch = null;
+                    Factory spoonFactory = nopol.getSpooner().spoonFactory();
+                    List<PatchAndDiff> patchAndDiffs = new ArrayList<>();
 
                     final ExecutorService executor = Executors.newSingleThreadExecutor();
-                    final Future<NopolResult> nopolExecution = executor.submit(new Callable() {
+                    final Future<NopolResult> nopolExecution = executor.submit(new Callable<NopolResult>() {
                         @Override
-                        public Object call() throws Exception {
+                        public NopolResult call() throws Exception {
                             NopolResult result = null;
                             try {
                                 result = nopol.build();
@@ -159,9 +162,13 @@ public class NopolRepair extends AbstractStep {
 
                         metric.addAngelicValueByTest(failureLocationWithoutDots, result.getNbAngelicValues());
 
-                        patch = result.getPatches();
-                        if (patch != null && !patch.isEmpty()) {
-                            nopolInformation.setPatches(patch);
+                        List<Patch> patches = result.getPatches();
+                        if (patches != null && !patches.isEmpty()) {
+                            for (Patch patch : patches) {
+                                String diff = patch.toDiff(spoonFactory, nopolContext);
+                                patchAndDiffs.add(new PatchAndDiff(patch, diff));
+                            }
+                            nopolInformation.setPatches(patchAndDiffs);
                             nopolInformation.setStatus(NopolStatus.PATCH);
                             patchCreated = true;
                         } else {
@@ -231,13 +238,14 @@ public class NopolRepair extends AbstractStep {
                     writer.flush();
 
                     int patchNumber = 0;
-                    for (Patch patch : information.getPatches()) {
+                    for (PatchAndDiff patchAndDiff : information.getPatches()) {
                         File patchFile = new File(patchDir.getPath()+"/"+information.getLocation().getClassName()+"_patch_"+(patchNumber++));
 
+                        Patch patch = patchAndDiff.getPatch();
                         BufferedWriter patchWriter = new BufferedWriter(new FileWriter(patchFile));
                         String patchWrite = "location: "+patch.getSourceLocation()+"\n"
                                             +"type: "+patch.getType()+"\n"
-                                            +"patch: "+patch.asString();
+                                            +"patch: "+patchAndDiff.getDiff();
 
                         patchWriter.write(patchWrite);
                         patchWriter.flush();
@@ -260,8 +268,8 @@ public class NopolRepair extends AbstractStep {
             this.getInspector().getJobStatus().setHasBeenPatched(true);
             List<String> nopolPatches = new ArrayList<>();
             for (NopolInformation information : this.nopolInformations) {
-                for (Patch p : information.getPatches()) {
-                    nopolPatches.add(p.asString());
+                for (PatchAndDiff p : information.getPatches()) {
+                    nopolPatches.add(p.getDiff());
                 }
             }
             this.getInspector().getJobStatus().setNopolPatches(nopolPatches);
