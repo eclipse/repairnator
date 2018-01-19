@@ -1,3 +1,7 @@
+import model.Benchmark;
+import model.Bug;
+import model.ExceptionType;
+import model.Project;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,18 +27,13 @@ public class JsonParser {
     private Date lookFromDate;
     private Date lookToDate;
 
+    private Benchmark benchmark;
+
     private List<String> listOfProjectsA;
     private List<String> listOfProjectsB;
-
-    // Metrics
-    private int numberOfBugs;
-    private Map<String, Integer> projectsToBugsMap = new HashMap<String, Integer>();
-    private Map<String, Integer> bugTypesToCounterMap = new HashMap<String, Integer>();
-    private Map<String, Map<String, Integer>> exceptionTypesToProjectsToCounterMap = new HashMap<String, Map<String, Integer>>();
+    private List<String> listOfProjectsG;
 
     private Pattern patternToGetDateFromBranchName = Pattern.compile("(.*)[-]\\d*[-](\\d*)[-]\\d*");
-
-    private Map<String, Integer> errorTypesOut = new HashMap<String, Integer>();
 
     JsonParser(String jsonFileFolderPath, String outputPath, LauncherMode launcherMode, OutputType outputType, Date lookFromDate, Date lookToDate) {
         this.jsonFileFolderPath = jsonFileFolderPath;
@@ -44,11 +43,9 @@ public class JsonParser {
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
 
-        this.listOfProjectsA = this.getListOfProjects("../bearsData/list_of_projectsA.txt");
-        this.listOfProjectsB = this.getListOfProjects("../bearsData/list_of_projectsB.txt");
-
-        this.errorTypesOut.put("skipped", 0);
-        this.errorTypesOut.put("Wanted but not invoked", 0);
+        this.listOfProjectsA = this.getListOfProjects("../librepair/bearsData/list_of_projectsA.txt");
+        this.listOfProjectsB = this.getListOfProjects("../librepair/bearsData/list_of_projectsB.txt");
+        this.listOfProjectsG = this.getListOfProjects("../librepair/bearsData/list_of_projectsG.txt");
     }
 
     public void run() {
@@ -60,10 +57,10 @@ public class JsonParser {
         File dir = new File(this.jsonFileFolderPath);
         File[] files = dir.listFiles(filter);
 
-        System.out.println("#Files found: " + files.length);
+        System.out.println("# Files found: " + files.length);
 
         if (outputType == OutputType.METRICS) {
-            calculateMetrics(files);
+            calculateMetricsFromRepairnatorJsonFile(files);
         } else {
             getBranchNames(files);
         }
@@ -93,7 +90,8 @@ public class JsonParser {
         return false;
     }
 
-    private void calculateMetrics(File[] files) {
+    private void calculateMetricsFromRepairnatorJsonFile(File[] files) {
+        this.benchmark = new Benchmark();
         try {
             for (int i = 0; i < files.length; i++) {
                 String branchName = files[i].getName().replace("_repairnator.json", "");
@@ -104,64 +102,110 @@ public class JsonParser {
 
                 JSONParser parser = new JSONParser();
 
-                JSONObject bug = (JSONObject) parser.parse(new FileReader(files[i]));
+                JSONObject jsonBug = (JSONObject) parser.parse(new FileReader(files[i]));
 
-                String project = (String) bug.get("repo");
+                String projectName = (String) jsonBug.get("repo");
 
-                if (listOfProjectsA.contains(project) || listOfProjectsB.contains(project)) {
-                    this.numberOfBugs++;
+                if (listOfProjectsA.contains(projectName) || listOfProjectsB.contains(projectName) || listOfProjectsG.contains(projectName)) {
+                    Project project = this.benchmark.addProject(projectName);
 
-                    if (!this.projectsToBugsMap.keySet().contains(project)) {
-                        this.projectsToBugsMap.put(project, 0);
-                    }
-                    this.projectsToBugsMap.put(project, this.projectsToBugsMap.get(project) + 1);
+                    Bug bug = this.benchmark.addBug(branchName, project);
 
-                    String bugType = (String) bug.get("bugType");
-                    if (!this.bugTypesToCounterMap.keySet().contains(bugType)) {
-                        this.bugTypesToCounterMap.put(bugType, 0);
-                    }
-                    this.bugTypesToCounterMap.put(bugType, this.bugTypesToCounterMap.get(bugType) + 1);
+                    String bugTypeDescription = (String) jsonBug.get("bugType");
+                    this.benchmark.addBugType(bugTypeDescription);
 
-                    JSONArray failingTestCases = (JSONArray) bug.get("failing-test-cases");
+                    JSONArray failingTestCases = (JSONArray) jsonBug.get("failing-test-cases");
                     Iterator failingTestCasesIterator = failingTestCases.iterator();
                     while (failingTestCasesIterator.hasNext()) {
                         JSONArray failures = (JSONArray) ((JSONObject) failingTestCasesIterator.next()).get("failures");
                         Iterator failuresIterator = failures.iterator();
                         while (failuresIterator.hasNext()) {
-                            String errorType = ((JSONObject) failuresIterator.next()).get("failureName").toString().replace(":", "");
-                            if (errorTypesOut.keySet().contains(errorType)) {
-                                errorTypesOut.put(errorType, errorTypesOut.get(errorType) + 1);
-                            } else {
-                                if (!this.exceptionTypesToProjectsToCounterMap.containsKey(errorType)) {
-                                    this.exceptionTypesToProjectsToCounterMap.put(errorType, new HashMap<String, Integer>());
-                                }
-                                if (!this.exceptionTypesToProjectsToCounterMap.get(errorType).containsKey(project)) {
-                                    this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, 0);
-                                }
-                                this.exceptionTypesToProjectsToCounterMap.get(errorType).put(project, this.exceptionTypesToProjectsToCounterMap.get(errorType).get(project) + 1);
-                            }
+                            String exceptionTypeDescription = ((JSONObject) failuresIterator.next()).get("failureName").toString().replace(":", "");
+                            ExceptionType exceptionType = this.benchmark.addExceptionType(exceptionTypeDescription);
+                            bug.addExceptionType(exceptionType);
                         }
                     }
+
+                    JSONObject metrics = (JSONObject) jsonBug.get("metrics");
+                    JSONObject stepDurations = (JSONObject) metrics.get("StepsDurationsInSeconds");
+
+                    int cloneRepositoryDuration = Integer.parseInt(stepDurations.get("CloneRepository").toString());
+                    int checkoutBuggyBuildDuration;
+                    int checkoutPatchedBuildDuration = Integer.parseInt(stepDurations.get("CheckoutPatchedBuild").toString());
+                    int computeClasspathDuration = Integer.parseInt(stepDurations.get("ComputeClasspath").toString());
+                    int computeSourceDirDuration = Integer.parseInt(stepDurations.get("ComputeSourceDir").toString());
+                    int computeTestDirDuration = Integer.parseInt(stepDurations.get("ComputeTestDir").toString());
+                    int resolveDependencyDuration = Integer.parseInt(stepDurations.get("ResolveDependency").toString());
+                    int buildProjectBuildDuration = Integer.parseInt(stepDurations.get("BuildProjectBuild").toString());
+                    int buildProjectPreviousBuildDuration;
+                    int testProjectBuildDuration = Integer.parseInt(stepDurations.get("TestProjectBuild").toString());
+                    int testProjectPreviousBuildDuration;
+                    int gatherTestInformationBuildDuration = Integer.parseInt(stepDurations.get("GatherTestInformationBuild").toString());
+                    int gatherTestInformationPreviousBuildDuration;
+                    int nopolRepairDuration = Integer.parseInt(stepDurations.get("NopolRepair").toString());
+                    int initRepoToPushDuration = Integer.parseInt(stepDurations.get("InitRepoToPush").toString());
+                    int pushIncriminatedBuildDuration = Integer.parseInt(stepDurations.get("PushIncriminatedBuild").toString());
+                    int commitPatchDuration = Integer.parseInt(stepDurations.get("CommitPatch").toString());
+
+                    if (bugTypeDescription.equals("failing_passing")) {
+                        checkoutBuggyBuildDuration = Integer.parseInt(stepDurations.get("CheckoutBuggyBuild").toString());
+                        buildProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("BuildProjectPreviousBuild").toString());
+                        testProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("TestProjectPreviousBuild").toString());
+                        gatherTestInformationPreviousBuildDuration = Integer.parseInt(stepDurations.get("GatherTestInformationPreviousBuild").toString());
+                    } else {
+                        checkoutBuggyBuildDuration = Integer.parseInt(stepDurations.get("CheckoutBuggyBuildSourceCode").toString());
+                        buildProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("BuildProjectPreviousBuildSourceCode").toString());
+                        testProjectPreviousBuildDuration = Integer.parseInt(stepDurations.get("TestProjectPreviousBuildSourceCode").toString());
+                        gatherTestInformationPreviousBuildDuration = Integer.parseInt(stepDurations.get("GatherTestInformationPreviousBuildSourceCode").toString());
+                    }
+
+                    int totalDuration = cloneRepositoryDuration + checkoutBuggyBuildDuration + checkoutPatchedBuildDuration
+                            + computeClasspathDuration + computeSourceDirDuration + computeTestDirDuration
+                            + resolveDependencyDuration + buildProjectBuildDuration + buildProjectPreviousBuildDuration
+                            + testProjectBuildDuration + testProjectPreviousBuildDuration + gatherTestInformationBuildDuration
+                            + gatherTestInformationPreviousBuildDuration + nopolRepairDuration + initRepoToPushDuration
+                            + pushIncriminatedBuildDuration + commitPatchDuration;
+
+                    bug.addStepToDuration("cloneRepository", cloneRepositoryDuration);
+                    bug.addStepToDuration("checkoutBuggyBuild", checkoutBuggyBuildDuration);
+                    bug.addStepToDuration("checkoutPatchedBuild", checkoutPatchedBuildDuration);
+                    bug.addStepToDuration("computeClasspath", computeClasspathDuration);
+                    bug.addStepToDuration("computeSourceDir", computeSourceDirDuration);
+                    bug.addStepToDuration("computeTestDir", computeTestDirDuration);
+                    bug.addStepToDuration("resolveDependency", resolveDependencyDuration);
+                    bug.addStepToDuration("buildProjectBuild", buildProjectBuildDuration);
+                    bug.addStepToDuration("buildProjectPreviousBuild", buildProjectPreviousBuildDuration);
+                    bug.addStepToDuration("testProjectBuild", testProjectBuildDuration);
+                    bug.addStepToDuration("testProjectPreviousBuild", testProjectPreviousBuildDuration);
+                    bug.addStepToDuration("gatherTestInformationBuild", gatherTestInformationBuildDuration);
+                    bug.addStepToDuration("gatherTestInformationPreviousBuild", gatherTestInformationPreviousBuildDuration);
+                    bug.addStepToDuration("nopolRepair", nopolRepairDuration);
+                    bug.addStepToDuration("initRepoToPush", initRepoToPushDuration);
+                    bug.addStepToDuration("pushIncriminatedBuild", pushIncriminatedBuildDuration);
+                    bug.addStepToDuration("commitPatch", commitPatchDuration);
+                    bug.addStepToDuration("totalDuration", totalDuration);
                 }
             }
 
-            System.out.println("#Bugs: " + this.numberOfBugs);
+            System.out.println("# Bugs: " + this.benchmark.getBugs().size());
 
-            System.out.println("#Projects: " + this.projectsToBugsMap.keySet().size());
+            System.out.println("# Projects: " + this.benchmark.getProjects().size());
 
-            System.out.println("Bug types: ");
-            for (Entry entry : this.bugTypesToCounterMap.entrySet()) {
-                System.out.println("#" + entry.getKey() + ": " + entry.getValue());
+            System.out.println("\nBug types: ");
+            for (Entry entry : this.benchmark.getBugTypeToCounterMap().entrySet()) {
+                System.out.println("# " + entry.getKey() + ": " + entry.getValue());
             }
 
-            System.out.println("#Distinct error types: " + this.exceptionTypesToProjectsToCounterMap.keySet().size());
+            System.out.println("\n# Distinct exception types: " + this.benchmark.getExceptionTypes().size());
 
-            System.out.println();
-            for (String errorTypeOut : errorTypesOut.keySet()) {
-                System.out.println(errorTypeOut + ": " + errorTypesOut.get(errorTypeOut));
+            System.out.println("\nException types out:");
+            for (Entry<String, Integer> exceptionTypeOutToCounter : this.benchmark.getExceptionTypesOutToCounterMap().entrySet()) {
+                System.out.println(exceptionTypeOutToCounter.getKey() + ": " + exceptionTypeOutToCounter.getValue());
             }
 
-            writeErrorTypeDistributionCsvFile();
+            createNumberOfBugsByProjectsCsvFile();
+            createDistributionExceptionTypeOccurrencesByProjectsCsvFile();
+            createStepTotalDurationByProjectsCsvFile();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -182,62 +226,113 @@ public class JsonParser {
             totalBranchOutput++;
         }
 
-        System.out.println("#Total branches output: "+totalBranchOutput);
+        System.out.println("# Total branches output: "+totalBranchOutput);
     }
 
-    private void writeErrorTypeDistributionCsvFile() {
+    private void createNumberOfBugsByProjectsCsvFile() {
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter(outputPath + "/distribution-error-types-by-projects.csv");
+            fileWriter = new FileWriter(outputPath + "/number-of-bugs-by-projects.csv");
 
-            Map<String, Integer> sortedProjectsToBugsMap = sortByComparator(this.projectsToBugsMap);
+            Collections.sort(this.benchmark.getProjects());
 
-            String fileHeader = "error type";
-            for (String projectName : sortedProjectsToBugsMap.keySet()) {
-                fileHeader += "," + projectName;
-            }
-            fileHeader += ",sum";
+            String fileHeader = "project,number of bugs\n";
             fileWriter.append(fileHeader);
 
-            fileWriter.append("\n");
+            String line;
+            for (Project project : this.benchmark.getProjects()) {
+                line = project.getName() + "," + project.getNumberOfBugs() + "\n";
+                fileWriter.append(line);
+            }
 
-            Map<String, Map<String, Integer>> projectsToExceptionTypesToCounterMap = new HashMap<String, Map<String, Integer>>();
+            System.out.println("\nNumber of bugs by projects CSV file was created successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void createDistributionExceptionTypeOccurrencesByProjectsCsvFile() {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(outputPath + "/distribution-exception-type-occurrences-by-projects.csv");
+
+            Collections.sort(this.benchmark.getProjects());
+
+            String fileHeader = "exception type";
+            for (Project project : this.benchmark.getProjects()) {
+                fileHeader += "," + project.getName();
+            }
+            fileHeader += ",sum\n";
+            fileWriter.append(fileHeader);
 
             String line;
-            for (String exceptionType : this.exceptionTypesToProjectsToCounterMap.keySet()) {
-                int sumForErrorType = 0;
-                line = exceptionType + ",";
-                for (String projectName : sortedProjectsToBugsMap.keySet()) {
-                    if (this.exceptionTypesToProjectsToCounterMap.get(exceptionType).containsKey(projectName)) {
-                        int number = this.exceptionTypesToProjectsToCounterMap.get(exceptionType).get(projectName);
+            for (ExceptionType exceptionType : this.benchmark.getExceptionTypes()) {
+                String exceptionTypeDescription = exceptionType.getDescription();
+                line = exceptionTypeDescription + ",";
+                int sumForExceptionType = 0;
+                for (Project project : this.benchmark.getProjects()) {
+                    if (project.containsExceptionType(exceptionTypeDescription)) {
+                        int number = project.getOccurrenceCounterOfExceptionType(exceptionTypeDescription);
                         line += number + ",";
-                        sumForErrorType += number;
-                        if (!projectsToExceptionTypesToCounterMap.containsKey(projectName)) {
-                            projectsToExceptionTypesToCounterMap.put(projectName, new HashMap<String, Integer>());
-                        }
-                        if (!projectsToExceptionTypesToCounterMap.get(projectName).containsKey(exceptionType)) {
-                            projectsToExceptionTypesToCounterMap.get(projectName).put(exceptionType, number);
-                        }
+                        sumForExceptionType += number;
                     } else {
                         line += "0,";
                     }
                 }
-                line += sumForErrorType;
+                line += sumForExceptionType + "\n";
                 fileWriter.append(line);
-                fileWriter.append("\n");
             }
             line = "sum";
-            for (String projectName : sortedProjectsToBugsMap.keySet()) {
-                int sumForProject = 0;
-                Map<String, Integer> exceptionTypesToCounter = projectsToExceptionTypesToCounterMap.get(projectName);
-                for (Integer counter : exceptionTypesToCounter.values()) {
-                    sumForProject += counter;
-                }
-                line += "," + sumForProject;
+            for (Project project : this.benchmark.getProjects()) {
+                line += "," + project.getOccurrenceCounterOfAllExceptionTypes();
             }
             fileWriter.append(line);
 
-            System.out.println("CSV file was created successfully");
+            System.out.println("\nDistribution exception type occurrences by projects CSV file was created successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void createStepTotalDurationByProjectsCsvFile() {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(outputPath + "/step-total-duration-by-projects.csv");
+
+            Collections.sort(this.benchmark.getProjects());
+
+            String fileHeader = "project,average,min,max\n";
+            fileWriter.append(fileHeader);
+
+            String line;
+            for (Project project : this.benchmark.getProjects()) {
+                line = project.getName() + ",";
+                int sum = 0, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+                for (Bug bug : project.getBugs()) {
+                    int totalDuration = bug.getStepDuration("totalDuration");
+                    sum += totalDuration;
+                    min = (totalDuration < min) ? totalDuration : min;
+                    max = (totalDuration > max) ? totalDuration : max;
+                }
+                line += sum / project.getNumberOfBugs() + "," + min + "," + max + "\n";
+                fileWriter.append(line);
+            }
+
+            System.out.println("\nStep total duration by projects CSV file was created successfully");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -268,23 +363,6 @@ public class JsonParser {
         }
 
         return listOfProjects;
-    }
-
-    private static Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap) {
-        List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(unsortMap.entrySet());
-
-        Collections.sort(list, new Comparator<Entry<String, Integer>>() {
-            public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-                return o2.getKey().compareTo(o1.getKey());
-            }
-        });
-
-        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-        for (Entry<String, Integer> entry : list) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return sortedMap;
     }
 
 }
