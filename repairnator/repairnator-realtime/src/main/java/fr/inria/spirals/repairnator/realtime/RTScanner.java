@@ -207,7 +207,7 @@ public class RTScanner {
         if (jobs != null) {
             for (Job job : jobs) {
                 Log jobLog = job.getLog();
-                if (jobLog != null && jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0) {
+                if (jobLog != null && jobLog.getTestsInformation() != null && (jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0)) {
                     failing = true;
                     break;
                 }
