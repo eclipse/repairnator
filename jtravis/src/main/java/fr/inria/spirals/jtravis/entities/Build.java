@@ -38,7 +38,7 @@ public class Build extends BuildPojo implements Comparable<Build> {
 
     public void refreshStatus() {
         Build b = BuildHelper.getBuildFromId(this.getId(), null);
-        if (b != null && !this.getState().equals(b.getState())) {
+        if (b != null && (this.getState() == null || !this.getState().equals(b.getState()))) {
             this.jobs.clear();
             this.completeLog = null;
             this.buildTool = null;

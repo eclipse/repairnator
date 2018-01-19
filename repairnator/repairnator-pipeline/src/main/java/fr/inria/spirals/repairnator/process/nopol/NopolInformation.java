@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.process.nopol;
 
 import fr.inria.lille.repair.common.config.NopolContext;
-import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class NopolInformation {
     private Date dateEnd;
     private int allocatedTime;
     private int passingTime;
-    private List<Patch> patches;
+    private List<PatchAndDiff> patches;
     private NopolContext nopolContext;
     private String exceptionDetail;
     private int nbStatements;
@@ -75,11 +74,11 @@ public class NopolInformation {
         this.exceptionDetail = exceptionDetail;
     }
 
-    public List<Patch> getPatches() {
+    public List<PatchAndDiff> getPatches() {
         return patches;
     }
 
-    public void setPatches(List<Patch> patches) {
+    public void setPatches(List<PatchAndDiff> patches) {
         this.patches = patches;
     }
 
