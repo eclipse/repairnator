@@ -220,6 +220,8 @@ public class RTScanner {
 
     public void submitWaitingBuild(int buildId) {
         Build build = BuildHelper.getBuildFromId(buildId, null);
-        this.inspectBuilds.submitNewBuild(build);
+        if (build != null) {
+            this.inspectBuilds.submitNewBuild(build);
+        }
     }
 }
