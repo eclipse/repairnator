@@ -203,13 +203,17 @@ public class RTScanner {
 
     public void submitBuildToExecution(Build build) {
         boolean failing = false;
-        for (Job job : build.getJobs()) {
-            Log jobLog = job.getLog();
-            if (jobLog != null && jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0) {
-                failing = true;
-                break;
+        List<Job> jobs = build.getJobs();
+        if (jobs != null) {
+            for (Job job : jobs) {
+                Log jobLog = job.getLog();
+                if (jobLog != null && jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0) {
+                    failing = true;
+                    break;
+                }
             }
         }
+
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
             this.buildRunner.submitBuild(build);
