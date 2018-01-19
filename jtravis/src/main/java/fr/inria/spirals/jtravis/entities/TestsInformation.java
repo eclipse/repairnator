@@ -1,5 +1,8 @@
 package fr.inria.spirals.jtravis.entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by urli on 04/01/2017.
  */
@@ -9,8 +12,11 @@ public class TestsInformation {
     private int skipping;
     private int errored;
     private int passing;
+    private Map<String, Double> durationByTest;
 
-    public TestsInformation() {}
+    public TestsInformation() {
+        this.durationByTest = new HashMap<>();
+    }
 
     public int getRunning() {
         return running;
@@ -50,5 +56,17 @@ public class TestsInformation {
 
     public void setPassing(int passing) {
         this.passing = passing;
+    }
+
+    public Map<String, Double> getDurationByTest() {
+        return durationByTest;
+    }
+
+    public void setDurationByTest(Map<String, Double> durationByTest) {
+        this.durationByTest = durationByTest;
+    }
+
+    public void addTestDuration(String testName, Double duration) {
+        this.durationByTest.put(testName, duration);
     }
 }
