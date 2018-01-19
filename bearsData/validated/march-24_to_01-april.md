@@ -8,7 +8,7 @@
 * https://github.com/surli/bugs-collection/tree/languagetool-org-languagetool-215682025-20170327-222910 
 * https://github.com/surli/bugs-collection/tree/OpenGamma-Strata-216882883-20170330-205302 
 * https://github.com/surli/bugs-collection/tree/tipsy-j2html-216094003-20170328-222754 
-* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-216359941-20170329-155651 [FAILURE] (patch reproduction - status = 1)
+* https://github.com/surli/bugs-collection/tree/phoenixnap-springmvc-raml-plugin-216359941-20170329-155651 
 * https://github.com/surli/bugs-collection/tree/OWASP-java-html-sanitizer-216196177-20170329-053018 
 * https://github.com/surli/bugs-collection/tree/oVirt-ovirt-engine-215860614-20170328-113554 
 * https://github.com/surli/bugs-collection/tree/owlcs-owlapi-216138121-20170329-004746 
