@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
+import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
@@ -37,7 +38,7 @@ public class NopolSerializer extends AbstractDataSerializer {
     }
 
 
-    private List<Object> serializeNopolInfoAsList(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, Patch patch, int patchNumber) {
+    private List<Object> serializeNopolInfoAsList(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, PatchAndDiff patchAndDiff, int patchNumber) {
 
         Build build = buildToBeInspected.getBuggyBuild();
         List<Object> dataCol = new ArrayList<Object>();
@@ -59,15 +60,16 @@ public class NopolSerializer extends AbstractDataSerializer {
             dataCol.add("N/A");
         }
 
-        if (patch == null) {
+        if (patchAndDiff == null) {
             dataCol.add("N/A");
             dataCol.add("N/A");
             dataCol.add("N/A");
             dataCol.add("N/A");
         } else {
+            Patch patch = patchAndDiff.getPatch();
             dataCol.add(patchNumber + "/" + nopolInformation.getPatches().size());
             dataCol.add(patch.getType().name());
-            dataCol.add(patch.asString());
+            dataCol.add(patchAndDiff.getDiff());
             dataCol.add(patch.getRootClassName() + ":" + patch.getLineNumber());
         }
 
@@ -81,7 +83,7 @@ public class NopolSerializer extends AbstractDataSerializer {
         return dataCol;
     }
 
-    private JsonElement serializeNopolInfoAsJson(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, Patch patch, int patchNumber) {
+    private JsonElement serializeNopolInfoAsJson(BuildToBeInspected buildToBeInspected, NopolInformation nopolInformation, PatchAndDiff patchAndDiff, int patchNumber) {
         Build build = buildToBeInspected.getBuggyBuild();
 
         JsonObject result = new JsonObject();
@@ -103,11 +105,12 @@ public class NopolSerializer extends AbstractDataSerializer {
             result.addProperty("exceptionDetail", nopolInformation.getExceptionDetail());
         }
 
-        if (patch != null) {
+        if (patchAndDiff != null) {
+            Patch patch = patchAndDiff.getPatch();
             result.addProperty("totalPatches", nopolInformation.getPatches().size());
             result.addProperty("patchNumber", patchNumber);
             result.addProperty("patchType", patch.getType().name());
-            result.addProperty("patch", patch.asString());
+            result.addProperty("patch", patchAndDiff.getDiff());
             result.addProperty("patchLocation", patch.getRootClassName() + ":" + patch.getLineNumber());
         }
 
@@ -137,9 +140,9 @@ public class NopolSerializer extends AbstractDataSerializer {
                 } else {
                     int patchNumber = 1;
 
-                    for (Patch patch : nopolInformation.getPatches()) {
-                        SerializedData data = new SerializedData(this.serializeNopolInfoAsList(buildToBeInspected, nopolInformation, patch, patchNumber),
-                                this.serializeNopolInfoAsJson(buildToBeInspected, nopolInformation, patch, patchNumber));
+                    for (PatchAndDiff patchAndDiff : nopolInformation.getPatches()) {
+                        SerializedData data = new SerializedData(this.serializeNopolInfoAsList(buildToBeInspected, nopolInformation, patchAndDiff, patchNumber),
+                                this.serializeNopolInfoAsJson(buildToBeInspected, nopolInformation, patchAndDiff, patchNumber));
                         allDatas.add(data);
                         patchNumber++;
                     }
