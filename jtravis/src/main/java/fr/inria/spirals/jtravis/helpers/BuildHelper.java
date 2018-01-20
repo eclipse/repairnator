@@ -577,8 +577,12 @@ public class BuildHelper extends AbstractHelper {
         eventTypes.add("push");
         int prNumber = -1;
 
-        getBuildsFromSlugRecursively(slug, results, limitDate, 0, 0, eventTypes, limitNumber, BuildStatus.PASSED, prNumber, false, null);
-
+        try {
+            getBuildsFromSlugRecursively(slug, results, limitDate, 0, 0, eventTypes, limitNumber, BuildStatus.PASSED, prNumber, false, null);
+        } catch (Exception e) {
+            // TODO: the above function should be fixed!
+            getInstance().getLogger().error("Error while getting the last successful build", e);
+        }
 
         if (results.size() > 0) {
             return results.get(0);
