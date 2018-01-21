@@ -581,7 +581,7 @@ public class BuildHelper extends AbstractHelper {
             getBuildsFromSlugRecursively(slug, results, limitDate, 0, 0, eventTypes, limitNumber, BuildStatus.PASSED, prNumber, false, null);
         } catch (StackOverflowError e) {
             // TODO: the above function should be fixed!
-            getInstance().getLogger().error("Error while getting the last successful build", e);
+            getInstance().getLogger().error("StackOverflowError: Error while getting the last successful build from repo "+repository.getSlug()+" (id: "+repository.getId()+"): "+e.getMessage());
         }
 
         if (results.size() > 0) {
