@@ -11,7 +11,6 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PushState;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
