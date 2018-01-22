@@ -11,12 +11,18 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by urli on 26/04/2017.
  */
 public class InitRepoToPush extends AbstractStep {
+
+    private static final String TRAVIS_FILE = ".travis.yml";
 
     public InitRepoToPush(ProjectInspector inspector) {
         super(inspector);
@@ -24,6 +30,56 @@ public class InitRepoToPush extends AbstractStep {
 
     public InitRepoToPush(ProjectInspector inspector, String name) {
         super(inspector, name);
+    }
+
+    private void removeNotificationFromTravisYML(File directory) {
+        File travisFile = new File(directory, TRAVIS_FILE);
+
+        if (!travisFile.exists()) {
+            getLogger().warn("Travis file has not been detected. It should however exists.");
+        } else {
+            try {
+                List<String> lines = Files.readAllLines(travisFile.toPath());
+                List<String> newLines = new ArrayList<>();
+                boolean changed = false;
+                boolean inNotifBlock = false;
+
+                for (String line : lines) {
+                    if (line.trim().equals("notifications:")) {
+                        changed = true;
+                        inNotifBlock = true;
+                    }
+                    if (inNotifBlock) {
+                        if (line.trim().isEmpty()) {
+                            inNotifBlock = false;
+                            newLines.add(line);
+                        } else {
+                            newLines.add("#"+line);
+                        }
+                    } else {
+                        newLines.add(line);
+                    }
+                }
+
+                if (changed) {
+                    getLogger().info("Notification block detected. The travis file will be changed.");
+                    File bakTravis = new File(directory, "bak"+TRAVIS_FILE);
+                    Files.move(travisFile.toPath(), bakTravis.toPath());
+                    FileWriter fw = new FileWriter(travisFile);
+                    for (String line : newLines) {
+                        fw.append(line);
+                        fw.append("\n");
+                        fw.flush();
+                    }
+                    fw.close();
+
+                    this.getInspector().getJobStatus().getCreatedFilesToPush().add(".travis.yml");
+                    this.getInspector().getJobStatus().getCreatedFilesToPush().add("bak.travis.yml");
+                }
+            } catch (IOException e) {
+                getLogger().warn("Error while changing travis file", e);
+            }
+        }
     }
 
     @Override
@@ -37,6 +93,8 @@ public class InitRepoToPush extends AbstractStep {
 
             try {
                 FileUtils.copyDirectory(sourceDir, targetDir);
+
+                this.removeNotificationFromTravisYML(targetDir);
 
                 File gitTargetFolder = new File(targetDir, ".git");
                 FileUtils.deleteDirectory(gitTargetFolder);

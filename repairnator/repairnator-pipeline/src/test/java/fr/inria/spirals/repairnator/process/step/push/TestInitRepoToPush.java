@@ -27,11 +27,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +45,7 @@ public class TestInitRepoToPush {
 
     @Before
     public void setup() {
-        Utils.setLoggersLevel(Level.ERROR);
+        Utils.setLoggersLevel(Level.INFO);
     }
 
     @After
@@ -98,5 +101,61 @@ public class TestInitRepoToPush {
         RevCommit firstCommit = iterator.next();
         assertThat(firstCommit.getShortMessage(), containsString("Bug commit"));
         assertThat(iterator.hasNext(), is(false));
+    }
+
+    @Test
+    public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
+        int buildId = 331637757;
+
+        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
+        repairnatorConfig.setClean(false);
+        repairnatorConfig.setPush(true);
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_initRepoToPush");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getRepoToPushLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repotopush");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuggyBuild()).thenReturn(build);
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector));
+        cloneStep.execute();
+
+        assertThat(jobStatus.getPushState(), is(PushState.REPO_INITIALIZED));
+        File bak = new File(tmpDir.getAbsolutePath()+"/repotopush/bak.travis.yml");
+        File travis = new File(tmpDir.getAbsolutePath()+"/repotopush/.travis.yml");
+
+        assertTrue(bak.exists());
+        assertTrue(travis.exists());
+
+        boolean detected = false;
+        List<String> lines = Files.readAllLines(travis.toPath());
+        for (String l : lines) {
+            if (l.contains("notification")) {
+                assertTrue(l.trim().startsWith("#"));
+                detected = true;
+            }
+            if (l.contains("script")) {
+                assertFalse(l.trim().startsWith("#"));
+            }
+        }
+
+        assertTrue(detected);
     }
 }
