@@ -11,7 +11,6 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PushState;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -303,21 +302,23 @@ public abstract class AbstractStep {
                 org.apache.commons.io.FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
                     @Override
                     public boolean accept(File pathname) {
-                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2");
+                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2") && !pathname.toString().contains(".travis.yml");
                     }
                 });
 
                 git.add().addFilepattern(".").call();
 
-                // add force is not supported by JGit...
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", StringUtils.join(this.getInspector().getJobStatus().getCreatedFilesToPush(), " "))
-                        .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+                for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
+                    // add force is not supported by JGit...
+                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f",fileToPush)
+                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
 
-                try {
-                    Process p = processBuilder.start();
-                    p.waitFor();
-                } catch (InterruptedException|IOException e) {
-                    this.getLogger().error("Error while executing git command to add files: " + e);
+                    try {
+                        Process p = processBuilder.start();
+                        p.waitFor();
+                    } catch (InterruptedException|IOException e) {
+                        this.getLogger().error("Error while executing git command to add files: " + e);
+                    }
                 }
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
