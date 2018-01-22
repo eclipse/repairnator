@@ -164,7 +164,7 @@ public class RTScanner {
         }
 
         Repository repository = RepositoryHelper.getRepositoryFromId(repositoryId);
-        Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false);
+        Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false, 5);
 
         if (masterBuild == null) {
             this.addInTempBlackList(repository, "No successful build found.");
