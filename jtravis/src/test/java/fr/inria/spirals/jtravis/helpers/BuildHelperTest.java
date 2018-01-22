@@ -4,12 +4,14 @@ import fr.inria.spirals.jtravis.entities.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static fr.inria.spirals.jtravis.helpers.BuildHelper.getLastSuccessfulBuildFromMaster;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -449,6 +451,18 @@ public class BuildHelperTest {
         Build futureB2 = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(b2, null);
 
         assertFalse(futureB1.equals(futureB2));
+    }
+
+    // this test might take around 1 minute
+    @Test
+    public void testTimeoutWhenGettingSuccessfulBuild() {
+        Date begin = new Date();
+        Repository repo = RepositoryHelper.getRepositoryFromSlug("everypolitician-scrapers/mexico-diputados-2015");
+        Build b = getLastSuccessfulBuildFromMaster(repo, false, 1);
+        Date end = new Date();
+
+        Date maxExpectedDate = new Date(begin.toInstant().plus(2, ChronoUnit.MINUTES).toEpochMilli());
+        assertTrue(end.getTime() < maxExpectedDate.getTime());
     }
 
 }
