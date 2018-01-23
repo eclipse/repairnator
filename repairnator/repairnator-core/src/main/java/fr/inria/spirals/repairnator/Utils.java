@@ -20,6 +20,7 @@ public class Utils {
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
     private static final String TRAVIS_URL = "http://travis-ci.org/";
+    private static final String GITHUB_URL = "https://github.com/";
 
     public static String formatCompleteDate(Date date) {
         return tsvCompleteDateFormat.format(date);
@@ -44,6 +45,10 @@ public class Utils {
 
     public static String getTravisUrl(int buildId, String slug) {
         return TRAVIS_URL + slug + "/builds/" + buildId;
+    }
+
+    public static String getGithubRepoUrl(String slug) {
+        return GITHUB_URL + slug + ".git";
     }
 
     public static String getDuration(Date dateBegin, Date dateEnd) {
