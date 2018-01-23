@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by urli on 07/03/2017.
@@ -90,5 +91,7 @@ public class TestNopolRepair {
         assertThat(nopolRepair.shouldStop, is(false));
         assertThat(nopolRepair.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(nopolRepair.getNopolInformations().size(), is(11));
+        File nopolLog = new File(tmpDir, "repairnator.nopol.log");
+        assertTrue(nopolLog.exists());
     }
 }

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -206,6 +207,17 @@ public class NopolRepair extends AbstractStep {
                 }
             }
 
+            File nopolLog = new File(this.getInspector().getRepoLocalPath(), "debug.log");
+            if (nopolLog.exists()) {
+                String nopolDestName = "repairnator.nopol.log";
+                File nopolDest = new File(this.getInspector().getRepoLocalPath(), nopolDestName);
+                try {
+                    Files.move(nopolLog.toPath(), nopolDest.toPath());
+                    this.getInspector().getJobStatus().addFileToPush(nopolDestName);
+                } catch (IOException e) {
+                    getLogger().error("Error while renaming nopol log", e);
+                }
+            }
             File nopolProperties = new File(this.getInspector().getRepoLocalPath()+"/repairnator.nopol.results");
 
             this.getInspector().getJobStatus().addFileToPush("repairnator.nopol.results");
