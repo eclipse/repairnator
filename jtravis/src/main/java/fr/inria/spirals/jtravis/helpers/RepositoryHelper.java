@@ -98,5 +98,8 @@ public class RepositoryHelper extends AbstractHelper {
 
     }
 
-
+    public static void main(String[] args) {
+        Repository repo = RepositoryHelper.getRepositoryFromSlug("surli/failingProject");
+        System.out.println("Repo id: "+repo.getId());
+    }
 }
