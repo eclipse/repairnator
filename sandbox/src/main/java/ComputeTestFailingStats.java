@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,8 +34,16 @@ public class ComputeTestFailingStats {
 
         MongoConnection mongoConnection = new MongoConnection(dbCollectionUrl, dbName);
         MongoDatabase database = mongoConnection.getMongoDatabase();
-        MongoCollection collection = database.getCollection(collectionName);
+        MongoCollection<Document> collection = database.getCollection(collectionName);
 
+        Calendar limitDateFebruary2017 = Calendar.getInstance();
+        Calendar limitDateJanuary2018 = Calendar.getInstance();
+        //limitDateMay.set(2017, Calendar.MAY, 10);
+        limitDateFebruary2017.set(2017, Calendar.FEBRUARY, 1);
+        limitDateJanuary2018.set(2018, Calendar.JANUARY, 1);
+
+        Calendar limitDateNow = Calendar.getInstance();
+        limitDateNow.set(2018, Calendar.JANUARY, 2);
 
         Block<Document> block = new Block<Document>(){
 
@@ -60,7 +69,15 @@ public class ComputeTestFailingStats {
                 }
             }
         };
-        collection.find(and(ne("typeOfFailures", ""), ne("typeOfFailures", null))).forEach(
+        collection.find(
+                and(
+                        lt("buildFinishedDate", limitDateJanuary2018.getTime()),
+                        gt("buildFinishedDate", limitDateFebruary2017.getTime()),
+                        lt("buildReproductionDate", limitDateNow.getTime()),
+                        ne("typeOfFailures", ""),
+                        ne("typeOfFailures", null)
+                )
+        ).forEach(
                 block
         );
 
