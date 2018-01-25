@@ -64,6 +64,7 @@ if [[ 1 -eq 1 ]]; then
                 export COUNTER=$((COUNTER+1))
             fi
         fi
+        sync
     done
 
     echo $COUNTER > $TMP_FILE_COUNTER
