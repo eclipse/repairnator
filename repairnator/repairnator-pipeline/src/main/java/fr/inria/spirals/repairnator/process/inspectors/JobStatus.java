@@ -54,6 +54,8 @@ public class JobStatus {
     private Metrics metrics;
 
     private List<String> createdFilesToPush;
+    private boolean hasBeenForked;
+    private String forkURL;
 
     public JobStatus(String pomDirPath) {
         this.pipelineState = PipelineState.NONE;
@@ -270,5 +272,21 @@ public class JobStatus {
 
     public void setNopolPatches(List<String> nopolPatches) {
         this.nopolPatches = nopolPatches;
+    }
+
+    public boolean isHasBeenForked() {
+        return hasBeenForked;
+    }
+
+    public void setHasBeenForked(boolean hasBeenForked) {
+        this.hasBeenForked = hasBeenForked;
+    }
+
+    public String getForkURL() {
+        return forkURL;
+    }
+
+    public void setForkURL(String forkURL) {
+        this.forkURL = forkURL;
     }
 }
