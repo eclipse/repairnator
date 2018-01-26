@@ -177,12 +177,6 @@ public abstract class AbstractStep {
     }
 
     private void observeAndNotify() {
-        if (this.notifiers != null) {
-            for (AbstractNotifier notifier : this.notifiers) {
-                notifier.observe(this.inspector);
-            }
-        }
-
         ProjectInspector inspector = this.getInspector();
         JobStatus jobStatus = inspector.getJobStatus();
         if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked()) {
@@ -198,6 +192,12 @@ public abstract class AbstractStep {
                 getLogger().error("Error while forking the repository "+repositoryName, e);
             }
 
+        }
+
+        if (this.notifiers != null) {
+            for (AbstractNotifier notifier : this.notifiers) {
+                notifier.observe(this.inspector);
+            }
         }
     }
 
