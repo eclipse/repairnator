@@ -186,6 +186,7 @@ public abstract class AbstractStep {
                 String forkedRepoUrl = inspector.getGitHelper().forkRepository(repositoryName);
                 if (forkedRepoUrl != null) {
                     jobStatus.setForkURL(forkedRepoUrl);
+                    jobStatus.setHasBeenForked(true);
                     getLogger().info("Obtain the following fork URL: "+forkedRepoUrl);
                 }
             } catch (IOException e) {
