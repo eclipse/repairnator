@@ -109,7 +109,7 @@ public class PatchNotifier extends AbstractNotifier {
 
                 String[] divideSlug = slug.split("/");
                 String projectName = divideSlug[1];
-                String destSlug = "lucesape/"+projectName;
+
                 text += "Data about patches has been pushed on the following branch: "+status.getGitBranchUrl()+".\n\n";
                 text += "Follow those instruction to create a pull request:\n";
                 text += "mkdir "+projectName+"\n";
@@ -119,7 +119,14 @@ public class PatchNotifier extends AbstractNotifier {
                 text += "git checkout -b patch FETCH_HEAD\n";
                 text += "vi [file_to_patch]\n";
                 text += "git commit -m \"tentative patch\" -a\n";
-                text += "git push "+Utils.getGithubRepoUrl(destSlug)+"\n";
+
+                if (status.isHasBeenForked()) {
+                    text += "git push "+status.getForkURL()+"\n";
+                } else {
+                    text += "Then fork the repository ("+slug+") from Github interface\n";
+                    text += "git push [url to the fork]\n";
+                }
+
             }
 
             text += "You may find several information on the following about those patches: \n";
