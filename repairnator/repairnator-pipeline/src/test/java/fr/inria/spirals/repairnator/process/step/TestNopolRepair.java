@@ -91,7 +91,7 @@ public class TestNopolRepair {
         assertThat(nopolRepair.shouldStop, is(false));
         assertThat(nopolRepair.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(nopolRepair.getNopolInformations().size(), is(11));
-        File nopolLog = new File(tmpDir, "repairnator.nopol.log");
+        File nopolLog = new File(inspector.getRepoLocalPath(), "repairnator.nopol.log");
         assertTrue(nopolLog.exists());
     }
 }

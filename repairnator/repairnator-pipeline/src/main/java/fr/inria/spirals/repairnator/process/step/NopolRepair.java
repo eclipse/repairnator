@@ -207,7 +207,7 @@ public class NopolRepair extends AbstractStep {
                 }
             }
 
-            File nopolLog = new File(this.getInspector().getRepoLocalPath(), "debug.log");
+            File nopolLog = new File(System.getProperty("user.dir"), "debug.log");
             if (nopolLog.exists()) {
                 String nopolDestName = "repairnator.nopol.log";
                 File nopolDest = new File(this.getInspector().getRepoLocalPath(), nopolDestName);
