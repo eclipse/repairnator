@@ -124,6 +124,7 @@ public class NopolRepair extends AbstractStep {
                     nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
                     nopolContext.setType(StatementType.COND_THEN_PRE);
                     nopolContext.setOnlyOneSynthesisResult(false);
+                    nopolContext.setOutputFolder(this.getInspector().getRepoLocalPath());
 
                     nopolInformation.setNopolContext(nopolContext);
 
