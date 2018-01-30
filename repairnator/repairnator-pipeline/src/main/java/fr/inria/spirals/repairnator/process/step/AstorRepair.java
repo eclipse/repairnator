@@ -142,6 +142,7 @@ public class AstorRepair extends AbstractStep {
                 this.setPipelineState(PipelineState.ASTOR_NOTPATCHED);
             } else {
                 this.setPipelineState(PipelineState.ASTOR_PATCHED);
+                this.getInspector().getJobStatus().setHasBeenPatched(true);
             }
         }
     }

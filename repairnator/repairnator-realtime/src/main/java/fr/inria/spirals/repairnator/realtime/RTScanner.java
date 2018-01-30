@@ -164,39 +164,46 @@ public class RTScanner {
         }
 
         Repository repository = RepositoryHelper.getRepositoryFromId(repositoryId);
-        Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false, 5);
+        if (repository != null) {
+            Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false, 5);
 
-        if (masterBuild == null) {
-            this.addInTempBlackList(repository, "No successful build found.");
-            return false;
-        } else {
-            if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
-                this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
+            if (masterBuild == null) {
+                this.addInTempBlackList(repository, "No successful build found.");
                 return false;
-            }
-
-            if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
-                this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
-                return false;
-            } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
-                this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
-                return false;
-            }
-
-            if (!masterBuild.getJobs().isEmpty()) {
-                Job firstJob = masterBuild.getJobs().get(0);
-                Log jobLog = firstJob.getLog();
-                if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
-                    LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-                    this.addInWhitelistRepository(repository);
-                    return true;
-                } else {
-                    this.addInTempBlackList(repository, "No test found");
-                }
             } else {
-                LOGGER.info("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
+                if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
+                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
+                    return false;
+                }
+
+                if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
+                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
+                    return false;
+                } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
+                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
+                    return false;
+                }
+
+                if (!masterBuild.getJobs().isEmpty()) {
+                    Job firstJob = masterBuild.getJobs().get(0);
+                    Log jobLog = firstJob.getLog();
+                    if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
+                        LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
+                        this.addInWhitelistRepository(repository);
+                        return true;
+                    } else {
+                        this.addInTempBlackList(repository, "No test found");
+                    }
+                } else {
+                    LOGGER.info("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
+                }
             }
+        } else {
+            LOGGER.info("Repository not found with the following id: "+repositoryId+" it will be temporary blacklisted");
+            Date expirationDate = new Date(new Date().toInstant().plusSeconds(DURATION_IN_TEMP_BLACKLIST).toEpochMilli());
+            this.tempBlackList.put(repositoryId, expirationDate);
         }
+
 
         return false;
     }
