@@ -19,12 +19,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by urli on 17/08/2017.
  */
 public class AstorRepair extends AbstractStep {
 
+    private static final int MAX_TIME_EXECUTION = 100; // in minutes
     public AstorRepair(ProjectInspector inspector) {
         super(inspector);
     }
@@ -51,7 +59,7 @@ public class AstorRepair extends AbstractStep {
                 }
             }
 
-            List<String> astorArgs = new ArrayList<>();
+            final List<String> astorArgs = new ArrayList<>();
             astorArgs.add("-dependencies");
             astorArgs.add(StringUtils.join(dependencies,":"));
 
@@ -78,26 +86,51 @@ public class AstorRepair extends AbstractStep {
             astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.astor.log");
 
             astorArgs.add("-maxtime");
-            astorArgs.add("100");
+            astorArgs.add(MAX_TIME_EXECUTION+"");
 
             astorArgs.add("-seed");
             astorArgs.add("1");
 
+            final AstorMain astorMain = new AstorMain();
 
-            AstorMain astorMain = new AstorMain();
 
-            AstorOutputStatus status;
+            final ExecutorService executor = Executors.newSingleThreadExecutor();
+            final Future<AstorOutputStatus> astorExecution = executor.submit(new Callable<AstorOutputStatus>() {
+                @Override
+                public AstorOutputStatus call() throws Exception {
+                    AstorOutputStatus status = null;
+                    try {
+                        astorMain.execute(astorArgs.toArray(new String[0]));
+                        if (astorMain.getEngine() != null) {
+                            status = astorMain.getEngine().getOutputStatus();
+                        } else {
+                            status = AstorOutputStatus.ERROR;
+                        }
+                    } catch (RuntimeException e) {
+                        addStepError("Got runtime exception while running Nopol", e);
+                        status = AstorOutputStatus.ERROR;
+                    }
+                    return status;
+                }
+            });
+
+            AstorOutputStatus status = null;
             try {
-                astorMain.execute(astorArgs.toArray(new String[0]));
+                executor.shutdown();
+                status = astorExecution.get(MAX_TIME_EXECUTION, TimeUnit.MINUTES);
 
-                status = astorMain.getEngine().getOutputStatus();
-                List<ProgramVariant> solutions = astorMain.getEngine().getSolutions();
+                if (astorMain.getEngine() != null) {
+                    List<ProgramVariant> solutions = astorMain.getEngine().getSolutions();
 
-                for (ProgramVariant pv : solutions) {
-                    if (pv.isSolution()) {
-                        astorPatches.add(pv.getPatchDiff());
+                    if (solutions != null) {
+                        for (ProgramVariant pv : solutions) {
+                            if (pv.isSolution()) {
+                                astorPatches.add(pv.getPatchDiff());
+                            }
+                        }
                     }
                 }
+
             } catch (Exception e) {
                 status = AstorOutputStatus.ERROR;
                 this.addStepError("Error while executing astor with args: "+ StringUtils.join(astorArgs,","), e);
