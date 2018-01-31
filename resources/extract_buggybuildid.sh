@@ -57,6 +57,14 @@ do
                 BUILDID=`jq -r .metrics.BuggyBuildId repairnator.json`
                 echo "repairnator.json is valid in $branchname. Found following buildid: $BUILDID"
                 echo "$BUILDID $branchname" >> $DEST
+            else
+                BUILDID=`jq -r .buildid repairnator.json`
+                if [ "$BUILDID" != "null" ]; then
+                    echo "repairnator.json is NOT valid in $branchname but Found following buildid: $BUILDID"
+                    echo "$BUILDID $branchname" >> $DEST
+                else
+                    echo "repairnator.json is not valid and no interesting value found in $branchname"
+                fi
             fi
         else
             echo "No property or json file has been found for repairnator in $branchname."
