@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-CSV_FILE="seip-reproduced-bugs.csv"
+#CSV_FILE="seip-reproduced-bugs.csv"
+CSV_FILE="seip-reproduced-bugs-nobranch.csv"
 LIST_BRANCHES="librepair-xp-remote-branches.txt"
 OUTPUT="missing-branches.txt"
 RETRIEVED_BRANCHES="retrieved-branches.txt"
