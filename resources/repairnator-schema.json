@@ -798,6 +798,7 @@
     "totalNumberFailingTests",
     "totalNumberErroringTests",
     "totalNumberRunningTests",
-    "repo"
+    "repo",
+    "metrics"
   ]
 }
