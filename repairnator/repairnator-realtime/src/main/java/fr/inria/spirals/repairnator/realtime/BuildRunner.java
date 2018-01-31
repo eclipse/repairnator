@@ -42,7 +42,7 @@ public class BuildRunner extends AbstractPoolManager {
     public void initExecutorService(int nbThreads) {
         this.nbThreads = nbThreads;
         this.executorService = Executors.newFixedThreadPool(nbThreads);
-        this.waitingBuilds = new LinkedBlockingDeque<>(this.nbThreads);
+        this.waitingBuilds = new LinkedBlockingDeque<>(this.nbThreads*4);
         LOGGER.debug("Executor service initialized for "+nbThreads+" threads.");
     }
 

@@ -1,6 +1,8 @@
 package fr.inria.spirals.repairnator.notifier;
 
 import fr.inria.lille.repair.common.patch.Patch;
+import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.spirals.jtravis.entities.Repository;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
@@ -91,15 +93,40 @@ public class PatchNotifier extends AbstractNotifier {
 
     public void observe(ProjectInspector inspector) {
         JobStatus status = inspector.getJobStatus();
+        Build buggyBuild = inspector.getBuggyBuild();
+        Repository repository = buggyBuild.getRepository();
 
         if (status.isHasBeenPatched()) {
-            String subject = "Patched build: "+inspector.getBuggyBuild().getId()+" - "+inspector.getBuggyBuild().getRepository().getSlug();
+            String subject = "Patched build: "+buggyBuild.getId()+" - "+repository.getSlug();
 
             String text = "Hurray !\n\n" +
-                    "Patch(es) has been found for the following build: "+ Utils.getTravisUrl(inspector.getBuggyBuild().getId(), inspector.getBuggyBuild().getRepository().getSlug())+".\n";
+                    "Patch(es) has been found for the following build: "+ Utils.getTravisUrl(buggyBuild.getId(), repository.getSlug())+".\n";
 
             if (status.isHasBeenPushed()) {
-                text += "Data about patches has been pushed on the following branch: "+status.getGitBranchUrl()+".\n";
+                String slug = repository.getSlug();
+                String repoURL = Utils.getGithubRepoUrl(slug);
+                String branchName = buggyBuild.getCommit().getBranch();
+
+                String[] divideSlug = slug.split("/");
+                String projectName = divideSlug[1];
+
+                text += "Data about patches has been pushed on the following branch: "+status.getGitBranchUrl()+".\n\n";
+                text += "Follow those instruction to create a pull request:\n";
+                text += "mkdir "+projectName+"\n";
+                text += "cd "+projectName+"\n";
+                text += "git init\n";
+                text += "git fetch "+repoURL+" "+branchName+"\n";
+                text += "git checkout -b patch FETCH_HEAD\n";
+                text += "vi [file_to_patch]\n";
+                text += "git commit -m \"tentative patch\" -a\n";
+
+                if (status.isHasBeenForked()) {
+                    text += "git push "+status.getForkURL()+"\n";
+                } else {
+                    text += "Then fork the repository ("+slug+") from Github interface\n";
+                    text += "git push [url to the fork]\n";
+                }
+
             }
 
             text += "You may find several information on the following about those patches: \n";

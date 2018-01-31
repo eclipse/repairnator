@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
@@ -176,6 +177,24 @@ public abstract class AbstractStep {
     }
 
     private void observeAndNotify() {
+        ProjectInspector inspector = this.getInspector();
+        JobStatus jobStatus = inspector.getJobStatus();
+        if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked()) {
+            String repositoryName = getInspector().getRepoSlug();
+            getLogger().info("Fork the repository: "+repositoryName);
+            try {
+                String forkedRepoUrl = inspector.getGitHelper().forkRepository(repositoryName);
+                if (forkedRepoUrl != null) {
+                    jobStatus.setForkURL(forkedRepoUrl);
+                    jobStatus.setHasBeenForked(true);
+                    getLogger().info("Obtain the following fork URL: "+forkedRepoUrl);
+                }
+            } catch (IOException e) {
+                getLogger().error("Error while forking the repository "+repositoryName, e);
+            }
+
+        }
+
         if (this.notifiers != null) {
             for (AbstractNotifier notifier : this.notifiers) {
                 notifier.observe(this.inspector);

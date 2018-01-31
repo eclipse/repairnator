@@ -131,16 +131,18 @@ public class GitHelper {
 
                 this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
 
-                // add force is not supported by JGit...
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", StringUtils.join(filesToAdd, " "))
-                        .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+                for (String fileToAdd : filesToAdd) {
+                    // add force is not supported by JGit...
+                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", fileToAdd)
+                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
 
-                try {
-                    Process p = processBuilder.start();
-                    p.waitFor();
-                } catch (InterruptedException|IOException e) {
-                    this.getLogger().error("Error while executing git command to add files: " + e);
-                    return false;
+                    try {
+                        Process p = processBuilder.start();
+                        p.waitFor();
+                    } catch (InterruptedException|IOException e) {
+                        this.getLogger().error("Error while executing git command to add files: " + e);
+                        return false;
+                    }
                 }
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
@@ -345,5 +347,14 @@ public class GitHelper {
             return false;
         }
         return true;
+    }
+
+    public String forkRepository(String repository) throws IOException {
+        GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
+        GHRepository originalRepo = gh.getRepository(repository);
+        if (originalRepo != null) {
+            return originalRepo.fork().getUrl().toString();
+        }
+        return null;
     }
 }
