@@ -700,7 +700,6 @@
         "NbFailingTests",
         "FailureNames",
         "BugCommitUrl",
-        "BuggyBuildId",
         "BuggyBuildURL",
         "BuggyBuildDate",
         "BugCommit",
