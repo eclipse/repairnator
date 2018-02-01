@@ -124,7 +124,7 @@ public class TestProjectInspector {
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
-        String remoteBranchName = "surli-failingProject-208897371-20170308-100702";
+        String remoteBranchName = "surli-failingProject-208897371-20170308-040702";
         assertEquals(remoteBranchName, inspector.getRemoteBranchName());
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
