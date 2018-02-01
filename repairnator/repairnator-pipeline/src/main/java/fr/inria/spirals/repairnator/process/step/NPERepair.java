@@ -83,26 +83,27 @@ public class NPERepair extends AbstractStep {
                         List<String> npePatches = new ArrayList<String>();
 
                         JsonArray executions = root.getAsJsonObject().getAsJsonArray("executions");
+                        if (executions != null) {
+                            for (JsonElement execution : executions) {
+                                JsonObject result = execution.getAsJsonObject().getAsJsonObject("result");
+                                boolean success = result.get("success").getAsBoolean() && execution.getAsJsonObject().has("decisions");
 
-                        for (JsonElement execution : executions) {
-                            JsonObject result = execution.getAsJsonObject().getAsJsonObject("result");
-                            boolean success = result.get("success").getAsBoolean() && execution.getAsJsonObject().has("decisions");
+                                if (success) {
+                                    effectivelyPatched = true;
+                                    String testName = execution.getAsJsonObject().getAsJsonObject("test").get("name").getAsString();
+                                    long startDate = execution.getAsJsonObject().get("startDate").getAsLong();
 
-                            if (success) {
-                                effectivelyPatched = true;
-                                String testName = execution.getAsJsonObject().getAsJsonObject("test").get("name").getAsString();
-                                long startDate = execution.getAsJsonObject().get("startDate").getAsLong();
+                                    String filename = "npefix_"+testName+"_"+startDate+".patch";
+                                    String content = execution.getAsJsonObject().get("diff").getAsString();
 
-                                String filename = "npefix_"+testName+"_"+startDate+".patch";
-                                String content = execution.getAsJsonObject().get("diff").getAsString();
+                                    File patchFile = new File(patchDir.getPath()+"/"+filename);
+                                    BufferedWriter patchWriter = new BufferedWriter(new FileWriter(patchFile));
+                                    patchWriter.write(content);
+                                    patchWriter.flush();
+                                    patchWriter.close();
 
-                                File patchFile = new File(patchDir.getPath()+"/"+filename);
-                                BufferedWriter patchWriter = new BufferedWriter(new FileWriter(patchFile));
-                                patchWriter.write(content);
-                                patchWriter.flush();
-                                patchWriter.close();
-
-                                npePatches.add(content);
+                                    npePatches.add(content);
+                                }
                             }
                         }
                         this.getInspector().getJobStatus().setNpeFixPatches(npePatches);
