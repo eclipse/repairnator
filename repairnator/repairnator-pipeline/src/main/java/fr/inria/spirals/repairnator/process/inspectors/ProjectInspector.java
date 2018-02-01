@@ -125,11 +125,7 @@ public class ProjectInspector {
     public String getRemoteBranchName() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
         String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
-        if (this.buildToBeInspected.getStatus() == ScannedBuildStatus.ONLY_FAIL) {
-            return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate + "_bugonly";
-        } else {
-            return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
-        }
+        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
     }
 
     public void run() {
