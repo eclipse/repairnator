@@ -119,7 +119,7 @@ public class NopolRepair extends AbstractStep {
                     nopolContext.setTimeoutTestExecution(300);
                     nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
                     nopolContext.setMaxTimeInMinutes(timeout);
-                    nopolContext.setLocalizer(NopolContext.NopolLocalizer.OCHIAI);
+                    nopolContext.setLocalizer(NopolContext.NopolLocalizer.COCOSPOON);
                     nopolContext.setSolverPath(this.getConfig().getZ3solverPath());
                     nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
                     nopolContext.setType(StatementType.COND_THEN_PRE);
