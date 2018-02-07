@@ -1,654 +1,0 @@
-travis_fold:start:worker_info[0K[33;1mWorker information[0m
-hostname: 72c9d40c-aff0-4023-9d85-3dd67a159bc9@1.i-0d38b73-production-2-worker-org-ec2.travisci.net
-version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
-instance: 3db4663:travis:java (via amqp)
-startup: 422.605571ms
-travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
-Build language: java
-Build group: stable
-Build dist: trusty
-Build id: 277545748
-Job id: 277545749
-Runtime kernel version: 4.11.6-041106-generic
-travis-build version: 125c5d1fa
-[34m[1mBuild image provisioning date and time[0m
-Tue Aug 29 02:50:02 UTC 2017
-[34m[1mOperating System Details[0m
-Distributor ID:	Ubuntu
-Description:	Ubuntu 14.04.5 LTS
-Release:	14.04
-Codename:	trusty
-[34m[1mCookbooks Version[0m
-4642454 https://github.com/travis-ci/travis-cookbooks/tree/4642454
-[34m[1mgit version[0m
-git version 2.14.1
-[34m[1mbash version[0m
-GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
-[34m[1mgcc version[0m
-gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
-Copyright (C) 2013 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-[34m[1mdocker version[0m
-Client:
- Version:      17.03.1-ce
- API version:  1.27
- Go version:   go1.7.5
- Git commit:   c6d412e
- Built:        Mon Mar 27 16:58:30 2017
- OS/Arch:      linux/amd64
-[34m[1mclang version[0m
-clang version 3.9.0 (tags/RELEASE_390/final)
-Target: x86_64-unknown-linux-gnu
-Thread model: posix
-InstalledDir: /usr/local/clang-3.9.0/bin
-[34m[1mjq version[0m
-jq-1.5
-[34m[1mbats version[0m
-Bats 0.4.0
-[34m[1mshellcheck version[0m
-0.4.6
-[34m[1mshfmt version[0m
-v1.3.1
-[34m[1mccache version[0m
-ccache version 3.1.9
-
-Copyright (C) 2002-2007 Andrew Tridgell
-Copyright (C) 2009-2011 Joel Rosdahl
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 3 of the License, or (at your option) any later
-version.
-[34m[1mcmake version[0m
-cmake version 3.2.2
-
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-[34m[1mheroku version[0m
-heroku-cli/6.13.19-6cd27b3 (linux-x64) node-v8.3.0
-[34m[1mimagemagick version[0m
-Version: ImageMagick 6.7.7-10 2017-07-31 Q16 http://www.imagemagick.org
-[34m[1mmd5deep version[0m
-4.2
-[34m[1mmercurial version[0m
-Mercurial Distributed SCM (version 4.2.2)
-(see https://mercurial-scm.org for more information)
-
-Copyright (C) 2005-2017 Matt Mackall and others
-This is free software; see the source for copying conditions. There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-[34m[1mmysql version[0m
-mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
-[34m[1mopenssl version[0m
-OpenSSL 1.0.1f 6 Jan 2014
-[34m[1mpacker version[0m
-Packer v1.0.2
-
-Your version of Packer is out of date! The latest version
-is 1.0.4. You can update by downloading from www.packer.io
-[34m[1mpostgresql client version[0m
-psql (PostgreSQL) 9.6.4
-[34m[1mragel version[0m
-Ragel State Machine Compiler version 6.8 Feb 2013
-Copyright (c) 2001-2009 by Adrian Thurston
-[34m[1msubversion version[0m
-svn, version 1.8.8 (r1568071)
-   compiled Aug 10 2017, 17:20:39 on x86_64-pc-linux-gnu
-
-Copyright (C) 2013 The Apache Software Foundation.
-This software consists of contributions made by many people;
-see the NOTICE file for more information.
-Subversion is open source software, see http://subversion.apache.org/
-
-The following repository access (RA) modules are available:
-
-* ra_svn : Module for accessing a repository using the svn network protocol.
-  - with Cyrus SASL authentication
-  - handles 'svn' scheme
-* ra_local : Module for accessing a repository on local disk.
-  - handles 'file' scheme
-* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
-  - using serf 1.3.3
-  - handles 'http' scheme
-  - handles 'https' scheme
-
-[34m[1msudo version[0m
-Sudo version 1.8.9p5
-Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
-Sudoers policy plugin version 1.8.9p5
-Sudoers file grammar version 43
-
-Sudoers path: /etc/sudoers
-Authentication methods: 'pam'
-Syslog facility if syslog is being used for logging: authpriv
-Syslog priority to use when user authenticates successfully: notice
-Syslog priority to use when user authenticates unsuccessfully: alert
-Send mail if the user is not in sudoers
-Use a separate timestamp for each user/tty combo
-Lecture user the first time they run sudo
-Root may run sudo
-Allow some information gathering to give useful error messages
-Require fully-qualified hostnames in the sudoers file
-Visudo will honor the EDITOR environment variable
-Set the LOGNAME and USER environment variables
-Length at which to wrap log file lines (0 for no wrap): 80
-Authentication timestamp timeout: 15.0 minutes
-Password prompt timeout: 0.0 minutes
-Number of tries to enter a password: 3
-Umask to use or 0777 to use user's: 022
-Path to mail program: /usr/sbin/sendmail
-Flags for mail program: -t
-Address to send mail to: root
-Subject line for mail messages: *** SECURITY information for %h ***
-Incorrect password message: Sorry, try again.
-Path to authentication timestamp dir: /var/lib/sudo
-Default password prompt: [sudo] password for %p: 
-Default user to run commands as: root
-Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-Path to the editor for use by visudo: /usr/bin/editor
-When to require a password for 'list' pseudocommand: any
-When to require a password for 'verify' pseudocommand: all
-File descriptors >= 3 will be closed before executing a command
-Environment variables to check for sanity:
-	TZ
-	TERM
-	LINGUAS
-	LC_*
-	LANGUAGE
-	LANG
-	COLORTERM
-Environment variables to remove:
-	RUBYOPT
-	RUBYLIB
-	PYTHONUSERBASE
-	PYTHONINSPECT
-	PYTHONPATH
-	PYTHONHOME
-	TMPPREFIX
-	ZDOTDIR
-	READNULLCMD
-	NULLCMD
-	FPATH
-	PERL5DB
-	PERL5OPT
-	PERL5LIB
-	PERLLIB
-	PERLIO_DEBUG 
-	JAVA_TOOL_OPTIONS
-	SHELLOPTS
-	GLOBIGNORE
-	PS4
-	BASH_ENV
-	ENV
-	TERMCAP
-	TERMPATH
-	TERMINFO_DIRS
-	TERMINFO
-	_RLD*
-	LD_*
-	PATH_LOCALE
-	NLSPATH
-	HOSTALIASES
-	RES_OPTIONS
-	LOCALDOMAIN
-	CDPATH
-	IFS
-Environment variables to preserve:
-	JAVA_HOME
-	TRAVIS
-	CI
-	DEBIAN_FRONTEND
-	XAUTHORIZATION
-	XAUTHORITY
-	PS2
-	PS1
-	PATH
-	LS_COLORS
-	KRB5CCNAME
-	HOSTNAME
-	HOME
-	DISPLAY
-	COLORS
-Locale to use while parsing sudoers: C
-Directory in which to store input/output logs: /var/log/sudo-io
-File in which to store the input/output log: %{seq}
-Add an entry to the utmp/utmpx file when allocating a pty
-PAM service name to use
-PAM service name to use for login shells
-Create a new PAM session for the command to run in
-Maximum I/O log sequence number: 0
-
-Local IP address and netmask pairs:
-	172.17.0.2/255.255.0.0
-
-Sudoers I/O plugin version 1.8.9p5
-[34m[1mgzip version[0m
-gzip 1.6
-Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
-Copyright (C) 1993 Jean-loup Gailly.
-This is free software.  You may redistribute copies of it under the terms of
-the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
-There is NO WARRANTY, to the extent permitted by law.
-
-Written by Jean-loup Gailly.
-[34m[1mzip version[0m
-Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
-This is Zip 3.0 (July 5th 2008), by Info-ZIP.
-Currently maintained by E. Gordon.  Please send bug reports to
-the authors using the web page at www.info-zip.org; see README for details.
-
-Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
-as of above date; see http://www.info-zip.org/ for other sites.
-
-Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
-
-Zip special compilation options:
-	USE_EF_UT_TIME       (store Universal Time)
-	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
-	    bzip2 code and library copyright (c) Julian R Seward
-	    (See the bzip2 license for terms of use)
-	SYMLINK_SUPPORT      (symbolic links supported)
-	LARGE_FILE_SUPPORT   (can read and write large files on file system)
-	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
-	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
-	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
-	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
-	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
-
-Encryption notice:
-	The encryption code of this program is not copyrighted and is
-	put in the public domain.  It was originally written in Europe
-	and, to the best of our knowledge, can be freely distributed
-	in both source and object forms from any country, including
-	the USA under License Exception TSU of the U.S. Export
-	Administration Regulations (section 740.13(e)) of 6 June 2002.
-
-Zip environment options:
-             ZIP:  [none]
-          ZIPOPT:  [none]
-[34m[1mvim version[0m
-VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
-Included patches: 1-52
-Extra patches: 8.0.0056
-Modified by pkg-vim-maintainers@lists.alioth.debian.org
-Compiled by buildd@
-Huge version without GUI.  Features included (+) or not (-):
-+acl             +farsi           +mouse_netterm   +syntax
-+arabic          +file_in_path    +mouse_sgr       +tag_binary
-+autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
--balloon_eval    +float           +mouse_urxvt     -tag_any_white
--browse          +folding         +mouse_xterm     -tcl
-++builtin_terms  -footer          +multi_byte      +terminfo
-+byte_offset     +fork()          +multi_lang      +termresponse
-+cindent         +gettext         -mzscheme        +textobjects
--clientserver    -hangul_input    +netbeans_intg   +title
--clipboard       +iconv           +path_extra      -toolbar
-+cmdline_compl   +insert_expand   -perl            +user_commands
-+cmdline_hist    +jumplist        +persistent_undo +vertsplit
-+cmdline_info    +keymap          +postscript      +virtualedit
-+comments        +langmap         +printer         +visual
-+conceal         +libcall         +profile         +visualextra
-+cryptv          +linebreak       +python          +viminfo
-+cscope          +lispindent      -python3         +vreplace
-+cursorbind      +listcmds        +quickfix        +wildignore
-+cursorshape     +localmap        +reltime         +wildmenu
-+dialog_con      -lua             +rightleft       +windows
-+diff            +menu            -ruby            +writebackup
-+digraphs        +mksession       +scrollbind      -X11
--dnd             +modify_fname    +signs           -xfontset
--ebcdic          +mouse           +smartindent     -xim
-+emacs_tags      -mouseshape      -sniff           -xsmp
-+eval            +mouse_dec       +startuptime     -xterm_clipboard
-+ex_extra        +mouse_gpm       +statusline      -xterm_save
-+extra_search    -mouse_jsbterm   -sun_workshop    -xpm
-   system vimrc file: "$VIM/vimrc"
-     user vimrc file: "$HOME/.vimrc"
- 2nd user vimrc file: "~/.vim/vimrc"
-      user exrc file: "$HOME/.exrc"
-  fall-back for $VIM: "/usr/share/vim"
-Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
-Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
-[34m[1miptables version[0m
-iptables v1.4.21
-[34m[1mcurl version[0m
-curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
-[34m[1mwget version[0m
-GNU Wget 1.15 built on linux-gnu.
-[34m[1mrsync version[0m
-rsync  version 3.1.0  protocol version 31
-[34m[1mgimme version[0m
-v1.2.0
-[34m[1mnvm version[0m
-0.33.2
-[34m[1mperlbrew version[0m
-/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
-[34m[1mphpenv version[0m
-rbenv 1.1.1-4-g4ebd1bd
-[34m[1mrvm version[0m
-rvm 1.29.2 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io/]
-[34m[1mdefault ruby version[0m
-ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
-[34m[1mCouchDB version[0m
-couchdb 1.6.1
-[34m[1mElasticSearch version[0m
-5.5.0
-[34m[1mInstalled Firefox version[0m
-firefox 55.0.2
-[34m[1mMongoDB version[0m
-MongoDB 3.2.16
-[34m[1mPre-installed PostgreSQL versions[0m
-9.2.22
-9.3.18
-9.4.13
-9.5.8
-9.6.4
-[34m[1mRabbitMQ Version[0m
-3.6.11
-[34m[1mRedis version[0m
-redis-server 4.0.1
-[34m[1mriak version[0m
-2.2.3
-[34m[1mPre-installed Go versions[0m
-1.7.4
-[34m[1mant version[0m
-Apache Ant(TM) version 1.9.3 compiled on April 8 2014
-[34m[1mmvn version[0m
-Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
-Maven home: /usr/local/maven-3.5.0
-Java version: 1.8.0_144, vendor: Oracle Corporation
-Java home: /usr/lib/jvm/java-8-oracle/jre
-Default locale: en_US, platform encoding: UTF-8
-OS name: "linux", version: "4.4.0-92-generic", arch: "amd64", family: "unix"
-[34m[1mgradle version[0m
-
-------------------------------------------------------------
-Gradle 4.0.1
-------------------------------------------------------------
-
-Build time:   2017-07-07 14:02:41 UTC
-Revision:     38e5dc0f772daecca1d2681885d3d85414eb6826
-
-Groovy:       2.4.11
-Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
-JVM:          1.8.0_144 (Oracle Corporation 25.144-b01)
-OS:           Linux 4.4.0-92-generic amd64
-
-[34m[1mlein version[0m
-WARNING: You're currently running as root; probably by accident.
-Press control-C to abort or Enter to continue as root.
-Set LEIN_ROOT to disable this warning.
-Leiningen 2.7.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
-[34m[1mPre-installed Node.js versions[0m
-v4.8.4
-v6.11.2
-v6.9.4
-v7.4.0
-v8.4
-[34m[1mphpenv versions[0m
-  system
-  5.6
-* 5.6.31 (set by /home/travis/.phpenv/version)
-  7.0
-  7.0.22
-  hhvm
-  hhvm-stable
-[34m[1mcomposer --version[0m
-Composer version 1.4.2 2017-05-17 08:17:52
-[34m[1mPre-installed Ruby versions[0m
-ruby-2.2.7
-ruby-2.3.4
-ruby-2.4.1
-travis_fold:end:system_info[0K
-W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
-W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
-$ jdk_switcher use oraclejdk8
-Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
-travis_fold:start:git.checkout[0Ktravis_time:start:08c59628[0K$ git clone --depth=50 https://github.com/KittehOrg/KittehIRCClientLib.git KittehOrg/KittehIRCClientLib
-Cloning into 'KittehOrg/KittehIRCClientLib'...
-remote: Counting objects: 987, done.[K
-remote: Compressing objects:   0% (1/457)   [Kremote: Compressing objects:   1% (5/457)   [Kremote: Compressing objects:   2% (10/457)   [Kremote: Compressing objects:   3% (14/457)   [Kremote: Compressing objects:   4% (19/457)   [Kremote: Compressing objects:   5% (23/457)   [Kremote: Compressing objects:   6% (28/457)   [Kremote: Compressing objects:   7% (32/457)   [Kremote: Compressing objects:   8% (37/457)   [Kremote: Compressing objects:   9% (42/457)   [Kremote: Compressing objects:  10% (46/457)   [Kremote: Compressing objects:  11% (51/457)   [Kremote: Compressing objects:  12% (55/457)   [Kremote: Compressing objects:  13% (60/457)   [Kremote: Compressing objects:  14% (64/457)   [Kremote: Compressing objects:  15% (69/457)   [Kremote: Compressing objects:  16% (74/457)   [Kremote: Compressing objects:  17% (78/457)   [Kremote: Compressing objects:  18% (83/457)   [Kremote: Compressing objects:  19% (87/457)   [Kremote: Compressing objects:  20% (92/457)   [Kremote: Compressing objects:  21% (96/457)   [Kremote: Compressing objects:  22% (101/457)   [Kremote: Compressing objects:  23% (106/457)   [Kremote: Compressing objects:  24% (110/457)   [Kremote: Compressing objects:  25% (115/457)   [Kremote: Compressing objects:  26% (119/457)   [Kremote: Compressing objects:  27% (124/457)   [Kremote: Compressing objects:  28% (128/457)   [Kremote: Compressing objects:  29% (133/457)   [Kremote: Compressing objects:  30% (138/457)   [Kremote: Compressing objects:  31% (142/457)   [Kremote: Compressing objects:  32% (147/457)   [Kremote: Compressing objects:  33% (151/457)   [Kremote: Compressing objects:  34% (156/457)   [Kremote: Compressing objects:  35% (160/457)   [Kremote: Compressing objects:  36% (165/457)   [Kremote: Compressing objects:  37% (170/457)   [Kremote: Compressing objects:  38% (174/457)   [Kremote: Compressing objects:  39% (179/457)   [Kremote: Compressing objects:  40% (183/457)   [Kremote: Compressing objects:  41% (188/457)   [Kremote: Compressing objects:  42% (192/457)   [Kremote: Compressing objects:  43% (197/457)   [Kremote: Compressing objects:  44% (202/457)   [Kremote: Compressing objects:  45% (206/457)   [Kremote: Compressing objects:  46% (211/457)   [Kremote: Compressing objects:  47% (215/457)   [Kremote: Compressing objects:  48% (220/457)   [Kremote: Compressing objects:  49% (224/457)   [Kremote: Compressing objects:  50% (229/457)   [Kremote: Compressing objects:  51% (234/457)   [Kremote: Compressing objects:  52% (238/457)   [Kremote: Compressing objects:  53% (243/457)   [Kremote: Compressing objects:  54% (247/457)   [Kremote: Compressing objects:  55% (252/457)   [Kremote: Compressing objects:  56% (256/457)   [Kremote: Compressing objects:  57% (261/457)   [Kremote: Compressing objects:  58% (266/457)   [Kremote: Compressing objects:  59% (270/457)   [Kremote: Compressing objects:  60% (275/457)   [Kremote: Compressing objects:  61% (279/457)   [Kremote: Compressing objects:  62% (284/457)   [Kremote: Compressing objects:  63% (288/457)   [Kremote: Compressing objects:  64% (293/457)   [Kremote: Compressing objects:  65% (298/457)   [Kremote: Compressing objects:  66% (302/457)   [Kremote: Compressing objects:  67% (307/457)   [Kremote: Compressing objects:  68% (311/457)   [Kremote: Compressing objects:  69% (316/457)   [Kremote: Compressing objects:  70% (320/457)   [Kremote: Compressing objects:  71% (325/457)   [Kremote: Compressing objects:  72% (330/457)   [Kremote: Compressing objects:  73% (334/457)   [Kremote: Compressing objects:  74% (339/457)   [Kremote: Compressing objects:  75% (343/457)   [Kremote: Compressing objects:  76% (348/457)   [Kremote: Compressing objects:  77% (352/457)   [Kremote: Compressing objects:  78% (357/457)   [Kremote: Compressing objects:  79% (362/457)   [Kremote: Compressing objects:  80% (366/457)   [Kremote: Compressing objects:  81% (371/457)   [Kremote: Compressing objects:  82% (375/457)   [Kremote: Compressing objects:  83% (380/457)   [Kremote: Compressing objects:  84% (384/457)   [Kremote: Compressing objects:  85% (389/457)   [Kremote: Compressing objects:  86% (394/457)   [Kremote: Compressing objects:  87% (398/457)   [Kremote: Compressing objects:  88% (403/457)   [Kremote: Compressing objects:  89% (407/457)   [Kremote: Compressing objects:  90% (412/457)   [Kremote: Compressing objects:  91% (416/457)   [Kremote: Compressing objects:  92% (421/457)   [Kremote: Compressing objects:  93% (426/457)   [Kremote: Compressing objects:  94% (430/457)   [Kremote: Compressing objects:  95% (435/457)   [Kremote: Compressing objects:  96% (439/457)   [Kremote: Compressing objects:  97% (444/457)   [Kremote: Compressing objects:  98% (448/457)   [Kremote: Compressing objects:  99% (453/457)   [Kremote: Compressing objects: 100% (457/457)   [Kremote: Compressing objects: 100% (457/457), done.[K
-Receiving objects:   0% (1/987)   Receiving objects:   1% (10/987)   Receiving objects:   2% (20/987)   Receiving objects:   3% (30/987)   Receiving objects:   4% (40/987)   Receiving objects:   5% (50/987)   Receiving objects:   6% (60/987)   Receiving objects:   7% (70/987)   Receiving objects:   8% (79/987)   Receiving objects:   9% (89/987)   Receiving objects:  10% (99/987)   Receiving objects:  11% (109/987)   Receiving objects:  12% (119/987)   Receiving objects:  13% (129/987)   Receiving objects:  14% (139/987)   Receiving objects:  15% (149/987)   Receiving objects:  16% (158/987)   Receiving objects:  17% (168/987)   Receiving objects:  18% (178/987)   Receiving objects:  19% (188/987)   Receiving objects:  20% (198/987)   Receiving objects:  21% (208/987)   Receiving objects:  22% (218/987)   Receiving objects:  23% (228/987)   Receiving objects:  24% (237/987)   Receiving objects:  25% (247/987)   Receiving objects:  26% (257/987)   Receiving objects:  27% (267/987)   Receiving objects:  28% (277/987)   Receiving objects:  29% (287/987)   Receiving objects:  30% (297/987)   Receiving objects:  31% (306/987)   Receiving objects:  32% (316/987)   Receiving objects:  33% (326/987)   Receiving objects:  34% (336/987)   Receiving objects:  35% (346/987)   Receiving objects:  36% (356/987)   Receiving objects:  37% (366/987)   Receiving objects:  38% (376/987)   Receiving objects:  39% (385/987)   Receiving objects:  40% (395/987)   Receiving objects:  41% (405/987)   Receiving objects:  42% (415/987)   Receiving objects:  43% (425/987)   Receiving objects:  44% (435/987)   Receiving objects:  45% (445/987)   Receiving objects:  46% (455/987)   Receiving objects:  47% (464/987)   Receiving objects:  48% (474/987)   Receiving objects:  49% (484/987)   Receiving objects:  50% (494/987)   Receiving objects:  51% (504/987)   Receiving objects:  52% (514/987)   Receiving objects:  53% (524/987)   Receiving objects:  54% (533/987)   Receiving objects:  55% (543/987)   Receiving objects:  56% (553/987)   Receiving objects:  57% (563/987)   Receiving objects:  58% (573/987)   Receiving objects:  59% (583/987)   Receiving objects:  60% (593/987)   Receiving objects:  61% (603/987)   Receiving objects:  62% (612/987)   Receiving objects:  63% (622/987)   Receiving objects:  64% (632/987)   Receiving objects:  65% (642/987)   Receiving objects:  66% (652/987)   Receiving objects:  67% (662/987)   Receiving objects:  68% (672/987)   Receiving objects:  69% (682/987)   Receiving objects:  70% (691/987)   Receiving objects:  71% (701/987)   Receiving objects:  72% (711/987)   Receiving objects:  73% (721/987)   Receiving objects:  74% (731/987)   Receiving objects:  75% (741/987)   Receiving objects:  76% (751/987)   Receiving objects:  77% (760/987)   Receiving objects:  78% (770/987)   Receiving objects:  79% (780/987)   Receiving objects:  80% (790/987)   Receiving objects:  81% (800/987)   Receiving objects:  82% (810/987)   Receiving objects:  83% (820/987)   Receiving objects:  84% (830/987)   Receiving objects:  85% (839/987)   Receiving objects:  86% (849/987)   Receiving objects:  87% (859/987)   Receiving objects:  88% (869/987)   Receiving objects:  89% (879/987)   Receiving objects:  90% (889/987)   Receiving objects:  91% (899/987)   Receiving objects:  92% (909/987)   Receiving objects:  93% (918/987)   Receiving objects:  94% (928/987)   Receiving objects:  95% (938/987)   remote: Total 987 (delta 490), reused 707 (delta 314), pack-reused 0[K
-Receiving objects:  96% (948/987)   Receiving objects:  97% (958/987)   Receiving objects:  98% (968/987)   Receiving objects:  99% (978/987)   Receiving objects: 100% (987/987)   Receiving objects: 100% (987/987), 293.88 KiB | 10.13 MiB/s, done.
-Resolving deltas:   0% (0/490)   Resolving deltas:   1% (6/490)   Resolving deltas:   2% (10/490)   Resolving deltas:   3% (15/490)   Resolving deltas:   4% (20/490)   Resolving deltas:   6% (30/490)   Resolving deltas:   7% (36/490)   Resolving deltas:   8% (40/490)   Resolving deltas:  23% (113/490)   Resolving deltas:  26% (130/490)   Resolving deltas:  29% (143/490)   Resolving deltas:  30% (149/490)   Resolving deltas:  31% (153/490)   Resolving deltas:  32% (157/490)   Resolving deltas:  34% (167/490)   Resolving deltas:  35% (172/490)   Resolving deltas:  40% (200/490)   Resolving deltas:  41% (201/490)   Resolving deltas:  43% (213/490)   Resolving deltas:  45% (222/490)   Resolving deltas:  48% (237/490)   Resolving deltas:  49% (241/490)   Resolving deltas:  52% (256/490)   Resolving deltas:  53% (261/490)   Resolving deltas:  61% (300/490)   Resolving deltas:  62% (308/490)   Resolving deltas:  65% (321/490)   Resolving deltas:  71% (352/490)   Resolving deltas:  74% (367/490)   Resolving deltas:  77% (382/490)   Resolving deltas:  81% (398/490)   Resolving deltas:  83% (408/490)   Resolving deltas:  87% (427/490)   Resolving deltas:  88% (432/490)   Resolving deltas:  89% (440/490)   Resolving deltas:  90% (442/490)   Resolving deltas:  92% (454/490)   Resolving deltas:  93% (458/490)   Resolving deltas:  94% (461/490)   Resolving deltas:  95% (466/490)   Resolving deltas:  96% (474/490)   Resolving deltas:  97% (476/490)   Resolving deltas:  98% (481/490)   Resolving deltas:  99% (487/490)   Resolving deltas: 100% (490/490)   Resolving deltas: 100% (490/490), done.
-
-travis_time:end:08c59628:start=1505863495291134389,finish=1505863495742794948,duration=451660559[0K$ cd KittehOrg/KittehIRCClientLib
-travis_time:start:01f1cb30[0K$ git fetch origin +refs/pull/204/merge:
-remote: Counting objects: 25, done.[K
-remote: Compressing objects:  14% (1/7)   [Kremote: Compressing objects:  28% (2/7)   [Kremote: Compressing objects:  42% (3/7)   [Kremote: Compressing objects:  57% (4/7)   [Kremote: Compressing objects:  71% (5/7)   [Kremote: Compressing objects:  85% (6/7)   [Kremote: Compressing objects: 100% (7/7)   [Kremote: Compressing objects: 100% (7/7), done.[K
-remote: Total 25 (delta 9), reused 23 (delta 8), pack-reused 0[K
-Unpacking objects:   4% (1/25)   Unpacking objects:   8% (2/25)   Unpacking objects:  12% (3/25)   Unpacking objects:  16% (4/25)   Unpacking objects:  20% (5/25)   Unpacking objects:  24% (6/25)   Unpacking objects:  28% (7/25)   Unpacking objects:  32% (8/25)   Unpacking objects:  36% (9/25)   Unpacking objects:  40% (10/25)   Unpacking objects:  44% (11/25)   Unpacking objects:  48% (12/25)   Unpacking objects:  52% (13/25)   Unpacking objects:  56% (14/25)   Unpacking objects:  60% (15/25)   Unpacking objects:  64% (16/25)   Unpacking objects:  68% (17/25)   Unpacking objects:  72% (18/25)   Unpacking objects:  76% (19/25)   Unpacking objects:  80% (20/25)   Unpacking objects:  84% (21/25)   Unpacking objects:  88% (22/25)   Unpacking objects:  92% (23/25)   Unpacking objects:  96% (24/25)   Unpacking objects: 100% (25/25)   Unpacking objects: 100% (25/25), done.
-From https://github.com/KittehOrg/KittehIRCClientLib
- * branch            refs/pull/204/merge -> FETCH_HEAD
-
-travis_time:end:01f1cb30:start=1505863495748649262,finish=1505863495975000797,duration=226351535[0K$ git checkout -qf FETCH_HEAD
-travis_fold:end:git.checkout[0K
-[33;1mEncrypted environment variables have been removed for security reasons.[0m
-[33;1mSee https://docs.travis-ci.com/user/pull-requests/#Pull-Requests-and-Security-Restrictions[0m
-[33;1mDisabling Gradle daemon[0m
-travis_time:start:1d8a5314[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-
-travis_time:end:1d8a5314:start=1505863499554232620,finish=1505863499559230348,duration=4997728[0K$ export PATH=$JAVA_HOME/bin:$PATH
-travis_fold:start:cache.1[0KSetting up build cache
-$ export CASHER_DIR=$HOME/.casher
-travis_time:start:0889514a[0K$ Installing caching utilities
-
-travis_time:end:0889514a:start=1505863502592881284,finish=1505863502632732234,duration=39850950[0Ktravis_time:start:00eadaf0[0K
-travis_time:end:00eadaf0:start=1505863502638739473,finish=1505863502642866765,duration=4127292[0Ktravis_time:start:04b1b1dc[0K[32;1mattempting to download cache archive[0m
-[32;1mfetching PR.204/cache-linux-trusty-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855--jdk-oraclejdk8.tgz[0m
-[32;1mfound cache[0m
-
-travis_time:end:04b1b1dc:start=1505863502647799683,finish=1505863506780432421,duration=4132632738[0Ktravis_time:start:0638795a[0K
-travis_time:end:0638795a:start=1505863506785392145,finish=1505863506789590415,duration=4198270[0Ktravis_time:start:0a1ab724[0K[32;1madding /home/travis/.m2 to cache[0m
-
-travis_time:end:0a1ab724:start=1505863506794527816,finish=1505863508833563738,duration=2039035922[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
-Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
-java version "1.8.0_144"
-Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
-Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
-$ javac -J-Xmx32m -version
-Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
-javac 1.8.0_144
-travis_fold:start:before_install[0Ktravis_time:start:07c8e71b[0K$ pip install --user codecov
-Collecting codecov
-/usr/local/lib/python2.7/dist-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:318: SNIMissingWarning: An HTTPS request has been made, but the SNI (Subject Name Indication) extension to TLS is not available on this platform. This may cause the server to present an incorrect TLS certificate, which can cause validation failures. You can upgrade to a newer version of Python to solve this. For more information, see https://urllib3.readthedocs.io/en/latest/security.html#snimissingwarning.
-  SNIMissingWarning
-/usr/local/lib/python2.7/dist-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:122: InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. You can upgrade to a newer version of Python to solve this. For more information, see https://urllib3.readthedocs.io/en/latest/security.html#insecureplatformwarning.
-  InsecurePlatformWarning
-  Downloading codecov-2.0.9-py2.py3-none-any.whl
-Collecting requests>=2.7.9 (from codecov)
-  Downloading requests-2.18.4-py2.py3-none-any.whl (88kB)
-[?25l[K    11% |███▊                            | 10kB 64.4MB/s eta 0:00:01[K    23% |███████▍                        | 20kB 17.0MB/s eta 0:00:01[K    34% |███████████                     | 30kB 22.4MB/s eta 0:00:01[K    46% |██████████████▊                 | 40kB 14.8MB/s eta 0:00:01[K    57% |██████████████████▌             | 51kB 10.1MB/s eta 0:00:01[K    69% |██████████████████████▏         | 61kB 11.7MB/s eta 0:00:01[K    80% |█████████████████████████▉      | 71kB 11.7MB/s eta 0:00:01[K    92% |█████████████████████████████▌  | 81kB 11.4MB/s eta 0:00:01[K    100% |████████████████████████████████| 92kB 5.9MB/s 
-[?25hCollecting coverage (from codecov)
-  Downloading coverage-4.4.1-cp27-cp27mu-manylinux1_x86_64.whl (193kB)
-[?25l[K    5% |█▊                              | 10kB 56.2MB/s eta 0:00:01[K    10% |███▍                            | 20kB 31.2MB/s eta 0:00:01[K    15% |█████                           | 30kB 37.9MB/s eta 0:00:01[K    21% |██████▉                         | 40kB 29.6MB/s eta 0:00:01[K    26% |████████▌                       | 51kB 24.6MB/s eta 0:00:01[K    31% |██████████▏                     | 61kB 27.2MB/s eta 0:00:01[K    37% |███████████▉                    | 71kB 25.5MB/s eta 0:00:01[K    42% |█████████████▋                  | 81kB 27.4MB/s eta 0:00:01[K    47% |███████████████▎                | 92kB 26.8MB/s eta 0:00:01[K    52% |█████████████████               | 102kB 24.4MB/s eta 0:00:01[K    58% |██████████████████▋             | 112kB 24.5MB/s eta 0:00:01[K    63% |████████████████████▍           | 122kB 24.7MB/s eta 0:00:01[K    68% |██████████████████████          | 133kB 22.2MB/s eta 0:00:01[K    74% |███████████████████████▊        | 143kB 24.4MB/s eta 0:00:01[K    79% |█████████████████████████▍      | 153kB 25.0MB/s eta 0:00:01[K    84% |███████████████████████████▏    | 163kB 25.1MB/s eta 0:00:01[K    90% |████████████████████████████▉   | 174kB 26.0MB/s eta 0:00:01[K    95% |██████████████████████████████▌ | 184kB 23.5MB/s eta 0:00:01[K    100% |████████████████████████████████| 194kB 5.6MB/s 
-[?25hCollecting urllib3<1.23,>=1.21.1 (from requests>=2.7.9->codecov)
-  Downloading urllib3-1.22-py2.py3-none-any.whl (132kB)
-[?25l[K    7% |██▌                             | 10kB 50.2MB/s eta 0:00:01[K    15% |█████                           | 20kB 43.9MB/s eta 0:00:01[K    23% |███████▍                        | 30kB 49.0MB/s eta 0:00:01[K    30% |██████████                      | 40kB 34.4MB/s eta 0:00:01[K    38% |████████████▍                   | 51kB 32.5MB/s eta 0:00:01[K    46% |██████████████▉                 | 61kB 35.4MB/s eta 0:00:01[K    54% |█████████████████▍              | 71kB 32.5MB/s eta 0:00:01[K    61% |███████████████████▉            | 81kB 34.6MB/s eta 0:00:01[K    69% |██████████████████████▎         | 92kB 34.3MB/s eta 0:00:01[K    77% |████████████████████████▊       | 102kB 34.9MB/s eta 0:00:01[K    85% |███████████████████████████▎    | 112kB 35.5MB/s eta 0:00:01[K    92% |█████████████████████████████▊  | 122kB 34.0MB/s eta 0:00:01[K    100% |████████████████████████████████| 133kB 7.9MB/s 
-[?25hCollecting idna<2.7,>=2.5 (from requests>=2.7.9->codecov)
-  Downloading idna-2.6-py2.py3-none-any.whl (56kB)
-[?25l[K    18% |█████▉                          | 10kB 66.5MB/s eta 0:00:01[K    36% |███████████▋                    | 20kB 51.6MB/s eta 0:00:01[K    54% |█████████████████▍              | 30kB 54.5MB/s eta 0:00:01[K    72% |███████████████████████▏        | 40kB 52.8MB/s eta 0:00:01[K    90% |█████████████████████████████   | 51kB 52.5MB/s eta 0:00:01[K    100% |████████████████████████████████| 61kB 10.7MB/s 
-[?25hCollecting chardet<3.1.0,>=3.0.2 (from requests>=2.7.9->codecov)
-  Downloading chardet-3.0.4-py2.py3-none-any.whl (133kB)
-[?25l[K    7% |██▌                             | 10kB 60.6MB/s eta 0:00:01[K    15% |█████                           | 20kB 49.1MB/s eta 0:00:01[K    23% |███████▍                        | 30kB 51.9MB/s eta 0:00:01[K    30% |█████████▉                      | 40kB 50.9MB/s eta 0:00:01[K    38% |████████████▎                   | 51kB 36.9MB/s eta 0:00:01[K    46% |██████████████▊                 | 61kB 39.4MB/s eta 0:00:01[K    53% |█████████████████▏              | 71kB 40.2MB/s eta 0:00:01[K    61% |███████████████████▋            | 81kB 41.4MB/s eta 0:00:01[K    69% |██████████████████████▏         | 92kB 43.1MB/s eta 0:00:01[K    76% |████████████████████████▋       | 102kB 43.9MB/s eta 0:00:01[K    84% |███████████████████████████     | 112kB 44.2MB/s eta 0:00:01[K    92% |█████████████████████████████▌  | 122kB 44.5MB/s eta 0:00:01[K    99% |████████████████████████████████| 133kB 44.5MB/s eta 0:00:01[K    100% |████████████████████████████████| 143kB 8.4MB/s 
-[?25hCollecting certifi>=2017.4.17 (from requests>=2.7.9->codecov)
-  Downloading certifi-2017.7.27.1-py2.py3-none-any.whl (349kB)
-[?25l[K    2% |█                               | 10kB 67.0MB/s eta 0:00:01[K    5% |█▉                              | 20kB 51.9MB/s eta 0:00:01[K    8% |██▉                             | 30kB 54.5MB/s eta 0:00:01[K    11% |███▊                            | 40kB 53.3MB/s eta 0:00:01[K    14% |████▊                           | 51kB 52.3MB/s eta 0:00:01[K    17% |█████▋                          | 61kB 51.4MB/s eta 0:00:01[K    20% |██████▋                         | 71kB 48.7MB/s eta 0:00:01[K    23% |███████▌                        | 81kB 48.7MB/s eta 0:00:01[K    26% |████████▍                       | 92kB 50.1MB/s eta 0:00:01[K    29% |█████████▍                      | 102kB 50.5MB/s eta 0:00:01[K    32% |█���████████▎                     | 112kB 50.5MB/s eta 0:00:01[K    35% |███████████▎                    | 122kB 49.4MB/s eta 0:00:01[K    38% |████████████▏                   | 133kB 48.3MB/s eta 0:00:01[K    41% |█████████████▏                  | 143kB 49.5MB/s eta 0:00:01[K    43% |██████████████                  | 153kB 49.4MB/s eta 0:00:01[K    46% |███████████████                 | 163kB 46.0MB/s eta 0:00:01[K    49% |████████████████                | 174kB 48.7MB/s eta 0:00:01[K    52% |████████████████▉               | 184kB 48.3MB/s eta 0:00:01[K    55% |█████████████████▉              | 194kB 48.4MB/s eta 0:00:01[K    58% |██████████████████▊             | 204kB 47.7MB/s eta 0:00:01[K    61% |███████████████████▊            | 215kB 46.9MB/s eta 0:00:01[K    64% |████████████████████▋           | 225kB 49.9MB/s eta 0:00:01[K    67% |█████████████████████▋          | 235kB 50.6MB/s eta 0:00:01[K    70% |██████████████████████▌         | 245kB 49.7MB/s eta 0:00:01[K    73% |███████████████████████▍        | 256kB 51.2MB/s eta 0:00:01[K    76% |██████████████���█████████▍       | 266kB 55.2MB/s eta 0:00:01[K    79% |█████████████████████████▎      | 276kB 55.2MB/s eta 0:00:01[K    82% |██████████████████████████▎     | 286kB 56.3MB/s eta 0:00:01[K    84% |███████████████████████████▏    | 296kB 55.2MB/s eta 0:00:01[K    87% |████████████████████████████▏   | 307kB 57.2MB/s eta 0:00:01[K    90% |█████████████████████████████   | 317kB 57.4MB/s eta 0:00:01[K    93% |██████████████████████████████  | 327kB 56.3MB/s eta 0:00:01[K    96% |███████████████████████████████ | 337kB 57.6MB/s eta 0:00:01[K    99% |███████████████████████████████▉| 348kB 58.2MB/s eta 0:00:01[K    100% |████████████████████████████████| 358kB 3.8MB/s 
-[?25hInstalling collected packages: urllib3, idna, chardet, certifi, requests, coverage, codecov
-Successfully installed certifi-2017.7.27.1 chardet-3.0.4 codecov-2.0.9 coverage-4.4.1 idna-2.6 requests-2.18.4 urllib3-1.22
-/usr/local/lib/python2.7/dist-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:122: InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. You can upgrade to a newer version of Python to solve this. For more information, see https://urllib3.readthedocs.io/en/latest/security.html#insecureplatformwarning.
-  InsecurePlatformWarning
-
-travis_time:end:07c8e71b:start=1505863509245887737,finish=1505863511289256249,duration=2043368512[0Ktravis_fold:end:before_install[0Ktravis_fold:start:install[0Ktravis_time:start:0c6c72f9[0K$ true
-
-travis_time:end:0c6c72f9:start=1505863511294472619,finish=1505863511298461345,duration=3988726[0Ktravis_fold:end:install[0Ktravis_time:start:26507f55[0K$ if [ ${TRAVIS_PULL_REQUEST} = 'false' ] && [ ${TRAVIS_BRANCH} = 'master' -o ${TRAVIS_BRANCH} = 'next' ]; then mvn deploy -P duckswithsauce --settings .travis_settings.xml; else mvn test -B; fi
-Picked up _JAVA_OPTIONS: -Xmx2048m -Xms512m
-[INFO] Scanning for projects...
-[INFO] 
-[INFO] ------------------------------------------------------------------------
-[INFO] Building Kitteh IRC Client Library 3.3.1-SNAPSHOT
-[INFO] ------------------------------------------------------------------------
-[INFO] 
-[INFO] --- jacoco-maven-plugin:0.7.9:prepare-agent (default) @ client-lib ---
-[INFO] argLine set to -javaagent:/home/travis/.m2/repository/org/jacoco/org.jacoco.agent/0.7.9/org.jacoco.agent-0.7.9-runtime.jar=destfile=/home/travis/build/KittehOrg/KittehIRCClientLib/target/jacoco.exec
-[INFO] 
-[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ client-lib ---
-[INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] Copying 2 resources to .
-[INFO] Copying 1 resource to /home/travis/build/KittehOrg/KittehIRCClientLib/target
-[INFO] 
-[INFO] --- maven-compiler-plugin:3.6.1:compile (default-compile) @ client-lib ---
-[INFO] Changes detected - recompiling the module!
-[INFO] Compiling 261 source files to /home/travis/build/KittehOrg/KittehIRCClientLib/target/classes
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/main/java/org/kitteh/irc/client/library/implementation/EventListener.java: Some input files use or override a deprecated API.
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/main/java/org/kitteh/irc/client/library/implementation/EventListener.java: Recompile with -Xlint:deprecation for details.
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/main/java/org/kitteh/irc/client/library/Client.java: Some input files use unchecked or unsafe operations.
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/main/java/org/kitteh/irc/client/library/Client.java: Recompile with -Xlint:unchecked for details.
-[INFO] 
-[INFO] --- kitteh-maven-versionizer:1.0.0:versionizer (default) @ client-lib ---
-[INFO] Set version to 3.3.1-SNAPSHOT!
-[INFO] 
-[INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ client-lib ---
-[INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] skip non existing resourceDirectory /home/travis/build/KittehOrg/KittehIRCClientLib/src/test/resources
-[INFO] 
-[INFO] --- maven-compiler-plugin:3.6.1:testCompile (default-testCompile) @ client-lib ---
-[INFO] Changes detected - recompiling the module!
-[INFO] Compiling 37 source files to /home/travis/build/KittehOrg/KittehIRCClientLib/target/test-classes
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/test/java/org/kitteh/irc/client/library/implementation/CHGHOSTTest.java: /home/travis/build/KittehOrg/KittehIRCClientLib/src/test/java/org/kitteh/irc/client/library/implementation/CHGHOSTTest.java uses or overrides a deprecated API.
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/test/java/org/kitteh/irc/client/library/implementation/CHGHOSTTest.java: Recompile with -Xlint:deprecation for details.
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/test/java/org/kitteh/irc/client/library/implementation/CHGHOSTTest.java: Some input files use unchecked or unsafe operations.
-[INFO] /home/travis/build/KittehOrg/KittehIRCClientLib/src/test/java/org/kitteh/irc/client/library/implementation/CHGHOSTTest.java: Recompile with -Xlint:unchecked for details.
-[INFO] 
-[INFO] --- maven-surefire-plugin:2.20:test (default-test) @ client-lib ---
-[INFO] 
-[INFO] -------------------------------------------------------
-[INFO]  T E S T S
-[INFO] -------------------------------------------------------
-[INFO] Running org.kitteh.irc.client.library.command.KickCommandTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.401 s - in org.kitteh.irc.client.library.command.KickCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.CapabilityRequestCommandTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in org.kitteh.irc.client.library.command.CapabilityRequestCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.OperCommandTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in org.kitteh.irc.client.library.command.OperCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.MonitorCommandTest
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in org.kitteh.irc.client.library.command.MonitorCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.TopicCommandTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in org.kitteh.irc.client.library.command.TopicCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.WhoisCommandTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s - in org.kitteh.irc.client.library.command.WhoisCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.AwayCommandTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in org.kitteh.irc.client.library.command.AwayCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.WallopsCommandTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in org.kitteh.irc.client.library.command.WallopsCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.UserModeCommandTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.117 s - in org.kitteh.irc.client.library.command.UserModeCommandTest
-[INFO] Running org.kitteh.irc.client.library.command.ChannelModeCommandTest
-[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.151 s - in org.kitteh.irc.client.library.command.ChannelModeCommandTest
-[INFO] Running org.kitteh.irc.client.library.CaseMappingTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.kitteh.irc.client.library.CaseMappingTest
-[INFO] Running org.kitteh.irc.client.library.util.PairTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in org.kitteh.irc.client.library.util.PairTest
-[INFO] Running org.kitteh.irc.client.library.util.SanityTest
-[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in org.kitteh.irc.client.library.util.SanityTest
-[INFO] Running org.kitteh.irc.client.library.util.StringUtilTest
-[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in org.kitteh.irc.client.library.util.StringUtilTest
-[INFO] Running org.kitteh.irc.client.library.util.CIKeyMapTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s - in org.kitteh.irc.client.library.util.CIKeyMapTest
-[INFO] Running org.kitteh.irc.client.library.util.CTCPUtilTest
-[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s - in org.kitteh.irc.client.library.util.CTCPUtilTest
-[INFO] Running org.kitteh.irc.client.library.util.RiskyBusinessTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s - in org.kitteh.irc.client.library.util.RiskyBusinessTest
-[INFO] Running org.kitteh.irc.client.library.util.CutterTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s - in org.kitteh.irc.client.library.util.CutterTest
-[INFO] Running org.kitteh.irc.client.library.util.STSUtilTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s - in org.kitteh.irc.client.library.util.STSUtilTest
-[INFO] Running org.kitteh.irc.client.library.util.CISetTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s - in org.kitteh.irc.client.library.util.CISetTest
-[INFO] Running org.kitteh.irc.client.library.util.ToStringerTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in org.kitteh.irc.client.library.util.ToStringerTest
-[INFO] Running org.kitteh.irc.client.library.implementation.EventTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.087 s - in org.kitteh.irc.client.library.implementation.EventTest
-[INFO] Running org.kitteh.irc.client.library.implementation.CHGHOSTTest
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.625 s - in org.kitteh.irc.client.library.implementation.CHGHOSTTest
-[INFO] Running org.kitteh.irc.client.library.implementation.EventListenerTest
-[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.24 s - in org.kitteh.irc.client.library.implementation.EventListenerTest
-[INFO] Running org.kitteh.irc.client.library.implementation.MessageTagTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s - in org.kitteh.irc.client.library.implementation.MessageTagTest
-[INFO] Running org.kitteh.irc.client.library.implementation.STSPropertiesStorageManagerTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.052 s - in org.kitteh.irc.client.library.implementation.STSPropertiesStorageManagerTest
-[INFO] Running org.kitteh.irc.client.library.implementation.ISupportManagerTest
-[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s - in org.kitteh.irc.client.library.implementation.ISupportManagerTest
-[INFO] Running org.kitteh.irc.client.library.implementation.STSHandlerTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s - in org.kitteh.irc.client.library.implementation.STSHandlerTest
-[INFO] Running org.kitteh.irc.client.library.implementation.CustomEventManagerTest
-INFO: No error handler has been configured to handle exceptions during publication.
-Publication error handlers can be added by IBusConfiguration.addPublicationErrorHandler()
-Falling back to console logger.
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s - in org.kitteh.irc.client.library.implementation.CustomEventManagerTest
-[INFO] Running org.kitteh.irc.client.library.implementation.AuthManagerTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s - in org.kitteh.irc.client.library.implementation.AuthManagerTest
-[INFO] Running org.kitteh.irc.client.library.implementation.ConfigTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in org.kitteh.irc.client.library.implementation.ConfigTest
-[INFO] Running org.kitteh.irc.client.library.ClientBuilderTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in org.kitteh.irc.client.library.ClientBuilderTest
-[INFO] Running org.kitteh.irc.client.library.CapabilityManagerTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 s - in org.kitteh.irc.client.library.CapabilityManagerTest
-[INFO] Running org.kitteh.irc.client.library.feature.auth.SaslECDSANIST256PChallengeTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s - in org.kitteh.irc.client.library.feature.auth.SaslECDSANIST256PChallengeTest
-[INFO] Running org.kitteh.irc.client.library.feature.DefaultMessageTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s - in org.kitteh.irc.client.library.feature.DefaultMessageTest
-[INFO] Running org.kitteh.irc.client.library.FormatTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s - in org.kitteh.irc.client.library.FormatTest
-[INFO] 
-[INFO] Results:
-[INFO] 
-[INFO] Tests run: 190, Failures: 0, Errors: 0, Skipped: 0
-[INFO] 
-[INFO] 
-[INFO] --- jacoco-maven-plugin:0.7.9:report (report) @ client-lib ---
-[INFO] Loading execution data file /home/travis/build/KittehOrg/KittehIRCClientLib/target/jacoco.exec
-[INFO] Analyzed bundle 'Kitteh IRC Client Library' with 270 classes
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time: 14.415 s
-[INFO] Finished at: 2017-09-19T23:25:27Z
-[INFO] Final Memory: 25M/613M
-[INFO] ------------------------------------------------------------------------
-
-travis_time:end:26507f55:start=1505863511303577995,finish=1505863527169112695,duration=15865534700[0K
-[32;1mThe command "if [ ${TRAVIS_PULL_REQUEST} = 'false' ] && [ ${TRAVIS_BRANCH} = 'master' -o ${TRAVIS_BRANCH} = 'next' ]; then mvn deploy -P duckswithsauce --settings .travis_settings.xml; else mvn test -B; fi" exited with 0.[0m
-travis_fold:start:cache.2[0Kstore build cache
-travis_time:start:0280f62c[0K
-travis_time:end:0280f62c:start=1505863527174656382,finish=1505863527178968379,duration=4311997[0Ktravis_time:start:122f3d68[0K[32;1mnothing changed, not updating cache[0m
-
-travis_time:end:122f3d68:start=1505863527183999373,finish=1505863528238424058,duration=1054424685[0Ktravis_fold:end:cache.2[0Ktravis_fold:start:after_success[0Ktravis_time:start:036d9ea4[0K$ codecov
-
-      _____          _
-     / ____|        | |
-    | |     ___   __| | ___  ___ _____   __
-    | |    / _ \ / _  |/ _ \/ __/ _ \ \ / /
-    | |___| (_) | (_| |  __/ (_| (_) \ V /
-     \_____\___/ \____|\___|\___\___/ \_/
-                                    v2.0.9
-
-[90m==>[0m Detecting CI provider
-    Travis Detected
-[90m==>[0m Preparing upload
-[90m==>[0m Processing gcov (disable by -X gcov)
-    Executing gcov (find /home/travis/build/KittehOrg/KittehIRCClientLib -type f -name '*.gcno'  -exec gcov -pb  {} +)
-[90m==>[0m Collecting reports
-    [32m+[0m /home/travis/build/KittehOrg/KittehIRCClientLib/target/site/jacoco/jacoco.xml bytes=771947
-[90m==>[0m Appending environment variables
-    [32m+[0m TRAVIS_JDK_VERSION
-    [32m+[0m TRAVIS_OS_NAME
-[90m==>[0m Uploading
-    .url https://codecov.io
-    .query pr=204&service=travis&package=py2.0.9&job=277545749&build=1042.1&branch=master&commit=78fcb10b3b66d3d5c4107d65363d3c57057a4091&slug=KittehOrg%2FKittehIRCClientLib
-    Pinging Codecov...
-    Uploading to S3...
-[92m    https://codecov.io/github/KittehOrg/KittehIRCClientLib/commit/78fcb10b3b66d3d5c4107d65363d3c57057a4091[0m
-
-travis_time:end:036d9ea4:start=1505863528243720511,finish=1505863529886093862,duration=1642373351[0Ktravis_fold:end:after_success[0K
-Done. Your build exited with 0.

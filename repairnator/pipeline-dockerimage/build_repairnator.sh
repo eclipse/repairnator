@@ -5,7 +5,7 @@ set -e
 cd /root
 mkdir github
 cd github
-git clone https://github.com/Spirals-Team/librepair.git
+git clone --recursive https://github.com/Spirals-Team/librepair.git
 
 echo "LibRepair repository cloned."
 

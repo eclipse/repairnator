@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.realtime.serializer;
 
 import com.google.gson.JsonObject;
-import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.realtime.RTScanner;
 import fr.inria.spirals.repairnator.serializer.Serializer;

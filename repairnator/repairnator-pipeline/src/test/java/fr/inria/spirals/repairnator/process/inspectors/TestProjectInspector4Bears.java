@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.helpers.BuildHelper;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;

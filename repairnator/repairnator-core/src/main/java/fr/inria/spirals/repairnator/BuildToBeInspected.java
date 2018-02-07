@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator;
 
-import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 
 /**
