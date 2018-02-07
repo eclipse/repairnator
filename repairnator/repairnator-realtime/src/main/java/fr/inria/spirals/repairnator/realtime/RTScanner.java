@@ -29,7 +29,6 @@ public class RTScanner {
     private final List<Integer> blackListedRepository;
     private final List<Integer> whiteListedRepository;
     private final Map<Integer,Date> tempBlackList;
-    private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final BuildRunner buildRunner;
     private FileWriter blacklistWriter;
@@ -38,6 +37,7 @@ public class RTScanner {
     private String runId;
     private List<SerializerEngine> engines;
     private BlacklistedSerializer blacklistedSerializer;
+    private boolean runnerOnWaitlist;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
         this.engines = engines;
@@ -45,7 +45,6 @@ public class RTScanner {
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
         this.buildRunner = new BuildRunner(this);
-        this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
@@ -61,10 +60,6 @@ public class RTScanner {
 
     public BuildRunner getBuildRunner() {
         return buildRunner;
-    }
-
-    public InspectBuilds getInspectBuilds() {
-        return inspectBuilds;
     }
 
     public InspectJobs getInspectJobs() {
@@ -108,7 +103,6 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             this.running = true;
         }
@@ -208,6 +202,14 @@ public class RTScanner {
         return false;
     }
 
+    public boolean isRunnerOnWaitlist() {
+        return runnerOnWaitlist;
+    }
+
+    public void setRunnerOnWaitlist(boolean runnerOnWaitlist) {
+        this.runnerOnWaitlist = runnerOnWaitlist;
+    }
+
     public void submitBuildToExecution(Build build) {
         boolean failing = false;
         List<Job> jobs = build.getJobs();
@@ -232,7 +234,7 @@ public class RTScanner {
     public void submitWaitingBuild(int buildId) {
         Build build = BuildHelper.getBuildFromId(buildId, null);
         if (build != null) {
-            this.inspectBuilds.submitNewBuild(build);
+            this.submitBuildToExecution(build);
         }
     }
 }

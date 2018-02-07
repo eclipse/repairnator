@@ -170,20 +170,6 @@ public class RTLauncher {
         opt2.setDefault(InspectJobs.JOB_SLEEP_TIME+"");
         opt2.setHelp("Specify the sleep time between two requests to Travis Job endpoint (in seconds)");
         this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("buildsleeptime");
-        opt2.setLongFlag("buildsleeptime");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME+"");
-        opt2.setHelp("Specify the sleep time between two refresh of build statuses (in seconds)");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("maxinspectedbuilds");
-        opt2.setLongFlag("maxinspectedbuilds");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.LIMIT_SUBMITTED_BUILDS+"");
-        opt2.setHelp("Specify the maximum number of watched builds");
-        this.jsap.registerParameter(opt2);
     }
 
     private void checkArguments() {
@@ -269,8 +255,6 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
-        rtScanner.getInspectBuilds().setMaxSubmittedBuilds(this.arguments.getInt("maxinspectedbuilds"));
-        rtScanner.getInspectBuilds().setSleepTime(this.arguments.getInt("buildsleeptime"));
         rtScanner.getInspectJobs().setSleepTime(this.arguments.getInt("jobsleeptime"));
 
         LOGGER.info("Init build runner");

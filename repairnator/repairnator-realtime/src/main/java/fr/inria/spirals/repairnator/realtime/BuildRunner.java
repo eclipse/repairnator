@@ -55,10 +55,12 @@ public class BuildRunner extends AbstractPoolManager {
             this.refreshDockerImage();
         }
         if (getRunning() < this.nbThreads) {
+            this.rtScanner.setRunnerOnWaitlist(false);
             LOGGER.info("Build (id: "+build.getId()+") immediately submitted for running.");
             this.executorService.submit(this.submitBuild(this.dockerImageId, build.getId()));
         } else {
             LOGGER.info("All threads currently running (Limit: "+this.nbThreads+"). Add build (id: "+build.getId()+") to list");
+            this.rtScanner.setRunnerOnWaitlist(true);
             if (this.waitingBuilds.size() == this.nbThreads) {
                 Build b = this.waitingBuilds.removeLast();
                 LOGGER.debug("Remove oldest build (id: "+b.getId()+")");
