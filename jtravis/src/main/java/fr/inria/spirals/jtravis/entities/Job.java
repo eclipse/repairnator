@@ -22,9 +22,9 @@ public class Job extends JobPojo {
         this.config = config;
     }
 
-    public BuildStatus getBuildStatus() {
+    public JobStatus getJobStatus() {
         if (this.getState() != null) {
-            return BuildStatus.valueOf(this.getState().toUpperCase());
+            return JobStatus.valueOf(this.getState().toUpperCase());
         } else {
             return null;
         }

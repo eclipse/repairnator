@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import fr.inria.spirals.jtravis.entities.Config;
 import fr.inria.spirals.jtravis.entities.Job;
+import fr.inria.spirals.jtravis.entities.JobStatus;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
@@ -67,7 +68,15 @@ public class JobHelper extends AbstractHelper {
     }
 
     public static List<Job> getJobList() {
+        return getJobList(null);
+    }
+
+    public static List<Job> getJobList(JobStatus status) {
         String resourceUrl = getInstance().getEndpoint()+JOB_ENDPOINT;
+
+        if (status != null) {
+            resourceUrl += "?status="+status.name().toLowerCase();
+        }
 
         try {
             String response = getInstance().get(resourceUrl);
@@ -86,4 +95,6 @@ public class JobHelper extends AbstractHelper {
         }
         return null;
     }
+
+
 }
