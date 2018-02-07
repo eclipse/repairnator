@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import fr.inria.jtravis.entities.BuildStatus;
 import fr.inria.jtravis.entities.Job;
 import fr.inria.jtravis.helpers.JobHelper;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class InspectJobs implements Runnable {
             throw new RuntimeException("Sleep time has to be set before running this.");
         }
         while (true) {
-            List<Job> jobList = JobHelper.getJobList();
+            List<Job> jobList = JobHelper.getJobListWithFilter(BuildStatus.FAILED);
 
             if (jobList != null) {
                 LOGGER.info("Retrieved "+jobList.size()+" jobs");
@@ -40,8 +41,8 @@ public class InspectJobs implements Runnable {
                     }
                 }
             }
-            if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || jobList == null) {
-                LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
+            if (this.rtScanner.isRunnerOnWaitlist() || jobList == null) {
+                LOGGER.debug("Runner has already a wait list. Sleep for "+sleepTime+" seconds.");
                 try {
                     Thread.sleep(sleepTime * 1000);
                 } catch (InterruptedException e) {

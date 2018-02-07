@@ -34,8 +34,6 @@ export CHECK_BRANCH_REPOSITORY= # Repository to use for check branches script
 ##### CONFIGURATION FOR REALTIME SCANNER ####
 
 export JOB_SLEEP_TIME=10
-export BUILD_SLEEP_TIME=10
-export LIMIT_INSPECTED_BUILDS=100
 export WHITELIST_PATH=
 export BLACKLIST_PATH=
 
