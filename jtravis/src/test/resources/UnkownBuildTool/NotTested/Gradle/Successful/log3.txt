@@ -1,1515 +1,0 @@
-travis_fold:start:worker_info[0K[33;1mWorker information[0m
-hostname: 42afb730-917c-4670-9533-0abbd09327c7@1.production-1-worker-org-b-19-gce
-version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
-instance: testing-gce-4343a96f-f952-4ee8-8bef-ef4efbe8ace0:travis-ci-garnet-trusty-1503972833 (via amqp)
-startup: 21.145933136s
-travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
-Build language: java
-Build group: stable
-Build dist: trusty
-Build id: 277442110
-Job id: 277442111
-Runtime kernel version: 4.4.0-93-generic
-travis-build version: 125c5d1fa
-[34m[1mBuild image provisioning date and time[0m
-Tue Aug 29 02:48:34 UTC 2017
-[34m[1mOperating System Details[0m
-Distributor ID:	Ubuntu
-Description:	Ubuntu 14.04.5 LTS
-Release:	14.04
-Codename:	trusty
-[34m[1mCookbooks Version[0m
-4642454 https://github.com/travis-ci/travis-cookbooks/tree/4642454
-[34m[1mgit version[0m
-git version 2.14.1
-[34m[1mbash version[0m
-GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
-[34m[1mgcc version[0m
-gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
-Copyright (C) 2013 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-[34m[1mdocker version[0m
-Client:
- Version:      17.03.1-ce
- API version:  1.27
- Go version:   go1.7.5
- Git commit:   c6d412e
- Built:        Mon Mar 27 17:10:36 2017
- OS/Arch:      linux/amd64
-
-Server:
- Version:      17.03.1-ce
- API version:  1.27 (minimum version 1.12)
- Go version:   go1.7.5
- Git commit:   c6d412e
- Built:        Mon Mar 27 17:10:36 2017
- OS/Arch:      linux/amd64
- Experimental: false
-[34m[1mclang version[0m
-clang version 3.9.0 (tags/RELEASE_390/final)
-Target: x86_64-unknown-linux-gnu
-Thread model: posix
-InstalledDir: /usr/local/clang-3.9.0/bin
-[34m[1mjq version[0m
-jq-1.5
-[34m[1mbats version[0m
-Bats 0.4.0
-[34m[1mshellcheck version[0m
-0.4.6
-[34m[1mshfmt version[0m
-v1.3.1
-[34m[1mccache version[0m
-ccache version 3.1.9
-
-Copyright (C) 2002-2007 Andrew Tridgell
-Copyright (C) 2009-2011 Joel Rosdahl
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 3 of the License, or (at your option) any later
-version.
-[34m[1mcmake version[0m
-cmake version 3.2.2
-
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-[34m[1mheroku version[0m
-heroku-cli/6.13.19-6cd27b3 (linux-x64) node-v8.3.0
-[34m[1mimagemagick version[0m
-Version: ImageMagick 6.7.7-10 2017-07-31 Q16 http://www.imagemagick.org
-[34m[1mmd5deep version[0m
-4.2
-[34m[1mmercurial version[0m
-Mercurial Distributed SCM (version 4.2.2)
-(see https://mercurial-scm.org for more information)
-
-Copyright (C) 2005-2017 Matt Mackall and others
-This is free software; see the source for copying conditions. There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-[34m[1mmysql version[0m
-mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
-[34m[1mopenssl version[0m
-OpenSSL 1.0.1f 6 Jan 2014
-[34m[1mpacker version[0m
-Packer v1.0.2
-
-Your version of Packer is out of date! The latest version
-is 1.0.4. You can update by downloading from www.packer.io
-[34m[1mpostgresql client version[0m
-psql (PostgreSQL) 9.6.4
-[34m[1mragel version[0m
-Ragel State Machine Compiler version 6.8 Feb 2013
-Copyright (c) 2001-2009 by Adrian Thurston
-[34m[1msubversion version[0m
-svn, version 1.8.8 (r1568071)
-   compiled Aug 10 2017, 17:20:39 on x86_64-pc-linux-gnu
-
-Copyright (C) 2013 The Apache Software Foundation.
-This software consists of contributions made by many people;
-see the NOTICE file for more information.
-Subversion is open source software, see http://subversion.apache.org/
-
-The following repository access (RA) modules are available:
-
-* ra_svn : Module for accessing a repository using the svn network protocol.
-  - with Cyrus SASL authentication
-  - handles 'svn' scheme
-* ra_local : Module for accessing a repository on local disk.
-  - handles 'file' scheme
-* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
-  - using serf 1.3.3
-  - handles 'http' scheme
-  - handles 'https' scheme
-
-[34m[1msudo version[0m
-Sudo version 1.8.9p5
-Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
-Sudoers policy plugin version 1.8.9p5
-Sudoers file grammar version 43
-
-Sudoers path: /etc/sudoers
-Authentication methods: 'pam'
-Syslog facility if syslog is being used for logging: authpriv
-Syslog priority to use when user authenticates successfully: notice
-Syslog priority to use when user authenticates unsuccessfully: alert
-Send mail if the user is not in sudoers
-Use a separate timestamp for each user/tty combo
-Lecture user the first time they run sudo
-Root may run sudo
-Allow some information gathering to give useful error messages
-Require fully-qualified hostnames in the sudoers file
-Visudo will honor the EDITOR environment variable
-Set the LOGNAME and USER environment variables
-Length at which to wrap log file lines (0 for no wrap): 80
-Authentication timestamp timeout: 15.0 minutes
-Password prompt timeout: 0.0 minutes
-Number of tries to enter a password: 3
-Umask to use or 0777 to use user's: 022
-Path to mail program: /usr/sbin/sendmail
-Flags for mail program: -t
-Address to send mail to: root
-Subject line for mail messages: *** SECURITY information for %h ***
-Incorrect password message: Sorry, try again.
-Path to authentication timestamp dir: /var/lib/sudo
-Default password prompt: [sudo] password for %p: 
-Default user to run commands as: root
-Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-Path to the editor for use by visudo: /usr/bin/editor
-When to require a password for 'list' pseudocommand: any
-When to require a password for 'verify' pseudocommand: all
-File descriptors >= 3 will be closed before executing a command
-Environment variables to check for sanity:
-	TZ
-	TERM
-	LINGUAS
-	LC_*
-	LANGUAGE
-	LANG
-	COLORTERM
-Environment variables to remove:
-	RUBYOPT
-	RUBYLIB
-	PYTHONUSERBASE
-	PYTHONINSPECT
-	PYTHONPATH
-	PYTHONHOME
-	TMPPREFIX
-	ZDOTDIR
-	READNULLCMD
-	NULLCMD
-	FPATH
-	PERL5DB
-	PERL5OPT
-	PERL5LIB
-	PERLLIB
-	PERLIO_DEBUG 
-	JAVA_TOOL_OPTIONS
-	SHELLOPTS
-	GLOBIGNORE
-	PS4
-	BASH_ENV
-	ENV
-	TERMCAP
-	TERMPATH
-	TERMINFO_DIRS
-	TERMINFO
-	_RLD*
-	LD_*
-	PATH_LOCALE
-	NLSPATH
-	HOSTALIASES
-	RES_OPTIONS
-	LOCALDOMAIN
-	CDPATH
-	IFS
-Environment variables to preserve:
-	JAVA_HOME
-	TRAVIS
-	CI
-	DEBIAN_FRONTEND
-	XAUTHORIZATION
-	XAUTHORITY
-	PS2
-	PS1
-	PATH
-	LS_COLORS
-	KRB5CCNAME
-	HOSTNAME
-	HOME
-	DISPLAY
-	COLORS
-Locale to use while parsing sudoers: C
-Directory in which to store input/output logs: /var/log/sudo-io
-File in which to store the input/output log: %{seq}
-Add an entry to the utmp/utmpx file when allocating a pty
-PAM service name to use
-PAM service name to use for login shells
-Create a new PAM session for the command to run in
-Maximum I/O log sequence number: 0
-
-Local IP address and netmask pairs:
-	10.240.0.10/255.255.255.255
-	172.17.0.1/255.255.0.0
-
-Sudoers I/O plugin version 1.8.9p5
-[34m[1mgzip version[0m
-gzip 1.6
-Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
-Copyright (C) 1993 Jean-loup Gailly.
-This is free software.  You may redistribute copies of it under the terms of
-the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
-There is NO WARRANTY, to the extent permitted by law.
-
-Written by Jean-loup Gailly.
-[34m[1mzip version[0m
-Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
-This is Zip 3.0 (July 5th 2008), by Info-ZIP.
-Currently maintained by E. Gordon.  Please send bug reports to
-the authors using the web page at www.info-zip.org; see README for details.
-
-Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
-as of above date; see http://www.info-zip.org/ for other sites.
-
-Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
-
-Zip special compilation options:
-	USE_EF_UT_TIME       (store Universal Time)
-	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
-	    bzip2 code and library copyright (c) Julian R Seward
-	    (See the bzip2 license for terms of use)
-	SYMLINK_SUPPORT      (symbolic links supported)
-	LARGE_FILE_SUPPORT   (can read and write large files on file system)
-	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
-	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
-	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
-	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
-	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
-
-Encryption notice:
-	The encryption code of this program is not copyrighted and is
-	put in the public domain.  It was originally written in Europe
-	and, to the best of our knowledge, can be freely distributed
-	in both source and object forms from any country, including
-	the USA under License Exception TSU of the U.S. Export
-	Administration Regulations (section 740.13(e)) of 6 June 2002.
-
-Zip environment options:
-             ZIP:  [none]
-          ZIPOPT:  [none]
-[34m[1mvim version[0m
-VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
-Included patches: 1-52
-Extra patches: 8.0.0056
-Modified by pkg-vim-maintainers@lists.alioth.debian.org
-Compiled by buildd@
-Huge version without GUI.  Features included (+) or not (-):
-+acl             +farsi           +mouse_netterm   +syntax
-+arabic          +file_in_path    +mouse_sgr       +tag_binary
-+autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
--balloon_eval    +float           +mouse_urxvt     -tag_any_white
--browse          +folding         +mouse_xterm     -tcl
-++builtin_terms  -footer          +multi_byte      +terminfo
-+byte_offset     +fork()          +multi_lang      +termresponse
-+cindent         +gettext         -mzscheme        +textobjects
--clientserver    -hangul_input    +netbeans_intg   +title
--clipboard       +iconv           +path_extra      -toolbar
-+cmdline_compl   +insert_expand   -perl            +user_commands
-+cmdline_hist    +jumplist        +persistent_undo +vertsplit
-+cmdline_info    +keymap          +postscript      +virtualedit
-+comments        +langmap         +printer         +visual
-+conceal         +libcall         +profile         +visualextra
-+cryptv          +linebreak       +python          +viminfo
-+cscope          +lispindent      -python3         +vreplace
-+cursorbind      +listcmds        +quickfix        +wildignore
-+cursorshape     +localmap        +reltime         +wildmenu
-+dialog_con      -lua             +rightleft       +windows
-+diff            +menu            -ruby            +writebackup
-+digraphs        +mksession       +scrollbind      -X11
--dnd             +modify_fname    +signs           -xfontset
--ebcdic          +mouse           +smartindent     -xim
-+emacs_tags      -mouseshape      -sniff           -xsmp
-+eval            +mouse_dec       +startuptime     -xterm_clipboard
-+ex_extra        +mouse_gpm       +statusline      -xterm_save
-+extra_search    -mouse_jsbterm   -sun_workshop    -xpm
-   system vimrc file: "$VIM/vimrc"
-     user vimrc file: "$HOME/.vimrc"
- 2nd user vimrc file: "~/.vim/vimrc"
-      user exrc file: "$HOME/.exrc"
-  fall-back for $VIM: "/usr/share/vim"
-Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
-Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
-[34m[1miptables version[0m
-iptables v1.4.21
-[34m[1mcurl version[0m
-curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
-[34m[1mwget version[0m
-GNU Wget 1.15 built on linux-gnu.
-[34m[1mrsync version[0m
-rsync  version 3.1.0  protocol version 31
-[34m[1mgimme version[0m
-v1.2.0
-[34m[1mnvm version[0m
-0.33.2
-[34m[1mperlbrew version[0m
-/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
-[34m[1mphpenv version[0m
-rbenv 1.1.1-4-g4ebd1bd
-[34m[1mrvm version[0m
-rvm 1.29.2 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io/]
-[34m[1mdefault ruby version[0m
-ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
-[34m[1mCouchDB version[0m
-couchdb 1.6.1
-[34m[1mElasticSearch version[0m
-5.5.0
-[34m[1mInstalled Firefox version[0m
-firefox 55.0.2
-[34m[1mMongoDB version[0m
-MongoDB 3.2.16
-[34m[1mPre-installed PostgreSQL versions[0m
-9.2.22
-9.3.18
-9.4.13
-9.5.8
-9.6.4
-[34m[1mRabbitMQ Version[0m
-3.6.11
-[34m[1mRedis version[0m
-redis-server 4.0.1
-[34m[1mriak version[0m
-2.2.3
-[34m[1mPre-installed Go versions[0m
-1.7.4
-[34m[1mant version[0m
-Apache Ant(TM) version 1.9.3 compiled on April 8 2014
-[34m[1mmvn version[0m
-Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
-Maven home: /usr/local/maven-3.5.0
-Java version: 1.8.0_144, vendor: Oracle Corporation
-Java home: /usr/lib/jvm/java-8-oracle/jre
-Default locale: en_US, platform encoding: UTF-8
-OS name: "linux", version: "4.4.0-81-generic", arch: "amd64", family: "unix"
-[34m[1mgradle version[0m
-
-------------------------------------------------------------
-Gradle 4.0.1
-------------------------------------------------------------
-
-Build time:   2017-07-07 14:02:41 UTC
-Revision:     38e5dc0f772daecca1d2681885d3d85414eb6826
-
-Groovy:       2.4.11
-Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
-JVM:          1.8.0_144 (Oracle Corporation 25.144-b01)
-OS:           Linux 4.4.0-81-generic amd64
-
-[34m[1mlein version[0m
-WARNING: You're currently running as root; probably by accident.
-Press control-C to abort or Enter to continue as root.
-Set LEIN_ROOT to disable this warning.
-Leiningen 2.7.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
-[34m[1mPre-installed Node.js versions[0m
-v4.8.4
-v6.11.2
-v6.9.4
-v7.4.0
-v8.4
-[34m[1mphpenv versions[0m
-  system
-  5.6
-* 5.6.31 (set by /home/travis/.phpenv/version)
-  7.0
-  7.0.22
-  hhvm
-  hhvm-stable
-[34m[1mcomposer --version[0m
-Composer version 1.4.2 2017-05-17 08:17:52
-[34m[1mPre-installed Ruby versions[0m
-ruby-2.2.7
-ruby-2.3.4
-ruby-2.4.1
-travis_fold:end:system_info[0K
-W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
-W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
-$ jdk_switcher use oraclejdk8
-Switching to Oracle JDK8 (java-8-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-8-oracle
-travis_fold:start:git.checkout[0Ktravis_time:start:36978ac0[0K$ git clone --depth=50 --branch=feature/twig-translation-generator https://github.com/Haehnchen/idea-php-symfony2-plugin.git Haehnchen/idea-php-symfony2-plugin
-Cloning into 'Haehnchen/idea-php-symfony2-plugin'...
-remote: Counting objects: 2483, done.[K
-remote: Compressing objects:   0% (1/1504)   [Kremote: Compressing objects:   1% (16/1504)   [Kremote: Compressing objects:   2% (31/1504)   [Kremote: Compressing objects:   3% (46/1504)   [Kremote: Compressing objects:   4% (61/1504)   [Kremote: Compressing objects:   5% (76/1504)   [Kremote: Compressing objects:   6% (91/1504)   [Kremote: Compressing objects:   7% (106/1504)   [Kremote: Compressing objects:   8% (121/1504)   [Kremote: Compressing objects:   9% (136/1504)   [Kremote: Compressing objects:  10% (151/1504)   [Kremote: Compressing objects:  11% (166/1504)   [Kremote: Compressing objects:  12% (181/1504)   [Kremote: Compressing objects:  13% (196/1504)   [Kremote: Compressing objects:  14% (211/1504)   [Kremote: Compressing objects:  15% (226/1504)   [Kremote: Compressing objects:  16% (241/1504)   [Kremote: Compressing objects:  17% (256/1504)   [Kremote: Compressing objects:  18% (271/1504)   [Kremote: Compressing objects:  19% (286/1504)   [Kremote: Compressing objects:  20% (301/1504)   [Kremote: Compressing objects:  21% (316/1504)   [Kremote: Compressing objects:  22% (331/1504)   [Kremote: Compressing objects:  23% (346/1504)   [Kremote: Compressing objects:  24% (361/1504)   [Kremote: Compressing objects:  25% (376/1504)   [Kremote: Compressing objects:  26% (392/1504)   [Kremote: Compressing objects:  27% (407/1504)   [Kremote: Compressing objects:  28% (422/1504)   [Kremote: Compressing objects:  29% (437/1504)   [Kremote: Compressing objects:  30% (452/1504)   [Kremote: Compressing objects:  31% (467/1504)   [Kremote: Compressing objects:  32% (482/1504)   [Kremote: Compressing objects:  33% (497/1504)   [Kremote: Compressing objects:  34% (512/1504)   [Kremote: Compressing objects:  35% (527/1504)   [Kremote: Compressing objects:  36% (542/1504)   [Kremote: Compressing objects:  37% (557/1504)   [Kremote: Compressing objects:  38% (572/1504)   [Kremote: Compressing objects:  39% (587/1504)   [Kremote: Compressing objects:  40% (602/1504)   [Kremote: Compressing objects:  41% (617/1504)   [Kremote: Compressing objects:  42% (632/1504)   [Kremote: Compressing objects:  43% (647/1504)   [Kremote: Compressing objects:  44% (662/1504)   [Kremote: Compressing objects:  45% (677/1504)   [Kremote: Compressing objects:  46% (692/1504)   [Kremote: Compressing objects:  47% (707/1504)   [Kremote: Compressing objects:  48% (722/1504)   [Kremote: Compressing objects:  49% (737/1504)   [Kremote: Compressing objects:  50% (752/1504)   [Kremote: Compressing objects:  51% (768/1504)   [Kremote: Compressing objects:  52% (783/1504)   [Kremote: Compressing objects:  53% (798/1504)   [Kremote: Compressing objects:  54% (813/1504)   [Kremote: Compressing objects:  55% (828/1504)   [Kremote: Compressing objects:  56% (843/1504)   [Kremote: Compressing objects:  57% (858/1504)   [Kremote: Compressing objects:  58% (873/1504)   [Kremote: Compressing objects:  59% (888/1504)   [Kremote: Compressing objects:  60% (903/1504)   [Kremote: Compressing objects:  61% (918/1504)   [Kremote: Compressing objects:  62% (933/1504)   [Kremote: Compressing objects:  63% (948/1504)   [Kremote: Compressing objects:  64% (963/1504)   [Kremote: Compressing objects:  65% (978/1504)   [Kremote: Compressing objects:  66% (993/1504)   [Kremote: Compressing objects:  67% (1008/1504)   [Kremote: Compressing objects:  68% (1023/1504)   [Kremote: Compressing objects:  69% (1038/1504)   [Kremote: Compressing objects:  70% (1053/1504)   [Kremote: Compressing objects:  71% (1068/1504)   [Kremote: Compressing objects:  72% (1083/1504)   [Kremote: Compressing objects:  73% (1098/1504)   [Kremote: Compressing objects:  74% (1113/1504)   [Kremote: Compressing objects:  75% (1128/1504)   [Kremote: Compressing objects:  76% (1144/1504)   [Kremote: Compressing objects:  77% (1159/1504)   [Kremote: Compressing objects:  78% (1174/1504)   [Kremote: Compressing objects:  79% (1189/1504)   [Kremote: Compressing objects:  80% (1204/1504)   [Kremote: Compressing objects:  81% (1219/1504)   [Kremote: Compressing objects:  82% (1234/1504)   [Kremote: Compressing objects:  83% (1249/1504)   [Kremote: Compressing objects:  84% (1264/1504)   [Kremote: Compressing objects:  85% (1279/1504)   [Kremote: Compressing objects:  86% (1294/1504)   [Kremote: Compressing objects:  87% (1309/1504)   [Kremote: Compressing objects:  88% (1324/1504)   [Kremote: Compressing objects:  89% (1339/1504)   [Kremote: Compressing objects:  90% (1354/1504)   [Kremote: Compressing objects:  91% (1369/1504)   [Kremote: Compressing objects:  92% (1384/1504)   [Kremote: Compressing objects:  93% (1399/1504)   [Kremote: Compressing objects:  94% (1414/1504)   [Kremote: Compressing objects:  95% (1429/1504)   [Kremote: Compressing objects:  96% (1444/1504)   [Kremote: Compressing objects:  97% (1459/1504)   [Kremote: Compressing objects:  98% (1474/1504)   [Kremote: Compressing objects:  99% (1489/1504)   [Kremote: Compressing objects: 100% (1504/1504)   [Kremote: Compressing objects: 100% (1504/1504), done.[K
-Receiving objects:   0% (1/2483)   Receiving objects:   1% (25/2483)   Receiving objects:   2% (50/2483)   Receiving objects:   3% (75/2483)   Receiving objects:   4% (100/2483)   Receiving objects:   5% (125/2483)   Receiving objects:   6% (149/2483)   Receiving objects:   7% (174/2483)   Receiving objects:   8% (199/2483)   Receiving objects:   9% (224/2483)   Receiving objects:  10% (249/2483)   Receiving objects:  11% (274/2483)   Receiving objects:  12% (298/2483)   Receiving objects:  13% (323/2483)   Receiving objects:  14% (348/2483)   Receiving objects:  15% (373/2483)   Receiving objects:  16% (398/2483)   Receiving objects:  17% (423/2483)   Receiving objects:  18% (447/2483)   Receiving objects:  19% (472/2483)   Receiving objects:  20% (497/2483)   Receiving objects:  21% (522/2483)   Receiving objects:  22% (547/2483)   Receiving objects:  23% (572/2483)   Receiving objects:  24% (596/2483)   Receiving objects:  25% (621/2483)   Receiving objects:  26% (646/2483)   Receiving objects:  27% (671/2483)   Receiving objects:  28% (696/2483)   Receiving objects:  29% (721/2483)   Receiving objects:  30% (745/2483)   Receiving objects:  31% (770/2483)   Receiving objects:  32% (795/2483)   Receiving objects:  33% (820/2483)   Receiving objects:  34% (845/2483)   Receiving objects:  35% (870/2483)   Receiving objects:  36% (894/2483)   Receiving objects:  37% (919/2483)   Receiving objects:  38% (944/2483)   Receiving objects:  39% (969/2483)   Receiving objects:  40% (994/2483)   Receiving objects:  41% (1019/2483)   Receiving objects:  42% (1043/2483)   Receiving objects:  43% (1068/2483)   Receiving objects:  44% (1093/2483)   Receiving objects:  45% (1118/2483)   Receiving objects:  46% (1143/2483)   Receiving objects:  47% (1168/2483)   Receiving objects:  48% (1192/2483)   Receiving objects:  49% (1217/2483)   Receiving objects:  50% (1242/2483)   Receiving objects:  51% (1267/2483)   Receiving objects:  52% (1292/2483)   Receiving objects:  53% (1316/2483)   Receiving objects:  54% (1341/2483)   Receiving objects:  55% (1366/2483)   Receiving objects:  56% (1391/2483)   Receiving objects:  57% (1416/2483)   Receiving objects:  58% (1441/2483)   Receiving objects:  59% (1465/2483)   Receiving objects:  60% (1490/2483)   Receiving objects:  61% (1515/2483)   Receiving objects:  62% (1540/2483)   Receiving objects:  63% (1565/2483)   Receiving objects:  64% (1590/2483)   Receiving objects:  65% (1614/2483)   Receiving objects:  66% (1639/2483)   Receiving objects:  67% (1664/2483)   Receiving objects:  68% (1689/2483)   Receiving objects:  69% (1714/2483)   Receiving objects:  70% (1739/2483)   Receiving objects:  71% (1763/2483)   Receiving objects:  72% (1788/2483)   Receiving objects:  73% (1813/2483)   Receiving objects:  74% (1838/2483)   Receiving objects:  75% (1863/2483)   Receiving objects:  76% (1888/2483)   Receiving objects:  77% (1912/2483)   Receiving objects:  78% (1937/2483)   Receiving objects:  79% (1962/2483)   Receiving objects:  80% (1987/2483)   Receiving objects:  81% (2012/2483)   Receiving objects:  82% (2037/2483)   Receiving objects:  83% (2061/2483)   Receiving objects:  84% (2086/2483)   Receiving objects:  85% (2111/2483)   Receiving objects:  86% (2136/2483)   Receiving objects:  87% (2161/2483)   Receiving objects:  88% (2186/2483)   Receiving objects:  89% (2210/2483)   Receiving objects:  90% (2235/2483)   Receiving objects:  91% (2260/2483)   remote: Total 2483 (delta 975), reused 1569 (delta 645), pack-reused 0[K
-Receiving objects:  92% (2285/2483)   Receiving objects:  93% (2310/2483)   Receiving objects:  94% (2335/2483)   Receiving objects:  95% (2359/2483)   Receiving objects:  96% (2384/2483)   Receiving objects:  97% (2409/2483)   Receiving objects:  98% (2434/2483)   Receiving objects:  99% (2459/2483)   Receiving objects: 100% (2483/2483)   Receiving objects: 100% (2483/2483), 1.24 MiB | 9.76 MiB/s, done.
-Resolving deltas:   0% (0/975)   Resolving deltas:   1% (15/975)   Resolving deltas:   3% (33/975)   Resolving deltas:   4% (43/975)   Resolving deltas:  11% (112/975)   Resolving deltas:  12% (119/975)   Resolving deltas:  13% (131/975)   Resolving deltas:  14% (146/975)   Resolving deltas:  15% (147/975)   Resolving deltas:  16% (163/975)   Resolving deltas:  17% (169/975)   Resolving deltas:  18% (177/975)   Resolving deltas:  19% (189/975)   Resolving deltas:  20% (196/975)   Resolving deltas:  23% (225/975)   Resolving deltas:  25% (244/975)   Resolving deltas:  26% (254/975)   Resolving deltas:  28% (274/975)   Resolving deltas:  31% (308/975)   Resolving deltas:  32% (314/975)   Resolving deltas:  33% (324/975)   Resolving deltas:  34% (332/975)   Resolving deltas:  35% (342/975)   Resolving deltas:  36% (354/975)   Resolving deltas:  37% (363/975)   Resolving deltas:  38% (372/975)   Resolving deltas:  39% (381/975)   Resolving deltas:  40% (391/975)   Resolving deltas:  41% (406/975)   Resolving deltas:  42% (410/975)   Resolving deltas:  43% (420/975)   Resolving deltas:  44% (434/975)   Resolving deltas:  45% (439/975)   Resolving deltas:  46% (450/975)   Resolving deltas:  47% (460/975)   Resolving deltas:  48% (469/975)   Resolving deltas:  49% (480/975)   Resolving deltas:  51% (498/975)   Resolving deltas:  52% (510/975)   Resolving deltas:  57% (556/975)   Resolving deltas:  58% (570/975)   Resolving deltas:  59% (576/975)   Resolving deltas:  60% (587/975)   Resolving deltas:  61% (598/975)   Resolving deltas:  62% (608/975)   Resolving deltas:  63% (615/975)   Resolving deltas:  64% (624/975)   Resolving deltas:  65% (634/975)   Resolving deltas:  66% (647/975)   Resolving deltas:  67% (654/975)   Resolving deltas:  68% (668/975)   Resolving deltas:  69% (673/975)   Resolving deltas:  70% (684/975)   Resolving deltas:  71% (695/975)   Resolving deltas:  72% (703/975)   Resolving deltas:  73% (712/975)   Resolving deltas:  75% (737/975)   Resolving deltas:  76% (742/975)   Resolving deltas:  77% (751/975)   Resolving deltas:  78% (768/975)   Resolving deltas:  79% (771/975)   Resolving deltas:  80% (780/975)   Resolving deltas:  81% (790/975)   Resolving deltas:  82% (801/975)   Resolving deltas:  83% (811/975)   Resolving deltas:  84% (821/975)   Resolving deltas:  85% (831/975)   Resolving deltas:  87% (849/975)   Resolving deltas:  88% (858/975)   Resolving deltas:  89% (869/975)   Resolving deltas:  90% (879/975)   Resolving deltas:  91% (888/975)   Resolving deltas:  92% (898/975)   Resolving deltas:  93% (910/975)   Resolving deltas:  94% (917/975)   Resolving deltas:  95% (927/975)   Resolving deltas:  96% (939/975)   Resolving deltas:  97% (946/975)   Resolving deltas:  98% (956/975)   Resolving deltas:  99% (966/975)   Resolving deltas: 100% (975/975)   Resolving deltas: 100% (975/975), done.
-
-travis_time:end:36978ac0:start=1505846933420735698,finish=1505846934522742218,duration=1102006520[0K$ cd Haehnchen/idea-php-symfony2-plugin
-$ git checkout -qf 340f58d89e96b83f6c3f6f772b2fea3a4e03be46
-travis_fold:end:git.checkout[0K
-[33;1mSetting environment variables from .travis.yml[0m
-$ export PHPSTORM_ENV=2017.1
-
-[33;1mDisabling Gradle daemon[0m
-travis_time:start:013a2f52[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-
-travis_time:end:013a2f52:start=1505846934579230229,finish=1505846934583928688,duration=4698459[0K$ export PATH=$JAVA_HOME/bin:$PATH
-travis_fold:start:cache.1[0KSetting up build cache
-$ export CASHER_DIR=$HOME/.casher
-travis_time:start:0d1fc0df[0K$ Installing caching utilities
-
-travis_time:end:0d1fc0df:start=1505846938290406157,finish=1505846938432458138,duration=142051981[0Ktravis_time:start:1b3be816[0K
-travis_time:end:1b3be816:start=1505846938437858749,finish=1505846938441538977,duration=3680228[0Ktravis_time:start:06764c0d[0K[32;1mattempting to download cache archive[0m
-[32;1mfetching featuretwig-translation-generator/cache-linux-trusty-e5a7bed5b3519261420e835a5652674cfe53130598ec26f9afd51d457e9eda33--jdk-oraclejdk8.tgz[0m
-[32;1mfetching featuretwig-translation-generator/cache--jdk-oraclejdk8.tgz[0m
-[32;1mfetching master/cache-linux-trusty-e5a7bed5b3519261420e835a5652674cfe53130598ec26f9afd51d457e9eda33--jdk-oraclejdk8.tgz[0m
-[32;1mfound cache[0m
-
-travis_time:end:06764c0d:start=1505846938445652636,finish=1505846944734168058,duration=6288515422[0Ktravis_time:start:08e28dcd[0K
-travis_time:end:08e28dcd:start=1505846944739158759,finish=1505846944743434722,duration=4275963[0Ktravis_time:start:00b52fe6[0K[32;1madding /home/travis/build/Haehnchen/idea-php-symfony2-plugin/.cache to cache[0m
-[32;1mcreating directory /home/travis/build/Haehnchen/idea-php-symfony2-plugin/.cache[0m
-
-travis_time:end:00b52fe6:start=1505846944748350573,finish=1505846952147016820,duration=7398666247[0Ktravis_fold:end:cache.1[0K$ java -Xmx32m -version
-java version "1.8.0_144"
-Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
-Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
-$ javac -J-Xmx32m -version
-javac 1.8.0_144
-travis_fold:start:before_script.1[0Ktravis_time:start:0664ddf0[0K$ sudo apt-get -qq update
-W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
-W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
-
-travis_time:end:0664ddf0:start=1505846952963374446,finish=1505846957127173159,duration=4163798713[0Ktravis_fold:end:before_script.1[0Ktravis_fold:start:before_script.2[0Ktravis_time:start:10efdf00[0K$ sudo apt-get install ant-optional
-Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
-Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
-Reading state information... 0%Reading state information... 0%Reading state information... Done
-ant-optional is already the newest version (1.9.3-2build1).
-0 upgraded, 0 newly installed, 0 to remove and 51 not upgraded.
-
-travis_time:end:10efdf00:start=1505846957132160137,finish=1505846957670023528,duration=537863391[0Ktravis_fold:end:before_script.2[0Ktravis_fold:start:before_script.3[0Ktravis_time:start:184540df[0K$ chmod +x travis.sh
-
-travis_time:end:184540df:start=1505846957674843603,finish=1505846957679405710,duration=4562107[0Ktravis_fold:end:before_script.3[0Ktravis_time:start:257157de[0K$ ./travis.sh
-Cached file 589M .cache/ideaIU-2017.1.4.tar.gz - 2017-06-06 19:58:51
-Cached file 5.0M .cache/phpstorm-2017.1-php.zip - 2017-03-23 16:46:15
-Cached file 68K .cache/phpstorm-2017.1-twig.zip - 2017-03-23 16:46:22
---2017-09-19 18:49:39--  http://phpstorm.espend.de/files/proxy/plugins/php-annotation.jar
-Resolving phpstorm.espend.de (phpstorm.espend.de)... 92.51.162.236
-Connecting to phpstorm.espend.de (phpstorm.espend.de)|92.51.162.236|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 234134 (229K) [application/java-archive]
-Saving to: ‘.cache/php-annotation.jar’
-
- 0% [                                       ] 0           --.-K/s              16% [=====>                                 ] 38,656       166KB/s             37% [=============>                         ] 88,704       190KB/s             87% [=================================>     ] 205,184      293KB/s             100%[======================================>] 234,134      334KB/s   in 0.7s   
-
-2017-09-19 18:49:39 (334 KB/s) - ‘.cache/php-annotation.jar’ saved [234134/234134]
-
---2017-09-19 18:49:39--  http://phpstorm.espend.de/files/proxy/plugins/php-toolbox.jar
-Resolving phpstorm.espend.de (phpstorm.espend.de)... 92.51.162.236
-Connecting to phpstorm.espend.de (phpstorm.espend.de)|92.51.162.236|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 305865 (299K) [application/java-archive]
-Saving to: ‘.cache/php-toolbox.jar’
-
- 0% [                                       ] 0           --.-K/s              92% [===================================>   ] 283,904     1.19MB/s             100%[======================================>] 305,865      873KB/s   in 0.3s   
-
-2017-09-19 18:49:42 (873 KB/s) - ‘.cache/php-toolbox.jar’ saved [305865/305865]
-
-Buildfile: /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build-test.xml
-
-init:
-    [mkdir] Created dir: /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build
-    [mkdir] Created dir: /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build_test
-    [mkdir] Created dir: /home/travis/build/Haehnchen/idea-php-symfony2-plugin/plugins/symfony-plugin
-     [echo] Using IDEA build from: /home/travis/build/Haehnchen/idea-php-symfony2-plugin/idea
-     [echo] Using JAVA_HOME: /usr/lib/jvm/java-8-oracle/jre
-
-compile:
-   [javac2] Compiling 610 source files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build
-   [javac2] Note: Some input files use or override a deprecated API.
-   [javac2] Note: Recompile with -Xlint:deprecation for details.
-   [javac2] Note: Some input files use unchecked or unsafe operations.
-   [javac2] Note: Recompile with -Xlint:unchecked for details.
-   [javac2] Added @NotNull assertions to 627 files
-     [echo] Copying resources
-     [copy] Copying 130 files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build
-     [copy] Copying 757 files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/plugins/symfony-plugin/classes
-     [copy] Copying 2 files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/plugins/symfony-plugin/lib
-     [copy] Copying 2 files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/plugins/symfony-plugin/META-INF
-
-compile_test:
-   [javac2] Compiling 809 source files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build_test
-   [javac2] Note: Some input files use or override a deprecated API.
-   [javac2] Note: Recompile with -Xlint:deprecation for details.
-   [javac2] Note: Some input files use unchecked or unsafe operations.
-   [javac2] Note: Recompile with -Xlint:unchecked for details.
-   [javac2] Added @NotNull assertions to 670 files
-     [echo] Copying resources
-     [copy] Copying 130 files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build_test
-     [echo] Copying resources
-     [copy] Copying 223 files to /home/travis/build/Haehnchen/idea-php-symfony2-plugin/build_test
-
-test:
-     [echo] Running tests
-    [junit] Listening for transport dt_socket at address: 43251
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.TwigHelperTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.TwigHelperTest
-    [junit] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.162 sec
-    [junit] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.162 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.action.ServiceActionUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.action.ServiceActionUtilTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.328 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.328 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.action.SymfonyContainerServiceBuilderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.action.SymfonyContainerServiceBuilderTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.428 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.428 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.actions.generator.naming.DefaultServiceNameStrategyTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.actions.generator.naming.DefaultServiceNameStrategyTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.actions.generator.naming.JavascriptServiceNameStrategyTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.actions.generator.naming.JavascriptServiceNameStrategyTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.112 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.112 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.actions.ui.ServiceBuilderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.actions.ui.ServiceBuilderTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.489 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.489 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.asset.AssetGoToDeclarationHandlerTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.asset.AssetGoToDeclarationHandlerTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.codeInspection.form.FormTypeAsClassConstantInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.codeInspection.form.FormTypeAsClassConstantInspectionTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.02 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.02 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.codeInspection.service.ServiceDeprecatedClassesInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.codeInspection.service.ServiceDeprecatedClassesInspectionTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.221 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.221 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.codeInspection.service.TaggedExtendsInterfaceClassInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.codeInspection.service.TaggedExtendsInterfaceClassInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.completion.command.ConsoleHelperGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.completion.command.ConsoleHelperGotoCompletionRegistrarTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.597 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.597 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.completion.xml.XmlGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.completion.xml.XmlGotoCompletionRegistrarTest
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.907 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.907 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.completion.yaml.YamlGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.completion.yaml.YamlGotoCompletionRegistrarTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.633 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.633 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.ConfigLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.ConfigLineMarkerProviderTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.EventDispatcherSubscriberUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.EventDispatcherSubscriberUtilTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.479 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.479 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.ServiceLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.ServiceLineMarkerProviderTest
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.383 sec
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.383 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.SymfonyPhpReferenceContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.SymfonyPhpReferenceContributorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.27 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.27 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.component.parser.ParameterServiceParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.component.parser.ParameterServiceParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.php.PhpConfigReferenceContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.php.PhpConfigReferenceContributorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.472 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.472 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.utils.ConfigUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.utils.ConfigUtilTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.xml.XmlHelperTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.xml.XmlHelperTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.159 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.159 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.xml.XmlReferenceContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.xml.XmlReferenceContributorTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.494 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.494 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.xml.inspection.XmlServiceArgumentInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.xml.inspection.XmlServiceArgumentInspectionTest
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.56 sec
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.56 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlCompletionContributorTest
-    [junit] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.994 sec
-    [junit] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.994 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlElementPatternHelperTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlElementPatternHelperTest
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.798 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.798 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlGoToDeclarationHandlerTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlGoToDeclarationHandlerTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.855 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.855 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlGoToKnownDeclarationHandlerTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlGoToKnownDeclarationHandlerTest
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.839 sec
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.839 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlServiceArgumentInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.YamlServiceArgumentInspectionTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.578 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.578 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.completion.ConfigCompletionProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.completion.ConfigCompletionProviderTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.25 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.25 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.inspection.EventMethodCallInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.inspection.EventMethodCallInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.inspection.YamlDuplicateServiceKeyInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.config.yaml.inspection.YamlDuplicateServiceKeyInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.DefaultServiceCollectorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.DefaultServiceCollectorTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.ServiceArgumentParameterHintsProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.ServiceArgumentParameterHintsProviderTest
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.492 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.492 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.ServiceMapParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.ServiceMapParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.ServiceStringLookupElementTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.ServiceStringLookupElementTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.SymfonyContainerTypeProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.SymfonyContainerTypeProviderTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.376 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.376 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.XmlEventParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.XmlEventParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.XmlTagParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.XmlTagParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.container.XmlServiceTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.container.XmlServiceTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.container.suggestion.XmlCallServiceSuggestionCollectorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.container.suggestion.XmlCallServiceSuggestionCollectorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.container.suggestion.XmlConstructServiceSuggestionCollectorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.container.suggestion.XmlConstructServiceSuggestionCollectorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.1 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.1 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.container.suggestion.YamlConstructServiceSuggestionCollectorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.container.suggestion.YamlConstructServiceSuggestionCollectorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.container.util.DotEnvUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.container.util.DotEnvUtilTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.container.util.ServiceContainerUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.container.util.ServiceContainerUtilTest
-    [junit] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.923 sec
-    [junit] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.923 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.CaseSensitivityServiceInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.CaseSensitivityServiceInspectionTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.609 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.609 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.ContainerConstantInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.ContainerConstantInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.ContainerSettingDeprecatedInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.ContainerSettingDeprecatedInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.21 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.21 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.MissingServiceInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.MissingServiceInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.218 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.218 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.XmlServiceInstanceInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.XmlServiceInstanceInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.154 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.YamlClassInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.YamlClassInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.226 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.226 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.YamlParameterInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.YamlParameterInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.245 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.245 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.YamlXmlServiceInstanceInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.inspection.YamlXmlServiceInstanceInspectionTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.7 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.7 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.linemarker.XmlLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.linemarker.XmlLineMarkerProviderTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.linemarker.YamlLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.linemarker.YamlLineMarkerProviderTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.registrar.DicGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.registrar.DicGotoCompletionRegistrarTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.557 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.557 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.tags.ServiceTagFactoryTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.tags.ServiceTagFactoryTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.translation.TranslationStringParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.translation.TranslationStringParserTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.xml.XmlDicCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.xml.XmlDicCompletionContributorTest
-    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.321 sec
-    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.321 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.xml.XmlDicInspectionsTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.xml.XmlDicInspectionsTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.97 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.97 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.yaml.YamlDicCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.yaml.YamlDicCompletionContributorTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.812 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.812 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.dic.yaml.YamlDicNavigationContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.dic.yaml.YamlDicNavigationContributorTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.173 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.173 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.DoctrineUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.DoctrineUtilTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.EntityHelperTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.EntityHelperTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.266 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.266 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.ObjectManagerFindTypeProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.ObjectManagerFindTypeProviderTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.ObjectRepositoryResultTypeProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.ObjectRepositoryResultTypeProviderTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.233 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.233 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.ObjectRepositoryTypeProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.ObjectRepositoryTypeProviderTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.182 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.182 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.completion.DoctrineCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.completion.DoctrineCompletionContributorTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.672 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.672 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.component.DocumentNamespacesParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.component.DocumentNamespacesParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.component.EntityNamesServiceParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.component.EntityNamesServiceParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.dbal.DoctrineDbalQbGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.dbal.DoctrineDbalQbGotoCompletionRegistrarTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.658 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.658 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.dict.DoctrineModelTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.dict.DoctrineModelTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.intention.DoctrineRepositoryClassConstantIntentionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.intention.DoctrineRepositoryClassConstantIntentionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.166 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.166 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineMetadataLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineMetadataLineMarkerProviderTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineMetadataPatternTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineMetadataPatternTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineXmlCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineXmlCompletionContributorTest
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.661 sec
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.661 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineXmlGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineXmlGotoCompletionRegistrarTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.557 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.557 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineYamlGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.DoctrineYamlGotoCompletionRegistrarTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.249 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.249 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.ObjectRepositoryFindGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.ObjectRepositoryFindGotoCompletionRegistrarTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.636 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.636 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.driver.DoctrinePhpMappingDriverTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.driver.DoctrinePhpMappingDriverTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.142 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.142 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.lookup.DoctrineRepositoryLookupElementTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.lookup.DoctrineRepositoryLookupElementTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.type.DoctrineTypeGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.type.DoctrineTypeGotoCompletionRegistrarTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.893 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.893 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.util.DoctrineMetadataUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.metadata.util.DoctrineMetadataUtilTest
-    [junit] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.192 sec
-    [junit] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.192 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.doctrine.querybuilder.util.QueryBuilderUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.doctrine.querybuilder.util.QueryBuilderUtilTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.external.toolbox.provider.ServiceToolboxProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.external.toolbox.provider.ServiceToolboxProviderTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.FormArrayOptionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.FormArrayOptionTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.563 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.563 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.FormGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.FormGotoCompletionRegistrarTest
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.595 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.595 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.FormOptionGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.FormOptionGotoCompletionRegistrarTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.515 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.515 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.FormTypeReferenceContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.FormTypeReferenceContributorTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.52 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.52 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.completion.FormCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.completion.FormCompletionContributorTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.189 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.189 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.dict.FormExtensionServiceParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.dict.FormExtensionServiceParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.dict.FormTypeServiceParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.dict.FormTypeServiceParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.intention.FormStringToClassConstantIntentionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.intention.FormStringToClassConstantIntentionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.util.FormOptionsUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.util.FormOptionsUtilTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.219 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.219 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.form.util.FormUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.form.util.FormUtilTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.165 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.165 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.installer.SymfonyInstallerUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.installer.SymfonyInstallerUtilTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.intentions.xml.XmlServiceSuggestIntentionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.intentions.xml.XmlServiceSuggestIntentionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.intentions.xml.XmlServiceTagIntentionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.intentions.xml.XmlServiceTagIntentionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.YamlQuotedEscapedInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.YamlQuotedEscapedInspectionTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.588 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.588 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.YamlServiceTagIntentionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.YamlServiceTagIntentionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.YamlUnquotedColonTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.YamlUnquotedColonTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.22 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.22 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.dic.YamlCreateServiceArgumentsCallbackTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.dic.YamlCreateServiceArgumentsCallbackTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.dic.YamlUpdateArgumentServicesCallbackTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.intentions.yaml.dic.YamlUpdateArgumentServicesCallbackTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.navigation.controller.RouteControllerRelatedGotoCollectorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.navigation.controller.RouteControllerRelatedGotoCollectorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.06 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.06 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.profiler.HttpProfilerIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.profiler.HttpProfilerIndexTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.profiler.ProfilerUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.profiler.ProfilerUtilTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.226 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.226 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.profiler.dict.LocalProfilerRequestTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.profiler.dict.LocalProfilerRequestTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.DocTagCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.DocTagCompletionContributorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.395 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.395 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.PhpRouteReferenceContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.PhpRouteReferenceContributorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.247 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.247 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.RouteHelperTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.RouteHelperTest
-    [junit] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.699 sec
-    [junit] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.699 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.RouteTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.RouteTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.RouteXmlReferenceContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.RouteXmlReferenceContributorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.RoutingDefinitionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.RoutingDefinitionTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.363 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.363 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.TwigRoutingCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.TwigRoutingCompletionContributorTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.966 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.966 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.XmlLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.XmlLineMarkerProviderTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.YamlLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.YamlLineMarkerProviderTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.442 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.442 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.ControllerMethodInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.ControllerMethodInspectionTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.33 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.33 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.DuplicateLocalRouteInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.DuplicateLocalRouteInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.PhpRouteMissingInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.PhpRouteMissingInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.RouteSettingDeprecatedInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.RouteSettingDeprecatedInspectionTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.333 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.333 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.TwigRouteMissingInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.routing.inspection.TwigRouteMissingInspectionTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.security.VoterGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.security.VoterGotoCompletionRegistrarTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.395 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.395 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.security.utils.VoterUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.security.utils.VoterUtilTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.175 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.175 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.ContainerCollectionResolverTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.ContainerCollectionResolverTest
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.546 sec
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.546 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.ServiceIndexUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.ServiceIndexUtilTest
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.206 sec
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.206 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ContainerBuilderStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ContainerBuilderStubIndexTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ContainerIdUsagesStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ContainerIdUsagesStubIndexTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ContainerParameterStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ContainerParameterStubIndexTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.267 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.267 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.DoctrineMetadataFileStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.DoctrineMetadataFileStubIndexTest
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.621 sec
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.621 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.EventAnnotationStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.EventAnnotationStubIndexTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.05 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.05 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.FileResourcesIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.FileResourcesIndexTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.PhpTwigTemplateUsageStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.PhpTwigTemplateUsageStubIndexTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.RoutesStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.RoutesStubIndexTest
-    [junit] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.492 sec
-    [junit] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.492 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ServicesDefinitionStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ServicesDefinitionStubIndexTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.215 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.215 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ServicesTagStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.ServicesTagStubIndexTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.08 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.08 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TranslationStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TranslationStubIndexTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.732 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.732 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TwigExtendsStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TwigExtendsStubIndexTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TwigIncludeStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TwigIncludeStubIndexTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TwigMacroFunctionStubIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.indexes.TwigMacroFunctionStubIndexTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.stubs.util.EventDispatcherUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.stubs.util.EventDispatcherUtilTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.FilterCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.FilterCompletionRegistrarTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.PhpTemplateGlobalStringGoToDeclarationHandlerTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.PhpTemplateGlobalStringGoToDeclarationHandlerTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.PhpTemplateMissingInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.PhpTemplateMissingInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.TranslationTagCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.TranslationTagCompletionRegistrarTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.161 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.161 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigFilterCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigFilterCompletionContributorTest
-    [junit] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.296 sec
-    [junit] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.296 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigLineMarkerProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigLineMarkerProviderTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigTemplateCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigTemplateCompletionContributorTest
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.541 sec
-    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.541 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigTemplateGoToDeclarationHandlerTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigTemplateGoToDeclarationHandlerTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigTemplateGoToLocalDeclarationHandlerTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.TwigTemplateGoToLocalDeclarationHandlerTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.302 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.302 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.annotation.TemplateAnnotationAnnotatorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.annotation.TemplateAnnotationAnnotatorTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.assets.TwigAssetsCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.assets.TwigAssetsCompletionContributorTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.assets.TwigNamedAssetsServiceParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.assets.TwigNamedAssetsServiceParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigAssetMissingInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigAssetMissingInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigAssetsTagMissingInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigAssetsTagMissingInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.119 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.119 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigTemplateMissingInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigTemplateMissingInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.195 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.195 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigVariableDeprecatedInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigVariableDeprecatedInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigVariablePathInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.inspection.TwigVariablePathInspectionTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.39 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.39 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.path.BundleTwigNamespaceExtensionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.path.BundleTwigNamespaceExtensionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.path.GlobalAppTwigNamespaceExtensionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.path.GlobalAppTwigNamespaceExtensionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.path.JsonFileIndexTwigNamespacesTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.path.JsonFileIndexTwigNamespacesTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.path.TwigPathServiceParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.path.TwigPathServiceParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.path.globals.TwigGlobalsServiceParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.path.globals.TwigGlobalsServiceParserTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.translation.TwigTranslationCompletionContributorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.translation.TwigTranslationCompletionContributorTest
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.428 sec
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.428 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.translation.TwigTranslationNavigationTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.translation.TwigTranslationNavigationTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.util.PhpMethodVariableResolveUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.util.PhpMethodVariableResolveUtilTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.099 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.util.TwigExtensionParserTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.util.TwigExtensionParserTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.util.TwigTypeResolveUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.util.TwigTypeResolveUtilTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.util.TwigUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.util.TwigUtilTest
-    [junit] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.589 sec
-    [junit] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.589 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.variable.collector.FileDocVariableCollectorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.variable.collector.FileDocVariableCollectorTest
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.756 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.756 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.templating.variable.collector.MarcoScopeVariableCollectorTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.templating.variable.collector.MarcoScopeVariableCollectorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.PhpTranslationDomainInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.PhpTranslationDomainInspectionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.172 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.172 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.PhpTranslationKeyInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.PhpTranslationKeyInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.419 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.419 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.TranslationPlaceholderGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.TranslationPlaceholderGotoCompletionRegistrarTest
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.605 sec
-    [junit] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.605 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.ValidatorTranslationGotoCompletionRegistrarTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.ValidatorTranslationGotoCompletionRegistrarTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.237 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.237 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.dict.TranslationUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.dict.TranslationUtilTest
-    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.321 sec
-    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.321 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.inspection.TwigTranslationDomainInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.inspection.TwigTranslationDomainInspectionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.inspection.TwigTranslationKeyInspectionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.inspection.TwigTranslationKeyInspectionTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.13 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.13 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.intention.TwigTranslationKeyIntentionTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.intention.TwigTranslationKeyIntentionTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.parser.DomainMappingsTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.parser.DomainMappingsTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.translation.util.TranslationInsertUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.translation.util.TranslationInsertUtilTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.AnnotationBackportUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.AnnotationBackportUtilTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.EventDispatcherTypeProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.EventDispatcherTypeProviderTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.144 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.144 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.EventSubscriberUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.EventSubscriberUtilTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.07 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.07 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.PhpElementsUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.PhpElementsUtilTest
-    [junit] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.289 sec
-    [junit] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.289 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.PhpTypeProviderUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.PhpTypeProviderUtilTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.StringUtilsTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.StringUtilsTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.SymfonyCommandUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.SymfonyCommandUtilTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.SymfonyUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.SymfonyUtilTest
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.215 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.215 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.completion.TagNameCompletionProviderTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.completion.TagNameCompletionProviderTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.controller.ControllerIndexTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.controller.ControllerIndexTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.04 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.dict.ServiceUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.dict.ServiceUtilTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.resource.FileResourceUtilTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.resource.FileResourceUtilTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.yaml.YamlHelperLightTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.yaml.YamlHelperLightTest
-    [junit] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.489 sec
-    [junit] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.489 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.yaml.YamlHelperTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.yaml.YamlHelperTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] 
-    [junit] Running fr.adrienbrault.idea.symfony2plugin.tests.util.yaml.visitor.YamlServiceTagTest
-    [junit] Testsuite: fr.adrienbrault.idea.symfony2plugin.tests.util.yaml.visitor.YamlServiceTagTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 sec
-    [junit] 
-
-check_test:
-
-BUILD SUCCESSFUL
-Total time: 2 minutes 2 seconds
-
-travis_time:end:257157de:start=1505846957684225917,finish=1505847106780278707,duration=149096052790[0K
-[32;1mThe command "./travis.sh" exited with 0.[0m
-travis_fold:start:cache.2[0Kstore build cache
-travis_time:start:00f033d0[0K
-travis_time:end:00f033d0:start=1505847106785758833,finish=1505847106789806317,duration=4047484[0Ktravis_time:start:08676084[0K[32;1mnothing changed, not updating cache[0m
-
-travis_time:end:08676084:start=1505847106794751119,finish=1505847109274263282,duration=2479512163[0Ktravis_fold:end:cache.2[0K
-Done. Your build exited with 0.
