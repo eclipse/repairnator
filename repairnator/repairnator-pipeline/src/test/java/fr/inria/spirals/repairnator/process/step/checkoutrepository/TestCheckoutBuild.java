@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
 import ch.qos.logback.classic.Level;
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.helpers.BuildHelper;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -13,7 +13,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -28,11 +27,9 @@ import java.nio.file.Path;
 import java.util.Iterator;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**

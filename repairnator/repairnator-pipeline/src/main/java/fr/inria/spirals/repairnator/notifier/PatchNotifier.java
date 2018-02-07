@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.notifier;
 
 import fr.inria.lille.repair.common.patch.Patch;
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.Repository;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.entities.Repository;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;

@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.scanner;
 
-import fr.inria.spirals.jtravis.entities.*;
-import fr.inria.spirals.jtravis.helpers.BuildHelper;
-import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
+import fr.inria.jtravis.entities.*;
+import fr.inria.jtravis.helpers.BuildHelper;
+import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;

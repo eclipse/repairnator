@@ -1,840 +1,0 @@
-travis_fold:start:worker_info[0K[33;1mWorker information[0m
-hostname: b97e47ea-4ae7-4a24-873f-77cb812eaf3e@1.production-1-worker-org-b-8-gce
-version: v3.0.2 https://github.com/travis-ci/worker/tree/f1c05caed79c66a9103f12a22e8a45ec66dbca64
-instance: testing-gce-1964bbb5-58ee-43e6-a11a-7af712bf09a8:travis-ci-garnet-trusty-1503972833 (via amqp)
-startup: 21.149957631s
-travis_fold:end:worker_info[0Ktravis_fold:start:system_info[0K[33;1mBuild system information[0m
-Build language: java
-Build group: stable
-Build dist: trusty
-Build id: 277886497
-Job id: 277886498
-Runtime kernel version: 4.4.0-93-generic
-travis-build version: 125c5d1fa
-[34m[1mBuild image provisioning date and time[0m
-Tue Aug 29 02:48:34 UTC 2017
-[34m[1mOperating System Details[0m
-Distributor ID:	Ubuntu
-Description:	Ubuntu 14.04.5 LTS
-Release:	14.04
-Codename:	trusty
-[34m[1mCookbooks Version[0m
-4642454 https://github.com/travis-ci/travis-cookbooks/tree/4642454
-[34m[1mgit version[0m
-git version 2.14.1
-[34m[1mbash version[0m
-GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu)
-[34m[1mgcc version[0m
-gcc (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4
-Copyright (C) 2013 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-[34m[1mdocker version[0m
-Client:
- Version:      17.03.1-ce
- API version:  1.27
- Go version:   go1.7.5
- Git commit:   c6d412e
- Built:        Mon Mar 27 17:10:36 2017
- OS/Arch:      linux/amd64
-
-Server:
- Version:      17.03.1-ce
- API version:  1.27 (minimum version 1.12)
- Go version:   go1.7.5
- Git commit:   c6d412e
- Built:        Mon Mar 27 17:10:36 2017
- OS/Arch:      linux/amd64
- Experimental: false
-[34m[1mclang version[0m
-clang version 3.9.0 (tags/RELEASE_390/final)
-Target: x86_64-unknown-linux-gnu
-Thread model: posix
-InstalledDir: /usr/local/clang-3.9.0/bin
-[34m[1mjq version[0m
-jq-1.5
-[34m[1mbats version[0m
-Bats 0.4.0
-[34m[1mshellcheck version[0m
-0.4.6
-[34m[1mshfmt version[0m
-v1.3.1
-[34m[1mccache version[0m
-ccache version 3.1.9
-
-Copyright (C) 2002-2007 Andrew Tridgell
-Copyright (C) 2009-2011 Joel Rosdahl
-
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 3 of the License, or (at your option) any later
-version.
-[34m[1mcmake version[0m
-cmake version 3.2.2
-
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-[34m[1mheroku version[0m
-heroku-cli/6.13.19-6cd27b3 (linux-x64) node-v8.3.0
-[34m[1mimagemagick version[0m
-Version: ImageMagick 6.7.7-10 2017-07-31 Q16 http://www.imagemagick.org
-[34m[1mmd5deep version[0m
-4.2
-[34m[1mmercurial version[0m
-Mercurial Distributed SCM (version 4.2.2)
-(see https://mercurial-scm.org for more information)
-
-Copyright (C) 2005-2017 Matt Mackall and others
-This is free software; see the source for copying conditions. There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-[34m[1mmysql version[0m
-mysql  Ver 14.14 Distrib 5.6.33, for debian-linux-gnu (x86_64) using  EditLine wrapper
-[34m[1mopenssl version[0m
-OpenSSL 1.0.1f 6 Jan 2014
-[34m[1mpacker version[0m
-Packer v1.0.2
-
-Your version of Packer is out of date! The latest version
-is 1.0.4. You can update by downloading from www.packer.io
-[34m[1mpostgresql client version[0m
-psql (PostgreSQL) 9.6.4
-[34m[1mragel version[0m
-Ragel State Machine Compiler version 6.8 Feb 2013
-Copyright (c) 2001-2009 by Adrian Thurston
-[34m[1msubversion version[0m
-svn, version 1.8.8 (r1568071)
-   compiled Aug 10 2017, 17:20:39 on x86_64-pc-linux-gnu
-
-Copyright (C) 2013 The Apache Software Foundation.
-This software consists of contributions made by many people;
-see the NOTICE file for more information.
-Subversion is open source software, see http://subversion.apache.org/
-
-The following repository access (RA) modules are available:
-
-* ra_svn : Module for accessing a repository using the svn network protocol.
-  - with Cyrus SASL authentication
-  - handles 'svn' scheme
-* ra_local : Module for accessing a repository on local disk.
-  - handles 'file' scheme
-* ra_serf : Module for accessing a repository via WebDAV protocol using serf.
-  - using serf 1.3.3
-  - handles 'http' scheme
-  - handles 'https' scheme
-
-[34m[1msudo version[0m
-Sudo version 1.8.9p5
-Configure options: --prefix=/usr -v --with-all-insults --with-pam --with-fqdn --with-logging=syslog --with-logfac=authpriv --with-env-editor --with-editor=/usr/bin/editor --with-timeout=15 --with-password-timeout=0 --with-passprompt=[sudo] password for %p:  --without-lecture --with-tty-tickets --disable-root-mailer --enable-admin-flag --with-sendmail=/usr/sbin/sendmail --with-timedir=/var/lib/sudo --mandir=/usr/share/man --libexecdir=/usr/lib/sudo --with-sssd --with-sssd-lib=/usr/lib/x86_64-linux-gnu --with-selinux
-Sudoers policy plugin version 1.8.9p5
-Sudoers file grammar version 43
-
-Sudoers path: /etc/sudoers
-Authentication methods: 'pam'
-Syslog facility if syslog is being used for logging: authpriv
-Syslog priority to use when user authenticates successfully: notice
-Syslog priority to use when user authenticates unsuccessfully: alert
-Send mail if the user is not in sudoers
-Use a separate timestamp for each user/tty combo
-Lecture user the first time they run sudo
-Root may run sudo
-Allow some information gathering to give useful error messages
-Require fully-qualified hostnames in the sudoers file
-Visudo will honor the EDITOR environment variable
-Set the LOGNAME and USER environment variables
-Length at which to wrap log file lines (0 for no wrap): 80
-Authentication timestamp timeout: 15.0 minutes
-Password prompt timeout: 0.0 minutes
-Number of tries to enter a password: 3
-Umask to use or 0777 to use user's: 022
-Path to mail program: /usr/sbin/sendmail
-Flags for mail program: -t
-Address to send mail to: root
-Subject line for mail messages: *** SECURITY information for %h ***
-Incorrect password message: Sorry, try again.
-Path to authentication timestamp dir: /var/lib/sudo
-Default password prompt: [sudo] password for %p: 
-Default user to run commands as: root
-Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-Path to the editor for use by visudo: /usr/bin/editor
-When to require a password for 'list' pseudocommand: any
-When to require a password for 'verify' pseudocommand: all
-File descriptors >= 3 will be closed before executing a command
-Environment variables to check for sanity:
-	TZ
-	TERM
-	LINGUAS
-	LC_*
-	LANGUAGE
-	LANG
-	COLORTERM
-Environment variables to remove:
-	RUBYOPT
-	RUBYLIB
-	PYTHONUSERBASE
-	PYTHONINSPECT
-	PYTHONPATH
-	PYTHONHOME
-	TMPPREFIX
-	ZDOTDIR
-	READNULLCMD
-	NULLCMD
-	FPATH
-	PERL5DB
-	PERL5OPT
-	PERL5LIB
-	PERLLIB
-	PERLIO_DEBUG 
-	JAVA_TOOL_OPTIONS
-	SHELLOPTS
-	GLOBIGNORE
-	PS4
-	BASH_ENV
-	ENV
-	TERMCAP
-	TERMPATH
-	TERMINFO_DIRS
-	TERMINFO
-	_RLD*
-	LD_*
-	PATH_LOCALE
-	NLSPATH
-	HOSTALIASES
-	RES_OPTIONS
-	LOCALDOMAIN
-	CDPATH
-	IFS
-Environment variables to preserve:
-	JAVA_HOME
-	TRAVIS
-	CI
-	DEBIAN_FRONTEND
-	XAUTHORIZATION
-	XAUTHORITY
-	PS2
-	PS1
-	PATH
-	LS_COLORS
-	KRB5CCNAME
-	HOSTNAME
-	HOME
-	DISPLAY
-	COLORS
-Locale to use while parsing sudoers: C
-Directory in which to store input/output logs: /var/log/sudo-io
-File in which to store the input/output log: %{seq}
-Add an entry to the utmp/utmpx file when allocating a pty
-PAM service name to use
-PAM service name to use for login shells
-Create a new PAM session for the command to run in
-Maximum I/O log sequence number: 0
-
-Local IP address and netmask pairs:
-	10.240.0.10/255.255.255.255
-	172.17.0.1/255.255.0.0
-
-Sudoers I/O plugin version 1.8.9p5
-[34m[1mgzip version[0m
-gzip 1.6
-Copyright (C) 2007, 2010, 2011 Free Software Foundation, Inc.
-Copyright (C) 1993 Jean-loup Gailly.
-This is free software.  You may redistribute copies of it under the terms of
-the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
-There is NO WARRANTY, to the extent permitted by law.
-
-Written by Jean-loup Gailly.
-[34m[1mzip version[0m
-Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.
-This is Zip 3.0 (July 5th 2008), by Info-ZIP.
-Currently maintained by E. Gordon.  Please send bug reports to
-the authors using the web page at www.info-zip.org; see README for details.
-
-Latest sources and executables are at ftp://ftp.info-zip.org/pub/infozip,
-as of above date; see http://www.info-zip.org/ for other sites.
-
-Compiled with gcc 4.8.2 for Unix (Linux ELF) on Oct 21 2013.
-
-Zip special compilation options:
-	USE_EF_UT_TIME       (store Universal Time)
-	BZIP2_SUPPORT        (bzip2 library version 1.0.6, 6-Sept-2010)
-	    bzip2 code and library copyright (c) Julian R Seward
-	    (See the bzip2 license for terms of use)
-	SYMLINK_SUPPORT      (symbolic links supported)
-	LARGE_FILE_SUPPORT   (can read and write large files on file system)
-	ZIP64_SUPPORT        (use Zip64 to store large files in archives)
-	UNICODE_SUPPORT      (store and read UTF-8 Unicode paths)
-	STORE_UNIX_UIDs_GIDs (store UID/GID sizes/values using new extra field)
-	UIDGID_NOT_16BIT     (old Unix 16-bit UID/GID extra field not used)
-	[encryption, version 2.91 of 05 Jan 2007] (modified for Zip 3)
-
-Encryption notice:
-	The encryption code of this program is not copyrighted and is
-	put in the public domain.  It was originally written in Europe
-	and, to the best of our knowledge, can be freely distributed
-	in both source and object forms from any country, including
-	the USA under License Exception TSU of the U.S. Export
-	Administration Regulations (section 740.13(e)) of 6 June 2002.
-
-Zip environment options:
-             ZIP:  [none]
-          ZIPOPT:  [none]
-[34m[1mvim version[0m
-VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Nov 24 2016 16:43:18)
-Included patches: 1-52
-Extra patches: 8.0.0056
-Modified by pkg-vim-maintainers@lists.alioth.debian.org
-Compiled by buildd@
-Huge version without GUI.  Features included (+) or not (-):
-+acl             +farsi           +mouse_netterm   +syntax
-+arabic          +file_in_path    +mouse_sgr       +tag_binary
-+autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
--balloon_eval    +float           +mouse_urxvt     -tag_any_white
--browse          +folding         +mouse_xterm     -tcl
-++builtin_terms  -footer          +multi_byte      +terminfo
-+byte_offset     +fork()          +multi_lang      +termresponse
-+cindent         +gettext         -mzscheme        +textobjects
--clientserver    -hangul_input    +netbeans_intg   +title
--clipboard       +iconv           +path_extra      -toolbar
-+cmdline_compl   +insert_expand   -perl            +user_commands
-+cmdline_hist    +jumplist        +persistent_undo +vertsplit
-+cmdline_info    +keymap          +postscript      +virtualedit
-+comments        +langmap         +printer         +visual
-+conceal         +libcall         +profile         +visualextra
-+cryptv          +linebreak       +python          +viminfo
-+cscope          +lispindent      -python3         +vreplace
-+cursorbind      +listcmds        +quickfix        +wildignore
-+cursorshape     +localmap        +reltime         +wildmenu
-+dialog_con      -lua             +rightleft       +windows
-+diff            +menu            -ruby            +writebackup
-+digraphs        +mksession       +scrollbind      -X11
--dnd             +modify_fname    +signs           -xfontset
--ebcdic          +mouse           +smartindent     -xim
-+emacs_tags      -mouseshape      -sniff           -xsmp
-+eval            +mouse_dec       +startuptime     -xterm_clipboard
-+ex_extra        +mouse_gpm       +statusline      -xterm_save
-+extra_search    -mouse_jsbterm   -sun_workshop    -xpm
-   system vimrc file: "$VIM/vimrc"
-     user vimrc file: "$HOME/.vimrc"
- 2nd user vimrc file: "~/.vim/vimrc"
-      user exrc file: "$HOME/.exrc"
-  fall-back for $VIM: "/usr/share/vim"
-Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H     -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
-Linking: gcc   -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed -o vim        -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl    -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions      
-[34m[1miptables version[0m
-iptables v1.4.21
-[34m[1mcurl version[0m
-curl 7.35.0 (x86_64-pc-linux-gnu) libcurl/7.35.0 OpenSSL/1.0.1f zlib/1.2.8 libidn/1.28 librtmp/2.3
-[34m[1mwget version[0m
-GNU Wget 1.15 built on linux-gnu.
-[34m[1mrsync version[0m
-rsync  version 3.1.0  protocol version 31
-[34m[1mgimme version[0m
-v1.2.0
-[34m[1mnvm version[0m
-0.33.2
-[34m[1mperlbrew version[0m
-/home/travis/perl5/perlbrew/bin/perlbrew  - App::perlbrew/0.80
-[34m[1mphpenv version[0m
-rbenv 1.1.1-4-g4ebd1bd
-[34m[1mrvm version[0m
-rvm 1.29.2 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io/]
-[34m[1mdefault ruby version[0m
-ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]
-[34m[1mCouchDB version[0m
-couchdb 1.6.1
-[34m[1mElasticSearch version[0m
-5.5.0
-[34m[1mInstalled Firefox version[0m
-firefox 55.0.2
-[34m[1mMongoDB version[0m
-MongoDB 3.2.16
-[34m[1mPre-installed PostgreSQL versions[0m
-9.2.22
-9.3.18
-9.4.13
-9.5.8
-9.6.4
-[34m[1mRabbitMQ Version[0m
-3.6.11
-[34m[1mRedis version[0m
-redis-server 4.0.1
-[34m[1mriak version[0m
-2.2.3
-[34m[1mPre-installed Go versions[0m
-1.7.4
-[34m[1mant version[0m
-Apache Ant(TM) version 1.9.3 compiled on April 8 2014
-[34m[1mmvn version[0m
-Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T19:39:06Z)
-Maven home: /usr/local/maven-3.5.0
-Java version: 1.8.0_144, vendor: Oracle Corporation
-Java home: /usr/lib/jvm/java-8-oracle/jre
-Default locale: en_US, platform encoding: UTF-8
-OS name: "linux", version: "4.4.0-81-generic", arch: "amd64", family: "unix"
-[34m[1mgradle version[0m
-
-------------------------------------------------------------
-Gradle 4.0.1
-------------------------------------------------------------
-
-Build time:   2017-07-07 14:02:41 UTC
-Revision:     38e5dc0f772daecca1d2681885d3d85414eb6826
-
-Groovy:       2.4.11
-Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
-JVM:          1.8.0_144 (Oracle Corporation 25.144-b01)
-OS:           Linux 4.4.0-81-generic amd64
-
-[34m[1mlein version[0m
-WARNING: You're currently running as root; probably by accident.
-Press control-C to abort or Enter to continue as root.
-Set LEIN_ROOT to disable this warning.
-Leiningen 2.7.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
-[34m[1mPre-installed Node.js versions[0m
-v4.8.4
-v6.11.2
-v6.9.4
-v7.4.0
-v8.4
-[34m[1mphpenv versions[0m
-  system
-  5.6
-* 5.6.31 (set by /home/travis/.phpenv/version)
-  7.0
-  7.0.22
-  hhvm
-  hhvm-stable
-[34m[1mcomposer --version[0m
-Composer version 1.4.2 2017-05-17 08:17:52
-[34m[1mPre-installed Ruby versions[0m
-ruby-2.2.7
-ruby-2.3.4
-ruby-2.4.1
-travis_fold:end:system_info[0K
-W: http://dl.hhvm.com/ubuntu/dists/trusty/InRelease: Signature by key 36AEF64D0207E7EEE352D4875A16E7281BE7A449 uses weak digest algorithm (SHA1)
-W: http://ppa.launchpad.net/couchdb/stable/ubuntu/dists/trusty/Release.gpg: Signature by key 15866BAFD9BCC4F3C1E0DFC7D69548E1C17EAB57 uses weak digest algorithm (SHA1)
-$ jdk_switcher use oraclejdk9
-Switching to Oracle JDK9 (java-9-oracle), JAVA_HOME will be set to /usr/lib/jvm/java-9-oracle
-travis_fold:start:git.checkout[0Ktravis_time:start:09335081[0K$ git clone --depth=50 --branch=master https://github.com/phishman3579/java-algorithms-implementation.git phishman3579/java-algorithms-implementation
-Cloning into 'phishman3579/java-algorithms-implementation'...
-remote: Counting objects: 1345, done.[K
-remote: Compressing objects:   0% (1/464)   [Kremote: Compressing objects:   1% (5/464)   [Kremote: Compressing objects:   2% (10/464)   [Kremote: Compressing objects:   3% (14/464)   [Kremote: Compressing objects:   4% (19/464)   [Kremote: Compressing objects:   5% (24/464)   [Kremote: Compressing objects:   6% (28/464)   [Kremote: Compressing objects:   7% (33/464)   [Kremote: Compressing objects:   8% (38/464)   [Kremote: Compressing objects:   9% (42/464)   [Kremote: Compressing objects:  10% (47/464)   [Kremote: Compressing objects:  11% (52/464)   [Kremote: Compressing objects:  12% (56/464)   [Kremote: Compressing objects:  13% (61/464)   [Kremote: Compressing objects:  14% (65/464)   [Kremote: Compressing objects:  15% (70/464)   [Kremote: Compressing objects:  16% (75/464)   [Kremote: Compressing objects:  17% (79/464)   [Kremote: Compressing objects:  18% (84/464)   [Kremote: Compressing objects:  19% (89/464)   [Kremote: Compressing objects:  20% (93/464)   [Kremote: Compressing objects:  21% (98/464)   [Kremote: Compressing objects:  22% (103/464)   [Kremote: Compressing objects:  23% (107/464)   [Kremote: Compressing objects:  24% (112/464)   [Kremote: Compressing objects:  25% (116/464)   [Kremote: Compressing objects:  26% (121/464)   [Kremote: Compressing objects:  27% (126/464)   [Kremote: Compressing objects:  28% (130/464)   [Kremote: Compressing objects:  29% (135/464)   [Kremote: Compressing objects:  30% (140/464)   [Kremote: Compressing objects:  31% (144/464)   [Kremote: Compressing objects:  32% (149/464)   [Kremote: Compressing objects:  33% (154/464)   [Kremote: Compressing objects:  34% (158/464)   [Kremote: Compressing objects:  35% (163/464)   [Kremote: Compressing objects:  36% (168/464)   [Kremote: Compressing objects:  37% (172/464)   [Kremote: Compressing objects:  38% (177/464)   [Kremote: Compressing objects:  39% (181/464)   [Kremote: Compressing objects:  40% (186/464)   [Kremote: Compressing objects:  41% (191/464)   [Kremote: Compressing objects:  42% (195/464)   [Kremote: Compressing objects:  43% (200/464)   [Kremote: Compressing objects:  44% (205/464)   [Kremote: Compressing objects:  45% (209/464)   [Kremote: Compressing objects:  46% (214/464)   [Kremote: Compressing objects:  47% (219/464)   [Kremote: Compressing objects:  48% (223/464)   [Kremote: Compressing objects:  49% (228/464)   [Kremote: Compressing objects:  50% (232/464)   [Kremote: Compressing objects:  51% (237/464)   [Kremote: Compressing objects:  52% (242/464)   [Kremote: Compressing objects:  53% (246/464)   [Kremote: Compressing objects:  54% (251/464)   [Kremote: Compressing objects:  55% (256/464)   [Kremote: Compressing objects:  56% (260/464)   [Kremote: Compressing objects:  57% (265/464)   [Kremote: Compressing objects:  58% (270/464)   [Kremote: Compressing objects:  59% (274/464)   [Kremote: Compressing objects:  60% (279/464)   [Kremote: Compressing objects:  61% (284/464)   [Kremote: Compressing objects:  62% (288/464)   [Kremote: Compressing objects:  63% (293/464)   [Kremote: Compressing objects:  64% (297/464)   [Kremote: Compressing objects:  65% (302/464)   [Kremote: Compressing objects:  66% (307/464)   [Kremote: Compressing objects:  67% (311/464)   [Kremote: Compressing objects:  68% (316/464)   [Kremote: Compressing objects:  69% (321/464)   [Kremote: Compressing objects:  70% (325/464)   [Kremote: Compressing objects:  71% (330/464)   [Kremote: Compressing objects:  72% (335/464)   [Kremote: Compressing objects:  73% (339/464)   [Kremote: Compressing objects:  74% (344/464)   [Kremote: Compressing objects:  75% (348/464)   [Kremote: Compressing objects:  76% (353/464)   [Kremote: Compressing objects:  77% (358/464)   [Kremote: Compressing objects:  78% (362/464)   [Kremote: Compressing objects:  79% (367/464)   [Kremote: Compressing objects:  80% (372/464)   [Kremote: Compressing objects:  81% (376/464)   [Kremote: Compressing objects:  82% (381/464)   [Kremote: Compressing objects:  83% (386/464)   [Kremote: Compressing objects:  84% (390/464)   [Kremote: Compressing objects:  85% (395/464)   [Kremote: Compressing objects:  86% (400/464)   [Kremote: Compressing objects:  87% (404/464)   [Kremote: Compressing objects:  88% (409/464)   [Kremote: Compressing objects:  89% (413/464)   [Kremote: Compressing objects:  90% (418/464)   [Kremote: Compressing objects:  91% (423/464)   [Kremote: Compressing objects:  92% (427/464)   [Kremote: Compressing objects:  93% (432/464)   [Kremote: Compressing objects:  94% (437/464)   [Kremote: Compressing objects:  95% (441/464)   [Kremote: Compressing objects:  96% (446/464)   [Kremote: Compressing objects:  97% (451/464)   [Kremote: Compressing objects:  98% (455/464)   [Kremote: Compressing objects:  99% (460/464)   [Kremote: Compressing objects: 100% (464/464)   [Kremote: Compressing objects: 100% (464/464), done.[K
-Receiving objects:   0% (1/1345)   Receiving objects:   1% (14/1345)   Receiving objects:   2% (27/1345)   Receiving objects:   3% (41/1345)   Receiving objects:   4% (54/1345)   Receiving objects:   5% (68/1345)   Receiving objects:   6% (81/1345)   Receiving objects:   7% (95/1345)   Receiving objects:   8% (108/1345)   Receiving objects:   9% (122/1345)   Receiving objects:  10% (135/1345)   Receiving objects:  11% (148/1345)   Receiving objects:  12% (162/1345)   Receiving objects:  13% (175/1345)   Receiving objects:  14% (189/1345)   Receiving objects:  15% (202/1345)   Receiving objects:  16% (216/1345)   Receiving objects:  17% (229/1345)   Receiving objects:  18% (243/1345)   Receiving objects:  19% (256/1345)   Receiving objects:  20% (269/1345)   Receiving objects:  21% (283/1345)   Receiving objects:  22% (296/1345)   Receiving objects:  23% (310/1345)   Receiving objects:  24% (323/1345)   Receiving objects:  25% (337/1345)   Receiving objects:  26% (350/1345)   Receiving objects:  27% (364/1345)   Receiving objects:  28% (377/1345)   Receiving objects:  29% (391/1345)   Receiving objects:  30% (404/1345)   Receiving objects:  31% (417/1345)   Receiving objects:  32% (431/1345)   Receiving objects:  33% (444/1345)   Receiving objects:  34% (458/1345)   Receiving objects:  35% (471/1345)   Receiving objects:  36% (485/1345)   Receiving objects:  37% (498/1345)   Receiving objects:  38% (512/1345)   Receiving objects:  39% (525/1345)   Receiving objects:  40% (538/1345)   Receiving objects:  41% (552/1345)   Receiving objects:  42% (565/1345)   Receiving objects:  43% (579/1345)   Receiving objects:  44% (592/1345)   Receiving objects:  45% (606/1345)   Receiving objects:  46% (619/1345)   Receiving objects:  47% (633/1345)   Receiving objects:  48% (646/1345)   Receiving objects:  49% (660/1345)   Receiving objects:  50% (673/1345)   Receiving objects:  51% (686/1345)   Receiving objects:  52% (700/1345)   Receiving objects:  53% (713/1345)   Receiving objects:  54% (727/1345)   Receiving objects:  55% (740/1345)   Receiving objects:  56% (754/1345)   Receiving objects:  57% (767/1345)   Receiving objects:  58% (781/1345)   Receiving objects:  59% (794/1345)   Receiving objects:  60% (807/1345)   Receiving objects:  61% (821/1345)   Receiving objects:  62% (834/1345)   Receiving objects:  63% (848/1345)   Receiving objects:  64% (861/1345)   Receiving objects:  65% (875/1345)   Receiving objects:  66% (888/1345)   Receiving objects:  67% (902/1345)   Receiving objects:  68% (915/1345)   Receiving objects:  69% (929/1345)   Receiving objects:  70% (942/1345)   Receiving objects:  71% (955/1345)   Receiving objects:  72% (969/1345)   remote: Total 1345 (delta 624), reused 1156 (delta 534), pack-reused 0[K
-Receiving objects:  73% (982/1345)   Receiving objects:  74% (996/1345)   Receiving objects:  75% (1009/1345)   Receiving objects:  76% (1023/1345)   Receiving objects:  77% (1036/1345)   Receiving objects:  78% (1050/1345)   Receiving objects:  79% (1063/1345)   Receiving objects:  80% (1076/1345)   Receiving objects:  81% (1090/1345)   Receiving objects:  82% (1103/1345)   Receiving objects:  83% (1117/1345)   Receiving objects:  84% (1130/1345)   Receiving objects:  85% (1144/1345)   Receiving objects:  86% (1157/1345)   Receiving objects:  87% (1171/1345)   Receiving objects:  88% (1184/1345)   Receiving objects:  89% (1198/1345)   Receiving objects:  90% (1211/1345)   Receiving objects:  91% (1224/1345)   Receiving objects:  92% (1238/1345)   Receiving objects:  93% (1251/1345)   Receiving objects:  94% (1265/1345)   Receiving objects:  95% (1278/1345)   Receiving objects:  96% (1292/1345)   Receiving objects:  97% (1305/1345)   Receiving objects:  98% (1319/1345)   Receiving objects:  99% (1332/1345)   Receiving objects: 100% (1345/1345)   Receiving objects: 100% (1345/1345), 454.17 KiB | 4.88 MiB/s, done.
-Resolving deltas:   0% (0/624)   Resolving deltas:   1% (7/624)   Resolving deltas:   2% (18/624)   Resolving deltas:   4% (25/624)   Resolving deltas:  22% (143/624)   Resolving deltas:  23% (144/624)   Resolving deltas:  25% (162/624)   Resolving deltas:  28% (180/624)   Resolving deltas:  29% (184/624)   Resolving deltas:  31% (194/624)   Resolving deltas:  32% (205/624)   Resolving deltas:  33% (206/624)   Resolving deltas:  34% (213/624)   Resolving deltas:  35% (222/624)   Resolving deltas:  36% (227/624)   Resolving deltas:  37% (231/624)   Resolving deltas:  38% (238/624)   Resolving deltas:  39% (245/624)   Resolving deltas:  40% (250/624)   Resolving deltas:  41% (258/624)   Resolving deltas:  42% (265/624)   Resolving deltas:  43% (271/624)   Resolving deltas:  44% (275/624)   Resolving deltas:  45% (281/624)   Resolving deltas:  46% (288/624)   Resolving deltas:  47% (294/624)   Resolving deltas:  48% (305/624)   Resolving deltas:  49% (307/624)   Resolving deltas:  50% (312/624)   Resolving deltas:  51% (319/624)   Resolving deltas:  52% (327/624)   Resolving deltas:  53% (331/624)   Resolving deltas:  54% (338/624)   Resolving deltas:  55% (344/624)   Resolving deltas:  56% (350/624)   Resolving deltas:  57% (356/624)   Resolving deltas:  58% (362/624)   Resolving deltas:  62% (388/624)   Resolving deltas:  64% (404/624)   Resolving deltas:  65% (406/624)   Resolving deltas:  66% (415/624)   Resolving deltas:  67% (420/624)   Resolving deltas:  68% (425/624)   Resolving deltas:  69% (433/624)   Resolving deltas:  71% (445/624)   Resolving deltas:  72% (450/624)   Resolving deltas:  73% (456/624)   Resolving deltas:  74% (462/624)   Resolving deltas:  75% (468/624)   Resolving deltas:  76% (477/624)   Resolving deltas:  77% (482/624)   Resolving deltas:  78% (487/624)   Resolving deltas:  79% (497/624)   Resolving deltas:  80% (502/624)   Resolving deltas:  83% (520/624)   Resolving deltas:  86% (541/624)   Resolving deltas:  87% (545/624)   Resolving deltas:  88% (551/624)   Resolving deltas:  90% (566/624)   Resolving deltas:  91% (571/624)   Resolving deltas:  93% (581/624)   Resolving deltas:  94% (589/624)   Resolving deltas:  95% (595/624)   Resolving deltas:  96% (601/624)   Resolving deltas: 100% (624/624)   Resolving deltas: 100% (624/624), done.
-
-travis_time:end:09335081:start=1505931149449679149,finish=1505931150188637709,duration=738958560[0K$ cd phishman3579/java-algorithms-implementation
-$ git checkout -qf b23f385b6531e0047dc4e91573939a6a799b439d
-travis_fold:end:git.checkout[0Ktravis_fold:start:apt[0K[33;1mInstalling APT Packages (BETA)[0m
-$ export DEBIAN_FRONTEND=noninteractive
-travis_time:start:027cd8d9[0K$ sudo -E apt-get -yq update &>> ~/apt-get-update.log
-
-travis_time:end:027cd8d9:start=1505931150208593795,finish=1505931153432489058,duration=3223895263[0Ktravis_time:start:0a652ba2[0K$ sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install openjdk-6-jdk
-Reading package lists...
-Building dependency tree...
-Reading state information...
-The following additional packages will be installed:
-  openjdk-6-jre openjdk-6-jre-headless openjdk-6-jre-lib
-Suggested packages:
-  openjdk-6-demo openjdk-6-source visualvm icedtea-plugin libnss-mdns
-  sun-java6-fonts ttf-dejavu-extra fonts-ipafont-gothic fonts-ipafont-mincho
-  ttf-wqy-microhei | ttf-wqy-zenhei ttf-indic-fonts-core ttf-telugu-fonts
-  ttf-oriya-fonts ttf-kannada-fonts ttf-bengali-fonts
-Recommended packages:
-  ttf-dejavu-extra icedtea-6-jre-cacao icedtea-6-jre-jamvm
-The following NEW packages will be installed:
-  openjdk-6-jdk openjdk-6-jre openjdk-6-jre-headless openjdk-6-jre-lib
-0 upgraded, 4 newly installed, 0 to remove and 51 not upgraded.
-Need to get 52.5 MB of archives.
-After this operation, 75.5 MB of additional disk space will be used.
-Get:1 http://us-central1.gce.archive.ubuntu.com/ubuntu trusty-updates/universe amd64 openjdk-6-jre-lib all 6b41-1.13.13-0ubuntu0.14.04.1 [6,007 kB]
-Get:2 http://us-central1.gce.archive.ubuntu.com/ubuntu trusty-updates/universe amd64 openjdk-6-jre-headless amd64 6b41-1.13.13-0ubuntu0.14.04.1 [31.2 MB]
-Get:3 http://us-central1.gce.archive.ubuntu.com/ubuntu trusty-updates/universe amd64 openjdk-6-jre amd64 6b41-1.13.13-0ubuntu0.14.04.1 [192 kB]
-Get:4 http://us-central1.gce.archive.ubuntu.com/ubuntu trusty-updates/universe amd64 openjdk-6-jdk amd64 6b41-1.13.13-0ubuntu0.14.04.1 [15.1 MB]
-Fetched 52.5 MB in 0s (73.1 MB/s)
-Selecting previously unselected package openjdk-6-jre-lib.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 92755 files and directories currently installed.)
-Preparing to unpack .../openjdk-6-jre-lib_6b41-1.13.13-0ubuntu0.14.04.1_all.deb ...
-Unpacking openjdk-6-jre-lib (6b41-1.13.13-0ubuntu0.14.04.1) ...
-Selecting previously unselected package openjdk-6-jre-headless:amd64.
-Preparing to unpack .../openjdk-6-jre-headless_6b41-1.13.13-0ubuntu0.14.04.1_amd64.deb ...
-Unpacking openjdk-6-jre-headless:amd64 (6b41-1.13.13-0ubuntu0.14.04.1) ...
-Selecting previously unselected package openjdk-6-jre:amd64.
-Preparing to unpack .../openjdk-6-jre_6b41-1.13.13-0ubuntu0.14.04.1_amd64.deb ...
-Unpacking openjdk-6-jre:amd64 (6b41-1.13.13-0ubuntu0.14.04.1) ...
-Selecting previously unselected package openjdk-6-jdk:amd64.
-Preparing to unpack .../openjdk-6-jdk_6b41-1.13.13-0ubuntu0.14.04.1_amd64.deb ...
-Unpacking openjdk-6-jdk:amd64 (6b41-1.13.13-0ubuntu0.14.04.1) ...
-Processing triggers for mime-support (3.54ubuntu1.1) ...
-Processing triggers for hicolor-icon-theme (0.13-1) ...
-Setting up openjdk-6-jre-headless:amd64 (6b41-1.13.13-0ubuntu0.14.04.1) ...
-update-binfmts: warning: current package is oracle-java9, but binary format already installed by openjdk-7
-Setting up openjdk-6-jre:amd64 (6b41-1.13.13-0ubuntu0.14.04.1) ...
-Setting up openjdk-6-jdk:amd64 (6b41-1.13.13-0ubuntu0.14.04.1) ...
-Setting up openjdk-6-jre-lib (6b41-1.13.13-0ubuntu0.14.04.1) ...
-W: --force-yes is deprecated, use one of the options starting with --allow instead.
-
-travis_time:end:0a652ba2:start=1505931153436878304,finish=1505931162215284731,duration=8778406427[0Ktravis_fold:end:apt[0K
-[33;1mSetting environment variables from .travis.yml[0m
-$ export TEST_SUITE=run_tests
-
-[33;1mDisabling Gradle daemon[0m
-travis_time:start:30bb0866[0K$ mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-
-travis_time:end:30bb0866:start=1505931162224024020,finish=1505931162228684605,duration=4660585[0K$ export PATH=$JAVA_HOME/bin:$PATH
-$ java -Xmx32m -version
-java version "9"
-Java(TM) SE Runtime Environment (build 9+181)
-Java HotSpot(TM) 64-Bit Server VM (build 9+181, mixed mode)
-$ javac -J-Xmx32m -version
-javac 9
-travis_fold:start:before_script.1[0Ktravis_time:start:0a84cb4e[0K$ sudo apt-get install ant-optional
-Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
-Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
-Reading state information... 0%Reading state information... 0%Reading state information... Done
-ant-optional is already the newest version (1.9.3-2build1).
-0 upgraded, 0 newly installed, 0 to remove and 51 not upgraded.
-
-travis_time:end:0a84cb4e:start=1505931162981172261,finish=1505931163462124599,duration=480952338[0Ktravis_fold:end:before_script.1[0Ktravis_fold:start:before_script.2[0Ktravis_time:start:07f8500c[0K$ export OPTS="-server -Xmx3072M"
-
-travis_time:end:07f8500c:start=1505931163466693257,finish=1505931163470447315,duration=3754058[0Ktravis_fold:end:before_script.2[0Ktravis_fold:start:before_script.3[0Ktravis_time:start:079ba178[0K$ export JAVA_OPTS="${JAVA_OPTS} ${OPTS}"
-
-travis_time:end:079ba178:start=1505931163474914505,finish=1505931163478578775,duration=3664270[0Ktravis_fold:end:before_script.3[0Ktravis_fold:start:before_script.4[0Ktravis_time:start:0118d110[0K$ export ANT_OPTS="${ANT_OPTS} ${OPTS}"
-
-travis_time:end:0118d110:start=1505931163483093446,finish=1505931163486690887,duration=3597441[0Ktravis_fold:end:before_script.4[0Ktravis_fold:start:before_script.5[0Ktravis_time:start:041ab70e[0K$ echo $JAVA_OPTS
--server -Xmx3072M
-
-travis_time:end:041ab70e:start=1505931163492270528,finish=1505931163495621064,duration=3350536[0Ktravis_fold:end:before_script.5[0Ktravis_fold:start:before_script.6[0Ktravis_time:start:2ac60736[0K$ echo $ANT_OPTS
--server -Xmx3072M
-
-travis_time:end:2ac60736:start=1505931163500190726,finish=1505931163503708049,duration=3517323[0Ktravis_fold:end:before_script.6[0Ktravis_time:start:06bb74a4[0K$ ant $TEST_SUITE
-Buildfile: /home/travis/build/phishman3579/java-algorithms-implementation/build.xml
-
-clean:
-
-echo.env_vars:
-     [echo] CLASSPATH='${env_vars.CLASSPATH}'
-     [echo] JAVA_HOME='/usr/lib/jvm/java-9-oracle'
-     [echo] JAVA_OPTS=' -server -Xmx3072M'
-
-init:
-    [mkdir] Created dir: /home/travis/build/phishman3579/java-algorithms-implementation/build
-    [mkdir] Created dir: /home/travis/build/phishman3579/java-algorithms-implementation/dist
-
-build:
-    [javac] Compiling 102 source files to /home/travis/build/phishman3579/java-algorithms-implementation/build
-    [javac] Note: Some input files use or override a deprecated API.
-    [javac] Note: Recompile with -Xlint:deprecation for details.
-
-dist:
-      [jar] Building jar: /home/travis/build/phishman3579/java-algorithms-implementation/dist/java-algorithms-implementation-20170920.jar
-
-build_tests:
-    [javac] Compiling 83 source files to /home/travis/build/phishman3579/java-algorithms-implementation/build
-
-tests_jar:
-      [jar] Building jar: /home/travis/build/phishman3579/java-algorithms-implementation/dist/java-algorithms-implementation-tests-20170920.jar
-
-run_tests:
-    [junit] Running com.jwetherell.algorithms.data_structures.test.AVLTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.AVLTreeTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.BTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.BTreeTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.192 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.192 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.BinaryHeapTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.BinaryHeapTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.208 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.208 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.BinarySearchTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.BinarySearchTreeTests
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.09 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.09 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.CompactSuffixTrieTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.CompactSuffixTrieTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.DisjointSetTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.DisjointSetTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.FenwickTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.FenwickTreeTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.GraphTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.GraphTests
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.HashArrayMappedTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.HashArrayMappedTreeTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.954 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.954 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.HashMapTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.HashMapTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.891 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.891 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.ImplicitKeyTreapTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.ImplicitKeyTreapTests
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.IntervalSumTest
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.IntervalSumTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.178 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.178 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.IntervalTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.IntervalTreeTests
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.KdTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.KdTreeTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.LCPArrayTest
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.LCPArrayTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.ListTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.ListTests
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.691 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.691 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.LowestCommonAncestorTest
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.LowestCommonAncestorTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.114 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.114 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.MatrixTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.MatrixTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.PatriciaTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.PatriciaTreeTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.678 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.678 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.QuadTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.QuadTreeTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.537 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.537 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.QueueTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.QueueTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.RadixTrieTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.RadixTrieTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.059 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.059 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.RedBlackTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.RedBlackTreeTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.SegmentTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.SegmentTreeTests
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.SkipListMapTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.SkipListMapTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.903 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.903 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.SkipListTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.SkipListTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.136 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.136 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.SplayTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.SplayTreeTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.StackTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.StackTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.402 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.402 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.SuffixArrayTest
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.SuffixArrayTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.SuffixTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.SuffixTreeTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.SuffixTrieTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.SuffixTrieTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.TernarySearchTreeTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.TernarySearchTreeTests
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.134 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.134 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.TreapTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.TreapTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.123 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.123 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.TreeMapTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.TreeMapTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.136 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.136 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.TrieMapTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.TrieMapTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.136 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.136 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.data_structures.test.TrieTests
-    [junit] Testsuite: com.jwetherell.algorithms.data_structures.test.TrieTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.757 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.757 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.graph.test.BreadthFirstTraversalTest
-    [junit] Testsuite: com.jwetherell.algorithms.graph.test.BreadthFirstTraversalTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.graph.test.DepthFirstTraversalTest
-    [junit] Testsuite: com.jwetherell.algorithms.graph.test.DepthFirstTraversalTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.graph.test.EdmondsKarpTest
-    [junit] Testsuite: com.jwetherell.algorithms.graph.test.EdmondsKarpTest
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.graph.test.Graphs
-    [junit] Testsuite: com.jwetherell.algorithms.graph.test.Graphs
-    [junit] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 sec
-    [junit] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.graph.test.PushRelabelTest
-    [junit] Testsuite: com.jwetherell.algorithms.graph.test.PushRelabelTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.graph.test.TurboMatchingTest
-    [junit] Testsuite: com.jwetherell.algorithms.graph.test.TurboMatchingTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.CoprimesTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.CoprimesTest
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.DiscreteLogarithmTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.DiscreteLogarithmTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.ExponentiationTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.ExponentiationTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.GCDTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.GCDTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.LUDecompositionTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.LUDecompositionTest
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.MathematicsTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.MathematicsTest
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.ModularArithmeticTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.ModularArithmeticTest
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec
-    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.PermutationsTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.PermutationsTest
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.mathematics.test.RamerDouglasPeuckerTest
-    [junit] Testsuite: com.jwetherell.algorithms.mathematics.test.RamerDouglasPeuckerTest
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.numbers.test.Numbers
-    [junit] Testsuite: com.jwetherell.algorithms.numbers.test.Numbers
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 sec
-    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.search.test.Search
-    [junit] Testsuite: com.jwetherell.algorithms.search.test.Search
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.05 sec
-    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.05 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.sequence.test.Sequences
-    [junit] Testsuite: com.jwetherell.algorithms.sequence.test.Sequences
-    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 sec
-    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.sorts.test.Sorts
-    [junit] Testsuite: com.jwetherell.algorithms.sorts.test.Sorts
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.432 sec
-    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.432 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.strings.test.KnuthMorrisPrattTests
-    [junit] Testsuite: com.jwetherell.algorithms.strings.test.KnuthMorrisPrattTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.strings.test.ManacherTests
-    [junit] Testsuite: com.jwetherell.algorithms.strings.test.ManacherTests
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.strings.test.StringRotation
-    [junit] Testsuite: com.jwetherell.algorithms.strings.test.StringRotation
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.274 sec
-    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.274 sec
-    [junit] 
-    [junit] Running com.jwetherell.algorithms.strings.test.Strings
-    [junit] Testsuite: com.jwetherell.algorithms.strings.test.Strings
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 sec
-    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 sec
-    [junit] 
-
-BUILD SUCCESSFUL
-Total time: 26 seconds
-
-travis_time:end:06bb74a4:start=1505931163508072781,finish=1505931190713166472,duration=27205093691[0K
-[32;1mThe command "ant $TEST_SUITE" exited with 0.[0m
-
-Done. Your build exited with 0.

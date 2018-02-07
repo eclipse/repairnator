@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.PRInformation;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;

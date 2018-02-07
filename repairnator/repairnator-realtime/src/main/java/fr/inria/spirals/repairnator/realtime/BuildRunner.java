@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.spirals.jtravis.entities.Build;
+import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.dockerpool.AbstractPoolManager;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import org.slf4j.Logger;

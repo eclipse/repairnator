@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.spirals.jtravis.entities.Job;
-import fr.inria.spirals.jtravis.helpers.JobHelper;
+import fr.inria.jtravis.entities.Job;
+import fr.inria.jtravis.helpers.JobHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

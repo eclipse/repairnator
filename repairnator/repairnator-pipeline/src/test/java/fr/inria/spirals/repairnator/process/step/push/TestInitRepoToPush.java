@@ -1,11 +1,10 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import ch.qos.logback.classic.Level;
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.helpers.BuildHelper;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.states.PushState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;

@@ -2,8 +2,8 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.main.AstorOutputStatus;
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.helpers.BuildHelper;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -30,7 +30,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.channels.Pipe;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
