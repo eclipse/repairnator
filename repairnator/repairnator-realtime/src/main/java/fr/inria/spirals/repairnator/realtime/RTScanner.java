@@ -1,12 +1,12 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.BuildTool;
-import fr.inria.spirals.jtravis.entities.Job;
-import fr.inria.spirals.jtravis.entities.Log;
-import fr.inria.spirals.jtravis.entities.Repository;
-import fr.inria.spirals.jtravis.helpers.BuildHelper;
-import fr.inria.spirals.jtravis.helpers.RepositoryHelper;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.entities.BuildTool;
+import fr.inria.jtravis.entities.Job;
+import fr.inria.jtravis.entities.Log;
+import fr.inria.jtravis.entities.Repository;
+import fr.inria.jtravis.helpers.BuildHelper;
+import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;

@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.process.git;
 
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.Commit;
-import fr.inria.spirals.jtravis.entities.PRInformation;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.entities.Commit;
+import fr.inria.jtravis.entities.PRInformation;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;

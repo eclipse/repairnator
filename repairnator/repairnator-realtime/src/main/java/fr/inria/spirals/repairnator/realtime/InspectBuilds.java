@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.spirals.jtravis.entities.Build;
-import fr.inria.spirals.jtravis.entities.BuildStatus;
+import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.entities.BuildStatus;
 import fr.inria.spirals.repairnator.realtime.serializer.WatchedBuildSerializer;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.slf4j.Logger;
