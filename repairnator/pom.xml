@@ -47,7 +47,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>fr.inria.spirals</groupId>
+            <groupId>fr.inria.jtravis</groupId>
             <artifactId>jtravis</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
