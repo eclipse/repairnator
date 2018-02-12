@@ -44,7 +44,7 @@ elif [ "$status" -eq 124 ]; then
     exit 2
 fi
 
-if [ $BRANCH_NAME = "--human-patch" ]; then
+if [ $HUMAN_PATCH = "--human-patch" ]; then
     echo "Checking out the patch commit: $patchCommitId"
     git log --format=%B -n 1 $patchCommitId
 
