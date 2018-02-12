@@ -9,7 +9,7 @@ git clone --recursive https://github.com/Spirals-Team/librepair.git
 
 echo "LibRepair repository cloned."
 
-cd repairnator
+cd librepair/repairnator
 mvn clean install -DskipTests=true
 
 echo "Repairnator compiled and installed"
