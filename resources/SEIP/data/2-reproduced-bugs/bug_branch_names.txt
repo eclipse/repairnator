@@ -663,7 +663,7 @@ xetorthio-jedis-294082044-20171028-131059_bugonly
 jenkinsci-performance-plugin-238313504-20170601-141955
 pgjdbc-pgjdbc-256465399-20170723-004207
 spotify-docker-client-231638763-20170512-193106_bugonly
-go-ive-steam-api-229681073-20170507-164843                                                                
+go-ive-steam-api-229681073-20170507-164843
 HubSpot-Singularity-248928029-20170630-225824_bugonly
 apache-flink-250135538-20170705-073825_bugonly
 graphhopper-jsprit-263397299-20170811-101430

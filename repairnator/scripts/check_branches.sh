@@ -72,6 +72,9 @@ args="`ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"
 fi
+if [ "$HUMAN_PATCH" -eq 1 ]; then
+    args="$args --humanPatch"
+fi
 
 echo "Supplementary args for docker pool checkbranches $args"
 java -jar $REPAIRNATOR_CHECKBRANCHES_DEST_JAR -t $NB_THREADS -n $DOCKER_CHECKBRANCHES_TAG -i $INPUT -o $OUTPUT -r $CHECK_BRANCH_REPOSITORY -g $DAY_TIMEOUT --runId $RUN_ID $args &> $LOG_DIR/checkbranches.log
