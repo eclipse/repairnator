@@ -71,6 +71,12 @@ public class Launcher {
         sw1.setHelp("Activate the notification when the process ends.");
         this.jsap.registerParameter(sw1);
 
+        sw1 = new Switch("humanPatch");
+        sw1.setShortFlag('p');
+        sw1.setLongFlag("humanPatch");
+        sw1.setDefault("false");
+        this.jsap.registerParameter(sw1);
+
         FlaggedOption opt2 = new FlaggedOption("imageName");
         opt2.setShortFlag('n');
         opt2.setLongFlag("name");
@@ -217,7 +223,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, this.arguments.getFile("output").getAbsolutePath(), this.arguments.getBoolean("skipDelete"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, this.arguments.getFile("output").getAbsolutePath(), this.arguments.getBoolean("skipDelete"), this.arguments.getBoolean("humanPatch"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
