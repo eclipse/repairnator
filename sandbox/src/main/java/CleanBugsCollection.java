@@ -16,33 +16,38 @@ public class CleanBugsCollection {
 
     public static void main(String[] args) throws IOException {
         String prefix = "* https://github.com/surli/bugs-collection/tree/";
-        String pathToDirectory = "../bearsData/validated";
-        String fileForPushedBranches = "bugs-collection-branches.txt";
+        String pathToValidatedBranches = "../bearsData/branches/3_successfully_validated_branches";
+        String pathToReproducedBranches = "../bearsData/branches/1_reproduced_build_branches";
+        String fileForPushedBranches = "0_all_branches.txt";
 
         List<String> pushedBranches = new ArrayList<>();
         List<String> branchNameToKeep = new ArrayList<>();
         List<String> branchNameToDelete = new ArrayList<>();
 
-        File dir = new File(pathToDirectory);
-
-        if (!dir.exists()) {
-            throw new RuntimeException("Error with dir");
+        File reproducedBranchesDir = new File(pathToReproducedBranches);
+        if (!reproducedBranchesDir.exists()) {
+            throw new RuntimeException("Error with reproduced branches dir");
         }
 
-        for (String s : Files.readAllLines(new File(dir, fileForPushedBranches).toPath())) {
+        for (String s : Files.readAllLines(new File(reproducedBranchesDir, fileForPushedBranches).toPath())) {
             pushedBranches.add(s);
         }
 
         System.out.println("Number of pushed branches: "+pushedBranches.size());
 
-        Files.list(dir.toPath()).forEach((Path filePath) -> {
+        File validatedBranchesDir = new File(pathToValidatedBranches);
+        if (!validatedBranchesDir.exists()) {
+            throw new RuntimeException("Error with validated branches dir");
+        }
+
+        Files.list(validatedBranchesDir.toPath()).forEach((Path filePath) -> {
             if (!filePath.getFileName().toString().endsWith(fileForPushedBranches)) {
                 try {
                     for (String s : Files.readAllLines(filePath)) {
                         if (s.startsWith(prefix)) {
                             String branchName = s.substring(prefix.length()).trim();
                             if (!pushedBranches.contains(branchName)) {
-                                System.err.println("The following branch has not been pused on the repo: "+branchName);
+                                System.err.println("The following branch has not been pushed on the repo: "+branchName);
                             } else {
                                 branchNameToKeep.add(branchName);
                             }
