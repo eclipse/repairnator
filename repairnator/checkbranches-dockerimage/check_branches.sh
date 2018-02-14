@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ "$#" -ne 2 ]; then
-    echo "Usage: ./check_branches.sh <github repository> <branch name>"
+    echo "Usage: ./check_branches.sh <github repository> <branch name> [--human-patch]"
     exit 2
 fi
 
@@ -9,6 +9,7 @@ fi
 DOCKER_DEST=/tmp/result.txt
 REPO=$1
 BRANCH_NAME=$2
+HUMAN_PATCH=$3
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -43,22 +44,24 @@ elif [ "$status" -eq 124 ]; then
     exit 2
 fi
 
-echo "Checking out the patch commit: $patchCommitId"
-git log --format=%B -n 1 $patchCommitId
+if [ $HUMAN_PATCH = "--human-patch" ]; then
+    echo "Checking out the patch commit: $patchCommitId"
+    git log --format=%B -n 1 $patchCommitId
 
-git checkout -q $patchCommitId
+    git checkout -q $patchCommitId
 
-timeout 1800s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
+    timeout 1800s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
 
-status=$?
-if [ "$status" -eq 124 ]; then
-    >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC"
-    echo "$BRANCH_NAME [FAILURE] (patch reproduction timeout)" >> $DOCKER_DEST
-    exit 2
-elif [ "$status" -ne 0 ]; then
-    >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC (status = $status)"
-    echo "$BRANCH_NAME [FAILURE] (patch reproduction - status = $status)" >> $DOCKER_DEST
-    exit 2
+    status=$?
+    if [ "$status" -eq 124 ]; then
+        >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC"
+        echo "$BRANCH_NAME [FAILURE] (patch reproduction timeout)" >> $DOCKER_DEST
+        exit 2
+    elif [ "$status" -ne 0 ]; then
+        >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC (status = $status)"
+        echo "$BRANCH_NAME [FAILURE] (patch reproduction - status = $status)" >> $DOCKER_DEST
+        exit 2
+    fi
 fi
 
 echo -e "$GREEN Branch $BRANCH_NAME OK $NC"

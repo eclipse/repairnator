@@ -8,8 +8,5 @@ fi
 cd $HOME_REPAIR/github/librepair
 git pull
 
-cd jtravis
-mvn clean install -DskipTests=true
-
-cd ../repairnator
+cd repairnator
 mvn clean install -DskipTests=true

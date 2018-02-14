@@ -30,6 +30,7 @@ export NOTIFY_ENDPROCESS=0 # If set to 1, the end of dockerpool and scan will se
 export CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers
 
 export CHECK_BRANCH_REPOSITORY= # Repository to use for check branches script
+export HUMAN_PATCH=0 # Test the human patch for check branches ?
 
 ##### CONFIGURATION FOR REALTIME SCANNER ####
 

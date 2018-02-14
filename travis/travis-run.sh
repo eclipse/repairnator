@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-cd jtravis
-mvn clean install
-
-if [[ $? != 0 ]]
-then
-    echo "Error while installing jTravis"
-    exit 1
-fi
-
-cd ..
-
 git config --global user.name "Luc Esape"
 git config --global user.email "luc.esape@gmail.com"
 

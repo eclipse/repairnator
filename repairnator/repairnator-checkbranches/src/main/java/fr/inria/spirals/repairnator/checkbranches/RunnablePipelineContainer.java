@@ -27,15 +27,17 @@ public class RunnablePipelineContainer implements Runnable {
     private RepairnatorConfig repairnatorConfig;
     private boolean skipDelete;
     private String repository;
+    private boolean humanPatch;
 
 
-    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output, boolean skipDelete) {
+    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output, boolean skipDelete, boolean humanPatch) {
         this.imageId = imageId;
         this.branchName = branchName;
         this.output = output;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.skipDelete = skipDelete;
         this.repository = repository;
+        this.humanPatch = humanPatch;
     }
 
     @Override
@@ -47,9 +49,16 @@ public class RunnablePipelineContainer implements Runnable {
 
             String containerName = "checkbranch_"+ branchName;
 
+            String humanPatchStr = "";
+
+            if (humanPatch) {
+                humanPatchStr = "--human-patch";
+            }
+
             String[] envValues = new String[] {
                 "BRANCH_NAME="+this.branchName,
-                "REPOSITORY="+this.repository
+                "REPOSITORY="+this.repository,
+                "HUMAN_PATCH="+humanPatchStr
             };
 
             Map<String,String> labels = new HashMap<>();
