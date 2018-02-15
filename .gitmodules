@@ -1,0 +1,3 @@
+[submodule "bears-usage"]
+	path = bears-usage
+	url = https://github.com/fermadeiral/bears-usage.git
