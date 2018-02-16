@@ -4,6 +4,36 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
   var total = 0;
   data.forEach(element => {total += element.counted});
 
+  var success = "Successful Bug Reproduction";
+  var withoutFailure = "Test without failure";
+  var errorTesting = "Error when testing";
+  var errorCompiling = "Error when compiling";
+  var errorCheckout = "Error when checking out";
+  var errorCloning = "Error when cloning";
+
+  var statusMap = {
+    "PATCHED": success,
+    "test failure": success,
+    "test errors": success,
+    "NOTBUILDABLE": errorCompiling,
+    "SOURCEDIRNOTCOMPUTED": errorCompiling,
+    "NOTCLONABLE": errorCloning,
+    "NOTFAILING": withoutFailure,
+    "NOTTESTABLE": errorTesting,
+    "TESTABLE": errorTesting,
+    "BUILDNOTCHECKEDOUT": errorCheckout
+  };
+
+  var dataNewName = data.map(function (d) {
+    return {
+      '_id': statusMap[d._id],
+      'counted': d.counted
+    }
+  });
+
+  var map = dataNewName.reduce((acc, item) => { if (acc != undefined && acc.get(item._id) != undefined) { acc.set(item._id, item.counted + acc.get(item._id)); } else {acc.set(item._id, 0); } }, new Map());
+
+  console.log(map);
   $('#charts').append(htmlElement);
   Highcharts.chart({
     chart: {
@@ -35,7 +65,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
     series: [{
       name: 'Statuses',
       colorByPoint: true,
-      data: data.map(function (d) {
+      data: dataNewName.map(function (d) {
         return {
           name: d._id,
           y: d.counted

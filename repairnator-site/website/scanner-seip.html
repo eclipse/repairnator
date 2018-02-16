@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>All builds piechart</title>
+
+    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+    $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (data) {
+      var htmlElement = $('#charts');
+
+      var endOfDecember = moment('01/01/2018','DD/MM/YYYY');
+      data = data.filter(function (value) {
+        return (moment(value.dateLimit).isBefore(endOfDecember));
+      });
+      var currentWeek = moment().isoWeek();
+      var currentYear = moment().year();
+      var currentWeekYear = currentWeek+1000*currentYear;
+
+      var reducedData = data.reduce(function (accumulator, currentValue) {
+        var currentValueWeek = moment(currentValue.dateLimit).isoWeek();
+        var currentValueYear = moment(currentValue.dateLimit).year();
+        var currentValueWeekYear = currentValueWeek+1000*currentValueYear;
+
+        if (moment(currentValue.dateLimit).months() == 7 || moment(currentValue.dateLimit).months() == 8) {
+          if (currentValue.hostname == 'spirals-repairnator') {
+            return (accumulator.length == 0) ? [] : accumulator;
+          }
+        }
+
+        if (accumulator.length == 0) {
+          if (currentValueWeekYear === currentWeekYear) {
+            return [];
+          } else {
+            currentValue.dateLimit = moment().year(currentValueYear).isoWeek(currentValueWeek).toISOString();
+            return [ currentValue ];
+          }
+        } else {
+          var previousValue = accumulator[accumulator.length - 1];
+          var previousValueWeek = moment(previousValue.dateLimit).isoWeek();
+          var previousValueYear = moment(previousValue.dateLimit).year();
+          var previousValueWeekYear = previousValueWeek+1000*previousValueYear;
+
+          if (currentValueWeekYear === currentWeekYear) {
+            return accumulator;
+          }
+          if (previousValueWeekYear === currentValueWeekYear) {
+            for (var attr in previousValue) {
+              if (attr.indexOf('total') != -1 && attr.indexOf('totalRepoNumber') == -1) {
+                previousValue[attr] += currentValue[attr];
+              }
+            }
+          } else {
+            currentValue.dateLimit = moment().year(currentValueYear).isoWeek(currentValueWeek).toISOString();
+            accumulator.push(currentValue);
+          }
+
+          return accumulator;
+        }
+      }, []);
+    });
+    </script>
+  </head>
+  <body>
+    <div id="charts"></div>
+  </body>
+</html>
