@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>All builds piechart</title>
+
+    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+    $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+      var htmlElement = $('#charts');
+
+      var total = 0;
+      data.forEach(element => {total += element.counted});
+      Highcharts.chart({
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie',
+          renderTo: htmlElement[0]
+        },
+        title: {
+          text: 'Build statuses (all times - '+total+' builds)'
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+              style: {
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+              }
+            }
+          }
+        },
+        series: [{
+          name: 'Statuses',
+          colorByPoint: true,
+          data: data.map(function (d) {
+            return {
+              name: d._id,
+              y: d.counted
+            }
+          })
+        }]
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <div id="charts"></div>
+  </body>
+</html>
