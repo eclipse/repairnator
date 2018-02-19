@@ -40,6 +40,41 @@ var simplifyStatuses = function (dataArray) {
   return finalArray;
 };
 
+var filterPatchedAndTestReproduced = function (dataArray) {
+  var successReproduction = 'Bug reproduction without patch';
+  var patchCreated = 'Bug reproduction and patch created';
+
+  var statusMap = {
+    'PATCHED': patchCreated,
+    'test failure': successReproduction,
+    'test errors': successReproduction
+  };
+
+  var dataNewName = dataArray.reduce(function (acc, elem) {
+    var status = statusMap[elem._id];
+    if (status !== undefined) {
+      if (acc[status] === undefined) {
+        acc[status] = elem.counted;
+      } else {
+        acc[status] += elem.counted;
+      }
+      return acc;
+    } else {
+      return acc;
+    }
+  }, {});
+
+  var finalArray = Object.keys(dataNewName).reduce(function (acc, id) {
+    acc.push({
+      'name': id,
+      'y': dataNewName[id]
+    });
+    return acc;
+  }, []);
+
+  return finalArray;
+};
+
 $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
   var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
 
@@ -70,7 +105,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
         cursor: 'pointer',
         dataLabels: {
           enabled: true,
-          format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+          format: '<b>{point.name}</b>: {point.percentage:.1f}% ({point.y})',
           style: {
             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
           }
@@ -81,6 +116,50 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
       name: 'Statuses',
       colorByPoint: true,
       data: simplifyStatuses(data)
+    }]
+  });
+});
+
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+  var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
+
+  var total = 0;
+  data.forEach(element => {total += element.counted});
+
+  // return acc.set(item._id, item.counted + acc.get(item._id));
+
+  $('#charts').append(htmlElement);
+  Highcharts.chart({
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie',
+      renderTo: htmlElement[0]
+    },
+    title: {
+      text: 'Successful Reproduction Builds (all times - '+total+' builds)'
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.percentage:.1f}% ({point.y})',
+          style: {
+            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+          }
+        }
+      }
+    },
+    series: [{
+      name: 'Statuses',
+      colorByPoint: true,
+      data: filterPatchedAndTestReproduced(data)
     }]
   });
 });

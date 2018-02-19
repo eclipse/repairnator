@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>All builds piechart</title>
+
+    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+    var filterPatchedAndTestReproduced = function (dataArray) {
+      var successReproduction = 'Bug reproduction without patch';
+      var patchCreated = 'Bug reproduction and patch created';
+
+      var statusMap = {
+        'PATCHED': patchCreated,
+        'test failure': successReproduction,
+        'test errors': successReproduction
+      };
+
+      var dataNewName = dataArray.reduce(function (acc, elem) {
+        var status = statusMap[elem._id];
+        if (status !== undefined) {
+          if (acc[status] === undefined) {
+            acc[status] = elem.counted;
+          } else {
+            acc[status] += elem.counted;
+          }
+          return acc;
+        } else {
+          return acc;
+        }
+      }, {});
+
+      var finalArray = Object.keys(dataNewName).reduce(function (acc, id) {
+        acc.push({
+          'name': id,
+          'y': dataNewName[id]
+        });
+        return acc;
+      }, []);
+
+      return finalArray;
+    };
+    $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+      var htmlElement = $('#charts');
+
+      var total = 0;
+      data.forEach(element => {total += element.counted});
+      Highcharts.chart({
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'bar',
+          renderTo: htmlElement[0]
+        },
+        colors: ["#7cb5ec", "#828282", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"],
+        title: {
+          text: 'Build statuses (all times - '+total+' builds)'
+        },
+        xAxis: {
+          type: 'category'
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
+        },
+        plotOptions: {
+          bar: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '<b>{point.name}</b>: {point.y}',
+              style: {
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+              }
+            }
+          }
+        },
+        series: [{
+          name: 'Statuses',
+          colorByPoint: true,
+          data: filterPatchedAndTestReproduced(data)
+        }],
+        legend: {
+          enabled: false
+        }
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <div id="charts"></div>
+  </body>
+</html>
