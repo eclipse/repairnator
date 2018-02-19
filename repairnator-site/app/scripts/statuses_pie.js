@@ -1,22 +1,22 @@
 var simplifyStatuses = function (dataArray) {
-  var success = "Successful Bug Reproduction";
-  var withoutFailure = "Test without failure";
-  var errorTesting = "Error when testing";
-  var errorCompiling = "Error when compiling";
-  var errorCheckout = "Error when checking out";
-  var errorCloning = "Error when cloning";
+  var success = 'Successful Bug Reproduction';
+  var withoutFailure = 'Test without failure';
+  var errorTesting = 'Error when testing';
+  var errorCompiling = 'Error when compiling';
+  var errorCheckout = 'Error when checking out';
+  var errorCloning = 'Error when cloning';
 
   var statusMap = {
-    "PATCHED": success,
-    "test failure": success,
-    "test errors": success,
-    "NOTBUILDABLE": errorCompiling,
-    "SOURCEDIRNOTCOMPUTED": errorCompiling,
-    "NOTCLONABLE": errorCloning,
-    "NOTFAILING": withoutFailure,
-    "NOTTESTABLE": errorTesting,
-    "TESTABLE": errorTesting,
-    "BUILDNOTCHECKEDOUT": errorCheckout
+    'PATCHED': success,
+    'test failure': success,
+    'test errors': success,
+    'NOTBUILDABLE': errorCompiling,
+    'SOURCEDIRNOTCOMPUTED': errorCompiling,
+    'NOTCLONABLE': errorCloning,
+    'NOTFAILING': withoutFailure,
+    'NOTTESTABLE': errorTesting,
+    'TESTABLE': errorTesting,
+    'BUILDNOTCHECKEDOUT': errorCheckout
   };
 
   var dataNewName = dataArray.reduce(function (acc, elem) {
