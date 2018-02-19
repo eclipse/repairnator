@@ -1,9 +1,4 @@
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
-  var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
-
-  var total = 0;
-  data.forEach(element => {total += element.counted});
-
+var simplifyStatuses = function (dataArray) {
   var success = "Successful Bug Reproduction";
   var withoutFailure = "Test without failure";
   var errorTesting = "Error when testing";
@@ -24,16 +19,36 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
     "BUILDNOTCHECKEDOUT": errorCheckout
   };
 
-  var dataNewName = data.map(function (d) {
-    return {
-      '_id': statusMap[d._id],
-      'counted': d.counted
+  var dataNewName = dataArray.reduce(function (acc, elem) {
+    var status = statusMap[elem._id];
+    if (acc[status] === undefined) {
+      acc[status] = elem.counted;
+    } else {
+      acc[status] += elem.counted;
     }
-  });
+    return acc;
+  }, {});
 
-  var map = dataNewName.reduce((acc, item) => { if (acc != undefined && acc.get(item._id) != undefined) { acc.set(item._id, item.counted + acc.get(item._id)); } else {acc.set(item._id, 0); } }, new Map());
+  var finalArray = Object.keys(dataNewName).reduce(function (acc, id) {
+    acc.push({
+      'name': id,
+      'y': dataNewName[id]
+    });
+    return acc;
+  }, []);
 
-  console.log(map);
+  return finalArray;
+};
+
+$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+  var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
+
+  var total = 0;
+  data.forEach(element => {total += element.counted});
+
+
+  // return acc.set(item._id, item.counted + acc.get(item._id));
+
   $('#charts').append(htmlElement);
   Highcharts.chart({
     chart: {
@@ -65,12 +80,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
     series: [{
       name: 'Statuses',
       colorByPoint: true,
-      data: dataNewName.map(function (d) {
-        return {
-          name: d._id,
-          y: d.counted
-        }
-      })
+      data: simplifyStatuses(data)
     }]
   });
 });
@@ -112,12 +122,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
     series: [{
       name: 'Statuses',
       colorByPoint: true,
-      data: data.map(function (d) {
-        return {
-          name: d._id,
-          y: d.counted
-        }
-      })
+      data: simplifyStatuses(data)
     }]
   });
 });
@@ -159,12 +164,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
     series: [{
       name: 'Statuses',
       colorByPoint: true,
-      data: data.map(function (d) {
-        return {
-          name: d._id,
-          y: d.counted
-        }
-      })
+      data: simplifyStatuses(data)
     }]
   });
 });
