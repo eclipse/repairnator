@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Use to create args in the command line for optionnal arguments
+# Use to create args in the command line for optional arguments
 function ca {
   if [ -z "$2" ];
   then
@@ -34,6 +34,13 @@ source $SCRIPT_DIR/set_env_variable.sh
 if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1
     SKIP_LAUNCH_REPAIRNATOR=0
+else
+    if [ -f "$REPAIR_PROJECT_LIST_PATH" ]; then
+        echo "Project list that will be scanned: $REPAIR_PROJECT_LIST_PATH"
+    else
+        echo "Project list not found (path $REPAIR_PROJECT_LIST_PATH)"
+        exit -1
+    fi
 fi
 
 mkdir $REPAIR_OUTPUT_PATH
@@ -50,6 +57,7 @@ echo "Create log directory: $LOG_DIR"
 mkdir $LOG_DIR
 
 echo "Start building a new version of repairnator"
+chmod +x $SCRIPT_DIR/build_repairnator.sh
 $SCRIPT_DIR/build_repairnator.sh
 
 if [[ $? != 0 ]]

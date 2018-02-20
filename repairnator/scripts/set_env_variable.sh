@@ -6,13 +6,13 @@ export RUN_ID_SUFFIX= # A suffix to add to the run id.
 export M2_HOME= # Path to maven home directory
 export GITHUB_LOGIN= # Github Login to use github API
 export GITHUB_OAUTH= # Github personal token (https://github.com/settings/tokens)
-export HOME_REPAIR= # The home directory for the following paths
+export HOME_REPAIR= # The path for the created `librepair` directory
 export NB_THREADS=4 # Number of concurrent docker container to run
-export ROOT_LOG_DIR=$HOME_REPAIR/logs/
+export ROOT_LOG_DIR=$HOME_REPAIR/logs
 export LOG_DIR=$ROOT_LOG_DIR/`date "+%Y-%m-%d_%H%M"` # Log directory: it will contain several logs and serialized files
 export DOCKER_LOG_DIR=$LOG_DIR # Log directory for docker containers (most of the time, it should be the same as LOG_DIR, but sometimes if you use distant host, e.g. g5k you need to specify another value)
 export REPAIR_PROJECT_LIST_PATH=$HOME_REPAIR/scripts/project_list.txt # The list of project slug to scan
-export REPAIR_OUTPUT_PATH=/var/www/html/repairnator/`date "+%Y-%m-%d_%H%M"` # Where to put output of the scanner
+export REPAIR_OUTPUT_PATH=directory/`date "+%Y-%m-%d_%H%M"` # Where to put output of the scanner
 export SCANNER_NB_HOURS=4 # Limit of hours to inspect to get last builds
 export SCANNER_MODE=repair # Available modes are repair or bears
 export DAY_TIMEOUT=1 # Global timeout to stop the docker execution
@@ -23,9 +23,9 @@ export PUSH_URL= # Github repository URL to put data (data are pushed in branche
 export SMTP_SERVER= # Smtp server to notify by email
 export NOTIFY_TO= # email adresses separated by comma
 export DOCKER_TAG=surli/repairnator:latest # Tag of the docker image to use for pipeline
-export LOOK_FROM_DATE= # Use with the following one, when wanting to scan a period of time
+export LOOK_FROM_DATE= # Use with the following one, when wanting to scan a period of time (input format dd/mm/yyyy)
 export LOOK_TO_DATE=
-export SKIP_LAUNCH_REPAIRNATOR=0 # Skip the launch of docker pool: it will only launch the scanner. Note that if a list of build is passed as parameter, this option is overriden.
+export SKIP_LAUNCH_REPAIRNATOR=0 # If set to 1, skip the launch of docker pool: it will only launch the scanner. Note that if a list of build is passed as parameter, this option is overriden.
 export NOTIFY_ENDPROCESS=0 # If set to 1, the end of dockerpool and scan will send a notification using smtp and notify_to information
 export CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers
 
@@ -41,7 +41,7 @@ export WHITELIST_PATH=
 export BLACKLIST_PATH=
 
 export DOCKER_CHECKBRANCHES_TAG=surli/checkbranches:latest
-export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/librepair/repairnator # Path of the local cloned repository for repairnator
+export REPAIRNATOR_GH_REPO_PATH=$HOME_REPAIR/github/repairnator # Path of the local cloned repository for repairnator
 export GOOGLE_SECRET_PATH=$HOME_REPAIR/client_secret.json # Path of the google secret if spreadsheet is used
 
 export REPAIRNATOR_RUN_DIR=$HOME_REPAIR/bin/`date "+%Y-%m-%d_%H%M"` # Where to put executables used (will be created automatically and deleted)

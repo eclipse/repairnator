@@ -28,39 +28,28 @@ Usage of each parts are detailed in their own Readme file.
 On a linux machine, be sure to install Java 8, Maven 3.3.9, Docker and uuidgen tool (package uuid-runtime on Ubuntu).
 
 Create a directory dedicated to repairnator called `librepair` and create in it the following folders:
+  - github
   - bin
   - logs
-  - scripts
-  - github
   
-Under github directory, clone this repository and then copy and paste `travis/travis-install.sh` bash file.
-Launch it with the following command:
+Under `github` directory, clone this repository.
 
-```
-chmod +x travis-install.sh
-./travis-install.sh
-```
+Then enter in the directory `librepair/github/repairnator/scripts` and:
 
-Then go back to `librepair` directory and launch the following commands:
-```
-chmod +x ./scripts/*.sh
-./scripts/install_git_rebase_last.sh
-```
+  - create a file containing list of GitHub project names (one name per line) in file `project_list.txt`
 
-Then create a file containing list of GitHub project names (one name per line) in file `scripts/project_list.txt`.
-
-Then edit file `scripts/set_env_variable.sh` to put right information.
+  - edit file `set_env_variable.sh` to put right information - note that the `HOME_REPAIR` must be set with the path for the `librepair` directory  
 
 And finally you should be able to launch repairnator executing the following command:
 
 ```
-./scripts/launch_repairnator.sh
+./launch_repairnator.sh
 ```
 
 You can also launch it with a list of build ids passed as argument, to skip the scanning process: 
 
 ```
-./scripts/launch_repairnator.sh /path/to/file/with/build/ids
+./launch_repairnator.sh /path/to/file/with/build/ids
 ```
 
 

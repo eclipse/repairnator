@@ -5,7 +5,7 @@ if [ -z "$HOME_REPAIR" ]; then
     exit -1
 fi
 
-cd $HOME_REPAIR/github/librepair
+cd $HOME_REPAIR/github
 git pull
 
 cd repairnator
