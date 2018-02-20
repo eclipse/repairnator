@@ -123,6 +123,48 @@ E.g: `inspectors/343674821` returns a complete inspector object like this:
 }
 ```
 
+### /inspectors/patches
+
+Return all inspector data with a `PATCHED` status. 
+
+### /inspectors/failuresByProject
+
+Return the number of detected failing builds by project and the associated pull request number.
+
+It returns an object of the form:
+
+```json
+[
+{
+  "_id": "prestodb/presto",
+  "count": 1144,
+  "nbPR": 995
+}, {
+  "_id": "druid-io/druid",
+  "count": 663,
+  "nbPR": 518
+}
+]
+```
+
+### /inspectors/reproducedByProject
+
+Return the number of reproduced failing builds by project.
+
+It returns an object of the form:
+
+```json
+[
+{
+  "_id": "apache/flink",
+  "count": 406
+}, {
+  "_id": "druid-io/druid",
+  "count": 402
+}
+]
+```
+
 ### /scanners/
 
 This endpoint returns the whole data from `scanner` collection.

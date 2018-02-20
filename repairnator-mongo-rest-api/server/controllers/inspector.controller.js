@@ -71,4 +71,22 @@ function reproducedBuilds(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll };
+function getPatches(req, res, next) {
+  Inspector.getPatches()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+function getNbFailuresByProject(req, res, next) {
+  Inspector.nbFailuresByProject()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+function getNbReproducedByProject(req, res, next) {
+  Inspector.nbReproducedByProject()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll, getPatches, getNbFailuresByProject, getNbReproducedByProject };

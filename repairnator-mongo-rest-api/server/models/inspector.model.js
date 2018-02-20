@@ -97,8 +97,8 @@ InspectorSchema.statics = {
             $gte: new Date(gtDateIso),
             $lt: new Date(ltDateIso)
           },
-          typeOfFailures: {
-            $ne: null
+          status: {
+            $in: ['PATCHED', 'test errors', 'test failure']
           }
         }
       },
@@ -164,6 +164,63 @@ InspectorSchema.statics = {
           count: {
             $sum: 1
           }
+        }
+      }
+    ]).exec();
+  },
+
+  getPatches() {
+    return this.find({
+      status: 'PATCHED'
+    }).sort({
+      buildReproductionDate: -1
+    }).exec();
+  },
+
+  nbFailuresByProject() {
+    return this.aggregate([
+      {
+        $addFields: {
+          isPR: { $cond: { if: { $gt: ['$prNumber', 0] }, then: 1, else: 0 } }
+        }
+      },
+      {
+        $group: {
+          _id: '$repositoryName',
+          count: { $sum: 1 },
+          nbPR: { $sum: '$isPR' }
+        }
+      },
+      {
+        $sort: {
+          count: -1
+        }
+      }
+    ]).exec();
+  },
+
+  nbReproducedByProject() {
+    return this.aggregate([
+      {
+        $match: {
+          status: {
+            $in: ['PATCHED', 'test errors', 'test failure']
+          }
+        }
+      },
+
+      // Stage 2
+      {
+        $group: {
+          _id: '$repositoryName',
+          count: { $sum: 1 }
+        }
+      },
+
+      // Stage 3
+      {
+        $sort: {
+          count: -1
         }
       }
     ]).exec();

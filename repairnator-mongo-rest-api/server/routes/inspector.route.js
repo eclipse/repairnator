@@ -34,10 +34,20 @@ router.param('nbDays', (req, res, next, nbDays) => {
 router.route('/uniqueBuilds')
   .get(inspectorCtrl.nbUniqueBuilds);
 
+router.route('/patches')
+  .get(inspectorCtrl.getPatches);
+
+router.route('/failuresByProject')
+  .get(inspectorCtrl.getNbFailuresByProject);
+
+router.route('/reproducedByProject')
+  .get(inspectorCtrl.getNbReproducedByProject);
+
+
+/** This should remain at the end of the file */
 router.route('/:inspectorId')
   .get(inspectorCtrl.get);
 
-/** Load user when API with userId route parameter is hit */
 router.param('inspectorId', inspectorCtrl.load);
 
 export default router;

@@ -100,6 +100,7 @@ ScannerSchema.statics = {
       }
     }).sort({ dateLimit: 1 }).exec();
   }
+
 };
 
 mongoose.set('debug', true);
