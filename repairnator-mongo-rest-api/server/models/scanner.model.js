@@ -52,9 +52,9 @@ ScannerSchema.statics = {
   get(id) {
     return this.findById(id)
       .exec()
-      .then((inspector) => {
-        if (inspector) {
-          return inspector;
+      .then((scanner) => {
+        if (scanner) {
+          return scanner;
         }
         const err = new APIError('No such scanner data exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);

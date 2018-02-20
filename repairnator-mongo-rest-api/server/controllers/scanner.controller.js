@@ -5,8 +5,8 @@ import Scanner from '../models/scanner.model';
  */
 function load(req, res, next, id) {
   Scanner.get(id)
-    .then((user) => {
-      req.user = user; // eslint-disable-line no-param-reassign
+    .then((scanner) => {
+      req.scanner = scanner; // eslint-disable-line no-param-reassign
       return next();
     })
     .catch(e => next(e));

@@ -9,7 +9,7 @@ import APIError from '../helpers/APIError';
  * Inspector Schema
  */
 const InspectorSchema = new mongoose.Schema({
-  buildId: String,
+  buildId: Number,
   repositoryName: String,
   status: String,
   prNumber: String,
@@ -46,7 +46,9 @@ InspectorSchema.statics = {
    * @returns {Promise<User, APIError>}
    */
   get(id) {
-    return this.findById(id)
+    return this.findOne({
+      buildId: id
+    })
       .exec()
       .then((inspector) => {
         if (inspector) {

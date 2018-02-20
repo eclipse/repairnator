@@ -5,19 +5,15 @@ import Inspector from '../models/inspector.model';
  */
 function load(req, res, next, id) {
   Inspector.get(id)
-    .then((user) => {
-      req.user = user; // eslint-disable-line no-param-reassign
+    .then((inspector) => {
+      req.inspector = inspector; // eslint-disable-line no-param-reassign
       return next();
     })
     .catch(e => next(e));
 }
 
-/**
- * Get user
- * @returns {User}
- */
 function get(req, res) {
-  return res.json(req.user);
+  return res.json(req.inspector);
 }
 
 /**

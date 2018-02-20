@@ -6,7 +6,6 @@ import inspectorCtrl from '../controllers/inspector.controller';
 const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/')
-  /** GET /api/users - Get list of users */
   .get(inspectorCtrl.list);
 
 router.route('/count')
@@ -36,7 +35,6 @@ router.route('/uniqueBuilds')
   .get(inspectorCtrl.nbUniqueBuilds);
 
 router.route('/:inspectorId')
-  /** GET /api/users/:userId - Get user */
   .get(inspectorCtrl.get);
 
 /** Load user when API with userId route parameter is hit */
