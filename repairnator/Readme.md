@@ -1,17 +1,20 @@
-# RepairNator
+# Repairnator
 
-## What it is?
+Repairnator is a software development bot that automatically repairs build failures on Travis CI.
+It scans failing Travis builds, tries to locally reproduce the failing build and tries to repair it with a program repair tool (eg Nopol or Astor). 
 
-The first goal of RepairNator is to scan failing Travis builds, try to reproduce the failing build and to repair it. 
-But it can also be used to scan builds looking for test fixes, in order to compute automatically metrics about those fixes. 
+See [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018.
 
-So the features of RepairNator are the following:
-  - it scans builds from Travis API, creating list of build ids respecting some given contracts, and compute metrics on them
-  - it tries to reproduce Maven Java builds by compiling them and launching test on them, it also aggregate data on them
-  - it can push on a specific repository the data of reproduced builds
-  - it automatically reproduce pull requests, and it's capable of searching for deleted commits using GitHub API
-  - it push all gathered metrics on a Google Spreadsheets, but it can also produce JSON or CSV data files
-  - it uses docker to run the builds on isolation
+```
+@inproceedings{repairnator,
+  TITLE = {{How to Design a Program Repair Bot? Insights from the Repairnator Project}},
+  AUTHOR = {Urli, Simon and Yu, Zhongxing and Seinturier, Lionel and Monperrus, Martin},
+  BOOKTITLE = {{ICSE 2018 - 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP)}},
+  PAGES = {1-10},
+  YEAR = {2018},
+  DOI = {10.1145/nnnnnnn.nnnnnnn},
+}
+```
 
 ## How does it work?
 
