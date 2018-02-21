@@ -1,4 +1,4 @@
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (data) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (data) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 

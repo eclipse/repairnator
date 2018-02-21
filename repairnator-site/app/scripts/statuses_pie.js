@@ -120,7 +120,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
   });
 });
 
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
   var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
 
   var total = 0;
@@ -206,7 +206,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/status
   });
 });
 
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats/1', function (data) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats/1', function (data) {
 
   var total = 0;
   data.forEach(element => {total += element.counted});

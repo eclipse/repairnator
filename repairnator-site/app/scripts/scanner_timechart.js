@@ -1,4 +1,4 @@
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksData/2', function (dataScanner) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksData/2', function (dataScanner) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
@@ -108,7 +108,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/weeksDat
   });
 });
 
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (dataScanner) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (dataScanner) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
@@ -178,7 +178,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
     }
   }, []);
 
-  $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/reproducedBuilds/', function (dataInspector) {
+  $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/reproducedBuilds/', function (dataInspector) {
 
     var reducedDataInspector = dataInspector.reduce(function (accumulator, currentValue) {
       var currentValueWeek = moment(currentValue._id, 'YYYY-MM-DD').isoWeek();
@@ -277,7 +277,7 @@ $.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', funct
   });
 });
 
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (data) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (data) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
