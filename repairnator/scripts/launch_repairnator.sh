@@ -72,6 +72,10 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
         args="$args --notifyEndProcess"
     fi
 
+    if [ "$SKIP_LAUNCH_REPAIRNATOR" -eq 1 ]; then
+        args="$args --scan-only"
+    fi
+
     echo "Supplementary args for scanner: $args"
     java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
 fi

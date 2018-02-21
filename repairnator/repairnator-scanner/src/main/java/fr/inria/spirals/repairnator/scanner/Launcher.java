@@ -163,7 +163,7 @@ public class Launcher {
         sw1 = new Switch("scanOnly");
         sw1.setLongFlag("scan-only");
         sw1.setDefault("false");
-        sw1.setHelp("Use it when the scanner is not used to launch the pipeline to gather more datas in spreadsheet.");
+        sw1.setHelp("Use it when the scanner is not used to launch the pipeline to gather more data.");
         this.jsap.registerParameter(sw1);
 
         sw1 = new Switch("skip-failing");
