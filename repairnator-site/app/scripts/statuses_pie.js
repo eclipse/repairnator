@@ -75,7 +75,7 @@ var filterPatchedAndTestReproduced = function (dataArray) {
   return finalArray;
 };
 
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
   var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
 
   var total = 0;
@@ -164,7 +164,7 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statu
   });
 });
 
-$.get('http://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats/14', function (data) {
+$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats/14', function (data) {
 
   var total = 0;
   data.forEach(element => {total += element.counted});
