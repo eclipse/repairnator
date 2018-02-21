@@ -25,18 +25,18 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
     }
 
     private List<Object> serializeAsList(BuildToBeInspected buildToBeInspected) {
-        Build build = buildToBeInspected.getPatchedBuild();
+        List<Object> dataCol = new ArrayList<Object>();
 
+        Build build = buildToBeInspected.getPatchedBuild();
         Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
-        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
 
-        List<Object> dataCol = new ArrayList<Object>();
+        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
 
         Date date = new Date();
         dataCol.add(build.getId() + "");
         dataCol.add(previousBuildId + "");
-        dataCol.add(buildToBeInspected.getStatus().toString());
+        dataCol.add(buildToBeInspected.getStatus().name());
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(Utils.formatCompleteDate(date));
         dataCol.add(Utils.formatOnlyDay(date));
@@ -53,12 +53,12 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
         JsonObject result = new JsonObject();
 
         Build build = buildToBeInspected.getPatchedBuild();
-
         Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
-        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
-        Date date = new Date();
 
+        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+
+        Date date = new Date();
         result.addProperty("buildId", build.getId());
         result.addProperty("previousBuildId", previousBuildId);
         result.addProperty("scannedStatus", buildToBeInspected.getStatus().name());
@@ -69,7 +69,7 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("travisBuildUrl", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         result.addProperty("travisPreviousBuildUrl", Utils.getTravisUrl(previousBuildId, build.getRepository().getSlug()));
-        result.addProperty("comitterEmail", committerEmail);
+        result.addProperty("committerEmail", committerEmail);
         result.addProperty("runId", buildToBeInspected.getRunId());
 
         return result;
