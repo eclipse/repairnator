@@ -5,19 +5,15 @@ import Inspector from '../models/inspector.model';
  */
 function load(req, res, next, id) {
   Inspector.get(id)
-    .then((user) => {
-      req.user = user; // eslint-disable-line no-param-reassign
+    .then((inspector) => {
+      req.inspector = inspector; // eslint-disable-line no-param-reassign
       return next();
     })
     .catch(e => next(e));
 }
 
-/**
- * Get user
- * @returns {User}
- */
 function get(req, res) {
-  return res.json(req.user);
+  return res.json(req.inspector);
 }
 
 /**
@@ -75,4 +71,22 @@ function reproducedBuilds(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll };
+function getPatches(req, res, next) {
+  Inspector.getPatches()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+function getNbFailuresByProject(req, res, next) {
+  Inspector.nbFailuresByProject()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+function getNbReproducedByProject(req, res, next) {
+  Inspector.nbReproducedByProject()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll, getPatches, getNbFailuresByProject, getNbReproducedByProject };

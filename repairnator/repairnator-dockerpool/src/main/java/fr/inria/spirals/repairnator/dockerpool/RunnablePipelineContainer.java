@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,23 +25,25 @@ import java.util.Map;
 public class RunnablePipelineContainer implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RunnablePipelineContainer.class);
+    private static final int DELAY_BEFORE_KILLING_DOCKER_IMAGE = 60 * 24; // in minutes
+    private Date limitDateBeforeKilling;
     private String imageId;
     private int buildId;
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
-    private TreatedBuildTracking googleSpreadSheetTreatedBuildTracking;
+    private TreatedBuildTracking treatedBuildTracking;
     private boolean skipDelete;
     private boolean createOutputDir;
     private AbstractPoolManager poolManager;
+    private String containerId;
 
-
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, String logDirectory, TreatedBuildTracking googleSpreadSheetTreatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
+    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.buildId = buildId;
         this.logDirectory = logDirectory;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
-        this.googleSpreadSheetTreatedBuildTracking = googleSpreadSheetTreatedBuildTracking;
+        this.treatedBuildTracking = treatedBuildTracking;
         this.skipDelete = skipDelete;
         this.createOutputDir = createOutputDir;
     }
@@ -49,12 +52,18 @@ public class RunnablePipelineContainer implements Runnable {
         return buildId;
     }
 
+    public Date getLimitDateBeforeKilling() {
+        return this.limitDateBeforeKilling;
+    }
+
     @Override
     public void run() {
+        this.limitDateBeforeKilling = new Date(new Date().toInstant().plus(DELAY_BEFORE_KILLING_DOCKER_IMAGE, ChronoUnit.MINUTES).toEpochMilli());
         String containerId = null;
         DockerClient docker = this.poolManager.getDockerClient();
         try {
             LOGGER.info("Start to build and run container for build id "+buildId);
+            LOGGER.info("At most this docker run will be killed at: "+this.limitDateBeforeKilling);
 
             String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
             String output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
@@ -90,8 +99,8 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("Create the container: "+containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
-            containerId = container.id();
-            googleSpreadSheetTreatedBuildTracking.setContainerId(containerId);
+            this.containerId = container.id();
+            treatedBuildTracking.setContainerId(containerId);
 
             LOGGER.info("Start the container: "+containerName);
             docker.startContainer(container.id());
@@ -108,7 +117,7 @@ public class RunnablePipelineContainer implements Runnable {
             serialize("TREATED");
         } catch (InterruptedException e) {
             LOGGER.error("Error while running the container for build id "+buildId, e);
-            killDockerContainer(docker, containerId);
+            killDockerContainer(docker, false);
         } catch (DockerException e) {
             LOGGER.error("Error while creating or running the container for build id "+buildId, e);
             serialize("ERROR");
@@ -116,20 +125,27 @@ public class RunnablePipelineContainer implements Runnable {
         this.poolManager.removeSubmittedRunnablePipelineContainer(this);
     }
 
-    private void killDockerContainer(DockerClient docker, String containerId) {
-        serialize("INTERRUPTED");
-        try {
-            docker.killContainer(containerId);
-            docker.removeContainer(containerId);
-        } catch (DockerException|InterruptedException e) {
-            LOGGER.error("Error while killing docker container "+containerId, e);
+    public void killDockerContainer(DockerClient docker, boolean remove) {
+        if (this.containerId == null) {
+            LOGGER.error("Error while trying to kill docker container: the container id is not available. Maybe the container is not started yet.");
+        } else {
+            LOGGER.info("Killing the docker container with id "+containerId+". Forced killing date: "+this.limitDateBeforeKilling);
+            try {
+                docker.killContainer(containerId);
+                if (remove) {
+                    docker.removeContainer(containerId);
+                }
+                serialize("INTERRUPTED");
+            } catch (DockerException|InterruptedException e) {
+                LOGGER.error("Error while killing docker container "+containerId, e);
+            }
         }
 
     }
 
     public void serialize(String msg) {
-        googleSpreadSheetTreatedBuildTracking.setStatus(msg);
-        googleSpreadSheetTreatedBuildTracking.serialize();
+        treatedBuildTracking.setStatus(msg);
+        treatedBuildTracking.serialize();
     }
 
 }
