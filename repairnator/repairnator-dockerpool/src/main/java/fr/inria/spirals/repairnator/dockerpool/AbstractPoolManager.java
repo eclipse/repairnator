@@ -7,13 +7,18 @@ import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AbstractPoolManager {
+    public static final Logger LOGGER = LoggerFactory.getLogger(AbstractPoolManager.class);
     private static int counter = 0;
     private static final String DEFAULT_RUN_ID = "RUN-"+(counter++);
     private static final String DEFAULT_OUTPUT_DIR = "/var/log/repairnator";
@@ -89,6 +94,7 @@ public class AbstractPoolManager {
     }
 
     public RunnablePipelineContainer submitBuild(String imageId, int buildId) {
+        this.cleanUpOlderContainers();
         TreatedBuildTracking treatedBuildTracking = null;
         try {
             treatedBuildTracking = new TreatedBuildTracking(this.engines, this.runId, buildId);
@@ -99,5 +105,20 @@ public class AbstractPoolManager {
         this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
 
         return runnablePipelineContainer;
+    }
+
+    public void cleanUpOlderContainers() {
+        LOGGER.info("Start cleaning docker containers...");
+        Instant now = new Date().toInstant();
+
+        int nbKilled = 0;
+        for (RunnablePipelineContainer runnablePipelineContainer : this.submittedRunnablePipelineContainers) {
+            if (runnablePipelineContainer.getLimitDateBeforeKilling().toInstant().isBefore(now)) {
+                runnablePipelineContainer.killDockerContainer(this.docker, false);
+                nbKilled++;
+            }
+        }
+
+        LOGGER.info("Number of killed docker containers: "+nbKilled);
     }
 }
