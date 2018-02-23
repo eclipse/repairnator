@@ -135,6 +135,7 @@ public class RunnablePipelineContainer implements Runnable {
                 if (remove) {
                     docker.removeContainer(containerId);
                 }
+                this.poolManager.removeSubmittedRunnablePipelineContainer(this);
                 serialize("INTERRUPTED");
             } catch (DockerException|InterruptedException e) {
                 LOGGER.error("Error while killing docker container "+containerId, e);
