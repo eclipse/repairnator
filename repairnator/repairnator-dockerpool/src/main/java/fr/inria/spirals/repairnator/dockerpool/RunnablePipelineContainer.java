@@ -59,7 +59,6 @@ public class RunnablePipelineContainer implements Runnable {
     @Override
     public void run() {
         this.limitDateBeforeKilling = new Date(new Date().toInstant().plus(DELAY_BEFORE_KILLING_DOCKER_IMAGE, ChronoUnit.MINUTES).toEpochMilli());
-        String containerId = null;
         DockerClient docker = this.poolManager.getDockerClient();
         try {
             LOGGER.info("Start to build and run container for build id "+buildId);
@@ -100,18 +99,18 @@ public class RunnablePipelineContainer implements Runnable {
             ContainerCreation container = docker.createContainer(containerConfig);
 
             this.containerId = container.id();
-            treatedBuildTracking.setContainerId(containerId);
+            treatedBuildTracking.setContainerId(this.containerId);
 
             LOGGER.info("Start the container: "+containerName);
             docker.startContainer(container.id());
 
-            ContainerExit exitStatus = docker.waitContainer(containerId);
+            ContainerExit exitStatus = docker.waitContainer(this.containerId);
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
             if (!skipDelete && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
-                docker.removeContainer(containerId);
+                docker.removeContainer(this.containerId);
             }
 
             serialize("TREATED");
