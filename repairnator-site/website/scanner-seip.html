@@ -62,6 +62,82 @@
           return accumulator;
         }
       }, []);
+
+      Highcharts.chart({
+        colors: ["#7cb5ec", "#828282", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"],
+        chart: {
+          type: 'spline',
+          renderTo: htmlElement[0],
+          width: 1000,
+          height: 768
+        },
+        title: {
+          text: ''
+        },
+        xAxis: {
+          type: 'datetime',
+          dateTimeLabelFormats: { // don't display the dummy year
+            week:'%e %b %Y',
+          },
+          title: {
+            text: 'Date'
+          },
+          tickInterval: 30*24*3600*1000
+        },
+        yAxis: {
+          tickInterval: 250,
+          title: {
+            text: 'Number of builds'
+          },
+          min: 0,
+          max: 15000
+        },
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x:%A, %b %e}: {point.y} builds'
+        },
+
+        plotOptions: {
+          spline: {
+            marker: {
+              enabled: true
+            },
+            dataLabels: {
+              enabled: false
+            },
+          },
+        },
+
+        series: [
+          {
+            name: 'Collected builds to be analyzed',
+            data: reducedData.map( function (d) {
+              return [
+                moment(d.dateLimit).hour(0).minute(0).second(0).valueOf(),
+                d.totalScannedBuilds
+              ]
+            })
+          },
+          {
+            name: 'Builds identified as Java with CI failure',
+            data: reducedData.map( function (d) {
+              return [
+                moment(d.dateLimit).hour(0).minute(0).second(0).valueOf(),
+                d.totalJavaFailingBuilds
+              ]
+            })
+          },
+          {
+            name: 'Builds with JUnit test failure (called “interesting builds”). ',
+            data: reducedData.map( function (d) {
+              return [
+                moment(d.dateLimit).hour(0).minute(0).second(0).valueOf(),
+                d.totalJavaFailingBuildsWithFailingTests
+              ]
+            })
+          }
+        ]
+      });
     });
     </script>
   </head>
