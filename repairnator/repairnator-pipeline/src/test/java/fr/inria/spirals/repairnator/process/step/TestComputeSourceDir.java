@@ -344,8 +344,8 @@ public class TestComputeSourceDir {
         cloneStep.execute();
 
         assertThat(computeSourceDir.shouldStop, is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
+        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRNOTCOMPUTED));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRNOTCOMPUTED));
 
     }
 }
