@@ -11,7 +11,9 @@ import org.apache.maven.model.building.ModelBuildingException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by urli on 08/02/2017.
@@ -19,6 +21,7 @@ import java.util.List;
 public class ComputeTestDir extends AbstractStep {
     private static final String DEFAULT_TEST_DIR = "/src/test/java";
     private static final String COMPUTE_TOTAL_CLOC = "cloc --json --vcs=git .";
+    private Set<File> visitedFiles = new HashSet<>();
 
     public ComputeTestDir(ProjectInspector inspector) {
         super(inspector);
@@ -42,6 +45,13 @@ public class ComputeTestDir extends AbstractStep {
 
         if (!pomIncriminatedModule.exists()) {
             pomIncriminatedModule = new File(this.getPom());
+        }
+
+        if (this.visitedFiles.contains(pomIncriminatedModule)) {
+            this.getLogger().info("It seems we are entering in a loop while searching the test dir. The following file has already been visited: "+pomIncriminatedModule.getAbsolutePath());
+            return result.toArray(new File[0]);
+        } else {
+            this.visitedFiles.add(pomIncriminatedModule);
         }
 
         try {
@@ -128,10 +138,10 @@ public class ComputeTestDir extends AbstractStep {
         this.computeMetricsOnTest(sources);
 
         if (sources == null) {
-            this.addStepError("Fail to find the sources directory.");
-            this.setPipelineState(PipelineState.TESTDIRCOMPUTED);
-        } else {
+            this.addStepError("Fail to find the tests directory.");
             this.setPipelineState(PipelineState.TESTDIRNOTCOMPUTED);
+        } else {
+            this.setPipelineState(PipelineState.TESTDIRCOMPUTED);
         }
     }
 
