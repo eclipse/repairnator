@@ -97,6 +97,8 @@ public class Launcher {
 
         this.buildId = this.arguments.getInt("build");
 
+        LOGGER.info("The pipeline will try to repair the following buildid: "+this.buildId);
+
         this.initializeSerializerEngines();
     }
 
