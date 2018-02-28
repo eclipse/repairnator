@@ -11,6 +11,9 @@ router.route('/')
 router.route('/count')
   .get(inspectorCtrl.count);
 
+router.route('/countSuccessfullyReproducedBuilds')
+  .get(inspectorCtrl.countSuccessFullyReproducedBuild);
+
 router.route('/hostnameStats')
   .get(inspectorCtrl.hostnameStats);
 
