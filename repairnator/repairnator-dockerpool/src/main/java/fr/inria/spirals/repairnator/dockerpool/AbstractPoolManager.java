@@ -93,7 +93,7 @@ public class AbstractPoolManager {
         this.engines = engines;
     }
 
-    public RunnablePipelineContainer submitBuild(String imageId, int buildId) {
+    public RunnablePipelineContainer submitBuild(String imageId, int buildId, int nextBuildId) {
         this.cleanUpOlderContainers();
         TreatedBuildTracking treatedBuildTracking = null;
         try {
@@ -101,7 +101,7 @@ public class AbstractPoolManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, buildId, this.dockerOutputDir, treatedBuildTracking, this.skipDelete, this.createOutputDir);
+        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, buildId, nextBuildId, this.dockerOutputDir, treatedBuildTracking, this.skipDelete, this.createOutputDir);
         this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
 
         return runnablePipelineContainer;

@@ -29,6 +29,7 @@ public class RunnablePipelineContainer implements Runnable {
     private Date limitDateBeforeKilling;
     private String imageId;
     private int buildId;
+    private int nextBuildId;
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
@@ -37,10 +38,11 @@ public class RunnablePipelineContainer implements Runnable {
     private AbstractPoolManager poolManager;
     private String containerId;
 
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
+    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, int nextBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.buildId = buildId;
+        this.nextBuildId = nextBuildId;
         this.logDirectory = logDirectory;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
@@ -69,6 +71,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             String[] envValues = new String[] {
                 "BUILD_ID="+this.buildId,
+                "NEXT_BUILD_ID="+this.nextBuildId,
                 "LOG_FILENAME="+containerName,
                 "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
                 "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),

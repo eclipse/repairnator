@@ -36,6 +36,9 @@ export REPAIR_MODE=
 LOCAL_BUILD_ID=$BUILD_ID
 export BUILD_ID=
 
+LOCAL_NEXT_BUILD_ID=$NEXT_BUILD_ID
+export NEXT_BUILD_ID=
+
 LOCAL_RUN_ID=$RUN_ID
 export RUN_ID=
 
@@ -49,4 +52,4 @@ LOCAL_GITHUB_LOGIN=$GITHUB_LOGIN
 export GITHUB_LOGIN=
 
 echo "Execute pipeline with following supplementary args: $args"
-java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -m $LOCAL_REPAIR_MODE -d -b $LOCAL_BUILD_ID --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghLogin $LOCAL_GITHUB_LOGIN --ghOauth $LOCAL_GITHUB_OAUTH $args
+java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -m $LOCAL_REPAIR_MODE -d -b $LOCAL_BUILD_ID -n $LOCAL_NEXT_BUILD_ID --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghLogin $LOCAL_GITHUB_LOGIN --ghOauth $LOCAL_GITHUB_OAUTH $args

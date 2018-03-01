@@ -61,6 +61,7 @@ public class Launcher {
     private JSAPResult arguments;
     private RepairnatorConfig config;
     private int buildId;
+    private int nextBuildId;
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
 
@@ -96,6 +97,7 @@ public class Launcher {
         }
 
         this.buildId = this.arguments.getInt("build");
+        this.nextBuildId = this.arguments.getInt("nextBuild");
 
         LOGGER.info("The pipeline will try to repair the following buildid: "+this.buildId);
 
@@ -223,6 +225,14 @@ public class Launcher {
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setRequired(true);
         opt2.setHelp("Specify the build id to use.");
+        this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("nextBuild");
+        opt2.setShortFlag('n');
+        opt2.setLongFlag("nextBuild");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("0");
+        opt2.setHelp("Specify the next build id to use.");
         this.jsap.registerParameter(opt2);
 
         String launcherModeValues = "";
@@ -366,8 +376,17 @@ public class Launcher {
         String runId = this.arguments.getString("runId");
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
-            Build patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);
-            if (patchedBuild == null) {
+            Build patchedBuild;
+            if (this.nextBuildId > 0) {
+                LOGGER.info("The passed next build id (" + this.nextBuildId + ") will be used as patched build.");
+                patchedBuild = BuildHelper.getBuildFromId(this.nextBuildId, null);
+            } else {
+                LOGGER.info("Careful: no next build was passed as argument. The patched build will be searched with jTravis.");
+                patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);
+            }
+            if (patchedBuild != null) {
+                LOGGER.info("The patched build (" + patchedBuild.getId() + ") was successfully retrieved from Travis.");
+            } else {
                 LOGGER.error("Error while getting patched build: obtained null value. The process will exit now.");
                 System.exit(-1);
             }
