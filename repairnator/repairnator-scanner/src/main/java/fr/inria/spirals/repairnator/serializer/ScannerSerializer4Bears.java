@@ -47,7 +47,6 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         dataCol.add(this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
         dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
         dataCol.add(this.scanner.getTotalPRBuilds());
-        dataCol.add(Utils.formatOnlyDay(this.scanner.getLookFromDate()));
         dataCol.add(this.scanner.getRunId());
 
         return dataCol;
@@ -69,7 +68,6 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         result.addProperty("dateLookedToStr", Utils.formatCompleteDate(this.scanner.getLookToDate()));
         this.addDate(result, "dateLookedTo", this.scanner.getLookToDate());
 
-        result.addProperty("dayLimit", Utils.formatOnlyDay(this.scanner.getLookFromDate()));
         result.addProperty("totalRepoNumber", this.scanner.getTotalRepoNumber());
         result.addProperty("totalRepoUsingTravis", this.scanner.getTotalRepoUsingTravis());
         result.addProperty("totalScannedBuilds", this.scanner.getTotalScannedBuilds());
@@ -138,8 +136,7 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
             result.addProperty("totalPassingAndPassingBuildPairs", Utils.getValue(value, 14));
             result.addProperty("totalPairOfBuilds", Utils.getValue(value, 15));
             result.addProperty("totalPRBuilds", Utils.getValue(value, 16));
-            result.addProperty("dayLimit", Utils.getValue(value, 17));
-            result.addProperty("runId", Utils.getValue(value, 18));
+            result.addProperty("runId", Utils.getValue(value, 17));
 
             data.add(new SerializedData(Collections.EMPTY_LIST, result));
         }
