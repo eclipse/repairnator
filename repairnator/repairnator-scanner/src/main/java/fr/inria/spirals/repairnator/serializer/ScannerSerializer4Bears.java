@@ -21,6 +21,7 @@ import java.util.List;
  * Created by fernanda on 06/03/2017.
  */
 public class ScannerSerializer4Bears extends ProcessSerializer {
+
     private ProjectScanner scanner;
 
     public ScannerSerializer4Bears(List<SerializerEngine> engines, ProjectScanner scanner) {
@@ -30,6 +31,7 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
 
     private List<Object> serializeAsList() {
         List<Object> dataCol = new ArrayList<Object>();
+
         dataCol.add(Utils.getHostname());
         dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
         dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningEndDate()));
@@ -43,10 +45,10 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         dataCol.add(this.scanner.getTotalJavaPassingBuilds());
         dataCol.add(this.scanner.getTotalBuildInJavaFailing());
         dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
+        dataCol.add(this.scanner.getTotalPRBuilds());
         dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs());
         dataCol.add(this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
         dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
-        dataCol.add(this.scanner.getTotalPRBuilds());
         dataCol.add(this.scanner.getRunId());
 
         return dataCol;
@@ -62,6 +64,8 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         result.addProperty("dateEndStr", Utils.formatCompleteDate(this.scanner.getScannerRunningEndDate()));
         this.addDate(result, "dateEnd", this.scanner.getScannerRunningEndDate());
 
+        result.addProperty("duration", this.scanner.getScannerDuration());
+
         result.addProperty("dateLookedFromStr", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
         this.addDate(result, "dateLookedFrom", this.scanner.getLookFromDate());
 
@@ -75,11 +79,10 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         result.addProperty("totalJavaPassingBuilds", this.scanner.getTotalJavaPassingBuilds());
         result.addProperty("totalJavaFailingBuilds", this.scanner.getTotalBuildInJavaFailing());
         result.addProperty("totalJavaFailingBuildsWithFailingTests", this.scanner.getTotalBuildInJavaFailingWithFailingTests());
+        result.addProperty("totalPRBuilds", this.scanner.getTotalPRBuilds());
         result.addProperty("totalFailingAndPassingBuildPairs", this.scanner.getTotalNumberOfFailingAndPassingBuildPairs());
         result.addProperty("totalPassingAndPassingBuildPairs", this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
         result.addProperty("totalPairOfBuilds", this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
-        result.addProperty("totalPRBuilds", this.scanner.getTotalPRBuilds());
-        result.addProperty("duration", this.scanner.getScannerDuration());
         result.addProperty("runId", this.scanner.getRunId());
 
         return result;
@@ -132,10 +135,10 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
             result.addProperty("totalJavaPassingBuilds", Utils.getValue(value, 10));
             result.addProperty("totalJavaFailingBuilds", Utils.getValue(value, 11));
             result.addProperty("totalJavaFailingBuildsWithFailingTests", Utils.getValue(value, 12));
-            result.addProperty("totalFailingAndPassingBuildPairs", Utils.getValue(value, 13));
-            result.addProperty("totalPassingAndPassingBuildPairs", Utils.getValue(value, 14));
-            result.addProperty("totalPairOfBuilds", Utils.getValue(value, 15));
-            result.addProperty("totalPRBuilds", Utils.getValue(value, 16));
+            result.addProperty("totalPRBuilds", Utils.getValue(value, 13));
+            result.addProperty("totalFailingAndPassingBuildPairs", Utils.getValue(value, 14));
+            result.addProperty("totalPassingAndPassingBuildPairs", Utils.getValue(value, 15));
+            result.addProperty("totalPairOfBuilds", Utils.getValue(value, 16));
             result.addProperty("runId", Utils.getValue(value, 17));
 
             data.add(new SerializedData(Collections.EMPTY_LIST, result));
