@@ -112,6 +112,7 @@ public class GatherTestInformation extends AbstractStep {
                             this.failingModulePath = failingModule.getCanonicalPath();
                             this.getInspector().getJobStatus().setFailingModulePath(this.failingModulePath);
                             this.writeProperty("failingModule", this.failingModulePath);
+                            getLogger().info("Get the following failing module path: "+failingModulePath);
 
                             for (ReportTestCase testCase : testSuite.getTestCases()) {
                                 if (testCase.hasFailure() || testCase.hasError()) {

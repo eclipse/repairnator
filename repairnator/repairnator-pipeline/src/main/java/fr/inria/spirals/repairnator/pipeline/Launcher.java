@@ -97,6 +97,8 @@ public class Launcher {
 
         this.buildId = this.arguments.getInt("build");
 
+        LOGGER.info("The pipeline will try to repair the following buildid: "+this.buildId);
+
         this.initializeSerializerEngines();
     }
 
@@ -356,6 +358,11 @@ public class Launcher {
 
     private void getBuildToBeInspected() {
         Build buggyBuild = BuildHelper.getBuildFromId(this.buildId, null);
+
+        if (buggyBuild.getFinishedAt() == null) {
+            LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
+            System.exit(-1);
+        }
         String runId = this.arguments.getString("runId");
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {

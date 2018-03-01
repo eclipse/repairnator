@@ -77,7 +77,12 @@ public class InspectBuilds implements Runnable {
                     if (build.getBuildStatus() == BuildStatus.FAILED) {
                         this.rtScanner.submitBuildToExecution(build);
                     }
-                    this.watchedBuildSerializer.serialize(build);
+                    try {
+                        this.watchedBuildSerializer.serialize(build);
+                    } catch (Throwable e) {
+                        LOGGER.error("Error while serializing", e);
+                    }
+
                     this.waitingBuilds.remove(build);
                     synchronized (this) {
                         this.nbSubmittedBuilds--;

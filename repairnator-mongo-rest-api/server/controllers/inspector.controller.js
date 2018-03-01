@@ -89,4 +89,10 @@ function getNbReproducedByProject(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll, getPatches, getNbFailuresByProject, getNbReproducedByProject };
+function countSuccessFullyReproducedBuild(req, res, next) {
+  Inspector.countReproducedErrors()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+export default { load, get, list, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll, getPatches, getNbFailuresByProject, getNbReproducedByProject, countSuccessFullyReproducedBuild };

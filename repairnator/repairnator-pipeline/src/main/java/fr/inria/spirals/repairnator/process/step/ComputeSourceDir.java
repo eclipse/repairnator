@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by urli on 08/02/2017.
@@ -27,6 +29,7 @@ public class ComputeSourceDir extends AbstractStep {
     private static final String COMPUTE_TOTAL_CLOC = "cloc --json --vcs=git .";
 
     private boolean allModules;
+    private Set<File> visitedFiles = new HashSet<>();
 
     public ComputeSourceDir(ProjectInspector inspector, boolean allModules) {
         super(inspector);
@@ -55,6 +58,13 @@ public class ComputeSourceDir extends AbstractStep {
 
         if (!pomIncriminatedModule.exists()) {
             pomIncriminatedModule = new File(this.getPom());
+        }
+
+        if (this.visitedFiles.contains(pomIncriminatedModule)) {
+            this.getLogger().info("It seems we are entering in a loop while searching the source dir. The following file has already been visited: "+pomIncriminatedModule.getAbsolutePath());
+            return result.toArray(new File[0]);
+        } else {
+            this.visitedFiles.add(pomIncriminatedModule);
         }
 
         try {

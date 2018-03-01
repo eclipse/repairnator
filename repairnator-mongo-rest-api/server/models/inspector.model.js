@@ -224,6 +224,14 @@ InspectorSchema.statics = {
         }
       }
     ]).exec();
+  },
+
+  countReproducedErrors() {
+    return this.count({
+      status: {
+        $in: ['PATCHED', 'test errors', 'test failure']
+      }
+    }).exec();
   }
 };
 
