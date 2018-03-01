@@ -56,7 +56,7 @@ public class BuildRunner extends AbstractPoolManager {
         }
         if (getRunning() < this.nbThreads) {
             LOGGER.info("Build (id: "+build.getId()+") immediately submitted for running.");
-            this.executorService.submit(this.submitBuild(this.dockerImageId, build.getId()));
+            this.executorService.submit(this.submitBuild(this.dockerImageId, build.getId(), 0));
         } else {
             LOGGER.info("All threads currently running (Limit: "+this.nbThreads+"). Add build (id: "+build.getId()+") to list");
             if (this.waitingBuilds.size() == this.nbThreads) {
