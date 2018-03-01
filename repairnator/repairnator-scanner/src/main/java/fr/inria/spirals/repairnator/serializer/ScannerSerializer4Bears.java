@@ -63,8 +63,11 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         result.addProperty("dateEndStr", Utils.formatCompleteDate(this.scanner.getScannerRunningEndDate()));
         this.addDate(result, "dateEnd", this.scanner.getScannerRunningEndDate());
 
-        result.addProperty("dateLimitStr", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
-        this.addDate(result, "dateLimit", this.scanner.getLookFromDate());
+        result.addProperty("dateLookedFromStr", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
+        this.addDate(result, "dateLookedFrom", this.scanner.getLookFromDate());
+
+        result.addProperty("dateLookedToStr", Utils.formatCompleteDate(this.scanner.getLookToDate()));
+        this.addDate(result, "dateLookedTo", this.scanner.getLookToDate());
 
         result.addProperty("dayLimit", Utils.formatOnlyDay(this.scanner.getLookFromDate()));
         result.addProperty("totalRepoNumber", this.scanner.getTotalRepoNumber());
@@ -122,8 +125,8 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
             result.addProperty("dateBegin", Utils.getValue(value, 1));
             result.addProperty("dateEnd", Utils.getValue(value, 2));
             result.addProperty("duration", Utils.getValue(value, 3));
-            //result.addProperty("dayLimit", Utils.getValue(value, 4));
-            result.addProperty("dateLimit", Utils.getValue(value, 5));
+            result.addProperty("dateLookedFrom", Utils.getValue(value, 4));
+            result.addProperty("dateLookedTo", Utils.getValue(value, 5));
             result.addProperty("totalRepoNumber", Utils.getValue(value, 6));
             result.addProperty("totalRepoUsingTravis", Utils.getValue(value, 7));
             result.addProperty("totalScannedBuilds", Utils.getValue(value, 8));
