@@ -7,11 +7,12 @@ import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
-import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.EndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
@@ -204,38 +205,6 @@ public class Launcher extends AbstractPoolManager {
         this.jsap.registerParameter(opt2);
     }
 
-    private void checkArguments() {
-        if (!this.arguments.success()) {
-            // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
-                System.err.println("Error: " + errs.next());
-            }
-            this.printUsage();
-        }
-
-        if (this.arguments.getBoolean("help")) {
-            this.printUsage();
-        }
-    }
-
-    private void checkEnvironmentVariables() {
-        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
-            if (System.getenv(envVar) == null || System.getenv(envVar).equals("")) {
-                System.err.println("You must set the following environment variable: "+envVar);
-                this.printUsage();
-            }
-        }
-    }
-
-    private void printUsage() {
-        System.err.println("Usage: java <repairnator-dockerpool name> [option(s)]");
-        System.err.println();
-        System.err.println("Options : ");
-        System.err.println();
-        System.err.println(jsap.getHelp());
-        System.exit(-1);
-    }
-
     private List<Integer> readListOfBuildIds() {
         List<Integer> result = new ArrayList<>();
         File inputFile = this.arguments.getFile("input");
@@ -315,8 +284,8 @@ public class Launcher extends AbstractPoolManager {
     private Launcher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
-        this.checkArguments();
-        this.checkEnvironmentVariables();
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.DOCKERPOOL);
+        LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.DOCKERPOOL);
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
 
         this.initConfig();

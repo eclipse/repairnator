@@ -7,6 +7,8 @@ import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -49,7 +51,7 @@ public class Launcher {
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
-        this.checkArguments();
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.SCANNER);
 
         if (this.arguments.getBoolean("debug")) {
             Utils.setLoggersLevel(Level.DEBUG);
@@ -113,33 +115,6 @@ public class Launcher {
         } else {
             LOGGER.info("MongoDB won't be used for serialization");
         }
-    }
-
-    private void checkArguments() {
-        if (!this.arguments.success()) {
-            // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
-                System.err.println("Error: " + errs.next());
-            }
-            this.printUsage();
-        }
-
-        if (this.arguments.getBoolean("help")) {
-            this.printUsage();
-        }
-
-        if (!this.arguments.getString("launcherMode").equals("bears") && this.arguments.getBoolean("skip-failing")) {
-            this.printUsage();
-        }
-    }
-
-    private void printUsage() {
-        System.err.println("Usage: java <repairnator-scanner> [option(s)]");
-        System.err.println();
-        System.err.println("Options : ");
-        System.err.println();
-        System.err.println(jsap.getHelp());
-        System.exit(-1);
     }
 
     private void defineArgs() throws JSAPException {

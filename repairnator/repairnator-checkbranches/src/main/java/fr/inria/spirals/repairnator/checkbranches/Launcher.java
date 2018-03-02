@@ -10,6 +10,8 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -146,29 +148,6 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
-    private void checkArguments() {
-        if (!this.arguments.success()) {
-            // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
-                System.err.println("Error: " + errs.next());
-            }
-            this.printUsage();
-        }
-
-        if (this.arguments.getBoolean("help")) {
-            this.printUsage();
-        }
-    }
-
-    private void printUsage() {
-        System.err.println("Usage: java <repairnator-dockerpool name> [option(s)]");
-        System.err.println();
-        System.err.println("Options : ");
-        System.err.println();
-        System.err.println(jsap.getHelp());
-        System.exit(-1);
-    }
-
     private List<String> readListOfBranches() {
         List<String> result = new ArrayList<>();
         File inputFile = this.arguments.getFile("input");
@@ -250,7 +229,7 @@ public class Launcher {
     private Launcher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
-        this.checkArguments();
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.CHECKBRANCHES);
 
         this.initConfig();
         this.initNotifiers();

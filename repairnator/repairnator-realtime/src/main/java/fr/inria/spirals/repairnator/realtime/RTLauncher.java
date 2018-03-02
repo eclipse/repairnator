@@ -6,7 +6,8 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -34,8 +35,8 @@ public class RTLauncher {
     private RTLauncher(String[] args) throws JSAPException {
         this.defineArgs();
         this.arguments = jsap.parse(args);
-        this.checkArguments();
-        this.checkEnvironmentVariables();
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.REALTIME);
+        LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.REALTIME);
         this.launcherMode = LauncherMode.REPAIR;
 
         this.initConfig();
@@ -184,38 +185,6 @@ public class RTLauncher {
         opt2.setDefault(InspectBuilds.LIMIT_SUBMITTED_BUILDS+"");
         opt2.setHelp("Specify the maximum number of watched builds");
         this.jsap.registerParameter(opt2);
-    }
-
-    private void checkArguments() {
-        if (!this.arguments.success()) {
-            // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
-                System.err.println("Error: " + errs.next());
-            }
-            this.printUsage();
-        }
-
-        if (this.arguments.getBoolean("help")) {
-            this.printUsage();
-        }
-    }
-
-    private void printUsage() {
-        System.err.println("Usage: java <repairnator-rtscanner name> [option(s)]");
-        System.err.println();
-        System.err.println("Options : ");
-        System.err.println();
-        System.err.println(jsap.getHelp());
-        System.exit(-1);
-    }
-
-    private void checkEnvironmentVariables() {
-        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
-            if (System.getenv(envVar) == null || System.getenv(envVar).equals("")) {
-                System.err.println("You must set the following environment variable: "+envVar);
-                this.printUsage();
-            }
-        }
     }
 
     private void initConfig() {

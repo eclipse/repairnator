@@ -9,6 +9,8 @@ import fr.inria.jtravis.entities.BuildStatus;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.GithubTokenHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
@@ -81,7 +83,7 @@ public class Launcher {
 
         this.defineArgs();
         this.arguments = jsap.parse(args);
-        this.checkArguments();
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.PIPELINE);
         this.initConfig();
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
@@ -175,27 +177,11 @@ public class Launcher {
 
             if (!file.exists()) {
                 System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
-                this.printUsage();
-                System.exit(-1);
+                LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
             }
         } else {
             System.err.println("The Nopol solver path should be provided.");
-            this.printUsage();
-            System.exit(-1);
-        }
-    }
-
-    private void checkArguments() {
-        if (!this.arguments.success()) {
-            // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
-                System.err.println("Error: " + errs.next());
-            }
-            this.printUsage();
-        }
-
-        if (this.arguments.getBoolean("help")) {
-            this.printUsage();
+            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
         }
     }
 
@@ -329,20 +315,6 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
-    private void printUsage() {
-        System.err.println("Usage: java <repairnator-pipeline name> [option(s)]");
-        System.err.println();
-        System.err.println("Options : ");
-        System.err.println();
-        System.err.println(jsap.getHelp());
-        System.err.println("Please note that the following environment variables must be set: ");
-        for (String env : Utils.ENVIRONMENT_VARIABLES) {
-            System.err.println(" - " + env);
-        }
-        System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
-        System.exit(-1);
-    }
-
     private void checkToolsLoaded() {
         URLClassLoader loader;
 
@@ -351,8 +323,7 @@ public class Launcher {
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
             System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
-            this.printUsage();
-            System.exit(-1);
+            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
         }
     }
 
