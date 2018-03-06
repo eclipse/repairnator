@@ -4,6 +4,7 @@ import fr.inria.jtravis.entities.*;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.kohsuke.github.*;
@@ -54,6 +55,8 @@ public class ProjectScanner {
         this.repositories = new HashSet<Repository>();
         this.runId = runId;
         this.skipFailing = skipFailing;
+
+        this.logger.info("Look from " + Utils.formatCompleteDate(this.lookFromDate) + " to " + Utils.formatCompleteDate(this.lookToDate));
     }
 
     public String getRunId() {
