@@ -160,12 +160,6 @@ public class Launcher {
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
 
-        sw1 = new Switch("scanOnly");
-        sw1.setLongFlag("scan-only");
-        sw1.setDefault("false");
-        sw1.setHelp("Use it when the scanner is not used to launch the pipeline to gather more datas in spreadsheet.");
-        this.jsap.registerParameter(sw1);
-
         sw1 = new Switch("skip-failing");
         sw1.setLongFlag("skip-failing");
         sw1.setDefault("false");
@@ -305,11 +299,8 @@ public class Launcher {
             scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
             scannerSerializer = new ScannerSerializer4Bears(this.engines, scanner);
-
-            if (this.arguments.getBoolean("scanOnly")) {
-                ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
-                scannerDetailedDataSerializer.serialize();
-            }
+            ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
+            scannerDetailedDataSerializer.serialize();
         }
 
         scannerSerializer.serialize();
