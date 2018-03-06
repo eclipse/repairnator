@@ -288,13 +288,7 @@ public class Launcher {
         Date lookFromDate = this.arguments.getDate("lookFromDate");
         Date lookToDate = this.arguments.getDate("lookToDate");
         if (lookToDate != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(lookToDate);
-            calendar.set(Calendar.HOUR_OF_DAY, calendar.getMaximum(Calendar.HOUR_OF_DAY));
-            calendar.set(Calendar.MINUTE, calendar.getMaximum(Calendar.MINUTE));
-            calendar.set(Calendar.SECOND, calendar.getMaximum(Calendar.SECOND));
-            calendar.set(Calendar.MILLISECOND, calendar.getMaximum(Calendar.MILLISECOND));
-            lookToDate = calendar.getTime();
+            lookToDate = Utils.getLastTimeFromDate(lookToDate);
         }
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
             scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"), this.arguments.getBoolean("skip-failing"));
