@@ -53,9 +53,6 @@ docker pull $DOCKER_TAG
 
 echo "Launch repairnator realtime scanner..."
 args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME``ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH``ca --blacklist $BLACKLIST_PATH`"
-if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
-    args="$args --notifyEndProcess"
-fi
 
 if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
     args="$args --createOutputDir"
