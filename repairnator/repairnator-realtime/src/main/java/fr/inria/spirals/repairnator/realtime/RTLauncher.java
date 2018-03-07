@@ -8,8 +8,6 @@ import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
-import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
@@ -40,7 +38,6 @@ public class RTLauncher {
 
         this.initConfig();
         this.initializeSerializerEngines();
-        this.initNotifiers();
     }
 
     private void defineArgs() throws JSAPException {
@@ -65,12 +62,6 @@ public class RTLauncher {
         sw1.setLongFlag("skipDelete");
         sw1.setDefault("false");
         sw1.setHelp("Skip the deletion of docker container.");
-        this.jsap.registerParameter(sw1);
-
-        sw1 = new Switch("notifyEndProcess");
-        sw1.setLongFlag("notifyEndProcess");
-        sw1.setDefault("false");
-        sw1.setHelp("Activate the notification when the process ends.");
         this.jsap.registerParameter(sw1);
 
         sw1 = new Switch("createOutputDir");
@@ -247,19 +238,6 @@ public class RTLauncher {
             }
         } else {
             LOGGER.info("MongoDB won't be used for serialization");
-        }
-    }
-
-    private void initNotifiers() {
-        if (this.arguments.getBoolean("notifyEndProcess")) {
-            List<NotifierEngine> notifierEngines = new ArrayList<>();
-            if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
-                LOGGER.info("The email notifier engine will be used.");
-
-                notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
-            } else {
-                LOGGER.info("The email notifier engine won't be used.");
-            }
         }
     }
 
