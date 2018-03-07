@@ -29,6 +29,7 @@ public class RunnablePipelineContainer implements Runnable {
     private Date limitDateBeforeKilling;
     private String imageId;
     private int buildId;
+    private int nextBuildId;
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
@@ -36,6 +37,9 @@ public class RunnablePipelineContainer implements Runnable {
     private boolean createOutputDir;
     private AbstractPoolManager poolManager;
     private String containerId;
+    String containerName;
+    String output;
+    private String[] envValues;
 
     public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
         this.poolManager = poolManager;
@@ -46,6 +50,59 @@ public class RunnablePipelineContainer implements Runnable {
         this.treatedBuildTracking = treatedBuildTracking;
         this.skipDelete = skipDelete;
         this.createOutputDir = createOutputDir;
+
+        this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
+        this.output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
+
+        this.envValues = new String[] {
+            "BUILD_ID="+this.buildId,
+            "LOG_FILENAME="+containerName,
+            "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
+            "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
+            "RUN_ID="+this.repairnatorConfig.getRunId(),
+            "GOOGLE_ACCESS_TOKEN="+this.repairnatorConfig.getGoogleAccessToken(),
+            "REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase(),
+            "SPREADSHEET_ID="+this.repairnatorConfig.getSpreadsheetId(),
+            "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
+            "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
+            "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
+            "SMTP_SERVER="+this.repairnatorConfig.getSmtpServer(),
+            "NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','),
+            "OUTPUT="+output
+        };
+    }
+
+    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, int nextBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
+        this.poolManager = poolManager;
+        this.imageId = imageId;
+        this.buildId = buildId;
+        this.nextBuildId = nextBuildId;
+        this.logDirectory = logDirectory;
+        this.repairnatorConfig = RepairnatorConfig.getInstance();
+        this.treatedBuildTracking = treatedBuildTracking;
+        this.skipDelete = skipDelete;
+        this.createOutputDir = createOutputDir;
+
+        this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
+        this.output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
+
+        this.envValues = new String[] {
+            "BUILD_ID="+this.buildId,
+            "NEXT_BUILD_ID="+this.nextBuildId,
+            "LOG_FILENAME="+containerName,
+            "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
+            "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
+            "RUN_ID="+this.repairnatorConfig.getRunId(),
+            "GOOGLE_ACCESS_TOKEN="+this.repairnatorConfig.getGoogleAccessToken(),
+            "REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase(),
+            "SPREADSHEET_ID="+this.repairnatorConfig.getSpreadsheetId(),
+            "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
+            "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
+            "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
+            "SMTP_SERVER="+this.repairnatorConfig.getSmtpServer(),
+            "NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','),
+            "OUTPUT="+output
+        };
     }
 
     public int getBuildId() {
@@ -64,25 +121,7 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("Start to build and run container for build id "+buildId);
             LOGGER.info("At most this docker run will be killed at: "+this.limitDateBeforeKilling);
 
-            String containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
-            String output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
-            String[] envValues = new String[] {
-                "BUILD_ID="+this.buildId,
-                "LOG_FILENAME="+containerName,
-                "GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"),
-                "GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"),
-                "RUN_ID="+this.repairnatorConfig.getRunId(),
-                "GOOGLE_ACCESS_TOKEN="+this.repairnatorConfig.getGoogleAccessToken(),
-                "REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase(),
-                "SPREADSHEET_ID="+this.repairnatorConfig.getSpreadsheetId(),
-                "PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo(),
-                "MONGODB_HOST="+this.repairnatorConfig.getMongodbHost(),
-                "MONGODB_NAME="+this.repairnatorConfig.getMongodbName(),
-                "SMTP_SERVER="+this.repairnatorConfig.getSmtpServer(),
-                "NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','),
-                "OUTPUT="+output
-            };
 
             Map<String,String> labels = new HashMap<>();
             labels.put("name",containerName);

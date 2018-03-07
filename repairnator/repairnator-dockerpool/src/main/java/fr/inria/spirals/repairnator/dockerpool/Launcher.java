@@ -33,7 +33,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -236,15 +238,20 @@ public class Launcher extends AbstractPoolManager {
         System.exit(-1);
     }
 
-    private List<Integer> readListOfBuildIds() {
-        List<Integer> result = new ArrayList<>();
+    private Map<Integer, Integer> readListOfBuildIds() {
+        Map<Integer, Integer> result = new HashMap<>();
         File inputFile = this.arguments.getFile("input");
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
             while (reader.ready()) {
                 String line = reader.readLine().trim();
-                result.add(Integer.parseInt(line));
+                String[] buildIds = line.split(",");
+                if (buildIds.length == 1) {
+                    result.put(Integer.parseInt(buildIds[0]), 0);
+                } else {
+                    result.put(Integer.parseInt(buildIds[0]), Integer.parseInt(buildIds[1]));
+                }
             }
 
             reader.close();
@@ -261,7 +268,7 @@ public class Launcher extends AbstractPoolManager {
         hardwareInfoSerializer.serialize();
 
         EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, runId);
-        List<Integer> buildIds = this.readListOfBuildIds();
+        Map<Integer, Integer> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
 
         endProcessSerializer.setNbBuilds(buildIds.size());
@@ -277,8 +284,12 @@ public class Launcher extends AbstractPoolManager {
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
-        for (Integer builId : buildIds) {
-            executorService.submit(this.submitBuild(imageId, builId));
+        for (Map.Entry<Integer, Integer> buildId : buildIds.entrySet()) {
+            if (launcherMode == LauncherMode.REPAIR) {
+                executorService.submit(this.submitBuild(imageId, buildId.getKey()));
+            } else {
+                executorService.submit(this.submitBuild(imageId, buildId.getKey(), buildId.getValue()));
+            }
         }
 
         executorService.shutdown();
