@@ -7,6 +7,7 @@ import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
+import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -33,9 +34,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -238,8 +237,9 @@ public class Launcher extends AbstractPoolManager {
         System.exit(-1);
     }
 
-    private Map<Integer, Integer> readListOfBuildIds() {
-        Map<Integer, Integer> result = new HashMap<>();
+    private List<InputBuildId> readListOfBuildIds() {
+        List<InputBuildId> result = new ArrayList<>();
+
         File inputFile = this.arguments.getFile("input");
 
         try {
@@ -247,10 +247,14 @@ public class Launcher extends AbstractPoolManager {
             while (reader.ready()) {
                 String line = reader.readLine().trim();
                 String[] buildIds = line.split(",");
-                if (buildIds.length == 1) {
-                    result.put(Integer.parseInt(buildIds[0]), 0);
-                } else {
-                    result.put(Integer.parseInt(buildIds[0]), Integer.parseInt(buildIds[1]));
+                if (buildIds.length > 0) {
+                    int buggyBuildId = Integer.parseInt(buildIds[0]);
+                    if (launcherMode == LauncherMode.REPAIR) {
+                        result.add(new InputBuildId(buggyBuildId));
+                    } else {
+                        int patchedBuildId = (buildIds.length > 1) ? Integer.parseInt(buildIds[1]) : 0;
+                        result.add(new InputBuildId(buggyBuildId, patchedBuildId));
+                    }
                 }
             }
 
@@ -268,7 +272,7 @@ public class Launcher extends AbstractPoolManager {
         hardwareInfoSerializer.serialize();
 
         EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, runId);
-        Map<Integer, Integer> buildIds = this.readListOfBuildIds();
+        List<InputBuildId> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
 
         endProcessSerializer.setNbBuilds(buildIds.size());
@@ -284,11 +288,11 @@ public class Launcher extends AbstractPoolManager {
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
 
-        for (Map.Entry<Integer, Integer> buildId : buildIds.entrySet()) {
+        for (InputBuildId buildId : buildIds) {
             if (launcherMode == LauncherMode.REPAIR) {
-                executorService.submit(this.submitBuild(imageId, buildId.getKey()));
+                executorService.submit(this.submitBuild(imageId, buildId.getBuggyBuildId()));
             } else {
-                executorService.submit(this.submitBuild(imageId, buildId.getKey(), buildId.getValue()));
+                executorService.submit(this.submitBuild(imageId, buildId.getBuggyBuildId(), buildId.getPatchedBuildId()));
             }
         }
 
