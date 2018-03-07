@@ -218,14 +218,14 @@ public class Launcher {
         opt2.setShortFlag('f');
         opt2.setLongFlag("lookFromDate");
         opt2.setStringParser(dateStringParser);
-        opt2.setHelp("Specify the initial date to get builds");
+        opt2.setHelp("Specify the initial date to get builds (e.g. 01/01/2017). Note that the search starts from 00:00:00 of the specified date.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("lookToDate");
         opt2.setShortFlag('t');
         opt2.setLongFlag("lookToDate");
         opt2.setStringParser(dateStringParser);
-        opt2.setHelp("Specify the final date to get builds");
+        opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("googleSecretPath");
@@ -281,6 +281,9 @@ public class Launcher {
         ProjectScanner scanner;
         Date lookFromDate = this.arguments.getDate("lookFromDate");
         Date lookToDate = this.arguments.getDate("lookToDate");
+        if (lookToDate != null) {
+            lookToDate = Utils.getLastTimeFromDate(lookToDate);
+        }
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
             scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"), this.arguments.getBoolean("skip-failing"));
         } else {
