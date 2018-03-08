@@ -88,6 +88,8 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded();
             this.checkNopolSolverPath();
+        } else {
+            this.checkNextBuildId();
         }
 
         if (this.arguments.getBoolean("debug")) {
@@ -187,6 +189,14 @@ public class Launcher {
         }
     }
 
+    private void checkNextBuildId() {
+        if (this.arguments.getInt("nextBuild") == 0) {
+            System.err.println("A pair of builds needs to be provided in BEARS mode.");
+            this.printUsage();
+            System.exit(-1);
+        }
+    }
+
     private void checkArguments() {
         if (!this.arguments.success()) {
             // print out specific error messages describing the problems
@@ -232,7 +242,7 @@ public class Launcher {
         opt2.setLongFlag("nextBuild");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault("0");
-        opt2.setHelp("Specify the next build id to use.");
+        opt2.setHelp("Specify the next build id to use (only in BEARS mode).");
         this.jsap.registerParameter(opt2);
 
         String launcherModeValues = "";
@@ -376,14 +386,7 @@ public class Launcher {
         String runId = this.arguments.getString("runId");
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
-            Build patchedBuild;
-            if (this.nextBuildId > 0) {
-                LOGGER.info("The passed next build id (" + this.nextBuildId + ") will be used as patched build.");
-                patchedBuild = BuildHelper.getBuildFromId(this.nextBuildId, null);
-            } else {
-                LOGGER.info("Careful: no next build was passed as argument. The patched build will be searched with jTravis.");
-                patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);
-            }
+            Build patchedBuild = BuildHelper.getBuildFromId(this.nextBuildId, null);
             if (patchedBuild != null) {
                 LOGGER.info("The patched build (" + patchedBuild.getId() + ") was successfully retrieved from Travis.");
             } else {
