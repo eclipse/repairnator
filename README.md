@@ -54,25 +54,18 @@ cd github/repairnator/repairnator/scripts
 
 The script will start a docker container to run Repairnator on your specified Build ID.
 
-## How does Repairnator work?
-
-RepairNator is decomposed in 4 different entities, which can be used independently of in interaction: 
-  - repairnator-core: contains shared elements for all other elements, it can be also use to generate Google Spreadsheets Credentials
-  - repairnator-scanner: as indicated by the name, this part can be used to scan automatically Travis Build and produce metrics and list of build ids
-  - repairnator-dockerpool: this part can be used to create a pool of docker containers to launch, given a list of build ids
-  - repairnator-pipeline: the main part of RepairNator, given a build id this part will try to compile, test and repair it, gathering data on it
-  
-Usage of each parts are detailed in their own Readme file.
-
 ## Content of the repository
 
-This repository contains three sub projects:
+This repository is organized as following:
 
-  * [RepairNator](https://github.com/Spirals-Team/librepair/tree/master/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
-  * [travisFilter](https://github.com/Spirals-Team/librepair/tree/master/travisFilter) is a really small project intented to filter quickly set of Github project to detect if they're using Travis or not.
-  * [sandbox](https://github.com/Spirals-Team/librepair/tree/master/sandbox) TODO
+  * [Repairnator](/tree/master/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
+  * [bears-usage](/tree/master/bears-usage) is a side project dedicated to gather data from repairnator.json files
+  * [resources](/tree/master/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
+  * [website](/tree/master/website) contains all data to produce repairnator website
+  
+Each directory contains its own Readme explaining its own internal organization.
 
-## Scripts
+## License
 
- `librepair/resources/clean_old_branches.sh` removes bad branches from https://github.com/Spirals-Team/librepair-experiments
+This project has been funded by InriaHub. The content of this repository is licensed under the AGPL terms. 
 
