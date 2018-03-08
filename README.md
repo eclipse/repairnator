@@ -58,10 +58,10 @@ The script will start a docker container to run Repairnator on your specified Bu
 
 This repository is organized as following:
 
-  * [Repairnator](/tree/master/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
-  * [bears-usage](/tree/master/bears-usage) is a side project dedicated to gather data from repairnator.json files
-  * [resources](/tree/master/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
-  * [website](/tree/master/website) contains all data to produce repairnator website
+  * [Repairnator](/master/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
+  * [bears-usage](/master/bears-usage) is a side project dedicated to gather data from repairnator.json files
+  * [resources](/master/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
+  * [website](/master/website) contains all data to produce repairnator website
   
 Each directory contains its own Readme explaining its own internal organization.
 
