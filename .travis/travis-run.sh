@@ -17,13 +17,3 @@ fi
 
 mvn jacoco:report coveralls:report --fail-never
 
-cd ..
-
-cd travisFilter
-mvn clean install
-
-if [[ $? != 0 ]]
-then
-    echo "Error while installing travisFilter"
-    exit 1
-fi
