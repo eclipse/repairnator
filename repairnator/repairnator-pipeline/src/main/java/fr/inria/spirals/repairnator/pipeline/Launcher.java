@@ -64,7 +64,7 @@ public class Launcher {
     private int buildId;
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
-
+    private List<AbstractNotifier> notifiers;
 
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
@@ -101,6 +101,16 @@ public class Launcher {
         LOGGER.info("The pipeline will try to repair the following buildid: "+this.buildId);
 
         this.initializeSerializerEngines();
+        this.initNotifiers();
+    }
+
+    private void initNotifiers() {
+        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+        ErrorNotifier.getInstance(notifierEngines);
+
+        this.notifiers = new ArrayList<>();
+        this.notifiers.add(new PatchNotifier(notifierEngines));
+        this.notifiers.add(new FixerBuildNotifier(notifierEngines));
     }
 
     private void initConfig() {
@@ -386,19 +396,12 @@ public class Launcher {
         serializers.add(new AstorSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
 
-        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-        ErrorNotifier.getInstance(notifierEngines);
-
-        List<AbstractNotifier> notifiers = new ArrayList<>();
-        notifiers.add(new PatchNotifier(notifierEngines));
-        notifiers.add(new FixerBuildNotifier(notifierEngines));
-
         ProjectInspector inspector;
 
         if (config.getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, notifiers);
+            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         } else {
-            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, notifiers);
+            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         }
         inspector.run();
 
