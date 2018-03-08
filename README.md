@@ -18,6 +18,42 @@ See [How to Design a Program Repair Bot? Insights from the Repairnator Project](
 }
 ```
 
+## Quickstart
+
+### Requirements
+
+In order to run Repairnator with the provided scripts, you'll need the following components installed: 
+  - git
+  - docker
+  - uuidgen utility tools (available for Mac & Linux)
+ 
+You also need to get a Github API key: Go to [Github Personal Access Tokens](https://github.com/settings/tokens), and click on "Generate new token". 
+You don't need to tick any box for Repairnator. Then just copy and keep the generated token somewhere safe.
+
+### Setup Repairnator
+
+All Repairnator scripts are located in the directory `repairnator/scripts`. 
+The scripts use the configuration set in `repairnator/scripts/set_env_variable.sh`.
+
+In order to use Repairnator: 
+   1. clone this repository, 
+   2. open in a file editor `repairnator/scripts/set_env_variable.sh`
+   3. edit the file to specify the mandatory elements (you must add the Github Personal Access Token here)
+
+### Launch Repairnator on a given Travis Build ID
+
+From a Travis URL like this one: https://travis-ci.org/surli/failingProject/builds/350466198 you can retrieve a Build ID by taking the last part of the URL.
+Here it is: `350466198`.
+
+All you have to do, to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
+
+```bash
+cd github/repairnator/repairnator/scripts
+./repair_buggy_build.sh 350466198
+```
+
+The script will start a docker container to run Repairnator on your specified Build ID.
+
 ## How does Repairnator work?
 
 RepairNator is decomposed in 4 different entities, which can be used independently of in interaction: 
@@ -27,46 +63,6 @@ RepairNator is decomposed in 4 different entities, which can be used independent
   - repairnator-pipeline: the main part of RepairNator, given a build id this part will try to compile, test and repair it, gathering data on it
   
 Usage of each parts are detailed in their own Readme file.
-   
-## How to use Repairnator?
-
-On a linux machine, be sure to install Java 8, Maven 3.3.9, Docker and uuidgen tool (package uuid-runtime on Ubuntu).
-
-Create a directory dedicated to repairnator called `librepair` and create in it the following folders:
-  - bin
-  - logs
-  - scripts
-  - github
-  
-Under github directory, clone this repository and then copy and paste `travis/travis-install.sh` bash file.
-Launch it with the following command:
-
-```
-chmod +x travis-install.sh
-./travis-install.sh
-```
-
-Then go back to `librepair` directory and launch the following commands:
-```
-chmod +x ./scripts/*.sh
-./scripts/install_git_rebase_last.sh
-```
-
-Then create a file containing list of GitHub project names (one name per line) in file `scripts/project_list.txt`.
-
-Then edit file `scripts/set_env_variable.sh` to put right information.
-
-And finally you should be able to launch repairnator executing the following command:
-
-```
-./scripts/launch_repairnator.sh
-```
-
-You can also launch it with a list of build ids passed as argument, to skip the scanning process: 
-
-```
-./scripts/launch_repairnator.sh /path/to/file/with/build/ids
-```
 
 ## Content of the repository
 
