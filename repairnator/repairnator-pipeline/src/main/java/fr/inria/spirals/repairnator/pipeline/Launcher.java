@@ -22,7 +22,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
-import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
@@ -387,17 +386,8 @@ public class Launcher {
         serializers.add(new AstorSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
 
-        List<NotifierEngine> notifierEngines = new ArrayList<>();
-
-        if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
-            LOGGER.info("The email notifier engine will be used.");
-
-            notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
-            ErrorNotifier.getInstance(notifierEngines);
-        } else {
-            LOGGER.info("The email notifier engine won't be used.");
-        }
-
+        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+        ErrorNotifier.getInstance(notifierEngines);
 
         List<AbstractNotifier> notifiers = new ArrayList<>();
         notifiers.add(new PatchNotifier(notifierEngines));

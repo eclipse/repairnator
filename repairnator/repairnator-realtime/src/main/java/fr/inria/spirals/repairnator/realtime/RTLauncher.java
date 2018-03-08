@@ -9,7 +9,7 @@ import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
+import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -31,6 +31,7 @@ public class RTLauncher {
     private JSAPResult arguments;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
+    private EndProcessNotifier endProcessNotifier;
 
     private RTLauncher(String[] args) throws JSAPException {
         this.defineArgs();
@@ -221,14 +222,8 @@ public class RTLauncher {
 
     private void initNotifiers() {
         if (this.arguments.getBoolean("notifyEndProcess")) {
-            List<NotifierEngine> notifierEngines = new ArrayList<>();
-            if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
-                LOGGER.info("The email notifier engine will be used.");
-
-                notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
-            } else {
-                LOGGER.info("The email notifier engine won't be used.");
-            }
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.REALTIME.name().toLowerCase()+" (runid: "+this.arguments.getString("runId")+")");
         }
     }
 

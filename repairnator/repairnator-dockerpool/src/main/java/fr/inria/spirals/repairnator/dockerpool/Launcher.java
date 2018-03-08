@@ -10,7 +10,6 @@ import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
-import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -295,16 +294,8 @@ public class Launcher extends AbstractPoolManager {
 
     private void initNotifiers() {
         if (this.arguments.getBoolean("notifyEndProcess")) {
-            List<NotifierEngine> notifierEngines = new ArrayList<>();
-            if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
-                LOGGER.info("The email notifier engine will be used.");
-
-                notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
-            } else {
-                LOGGER.info("The email notifier engine won't be used.");
-            }
-
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, "dockerpool - (runid: "+this.config.getRunId()+")");
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.DOCKERPOOL.name().toLowerCase()+" (runid: "+this.arguments.getString("runId")+")");
         }
     }
 

@@ -2,6 +2,12 @@ package fr.inria.spirals.repairnator;
 
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
+import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
+import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fermadeiral
@@ -54,6 +60,18 @@ public class LauncherUtils {
         }
 
         System.exit(-1);
+    }
+
+    public static List<NotifierEngine> initNotifierEngines(JSAPResult arguments, Logger logger) {
+        List<NotifierEngine> notifierEngines = new ArrayList<>();
+        if (arguments.getString("smtpServer") != null && arguments.getStringArray("notifyto") != null) {
+            logger.info("The email notifier engine will be used.");
+
+            notifierEngines.add(new EmailNotifierEngine(arguments.getStringArray("notifyto"), arguments.getString("smtpServer")));
+        } else {
+            logger.info("The email notifier engine won't be used.");
+        }
+        return notifierEngines;
     }
 
 }
