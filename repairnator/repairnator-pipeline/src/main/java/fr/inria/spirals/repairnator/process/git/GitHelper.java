@@ -349,11 +349,14 @@ public class GitHelper {
         return true;
     }
 
-    public String forkRepository(String repository) throws IOException {
+    public String forkRepository(String repository, AbstractStep step) throws IOException {
         GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
-        GHRepository originalRepo = gh.getRepository(repository);
-        if (originalRepo != null) {
-            return originalRepo.fork().getUrl().toString();
+        showGitHubRateInformation(gh, step);
+        if (gh.getRateLimit().remaining > 10) {
+            GHRepository originalRepo = gh.getRepository(repository);
+            if (originalRepo != null) {
+                return originalRepo.fork().getUrl().toString();
+            }
         }
         return null;
     }
