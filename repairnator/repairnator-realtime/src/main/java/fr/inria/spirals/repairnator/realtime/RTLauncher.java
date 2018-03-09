@@ -13,10 +13,6 @@ import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,17 +202,12 @@ public class RTLauncher {
     private void initializeSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        this.engines.add(new CSVSerializerEngine(this.arguments.getFile("output").getPath()));
-        this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("output").getPath()));
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        this.engines.addAll(fileSerializerEngines);
 
-        if (this.arguments.getString("mongoDBHost") != null) {
-            LOGGER.info("Initialize mongoDB serializer engine.");
-            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
-            if (mongoConnection.isConnected()) {
-                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
-            }
-        } else {
-            LOGGER.info("MongoDB won't be used for serialization");
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
         }
     }
 

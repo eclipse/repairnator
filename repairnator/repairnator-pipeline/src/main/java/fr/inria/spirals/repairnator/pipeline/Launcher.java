@@ -33,12 +33,6 @@ import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +40,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -119,9 +112,9 @@ public class Launcher {
         this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
         this.config.setClean(true);
         this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
-        if (this.arguments.getFile("outputPath") != null) {
+        if (this.arguments.getFile("output") != null) {
             this.config.setSerializeJson(true);
-            this.config.setJsonOutputPath(this.arguments.getFile("outputPath").getPath());
+            this.config.setJsonOutputPath(this.arguments.getFile("output").getPath());
         }
         if (this.arguments.getString("pushUrl") != null) {
             this.config.setPush(true);
@@ -139,42 +132,17 @@ public class Launcher {
     private void initializeSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        if (this.arguments.getString("spreadsheet") != null && this.arguments.getString("googleAccessToken") != null) {
-            LOGGER.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
-
-            try {
-                if (GoogleSpreadSheetFactory.initWithAccessToken(this.arguments.getString("googleAccessToken"))) {
-                    this.engines.add(new GoogleSpreadsheetSerializerEngine());
-                } else {
-                    LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets");
-                }
-            } catch (IOException | GeneralSecurityException e) {
-                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
-            }
-        } else {
-            LOGGER.info("Google Spreadsheet won't be used for serialization.");
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithAccessToken(this.arguments, LOGGER);
+        if (spreadsheetSerializerEngine != null) {
+            this.engines.add(spreadsheetSerializerEngine);
         }
 
-        if (config.isSerializeJson()) {
-            LOGGER.info("Initialize files serializers engines.");
-            String serializedFiles = config.getJsonOutputPath()+"/"+this.buildId;
-            this.engines.add(new CSVSerializerEngine(serializedFiles));
-            this.engines.add(new JSONFileSerializerEngine(serializedFiles));
-        } else {
-            LOGGER.info("Files serializer won't be used");
-        }
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        this.engines.addAll(fileSerializerEngines);
 
-        if (this.arguments.getString("mongoDBHost") != null) {
-            LOGGER.info("Initialize mongoDB serializer engine.");
-            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
-            if (mongoConnection.isConnected()) {
-                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
-            } else {
-                LOGGER.error("Error while connecting to mongoDB.");
-            }
-        } else {
-            LOGGER.info("MongoDB won't be used for serialization");
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
         }
     }
 
@@ -280,7 +248,7 @@ public class Launcher {
         opt2.setHelp("Specify path to Z3");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("outputPath");
+        opt2 = new FlaggedOption("output");
         opt2.setLongFlag("output");
         opt2.setShortFlag('o');
         opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));

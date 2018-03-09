@@ -4,8 +4,17 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +81,72 @@ public class LauncherUtils {
             logger.info("The email notifier engine won't be used.");
         }
         return notifierEngines;
+    }
+
+    public static SerializerEngine initMongoDBSerializerEngine(JSAPResult arguments, Logger logger) {
+        if (arguments.getString("mongoDBHost") != null) {
+            logger.info("Initialize mongoDB serializer engine.");
+            MongoConnection mongoConnection = new MongoConnection(arguments.getString("mongoDBHost"), arguments.getString("mongoDBName"));
+            if (mongoConnection.isConnected()) {
+                return new MongoDBSerializerEngine(mongoConnection);
+            } else {
+                logger.error("Error while connecting to mongoDB.");
+            }
+        } else {
+            logger.info("MongoDB won't be used for serialization.");
+        }
+        return null;
+    }
+
+    public static SerializerEngine initSpreadsheetSerializerEngineWithFileSecret(JSAPResult arguments, Logger logger) {
+        if (arguments.getString("spreadsheet") != null && arguments.getFile("googleSecretPath").exists()) {
+            logger.info("Initialize Google spreadsheet serializer engine.");
+            GoogleSpreadSheetFactory.setSpreadsheetId(arguments.getString("spreadsheet"));
+            try {
+                GoogleSpreadSheetFactory.initWithFileSecret(arguments.getFile("googleSecretPath").getPath());
+                return new GoogleSpreadsheetSerializerEngine();
+            } catch (IOException | GeneralSecurityException e) {
+                logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
+            }
+        } else {
+            logger.info("Google Spreadsheet won't be used for serialization.");
+        }
+        return null;
+    }
+
+    public static SerializerEngine initSpreadsheetSerializerEngineWithAccessToken(JSAPResult arguments, Logger logger) {
+        if (arguments.getString("spreadsheet") != null && arguments.getString("googleAccessToken") != null) {
+            logger.info("Initialize Google spreadsheet serializer engine.");
+            GoogleSpreadSheetFactory.setSpreadsheetId(arguments.getString("spreadsheet"));
+            try {
+                if (GoogleSpreadSheetFactory.initWithAccessToken(arguments.getString("googleAccessToken"))) {
+                    return new GoogleSpreadsheetSerializerEngine();
+                } else {
+                    logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.");
+                }
+            } catch (IOException | GeneralSecurityException e) {
+                logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
+            }
+        } else {
+            logger.info("Google Spreadsheet won't be used for serialization.");
+        }
+        return null;
+    }
+
+    public static List<SerializerEngine> initFileSerializerEngines(JSAPResult arguments, Logger logger) {
+        List<SerializerEngine> fileSerializerEngines = new ArrayList<>();
+        if (arguments.getFile("output") != null) {
+            logger.info("Initialize file serializer engines.");
+
+            String path = arguments.getFile("output").getPath();
+            path += arguments.contains("build") ? "/"+arguments.getInt("build") : "";
+
+            fileSerializerEngines.add(new CSVSerializerEngine(path));
+            fileSerializerEngines.add(new JSONFileSerializerEngine(path));
+        } else {
+            logger.info("File serializers won't be used.");
+        }
+        return fileSerializerEngines;
     }
 
 }

@@ -15,21 +15,14 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -73,38 +66,17 @@ public class Launcher {
     private void prepareSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        if (this.arguments.getString("spreadsheet") != null && this.arguments.getFile("googleSecretPath").exists()) {
-            LOGGER.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
-
-            try {
-                GoogleSpreadSheetFactory.initWithFileSecret(this.arguments.getFile("googleSecretPath").getPath());
-                this.engines.add(new GoogleSpreadsheetSerializerEngine());
-            } catch (IOException | GeneralSecurityException e) {
-                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
-            }
-        } else {
-            LOGGER.info("Google Spreadsheet won't be used for serialization.");
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
+        if (spreadsheetSerializerEngine != null) {
+            this.engines.add(spreadsheetSerializerEngine);
         }
 
-        if (this.arguments.getFile("output") != null) {
-            LOGGER.info("Initialize files serializers engines.");
-            this.engines.add(new CSVSerializerEngine(this.arguments.getFile("output").getPath()));
-            this.engines.add(new JSONFileSerializerEngine(this.arguments.getFile("output").getPath()));
-        } else {
-            LOGGER.info("Files serializer won't be used");
-        }
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        this.engines.addAll(fileSerializerEngines);
 
-        if (this.arguments.getString("mongoDBHost") != null) {
-            LOGGER.info("Initialize mongoDB serializer engine.");
-            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
-            if (mongoConnection.isConnected()) {
-                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
-            } else {
-                LOGGER.error("Error while connecting to mongoDB.");
-            }
-        } else {
-            LOGGER.info("MongoDB won't be used for serialization");
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
         }
     }
 
