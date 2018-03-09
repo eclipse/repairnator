@@ -252,8 +252,12 @@ public class Launcher extends AbstractPoolManager {
                     if (launcherMode == LauncherMode.REPAIR) {
                         result.add(new InputBuildId(buggyBuildId));
                     } else {
-                        int patchedBuildId = (buildIds.length > 1) ? Integer.parseInt(buildIds[1]) : 0;
-                        result.add(new InputBuildId(buggyBuildId, patchedBuildId));
+                        if (buildIds.length > 1) {
+                            int patchedBuildId = Integer.parseInt(buildIds[1]);
+                            result.add(new InputBuildId(buggyBuildId, patchedBuildId));
+                        } else {
+                            LOGGER.error("The build "+buggyBuildId+" will not be processed because there is no next build for it in the input file.");
+                        }
                     }
                 }
             }
