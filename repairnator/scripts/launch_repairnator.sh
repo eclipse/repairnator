@@ -73,7 +73,7 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
     fi
 
     echo "Supplementary args for scanner: $args"
-    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $SCANNER_MODE -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
+    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $REPAIR_MODE -l $SCANNER_NB_HOURS -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
 fi
 
 if [ "$SKIP_LAUNCH_REPAIRNATOR" -eq 1 ]; then
@@ -103,7 +103,7 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
 fi
 
 echo "Supplementary args for docker pool $args"
-java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $SCANNER_MODE $args &> $LOG_DIR/dockerpool.log
+java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $REPAIR_MODE $args &> $LOG_DIR/dockerpool.log
 
 echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR

@@ -18,65 +18,54 @@ See [How to Design a Program Repair Bot? Insights from the Repairnator Project](
 }
 ```
 
-## How does Repairnator work?
+## Quickstart
 
-RepairNator is decomposed in 4 different entities, which can be used independently of in interaction: 
-  - repairnator-core: contains shared elements for all other elements, it can be also use to generate Google Spreadsheets Credentials
-  - repairnator-scanner: as indicated by the name, this part can be used to scan automatically Travis Build and produce metrics and list of build ids
-  - repairnator-dockerpool: this part can be used to create a pool of docker containers to launch, given a list of build ids
-  - repairnator-pipeline: the main part of RepairNator, given a build id this part will try to compile, test and repair it, gathering data on it
-  
-Usage of each parts are detailed in their own Readme file.
-   
-## How to use Repairnator?
+### Requirements
 
-On a linux machine, be sure to install Java 8, Maven 3.3.9, Docker and uuidgen tool (package uuid-runtime on Ubuntu).
+In order to run Repairnator with the provided scripts, you'll need the following components installed: 
+  - git
+  - docker
+  - uuidgen utility tools (available for Mac & Linux)
+ 
+You also need to get a Github API key: Go to [Github Personal Access Tokens](https://github.com/settings/tokens), and click on "Generate new token". 
+You don't need to tick any box for Repairnator. Then just copy and keep the generated token somewhere safe.
 
-Create a directory dedicated to repairnator called `librepair` and create in it the following folders:
-  - bin
-  - logs
-  - scripts
-  - github
-  
-Under github directory, clone this repository and then copy and paste `travis/travis-install.sh` bash file.
-Launch it with the following command:
+### Setup Repairnator
 
-```
-chmod +x travis-install.sh
-./travis-install.sh
-```
+All Repairnator scripts are located in the directory `repairnator/scripts`. 
+The scripts use the configuration set in `repairnator/scripts/set_env_variable.sh`.
 
-Then go back to `librepair` directory and launch the following commands:
-```
-chmod +x ./scripts/*.sh
-./scripts/install_git_rebase_last.sh
-```
+In order to use Repairnator: 
+   1. clone this repository, 
+   2. open in a file editor `repairnator/scripts/set_env_variable.sh`
+   3. edit the file to specify the mandatory elements (you must add the Github Personal Access Token here)
 
-Then create a file containing list of GitHub project names (one name per line) in file `scripts/project_list.txt`.
+### Launch Repairnator on a given Travis Build ID
 
-Then edit file `scripts/set_env_variable.sh` to put right information.
+From a Travis URL like this one: https://travis-ci.org/surli/failingProject/builds/350466198 you can retrieve a Build ID by taking the last part of the URL.
+Here it is: `350466198`.
 
-And finally you should be able to launch repairnator executing the following command:
+All you have to do, to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
-```
-./scripts/launch_repairnator.sh
+```bash
+cd github/repairnator/repairnator/scripts
+./repair_buggy_build.sh 350466198
 ```
 
-You can also launch it with a list of build ids passed as argument, to skip the scanning process: 
-
-```
-./scripts/launch_repairnator.sh /path/to/file/with/build/ids
-```
+The script will start a docker container to run Repairnator on your specified Build ID.
 
 ## Content of the repository
 
-This repository contains three sub projects:
+This repository is organized as following:
 
-  * [RepairNator](https://github.com/Spirals-Team/librepair/tree/master/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
-  * [travisFilter](https://github.com/Spirals-Team/librepair/tree/master/travisFilter) is a really small project intented to filter quickly set of Github project to detect if they're using Travis or not.
-  * [sandbox](https://github.com/Spirals-Team/librepair/tree/master/sandbox) TODO
+  * [Repairnator](/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
+  * [bears-usage](/bears-usage) is a side project dedicated to gather data from repairnator.json files
+  * [resources](/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
+  * [website](/website) contains all data to produce repairnator website
+  
+Each directory contains its own Readme explaining its own internal organization.
 
-## Scripts
+## License
 
- `librepair/resources/clean_old_branches.sh` removes bad branches from https://github.com/Spirals-Team/librepair-experiments
+This project has been funded by InriaHub. The content of this repository is licensed under the AGPL terms. 
 
