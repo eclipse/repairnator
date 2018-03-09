@@ -346,6 +346,7 @@ public class Launcher extends AbstractPoolManager {
         if (this.arguments.getString("pushUrl") != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
+            this.config.setFork(true);
         }
         this.config.setRunId(this.arguments.getString("runId"));
         this.config.setSpreadsheetId(this.arguments.getString("spreadsheet"));
