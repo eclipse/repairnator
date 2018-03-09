@@ -179,7 +179,7 @@ public abstract class AbstractStep {
     private void observeAndNotify() {
         ProjectInspector inspector = this.getInspector();
         JobStatus jobStatus = inspector.getJobStatus();
-        if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked() && this.config.isPush()) {
+        if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked() && this.config.isPush() && this.config.isFork()) {
             String repositoryName = getInspector().getRepoSlug();
             getLogger().info("Fork the repository: "+repositoryName);
             try {
