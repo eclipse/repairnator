@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.DateStringParser;
-import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
@@ -127,13 +126,7 @@ public class Launcher {
         opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("googleSecretPath");
-        opt2.setShortFlag('g');
-        opt2.setLongFlag("googleSecretPath");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
-        opt2.setDefault("./client_secret.json");
-        opt2.setHelp("Specify the path to the JSON google secret for serializing.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
 
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
 

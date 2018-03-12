@@ -121,6 +121,23 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgGoogleSecretPath() {
+        FlaggedOption opt = new FlaggedOption("googleSecretPath");
+        opt.setLongFlag("googleSecretPath");
+        opt.setStringParser(FileStringParser.getParser().setMustBeFile(true));
+        opt.setDefault("./client_secret.json");
+        opt.setHelp("Specify the path to the JSON google secret for serializing.");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgGoogleAccessToken() {
+        FlaggedOption opt = new FlaggedOption("googleAccessToken");
+        opt.setLongFlag("googleAccessToken");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify the google access token to use for serializers.");
+        return opt;
+    }
+
     public static FlaggedOption defineArgSmtpServer() {
         FlaggedOption opt = new FlaggedOption("smtpServer");
         opt.setLongFlag("smtpServer");

@@ -5,7 +5,6 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
@@ -102,13 +101,7 @@ public class Launcher extends AbstractPoolManager {
         opt2.setHelp("Specify the number of day before killing the whole pool.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("googleSecretPath");
-        opt2.setShortFlag('s');
-        opt2.setLongFlag("googleSecretPath");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
-        opt2.setDefault("./client_secret.json");
-        opt2.setHelp("Specify the path to the JSON google secret for serializing.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
 
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
 
