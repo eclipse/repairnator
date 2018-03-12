@@ -72,13 +72,7 @@ public class Launcher extends AbstractPoolManager {
 
         this.jsap.registerParameter(LauncherUtils.defineArgThreads());
 
-        opt2 = new FlaggedOption("globalTimeout");
-        opt2.setShortFlag('g');
-        opt2.setLongFlag("globalTimeout");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault("1");
-        opt2.setHelp("Specify the number of day before killing the whole pool.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 
         this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
 

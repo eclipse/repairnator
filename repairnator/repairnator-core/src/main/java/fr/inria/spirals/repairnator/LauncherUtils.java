@@ -192,6 +192,16 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgGlobalTimeout() {
+        FlaggedOption opt = new FlaggedOption("globalTimeout");
+        opt.setShortFlag('g');
+        opt.setLongFlag("globalTimeout");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("1");
+        opt.setHelp("Specify the number of day before killing the whole pool.");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
