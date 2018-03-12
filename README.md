@@ -42,17 +42,18 @@ In order to use Repairnator:
 
 ### Launch Repairnator on a given Travis Build ID
 
-From a Travis URL like this one: https://travis-ci.org/surli/failingProject/builds/350466198 you can retrieve a Build ID by taking the last part of the URL.
-Here it is: `350466198`.
+From a Travis URL like this one: https://travis-ci.org/surli/test-repairnator/builds/352395977 you can retrieve a Build ID by taking the last part of the URL.
+Here it is: `352395977`.
 
 All you have to do, to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
 ```bash
 cd github/repairnator/repairnator/scripts
-./repair_buggy_build.sh 350466198
+./repair_buggy_build.sh 352395977
 ```
 
 The script will start a docker container to run Repairnator on your specified Build ID.
+When the docker container is finished you can find logs and serialized files in the $HOME_REPAIR/logs path.
 
 ## Content of the repository
 
