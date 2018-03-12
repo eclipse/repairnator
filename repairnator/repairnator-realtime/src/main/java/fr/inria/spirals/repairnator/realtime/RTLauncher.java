@@ -74,11 +74,7 @@ public class RTLauncher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
 
-        opt2 = new FlaggedOption("pushUrl");
-        opt2.setLongFlag("pushurl");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify push URL to push data from docker builds");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
 

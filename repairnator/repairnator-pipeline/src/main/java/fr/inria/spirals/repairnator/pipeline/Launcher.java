@@ -189,11 +189,7 @@ public class Launcher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
 
-        opt2 = new FlaggedOption("pushUrl");
-        opt2.setLongFlag("pushurl");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify repository to push data");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         opt2 = new FlaggedOption("z3");
         opt2.setLongFlag("z3");

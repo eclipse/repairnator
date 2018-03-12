@@ -202,6 +202,14 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgPushUrl() {
+        FlaggedOption opt = new FlaggedOption("pushUrl");
+        opt.setLongFlag("pushurl");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify repository URL to push data.");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
