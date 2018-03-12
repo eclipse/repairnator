@@ -4,10 +4,7 @@ sudo: true
 
 jdk: openjdk8
 
-before_install:
-  - chmod +x -R travis/
-
-script: "./travis/travis-run.sh"
+script: "./.travis/travis-run.sh"
 
 cache:
   directories:

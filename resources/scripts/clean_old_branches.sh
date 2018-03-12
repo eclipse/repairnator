@@ -2,8 +2,12 @@
 
 JSON_SCHEMA="`pwd`/repairnator-schema.json"
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: ./clean_old_branches.sh <Github repository>"
+if [ "$#" -eq 2 ]; then
+    BACKUP=$2
+elif [ "$#" -eq 1 ]; then
+    BACKUP="NONE"
+else
+    echo "Usage: ./clean_old_branches.sh <Github repository> [backup-repository]"
     exit -1
 fi
 
@@ -25,6 +29,10 @@ if [ ! -d "$1" ]; then
         echo "Error while cloning"
         exit 1
     fi
+
+    if [ "$BACKUP" != "NONE" ]; then
+        git remote add backup $BACKUP
+    fi
 else
     TMP_GIT_DIR=$1
     cd $TMP_GIT_DIR
@@ -32,6 +40,19 @@ fi
 
 TMP_FILE_OLDBRANCHES=/tmp/oldbranches_`uuidgen`
 TMP_FILE_COUNTER=/tmp/counter_`uuidgen`
+
+function delete {
+    if [ "$BACKUP" != "NONE" ]; then
+        git push backup $1
+    fi
+
+    export OLD_BRANCHES="$OLD_BRANCHES $branchname"
+    export COUNTER=$((COUNTER+1))
+    echo $COUNTER > $TMP_FILE_COUNTER
+    echo $OLD_BRANCHES > $TMP_FILE_OLDBRANCHES
+}
+
+
 
 git for-each-ref --shell --format="branchname=%(refname:strip=3)" refs/remotes | \
 if [[ 1 -eq 1 ]]; then
@@ -44,8 +65,7 @@ if [[ 1 -eq 1 ]]; then
             echo "Head ref ignored"
         elif [[ "$branchname" == "surli-failingProject"* ]]; then
             echo "Branch detected from surli/failingProject: $branchname"
-            export OLD_BRANCHES="$OLD_BRANCHES $branchname"
-            export COUNTER=$((COUNTER+1))
+            delete $branchname
         else
             echo "Treating branch $branchname"
             git checkout $branchname
@@ -55,34 +75,27 @@ if [[ 1 -eq 1 ]]; then
                     echo "found valid repairnator.json"
                 else
                     echo "INVALID repairnator.json"
-                    export OLD_BRANCHES="$OLD_BRANCHES $branchname"
-                    export COUNTER=$((COUNTER+1))
+                    delete $branchname
                 fi
             else
                 echo "No repairnator.json found. The branch is marked to be deleted."
-                export OLD_BRANCHES="$OLD_BRANCHES $branchname"
-                export COUNTER=$((COUNTER+1))
+                delete $branchname
             fi
         fi
         sync
     done
-
-    echo $COUNTER > $TMP_FILE_COUNTER
-    echo $OLD_BRANCHES > $TMP_FILE_OLDBRANCHES
 fi
 
 COUNTER=$(cat $TMP_FILE_COUNTER)
 OLD_BRANCHES=$(cat $TMP_FILE_OLDBRANCHES)
-#
-#while true; do
-#        read -p "Do you wish to delete the following $COUNTER branches: $OLD_BRANCHES?" yn
-#        case $yn in
-#            [Yy]* ) git push origin --delete $OLD_BRANCHES; break;;
-#            [Nn]* ) exit;;
-#            * ) echo "Please answer yes or no.";;
-#        esac
-#    done
-#
-#rm $TMP_FILE_OLDBRANCHES
-#rm $TMP_FILE_COUNTER
-#rm -rf $TMP_GIT_DIR
+
+while true; do
+    read -p "Do you wish to delete the following $COUNTER branches: $OLD_BRANCHES?" yn
+    case $yn in
+        [Yy]* ) git push origin --delete $OLD_BRANCHES; break;;
+        [Nn]* ) echo "The script will exit without deleting anything"; exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+rm -rf $TMP_GIT_DIR

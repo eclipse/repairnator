@@ -4,6 +4,7 @@ import fr.inria.jtravis.entities.*;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.kohsuke.github.*;
@@ -54,6 +55,8 @@ public class ProjectScanner {
         this.repositories = new HashSet<Repository>();
         this.runId = runId;
         this.skipFailing = skipFailing;
+
+        this.logger.info("Look from " + Utils.formatCompleteDate(this.lookFromDate) + " to " + Utils.formatCompleteDate(this.lookToDate));
     }
 
     public String getRunId() {
@@ -311,35 +314,34 @@ public class ProjectScanner {
     }
 
     private boolean thereIsDiffOnJavaFile(Build build, Build previousBuild) {
-        try {
-            GitHub gh = GitHubBuilder.fromEnvironment().build();
-
-            GHRateLimit rateLimit = gh.getRateLimit();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-            this.logger.debug("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
-
-            if (rateLimit.remaining > 2) {
-                GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
-                GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
-                GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
-                GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
-                GHCommit.File[] modifiedFiles = compare.getFiles();
-                for (GHCommit.File file : modifiedFiles) {
-                    if (file.getFileName().endsWith(".java")) {
-                        this.logger.debug("First java file found: " + file.getFileName());
-                        return true;
-                    }
+        GHCompare compare = this.getCompare(build, previousBuild);
+        if (compare != null) {
+            GHCommit.File[] modifiedFiles = compare.getFiles();
+            for (GHCommit.File file : modifiedFiles) {
+                if (file.getFileName().endsWith(".java")) {
+                    this.logger.debug("First java file found: " + file.getFileName());
+                    return true;
                 }
-            } else {
-                this.logger.warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
             }
-        } catch (IOException e) {
-            this.logger.warn("Error while getting commit from Github: " + e);
         }
         return false;
     }
 
     private boolean thereIsDiffOnTests(Build build, Build previousBuild) {
+        GHCompare compare = this.getCompare(build, previousBuild);
+        if (compare != null) {
+            GHCommit.File[] modifiedFiles = compare.getFiles();
+            for (GHCommit.File file : modifiedFiles) {
+                if (file.getFileName().toLowerCase().contains("test") && file.getFileName().endsWith(".java")) {
+                    this.logger.debug("First probable test file found: " + file.getFileName());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private GHCompare getCompare(Build build, Build previousBuild) {
         try {
             GitHub gh = GitHubBuilder.fromEnvironment().build();
 
@@ -352,20 +354,14 @@ public class ProjectScanner {
                 GHCommit buildCommit = ghRepo.getCommit(build.getCommit().getSha());
                 GHCommit previousBuildCommit = ghRepo.getCommit(previousBuild.getCommit().getSha());
                 GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
-                GHCommit.File[] modifiedFiles = compare.getFiles();
-                for (GHCommit.File file : modifiedFiles) {
-                    if (file.getFileName().toLowerCase().contains("test") && file.getFileName().endsWith(".java")) {
-                        this.logger.debug("First probable test file found: " + file.getFileName());
-                        return true;
-                    }
-                }
+                return compare;
             } else {
                 this.logger.warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
             }
         } catch (IOException e) {
             this.logger.warn("Error while getting commit from Github: " + e);
         }
-        return false;
+        return null;
     }
 
 }

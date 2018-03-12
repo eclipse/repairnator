@@ -21,6 +21,7 @@ import java.util.List;
  * Created by fernanda on 06/03/2017.
  */
 public class ScannerSerializer4Bears extends ProcessSerializer {
+
     private ProjectScanner scanner;
 
     public ScannerSerializer4Bears(List<SerializerEngine> engines, ProjectScanner scanner) {
@@ -30,6 +31,7 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
 
     private List<Object> serializeAsList() {
         List<Object> dataCol = new ArrayList<Object>();
+
         dataCol.add(Utils.getHostname());
         dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
         dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningEndDate()));
@@ -43,11 +45,10 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         dataCol.add(this.scanner.getTotalJavaPassingBuilds());
         dataCol.add(this.scanner.getTotalBuildInJavaFailing());
         dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
+        dataCol.add(this.scanner.getTotalPRBuilds());
         dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs());
         dataCol.add(this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
         dataCol.add(this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
-        dataCol.add(this.scanner.getTotalPRBuilds());
-        dataCol.add(Utils.formatOnlyDay(this.scanner.getLookFromDate()));
         dataCol.add(this.scanner.getRunId());
 
         return dataCol;
@@ -63,10 +64,14 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         result.addProperty("dateEndStr", Utils.formatCompleteDate(this.scanner.getScannerRunningEndDate()));
         this.addDate(result, "dateEnd", this.scanner.getScannerRunningEndDate());
 
-        result.addProperty("dateLimitStr", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
-        this.addDate(result, "dateLimit", this.scanner.getLookFromDate());
+        result.addProperty("duration", this.scanner.getScannerDuration());
 
-        result.addProperty("dayLimit", Utils.formatOnlyDay(this.scanner.getLookFromDate()));
+        result.addProperty("dateLookedFromStr", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
+        this.addDate(result, "dateLookedFrom", this.scanner.getLookFromDate());
+
+        result.addProperty("dateLookedToStr", Utils.formatCompleteDate(this.scanner.getLookToDate()));
+        this.addDate(result, "dateLookedTo", this.scanner.getLookToDate());
+
         result.addProperty("totalRepoNumber", this.scanner.getTotalRepoNumber());
         result.addProperty("totalRepoUsingTravis", this.scanner.getTotalRepoUsingTravis());
         result.addProperty("totalScannedBuilds", this.scanner.getTotalScannedBuilds());
@@ -74,11 +79,10 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
         result.addProperty("totalJavaPassingBuilds", this.scanner.getTotalJavaPassingBuilds());
         result.addProperty("totalJavaFailingBuilds", this.scanner.getTotalBuildInJavaFailing());
         result.addProperty("totalJavaFailingBuildsWithFailingTests", this.scanner.getTotalBuildInJavaFailingWithFailingTests());
+        result.addProperty("totalPRBuilds", this.scanner.getTotalPRBuilds());
         result.addProperty("totalFailingAndPassingBuildPairs", this.scanner.getTotalNumberOfFailingAndPassingBuildPairs());
         result.addProperty("totalPassingAndPassingBuildPairs", this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
         result.addProperty("totalPairOfBuilds", this.scanner.getTotalNumberOfFailingAndPassingBuildPairs() + this.scanner.getTotalNumberOfPassingAndPassingBuildPairs());
-        result.addProperty("totalPRBuilds", this.scanner.getTotalPRBuilds());
-        result.addProperty("duration", this.scanner.getScannerDuration());
         result.addProperty("runId", this.scanner.getRunId());
 
         return result;
@@ -122,8 +126,8 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
             result.addProperty("dateBegin", Utils.getValue(value, 1));
             result.addProperty("dateEnd", Utils.getValue(value, 2));
             result.addProperty("duration", Utils.getValue(value, 3));
-            //result.addProperty("dayLimit", Utils.getValue(value, 4));
-            result.addProperty("dateLimit", Utils.getValue(value, 5));
+            result.addProperty("dateLookedFrom", Utils.getValue(value, 4));
+            result.addProperty("dateLookedTo", Utils.getValue(value, 5));
             result.addProperty("totalRepoNumber", Utils.getValue(value, 6));
             result.addProperty("totalRepoUsingTravis", Utils.getValue(value, 7));
             result.addProperty("totalScannedBuilds", Utils.getValue(value, 8));
@@ -131,12 +135,11 @@ public class ScannerSerializer4Bears extends ProcessSerializer {
             result.addProperty("totalJavaPassingBuilds", Utils.getValue(value, 10));
             result.addProperty("totalJavaFailingBuilds", Utils.getValue(value, 11));
             result.addProperty("totalJavaFailingBuildsWithFailingTests", Utils.getValue(value, 12));
-            result.addProperty("totalFailingAndPassingBuildPairs", Utils.getValue(value, 13));
-            result.addProperty("totalPassingAndPassingBuildPairs", Utils.getValue(value, 14));
-            result.addProperty("totalPairOfBuilds", Utils.getValue(value, 15));
-            result.addProperty("totalPRBuilds", Utils.getValue(value, 16));
-            result.addProperty("dayLimit", Utils.getValue(value, 17));
-            result.addProperty("runId", Utils.getValue(value, 18));
+            result.addProperty("totalPRBuilds", Utils.getValue(value, 13));
+            result.addProperty("totalFailingAndPassingBuildPairs", Utils.getValue(value, 14));
+            result.addProperty("totalPassingAndPassingBuildPairs", Utils.getValue(value, 15));
+            result.addProperty("totalPairOfBuilds", Utils.getValue(value, 16));
+            result.addProperty("runId", Utils.getValue(value, 17));
 
             data.add(new SerializedData(Collections.EMPTY_LIST, result));
         }

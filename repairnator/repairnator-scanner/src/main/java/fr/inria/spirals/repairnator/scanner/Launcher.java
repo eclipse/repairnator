@@ -98,12 +98,6 @@ public class Launcher {
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
 
-        sw1 = new Switch("scanOnly");
-        sw1.setLongFlag("scan-only");
-        sw1.setDefault("false");
-        sw1.setHelp("Use it when the scanner is not used to launch the pipeline to gather more datas in spreadsheet.");
-        this.jsap.registerParameter(sw1);
-
         sw1 = new Switch("skip-failing");
         sw1.setLongFlag("skip-failing");
         sw1.setDefault("false");
@@ -162,14 +156,14 @@ public class Launcher {
         opt2.setShortFlag('f');
         opt2.setLongFlag("lookFromDate");
         opt2.setStringParser(dateStringParser);
-        opt2.setHelp("Specify the initial date to get builds");
+        opt2.setHelp("Specify the initial date to get builds (e.g. 01/01/2017). Note that the search starts from 00:00:00 of the specified date.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("lookToDate");
         opt2.setShortFlag('t');
         opt2.setLongFlag("lookToDate");
         opt2.setStringParser(dateStringParser);
-        opt2.setHelp("Specify the final date to get builds");
+        opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("googleSecretPath");
@@ -225,6 +219,9 @@ public class Launcher {
         ProjectScanner scanner;
         Date lookFromDate = this.arguments.getDate("lookFromDate");
         Date lookToDate = this.arguments.getDate("lookToDate");
+        if (lookToDate != null) {
+            lookToDate = Utils.getLastTimeFromDate(lookToDate);
+        }
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
             scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"), this.arguments.getBoolean("skip-failing"));
         } else {
@@ -243,11 +240,8 @@ public class Launcher {
             scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
             scannerSerializer = new ScannerSerializer4Bears(this.engines, scanner);
-
-            if (this.arguments.getBoolean("scanOnly")) {
-                ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
-                scannerDetailedDataSerializer.serialize();
-            }
+            ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
+            scannerDetailedDataSerializer.serialize();
         }
 
         scannerSerializer.serialize();

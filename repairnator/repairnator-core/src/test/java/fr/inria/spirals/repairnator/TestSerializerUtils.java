@@ -2,6 +2,8 @@ package fr.inria.spirals.repairnator;
 
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,4 +52,24 @@ public class TestSerializerUtils {
 
         assertThat(humanString, is("03:21"));
     }
+
+    @Test
+    public void testGetLastTimeFromDate() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormatAux = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse("01/01/2017");
+
+            Date obtainedDate = Utils.getLastTimeFromDate(date);
+
+            String expectedStr = "01/01/2017 23:59:59";
+
+            assertThat(simpleDateFormatAux.format(obtainedDate), is(expectedStr));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
