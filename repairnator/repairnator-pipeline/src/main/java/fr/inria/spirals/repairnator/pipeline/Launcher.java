@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.pipeline;
 
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildStatus;
@@ -178,20 +177,7 @@ public class Launcher {
         opt2.setHelp("Specify the build id to use.");
         this.jsap.registerParameter(opt2);
 
-        String launcherModeValues = "";
-        for (LauncherMode mode : LauncherMode.values()) {
-            launcherModeValues += mode.name() + ";";
-        }
-        launcherModeValues.substring(0, launcherModeValues.length() - 2);
-
-        // Launcher mode
-        opt2 = new FlaggedOption("launcherMode");
-        opt2.setShortFlag('m');
-        opt2.setLongFlag("launcherMode");
-        opt2.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
 
         opt2 = new FlaggedOption("runId");
         opt2.setLongFlag("runId");

@@ -1,8 +1,10 @@
 package fr.inria.spirals.repairnator;
 
+import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
+import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -12,6 +14,7 @@ import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine
 import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -46,6 +49,22 @@ public class LauncherUtils {
         sw.setDefault("false");
         sw.setHelp("Activate the notification when the process ends.");
         return sw;
+    }
+
+    public static FlaggedOption defineArgLauncherMode(String helpMessage) {
+        String launcherModeValues = "";
+        for (LauncherMode mode : LauncherMode.values()) {
+            launcherModeValues += mode.name() + ";";
+        }
+        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 1);
+
+        FlaggedOption opt = new FlaggedOption("launcherMode");
+        opt.setShortFlag('m');
+        opt.setLongFlag("launcherMode");
+        opt.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
+        opt.setRequired(true);
+        opt.setHelp(helpMessage);
+        return opt;
     }
 
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {

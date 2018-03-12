@@ -5,7 +5,6 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
@@ -142,20 +141,7 @@ public class Launcher extends AbstractPoolManager {
         opt2.setHelp("Specify mongodb DB name.");
         this.jsap.registerParameter(opt2);
 
-        String launcherModeValues = "";
-        for (LauncherMode mode : LauncherMode.values()) {
-            launcherModeValues += mode.name() + ";";
-        }
-        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 1);
-
-        // Launcher mode
-        opt2 = new FlaggedOption("launcherMode");
-        opt2.setShortFlag('m');
-        opt2.setLongFlag("launcherMode");
-        opt2.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify if the dockerpool intends to repair failing build (REPAIR) or gather builds info (BEARS).");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
 
         opt2 = new FlaggedOption("spreadsheet");
         opt2.setLongFlag("spreadsheet");

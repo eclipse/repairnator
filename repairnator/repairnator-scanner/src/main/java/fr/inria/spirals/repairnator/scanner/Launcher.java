@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.DateStringParser;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherType;
@@ -112,20 +111,7 @@ public class Launcher {
         opt2.setHelp("Specify where to write the list of build ids (default: stdout)");
         this.jsap.registerParameter(opt2);
 
-        String launcherModeValues = "";
-        for (LauncherMode mode : LauncherMode.values()) {
-            launcherModeValues += mode.name() + ";";
-        }
-        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 1);
-
-        // Launcher mode
-        opt2 = new FlaggedOption("launcherMode");
-        opt2.setShortFlag('m');
-        opt2.setLongFlag("launcherMode");
-        opt2.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify if the scanner intends to get failing build (REPAIR) or fixer builds (BEARS).");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
 
         opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
