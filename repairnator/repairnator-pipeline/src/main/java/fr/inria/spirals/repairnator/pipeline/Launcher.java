@@ -188,11 +188,7 @@ public class Launcher {
         opt2.setHelp("Specify the google access token to use for serializers.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("spreadsheet");
-        opt2.setLongFlag("spreadsheet");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
 
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
 

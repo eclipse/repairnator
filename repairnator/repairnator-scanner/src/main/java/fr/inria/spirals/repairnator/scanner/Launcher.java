@@ -141,11 +141,7 @@ public class Launcher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
 
-        opt2 = new FlaggedOption("spreadsheet");
-        opt2.setLongFlag("spreadsheet");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
 
         this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
 

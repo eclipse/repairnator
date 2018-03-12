@@ -118,11 +118,7 @@ public class Launcher extends AbstractPoolManager {
 
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
 
-        opt2 = new FlaggedOption("spreadsheet");
-        opt2.setLongFlag("spreadsheet");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
 
         opt2 = new FlaggedOption("pushUrl");
         opt2.setLongFlag("pushurl");

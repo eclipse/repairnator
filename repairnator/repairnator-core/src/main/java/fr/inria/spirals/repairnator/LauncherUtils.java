@@ -113,6 +113,14 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgSpreadsheetId() {
+        FlaggedOption opt = new FlaggedOption("spreadsheet");
+        opt.setLongFlag("spreadsheet");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify Google Spreadsheet ID to put data.");
+        return opt;
+    }
+
     public static FlaggedOption defineArgSmtpServer() {
         FlaggedOption opt = new FlaggedOption("smtpServer");
         opt.setLongFlag("smtpServer");
