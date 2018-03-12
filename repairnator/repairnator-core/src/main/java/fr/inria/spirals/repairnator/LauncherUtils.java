@@ -67,6 +67,14 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgRunId() {
+        FlaggedOption opt = new FlaggedOption("runId");
+        opt.setLongFlag("runId");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify the run id for this launch.");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems

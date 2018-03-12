@@ -179,11 +179,7 @@ public class Launcher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
 
-        opt2 = new FlaggedOption("runId");
-        opt2.setLongFlag("runId");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify the runId for this launch.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
 
         opt2 = new FlaggedOption("googleAccessToken");
         opt2.setShortFlag('g');

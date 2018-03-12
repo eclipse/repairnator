@@ -122,11 +122,7 @@ public class Launcher extends AbstractPoolManager {
         opt2.setHelp("Specify the path to the JSON google secret for serializing.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("runId");
-        opt2.setLongFlag("runId");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify the run id for this launch.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
 
         opt2 = new FlaggedOption("mongoDBHost");
         opt2.setLongFlag("dbhost");
