@@ -70,13 +70,7 @@ public class Launcher extends AbstractPoolManager {
 
         this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
 
-        opt2 = new FlaggedOption("threads");
-        opt2.setShortFlag('t');
-        opt2.setLongFlag("threads");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault("2");
-        opt2.setHelp("Specify the number of threads to run in parallel");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
 
         opt2 = new FlaggedOption("globalTimeout");
         opt2.setShortFlag('g');

@@ -182,6 +182,16 @@ public class LauncherUtils {
         return sw;
     }
 
+    public static FlaggedOption defineArgThreads() {
+        FlaggedOption opt = new FlaggedOption("threads");
+        opt.setShortFlag('t');
+        opt.setLongFlag("threads");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("2");
+        opt.setHelp("Specify the number of threads to run in parallel");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
