@@ -101,19 +101,9 @@ public class RTLauncher {
         opt2.setHelp("Specify push URL to push data from docker builds");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("smtpServer");
-        opt2.setLongFlag("smtpServer");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify SMTP server to use for Email notification");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
 
-        opt2 = new FlaggedOption("notifyto");
-        opt2.setLongFlag("notifyto");
-        opt2.setList(true);
-        opt2.setListSeparator(',');
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify email adresses to notify");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
         opt2 = new FlaggedOption("whitelist");
         opt2.setShortFlag('w');

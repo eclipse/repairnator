@@ -113,6 +113,24 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgSmtpServer() {
+        FlaggedOption opt = new FlaggedOption("smtpServer");
+        opt.setLongFlag("smtpServer");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify SMTP server to use for Email notification");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgNotifyto() {
+        FlaggedOption opt = new FlaggedOption("notifyto");
+        opt.setLongFlag("notifyto");
+        opt.setList(true);
+        opt.setListSeparator(',');
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify email addresses to notify");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
