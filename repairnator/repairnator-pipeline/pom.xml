@@ -43,7 +43,7 @@
         <dependency>
             <groupId>fr.inria.gforge.spirals</groupId>
             <artifactId>nopol</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>cede74c7247ab1b6322f32a2665c7974120d6089</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
