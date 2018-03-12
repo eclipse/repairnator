@@ -40,6 +40,14 @@ public class LauncherUtils {
         return sw;
     }
 
+    public static Switch defineArgNotifyEndProcess() {
+        Switch sw = new Switch("notifyEndProcess");
+        sw.setLongFlag("notifyEndProcess");
+        sw.setDefault("false");
+        sw.setHelp("Activate the notification when the process ends.");
+        return sw;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems

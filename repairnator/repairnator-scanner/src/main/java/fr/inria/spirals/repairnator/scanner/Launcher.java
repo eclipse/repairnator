@@ -94,11 +94,7 @@ public class Launcher {
         sw1.setHelp("Use it when the scanner should skip failing builds (can be used only with bears mode)");
         this.jsap.registerParameter(sw1);
 
-        sw1 = new Switch("notifyEndProcess");
-        sw1.setLongFlag("notifyEndProcess");
-        sw1.setDefault("false");
-        sw1.setHelp("Activate the notification when the process ends.");
-        this.jsap.registerParameter(sw1);
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
 
         // Tab size
         FlaggedOption opt2 = new FlaggedOption("input");
