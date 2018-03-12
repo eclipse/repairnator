@@ -166,19 +166,9 @@ public class Launcher {
         // Verbose output
         this.jsap = new JSAP();
 
-        // help
-        Switch sw1 = new Switch("help");
-        sw1.setShortFlag('h');
-        sw1.setLongFlag("help");
-        sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
+        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
 
-        // verbosity
-        sw1 = new Switch("debug");
-        sw1.setShortFlag('d');
-        sw1.setLongFlag("debug");
-        sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
+        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');

@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator;
 
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -22,6 +23,22 @@ import java.util.List;
  * Created by fermadeiral
  */
 public class LauncherUtils {
+
+    public static Switch defineArgHelp() {
+        Switch sw = new Switch("help");
+        sw.setShortFlag('h');
+        sw.setLongFlag("help");
+        sw.setDefault("false");
+        return sw;
+    }
+
+    public static Switch defineArgDebug() {
+        Switch sw = new Switch("debug");
+        sw.setShortFlag('d');
+        sw.setLongFlag("debug");
+        sw.setDefault("false");
+        return sw;
+    }
 
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
