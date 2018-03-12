@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -31,6 +32,19 @@ public class MavenHelper {
     public static final int MAVEN_ERROR = 1;
 
     public static final String SKIP_TEST_PROPERTY = "maven.test.skip.exec";
+    private static final List<String> SKIP_LIST = Arrays.asList(
+            "enforcer.skip",
+            "checkstyle.skip",
+            "cobertura.skip",
+            "skipITs",
+            "rat.skip",
+            "license.skip",
+            "findbugs.skip",
+            "gpg.skip",
+            "skip.npm",
+            "skip.gulp",
+            "skip.bower"
+    );
 
     private final Logger logger = LoggerFactory.getLogger(MavenHelper.class);
 
@@ -86,14 +100,9 @@ public class MavenHelper {
         }
 
         properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
-        properties.setProperty("enforcer.skip", "true");
-        properties.setProperty("checkstyle.skip", "true");
-        properties.setProperty("cobertura.skip", "true");
-        properties.setProperty("skipITs", "true");
-        properties.setProperty("rat.skip", "true");
-        properties.setProperty("license.skip", "true");
-        properties.setProperty("findbugs.skip", "true");
-        properties.setProperty("gpg.skip", "true");
+        for (String skip : SKIP_LIST) {
+            properties.setProperty(skip, "true");
+        }
         request.setProperties(properties);
 
         Invoker invoker = new DefaultInvoker();
