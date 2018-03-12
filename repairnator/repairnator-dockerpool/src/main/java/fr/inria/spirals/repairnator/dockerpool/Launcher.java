@@ -151,7 +151,7 @@ public class Launcher extends AbstractPoolManager {
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
 
         this.initConfig();
-        this.initializeSerializerEngines();
+        this.initSerializerEngines();
         this.initNotifiers();
     }
 
@@ -179,7 +179,7 @@ public class Launcher extends AbstractPoolManager {
         this.config.setNotifyTo(this.arguments.getStringArray("notifyto"));
     }
 
-    private void initializeSerializerEngines() {
+    private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
         SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);

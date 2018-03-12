@@ -92,7 +92,7 @@ public class Launcher {
 
         LOGGER.info("The pipeline will try to repair the following buildid: "+this.buildId);
 
-        this.initializeSerializerEngines();
+        this.initSerializerEngines();
         this.initNotifiers();
     }
 
@@ -128,7 +128,7 @@ public class Launcher {
         GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
     }
 
-    private void initializeSerializerEngines() {
+    private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
         SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithAccessToken(this.arguments, LOGGER);

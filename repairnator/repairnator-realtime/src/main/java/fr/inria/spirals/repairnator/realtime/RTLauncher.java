@@ -36,7 +36,7 @@ public class RTLauncher {
         this.launcherMode = LauncherMode.REPAIR;
 
         this.initConfig();
-        this.initializeSerializerEngines();
+        this.initSerializerEngines();
         this.initNotifiers();
     }
 
@@ -111,7 +111,7 @@ public class RTLauncher {
         this.config.setNotifyTo(this.arguments.getStringArray("notifyto"));
     }
 
-    private void initializeSerializerEngines() {
+    private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
         List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
