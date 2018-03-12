@@ -46,24 +46,23 @@ public class Launcher {
         this.jsap = new JSAP();
 
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
-
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
-
+        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, false, true, false, "Specify where to put output data"));
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
+        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
+        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 
         Switch sw1 = new Switch("humanPatch");
         sw1.setShortFlag('p');
         sw1.setLongFlag("humanPatch");
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
-
-        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
-
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, false, true, false, "Specify where to put output data"));
 
         FlaggedOption opt2 = new FlaggedOption("repository");
         opt2.setShortFlag('r');
@@ -72,16 +71,6 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setHelp("Specify where to collect branches");
         this.jsap.registerParameter(opt2);
-
-        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
     }
 
     private List<String> readListOfBranches() {

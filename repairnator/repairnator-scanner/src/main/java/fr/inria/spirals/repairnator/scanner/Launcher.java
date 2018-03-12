@@ -83,23 +83,24 @@ public class Launcher {
         this.jsap = new JSAP();
 
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
-
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
+        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, false, true, false, "Specify where to write the list of build ids (default: stdout)"));
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
         Switch sw1 = new Switch("skip-failing");
         sw1.setLongFlag("skip-failing");
         sw1.setDefault("false");
         sw1.setHelp("Use it when the scanner should skip failing builds (can be used only with bears mode)");
         this.jsap.registerParameter(sw1);
-
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
-
-        // Tab size
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
-
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, false, true, false, "Specify where to write the list of build ids (default: stdout)"));
-
-        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
 
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
@@ -125,20 +126,6 @@ public class Launcher {
         opt2.setStringParser(dateStringParser);
         opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
         this.jsap.registerParameter(opt2);
-
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {

@@ -166,8 +166,17 @@ public class Launcher {
         this.jsap = new JSAP();
 
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
-
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, true, false, true, "Specify path to output serialized files"));
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        this.jsap.registerParameter(LauncherUtils.defineArgGoogleAccessToken());
+        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -177,28 +186,12 @@ public class Launcher {
         opt2.setHelp("Specify the build id to use.");
         this.jsap.registerParameter(opt2);
 
-        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
-
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleAccessToken());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
-
         opt2 = new FlaggedOption("z3");
         opt2.setLongFlag("z3");
         opt2.setDefault("./z3_for_linux");
         opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
         opt2.setHelp("Specify path to Z3");
         this.jsap.registerParameter(opt2);
-
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, true, false, true, "Specify path to output serialized files"));
 
         opt2 = new FlaggedOption("workspace");
         opt2.setLongFlag("workspace");
@@ -207,10 +200,6 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify path to output serialized files");
         this.jsap.registerParameter(opt2);
-
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
         opt2 = new FlaggedOption("ghLogin");
         opt2.setLongFlag("ghLogin");

@@ -46,44 +46,25 @@ public class Launcher extends AbstractPoolManager {
         this.jsap = new JSAP();
 
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
-
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
-
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
-
-        this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
-
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
-
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
-
+        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
-
-        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
-
+        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
-
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
+        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
+        this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
+        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
+        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
+        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
     }
 
     private List<Integer> readListOfBuildIds() {
