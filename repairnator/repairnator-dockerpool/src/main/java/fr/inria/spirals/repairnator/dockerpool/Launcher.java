@@ -74,21 +74,9 @@ public class Launcher extends AbstractPoolManager {
         opt2.setHelp("Specify the docker image name to use.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("input");
-        opt2.setShortFlag('i');
-        opt2.setLongFlag("input");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify the input file containing the list of build ids.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
 
-        opt2 = new FlaggedOption("output");
-        opt2.setShortFlag('o');
-        opt2.setLongFlag("output");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify where to put serialized files from dockerpool");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
 
         opt2 = new FlaggedOption("logDirectory");
         opt2.setShortFlag('l');

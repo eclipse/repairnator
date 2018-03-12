@@ -5,6 +5,7 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
+import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -72,6 +73,26 @@ public class LauncherUtils {
         opt.setLongFlag("runId");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("Specify the run id for this launch.");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgInput(String helpMessage) {
+        FlaggedOption opt = new FlaggedOption("input");
+        opt.setShortFlag('i');
+        opt.setLongFlag("input");
+        opt.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
+        opt.setRequired(true);
+        opt.setHelp(helpMessage);
+        return opt;
+    }
+
+    public static FlaggedOption defineArgOutput(boolean isRequired, boolean mustExist, boolean mustBeFile, boolean mustBeDirectory, String helpMessage) {
+        FlaggedOption opt = new FlaggedOption("output");
+        opt.setShortFlag('o');
+        opt.setLongFlag("output");
+        opt.setStringParser(FileStringParser.getParser().setMustExist(mustExist).setMustBeFile(mustBeFile).setMustBeDirectory(mustBeDirectory));
+        opt.setRequired(isRequired);
+        opt.setHelp(helpMessage);
         return opt;
     }
 

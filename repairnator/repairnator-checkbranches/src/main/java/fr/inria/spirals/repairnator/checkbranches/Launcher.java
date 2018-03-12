@@ -4,7 +4,6 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
@@ -72,21 +71,9 @@ public class Launcher {
         opt2.setHelp("Specify the docker image name to use.");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("input");
-        opt2.setShortFlag('i');
-        opt2.setLongFlag("input");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify the input file containing the list of branches to reproduce");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
 
-        opt2 = new FlaggedOption("output");
-        opt2.setShortFlag('o');
-        opt2.setLongFlag("output");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify where to put output data");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, false, true, false, "Specify where to put output data"));
 
         opt2 = new FlaggedOption("repository");
         opt2.setShortFlag('r');

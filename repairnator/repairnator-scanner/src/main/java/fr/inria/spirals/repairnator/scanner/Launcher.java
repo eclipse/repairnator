@@ -96,24 +96,13 @@ public class Launcher {
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
 
         // Tab size
-        FlaggedOption opt2 = new FlaggedOption("input");
-        opt2.setShortFlag('i');
-        opt2.setLongFlag("input");
-        opt2.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify where to find the list of projects to scan.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
 
-        opt2 = new FlaggedOption("output");
-        opt2.setShortFlag('o');
-        opt2.setLongFlag("output");
-        opt2.setStringParser(FileStringParser.getParser().setMustExist(false).setMustBeFile(true));
-        opt2.setHelp("Specify where to write the list of build ids (default: stdout)");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, false, true, false, "Specify where to write the list of build ids (default: stdout)"));
 
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
 
-        opt2 = new FlaggedOption("lookupHours");
+        FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
         opt2.setLongFlag("lookupHours");
         opt2.setStringParser(JSAP.INTEGER_PARSER);

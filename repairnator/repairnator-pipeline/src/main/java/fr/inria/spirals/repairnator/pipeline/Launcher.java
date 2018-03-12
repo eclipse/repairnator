@@ -220,12 +220,7 @@ public class Launcher {
         opt2.setHelp("Specify path to Z3");
         this.jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("output");
-        opt2.setLongFlag("output");
-        opt2.setShortFlag('o');
-        opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
-        opt2.setHelp("Specify path to output serialized files");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, true, false, true, "Specify path to output serialized files"));
 
         opt2 = new FlaggedOption("workspace");
         opt2.setLongFlag("workspace");
