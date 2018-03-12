@@ -156,6 +156,14 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static Switch defineArgCreateOutputDir() {
+        Switch sw = new Switch("createOutputDir");
+        sw.setLongFlag("createOutputDir");
+        sw.setDefault("false");
+        sw.setHelp("Create a specific directory for output.");
+        return sw;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems

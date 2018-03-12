@@ -57,11 +57,7 @@ public class RTLauncher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
 
-        sw1 = new Switch("createOutputDir");
-        sw1.setLongFlag("createOutputDir");
-        sw1.setDefault("false");
-        sw1.setHelp("Create a specific directory for output.");
-        this.jsap.registerParameter(sw1);
+        this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
 
         FlaggedOption opt2 = new FlaggedOption("imageName");
         opt2.setShortFlag('n');
