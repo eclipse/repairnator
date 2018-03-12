@@ -54,13 +54,7 @@ public class RTLauncher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
 
-        FlaggedOption opt2 = new FlaggedOption("imageName");
-        opt2.setShortFlag('n');
-        opt2.setLongFlag("name");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setRequired(true);
-        opt2.setHelp("Specify the docker image name to use.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
 
         this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
 
@@ -80,7 +74,7 @@ public class RTLauncher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
-        opt2 = new FlaggedOption("whitelist");
+        FlaggedOption opt2 = new FlaggedOption("whitelist");
         opt2.setShortFlag('w');
         opt2.setLongFlag("whitelist");
         opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(false).setMustExist(true));

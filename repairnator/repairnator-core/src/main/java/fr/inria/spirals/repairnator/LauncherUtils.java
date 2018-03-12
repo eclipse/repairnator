@@ -210,6 +210,16 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgImageName() {
+        FlaggedOption opt = new FlaggedOption("imageName");
+        opt.setShortFlag('n');
+        opt.setLongFlag("name");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setRequired(true);
+        opt.setHelp("Specify the docker image name to use.");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems

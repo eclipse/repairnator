@@ -59,19 +59,13 @@ public class Launcher {
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
 
-        FlaggedOption opt2 = new FlaggedOption("imageName");
-        opt2.setShortFlag('n');
-        opt2.setLongFlag("name");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setRequired(true);
-        opt2.setHelp("Specify the docker image name to use.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
 
         this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
 
         this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, false, true, false, "Specify where to put output data"));
 
-        opt2 = new FlaggedOption("repository");
+        FlaggedOption opt2 = new FlaggedOption("repository");
         opt2.setShortFlag('r');
         opt2.setLongFlag("repository");
         opt2.setStringParser(JSAP.STRING_PARSER);

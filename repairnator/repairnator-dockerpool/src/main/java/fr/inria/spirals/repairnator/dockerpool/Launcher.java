@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.dockerpool;
 import com.google.api.client.auth.oauth2.Credential;
-import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
@@ -56,13 +55,7 @@ public class Launcher extends AbstractPoolManager {
 
         this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
 
-        FlaggedOption opt2 = new FlaggedOption("imageName");
-        opt2.setShortFlag('n');
-        opt2.setLongFlag("name");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setRequired(true);
-        opt2.setHelp("Specify the docker image name to use.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
 
         this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
 
