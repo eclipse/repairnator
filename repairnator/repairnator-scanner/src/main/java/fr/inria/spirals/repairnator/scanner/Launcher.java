@@ -50,7 +50,7 @@ public class Launcher {
         }
 
         this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
-        this.prepareSerializerEngines();
+        this.initializeSerializerEngines();
         this.initNotifiers();
     }
 
@@ -61,7 +61,7 @@ public class Launcher {
         }
     }
 
-    private void prepareSerializerEngines() {
+    private void initializeSerializerEngines() {
         this.engines = new ArrayList<>();
 
         SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
