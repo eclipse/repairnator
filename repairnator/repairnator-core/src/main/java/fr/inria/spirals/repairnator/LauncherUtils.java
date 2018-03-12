@@ -174,6 +174,14 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static Switch defineArgSkipDelete() {
+        Switch sw = new Switch("skipDelete");
+        sw.setLongFlag("skipDelete");
+        sw.setDefault("false");
+        sw.setHelp("Skip the deletion of docker container.");
+        return sw;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems

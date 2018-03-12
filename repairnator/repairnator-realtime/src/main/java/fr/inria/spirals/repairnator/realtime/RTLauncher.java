@@ -4,7 +4,6 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
@@ -49,11 +48,7 @@ public class RTLauncher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
 
-        Switch sw1 = new Switch("skipDelete");
-        sw1.setLongFlag("skipDelete");
-        sw1.setDefault("false");
-        sw1.setHelp("Skip the deletion of docker container.");
-        this.jsap.registerParameter(sw1);
+        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
 
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
 

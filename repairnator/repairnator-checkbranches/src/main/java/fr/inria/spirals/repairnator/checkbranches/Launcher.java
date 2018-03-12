@@ -49,15 +49,11 @@ public class Launcher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
 
-        Switch sw1 = new Switch("skipDelete");
-        sw1.setLongFlag("skipDelete");
-        sw1.setDefault("false");
-        sw1.setHelp("Skip the deletion of docker container.");
-        this.jsap.registerParameter(sw1);
+        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
 
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
 
-        sw1 = new Switch("humanPatch");
+        Switch sw1 = new Switch("humanPatch");
         sw1.setShortFlag('p');
         sw1.setLongFlag("humanPatch");
         sw1.setDefault("false");
