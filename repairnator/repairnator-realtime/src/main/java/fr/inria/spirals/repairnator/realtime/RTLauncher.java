@@ -91,18 +91,9 @@ public class RTLauncher {
 
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
 
-        opt2 = new FlaggedOption("mongoDBHost");
-        opt2.setLongFlag("dbhost");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify mongodb host.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
 
-        opt2 = new FlaggedOption("mongoDBName");
-        opt2.setLongFlag("dbname");
-        opt2.setDefault("repairnator");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify mongodb DB name.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
 
         opt2 = new FlaggedOption("pushUrl");
         opt2.setLongFlag("pushurl");

@@ -112,18 +112,9 @@ public class Launcher extends AbstractPoolManager {
 
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
 
-        opt2 = new FlaggedOption("mongoDBHost");
-        opt2.setLongFlag("dbhost");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify mongodb host.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
 
-        opt2 = new FlaggedOption("mongoDBName");
-        opt2.setLongFlag("dbname");
-        opt2.setDefault("repairnator");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify mongodb DB name.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
 
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
 

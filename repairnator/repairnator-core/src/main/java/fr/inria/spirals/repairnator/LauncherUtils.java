@@ -96,6 +96,23 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static FlaggedOption defineArgMongoDBHost() {
+        FlaggedOption opt = new FlaggedOption("mongoDBHost");
+        opt.setLongFlag("dbhost");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify mongodb host.");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgMongoDBName() {
+        FlaggedOption opt = new FlaggedOption("mongoDBName");
+        opt.setLongFlag("dbname");
+        opt.setDefault("repairnator");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify mongodb DB name.");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
