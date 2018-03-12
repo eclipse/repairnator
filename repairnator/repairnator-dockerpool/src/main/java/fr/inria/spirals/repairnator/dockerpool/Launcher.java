@@ -73,13 +73,7 @@ public class Launcher extends AbstractPoolManager {
 
         this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
 
-        opt2 = new FlaggedOption("logDirectory");
-        opt2.setShortFlag('l');
-        opt2.setLongFlag("logDirectory");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setRequired(true);
-        opt2.setHelp("Specify where to put logs and serialized files created by docker machines.");
-        this.jsap.registerParameter(opt2);
+        this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
 
         opt2 = new FlaggedOption("threads");
         opt2.setShortFlag('t');

@@ -164,6 +164,16 @@ public class LauncherUtils {
         return sw;
     }
 
+    public static FlaggedOption defineArgLogDirectory() {
+        FlaggedOption opt = new FlaggedOption("logDirectory");
+        opt.setShortFlag('l');
+        opt.setLongFlag("logDirectory");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setRequired(true);
+        opt.setHelp("Specify where to put logs and serialized files created by docker machines.");
+        return opt;
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
