@@ -66,7 +66,7 @@ cp $REPAIRNATOR_DOCKERPOOL_JAR $REPAIRNATOR_DOCKERPOOL_DEST_JAR
 if [ "$SKIP_SCAN" -eq 0 ]; then
     echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
 
-    args="`ca -g $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --lookFromDate $LOOK_FROM_DATE` `ca --lookToDate $LOOK_TO_DATE``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+    args="`ca --googleSecretPath $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --lookFromDate $LOOK_FROM_DATE` `ca --lookToDate $LOOK_TO_DATE``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 
     if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
         args="$args --notifyEndProcess"
@@ -93,7 +93,7 @@ echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
 echo "Launch docker pool..."
-args="`ca -s $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+args="`ca --googleSecretPath $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"
 fi

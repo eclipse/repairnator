@@ -15,7 +15,7 @@ function ca {
   fi
 }
 
-args="`ca -g $GOOGLE_ACCESS_TOKEN``ca --spreadsheet $SPREADSHEET_ID``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+args="`ca --googleAccessToken $GOOGLE_ACCESS_TOKEN``ca --spreadsheet $SPREADSHEET_ID``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 
 if [ ! -d "$OUTPUT" ]; then
     mkdir $OUTPUT

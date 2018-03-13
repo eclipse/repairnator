@@ -2,13 +2,14 @@ package fr.inria.spirals.repairnator.pipeline;
 
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildStatus;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.GithubTokenHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
@@ -20,7 +21,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
-import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
@@ -32,12 +32,6 @@ import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
-import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +39,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -54,8 +47,7 @@ import java.util.Properties;
  * Created by urli on 09/03/2017.
  */
 public class Launcher {
-
-    private static final String TEST_PROJECT = "surli/failingproject";
+    private static final String TEST_PROJECT = "surli/failingproject"; // be careful when testing: this project deactivate serialization
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
@@ -64,7 +56,7 @@ public class Launcher {
     private int nextBuildId;
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
-
+    private List<AbstractNotifier> notifiers;
 
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
@@ -82,7 +74,7 @@ public class Launcher {
 
         this.defineArgs();
         this.arguments = jsap.parse(args);
-        this.checkArguments();
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.PIPELINE);
         this.initConfig();
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
@@ -92,7 +84,7 @@ public class Launcher {
             this.checkNextBuildId();
         }
 
-        if (this.arguments.getBoolean("debug")) {
+        if (LauncherUtils.getArgDebug(this.arguments)) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -103,131 +95,38 @@ public class Launcher {
 
         LOGGER.info("The pipeline will try to repair the following buildid: "+this.buildId);
 
-        this.initializeSerializerEngines();
-    }
-
-    private void initConfig() {
-        this.config = RepairnatorConfig.getInstance();
-        this.config.setRunId(this.arguments.getString("runId"));
-        this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
-        this.config.setClean(true);
-        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
-        if (this.arguments.getFile("outputPath") != null) {
-            this.config.setSerializeJson(true);
-            this.config.setJsonOutputPath(this.arguments.getFile("outputPath").getPath());
-        }
-        if (this.arguments.getString("pushUrl") != null) {
-            this.config.setPush(true);
-            this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
-        }
-        this.config.setWorkspacePath(this.arguments.getString("workspace"));
-
-        this.config.setGithubLogin(this.arguments.getString("ghLogin"));
-        this.config.setGithubToken(this.arguments.getString("ghOauth"));
-
-        GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
-        GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
-    }
-
-    private void initializeSerializerEngines() {
-        this.engines = new ArrayList<>();
-
-        if (this.arguments.getString("spreadsheet") != null && this.arguments.getString("googleAccessToken") != null) {
-            LOGGER.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(this.arguments.getString("spreadsheet"));
-
-            try {
-                if (GoogleSpreadSheetFactory.initWithAccessToken(this.arguments.getString("googleAccessToken"))) {
-                    this.engines.add(new GoogleSpreadsheetSerializerEngine());
-                } else {
-                    LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets");
-                }
-            } catch (IOException | GeneralSecurityException e) {
-                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets", e);
-            }
-        } else {
-            LOGGER.info("Google Spreadsheet won't be used for serialization.");
-        }
-
-        if (config.isSerializeJson()) {
-            LOGGER.info("Initialize files serializers engines.");
-            String serializedFiles = config.getJsonOutputPath()+"/"+this.buildId;
-            this.engines.add(new CSVSerializerEngine(serializedFiles));
-            this.engines.add(new JSONFileSerializerEngine(serializedFiles));
-        } else {
-            LOGGER.info("Files serializer won't be used");
-        }
-
-        if (this.arguments.getString("mongoDBHost") != null) {
-            LOGGER.info("Initialize mongoDB serializer engine.");
-            MongoConnection mongoConnection = new MongoConnection(this.arguments.getString("mongoDBHost"), this.arguments.getString("mongoDBName"));
-            if (mongoConnection.isConnected()) {
-                this.engines.add(new MongoDBSerializerEngine(mongoConnection));
-            } else {
-                LOGGER.error("Error while connecting to mongoDB.");
-            }
-        } else {
-            LOGGER.info("MongoDB won't be used for serialization");
-        }
-    }
-
-    private void checkNopolSolverPath() {
-        String solverPath = this.config.getZ3solverPath();
-
-        if (solverPath != null) {
-            File file = new File(solverPath);
-
-            if (!file.exists()) {
-                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
-                this.printUsage();
-                System.exit(-1);
-            }
-        } else {
-            System.err.println("The Nopol solver path should be provided.");
-            this.printUsage();
-            System.exit(-1);
-        }
-    }
-
-    private void checkNextBuildId() {
-        if (this.arguments.getInt("nextBuild") == 0) {
-            System.err.println("A pair of builds needs to be provided in BEARS mode.");
-            this.printUsage();
-            System.exit(-1);
-        }
-    }
-
-    private void checkArguments() {
-        if (!this.arguments.success()) {
-            // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
-                System.err.println("Error: " + errs.next());
-            }
-            this.printUsage();
-        }
-
-        if (this.arguments.getBoolean("help")) {
-            this.printUsage();
-        }
+        this.initSerializerEngines();
+        this.initNotifiers();
     }
 
     private void defineArgs() throws JSAPException {
         // Verbose output
         this.jsap = new JSAP();
 
-        // help
-        Switch sw1 = new Switch("help");
-        sw1.setShortFlag('h');
-        sw1.setLongFlag("help");
-        sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
-
-        // verbosity
-        sw1 = new Switch("debug");
-        sw1.setShortFlag('d');
-        sw1.setLongFlag("debug");
-        sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
+        // -h or --help
+        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        // -d or --debug
+        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        // --runId
+        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // -m or --launcherMode
+        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
+        // -o or --output
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
+        // --dbhost
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        // --dbname
+        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        // --spreadsheet
+        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        // --googleAccessToken
+        this.jsap.registerParameter(LauncherUtils.defineArgGoogleAccessToken());
+        // --smtpServer
+        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --notifyto
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        // --pushurl
+        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -245,71 +144,11 @@ public class Launcher {
         opt2.setHelp("Specify the next build id to use (only in BEARS mode).");
         this.jsap.registerParameter(opt2);
 
-        String launcherModeValues = "";
-        for (LauncherMode mode : LauncherMode.values()) {
-            launcherModeValues += mode.name() + ";";
-        }
-        launcherModeValues.substring(0, launcherModeValues.length() - 2);
-
-        // Launcher mode
-        opt2 = new FlaggedOption("launcherMode");
-        opt2.setShortFlag('m');
-        opt2.setLongFlag("launcherMode");
-        opt2.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS).");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("runId");
-        opt2.setLongFlag("runId");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify the runId for this launch.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("googleAccessToken");
-        opt2.setShortFlag('g');
-        opt2.setLongFlag("googleAccessToken");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify the google access token to use for serializers.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("spreadsheet");
-        opt2.setLongFlag("spreadsheet");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify Google Spreadsheet ID to put data.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("mongoDBHost");
-        opt2.setLongFlag("dbhost");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify mongodb host.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("mongoDBName");
-        opt2.setLongFlag("dbname");
-        opt2.setDefault("repairnator");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify mongodb DB name.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("pushUrl");
-        opt2.setLongFlag("pushurl");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify repository to push data");
-        this.jsap.registerParameter(opt2);
-
         opt2 = new FlaggedOption("z3");
         opt2.setLongFlag("z3");
         opt2.setDefault("./z3_for_linux");
         opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
         opt2.setHelp("Specify path to Z3");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("outputPath");
-        opt2.setLongFlag("output");
-        opt2.setShortFlag('o');
-        opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(true).setMustExist(true));
-        opt2.setHelp("Specify path to output serialized files");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("workspace");
@@ -318,20 +157,6 @@ public class Launcher {
         opt2.setDefault("./workspace");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify path to output serialized files");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("smtpServer");
-        opt2.setLongFlag("smtpServer");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify SMTP server to use for Email notification");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("notifyto");
-        opt2.setLongFlag("notifyto");
-        opt2.setList(true);
-        opt2.setListSeparator(',');
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify email adresses to notify");
         this.jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("ghLogin");
@@ -349,18 +174,27 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
-    private void printUsage() {
-        System.err.println("Usage: java <repairnator-pipeline name> [option(s)]");
-        System.err.println();
-        System.err.println("Options : ");
-        System.err.println();
-        System.err.println(jsap.getHelp());
-        System.err.println("Please note that the following environment variables must be set: ");
-        for (String env : Utils.ENVIRONMENT_VARIABLES) {
-            System.err.println(" - " + env);
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
+        this.config.setClean(true);
+        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
+        if (LauncherUtils.getArgOutput(this.arguments) != null) {
+            this.config.setSerializeJson(true);
+            this.config.setJsonOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
         }
-        System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
-        System.exit(-1);
+        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
+            this.config.setPush(true);
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
+        }
+        this.config.setWorkspacePath(this.arguments.getString("workspace"));
+
+        this.config.setGithubLogin(this.arguments.getString("ghLogin"));
+        this.config.setGithubToken(this.arguments.getString("ghOauth"));
+
+        GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
+        GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
     }
 
     private void checkToolsLoaded() {
@@ -371,9 +205,57 @@ public class Launcher {
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
             System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
-            this.printUsage();
-            System.exit(-1);
+            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
         }
+    }
+
+    private void checkNopolSolverPath() {
+        String solverPath = this.config.getZ3solverPath();
+
+        if (solverPath != null) {
+            File file = new File(solverPath);
+
+            if (!file.exists()) {
+                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
+                LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+            }
+        } else {
+            System.err.println("The Nopol solver path should be provided.");
+            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+        }
+    }
+
+    private void checkNextBuildId() {
+        if (this.arguments.getInt("nextBuild") == 0) {
+            System.err.println("A pair of builds needs to be provided in BEARS mode.");
+            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+        }
+    }
+
+    private void initSerializerEngines() {
+        this.engines = new ArrayList<>();
+
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithAccessToken(this.arguments, LOGGER);
+        if (spreadsheetSerializerEngine != null) {
+            this.engines.add(spreadsheetSerializerEngine);
+        }
+
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        this.engines.addAll(fileSerializerEngines);
+
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
+        }
+    }
+
+    private void initNotifiers() {
+        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+        ErrorNotifier.getInstance(notifierEngines);
+
+        this.notifiers = new ArrayList<>();
+        this.notifiers.add(new PatchNotifier(notifierEngines));
+        this.notifiers.add(new FixerBuildNotifier(notifierEngines));
     }
 
     private void getBuildToBeInspected() {
@@ -383,7 +265,7 @@ public class Launcher {
             LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
             System.exit(-1);
         }
-        String runId = this.arguments.getString("runId");
+        String runId = LauncherUtils.getArgRunId(this.arguments);
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             Build patchedBuild = BuildHelper.getBuildFromId(this.nextBuildId, null);
@@ -438,28 +320,12 @@ public class Launcher {
         serializers.add(new AstorSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
 
-        List<NotifierEngine> notifierEngines = new ArrayList<>();
-
-        if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
-            LOGGER.info("The email notifier engine will be used.");
-
-            notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
-            ErrorNotifier.getInstance(notifierEngines);
-        } else {
-            LOGGER.info("The email notifier engine won't be used.");
-        }
-
-
-        List<AbstractNotifier> notifiers = new ArrayList<>();
-        notifiers.add(new PatchNotifier(notifierEngines));
-        notifiers.add(new FixerBuildNotifier(notifierEngines));
-
         ProjectInspector inspector;
 
         if (config.getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, notifiers);
+            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         } else {
-            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, notifiers);
+            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         }
         inspector.run();
 
@@ -471,4 +337,5 @@ public class Launcher {
         Launcher launcher = new Launcher(args);
         launcher.mainProcess();
     }
+
 }

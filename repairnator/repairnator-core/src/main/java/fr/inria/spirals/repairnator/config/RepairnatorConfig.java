@@ -23,6 +23,7 @@ public class RepairnatorConfig {
     private String[] notifyTo;
     private String githubLogin;
     private String githubToken;
+    private boolean fork;
 
     private static RepairnatorConfig instance;
 
@@ -180,5 +181,18 @@ public class RepairnatorConfig {
 
     public void setGithubToken(String githubToken) {
         this.githubToken = githubToken;
+    }
+
+    public boolean isFork() {
+        return fork;
+    }
+
+    public RepairnatorConfig setFork(boolean fork) {
+        this.fork = fork;
+        return this;
+    }
+
+    public static void setInstance(RepairnatorConfig instance) {
+        RepairnatorConfig.instance = instance;
     }
 }
