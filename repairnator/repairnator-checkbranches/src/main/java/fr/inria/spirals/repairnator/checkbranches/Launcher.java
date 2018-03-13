@@ -54,7 +54,7 @@ public class Launcher {
         // -i or --input
         this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, false, true, false, "Specify where to put output data"));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.CHECKBRANCHES, "Specify where to put output data"));
         // --notifyEndProcess
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer

@@ -56,7 +56,7 @@ public class Launcher extends AbstractPoolManager {
         // -i or --input
         this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.DOCKERPOOL,"Specify where to put serialized files from dockerpool"));
         // --dbhost
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname

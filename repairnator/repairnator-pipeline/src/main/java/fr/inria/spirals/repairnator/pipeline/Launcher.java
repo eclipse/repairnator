@@ -174,7 +174,7 @@ public class Launcher {
         // -m or --launcherMode
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, true, false, true, "Specify path to output serialized files"));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname

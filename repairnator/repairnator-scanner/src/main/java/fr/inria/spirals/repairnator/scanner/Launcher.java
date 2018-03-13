@@ -93,7 +93,7 @@ public class Launcher {
         // -i or --input
         this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, false, true, false, "Specify where to write the list of build ids (default: stdout)"));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.SCANNER, "Specify where to write the list of build ids (default: stdout)"));
         // --dbhost
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname

@@ -51,7 +51,7 @@ public class RTLauncher {
         // --runId
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.REALTIME, "Specify where to put serialized files from dockerpool"));
         // --dbhost
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname

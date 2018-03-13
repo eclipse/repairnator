@@ -86,13 +86,25 @@ public class LauncherUtils {
         return opt;
     }
 
-    public static FlaggedOption defineArgOutput(boolean isRequired, boolean mustExist, boolean mustBeFile, boolean mustBeDirectory, String helpMessage) {
+    public static FlaggedOption defineArgOutput(LauncherType launcherType, String helpMessage) {
         FlaggedOption opt = new FlaggedOption("output");
         opt.setShortFlag('o');
         opt.setLongFlag("output");
-        opt.setStringParser(FileStringParser.getParser().setMustExist(mustExist).setMustBeFile(mustBeFile).setMustBeDirectory(mustBeDirectory));
-        opt.setRequired(isRequired);
+
+        FileStringParser fileStringParser = FileStringParser.getParser();
+        if (launcherType == LauncherType.SCANNER || launcherType == LauncherType.CHECKBRANCHES) {
+            fileStringParser.setMustBeFile(true);
+        } else {
+            fileStringParser.setMustBeDirectory(true).setMustExist(true);
+        }
+        opt.setStringParser(fileStringParser);
+
+        if (launcherType == LauncherType.DOCKERPOOL || launcherType == LauncherType.REALTIME || launcherType == LauncherType.CHECKBRANCHES) {
+            opt.setRequired(true);
+        }
+
         opt.setHelp(helpMessage);
+
         return opt;
     }
 
