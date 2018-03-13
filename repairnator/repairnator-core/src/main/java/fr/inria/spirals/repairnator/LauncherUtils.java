@@ -210,7 +210,7 @@ public class LauncherUtils {
         return opt;
     }
 
-    public static FlaggedOption defineArgImageName() {
+    public static FlaggedOption defineArgDockerImageName() {
         FlaggedOption opt = new FlaggedOption("imageName");
         opt.setShortFlag('n');
         opt.setLongFlag("name");

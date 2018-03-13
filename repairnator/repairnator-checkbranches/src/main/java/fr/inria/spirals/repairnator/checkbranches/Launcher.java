@@ -62,7 +62,7 @@ public class Launcher {
         // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
-        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
+        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
         // --skipDelete
         this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // -t or --threads

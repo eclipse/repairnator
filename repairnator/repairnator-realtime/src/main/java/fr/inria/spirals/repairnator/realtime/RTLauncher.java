@@ -63,7 +63,7 @@ public class RTLauncher {
         // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
-        this.jsap.registerParameter(LauncherUtils.defineArgImageName());
+        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
         // --skipDelete
         this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // --createOutputDir
