@@ -35,7 +35,6 @@ public class Launcher extends AbstractPoolManager {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
-    private String accessToken;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
@@ -126,8 +125,7 @@ public class Launcher extends AbstractPoolManager {
                 Credential credential = manageGoogleAccessToken.getCredential();
 
                 if (credential != null) {
-                    this.accessToken = credential.getAccessToken();
-                    this.config.setGoogleAccessToken(this.accessToken);
+                    this.config.setGoogleAccessToken(credential.getAccessToken());
                 }
             } catch (IOException | GeneralSecurityException e) {
                 LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets from the pipeline.", e);
