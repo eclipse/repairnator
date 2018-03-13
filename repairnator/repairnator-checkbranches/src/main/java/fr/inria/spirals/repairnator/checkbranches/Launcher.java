@@ -1,4 +1,5 @@
 package fr.inria.spirals.repairnator.checkbranches;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -40,6 +41,15 @@ public class Launcher {
 
     public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
+
+    private Launcher(String[] args) throws JSAPException {
+        this.defineArgs();
+        this.arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.CHECKBRANCHES);
+
+        this.initConfig();
+        this.initNotifiers();
+    }
 
     private void defineArgs() throws JSAPException {
         // Verbose output
@@ -83,6 +93,21 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setHelp("Specify where to collect branches");
         this.jsap.registerParameter(opt2);
+    }
+
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+    }
+
+    private void initNotifiers() {
+        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+        }
     }
 
     private List<String> readListOfBranches() {
@@ -163,32 +188,9 @@ public class Launcher {
         }
     }
 
-    private Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.CHECKBRANCHES);
-
-        this.initConfig();
-        this.initNotifiers();
-    }
-
-    private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
-        }
-    }
-
-    private void initConfig() {
-        this.config = RepairnatorConfig.getInstance();
-
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
-    }
-
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
         launcher.runPool();
     }
+
 }

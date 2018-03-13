@@ -31,7 +31,6 @@ import java.util.List;
  */
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
-
     private JSAP jsap;
     private JSAPResult arguments;
     private LauncherMode launcherMode;
@@ -52,30 +51,6 @@ public class Launcher {
         this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
         this.initSerializerEngines();
         this.initNotifiers();
-    }
-
-    private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
-        }
-    }
-
-    private void initSerializerEngines() {
-        this.engines = new ArrayList<>();
-
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
-        if (spreadsheetSerializerEngine != null) {
-            this.engines.add(spreadsheetSerializerEngine);
-        }
-
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
-        this.engines.addAll(fileSerializerEngines);
-
-        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
-        if (mongoDBSerializerEngine != null) {
-            this.engines.add(mongoDBSerializerEngine);
-        }
     }
 
     private void defineArgs() throws JSAPException {
@@ -141,6 +116,48 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
+    private void initSerializerEngines() {
+        this.engines = new ArrayList<>();
+
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
+        if (spreadsheetSerializerEngine != null) {
+            this.engines.add(spreadsheetSerializerEngine);
+        }
+
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        this.engines.addAll(fileSerializerEngines);
+
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
+        }
+    }
+
+    private void initNotifiers() {
+        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+        }
+    }
+
+    private void mainProcess() throws IOException {
+
+        List<BuildToBeInspected> buildsToBeInspected = this.runScanner();
+
+        if (buildsToBeInspected != null) {
+            for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
+                Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
+            }
+
+            this.processOutput(buildsToBeInspected);
+        } else {
+            Launcher.LOGGER.warn("Builds inspected has null value.");
+        }
+        if (this.endProcessNotifier != null) {
+            this.endProcessNotifier.notifyEnd();
+        }
+    }
+
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
         ProjectScanner scanner;
@@ -177,24 +194,6 @@ public class Launcher {
             Launcher.LOGGER.info("No build has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
         }
         return buildsToBeInspected;
-    }
-
-    private void mainProcess() throws IOException {
-
-        List<BuildToBeInspected> buildsToBeInspected = this.runScanner();
-
-        if (buildsToBeInspected != null) {
-            for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-                Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
-            }
-
-            this.processOutput(buildsToBeInspected);
-        } else {
-            Launcher.LOGGER.warn("Builds inspected has null value.");
-        }
-        if (this.endProcessNotifier != null) {
-            this.endProcessNotifier.notifyEnd();
-        }
     }
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {

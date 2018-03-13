@@ -47,7 +47,6 @@ import java.util.Properties;
  * Created by urli on 09/03/2017.
  */
 public class Launcher {
-
     private static final String TEST_PROJECT = "surli/failingproject";
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
@@ -94,71 +93,6 @@ public class Launcher {
 
         this.initSerializerEngines();
         this.initNotifiers();
-    }
-
-    private void initNotifiers() {
-        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-        ErrorNotifier.getInstance(notifierEngines);
-
-        this.notifiers = new ArrayList<>();
-        this.notifiers.add(new PatchNotifier(notifierEngines));
-        this.notifiers.add(new FixerBuildNotifier(notifierEngines));
-    }
-
-    private void initConfig() {
-        this.config = RepairnatorConfig.getInstance();
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
-        this.config.setClean(true);
-        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
-        if (LauncherUtils.getArgOutput(this.arguments) != null) {
-            this.config.setSerializeJson(true);
-            this.config.setJsonOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
-        }
-        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
-            this.config.setPush(true);
-            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
-        }
-        this.config.setWorkspacePath(this.arguments.getString("workspace"));
-
-        this.config.setGithubLogin(this.arguments.getString("ghLogin"));
-        this.config.setGithubToken(this.arguments.getString("ghOauth"));
-
-        GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
-        GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
-    }
-
-    private void initSerializerEngines() {
-        this.engines = new ArrayList<>();
-
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithAccessToken(this.arguments, LOGGER);
-        if (spreadsheetSerializerEngine != null) {
-            this.engines.add(spreadsheetSerializerEngine);
-        }
-
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
-        this.engines.addAll(fileSerializerEngines);
-
-        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
-        if (mongoDBSerializerEngine != null) {
-            this.engines.add(mongoDBSerializerEngine);
-        }
-    }
-
-    private void checkNopolSolverPath() {
-        String solverPath = this.config.getZ3solverPath();
-
-        if (solverPath != null) {
-            File file = new File(solverPath);
-
-            if (!file.exists()) {
-                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
-                LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
-            }
-        } else {
-            System.err.println("The Nopol solver path should be provided.");
-            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
-        }
     }
 
     private void defineArgs() throws JSAPException {
@@ -228,6 +162,29 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
+        this.config.setClean(true);
+        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
+        if (LauncherUtils.getArgOutput(this.arguments) != null) {
+            this.config.setSerializeJson(true);
+            this.config.setJsonOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
+        }
+        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
+            this.config.setPush(true);
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
+        }
+        this.config.setWorkspacePath(this.arguments.getString("workspace"));
+
+        this.config.setGithubLogin(this.arguments.getString("ghLogin"));
+        this.config.setGithubToken(this.arguments.getString("ghOauth"));
+
+        GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
+        GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
+    }
+
     private void checkToolsLoaded() {
         URLClassLoader loader;
 
@@ -238,6 +195,48 @@ public class Launcher {
             System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
             LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
         }
+    }
+
+    private void checkNopolSolverPath() {
+        String solverPath = this.config.getZ3solverPath();
+
+        if (solverPath != null) {
+            File file = new File(solverPath);
+
+            if (!file.exists()) {
+                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
+                LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+            }
+        } else {
+            System.err.println("The Nopol solver path should be provided.");
+            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+        }
+    }
+
+    private void initSerializerEngines() {
+        this.engines = new ArrayList<>();
+
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithAccessToken(this.arguments, LOGGER);
+        if (spreadsheetSerializerEngine != null) {
+            this.engines.add(spreadsheetSerializerEngine);
+        }
+
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        this.engines.addAll(fileSerializerEngines);
+
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
+        }
+    }
+
+    private void initNotifiers() {
+        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+        ErrorNotifier.getInstance(notifierEngines);
+
+        this.notifiers = new ArrayList<>();
+        this.notifiers.add(new PatchNotifier(notifierEngines));
+        this.notifiers.add(new FixerBuildNotifier(notifierEngines));
     }
 
     private void getBuildToBeInspected() {
@@ -317,4 +316,5 @@ public class Launcher {
         Launcher launcher = new Launcher(args);
         launcher.mainProcess();
     }
+
 }

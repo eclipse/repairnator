@@ -1,4 +1,5 @@
 package fr.inria.spirals.repairnator.dockerpool;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -40,6 +41,18 @@ public class Launcher extends AbstractPoolManager {
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
+
+    private Launcher(String[] args) throws JSAPException {
+        this.defineArgs();
+        this.arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.DOCKERPOOL);
+        LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.DOCKERPOOL);
+        this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
+
+        this.initConfig();
+        this.initSerializerEngines();
+        this.initNotifiers();
+    }
 
     private void defineArgs() throws JSAPException {
         // Verbose output
@@ -85,6 +98,59 @@ public class Launcher extends AbstractPoolManager {
         this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
         // --pushurl
         this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+    }
+
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
+
+        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
+            this.config.setPush(true);
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
+            this.config.setFork(true);
+        }
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+    }
+
+    private void initSerializerEngines() {
+        this.engines = new ArrayList<>();
+
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
+        if (spreadsheetSerializerEngine != null) {
+            this.engines.add(spreadsheetSerializerEngine);
+
+            try {
+                ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
+                Credential credential = manageGoogleAccessToken.getCredential();
+
+                if (credential != null) {
+                    this.accessToken = credential.getAccessToken();
+                    this.config.setGoogleAccessToken(this.accessToken);
+                }
+            } catch (IOException | GeneralSecurityException e) {
+                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets from the pipeline.", e);
+            }
+        }
+
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        this.engines.addAll(fileSerializerEngines);
+
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
+        }
+    }
+
+    private void initNotifiers() {
+        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.DOCKERPOOL.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+        }
     }
 
     private List<Integer> readListOfBuildIds() {
@@ -163,73 +229,9 @@ public class Launcher extends AbstractPoolManager {
         }
     }
 
-    private Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.DOCKERPOOL);
-        LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.DOCKERPOOL);
-        this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
-
-        this.initConfig();
-        this.initSerializerEngines();
-        this.initNotifiers();
-    }
-
-    private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.DOCKERPOOL.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
-        }
-    }
-
-    private void initConfig() {
-        this.config = RepairnatorConfig.getInstance();
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
-
-        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
-            this.config.setPush(true);
-            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
-            this.config.setFork(true);
-        }
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
-    }
-
-    private void initSerializerEngines() {
-        this.engines = new ArrayList<>();
-
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
-        if (spreadsheetSerializerEngine != null) {
-            this.engines.add(spreadsheetSerializerEngine);
-
-            try {
-                ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
-                Credential credential = manageGoogleAccessToken.getCredential();
-
-                if (credential != null) {
-                    this.accessToken = credential.getAccessToken();
-                    this.config.setGoogleAccessToken(this.accessToken);
-                }
-            } catch (IOException | GeneralSecurityException e) {
-                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets from the pipeline.", e);
-            }
-        }
-
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
-        this.engines.addAll(fileSerializerEngines);
-
-        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
-        if (mongoDBSerializerEngine != null) {
-            this.engines.add(mongoDBSerializerEngine);
-        }
-    }
-
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
         launcher.runPool();
     }
+
 }
