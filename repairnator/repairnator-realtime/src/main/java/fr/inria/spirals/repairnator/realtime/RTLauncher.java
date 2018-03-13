@@ -115,15 +115,15 @@ public class RTLauncher {
         this.config = RepairnatorConfig.getInstance();
         this.config.setLauncherMode(this.launcherMode);
 
-        if (this.arguments.getString("pushUrl") != null) {
+        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
         }
-        this.config.setRunId(this.arguments.getString("runId"));
-        this.config.setMongodbHost(this.arguments.getString("mongoDBHost"));
-        this.config.setMongodbName(this.arguments.getString("mongoDBName"));
-        this.config.setSmtpServer(this.arguments.getString("smtpServer"));
-        this.config.setNotifyTo(this.arguments.getStringArray("notifyto"));
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
     }
 
     private void initSerializerEngines() {
@@ -139,15 +139,15 @@ public class RTLauncher {
     }
 
     private void initNotifiers() {
-        if (this.arguments.getBoolean("notifyEndProcess")) {
+        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
             List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.REALTIME.name().toLowerCase()+" (runid: "+this.arguments.getString("runId")+")");
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.REALTIME.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
         }
     }
 
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
-        String runId = this.arguments.getString("runId");
+        String runId = LauncherUtils.getArgRunId(this.arguments);
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
@@ -157,13 +157,13 @@ public class RTLauncher {
 
         LOGGER.info("Init build runner");
         BuildRunner buildRunner = rtScanner.getBuildRunner();
-        buildRunner.setDockerOutputDir(this.arguments.getString("logDirectory"));
+        buildRunner.setDockerOutputDir(LauncherUtils.getArgLogDirectory(this.arguments));
         buildRunner.setRunId(runId);
-        buildRunner.setCreateOutputDir(this.arguments.getBoolean("createOutputDir"));
-        buildRunner.setSkipDelete(this.arguments.getBoolean("skipDelete"));
+        buildRunner.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(this.arguments));
+        buildRunner.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
         buildRunner.setEngines(this.engines);
-        buildRunner.setDockerImageName(this.arguments.getString("imageName"));
-        buildRunner.initExecutorService(this.arguments.getInt("threads"));
+        buildRunner.setDockerImageName(LauncherUtils.getArgDockerImageName(this.arguments));
+        buildRunner.initExecutorService(LauncherUtils.getArgNbThreads(this.arguments));
 
 
         if (this.arguments.contains("whitelist")) {

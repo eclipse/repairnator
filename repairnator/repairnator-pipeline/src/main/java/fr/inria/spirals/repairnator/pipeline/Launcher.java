@@ -82,7 +82,7 @@ public class Launcher {
             this.checkNopolSolverPath();
         }
 
-        if (this.arguments.getBoolean("debug")) {
+        if (LauncherUtils.getArgDebug(this.arguments)) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -107,17 +107,17 @@ public class Launcher {
 
     private void initConfig() {
         this.config = RepairnatorConfig.getInstance();
-        this.config.setRunId(this.arguments.getString("runId"));
-        this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
         this.config.setClean(true);
         this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
-        if (this.arguments.getFile("output") != null) {
+        if (LauncherUtils.getArgOutput(this.arguments) != null) {
             this.config.setSerializeJson(true);
-            this.config.setJsonOutputPath(this.arguments.getFile("output").getPath());
+            this.config.setJsonOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
         }
-        if (this.arguments.getString("pushUrl") != null) {
+        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
         }
         this.config.setWorkspacePath(this.arguments.getString("workspace"));
 
@@ -247,7 +247,7 @@ public class Launcher {
             LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
             System.exit(-1);
         }
-        String runId = this.arguments.getString("runId");
+        String runId = LauncherUtils.getArgRunId(this.arguments);
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             Build patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);

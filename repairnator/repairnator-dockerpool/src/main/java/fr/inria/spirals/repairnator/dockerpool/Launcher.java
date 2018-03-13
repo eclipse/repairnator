@@ -89,7 +89,7 @@ public class Launcher extends AbstractPoolManager {
 
     private List<Integer> readListOfBuildIds() {
         List<Integer> result = new ArrayList<>();
-        File inputFile = this.arguments.getFile("input");
+        File inputFile = LauncherUtils.getArgInput(this.arguments);
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -107,7 +107,7 @@ public class Launcher extends AbstractPoolManager {
     }
 
     private void runPool() throws IOException {
-        String runId = this.arguments.getString("runId");
+        String runId = LauncherUtils.getArgRunId(this.arguments);
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "dockerPool");
         hardwareInfoSerializer.serialize();
 
@@ -117,16 +117,16 @@ public class Launcher extends AbstractPoolManager {
 
         endProcessSerializer.setNbBuilds(buildIds.size());
 
-        String imageId = this.findDockerImage(this.arguments.getString("imageName"));
+        String imageId = this.findDockerImage(LauncherUtils.getArgDockerImageName(this.arguments));
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        this.setDockerOutputDir(this.arguments.getString("logDirectory"));
+        this.setDockerOutputDir(LauncherUtils.getArgLogDirectory(this.arguments));
         this.setRunId(runId);
-        this.setCreateOutputDir(this.arguments.getBoolean("createOutputDir"));
-        this.setSkipDelete(this.arguments.getBoolean("skipDelete"));
+        this.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(this.arguments));
+        this.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
         this.setEngines(this.engines);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
+        ExecutorService executorService = Executors.newFixedThreadPool(LauncherUtils.getArgNbThreads(this.arguments));
 
         for (Integer builId : buildIds) {
             executorService.submit(this.submitBuild(imageId, builId));
@@ -134,7 +134,7 @@ public class Launcher extends AbstractPoolManager {
 
         executorService.shutdown();
         try {
-            if (executorService.awaitTermination(this.arguments.getInt("globalTimeout"), TimeUnit.DAYS)) {
+            if (executorService.awaitTermination(LauncherUtils.getArgGlobalTimeout(this.arguments), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
                 endProcessSerializer.setStatus("ok");
             } else {
@@ -168,7 +168,7 @@ public class Launcher extends AbstractPoolManager {
         this.arguments = jsap.parse(args);
         LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.DOCKERPOOL);
         LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.DOCKERPOOL);
-        this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
+        this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
 
         this.initConfig();
         this.initSerializerEngines();
@@ -176,27 +176,27 @@ public class Launcher extends AbstractPoolManager {
     }
 
     private void initNotifiers() {
-        if (this.arguments.getBoolean("notifyEndProcess")) {
+        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
             List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.DOCKERPOOL.name().toLowerCase()+" (runid: "+this.arguments.getString("runId")+")");
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.DOCKERPOOL.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
         }
     }
 
     private void initConfig() {
         this.config = RepairnatorConfig.getInstance();
-        this.config.setLauncherMode(LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase()));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
 
-        if (this.arguments.getString("pushUrl") != null) {
+        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(this.arguments.getString("pushUrl"));
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
             this.config.setFork(true);
         }
-        this.config.setRunId(this.arguments.getString("runId"));
-        this.config.setSpreadsheetId(this.arguments.getString("spreadsheet"));
-        this.config.setMongodbHost(this.arguments.getString("mongoDBHost"));
-        this.config.setMongodbName(this.arguments.getString("mongoDBName"));
-        this.config.setSmtpServer(this.arguments.getString("smtpServer"));
-        this.config.setNotifyTo(this.arguments.getStringArray("notifyto"));
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
     }
 
     private void initSerializerEngines() {

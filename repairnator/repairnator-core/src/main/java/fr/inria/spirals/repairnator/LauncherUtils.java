@@ -18,6 +18,7 @@ import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -36,6 +37,10 @@ public class LauncherUtils {
         return sw;
     }
 
+    public static boolean getArgHelp(JSAPResult arguments) {
+        return arguments.getBoolean("help");
+    }
+
     public static Switch defineArgDebug() {
         Switch sw = new Switch("debug");
         sw.setShortFlag('d');
@@ -44,12 +49,20 @@ public class LauncherUtils {
         return sw;
     }
 
+    public static boolean getArgDebug(JSAPResult arguments) {
+        return arguments.getBoolean("debug");
+    }
+
     public static Switch defineArgNotifyEndProcess() {
         Switch sw = new Switch("notifyEndProcess");
         sw.setLongFlag("notifyEndProcess");
         sw.setDefault("false");
         sw.setHelp("Activate the notification when the process ends.");
         return sw;
+    }
+
+    public static boolean getArgNotifyEndProcess(JSAPResult arguments) {
+        return arguments.getBoolean("notifyEndProcess");
     }
 
     public static FlaggedOption defineArgLauncherMode(String helpMessage) {
@@ -68,12 +81,20 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static LauncherMode getArgLauncherMode(JSAPResult arguments) {
+        return LauncherMode.valueOf(arguments.getString("launcherMode").toUpperCase());
+    }
+
     public static FlaggedOption defineArgRunId() {
         FlaggedOption opt = new FlaggedOption("runId");
         opt.setLongFlag("runId");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("Specify the run id for this launch.");
         return opt;
+    }
+
+    public static String getArgRunId(JSAPResult arguments) {
+        return arguments.getString("runId");
     }
 
     public static FlaggedOption defineArgInput(String helpMessage) {
@@ -84,6 +105,10 @@ public class LauncherUtils {
         opt.setRequired(true);
         opt.setHelp(helpMessage);
         return opt;
+    }
+
+    public static File getArgInput(JSAPResult arguments) {
+        return arguments.getFile("input");
     }
 
     public static FlaggedOption defineArgOutput(LauncherType launcherType, String helpMessage) {
@@ -108,12 +133,20 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static File getArgOutput(JSAPResult arguments) {
+        return arguments.getFile("output");
+    }
+
     public static FlaggedOption defineArgMongoDBHost() {
         FlaggedOption opt = new FlaggedOption("mongoDBHost");
         opt.setLongFlag("dbhost");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("Specify mongodb host.");
         return opt;
+    }
+
+    public static String getArgMongoDBHost(JSAPResult arguments) {
+        return arguments.getString("mongoDBHost");
     }
 
     public static FlaggedOption defineArgMongoDBName() {
@@ -125,12 +158,20 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static String getArgMongoDBName(JSAPResult arguments) {
+        return arguments.getString("mongoDBName");
+    }
+
     public static FlaggedOption defineArgSpreadsheetId() {
         FlaggedOption opt = new FlaggedOption("spreadsheet");
         opt.setLongFlag("spreadsheet");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("Specify Google Spreadsheet ID to put data.");
         return opt;
+    }
+
+    public static String getArgSpreadsheetId(JSAPResult arguments) {
+        return arguments.getString("spreadsheet");
     }
 
     public static FlaggedOption defineArgGoogleSecretPath() {
@@ -142,6 +183,10 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static File getArgGoogleSecretPath(JSAPResult arguments) {
+        return arguments.getFile("googleSecretPath");
+    }
+
     public static FlaggedOption defineArgGoogleAccessToken() {
         FlaggedOption opt = new FlaggedOption("googleAccessToken");
         opt.setLongFlag("googleAccessToken");
@@ -150,12 +195,20 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static String getArgGoogleAccessToken(JSAPResult arguments) {
+        return arguments.getString("googleAccessToken");
+    }
+
     public static FlaggedOption defineArgSmtpServer() {
         FlaggedOption opt = new FlaggedOption("smtpServer");
         opt.setLongFlag("smtpServer");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("Specify SMTP server to use for Email notification");
         return opt;
+    }
+
+    public static String getArgSmtpServer(JSAPResult arguments) {
+        return arguments.getString("smtpServer");
     }
 
     public static FlaggedOption defineArgNotifyto() {
@@ -168,12 +221,20 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static String[] getArgNotifyto(JSAPResult arguments) {
+        return arguments.getStringArray("notifyto");
+    }
+
     public static Switch defineArgCreateOutputDir() {
         Switch sw = new Switch("createOutputDir");
         sw.setLongFlag("createOutputDir");
         sw.setDefault("false");
         sw.setHelp("Create a specific directory for output.");
         return sw;
+    }
+
+    public static boolean getArgCreateOutputDir(JSAPResult arguments) {
+        return arguments.getBoolean("createOutputDir");
     }
 
     public static FlaggedOption defineArgLogDirectory() {
@@ -186,12 +247,20 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static String getArgLogDirectory(JSAPResult arguments) {
+        return arguments.getString("logDirectory");
+    }
+
     public static Switch defineArgSkipDelete() {
         Switch sw = new Switch("skipDelete");
         sw.setLongFlag("skipDelete");
         sw.setDefault("false");
         sw.setHelp("Skip the deletion of docker container.");
         return sw;
+    }
+
+    public static boolean getArgSkipDelete(JSAPResult arguments) {
+        return arguments.getBoolean("skipDelete");
     }
 
     public static FlaggedOption defineArgNbThreads() {
@@ -204,6 +273,10 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static int getArgNbThreads(JSAPResult arguments) {
+        return arguments.getInt("threads");
+    }
+
     public static FlaggedOption defineArgGlobalTimeout() {
         FlaggedOption opt = new FlaggedOption("globalTimeout");
         opt.setShortFlag('g');
@@ -214,12 +287,20 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static int getArgGlobalTimeout(JSAPResult arguments) {
+        return arguments.getInt("globalTimeout");
+    }
+
     public static FlaggedOption defineArgPushUrl() {
         FlaggedOption opt = new FlaggedOption("pushUrl");
         opt.setLongFlag("pushurl");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("Specify repository URL to push data.");
         return opt;
+    }
+
+    public static String getArgPushUrl(JSAPResult arguments) {
+        return arguments.getString("pushUrl");
     }
 
     public static FlaggedOption defineArgDockerImageName() {
@@ -232,6 +313,10 @@ public class LauncherUtils {
         return opt;
     }
 
+    public static String getArgDockerImageName(JSAPResult arguments) {
+        return arguments.getString("imageName");
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
@@ -241,12 +326,12 @@ public class LauncherUtils {
             printUsage(jsap, launcherType);
         }
 
-        if (arguments.getBoolean("help")) {
+        if (getArgHelp(arguments)) {
             printUsage(jsap, launcherType);
         }
 
         if (launcherType == LauncherType.SCANNER) {
-            if (!arguments.getString("launcherMode").equals("bears") && arguments.getBoolean("skip-failing")) {
+            if (!(LauncherUtils.getArgLauncherMode(arguments) == LauncherMode.BEARS) && arguments.getBoolean("skip-failing")) {
                 printUsage(jsap, launcherType);
             }
         }
@@ -282,10 +367,10 @@ public class LauncherUtils {
 
     public static List<NotifierEngine> initNotifierEngines(JSAPResult arguments, Logger logger) {
         List<NotifierEngine> notifierEngines = new ArrayList<>();
-        if (arguments.getString("smtpServer") != null && arguments.getStringArray("notifyto") != null) {
+        if (LauncherUtils.getArgSmtpServer(arguments) != null && LauncherUtils.getArgNotifyto(arguments) != null) {
             logger.info("The email notifier engine will be used.");
 
-            notifierEngines.add(new EmailNotifierEngine(arguments.getStringArray("notifyto"), arguments.getString("smtpServer")));
+            notifierEngines.add(new EmailNotifierEngine(LauncherUtils.getArgNotifyto(arguments), LauncherUtils.getArgSmtpServer(arguments)));
         } else {
             logger.info("The email notifier engine won't be used.");
         }
@@ -293,9 +378,9 @@ public class LauncherUtils {
     }
 
     public static SerializerEngine initMongoDBSerializerEngine(JSAPResult arguments, Logger logger) {
-        if (arguments.getString("mongoDBHost") != null) {
+        if (LauncherUtils.getArgMongoDBHost(arguments) != null) {
             logger.info("Initialize mongoDB serializer engine.");
-            MongoConnection mongoConnection = new MongoConnection(arguments.getString("mongoDBHost"), arguments.getString("mongoDBName"));
+            MongoConnection mongoConnection = new MongoConnection(LauncherUtils.getArgMongoDBHost(arguments), LauncherUtils.getArgMongoDBName(arguments));
             if (mongoConnection.isConnected()) {
                 return new MongoDBSerializerEngine(mongoConnection);
             } else {
@@ -308,11 +393,11 @@ public class LauncherUtils {
     }
 
     public static SerializerEngine initSpreadsheetSerializerEngineWithFileSecret(JSAPResult arguments, Logger logger) {
-        if (arguments.getString("spreadsheet") != null && arguments.getFile("googleSecretPath").exists()) {
+        if (LauncherUtils.getArgSpreadsheetId(arguments) != null && LauncherUtils.getArgGoogleSecretPath(arguments).exists()) {
             logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(arguments.getString("spreadsheet"));
+            GoogleSpreadSheetFactory.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
             try {
-                GoogleSpreadSheetFactory.initWithFileSecret(arguments.getFile("googleSecretPath").getPath());
+                GoogleSpreadSheetFactory.initWithFileSecret(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
                 return new GoogleSpreadsheetSerializerEngine();
             } catch (IOException | GeneralSecurityException e) {
                 logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
@@ -324,11 +409,11 @@ public class LauncherUtils {
     }
 
     public static SerializerEngine initSpreadsheetSerializerEngineWithAccessToken(JSAPResult arguments, Logger logger) {
-        if (arguments.getString("spreadsheet") != null && arguments.getString("googleAccessToken") != null) {
+        if (LauncherUtils.getArgSpreadsheetId(arguments) != null && LauncherUtils.getArgGoogleAccessToken(arguments) != null) {
             logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(arguments.getString("spreadsheet"));
+            GoogleSpreadSheetFactory.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
             try {
-                if (GoogleSpreadSheetFactory.initWithAccessToken(arguments.getString("googleAccessToken"))) {
+                if (GoogleSpreadSheetFactory.initWithAccessToken(LauncherUtils.getArgGoogleAccessToken(arguments))) {
                     return new GoogleSpreadsheetSerializerEngine();
                 } else {
                     logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.");
@@ -344,10 +429,10 @@ public class LauncherUtils {
 
     public static List<SerializerEngine> initFileSerializerEngines(JSAPResult arguments, Logger logger) {
         List<SerializerEngine> fileSerializerEngines = new ArrayList<>();
-        if (arguments.getFile("output") != null) {
+        if (LauncherUtils.getArgOutput(arguments) != null) {
             logger.info("Initialize file serializer engines.");
 
-            String path = arguments.getFile("output").getPath();
+            String path = LauncherUtils.getArgOutput(arguments).getPath();
             path += arguments.contains("build") ? "/"+arguments.getInt("build") : "";
 
             fileSerializerEngines.add(new CSVSerializerEngine(path));

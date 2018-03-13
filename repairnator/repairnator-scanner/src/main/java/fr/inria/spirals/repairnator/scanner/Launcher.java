@@ -43,21 +43,21 @@ public class Launcher {
         this.arguments = jsap.parse(args);
         LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.SCANNER);
 
-        if (this.arguments.getBoolean("debug")) {
+        if (LauncherUtils.getArgDebug(this.arguments)) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.launcherMode = LauncherMode.valueOf(this.arguments.getString("launcherMode").toUpperCase());
+        this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
 
     private void initNotifiers() {
-        if (this.arguments.getBoolean("notifyEndProcess")) {
+        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
             List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+this.arguments.getString("runId")+")");
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
         }
     }
 
@@ -150,17 +150,17 @@ public class Launcher {
             lookToDate = Utils.getLastTimeFromDate(lookToDate);
         }
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, LauncherUtils.getArgRunId(this.arguments), this.arguments.getBoolean("skip-failing"));
         } else {
             int lookupHours = this.arguments.getInt("lookupHours");
             Calendar limitCal = Calendar.getInstance();
             limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
             lookFromDate = limitCal.getTime();
             lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.arguments.getString("runId"), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, LauncherUtils.getArgRunId(this.arguments), this.arguments.getBoolean("skip-failing"));
         }
 
-        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.arguments.getFile("input").getPath());
+        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(LauncherUtils.getArgInput(this.arguments).getPath());
         ProcessSerializer scannerSerializer;
 
         if (launcherMode == LauncherMode.REPAIR) {
@@ -198,8 +198,8 @@ public class Launcher {
     }
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
-        if (this.arguments.getFile("output") != null) {
-            String outputPath = this.arguments.getFile("output").getAbsolutePath();
+        if (LauncherUtils.getArgOutput(this.arguments) != null) {
+            String outputPath = LauncherUtils.getArgOutput(this.arguments).getAbsolutePath();
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
