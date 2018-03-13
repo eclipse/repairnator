@@ -165,17 +165,29 @@ public class Launcher {
         // Verbose output
         this.jsap = new JSAP();
 
+        // -h or --help
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        // -d or --debug
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        // --runId
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // -m or --launcherMode
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
+        // -o or --output
         this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, true, false, true, "Specify path to output serialized files"));
+        // --dbhost
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        // --dbname
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        // --spreadsheet
         this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        // --googleAccessToken
         this.jsap.registerParameter(LauncherUtils.defineArgGoogleAccessToken());
+        // --smtpServer
         this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        // --pushurl
         this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         FlaggedOption opt2 = new FlaggedOption("build");

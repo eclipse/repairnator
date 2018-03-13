@@ -82,18 +82,31 @@ public class Launcher {
         // Verbose output
         this.jsap = new JSAP();
 
+        // -h or --help
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        // -d or --debug
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        // --runId
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // -m or --launcherMode
         this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
+        // -i or --input
         this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
+        // -o or --output
         this.jsap.registerParameter(LauncherUtils.defineArgOutput(false, false, true, false, "Specify where to write the list of build ids (default: stdout)"));
+        // --dbhost
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        // --dbname
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        // --spreadsheet
         this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        // --googleSecretPath
         this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
+        // --notifyEndProcess
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        // --smtpServer
         this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
         Switch sw1 = new Switch("skip-failing");

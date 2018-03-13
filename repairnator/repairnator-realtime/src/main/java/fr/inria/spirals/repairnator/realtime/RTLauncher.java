@@ -44,20 +44,35 @@ public class RTLauncher {
         // Verbose output
         this.jsap = new JSAP();
 
+        // -h or --help
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        // -d or --debug
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        // --runId
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // -o or --output
         this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, true, false, true, "Specify where to put serialized files from dockerpool"));
+        // --dbhost
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        // --dbname
         this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        // --notifyEndProcess
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        // --smtpServer
         this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        // -n or --name
         this.jsap.registerParameter(LauncherUtils.defineArgImageName());
+        // --skipDelete
         this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        // --createOutputDir
         this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
+        // -l or --logDirectory
         this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
+        // -t or --threads
         this.jsap.registerParameter(LauncherUtils.defineArgThreads());
+        // --pushurl
         this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         FlaggedOption opt2 = new FlaggedOption("whitelist");

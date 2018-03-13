@@ -45,17 +45,29 @@ public class Launcher {
         // Verbose output
         this.jsap = new JSAP();
 
+        // -h or --help
         this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        // -d or --debug
         this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        // --runId
         this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // -i or --input
         this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
+        // -o or --output
         this.jsap.registerParameter(LauncherUtils.defineArgOutput(true, false, true, false, "Specify where to put output data"));
+        // --notifyEndProcess
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        // --smtpServer
         this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        // -n or --name
         this.jsap.registerParameter(LauncherUtils.defineArgImageName());
+        // --skipDelete
         this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        // -t or --threads
         this.jsap.registerParameter(LauncherUtils.defineArgThreads());
+        // -g or --globalTimeout
         this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 
         Switch sw1 = new Switch("humanPatch");
