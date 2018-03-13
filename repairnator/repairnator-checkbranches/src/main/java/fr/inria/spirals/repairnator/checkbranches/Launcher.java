@@ -1,17 +1,18 @@
 package fr.inria.spirals.repairnator.checkbranches;
+
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
-import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
@@ -41,137 +42,77 @@ public class Launcher {
     public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
 
+    private Launcher(String[] args) throws JSAPException {
+        this.defineArgs();
+        this.arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.CHECKBRANCHES);
+
+        this.initConfig();
+        this.initNotifiers();
+    }
+
     private void defineArgs() throws JSAPException {
         // Verbose output
         this.jsap = new JSAP();
 
-        // help
-        Switch sw1 = new Switch("help");
-        sw1.setShortFlag('h');
-        sw1.setLongFlag("help");
-        sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
+        // -h or --help
+        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        // -d or --debug
+        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        // --runId
+        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // -i or --input
+        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
+        // -o or --output
+        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.CHECKBRANCHES, "Specify where to put output data"));
+        // --notifyEndProcess
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        // --smtpServer
+        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --notifyto
+        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        // -n or --name
+        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
+        // --skipDelete
+        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        // -t or --threads
+        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
+        // -g or --globalTimeout
+        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 
-        // verbosity
-        sw1 = new Switch("debug");
-        sw1.setShortFlag('d');
-        sw1.setLongFlag("debug");
-        sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
-
-        sw1 = new Switch("skipDelete");
-        sw1.setLongFlag("skipDelete");
-        sw1.setDefault("false");
-        sw1.setHelp("Skip the deletion of docker container.");
-        this.jsap.registerParameter(sw1);
-
-        sw1 = new Switch("notifyEndProcess");
-        sw1.setLongFlag("notifyEndProcess");
-        sw1.setDefault("false");
-        sw1.setHelp("Activate the notification when the process ends.");
-        this.jsap.registerParameter(sw1);
-
-        sw1 = new Switch("humanPatch");
+        Switch sw1 = new Switch("humanPatch");
         sw1.setShortFlag('p');
         sw1.setLongFlag("humanPatch");
         sw1.setDefault("false");
         this.jsap.registerParameter(sw1);
 
-        FlaggedOption opt2 = new FlaggedOption("imageName");
-        opt2.setShortFlag('n');
-        opt2.setLongFlag("name");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setRequired(true);
-        opt2.setHelp("Specify the docker image name to use.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("input");
-        opt2.setShortFlag('i');
-        opt2.setLongFlag("input");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify the input file containing the list of branches to reproduce");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("output");
-        opt2.setShortFlag('o');
-        opt2.setLongFlag("output");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
-        opt2.setRequired(true);
-        opt2.setHelp("Specify where to put output data");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("repository");
+        FlaggedOption opt2 = new FlaggedOption("repository");
         opt2.setShortFlag('r');
         opt2.setLongFlag("repository");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setRequired(true);
         opt2.setHelp("Specify where to collect branches");
         this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("threads");
-        opt2.setShortFlag('t');
-        opt2.setLongFlag("threads");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault("2");
-        opt2.setHelp("Specify the number of threads to run in parallel");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("globalTimeout");
-        opt2.setShortFlag('g');
-        opt2.setLongFlag("globalTimeout");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault("1");
-        opt2.setHelp("Specify the number of day before killing the whole pool.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("runId");
-        opt2.setLongFlag("runId");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify the run id for this launch.");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("smtpServer");
-        opt2.setLongFlag("smtpServer");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify SMTP server to use for Email notification");
-        this.jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("notifyto");
-        opt2.setLongFlag("notifyto");
-        opt2.setList(true);
-        opt2.setListSeparator(',');
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify email adresses to notify");
-        this.jsap.registerParameter(opt2);
     }
 
-    private void checkArguments() {
-        if (!this.arguments.success()) {
-            // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
-                System.err.println("Error: " + errs.next());
-            }
-            this.printUsage();
-        }
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
 
-        if (this.arguments.getBoolean("help")) {
-            this.printUsage();
-        }
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
     }
 
-    private void printUsage() {
-        System.err.println("Usage: java <repairnator-dockerpool name> [option(s)]");
-        System.err.println();
-        System.err.println("Options : ");
-        System.err.println();
-        System.err.println(jsap.getHelp());
-        System.exit(-1);
+    private void initNotifiers() {
+        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+        }
     }
 
     private List<String> readListOfBranches() {
         List<String> result = new ArrayList<>();
-        File inputFile = this.arguments.getFile("input");
+        File inputFile = LauncherUtils.getArgInput(this.arguments);
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -196,14 +137,14 @@ public class Launcher {
 
             String imageId = null;
             for (Image image : allImages) {
-                if (image.repoTags() != null && image.repoTags().contains(this.arguments.getString("imageName"))) {
+                if (image.repoTags() != null && image.repoTags().contains(LauncherUtils.getArgDockerImageName(this.arguments))) {
                     imageId = image.id();
                     break;
                 }
             }
 
             if (imageId == null) {
-                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+this.arguments.getString("imageName")+"\": no image has been found.");
+                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+LauncherUtils.getArgDockerImageName(this.arguments)+"\": no image has been found.");
             }
             return imageId;
         } catch (DockerCertificateException|InterruptedException|DockerException e) {
@@ -212,7 +153,7 @@ public class Launcher {
     }
 
     private void runPool() throws IOException {
-        String runId = this.arguments.getString("runId");
+        String runId = LauncherUtils.getArgRunId(this.arguments);
 
         List<String> branchNames = this.readListOfBranches();
         LOGGER.info("Find "+branchNames.size()+" branches to run.");
@@ -220,17 +161,17 @@ public class Launcher {
         String imageId = this.findDockerImage();
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(this.arguments.getInt("threads"));
+        ExecutorService executorService = Executors.newFixedThreadPool(LauncherUtils.getArgNbThreads(this.arguments));
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, this.arguments.getFile("output").getAbsolutePath(), this.arguments.getBoolean("skipDelete"), this.arguments.getBoolean("humanPatch"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, LauncherUtils.getArgOutput(this.arguments).getAbsolutePath(), LauncherUtils.getArgSkipDelete(this.arguments), this.arguments.getBoolean("humanPatch"));
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
 
         executorService.shutdown();
         try {
-            if (executorService.awaitTermination(this.arguments.getInt("globalTimeout"), TimeUnit.DAYS)) {
+            if (executorService.awaitTermination(LauncherUtils.getArgGlobalTimeout(this.arguments), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
             } else {
                 LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");
@@ -247,40 +188,9 @@ public class Launcher {
         }
     }
 
-    private Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
-        this.arguments = jsap.parse(args);
-        this.checkArguments();
-
-        this.initConfig();
-        this.initNotifiers();
-    }
-
-    private void initNotifiers() {
-        if (this.arguments.getBoolean("notifyEndProcess")) {
-            List<NotifierEngine> notifierEngines = new ArrayList<>();
-            if (this.arguments.getString("smtpServer") != null && this.arguments.getStringArray("notifyto") != null) {
-                LOGGER.info("The email notifier engine will be used.");
-
-                notifierEngines.add(new EmailNotifierEngine(this.arguments.getStringArray("notifyto"), this.arguments.getString("smtpServer")));
-            } else {
-                LOGGER.info("The email notifier engine won't be used.");
-            }
-
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, "checkbranches - (runid: "+this.config.getRunId()+")");
-        }
-    }
-
-    private void initConfig() {
-        this.config = RepairnatorConfig.getInstance();
-
-        this.config.setRunId(this.arguments.getString("runId"));
-        this.config.setSmtpServer(this.arguments.getString("smtpServer"));
-        this.config.setNotifyTo(this.arguments.getStringArray("notifyto"));
-    }
-
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
         launcher.runPool();
     }
+
 }
