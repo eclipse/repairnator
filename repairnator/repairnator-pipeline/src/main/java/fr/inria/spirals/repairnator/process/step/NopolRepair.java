@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
 import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
-import fr.inria.lille.repair.common.synth.StatementType;
+import fr.inria.lille.repair.common.synth.RepairType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
@@ -122,7 +122,7 @@ public class NopolRepair extends AbstractStep {
                     nopolContext.setLocalizer(NopolContext.NopolLocalizer.COCOSPOON);
                     nopolContext.setSolverPath(this.getConfig().getZ3solverPath());
                     nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
-                    nopolContext.setType(StatementType.COND_THEN_PRE);
+                    nopolContext.setType(RepairType.COND_THEN_PRE);
                     nopolContext.setOnlyOneSynthesisResult(false);
                     nopolContext.setOutputFolder(this.getInspector().getRepoLocalPath());
 

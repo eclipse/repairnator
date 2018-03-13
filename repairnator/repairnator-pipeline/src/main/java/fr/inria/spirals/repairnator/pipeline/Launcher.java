@@ -47,7 +47,7 @@ import java.util.Properties;
  * Created by urli on 09/03/2017.
  */
 public class Launcher {
-    private static final String TEST_PROJECT = "surli/failingproject";
+    private static final String TEST_PROJECT = "surli/failingproject"; // be careful when testing: this project deactivate serialization
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
