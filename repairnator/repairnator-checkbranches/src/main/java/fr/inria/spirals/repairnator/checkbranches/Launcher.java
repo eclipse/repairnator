@@ -66,7 +66,7 @@ public class Launcher {
         // --skipDelete
         this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
+        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
         this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 

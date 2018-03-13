@@ -80,7 +80,7 @@ public class Launcher extends AbstractPoolManager {
         // -l or --logDirectory
         this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
+        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
         this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
         // --pushurl

@@ -182,7 +182,7 @@ public class LauncherUtils {
         return sw;
     }
 
-    public static FlaggedOption defineArgThreads() {
+    public static FlaggedOption defineArgNbThreads() {
         FlaggedOption opt = new FlaggedOption("threads");
         opt.setShortFlag('t');
         opt.setLongFlag("threads");

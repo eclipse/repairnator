@@ -71,7 +71,7 @@ public class RTLauncher {
         // -l or --logDirectory
         this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgThreads());
+        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // --pushurl
         this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
