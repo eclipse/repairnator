@@ -114,7 +114,6 @@ public class RTLauncher {
 
         opt2 = new FlaggedOption("duration");
         opt2.setLongFlag("duration");
-        opt2.setShortFlag('d');
         opt2.setStringParser(PeriodStringParser.getParser());
         opt2.setHelp("Duration of the execution. If not given, the execution never stop. This argument should be given on the ISO-8601 duration format: PWdTXhYmZs where W, X, Y, Z respectively represents number of Days, Hours, Minutes and Seconds. T is mandatory before the number of hours and P is always mandatory.");
         this.jsap.registerParameter(opt2);

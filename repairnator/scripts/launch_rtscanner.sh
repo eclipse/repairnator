@@ -22,6 +22,11 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
+
+mkdir -p $ROOT_LOG_DIR
+mkdir -p $ROOT_BIN_DIR
+mkdir -p $ROOT_OUT_DIR
+
 mkdir $REPAIR_OUTPUT_PATH
 
 if [ -z "$RUN_ID_SUFFIX" ]; then
