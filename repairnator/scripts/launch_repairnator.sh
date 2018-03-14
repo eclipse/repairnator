@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Use to create args in the command line for optionnal arguments
+# Use to create args in the command line for optional arguments
 function ca {
   if [ -z "$2" ];
   then
@@ -36,8 +36,6 @@ if [ "$SKIP_SCAN" -eq 1 ]; then
     SKIP_LAUNCH_REPAIRNATOR=0
 fi
 
-mkdir -p $REPAIR_OUTPUT_PATH
-
 if [ -z "$RUN_ID_SUFFIX" ]; then
     RUN_ID=`uuidgen`
 else
@@ -46,8 +44,14 @@ fi
 
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
+echo "Create output directory: $REPAIR_OUTPUT_PATH"
+mkdir -p $REPAIR_OUTPUT_PATH
+
 echo "Create log directory: $LOG_DIR"
 mkdir -p $LOG_DIR
+
+echo "Create bin directory: $REPAIRNATOR_RUN_DIR"
+mkdir -p $REPAIRNATOR_RUN_DIR
 
 echo "Start building a new version of repairnator"
 $SCRIPT_DIR/build_repairnator.sh
@@ -58,8 +62,7 @@ then
    exit -1
 fi
 
-echo "Copy jars and prepare docker image"
-mkdir -p $REPAIRNATOR_RUN_DIR
+echo "Copy jars"
 cp $REPAIRNATOR_SCANNER_JAR $REPAIRNATOR_SCANNER_DEST_JAR
 cp $REPAIRNATOR_DOCKERPOOL_JAR $REPAIRNATOR_DOCKERPOOL_DEST_JAR
 
@@ -76,17 +79,18 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
     java -jar $REPAIRNATOR_SCANNER_DEST_JAR -m $REPAIR_MODE -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID -d $args &> $LOG_DIR/scanner.log
 fi
 
+NB_LINES=`wc -l < $REPAIRNATOR_BUILD_LIST`
+
+if [[ $NB_LINES == 0 ]]; then
+    echo "No build has been found. Stop the script now."
+    exit 0
+else
+    echo "$NB_LINES builds have been found."
+fi
+
 if [ "$SKIP_LAUNCH_REPAIRNATOR" -eq 1 ]; then
     echo "Only scanning, skip the next steps"
     exit 0
-fi
-
-NB_LINES=`wc -l $REPAIRNATOR_BUILD_LIST`
-
-if [[ $NB_LINES == 0 ]]
-then
-   echo "No build has been found. Stop the script now."
-   exit 0
 fi
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
