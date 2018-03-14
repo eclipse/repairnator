@@ -7,6 +7,7 @@ import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.PeriodStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -16,6 +17,7 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,6 +111,12 @@ public class RTLauncher {
         opt2.setDefault(InspectBuilds.LIMIT_SUBMITTED_BUILDS+"");
         opt2.setHelp("Specify the maximum number of watched builds");
         this.jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("duration");
+        opt2.setLongFlag("duration");
+        opt2.setStringParser(PeriodStringParser.getParser());
+        opt2.setHelp("Duration of the execution. If not given, the execution never stop. This argument should be given on the ISO-8601 duration format: PWdTXhYmZs where W, X, Y, Z respectively represents number of Days, Hours, Minutes and Seconds. T is mandatory before the number of hours and P is always mandatory.");
+        this.jsap.registerParameter(opt2);
     }
 
     private void initConfig() {
@@ -154,6 +162,14 @@ public class RTLauncher {
         rtScanner.getInspectBuilds().setMaxSubmittedBuilds(this.arguments.getInt("maxinspectedbuilds"));
         rtScanner.getInspectBuilds().setSleepTime(this.arguments.getInt("buildsleeptime"));
         rtScanner.getInspectJobs().setSleepTime(this.arguments.getInt("jobsleeptime"));
+
+        if (this.arguments.getObject("duration") != null) {
+            rtScanner.setDuration((Duration) this.arguments.getObject("duration"));
+
+            if (this.endProcessNotifier != null) {
+                rtScanner.setEndProcessNotifier(this.endProcessNotifier);
+            }
+        }
 
         LOGGER.info("Init build runner");
         BuildRunner buildRunner = rtScanner.getBuildRunner();

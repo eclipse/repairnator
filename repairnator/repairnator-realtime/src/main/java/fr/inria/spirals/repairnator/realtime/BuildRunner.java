@@ -67,6 +67,17 @@ public class BuildRunner extends AbstractPoolManager {
         }
     }
 
+    public void switchOff() {
+        LOGGER.warn("The process will now stop. "+this.getRunning()+" docker containers will be stopped.");
+        this.waitingBuilds.clear();
+        for (RunnablePipelineContainer container : this.submittedRunnablePipelineContainers) {
+            container.serialize("ABORT");
+            container.killDockerContainer(this.getDockerClient(), false);
+        }
+
+        this.executorService.shutdownNow();
+    }
+
     @Override
     public void removeSubmittedRunnablePipelineContainer(RunnablePipelineContainer pipelineContainer) {
         LOGGER.info("Build (id: "+pipelineContainer.getBuildId()+") has finished.");

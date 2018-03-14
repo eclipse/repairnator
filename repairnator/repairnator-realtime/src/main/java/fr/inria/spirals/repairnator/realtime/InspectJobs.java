@@ -13,6 +13,7 @@ public class InspectJobs implements Runnable {
     public static final int JOB_SLEEP_TIME = 60;
     private RTScanner rtScanner;
     private int sleepTime;
+    private boolean shouldStop;
 
     public InspectJobs(RTScanner scanner) {
         this.rtScanner = scanner;
@@ -23,13 +24,17 @@ public class InspectJobs implements Runnable {
         this.sleepTime = sleepTime;
     }
 
+    public void switchOff() {
+        this.shouldStop = true;
+    }
+
     @Override
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
         if (sleepTime == -1) {
             throw new RuntimeException("Sleep time has to be set before running this.");
         }
-        while (true) {
+        while (!shouldStop) {
             List<Job> jobList = JobHelper.getJobList();
 
             if (jobList != null) {
@@ -49,5 +54,6 @@ public class InspectJobs implements Runnable {
                 }
             }
         }
+        LOGGER.info("This will now stop.");
     }
 }

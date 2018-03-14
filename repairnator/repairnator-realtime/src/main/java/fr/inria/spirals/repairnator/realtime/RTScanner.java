@@ -7,6 +7,7 @@ import fr.inria.jtravis.entities.Log;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.RepositoryHelper;
+import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,6 +40,8 @@ public class RTScanner {
     private String runId;
     private List<SerializerEngine> engines;
     private BlacklistedSerializer blacklistedSerializer;
+    private Duration duration;
+    private EndProcessNotifier endProcessNotifier;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
         this.engines = engines;
@@ -49,6 +53,14 @@ public class RTScanner {
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
+        this.endProcessNotifier = endProcessNotifier;
     }
 
     public List<SerializerEngine> getEngines() {
@@ -111,6 +123,17 @@ public class RTScanner {
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             this.running = true;
+
+            if (this.duration != null) {
+                InspectProcessDuration inspectProcessDuration;
+                if (this.endProcessNotifier != null) {
+                    inspectProcessDuration = new InspectProcessDuration(this.duration, this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
+                } else {
+                    inspectProcessDuration = new InspectProcessDuration(this.duration, this.inspectBuilds, this.inspectJobs, this.buildRunner);
+                }
+
+                new Thread(inspectProcessDuration).start();
+            }
         }
     }
 
