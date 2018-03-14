@@ -40,6 +40,7 @@ export DAY_TIMEOUT=1 # Global timeout to stop the docker execution
 
 export WHITELIST_PATH= # Path of the whitelist of projects (mandatory but the file does not have to exist)
 export BLACKLIST_PATH= # Path of the blacklist (mandatory but the file does not have to exist)
+export DURATION= # Duration execution of the process on the ISO-8601 duration format: PWdTXhYmZs (e.g. PT1h for 1 hour)
 export JOB_SLEEP_TIME=10 # Sleep time in seconds for requesting /job endpoint in Travis
 export BUILD_SLEEP_TIME=10 # Sleep time in seconds for refreshing builds status
 export LIMIT_INSPECTED_BUILDS=100 # Maximum number of builds under inspection

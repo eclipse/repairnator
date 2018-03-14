@@ -52,7 +52,11 @@ echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
 echo "Launch repairnator realtime scanner..."
-args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME``ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH``ca --blacklist $BLACKLIST_PATH`"
+args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL`"
+args="$args`ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME`"
+args="$args`ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH`"
+args="$args`ca --blacklist $BLACKLIST_PATH``ca --duration $DURATION`"
+
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"
 fi
