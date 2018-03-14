@@ -36,7 +36,7 @@ if [ "$SKIP_SCAN" -eq 1 ]; then
     SKIP_LAUNCH_REPAIRNATOR=0
 fi
 
-mkdir $REPAIR_OUTPUT_PATH
+mkdir -p $REPAIR_OUTPUT_PATH
 
 if [ -z "$RUN_ID_SUFFIX" ]; then
     RUN_ID=`uuidgen`
@@ -47,7 +47,7 @@ fi
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
 echo "Create log directory: $LOG_DIR"
-mkdir $LOG_DIR
+mkdir -p $LOG_DIR
 
 echo "Start building a new version of repairnator"
 $SCRIPT_DIR/build_repairnator.sh
@@ -59,7 +59,7 @@ then
 fi
 
 echo "Copy jars and prepare docker image"
-mkdir $REPAIRNATOR_RUN_DIR
+mkdir -p $REPAIRNATOR_RUN_DIR
 cp $REPAIRNATOR_SCANNER_JAR $REPAIRNATOR_SCANNER_DEST_JAR
 cp $REPAIRNATOR_DOCKERPOOL_JAR $REPAIRNATOR_DOCKERPOOL_DEST_JAR
 
