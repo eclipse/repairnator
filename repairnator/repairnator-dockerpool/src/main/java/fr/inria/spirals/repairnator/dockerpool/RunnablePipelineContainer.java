@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by urli on 14/03/2017.
@@ -36,6 +37,7 @@ public class RunnablePipelineContainer implements Runnable {
     private boolean createOutputDir;
     private AbstractPoolManager poolManager;
     private String containerId;
+    private Set<String> volumes;
 
     public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
         this.poolManager = poolManager;
@@ -98,6 +100,8 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("Create the container: "+containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
+            this.volumes = containerConfig.volumeNames();
+
             this.containerId = container.id();
             treatedBuildTracking.setContainerId(this.containerId);
 
@@ -111,6 +115,7 @@ public class RunnablePipelineContainer implements Runnable {
             if (!skipDelete && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(this.containerId);
+                this.removeVolumes(docker);
             }
 
             serialize("TREATED");
@@ -124,6 +129,13 @@ public class RunnablePipelineContainer implements Runnable {
         this.poolManager.removeSubmittedRunnablePipelineContainer(this);
     }
 
+    private void removeVolumes(DockerClient docker) throws DockerException, InterruptedException {
+        for (String volume : this.volumes) {
+            docker.removeVolume(volume);
+        }
+
+    }
+
     public void killDockerContainer(DockerClient docker, boolean remove) {
         if (this.containerId == null) {
             LOGGER.error("Error while trying to kill docker container: the container id is not available. Maybe the container is not started yet.");
@@ -133,6 +145,7 @@ public class RunnablePipelineContainer implements Runnable {
                 docker.killContainer(containerId);
                 if (remove) {
                     docker.removeContainer(containerId);
+                    this.removeVolumes(docker);
                 }
                 this.poolManager.removeSubmittedRunnablePipelineContainer(this);
                 serialize("INTERRUPTED");
