@@ -35,7 +35,6 @@ public class Launcher {
     private JSAP jsap;
     private JSAPResult arguments;
     private RepairnatorConfig config;
-    private LauncherMode launcherMode;
     private List<SerializerEngine> engines;
     private EndProcessNotifier endProcessNotifier;
 
@@ -50,7 +49,6 @@ public class Launcher {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
         this.initConfig();
         this.initSerializerEngines();
         this.initNotifiers();
@@ -182,20 +180,20 @@ public class Launcher {
             lookToDate = Utils.getLastTimeFromDate(lookToDate);
         }
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getLauncherMode(), this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
         } else {
             int lookupHours = this.arguments.getInt("lookupHours");
             Calendar limitCal = Calendar.getInstance();
             limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
             lookFromDate = limitCal.getTime();
             lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getLauncherMode(), this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
         }
 
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(LauncherUtils.getArgInput(this.arguments).getPath());
         ProcessSerializer scannerSerializer;
 
-        if (launcherMode == LauncherMode.REPAIR) {
+        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
             scannerSerializer = new ScannerSerializer4Bears(this.engines, scanner);
