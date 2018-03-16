@@ -7,6 +7,7 @@ import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -33,6 +34,7 @@ public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
+    private RepairnatorConfig config;
     private LauncherMode launcherMode;
     private List<SerializerEngine> engines;
     private EndProcessNotifier endProcessNotifier;
@@ -49,6 +51,7 @@ public class Launcher {
         }
 
         this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
+        this.initConfig();
         this.initSerializerEngines();
         this.initNotifiers();
     }
@@ -114,6 +117,18 @@ public class Launcher {
         opt2.setStringParser(dateStringParser);
         opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
         this.jsap.registerParameter(opt2);
+    }
+
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
     }
 
     private void initSerializerEngines() {
