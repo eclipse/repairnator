@@ -34,7 +34,6 @@ public class RepairnatorConfig {
     public void readFromFile() throws RepairnatorConfigException {
         RepairnatorConfigReader configReader = new RepairnatorConfigReader();
         configReader.readConfigFile(this);
-
     }
 
     // for test purpose
@@ -149,9 +148,8 @@ public class RepairnatorConfig {
         return fork;
     }
 
-    public RepairnatorConfig setFork(boolean fork) {
+    public void setFork(boolean fork) {
         this.fork = fork;
-        return this;
     }
 
     public String getZ3solverPath() {
