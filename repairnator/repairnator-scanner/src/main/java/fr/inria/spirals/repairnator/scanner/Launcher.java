@@ -7,6 +7,7 @@ import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -33,7 +34,7 @@ public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
     private JSAPResult arguments;
-    private LauncherMode launcherMode;
+    private RepairnatorConfig config;
     private List<SerializerEngine> engines;
     private EndProcessNotifier endProcessNotifier;
 
@@ -48,7 +49,7 @@ public class Launcher {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.launcherMode = LauncherUtils.getArgLauncherMode(this.arguments);
+        this.initConfig();
         this.initSerializerEngines();
         this.initNotifiers();
     }
@@ -116,6 +117,18 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
+    private void initConfig() {
+        this.config = RepairnatorConfig.getInstance();
+
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+    }
+
     private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
@@ -136,7 +149,7 @@ public class Launcher {
     private void initNotifiers() {
         if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
             List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }
 
@@ -167,20 +180,20 @@ public class Launcher {
             lookToDate = Utils.getLastTimeFromDate(lookToDate);
         }
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, LauncherUtils.getArgRunId(this.arguments), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
         } else {
             int lookupHours = this.arguments.getInt("lookupHours");
             Calendar limitCal = Calendar.getInstance();
             limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
             lookFromDate = limitCal.getTime();
             lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, launcherMode, LauncherUtils.getArgRunId(this.arguments), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
         }
 
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(LauncherUtils.getArgInput(this.arguments).getPath());
         ProcessSerializer scannerSerializer;
 
-        if (launcherMode == LauncherMode.REPAIR) {
+        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
             scannerSerializer = new ScannerSerializer4Bears(this.engines, scanner);

@@ -5,6 +5,7 @@ import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.kohsuke.github.*;
@@ -39,17 +40,15 @@ public class ProjectScanner {
 
     private Date lookFromDate;
     private Date lookToDate;
-    private LauncherMode launcherMode;
     private String runId;
     private boolean skipFailing;
 
     private Date scannerRunningBeginDate;
     private Date scannerRunningEndDate;
 
-    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode, String runId, boolean skipFailing) {
+    public ProjectScanner(Date lookFromDate, Date lookToDate, String runId, boolean skipFailing) {
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
-        this.launcherMode = launcherMode;
 
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
@@ -135,7 +134,7 @@ public class ProjectScanner {
         this.scannerRunningBeginDate = new Date();
 
         List<BuildToBeInspected> buildsToBeInspected;
-        if (this.launcherMode == LauncherMode.REPAIR) {
+        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
             buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path, true);
         } else {
             buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path, false);
@@ -220,7 +219,7 @@ public class ProjectScanner {
 
     public BuildToBeInspected getBuildToBeInspected(Build build, boolean targetFailing) {
         if (testBuild(build, targetFailing)) {
-            if (this.launcherMode == LauncherMode.REPAIR) {
+            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
                 return new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, this.runId);
             } else {
                 Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
