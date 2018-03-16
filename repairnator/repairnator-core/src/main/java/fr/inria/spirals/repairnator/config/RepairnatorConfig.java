@@ -10,7 +10,7 @@ public class RepairnatorConfig {
     private LauncherMode launcherMode;
 
     private boolean serializeJson;
-    private String jsonOutputPath;
+    private String outputPath;
     private String mongodbHost;
     private String mongodbName;
     private String spreadsheetId;
@@ -73,12 +73,12 @@ public class RepairnatorConfig {
         this.serializeJson = serializeJson;
     }
 
-    public String getJsonOutputPath() {
-        return jsonOutputPath;
+    public String getOutputPath() {
+        return outputPath;
     }
 
-    public void setJsonOutputPath(String jsonOutputPath) {
-        this.jsonOutputPath = jsonOutputPath;
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
     }
 
     public String getMongodbHost() {

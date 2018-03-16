@@ -170,7 +170,7 @@ public class Launcher {
         this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
         if (LauncherUtils.getArgOutput(this.arguments) != null) {
             this.config.setSerializeJson(true);
-            this.config.setJsonOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
+            this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
         }
         if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
             this.config.setPush(true);
