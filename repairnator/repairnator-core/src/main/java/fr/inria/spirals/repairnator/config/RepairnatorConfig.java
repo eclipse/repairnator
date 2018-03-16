@@ -6,24 +6,26 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
  * Created by urli on 08/03/2017.
  */
 public class RepairnatorConfig {
+    private String runId;
     private LauncherMode launcherMode;
-    private boolean clean;
-    private boolean push;
-    private String workspacePath;
-    private String z3solverPath;
+
     private boolean serializeJson;
     private String jsonOutputPath;
-    private String pushRemoteRepo;
-    private String googleAccessToken;
-    private String runId;
-    private String spreadsheetId;
     private String mongodbHost;
     private String mongodbName;
+    private String spreadsheetId;
+    private String googleAccessToken;
     private String smtpServer;
     private String[] notifyTo;
+    private boolean push;
+    private String pushRemoteRepo;
+    private boolean fork;
+    private String z3solverPath;
+    private String workspacePath;
     private String githubLogin;
     private String githubToken;
-    private boolean fork;
+
+    private boolean clean;
 
     private static RepairnatorConfig instance;
 
@@ -47,44 +49,20 @@ public class RepairnatorConfig {
         return instance;
     }
 
+    public String getRunId() {
+        return runId;
+    }
+
+    public void setRunId(String runId) {
+        this.runId = runId;
+    }
+
     public LauncherMode getLauncherMode() {
         return launcherMode;
     }
 
     public void setLauncherMode(LauncherMode launcherMode) {
         this.launcherMode = launcherMode;
-    }
-
-    public boolean isClean() {
-        return clean;
-    }
-
-    public void setClean(boolean clean) {
-        this.clean = clean;
-    }
-
-    public boolean isPush() {
-        return push;
-    }
-
-    public void setPush(boolean push) {
-        this.push = push;
-    }
-
-    public String getWorkspacePath() {
-        return workspacePath;
-    }
-
-    public void setWorkspacePath(String workspacePath) {
-        this.workspacePath = workspacePath;
-    }
-
-    public String getZ3solverPath() {
-        return z3solverPath;
-    }
-
-    public void setZ3solverPath(String z3solverPath) {
-        this.z3solverPath = z3solverPath;
     }
 
     public boolean isSerializeJson() {
@@ -103,38 +81,6 @@ public class RepairnatorConfig {
         this.jsonOutputPath = jsonOutputPath;
     }
 
-    public String getPushRemoteRepo() {
-        return pushRemoteRepo;
-    }
-
-    public void setPushRemoteRepo(String pushRemoteRepo) {
-        this.pushRemoteRepo = pushRemoteRepo;
-    }
-
-    public String getGoogleAccessToken() {
-        return googleAccessToken;
-    }
-
-    public void setGoogleAccessToken(String googleAccessToken) {
-        this.googleAccessToken = googleAccessToken;
-    }
-
-    public String getRunId() {
-        return runId;
-    }
-
-    public void setRunId(String runId) {
-        this.runId = runId;
-    }
-
-    public String getSpreadsheetId() {
-        return spreadsheetId;
-    }
-
-    public void setSpreadsheetId(String spreadsheetId) {
-        this.spreadsheetId = spreadsheetId;
-    }
-
     public String getMongodbHost() {
         return mongodbHost;
     }
@@ -149,6 +95,22 @@ public class RepairnatorConfig {
 
     public void setMongodbName(String mongodbName) {
         this.mongodbName = mongodbName;
+    }
+
+    public String getSpreadsheetId() {
+        return spreadsheetId;
+    }
+
+    public void setSpreadsheetId(String spreadsheetId) {
+        this.spreadsheetId = spreadsheetId;
+    }
+
+    public String getGoogleAccessToken() {
+        return googleAccessToken;
+    }
+
+    public void setGoogleAccessToken(String googleAccessToken) {
+        this.googleAccessToken = googleAccessToken;
     }
 
     public String getSmtpServer() {
@@ -167,6 +129,47 @@ public class RepairnatorConfig {
         this.notifyTo = notifyTo;
     }
 
+    public boolean isPush() {
+        return push;
+    }
+
+    public void setPush(boolean push) {
+        this.push = push;
+    }
+
+    public String getPushRemoteRepo() {
+        return pushRemoteRepo;
+    }
+
+    public void setPushRemoteRepo(String pushRemoteRepo) {
+        this.pushRemoteRepo = pushRemoteRepo;
+    }
+
+    public boolean isFork() {
+        return fork;
+    }
+
+    public RepairnatorConfig setFork(boolean fork) {
+        this.fork = fork;
+        return this;
+    }
+
+    public String getZ3solverPath() {
+        return z3solverPath;
+    }
+
+    public void setZ3solverPath(String z3solverPath) {
+        this.z3solverPath = z3solverPath;
+    }
+
+    public String getWorkspacePath() {
+        return workspacePath;
+    }
+
+    public void setWorkspacePath(String workspacePath) {
+        this.workspacePath = workspacePath;
+    }
+
     public String getGithubLogin() {
         return githubLogin;
     }
@@ -183,13 +186,12 @@ public class RepairnatorConfig {
         this.githubToken = githubToken;
     }
 
-    public boolean isFork() {
-        return fork;
+    public boolean isClean() {
+        return clean;
     }
 
-    public RepairnatorConfig setFork(boolean fork) {
-        this.fork = fork;
-        return this;
+    public void setClean(boolean clean) {
+        this.clean = clean;
     }
 
     public static void setInstance(RepairnatorConfig instance) {
