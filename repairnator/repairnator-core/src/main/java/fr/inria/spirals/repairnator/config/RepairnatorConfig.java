@@ -2,6 +2,8 @@ package fr.inria.spirals.repairnator.config;
 
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
+import java.util.Date;
+
 /**
  * Created by urli on 08/03/2017.
  */
@@ -10,13 +12,16 @@ public class RepairnatorConfig {
     private LauncherMode launcherMode;
 
     private boolean serializeJson;
+    private String inputPath;
     private String outputPath;
     private String mongodbHost;
     private String mongodbName;
     private String spreadsheetId;
+    private String googleSecretPath;
     private String googleAccessToken;
     private String smtpServer;
     private String[] notifyTo;
+    private boolean notifyEndProcess;
     private boolean push;
     private String pushRemoteRepo;
     private boolean fork;
@@ -24,6 +29,10 @@ public class RepairnatorConfig {
     private String workspacePath;
     private String githubLogin;
     private String githubToken;
+
+    // Scanner
+    private Date lookFromDate;
+    private Date lookToDate;
 
     private boolean clean;
 
@@ -72,6 +81,14 @@ public class RepairnatorConfig {
         this.serializeJson = serializeJson;
     }
 
+    public String getInputPath() {
+        return inputPath;
+    }
+
+    public void setInputPath(String inputPath) {
+        this.inputPath = inputPath;
+    }
+
     public String getOutputPath() {
         return outputPath;
     }
@@ -104,6 +121,14 @@ public class RepairnatorConfig {
         this.spreadsheetId = spreadsheetId;
     }
 
+    public String getGoogleSecretPath() {
+        return googleSecretPath;
+    }
+
+    public void setGoogleSecretPath(String googleSecretPath) {
+        this.googleSecretPath = googleSecretPath;
+    }
+
     public String getGoogleAccessToken() {
         return googleAccessToken;
     }
@@ -126,6 +151,14 @@ public class RepairnatorConfig {
 
     public void setNotifyTo(String[] notifyTo) {
         this.notifyTo = notifyTo;
+    }
+
+    public boolean isNotifyEndProcess() {
+        return notifyEndProcess;
+    }
+
+    public void setNotifyEndProcess(boolean notifyEndProcess) {
+        this.notifyEndProcess = notifyEndProcess;
     }
 
     public boolean isPush() {
@@ -182,6 +215,22 @@ public class RepairnatorConfig {
 
     public void setGithubToken(String githubToken) {
         this.githubToken = githubToken;
+    }
+
+    public Date getLookFromDate() {
+        return lookFromDate;
+    }
+
+    public void setLookFromDate(Date lookFromDate) {
+        this.lookFromDate = lookFromDate;
+    }
+
+    public Date getLookToDate() {
+        return lookToDate;
+    }
+
+    public void setLookToDate(Date lookToDate) {
+        this.lookToDate = lookToDate;
     }
 
     public boolean isClean() {

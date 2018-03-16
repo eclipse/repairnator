@@ -122,11 +122,32 @@ public class Launcher {
 
         this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
         this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(this.arguments).getPath());
+        if (LauncherUtils.getArgOutput(this.arguments) != null) {
+            this.config.setSerializeJson(true);
+            this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getAbsolutePath());
+        }
         this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
         this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
         this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
+        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(this.arguments).getPath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(this.arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
         this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+        Date lookFromDate = this.arguments.getDate("lookFromDate");
+        Date lookToDate = this.arguments.getDate("lookToDate");
+        if (lookToDate != null) {
+            lookToDate = Utils.getLastTimeFromDate(lookToDate);
+        }
+        if (lookFromDate == null || lookToDate == null || lookFromDate.after(lookToDate)) {
+            int lookupHours = this.arguments.getInt("lookupHours");
+            Calendar limitCal = Calendar.getInstance();
+            limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
+            lookFromDate = limitCal.getTime();
+            lookToDate = new Date();
+        }
+        this.config.setLookFromDate(lookFromDate);
+        this.config.setLookToDate(lookToDate);
     }
 
     private void initSerializerEngines() {
@@ -147,7 +168,7 @@ public class Launcher {
     }
 
     private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
+        if (this.config.isNotifyEndProcess()) {
             List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
             this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
@@ -173,24 +194,9 @@ public class Launcher {
 
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
-        ProjectScanner scanner;
-        Date lookFromDate = this.arguments.getDate("lookFromDate");
-        Date lookToDate = this.arguments.getDate("lookToDate");
-        if (lookToDate != null) {
-            lookToDate = Utils.getLastTimeFromDate(lookToDate);
-        }
-        if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
-        } else {
-            int lookupHours = this.arguments.getInt("lookupHours");
-            Calendar limitCal = Calendar.getInstance();
-            limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
-            lookFromDate = limitCal.getTime();
-            lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
-        }
+        ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
 
-        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(LauncherUtils.getArgInput(this.arguments).getPath());
+        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.config.getInputPath());
         ProcessSerializer scannerSerializer;
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
@@ -210,8 +216,8 @@ public class Launcher {
     }
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
-        if (LauncherUtils.getArgOutput(this.arguments) != null) {
-            String outputPath = LauncherUtils.getArgOutput(this.arguments).getAbsolutePath();
+        if (this.config.isSerializeJson()) {
+            String outputPath = this.config.getOutputPath();
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
