@@ -41,12 +41,11 @@ public class ProjectScanner {
     private Date lookToDate;
     private LauncherMode launcherMode;
     private String runId;
-    private boolean skipFailing;
 
     private Date scannerRunningBeginDate;
     private Date scannerRunningEndDate;
 
-    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode, String runId, boolean skipFailing) {
+    public ProjectScanner(Date lookFromDate, Date lookToDate, LauncherMode launcherMode, String runId) {
         this.lookFromDate = lookFromDate;
         this.lookToDate = lookToDate;
         this.launcherMode = launcherMode;
@@ -54,7 +53,6 @@ public class ProjectScanner {
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
         this.runId = runId;
-        this.skipFailing = skipFailing;
 
         this.logger.info("Look from " + Utils.formatCompleteDate(this.lookFromDate) + " to " + Utils.formatCompleteDate(this.lookToDate));
     }
@@ -256,7 +254,7 @@ public class ProjectScanner {
 
             this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
                     + build.getBuildStatus().name());
-            if (build.getBuildStatus() == BuildStatus.FAILED && !skipFailing) {
+            if (build.getBuildStatus() == BuildStatus.FAILED) {
                 this.totalBuildInJavaFailing++;
 
                 for (Job job : build.getJobs()) {
@@ -270,11 +268,11 @@ public class ProjectScanner {
                                 // testInfo can be null if the build tool is unknown
                                 if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
                                     this.totalBuildInJavaFailingWithFailingTests++;
-                                    if (targetFailing) {
+                                    if (targetFailing) { // REPAIR mode
                                         this.slugs.add(repo.getSlug());
                                         this.repositories.add(repo);
                                         return true;
-                                    } else {
+                                    } else { // BEARS mode
                                         return false;
                                     }
                                 }
@@ -288,7 +286,7 @@ public class ProjectScanner {
                 }
             } else if (build.getBuildStatus() == BuildStatus.PASSED) {
                 this.totalJavaPassingBuilds++;
-                if (!targetFailing) {
+                if (!targetFailing) { // BEARS mode
                     for (Job job : build.getJobs()) {
                         if (job.getBuildStatus() == BuildStatus.PASSED) {
                             Log jobLog = job.getLog();
