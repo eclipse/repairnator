@@ -131,12 +131,7 @@ public class ProjectScanner {
     public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
         this.scannerRunningBeginDate = new Date();
 
-        List<BuildToBeInspected> buildsToBeInspected;
-        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
-            buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path, true);
-        } else {
-            buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path, false);
-        }
+        List<BuildToBeInspected> buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path);
 
         this.scannerRunningEndDate = new Date();
 
@@ -164,12 +159,12 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path, boolean targetFailing) throws IOException {
+    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path) throws IOException {
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
-        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos, targetFailing);
+        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos);
 
         return builds;
     }
@@ -197,7 +192,7 @@ public class ProjectScanner {
         return result;
     }
 
-    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos, boolean targetFailing) {
+    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos) {
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
         for (Repository repo : repos) {
@@ -205,7 +200,7 @@ public class ProjectScanner {
 
             for (Build build : repoBuilds) {
                 this.totalScannedBuilds++;
-                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build, targetFailing);
+                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build);
                 if (buildToBeInspected != null) {
                     buildsToBeInspected.add(buildToBeInspected);
                 }
@@ -215,8 +210,8 @@ public class ProjectScanner {
         return buildsToBeInspected;
     }
 
-    public BuildToBeInspected getBuildToBeInspected(Build build, boolean targetFailing) {
-        if (testBuild(build, targetFailing)) {
+    public BuildToBeInspected getBuildToBeInspected(Build build) {
+        if (testBuild(build)) {
             if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
                 return new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, this.runId);
             } else {
@@ -242,7 +237,7 @@ public class ProjectScanner {
         return null;
     }
 
-    private boolean testBuild(Build build, boolean targetFailing) {
+    private boolean testBuild(Build build) {
         if (build.isPullRequest()) {
             this.totalPRBuilds++;
         }
@@ -267,11 +262,11 @@ public class ProjectScanner {
                                 // testInfo can be null if the build tool is unknown
                                 if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
                                     this.totalBuildInJavaFailingWithFailingTests++;
-                                    if (targetFailing) { // REPAIR mode
+                                    if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
                                         this.slugs.add(repo.getSlug());
                                         this.repositories.add(repo);
                                         return true;
-                                    } else { // BEARS mode
+                                    } else {
                                         return false;
                                     }
                                 }
@@ -285,7 +280,7 @@ public class ProjectScanner {
                 }
             } else if (build.getBuildStatus() == BuildStatus.PASSED) {
                 this.totalJavaPassingBuilds++;
-                if (!targetFailing) { // BEARS mode
+                if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                     for (Job job : build.getJobs()) {
                         if (job.getBuildStatus() == BuildStatus.PASSED) {
                             Log jobLog = job.getLog();
