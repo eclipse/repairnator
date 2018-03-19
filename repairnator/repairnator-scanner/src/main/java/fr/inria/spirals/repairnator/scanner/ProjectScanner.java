@@ -128,16 +128,6 @@ public class ProjectScanner {
         return hours + ":" + minutes + ":" + seconds;
     }
 
-    public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
-        this.scannerRunningBeginDate = new Date();
-
-        List<BuildToBeInspected> buildsToBeInspected = getListOfBuildsFromProjects(path);
-
-        this.scannerRunningEndDate = new Date();
-
-        return buildsToBeInspected;
-    }
-
     private List<String> getFileContent(String path) throws IOException {
         List<String> result = new ArrayList<String>();
         File file = new File(path);
@@ -159,12 +149,16 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    private List<BuildToBeInspected> getListOfBuildsFromProjects(String path) throws IOException {
+    public List<BuildToBeInspected> getListOfBuildsToBeInspectedFromProjects(String path) throws IOException {
+        this.scannerRunningBeginDate = new Date();
+
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
         List<Repository> repos = getListOfValidRepository(slugs);
         List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos);
+
+        this.scannerRunningEndDate = new Date();
 
         return builds;
     }

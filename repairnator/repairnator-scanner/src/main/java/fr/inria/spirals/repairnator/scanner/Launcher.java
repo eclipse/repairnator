@@ -184,7 +184,7 @@ public class Launcher {
             scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId());
         }
 
-        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(LauncherUtils.getArgInput(this.arguments).getPath());
+        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(LauncherUtils.getArgInput(this.arguments).getPath());
         ProcessSerializer scannerSerializer;
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
