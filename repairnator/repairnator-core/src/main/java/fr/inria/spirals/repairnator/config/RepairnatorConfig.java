@@ -34,6 +34,14 @@ public class RepairnatorConfig {
     private Date lookFromDate;
     private Date lookToDate;
 
+    // Dockerpool
+    private String dockerImageName;
+    private boolean skipDelete;
+    private boolean createOutputDir;
+    private String logDirectory;
+    private int nbThreads;
+    private int globalTimeout;
+
     private boolean clean;
 
     private static RepairnatorConfig instance;
@@ -231,6 +239,54 @@ public class RepairnatorConfig {
 
     public void setLookToDate(Date lookToDate) {
         this.lookToDate = lookToDate;
+    }
+
+    public String getDockerImageName() {
+        return dockerImageName;
+    }
+
+    public void setDockerImageName(String dockerImageName) {
+        this.dockerImageName = dockerImageName;
+    }
+
+    public boolean isSkipDelete() {
+        return skipDelete;
+    }
+
+    public void setSkipDelete(boolean skipDelete) {
+        this.skipDelete = skipDelete;
+    }
+
+    public boolean isCreateOutputDir() {
+        return createOutputDir;
+    }
+
+    public void setCreateOutputDir(boolean createOutputDir) {
+        this.createOutputDir = createOutputDir;
+    }
+
+    public String getLogDirectory() {
+        return logDirectory;
+    }
+
+    public void setLogDirectory(String logDirectory) {
+        this.logDirectory = logDirectory;
+    }
+
+    public int getNbThreads() {
+        return nbThreads;
+    }
+
+    public void setNbThreads(int nbThreads) {
+        this.nbThreads = nbThreads;
+    }
+
+    public int getGlobalTimeout() {
+        return globalTimeout;
+    }
+
+    public void setGlobalTimeout(int globalTimeout) {
+        this.globalTimeout = globalTimeout;
     }
 
     public boolean isClean() {
