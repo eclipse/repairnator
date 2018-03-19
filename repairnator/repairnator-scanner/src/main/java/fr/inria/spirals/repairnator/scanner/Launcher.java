@@ -33,23 +33,22 @@ import java.util.List;
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
-    private JSAPResult arguments;
     private RepairnatorConfig config;
     private List<SerializerEngine> engines;
     private EndProcessNotifier endProcessNotifier;
 
     public Launcher(String[] args) throws JSAPException {
         this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.SCANNER);
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.SCANNER);
 
-        if (LauncherUtils.getArgDebug(this.arguments)) {
+        if (LauncherUtils.getArgDebug(arguments)) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.initConfig();
+        this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
@@ -111,30 +110,30 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
-        this.config.setInputPath(LauncherUtils.getArgInput(this.arguments).getPath());
-        if (LauncherUtils.getArgOutput(this.arguments) != null) {
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
+        if (LauncherUtils.getArgOutput(arguments) != null) {
             this.config.setSerializeJson(true);
-            this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getAbsolutePath());
+            this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
         }
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
-        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(this.arguments).getPath());
-        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
-        Date lookFromDate = this.arguments.getDate("lookFromDate");
-        Date lookToDate = this.arguments.getDate("lookToDate");
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
+        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        Date lookFromDate = arguments.getDate("lookFromDate");
+        Date lookToDate = arguments.getDate("lookToDate");
         if (lookToDate != null) {
             lookToDate = Utils.getLastTimeFromDate(lookToDate);
         }
         if (lookFromDate == null || lookToDate == null || lookFromDate.after(lookToDate)) {
-            int lookupHours = this.arguments.getInt("lookupHours");
+            int lookupHours = arguments.getInt("lookupHours");
             Calendar limitCal = Calendar.getInstance();
             limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
             lookFromDate = limitCal.getTime();

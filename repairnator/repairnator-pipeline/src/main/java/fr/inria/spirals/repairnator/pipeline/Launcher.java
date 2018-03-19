@@ -50,7 +50,6 @@ public class Launcher {
     private static final String TEST_PROJECT = "surli/failingproject"; // be careful when testing: this project deactivate serialization
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
-    private JSAPResult arguments;
     private RepairnatorConfig config;
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
@@ -71,16 +70,16 @@ public class Launcher {
         }
 
         this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.PIPELINE);
-        this.initConfig();
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.PIPELINE);
+        this.initConfig(arguments);
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded();
             this.checkNopolSolverPath();
         }
 
-        if (LauncherUtils.getArgDebug(this.arguments)) {
+        if (LauncherUtils.getArgDebug(arguments)) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -159,31 +158,31 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
         this.config.setClean(true);
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
-        if (LauncherUtils.getArgOutput(this.arguments) != null) {
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+        if (LauncherUtils.getArgOutput(arguments) != null) {
             this.config.setSerializeJson(true);
-            this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
+            this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         }
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
-        this.config.setGoogleAccessToken(LauncherUtils.getArgGoogleAccessToken(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
-        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
+        this.config.setGoogleAccessToken(LauncherUtils.getArgGoogleAccessToken(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
         }
-        this.config.setBuildId(this.arguments.getInt("build"));
-        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
-        this.config.setWorkspacePath(this.arguments.getString("workspace"));
-        this.config.setGithubLogin(this.arguments.getString("ghLogin"));
-        this.config.setGithubToken(this.arguments.getString("ghOauth"));
+        this.config.setBuildId(arguments.getInt("build"));
+        this.config.setZ3solverPath(arguments.getFile("z3").getPath());
+        this.config.setWorkspacePath(arguments.getString("workspace"));
+        this.config.setGithubLogin(arguments.getString("ghLogin"));
+        this.config.setGithubToken(arguments.getString("ghOauth"));
 
         GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
         GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());

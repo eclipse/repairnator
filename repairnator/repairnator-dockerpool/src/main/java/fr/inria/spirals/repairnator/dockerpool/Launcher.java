@@ -34,18 +34,17 @@ import java.util.concurrent.TimeUnit;
 public class Launcher extends AbstractPoolManager {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
-    private JSAPResult arguments;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
     private Launcher(String[] args) throws JSAPException {
         this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.DOCKERPOOL);
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.DOCKERPOOL);
         LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.DOCKERPOOL);
 
-        this.initConfig();
+        this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
@@ -96,29 +95,29 @@ public class Launcher extends AbstractPoolManager {
         this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
-        this.config.setInputPath(LauncherUtils.getArgInput(this.arguments).getPath());
-        this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
-        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(this.arguments).getPath());
-        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
-        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(this.arguments));
-        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
-        this.config.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(this.arguments));
-        this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(this.arguments));
-        this.config.setNbThreads(LauncherUtils.getArgNbThreads(this.arguments));
-        this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(this.arguments));
-        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
+        this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
+        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(arguments));
+        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
+        this.config.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(arguments));
+        this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(arguments));
+        this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
+        this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(arguments));
+        if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
             this.config.setFork(true);
         }
     }

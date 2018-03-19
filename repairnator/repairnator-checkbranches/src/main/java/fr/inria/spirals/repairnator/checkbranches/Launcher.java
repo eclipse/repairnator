@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private JSAP jsap;
-    private JSAPResult arguments;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
@@ -44,10 +43,10 @@ public class Launcher {
 
     private Launcher(String[] args) throws JSAPException {
         this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.CHECKBRANCHES);
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.CHECKBRANCHES);
 
-        this.initConfig();
+        this.initConfig(arguments);
         this.initNotifiers();
     }
 
@@ -95,22 +94,22 @@ public class Launcher {
         this.jsap.registerParameter(opt2);
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setInputPath(LauncherUtils.getArgInput(this.arguments).getPath());
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
         this.config.setSerializeJson(true);
-        this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getAbsolutePath());
-        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
-        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(this.arguments));
-        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
-        this.config.setNbThreads(LauncherUtils.getArgNbThreads(this.arguments));
-        this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(this.arguments));
-        this.config.setHumanPatch(this.arguments.getBoolean("humanPatch"));
-        this.config.setRepository(this.arguments.getString("repository"));
+        this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(arguments));
+        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
+        this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
+        this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(arguments));
+        this.config.setHumanPatch(arguments.getBoolean("humanPatch"));
+        this.config.setRepository(arguments.getString("repository"));
     }
 
     private void initNotifiers() {

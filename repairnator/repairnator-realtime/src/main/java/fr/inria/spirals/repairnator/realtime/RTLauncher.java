@@ -25,19 +25,18 @@ public class RTLauncher {
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
     private final LauncherMode launcherMode;
     private JSAP jsap;
-    private JSAPResult arguments;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
     private RTLauncher(String[] args) throws JSAPException {
         this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.REALTIME);
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.REALTIME);
         LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.REALTIME);
         this.launcherMode = LauncherMode.REPAIR;
 
-        this.initConfig();
+        this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
@@ -119,37 +118,37 @@ public class RTLauncher {
         this.jsap.registerParameter(opt2);
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setLauncherMode(this.launcherMode);
-        this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
-        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(this.arguments));
-        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
-        this.config.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(this.arguments));
-        this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(this.arguments));
-        this.config.setNbThreads(LauncherUtils.getArgNbThreads(this.arguments));
-        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
+        this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(arguments));
+        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
+        this.config.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(arguments));
+        this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(arguments));
+        this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
+        if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
         }
-        if (this.arguments.contains("whitelist")) {
-            this.config.setWhiteList(this.arguments.getFile("whitelist"));
+        if (arguments.contains("whitelist")) {
+            this.config.setWhiteList(arguments.getFile("whitelist"));
         }
-        if (this.arguments.contains("blacklist")) {
-            this.config.setBlackList(this.arguments.getFile("blacklist"));
+        if (arguments.contains("blacklist")) {
+            this.config.setBlackList(arguments.getFile("blacklist"));
         }
-        this.config.setJobSleepTime(this.arguments.getInt("jobsleeptime"));
-        this.config.setBuildSleepTime(this.arguments.getInt("buildsleeptime"));
-        this.config.setMaxInspectedBuilds(this.arguments.getInt("maxinspectedbuilds"));
-        if (this.arguments.getObject("duration") != null) {
-            this.config.setDuration((Duration) this.arguments.getObject("duration"));
+        this.config.setJobSleepTime(arguments.getInt("jobsleeptime"));
+        this.config.setBuildSleepTime(arguments.getInt("buildsleeptime"));
+        this.config.setMaxInspectedBuilds(arguments.getInt("maxinspectedbuilds"));
+        if (arguments.getObject("duration") != null) {
+            this.config.setDuration((Duration) arguments.getObject("duration"));
         }
     }
 
