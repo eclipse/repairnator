@@ -329,12 +329,6 @@ public class LauncherUtils {
         if (getArgHelp(arguments)) {
             printUsage(jsap, launcherType);
         }
-
-        if (launcherType == LauncherType.SCANNER) {
-            if (!(LauncherUtils.getArgLauncherMode(arguments) == LauncherMode.BEARS) && arguments.getBoolean("skip-failing")) {
-                printUsage(jsap, launcherType);
-            }
-        }
     }
 
     public static void checkEnvironmentVariables(JSAP jsap, LauncherType launcherType) {

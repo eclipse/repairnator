@@ -85,12 +85,6 @@ public class Launcher {
         // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
-        Switch sw1 = new Switch("skip-failing");
-        sw1.setLongFlag("skip-failing");
-        sw1.setDefault("false");
-        sw1.setHelp("Use it when the scanner should skip failing builds (can be used only with bears mode)");
-        this.jsap.registerParameter(sw1);
-
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
         opt2.setLongFlag("lookupHours");
@@ -180,17 +174,17 @@ public class Launcher {
             lookToDate = Utils.getLastTimeFromDate(lookToDate);
         }
         if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId());
         } else {
             int lookupHours = this.arguments.getInt("lookupHours");
             Calendar limitCal = Calendar.getInstance();
             limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
             lookFromDate = limitCal.getTime();
             lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
+            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId());
         }
 
-        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(LauncherUtils.getArgInput(this.arguments).getPath());
+        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(LauncherUtils.getArgInput(this.arguments).getPath());
         ProcessSerializer scannerSerializer;
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
