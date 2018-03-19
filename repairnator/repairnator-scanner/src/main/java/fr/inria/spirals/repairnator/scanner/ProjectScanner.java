@@ -131,7 +131,7 @@ public class ProjectScanner {
     public List<BuildToBeInspected> getListOfBuildsToBeInspected(String path) throws IOException {
         this.scannerRunningBeginDate = new Date();
 
-        List<BuildToBeInspected> buildsToBeInspected = getListOfBuildsFromProjectsByBuildStatus(path);
+        List<BuildToBeInspected> buildsToBeInspected = getListOfBuildsFromProjects(path);
 
         this.scannerRunningEndDate = new Date();
 
@@ -159,7 +159,7 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    private List<BuildToBeInspected> getListOfBuildsFromProjectsByBuildStatus(String path) throws IOException {
+    private List<BuildToBeInspected> getListOfBuildsFromProjects(String path) throws IOException {
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
 
