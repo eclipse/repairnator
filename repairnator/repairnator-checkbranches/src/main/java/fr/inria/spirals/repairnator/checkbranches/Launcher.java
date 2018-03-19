@@ -115,7 +115,7 @@ public class Launcher {
 
     private void initNotifiers() {
         if (this.config.isNotifyEndProcess()) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
             this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }

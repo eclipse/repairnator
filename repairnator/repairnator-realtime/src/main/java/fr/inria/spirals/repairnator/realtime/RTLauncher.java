@@ -156,10 +156,10 @@ public class RTLauncher {
     private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
         this.engines.addAll(fileSerializerEngines);
 
-        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(LOGGER);
         if (mongoDBSerializerEngine != null) {
             this.engines.add(mongoDBSerializerEngine);
         }
@@ -167,7 +167,7 @@ public class RTLauncher {
 
     private void initNotifiers() {
         if (this.config.isNotifyEndProcess()) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
             this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.REALTIME.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }

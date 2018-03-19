@@ -220,22 +220,22 @@ public class Launcher {
     private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithAccessToken(this.arguments, LOGGER);
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithAccessToken(LOGGER);
         if (spreadsheetSerializerEngine != null) {
             this.engines.add(spreadsheetSerializerEngine);
         }
 
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
         this.engines.addAll(fileSerializerEngines);
 
-        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(LOGGER);
         if (mongoDBSerializerEngine != null) {
             this.engines.add(mongoDBSerializerEngine);
         }
     }
 
     private void initNotifiers() {
-        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
         ErrorNotifier.getInstance(notifierEngines);
 
         this.notifiers = new ArrayList<>();
