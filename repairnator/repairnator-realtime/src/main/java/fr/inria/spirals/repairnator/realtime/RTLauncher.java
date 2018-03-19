@@ -121,17 +121,36 @@ public class RTLauncher {
 
     private void initConfig() {
         this.config = RepairnatorConfig.getInstance();
-        this.config.setLauncherMode(this.launcherMode);
 
+        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setLauncherMode(this.launcherMode);
+        this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(this.arguments));
+        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
+        this.config.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(this.arguments));
+        this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(this.arguments));
+        this.config.setNbThreads(LauncherUtils.getArgNbThreads(this.arguments));
         if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
         }
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+        if (this.arguments.contains("whitelist")) {
+            this.config.setWhiteList(this.arguments.getFile("whitelist"));
+        }
+        if (this.arguments.contains("blacklist")) {
+            this.config.setBlackList(this.arguments.getFile("blacklist"));
+        }
+        this.config.setJobSleepTime(this.arguments.getInt("jobsleeptime"));
+        this.config.setBuildSleepTime(this.arguments.getInt("buildsleeptime"));
+        this.config.setMaxInspectedBuilds(this.arguments.getInt("maxinspectedbuilds"));
+        if (this.arguments.getObject("duration") != null) {
+            this.config.setDuration((Duration) this.arguments.getObject("duration"));
+        }
     }
 
     private void initSerializerEngines() {
@@ -147,24 +166,24 @@ public class RTLauncher {
     }
 
     private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
+        if (this.config.isNotifyEndProcess()) {
             List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.REALTIME.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.REALTIME.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }
 
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
-        String runId = LauncherUtils.getArgRunId(this.arguments);
+        String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
-        rtScanner.getInspectBuilds().setMaxSubmittedBuilds(this.arguments.getInt("maxinspectedbuilds"));
-        rtScanner.getInspectBuilds().setSleepTime(this.arguments.getInt("buildsleeptime"));
-        rtScanner.getInspectJobs().setSleepTime(this.arguments.getInt("jobsleeptime"));
+        rtScanner.getInspectBuilds().setMaxSubmittedBuilds(this.config.getMaxInspectedBuilds());
+        rtScanner.getInspectBuilds().setSleepTime(this.config.getBuildSleepTime());
+        rtScanner.getInspectJobs().setSleepTime(this.config.getJobSleepTime());
 
-        if (this.arguments.getObject("duration") != null) {
-            rtScanner.setDuration((Duration) this.arguments.getObject("duration"));
+        if (this.config.getDuration() != null) {
+            rtScanner.setDuration(this.config.getDuration());
 
             if (this.endProcessNotifier != null) {
                 rtScanner.setEndProcessNotifier(this.endProcessNotifier);
@@ -173,21 +192,21 @@ public class RTLauncher {
 
         LOGGER.info("Init build runner");
         BuildRunner buildRunner = rtScanner.getBuildRunner();
-        buildRunner.setDockerOutputDir(LauncherUtils.getArgLogDirectory(this.arguments));
+        buildRunner.setDockerOutputDir(this.config.getLogDirectory());
         buildRunner.setRunId(runId);
-        buildRunner.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(this.arguments));
-        buildRunner.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
+        buildRunner.setCreateOutputDir(this.config.isCreateOutputDir());
+        buildRunner.setSkipDelete(this.config.isSkipDelete());
         buildRunner.setEngines(this.engines);
-        buildRunner.setDockerImageName(LauncherUtils.getArgDockerImageName(this.arguments));
-        buildRunner.initExecutorService(LauncherUtils.getArgNbThreads(this.arguments));
+        buildRunner.setDockerImageName(this.config.getDockerImageName());
+        buildRunner.initExecutorService(this.config.getNbThreads());
 
 
-        if (this.arguments.contains("whitelist")) {
-            rtScanner.initWhiteListedRepository(this.arguments.getFile("whitelist"));
+        if (this.config.getWhiteList() != null) {
+            rtScanner.initWhiteListedRepository(this.config.getWhiteList());
         }
 
-        if (this.arguments.contains("blacklist")) {
-            rtScanner.initBlackListedRepository(this.arguments.getFile("blacklist"));
+        if (this.config.getBlackList() != null) {
+            rtScanner.initBlackListedRepository(this.config.getBlackList());
         }
 
         LOGGER.info("Start RTScanner...");

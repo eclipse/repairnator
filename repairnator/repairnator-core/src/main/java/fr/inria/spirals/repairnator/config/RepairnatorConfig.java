@@ -2,6 +2,8 @@ package fr.inria.spirals.repairnator.config;
 
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
+import java.io.File;
+import java.time.Duration;
 import java.util.Date;
 
 /**
@@ -44,6 +46,14 @@ public class RepairnatorConfig {
     private String logDirectory;
     private int nbThreads;
     private int globalTimeout;
+
+    // Realtime
+    private File whiteList;
+    private File blackList;
+    private int jobSleepTime;
+    private int buildSleepTime;
+    private int maxInspectedBuilds;
+    private Duration duration;
 
     private boolean clean;
 
@@ -298,6 +308,54 @@ public class RepairnatorConfig {
 
     public void setGlobalTimeout(int globalTimeout) {
         this.globalTimeout = globalTimeout;
+    }
+
+    public File getWhiteList() {
+        return whiteList;
+    }
+
+    public void setWhiteList(File whiteList) {
+        this.whiteList = whiteList;
+    }
+
+    public File getBlackList() {
+        return blackList;
+    }
+
+    public void setBlackList(File blackList) {
+        this.blackList = blackList;
+    }
+
+    public int getJobSleepTime() {
+        return jobSleepTime;
+    }
+
+    public void setJobSleepTime(int jobSleepTime) {
+        this.jobSleepTime = jobSleepTime;
+    }
+
+    public int getBuildSleepTime() {
+        return buildSleepTime;
+    }
+
+    public void setBuildSleepTime(int buildSleepTime) {
+        this.buildSleepTime = buildSleepTime;
+    }
+
+    public int getMaxInspectedBuilds() {
+        return maxInspectedBuilds;
+    }
+
+    public void setMaxInspectedBuilds(int maxInspectedBuilds) {
+        this.maxInspectedBuilds = maxInspectedBuilds;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     public boolean isClean() {
