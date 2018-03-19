@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    private JSAP jsap;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
@@ -42,48 +41,48 @@ public class Launcher {
     public static DockerClient docker;
 
     private Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
+        JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.CHECKBRANCHES);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.CHECKBRANCHES);
 
         this.initConfig(arguments);
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -i or --input
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
+        jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.CHECKBRANCHES, "Specify where to put output data"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.CHECKBRANCHES, "Specify where to put output data"));
         // --notifyEndProcess
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
-        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
+        jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
         // --skipDelete
-        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
+        jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
-        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
+        jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 
         Switch sw1 = new Switch("humanPatch");
         sw1.setShortFlag('p');
         sw1.setLongFlag("humanPatch");
         sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
+        jsap.registerParameter(sw1);
 
         FlaggedOption opt2 = new FlaggedOption("repository");
         opt2.setShortFlag('r');
@@ -91,7 +90,9 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setRequired(true);
         opt2.setHelp("Specify where to collect branches");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
+
+        return jsap;
     }
 
     private void initConfig(JSAPResult arguments) {

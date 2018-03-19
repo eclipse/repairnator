@@ -33,66 +33,67 @@ import java.util.concurrent.TimeUnit;
  */
 public class Launcher extends AbstractPoolManager {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    private JSAP jsap;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
     private Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
+        JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.DOCKERPOOL);
-        LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.DOCKERPOOL);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.DOCKERPOOL);
+        LauncherUtils.checkEnvironmentVariables(jsap, LauncherType.DOCKERPOOL);
 
         this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -m or --launcherMode
-        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
+        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
         // -i or --input
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
+        jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.DOCKERPOOL,"Specify where to put serialized files from dockerpool"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.DOCKERPOOL,"Specify where to put serialized files from dockerpool"));
         // --dbhost
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         // --spreadsheet
-        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
         // --googleSecretPath
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
+        jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
         // --notifyEndProcess
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
-        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
+        jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
         // --skipDelete
-        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // --createOutputDir
-        this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
+        jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
         // -l or --logDirectory
-        this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
+        jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
+        jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
-        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
+        jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
         // --pushurl
-        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+
+        return jsap;
     }
 
     private void initConfig(JSAPResult arguments) {

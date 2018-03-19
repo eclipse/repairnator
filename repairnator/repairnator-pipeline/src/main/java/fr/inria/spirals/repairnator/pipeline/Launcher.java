@@ -49,7 +49,6 @@ import java.util.Properties;
 public class Launcher {
     private static final String TEST_PROJECT = "surli/failingproject"; // be careful when testing: this project deactivate serialization
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    private JSAP jsap;
     private RepairnatorConfig config;
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
@@ -69,14 +68,14 @@ public class Launcher {
             LOGGER.info("No information about PIPELINE VERSION has been found.");
         }
 
-        this.defineArgs();
+        JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.PIPELINE);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
         this.initConfig(arguments);
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            this.checkToolsLoaded();
-            this.checkNopolSolverPath();
+            this.checkToolsLoaded(jsap);
+            this.checkNopolSolverPath(jsap);
         }
 
         if (LauncherUtils.getArgDebug(arguments)) {
@@ -91,34 +90,34 @@ public class Launcher {
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -m or --launcherMode
-        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
+        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         // --spreadsheet
-        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
         // --googleAccessToken
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleAccessToken());
+        jsap.registerParameter(LauncherUtils.defineArgGoogleAccessToken());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // --pushurl
-        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -126,14 +125,14 @@ public class Launcher {
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setRequired(true);
         opt2.setHelp("Specify the build id to use.");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("z3");
         opt2.setLongFlag("z3");
         opt2.setDefault("./z3_for_linux");
         opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
         opt2.setHelp("Specify path to Z3");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("workspace");
         opt2.setLongFlag("workspace");
@@ -141,21 +140,23 @@ public class Launcher {
         opt2.setDefault("./workspace");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify path to output serialized files");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("ghLogin");
         opt2.setLongFlag("ghLogin");
         opt2.setRequired(true);
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify login for Github use");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("ghOauth");
         opt2.setLongFlag("ghOauth");
         opt2.setRequired(true);
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify oauth for Github use");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
+
+        return jsap;
     }
 
     private void initConfig(JSAPResult arguments) {
@@ -188,7 +189,7 @@ public class Launcher {
         GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
     }
 
-    private void checkToolsLoaded() {
+    private void checkToolsLoaded(JSAP jsap) {
         URLClassLoader loader;
 
         try {
@@ -196,11 +197,11 @@ public class Launcher {
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
             System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
-            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
 
-    private void checkNopolSolverPath() {
+    private void checkNopolSolverPath(JSAP jsap) {
         String solverPath = this.config.getZ3solverPath();
 
         if (solverPath != null) {
@@ -208,11 +209,11 @@ public class Launcher {
 
             if (!file.exists()) {
                 System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
-                LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+                LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
             }
         } else {
             System.err.println("The Nopol solver path should be provided.");
-            LauncherUtils.printUsage(this.jsap, LauncherType.PIPELINE);
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
 

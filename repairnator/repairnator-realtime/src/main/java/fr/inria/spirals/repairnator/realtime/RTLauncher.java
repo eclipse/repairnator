@@ -24,16 +24,15 @@ import java.util.List;
 public class RTLauncher {
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
     private final LauncherMode launcherMode;
-    private JSAP jsap;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
     private RTLauncher(String[] args) throws JSAPException {
-        this.defineArgs();
+        JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.REALTIME);
-        LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.REALTIME);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.REALTIME);
+        LauncherUtils.checkEnvironmentVariables(jsap, LauncherType.REALTIME);
         this.launcherMode = LauncherMode.REPAIR;
 
         this.initConfig(arguments);
@@ -41,81 +40,83 @@ public class RTLauncher {
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.REALTIME, "Specify where to put serialized files from dockerpool"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.REALTIME, "Specify where to put serialized files from dockerpool"));
         // --dbhost
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         // --notifyEndProcess
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
-        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
+        jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
         // --skipDelete
-        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // --createOutputDir
-        this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
+        jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
         // -l or --logDirectory
-        this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
+        jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
+        jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // --pushurl
-        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
         FlaggedOption opt2 = new FlaggedOption("whitelist");
         opt2.setShortFlag('w');
         opt2.setLongFlag("whitelist");
         opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(false).setMustExist(true));
         opt2.setHelp("Specify the path of whitelisted repository");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("blacklist");
         opt2.setShortFlag('b');
         opt2.setLongFlag("blacklist");
         opt2.setStringParser(FileStringParser.getParser().setMustBeDirectory(false).setMustExist(true));
         opt2.setHelp("Specify the path of blacklisted repository");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("jobsleeptime");
         opt2.setLongFlag("jobsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault(InspectJobs.JOB_SLEEP_TIME+"");
         opt2.setHelp("Specify the sleep time between two requests to Travis Job endpoint (in seconds)");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("buildsleeptime");
         opt2.setLongFlag("buildsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME+"");
         opt2.setHelp("Specify the sleep time between two refresh of build statuses (in seconds)");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("maxinspectedbuilds");
         opt2.setLongFlag("maxinspectedbuilds");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault(InspectBuilds.LIMIT_SUBMITTED_BUILDS+"");
         opt2.setHelp("Specify the maximum number of watched builds");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("duration");
         opt2.setLongFlag("duration");
         opt2.setStringParser(PeriodStringParser.getParser());
         opt2.setHelp("Duration of the execution. If not given, the execution never stop. This argument should be given on the ISO-8601 duration format: PWdTXhYmZs where W, X, Y, Z respectively represents number of Days, Hours, Minutes and Seconds. T is mandatory before the number of hours and P is always mandatory.");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
+
+        return jsap;
     }
 
     private void initConfig(JSAPResult arguments) {

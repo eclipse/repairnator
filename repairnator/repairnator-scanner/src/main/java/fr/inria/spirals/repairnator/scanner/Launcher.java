@@ -32,15 +32,14 @@ import java.util.List;
  */
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
-    private JSAP jsap;
     private RepairnatorConfig config;
     private List<SerializerEngine> engines;
     private EndProcessNotifier endProcessNotifier;
 
     public Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
+        JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, arguments, LauncherType.SCANNER);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
 
         if (LauncherUtils.getArgDebug(arguments)) {
             Utils.setLoggersLevel(Level.DEBUG);
@@ -53,36 +52,36 @@ public class Launcher {
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -m or --launcherMode
-        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
+        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
         // -i or --input
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
+        jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.SCANNER, "Specify where to write the list of build ids (default: stdout)"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.SCANNER, "Specify where to write the list of build ids (default: stdout)"));
         // --dbhost
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         // --spreadsheet
-        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
         // --googleSecretPath
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
+        jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
         // --notifyEndProcess
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
@@ -90,7 +89,7 @@ public class Launcher {
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault("4");
         opt2.setHelp("Specify the hour number to lookup to get builds");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         DateStringParser dateStringParser = DateStringParser.getParser();
         dateStringParser.setProperty("format", "dd/MM/yyyy");
@@ -100,14 +99,16 @@ public class Launcher {
         opt2.setLongFlag("lookFromDate");
         opt2.setStringParser(dateStringParser);
         opt2.setHelp("Specify the initial date to get builds (e.g. 01/01/2017). Note that the search starts from 00:00:00 of the specified date.");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("lookToDate");
         opt2.setShortFlag('t');
         opt2.setLongFlag("lookToDate");
         opt2.setStringParser(dateStringParser);
         opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
+
+        return jsap;
     }
 
     private void initConfig(JSAPResult arguments) {
