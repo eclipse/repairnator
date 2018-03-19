@@ -99,20 +99,30 @@ public class Launcher {
         this.config = RepairnatorConfig.getInstance();
 
         this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(this.arguments).getPath());
+        this.config.setSerializeJson(true);
+        this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getAbsolutePath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(this.arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
         this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(this.arguments));
+        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
+        this.config.setNbThreads(LauncherUtils.getArgNbThreads(this.arguments));
+        this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(this.arguments));
+        this.config.setHumanPatch(this.arguments.getBoolean("humanPatch"));
+        this.config.setRepository(this.arguments.getString("repository"));
     }
 
     private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
+        if (this.config.isNotifyEndProcess()) {
             List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }
 
     private List<String> readListOfBranches() {
         List<String> result = new ArrayList<>();
-        File inputFile = LauncherUtils.getArgInput(this.arguments);
+        File inputFile = new File(this.config.getInputPath());
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -137,14 +147,14 @@ public class Launcher {
 
             String imageId = null;
             for (Image image : allImages) {
-                if (image.repoTags() != null && image.repoTags().contains(LauncherUtils.getArgDockerImageName(this.arguments))) {
+                if (image.repoTags() != null && image.repoTags().contains(this.config.getDockerImageName())) {
                     imageId = image.id();
                     break;
                 }
             }
 
             if (imageId == null) {
-                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+LauncherUtils.getArgDockerImageName(this.arguments)+"\": no image has been found.");
+                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+this.config.getDockerImageName()+"\": no image has been found.");
             }
             return imageId;
         } catch (DockerCertificateException|InterruptedException|DockerException e) {
@@ -153,7 +163,7 @@ public class Launcher {
     }
 
     private void runPool() throws IOException {
-        String runId = LauncherUtils.getArgRunId(this.arguments);
+        String runId = this.config.getRunId();
 
         List<String> branchNames = this.readListOfBranches();
         LOGGER.info("Find "+branchNames.size()+" branches to run.");
@@ -161,17 +171,17 @@ public class Launcher {
         String imageId = this.findDockerImage();
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(LauncherUtils.getArgNbThreads(this.arguments));
+        ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, LauncherUtils.getArgOutput(this.arguments).getAbsolutePath(), LauncherUtils.getArgSkipDelete(this.arguments), this.arguments.getBoolean("humanPatch"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.config.getRepository(), branchName, this.config.getOutputPath(), this.config.isSkipDelete(), this.config.isHumanPatch());
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
 
         executorService.shutdown();
         try {
-            if (executorService.awaitTermination(LauncherUtils.getArgGlobalTimeout(this.arguments), TimeUnit.DAYS)) {
+            if (executorService.awaitTermination(this.config.getGlobalTimeout(), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
             } else {
                 LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");

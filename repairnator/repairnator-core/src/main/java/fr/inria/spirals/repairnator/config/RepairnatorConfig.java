@@ -55,6 +55,10 @@ public class RepairnatorConfig {
     private int maxInspectedBuilds;
     private Duration duration;
 
+    // Checkbranches
+    private boolean humanPatch;
+    private String repository;
+
     private boolean clean;
 
     private static RepairnatorConfig instance;
@@ -356,6 +360,22 @@ public class RepairnatorConfig {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public boolean isHumanPatch() {
+        return humanPatch;
+    }
+
+    public void setHumanPatch(boolean humanPatch) {
+        this.humanPatch = humanPatch;
+    }
+
+    public String getRepository() {
+        return repository;
+    }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
     public boolean isClean() {
