@@ -25,14 +25,17 @@ public class RepairnatorConfig {
     private boolean push;
     private String pushRemoteRepo;
     private boolean fork;
-    private String z3solverPath;
-    private String workspacePath;
-    private String githubLogin;
-    private String githubToken;
 
     // Scanner
     private Date lookFromDate;
     private Date lookToDate;
+
+    // Pipeline
+    private int buildId;
+    private String z3solverPath;
+    private String workspacePath;
+    private String githubLogin;
+    private String githubToken;
 
     // Dockerpool
     private String dockerImageName;
@@ -191,6 +194,14 @@ public class RepairnatorConfig {
 
     public void setFork(boolean fork) {
         this.fork = fork;
+    }
+
+    public int getBuildId() {
+        return buildId;
+    }
+
+    public void setBuildId(int buildId) {
+        this.buildId = buildId;
     }
 
     public String getZ3solverPath() {

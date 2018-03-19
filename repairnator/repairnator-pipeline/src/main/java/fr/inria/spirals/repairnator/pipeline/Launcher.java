@@ -52,7 +52,6 @@ public class Launcher {
     private JSAP jsap;
     private JSAPResult arguments;
     private RepairnatorConfig config;
-    private int buildId;
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
@@ -87,9 +86,7 @@ public class Launcher {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.buildId = this.arguments.getInt("build");
-
-        LOGGER.info("The pipeline will try to repair the following buildid: "+this.buildId);
+        LOGGER.info("The pipeline will try to repair the following buildid: "+this.config.getBuildId());
 
         this.initSerializerEngines();
         this.initNotifiers();
@@ -164,20 +161,27 @@ public class Launcher {
 
     private void initConfig() {
         this.config = RepairnatorConfig.getInstance();
+
+        this.config.setClean(true);
         this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
         this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
-        this.config.setClean(true);
-        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
         if (LauncherUtils.getArgOutput(this.arguments) != null) {
             this.config.setSerializeJson(true);
             this.config.setOutputPath(LauncherUtils.getArgOutput(this.arguments).getPath());
         }
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
+        this.config.setGoogleAccessToken(LauncherUtils.getArgGoogleAccessToken(this.arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
         if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
         }
+        this.config.setBuildId(this.arguments.getInt("build"));
+        this.config.setZ3solverPath(this.arguments.getFile("z3").getPath());
         this.config.setWorkspacePath(this.arguments.getString("workspace"));
-
         this.config.setGithubLogin(this.arguments.getString("ghLogin"));
         this.config.setGithubToken(this.arguments.getString("ghOauth"));
 
@@ -240,13 +244,13 @@ public class Launcher {
     }
 
     private void getBuildToBeInspected() {
-        Build buggyBuild = BuildHelper.getBuildFromId(this.buildId, null);
+        Build buggyBuild = BuildHelper.getBuildFromId(this.config.getBuildId(), null);
 
         if (buggyBuild.getFinishedAt() == null) {
             LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
             System.exit(-1);
         }
-        String runId = LauncherUtils.getArgRunId(this.arguments);
+        String runId = this.config.getRunId();
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             Build patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);
@@ -279,10 +283,10 @@ public class Launcher {
     }
 
     private void mainProcess() throws IOException {
-        LOGGER.info("Start by getting the build (buildId: "+this.buildId+") with the following config: "+this.config);
+        LOGGER.info("Start by getting the build (buildId: "+this.config.getBuildId()+") with the following config: "+this.config);
         this.getBuildToBeInspected();
 
-        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.config.getRunId(), this.buildId+"");
+        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.config.getRunId(), this.config.getBuildId()+"");
         hardwareInfoSerializer.serialize();
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
