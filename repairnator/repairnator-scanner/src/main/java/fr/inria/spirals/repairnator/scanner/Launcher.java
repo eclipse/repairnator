@@ -85,12 +85,6 @@ public class Launcher {
         // --notifyto
         this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
-        Switch sw1 = new Switch("skip-failing");
-        sw1.setLongFlag("skip-failing");
-        sw1.setDefault("false");
-        sw1.setHelp("Use it when the scanner should skip failing builds (can be used only with bears mode)");
-        this.jsap.registerParameter(sw1);
-
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
         opt2.setLongFlag("lookupHours");
@@ -194,9 +188,11 @@ public class Launcher {
 
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
-        ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId(), this.arguments.getBoolean("skip-failing"));
 
-        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspected(this.config.getInputPath());
+        ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId());
+
+        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(this.config.getInputPath());
+
         ProcessSerializer scannerSerializer;
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
