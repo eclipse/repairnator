@@ -5,6 +5,7 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
+import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
@@ -103,17 +104,9 @@ public class AbstractPoolManager {
         return null;
     }
 
-    public RunnablePipelineContainer submitBuild(String imageId, int buildId) {
-        TreatedBuildTracking treatedBuildTracking = this.prepareBeforeSubmitBuild(buildId);
-        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, buildId, this.dockerOutputDir, treatedBuildTracking, this.skipDelete, this.createOutputDir);
-        this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
-
-        return runnablePipelineContainer;
-    }
-
-    public RunnablePipelineContainer submitBuild(String imageId, int buildId, int nextBuildId) {
-        TreatedBuildTracking treatedBuildTracking = this.prepareBeforeSubmitBuild(buildId);
-        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, buildId, nextBuildId, this.dockerOutputDir, treatedBuildTracking, this.skipDelete, this.createOutputDir);
+    public RunnablePipelineContainer submitBuild(String imageId, InputBuildId inputBuildId) {
+        TreatedBuildTracking treatedBuildTracking = this.prepareBeforeSubmitBuild(inputBuildId.getBuggyBuildId());
+        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, inputBuildId, this.dockerOutputDir, treatedBuildTracking, this.skipDelete, this.createOutputDir);
         this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
 
         return runnablePipelineContainer;

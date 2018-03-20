@@ -6,10 +6,12 @@ import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
+import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +28,7 @@ public class RunnablePipelineContainer implements Runnable {
     private static final int DELAY_BEFORE_KILLING_DOCKER_IMAGE = 60 * 24; // in minutes
     private Date limitDateBeforeKilling;
     private String imageId;
-    private int buildId;
-    private int nextBuildId;
+    private InputBuildId inputBuildId;
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
@@ -40,21 +41,24 @@ public class RunnablePipelineContainer implements Runnable {
     private List<String> envValues;
     private Set<String> volumes;
 
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
+    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
         this.poolManager = poolManager;
         this.imageId = imageId;
-        this.buildId = buildId;
+        this.inputBuildId = inputBuildId;
         this.logDirectory = logDirectory;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
         this.skipDelete = skipDelete;
         this.createOutputDir = createOutputDir;
 
-        this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.buildId;
+        this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId();
         this.output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
         this.envValues = new ArrayList<>();
-        this.envValues.add("BUILD_ID="+this.buildId);
+        this.envValues.add("BUILD_ID="+this.inputBuildId.getBuggyBuildId());
+        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.BEARS) {
+            this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
+        }
         this.envValues.add("LOG_FILENAME="+containerName);
         this.envValues.add("GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"));
         this.envValues.add("GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"));
@@ -70,14 +74,8 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("OUTPUT="+output);
     }
 
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, int buildId, int nextBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
-        this(poolManager, imageId, buildId, logDirectory, treatedBuildTracking, skipDelete, createOutputDir);
-        this.nextBuildId = nextBuildId;
-        this.envValues.add("NEXT_BUILD_ID="+this.nextBuildId);
-    }
-
-    public int getBuildId() {
-        return buildId;
+    public InputBuildId getInputBuildId() {
+        return this.inputBuildId;
     }
 
     public Date getLimitDateBeforeKilling() {
@@ -89,7 +87,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.limitDateBeforeKilling = new Date(new Date().toInstant().plus(DELAY_BEFORE_KILLING_DOCKER_IMAGE, ChronoUnit.MINUTES).toEpochMilli());
         DockerClient docker = this.poolManager.getDockerClient();
         try {
-            LOGGER.info("Start to build and run container for build id "+buildId);
+            LOGGER.info("Start to build and run container for build id "+this.inputBuildId.getBuggyBuildId());
             LOGGER.info("At most this docker run will be killed at: "+this.limitDateBeforeKilling);
 
 
@@ -128,10 +126,10 @@ public class RunnablePipelineContainer implements Runnable {
 
             serialize("TREATED");
         } catch (InterruptedException e) {
-            LOGGER.error("Error while running the container for build id "+buildId, e);
+            LOGGER.error("Error while running the container for build id "+this.inputBuildId.getBuggyBuildId(), e);
             killDockerContainer(docker, false);
         } catch (DockerException e) {
-            LOGGER.error("Error while creating or running the container for build id "+buildId, e);
+            LOGGER.error("Error while creating or running the container for build id "+this.inputBuildId.getBuggyBuildId(), e);
             serialize("ERROR");
         }
         this.poolManager.removeSubmittedRunnablePipelineContainer(this);

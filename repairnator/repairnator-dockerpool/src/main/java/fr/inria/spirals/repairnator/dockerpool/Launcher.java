@@ -215,12 +215,8 @@ public class Launcher extends AbstractPoolManager {
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
-        for (InputBuildId buildId : buildIds) {
-            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                executorService.submit(this.submitBuild(imageId, buildId.getBuggyBuildId()));
-            } else {
-                executorService.submit(this.submitBuild(imageId, buildId.getBuggyBuildId(), buildId.getPatchedBuildId()));
-            }
+        for (InputBuildId inputBuildId : buildIds) {
+            executorService.submit(this.submitBuild(imageId, inputBuildId));
         }
 
         executorService.shutdown();
