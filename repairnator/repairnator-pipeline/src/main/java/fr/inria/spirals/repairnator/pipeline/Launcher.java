@@ -255,11 +255,13 @@ public class Launcher {
         List<String> result = new ArrayList<>();
         if (this.config.getProjectsToIgnoreFilePath() != null) {
             try {
-                for (String line : Files.readAllLines(new File(this.config.getProjectsToIgnoreFilePath()).toPath())) {
+                List<String> lines = Files.readAllLines(new File(this.config.getProjectsToIgnoreFilePath()).toPath());
+                for (String line : lines) {
                     result.add(line.trim().toLowerCase());
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Error while reading projects to be ignored from file: " + this.config.getProjectsToIgnoreFilePath(), e);
+                LOGGER.error("Error while reading projects to be ignored from file "+this.config.getProjectsToIgnoreFilePath(), e);
+                result.clear();
             }
         }
         return result;
