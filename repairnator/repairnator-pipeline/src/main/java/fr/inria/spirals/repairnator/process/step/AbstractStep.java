@@ -154,7 +154,7 @@ public abstract class AbstractStep {
 
     public void addStepError(String error, Throwable exception) {
         getLogger().error(error, exception);
-        this.inspector.getJobStatus().addStepError(this.name, error);
+        this.inspector.getJobStatus().addStepError(this.name, error + "Original msg: " + exception.getMessage());
     }
 
     protected void executeNextStep() {

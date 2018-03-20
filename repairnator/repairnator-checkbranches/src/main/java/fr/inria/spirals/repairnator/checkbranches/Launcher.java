@@ -34,8 +34,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    private JSAP jsap;
-    private JSAPResult arguments;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
@@ -43,48 +41,48 @@ public class Launcher {
     public static DockerClient docker;
 
     private Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.CHECKBRANCHES);
+        JSAP jsap = this.defineArgs();
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.CHECKBRANCHES);
 
-        this.initConfig();
+        this.initConfig(arguments);
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -i or --input
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
+        jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.CHECKBRANCHES, "Specify where to put output data"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.CHECKBRANCHES, "Specify where to put output data"));
         // --notifyEndProcess
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
-        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
+        jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
         // --skipDelete
-        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
+        jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
-        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
+        jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 
         Switch sw1 = new Switch("humanPatch");
         sw1.setShortFlag('p');
         sw1.setLongFlag("humanPatch");
         sw1.setDefault("false");
-        this.jsap.registerParameter(sw1);
+        jsap.registerParameter(sw1);
 
         FlaggedOption opt2 = new FlaggedOption("repository");
         opt2.setShortFlag('r');
@@ -92,27 +90,39 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setRequired(true);
         opt2.setHelp("Specify where to collect branches");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
+
+        return jsap;
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
+        this.config.setSerializeJson(true);
+        this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(arguments));
+        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
+        this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
+        this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(arguments));
+        this.config.setHumanPatch(arguments.getBoolean("humanPatch"));
+        this.config.setRepository(arguments.getString("repository"));
     }
 
     private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+        if (this.config.isNotifyEndProcess()) {
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }
 
     private List<String> readListOfBranches() {
         List<String> result = new ArrayList<>();
-        File inputFile = LauncherUtils.getArgInput(this.arguments);
+        File inputFile = new File(this.config.getInputPath());
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -137,14 +147,14 @@ public class Launcher {
 
             String imageId = null;
             for (Image image : allImages) {
-                if (image.repoTags() != null && image.repoTags().contains(LauncherUtils.getArgDockerImageName(this.arguments))) {
+                if (image.repoTags() != null && image.repoTags().contains(this.config.getDockerImageName())) {
                     imageId = image.id();
                     break;
                 }
             }
 
             if (imageId == null) {
-                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+LauncherUtils.getArgDockerImageName(this.arguments)+"\": no image has been found.");
+                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+this.config.getDockerImageName()+"\": no image has been found.");
             }
             return imageId;
         } catch (DockerCertificateException|InterruptedException|DockerException e) {
@@ -153,7 +163,7 @@ public class Launcher {
     }
 
     private void runPool() throws IOException {
-        String runId = LauncherUtils.getArgRunId(this.arguments);
+        String runId = this.config.getRunId();
 
         List<String> branchNames = this.readListOfBranches();
         LOGGER.info("Find "+branchNames.size()+" branches to run.");
@@ -161,17 +171,17 @@ public class Launcher {
         String imageId = this.findDockerImage();
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(LauncherUtils.getArgNbThreads(this.arguments));
+        ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.arguments.getString("repository"), branchName, LauncherUtils.getArgOutput(this.arguments).getAbsolutePath(), LauncherUtils.getArgSkipDelete(this.arguments), this.arguments.getBoolean("humanPatch"));
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.config.getRepository(), branchName, this.config.getOutputPath(), this.config.isSkipDelete(), this.config.isHumanPatch());
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }
 
         executorService.shutdown();
         try {
-            if (executorService.awaitTermination(LauncherUtils.getArgGlobalTimeout(this.arguments), TimeUnit.DAYS)) {
+            if (executorService.awaitTermination(this.config.getGlobalTimeout(), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
             } else {
                 LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");

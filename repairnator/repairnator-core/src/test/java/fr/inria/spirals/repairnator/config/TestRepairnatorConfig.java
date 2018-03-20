@@ -31,7 +31,7 @@ public class TestRepairnatorConfig {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.readFromFile();
 
-        assertThat(config.getJsonOutputPath(), is("/tmp"));
+        assertThat(config.getOutputPath(), is("/tmp"));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(false));
         assertThat(config.isSerializeJson(), is(true));
@@ -54,7 +54,7 @@ public class TestRepairnatorConfig {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.readFromFile();
 
-        assertThat(config.getJsonOutputPath(), is(""));
+        assertThat(config.getOutputPath(), is(""));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(true));
         assertThat(config.isSerializeJson(), is(false));

@@ -55,6 +55,15 @@ cd github/repairnator/repairnator/scripts
 The script will start a docker container to run Repairnator on your specified Build ID.
 When the docker container is finished you can find logs and serialized files in the $HOME_REPAIR/logs path.
 
+### Launch Repairnator to analyze and repair failing builds in real-time
+
+You can launch Repairnator to analyze TravisCI builds in realtime and to repair failing ones.
+First open in a file editor `repairnator/scripts/set_env_variable.sh` and edit the values under `Realtime scanner configuration` section:
+  - `WHITELIST_PATH` and `BLACKLIST_PATH` should point on existing files: it can be empty files, or you can use those available in `repairnator/repairnator-realtime/src/main/resources`
+  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
+
+Then just run the script `launch_rtscanner.sh`.
+
 ## Content of the repository
 
 This repository is organized as following:

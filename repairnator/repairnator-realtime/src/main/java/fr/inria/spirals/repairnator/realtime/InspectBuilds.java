@@ -24,12 +24,17 @@ public class InspectBuilds implements Runnable {
     private int sleepTime;
     private int maxSubmittedBuilds;
     private WatchedBuildSerializer watchedBuildSerializer;
+    private boolean shouldStop;
 
     public InspectBuilds(RTScanner rtScanner) {
         this.rtScanner = rtScanner;
         this.sleepTime = -1;
         this.maxSubmittedBuilds = -1;
         this.watchedBuildSerializer = new WatchedBuildSerializer(this.rtScanner.getEngines(), this.rtScanner);
+    }
+
+    public void switchOff() {
+        this.shouldStop = true;
     }
 
     public void setSleepTime(int sleepTime) {
@@ -68,7 +73,7 @@ public class InspectBuilds implements Runnable {
         if (this.sleepTime == -1) {
             throw new RuntimeException("You must set sleepTime before running this.");
         }
-        while (true) {
+        while (!this.shouldStop) {
             LOGGER.info("Refresh all inspected build status (nb builds: "+this.nbSubmittedBuilds+")");
             for (Build build : this.waitingBuilds) {
                 build.refreshStatus();
@@ -96,5 +101,6 @@ public class InspectBuilds implements Runnable {
                 e.printStackTrace();
             }
         }
+        LOGGER.info("This will now stop.");
     }
 }

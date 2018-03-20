@@ -22,6 +22,11 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
+
+mkdir -p $ROOT_LOG_DIR
+mkdir -p $ROOT_BIN_DIR
+mkdir -p $ROOT_OUT_DIR
+
 mkdir $REPAIR_OUTPUT_PATH
 
 if [ -z "$RUN_ID_SUFFIX" ]; then
@@ -52,7 +57,11 @@ echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
 echo "Launch repairnator realtime scanner..."
-args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME``ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH``ca --blacklist $BLACKLIST_PATH`"
+args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL`"
+args="$args`ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME`"
+args="$args`ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH`"
+args="$args`ca --blacklist $BLACKLIST_PATH``ca --duration $DURATION`"
+
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"
 fi
@@ -62,4 +71,4 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
 fi
 
 echo "Supplementary args for realtime scanner $args"
-java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID $args 2> $ROOT_LOG_DIR/realtime/errors.log 1> /dev/null
+java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID $args 2> $LOG_DIR/errors.log 1> /dev/null
