@@ -32,58 +32,56 @@ import java.util.List;
  */
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
-    private JSAP jsap;
-    private JSAPResult arguments;
     private RepairnatorConfig config;
     private List<SerializerEngine> engines;
     private EndProcessNotifier endProcessNotifier;
 
     public Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.SCANNER);
+        JSAP jsap = this.defineArgs();
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
 
-        if (LauncherUtils.getArgDebug(this.arguments)) {
+        if (LauncherUtils.getArgDebug(arguments)) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.initConfig();
+        this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -m or --launcherMode
-        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
+        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
         // -i or --input
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
+        jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.SCANNER, "Specify where to write the list of build ids (default: stdout)"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.SCANNER, "Specify where to write the list of build ids (default: stdout)"));
         // --dbhost
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         // --spreadsheet
-        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
         // --googleSecretPath
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
+        jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
         // --notifyEndProcess
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
 
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
@@ -91,7 +89,7 @@ public class Launcher {
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault("4");
         opt2.setHelp("Specify the hour number to lookup to get builds");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         DateStringParser dateStringParser = DateStringParser.getParser();
         dateStringParser.setProperty("format", "dd/MM/yyyy");
@@ -101,48 +99,71 @@ public class Launcher {
         opt2.setLongFlag("lookFromDate");
         opt2.setStringParser(dateStringParser);
         opt2.setHelp("Specify the initial date to get builds (e.g. 01/01/2017). Note that the search starts from 00:00:00 of the specified date.");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("lookToDate");
         opt2.setShortFlag('t');
         opt2.setLongFlag("lookToDate");
         opt2.setStringParser(dateStringParser);
         opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
-        this.jsap.registerParameter(opt2);
+        jsap.registerParameter(opt2);
+
+        return jsap;
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
+        if (LauncherUtils.getArgOutput(arguments) != null) {
+            this.config.setSerializeJson(true);
+            this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
+        }
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
+        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        Date lookFromDate = arguments.getDate("lookFromDate");
+        Date lookToDate = arguments.getDate("lookToDate");
+        if (lookToDate != null) {
+            lookToDate = Utils.getLastTimeFromDate(lookToDate);
+        }
+        if (lookFromDate == null || lookToDate == null || lookFromDate.after(lookToDate)) {
+            int lookupHours = arguments.getInt("lookupHours");
+            Calendar limitCal = Calendar.getInstance();
+            limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
+            lookFromDate = limitCal.getTime();
+            lookToDate = new Date();
+        }
+        this.config.setLookFromDate(lookFromDate);
+        this.config.setLookToDate(lookToDate);
     }
 
     private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(LOGGER);
         if (spreadsheetSerializerEngine != null) {
             this.engines.add(spreadsheetSerializerEngine);
         }
 
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
         this.engines.addAll(fileSerializerEngines);
 
-        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(LOGGER);
         if (mongoDBSerializerEngine != null) {
             this.engines.add(mongoDBSerializerEngine);
         }
     }
 
     private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
+        if (this.config.isNotifyEndProcess()) {
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
             this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.SCANNER.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }
@@ -167,24 +188,11 @@ public class Launcher {
 
     private List<BuildToBeInspected> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in travis...");
-        ProjectScanner scanner;
-        Date lookFromDate = this.arguments.getDate("lookFromDate");
-        Date lookToDate = this.arguments.getDate("lookToDate");
-        if (lookToDate != null) {
-            lookToDate = Utils.getLastTimeFromDate(lookToDate);
-        }
-        if (lookFromDate != null && lookToDate != null && lookFromDate.before(lookToDate)) {
-            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId());
-        } else {
-            int lookupHours = this.arguments.getInt("lookupHours");
-            Calendar limitCal = Calendar.getInstance();
-            limitCal.add(Calendar.HOUR_OF_DAY, -lookupHours);
-            lookFromDate = limitCal.getTime();
-            lookToDate = new Date();
-            scanner = new ProjectScanner(lookFromDate, lookToDate, this.config.getRunId());
-        }
 
-        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(LauncherUtils.getArgInput(this.arguments).getPath());
+        ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId());
+
+        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(this.config.getInputPath());
+
         ProcessSerializer scannerSerializer;
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
@@ -204,8 +212,8 @@ public class Launcher {
     }
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
-        if (LauncherUtils.getArgOutput(this.arguments) != null) {
-            String outputPath = LauncherUtils.getArgOutput(this.arguments).getAbsolutePath();
+        if (this.config.isSerializeJson()) {
+            String outputPath = this.config.getOutputPath();
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 

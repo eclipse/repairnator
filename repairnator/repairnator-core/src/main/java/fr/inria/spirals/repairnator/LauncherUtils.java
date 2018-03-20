@@ -6,6 +6,7 @@ import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -359,22 +360,24 @@ public class LauncherUtils {
         System.exit(-1);
     }
 
-    public static List<NotifierEngine> initNotifierEngines(JSAPResult arguments, Logger logger) {
+    public static List<NotifierEngine> initNotifierEngines(Logger logger) {
         List<NotifierEngine> notifierEngines = new ArrayList<>();
-        if (LauncherUtils.getArgSmtpServer(arguments) != null && LauncherUtils.getArgNotifyto(arguments) != null) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getSmtpServer() != null && config.getNotifyTo() != null) {
             logger.info("The email notifier engine will be used.");
 
-            notifierEngines.add(new EmailNotifierEngine(LauncherUtils.getArgNotifyto(arguments), LauncherUtils.getArgSmtpServer(arguments)));
+            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer()));
         } else {
             logger.info("The email notifier engine won't be used.");
         }
         return notifierEngines;
     }
 
-    public static SerializerEngine initMongoDBSerializerEngine(JSAPResult arguments, Logger logger) {
-        if (LauncherUtils.getArgMongoDBHost(arguments) != null) {
+    public static SerializerEngine initMongoDBSerializerEngine(Logger logger) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getMongodbHost() != null) {
             logger.info("Initialize mongoDB serializer engine.");
-            MongoConnection mongoConnection = new MongoConnection(LauncherUtils.getArgMongoDBHost(arguments), LauncherUtils.getArgMongoDBName(arguments));
+            MongoConnection mongoConnection = new MongoConnection(config.getMongodbHost(), config.getMongodbName());
             if (mongoConnection.isConnected()) {
                 return new MongoDBSerializerEngine(mongoConnection);
             } else {
@@ -386,12 +389,13 @@ public class LauncherUtils {
         return null;
     }
 
-    public static SerializerEngine initSpreadsheetSerializerEngineWithFileSecret(JSAPResult arguments, Logger logger) {
-        if (LauncherUtils.getArgSpreadsheetId(arguments) != null && LauncherUtils.getArgGoogleSecretPath(arguments).exists()) {
+    public static SerializerEngine initSpreadsheetSerializerEngineWithFileSecret(Logger logger) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getSpreadsheetId() != null && (new File(config.getGoogleSecretPath())).exists()) {
             logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
+            GoogleSpreadSheetFactory.setSpreadsheetId(config.getSpreadsheetId());
             try {
-                GoogleSpreadSheetFactory.initWithFileSecret(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
+                GoogleSpreadSheetFactory.initWithFileSecret(config.getGoogleSecretPath());
                 return new GoogleSpreadsheetSerializerEngine();
             } catch (IOException | GeneralSecurityException e) {
                 logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
@@ -402,12 +406,13 @@ public class LauncherUtils {
         return null;
     }
 
-    public static SerializerEngine initSpreadsheetSerializerEngineWithAccessToken(JSAPResult arguments, Logger logger) {
-        if (LauncherUtils.getArgSpreadsheetId(arguments) != null && LauncherUtils.getArgGoogleAccessToken(arguments) != null) {
+    public static SerializerEngine initSpreadsheetSerializerEngineWithAccessToken(Logger logger) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getSpreadsheetId() != null && config.getGoogleAccessToken() != null) {
             logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
+            GoogleSpreadSheetFactory.setSpreadsheetId(config.getSpreadsheetId());
             try {
-                if (GoogleSpreadSheetFactory.initWithAccessToken(LauncherUtils.getArgGoogleAccessToken(arguments))) {
+                if (GoogleSpreadSheetFactory.initWithAccessToken(config.getGoogleAccessToken())) {
                     return new GoogleSpreadsheetSerializerEngine();
                 } else {
                     logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.");
@@ -421,13 +426,14 @@ public class LauncherUtils {
         return null;
     }
 
-    public static List<SerializerEngine> initFileSerializerEngines(JSAPResult arguments, Logger logger) {
+    public static List<SerializerEngine> initFileSerializerEngines(Logger logger) {
         List<SerializerEngine> fileSerializerEngines = new ArrayList<>();
-        if (LauncherUtils.getArgOutput(arguments) != null) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getOutputPath() != null) {
             logger.info("Initialize file serializer engines.");
 
-            String path = LauncherUtils.getArgOutput(arguments).getPath();
-            path += arguments.contains("build") ? "/"+arguments.getInt("build") : "";
+            String path = config.getOutputPath();
+            path += config.getBuildId() > 0 ? "/"+config.getBuildId() : "";
 
             fileSerializerEngines.add(new CSVSerializerEngine(path));
             fileSerializerEngines.add(new JSONFileSerializerEngine(path));

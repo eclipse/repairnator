@@ -33,90 +33,100 @@ import java.util.concurrent.TimeUnit;
  */
 public class Launcher extends AbstractPoolManager {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    private JSAP jsap;
-    private JSAPResult arguments;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
     private Launcher(String[] args) throws JSAPException {
-        this.defineArgs();
-        this.arguments = jsap.parse(args);
-        LauncherUtils.checkArguments(this.jsap, this.arguments, LauncherType.DOCKERPOOL);
-        LauncherUtils.checkEnvironmentVariables(this.jsap, LauncherType.DOCKERPOOL);
+        JSAP jsap = this.defineArgs();
+        JSAPResult arguments = jsap.parse(args);
+        LauncherUtils.checkArguments(jsap, arguments, LauncherType.DOCKERPOOL);
+        LauncherUtils.checkEnvironmentVariables(jsap, LauncherType.DOCKERPOOL);
 
-        this.initConfig();
+        this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
 
-    private void defineArgs() throws JSAPException {
+    private JSAP defineArgs() throws JSAPException {
         // Verbose output
-        this.jsap = new JSAP();
+        JSAP jsap = new JSAP();
 
         // -h or --help
-        this.jsap.registerParameter(LauncherUtils.defineArgHelp());
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
         // -d or --debug
-        this.jsap.registerParameter(LauncherUtils.defineArgDebug());
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
-        this.jsap.registerParameter(LauncherUtils.defineArgRunId());
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -m or --launcherMode
-        this.jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
+        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
         // -i or --input
-        this.jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
+        jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
         // -o or --output
-        this.jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.DOCKERPOOL,"Specify where to put serialized files from dockerpool"));
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.DOCKERPOOL,"Specify where to put serialized files from dockerpool"));
         // --dbhost
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
-        this.jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         // --spreadsheet
-        this.jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
+        jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
         // --googleSecretPath
-        this.jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
+        jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
         // --notifyEndProcess
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
-        this.jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
-        this.jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
-        this.jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
+        jsap.registerParameter(LauncherUtils.defineArgDockerImageName());
         // --skipDelete
-        this.jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
+        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // --createOutputDir
-        this.jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
+        jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
         // -l or --logDirectory
-        this.jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
+        jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
-        this.jsap.registerParameter(LauncherUtils.defineArgNbThreads());
+        jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
-        this.jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
+        jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
         // --pushurl
-        this.jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+
+        return jsap;
     }
 
-    private void initConfig() {
+    private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(this.arguments));
 
-        if (LauncherUtils.getArgPushUrl(this.arguments) != null) {
+        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+        this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
+        this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
+        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
+        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
+        this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
+        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(arguments));
+        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
+        this.config.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(arguments));
+        this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(arguments));
+        this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
+        this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(arguments));
+        if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
-            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(this.arguments));
+            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
             this.config.setFork(true);
         }
-        this.config.setRunId(LauncherUtils.getArgRunId(this.arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(this.arguments));
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(this.arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(this.arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(this.arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(this.arguments));
     }
 
     private void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(this.arguments, LOGGER);
+        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(LOGGER);
         if (spreadsheetSerializerEngine != null) {
             this.engines.add(spreadsheetSerializerEngine);
 
@@ -132,25 +142,25 @@ public class Launcher extends AbstractPoolManager {
             }
         }
 
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(this.arguments, LOGGER);
+        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
         this.engines.addAll(fileSerializerEngines);
 
-        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(this.arguments, LOGGER);
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(LOGGER);
         if (mongoDBSerializerEngine != null) {
             this.engines.add(mongoDBSerializerEngine);
         }
     }
 
     private void initNotifiers() {
-        if (LauncherUtils.getArgNotifyEndProcess(this.arguments)) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(this.arguments, LOGGER);
-            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.DOCKERPOOL.name().toLowerCase()+" (runid: "+LauncherUtils.getArgRunId(this.arguments)+")");
+        if (this.config.isNotifyEndProcess()) {
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
+            this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.DOCKERPOOL.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }
 
     private List<Integer> readListOfBuildIds() {
         List<Integer> result = new ArrayList<>();
-        File inputFile = LauncherUtils.getArgInput(this.arguments);
+        File inputFile = new File(this.config.getInputPath());
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -168,7 +178,7 @@ public class Launcher extends AbstractPoolManager {
     }
 
     private void runPool() throws IOException {
-        String runId = LauncherUtils.getArgRunId(this.arguments);
+        String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "dockerPool");
         hardwareInfoSerializer.serialize();
 
@@ -178,16 +188,16 @@ public class Launcher extends AbstractPoolManager {
 
         endProcessSerializer.setNbBuilds(buildIds.size());
 
-        String imageId = this.findDockerImage(LauncherUtils.getArgDockerImageName(this.arguments));
+        String imageId = this.findDockerImage(this.config.getDockerImageName());
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        this.setDockerOutputDir(LauncherUtils.getArgLogDirectory(this.arguments));
+        this.setDockerOutputDir(this.config.getLogDirectory());
         this.setRunId(runId);
-        this.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(this.arguments));
-        this.setSkipDelete(LauncherUtils.getArgSkipDelete(this.arguments));
+        this.setCreateOutputDir(this.config.isCreateOutputDir());
+        this.setSkipDelete(this.config.isSkipDelete());
         this.setEngines(this.engines);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(LauncherUtils.getArgNbThreads(this.arguments));
+        ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         for (Integer builId : buildIds) {
             executorService.submit(this.submitBuild(imageId, builId));
@@ -195,7 +205,7 @@ public class Launcher extends AbstractPoolManager {
 
         executorService.shutdown();
         try {
-            if (executorService.awaitTermination(LauncherUtils.getArgGlobalTimeout(this.arguments), TimeUnit.DAYS)) {
+            if (executorService.awaitTermination(this.config.getGlobalTimeout(), TimeUnit.DAYS)) {
                 LOGGER.info("Job finished within time.");
                 endProcessSerializer.setStatus("ok");
             } else {
