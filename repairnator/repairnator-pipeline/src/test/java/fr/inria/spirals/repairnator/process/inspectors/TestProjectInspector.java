@@ -5,6 +5,7 @@ import fr.inria.main.AstorOutputStatus;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -243,6 +244,42 @@ public class TestProjectInspector {
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTBUILDABLE));
         assertThat(jobStatus.getPushState(), is(PushState.NONE));
+
+        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
+
+    }
+
+    @Test
+    public void testSpoonException() throws IOException, GitAPIException {
+        int buildId = 355743087; // surli/failingProject only-one-failing
+
+        Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
+
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
+
+        List<AbstractDataSerializer> serializers = new ArrayList<>();
+        List<AbstractNotifier> notifiers = new ArrayList<>();
+
+        List<SerializerEngine> serializerEngines = new ArrayList<>();
+        SerializerEngine serializerEngine = mock(SerializerEngine.class);
+        serializerEngines.add(serializerEngine);
+
+        serializers.add(new InspectorSerializer(serializerEngines));
+        serializers.add(new NopolSerializer(serializerEngines));
+
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.REPAIR);
+
+        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        inspector.run();
+
+        JobStatus jobStatus = inspector.getJobStatus();
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_NOTPATCHED));
+        assertThat(jobStatus.getNopolInformations().get(0).getStatus(), is(NopolStatus.EXCEPTION));
 
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
 
