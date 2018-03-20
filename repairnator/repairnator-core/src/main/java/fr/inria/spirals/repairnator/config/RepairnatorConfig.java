@@ -38,6 +38,7 @@ public class RepairnatorConfig {
     private String workspacePath;
     private String githubLogin;
     private String githubToken;
+    private String projectsToIgnoreFilePath;
 
     // Dockerpool
     private String dockerImageName;
@@ -248,6 +249,14 @@ public class RepairnatorConfig {
 
     public void setGithubToken(String githubToken) {
         this.githubToken = githubToken;
+    }
+
+    public String getProjectsToIgnoreFilePath() {
+        return projectsToIgnoreFilePath;
+    }
+
+    public void setProjectsToIgnoreFilePath(String projectsToIgnoreFilePath) {
+        this.projectsToIgnoreFilePath = projectsToIgnoreFilePath;
     }
 
     public Date getLookFromDate() {

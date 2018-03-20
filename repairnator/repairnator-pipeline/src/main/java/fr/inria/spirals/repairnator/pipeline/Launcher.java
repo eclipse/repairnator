@@ -35,9 +35,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +45,6 @@ import java.util.Properties;
  * Created by urli on 09/03/2017.
  */
 public class Launcher {
-    private static final String TEST_PROJECT = "surli/failingproject"; // be careful when testing: this project deactivate serialization
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     private RepairnatorConfig config;
     private BuildToBeInspected buildToBeInspected;
@@ -156,6 +153,13 @@ public class Launcher {
         opt2.setHelp("Specify oauth for Github use");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("projectsToIgnore");
+        opt2.setLongFlag("projectsToIgnore");
+        opt2.setDefault("./projects_to_ignore.txt");
+        opt2.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
+        opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -184,6 +188,9 @@ public class Launcher {
         this.config.setWorkspacePath(arguments.getString("workspace"));
         this.config.setGithubLogin(arguments.getString("ghLogin"));
         this.config.setGithubToken(arguments.getString("ghOauth"));
+        if (arguments.getFile("projectsToIgnore") != null) {
+            this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
+        }
 
         GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
         GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
@@ -243,6 +250,24 @@ public class Launcher {
         this.notifiers.add(new FixerBuildNotifier(notifierEngines));
     }
 
+    private List<String> getListOfProjectsToIgnore() {
+        List<String> result = new ArrayList<>();
+        if (this.config.getProjectsToIgnoreFilePath() != null) {
+            File file = new File(this.config.getProjectsToIgnoreFilePath());
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                while (reader.ready()) {
+                    result.add(reader.readLine().trim().toLowerCase());
+                }
+                reader.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Error while reading projects to be ignored from file: " + file.getPath(), e);
+            }
+        }
+
+        return result;
+    }
+
     private void getBuildToBeInspected() {
         Build buggyBuild = BuildHelper.getBuildFromId(this.config.getBuildId(), null);
 
@@ -275,9 +300,11 @@ public class Launcher {
 
             // switch off push mechanism in case of test project
             // and switch off serialization
-            if (buggyBuild.getRepository().getSlug().toLowerCase().equals(TEST_PROJECT)) {
+            String project = buggyBuild.getRepository().getSlug().toLowerCase();
+            if (this.getListOfProjectsToIgnore().contains(project)) {
                 this.config.setPush(false);
                 this.engines.clear();
+                LOGGER.info("The build "+this.config.getBuildId()+" is from a project to be ignored ("+project+"), thus the pipeline deactivated serialization for that build.");
             }
         }
     }
