@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -253,18 +254,14 @@ public class Launcher {
     private List<String> getListOfProjectsToIgnore() {
         List<String> result = new ArrayList<>();
         if (this.config.getProjectsToIgnoreFilePath() != null) {
-            File file = new File(this.config.getProjectsToIgnoreFilePath());
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-                while (reader.ready()) {
-                    result.add(reader.readLine().trim().toLowerCase());
+                for (String line : Files.readAllLines(new File(this.config.getProjectsToIgnoreFilePath()).toPath())) {
+                    result.add(line.trim().toLowerCase());
                 }
-                reader.close();
             } catch (IOException e) {
-                throw new RuntimeException("Error while reading projects to be ignored from file: " + file.getPath(), e);
+                throw new RuntimeException("Error while reading projects to be ignored from file: " + this.config.getProjectsToIgnoreFilePath(), e);
             }
         }
-
         return result;
     }
 
