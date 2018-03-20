@@ -45,7 +45,7 @@ public class TestCloneRepositoryStep {
     }
 
     @Test
-    public void testCloneMasterBuild() throws IOException, GitAPIException {
+    public void testCloneMasterBuild() throws IOException {
         int buildId = 207924136; // surli/failingProject build
 
         Build build = BuildHelper.getBuildFromId(buildId, null);
@@ -83,5 +83,40 @@ public class TestCloneRepositoryStep {
         ref = ref.getTarget();
 
         assertThat(ref.getObjectId().getName(), not(build.getCommit().getSha())); // no check out yet
+    }
+
+    @Test
+    public void testCloneBuildWithSubmodule() throws IOException {
+        int buildId = 355839305; // surli/failingProject build
+
+        Build build = BuildHelper.getBuildFromId(buildId, null);
+        assertThat(build, notNullValue());
+        assertThat(buildId, is(build.getId()));
+
+        Path tmpDirPath = Files.createTempDirectory("test_clone");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
+        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
+        when(inspector.getBuggyBuild()).thenReturn(build);
+        when(inspector.getGitHelper()).thenReturn(new GitHelper());
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        cloneStep.execute();
+
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.CLONABLE));
+        assertThat(cloneStep.getPipelineState(), is(PipelineState.CLONABLE));
+        assertThat(cloneStep.shouldStop, is(false));
+
+        File licenceInSubmodule = new File(tmpDirPath.toFile(), "repo/grakn-spec/LICENSE");
+        assertThat("Submodule are not supported", licenceInSubmodule.exists(), is(true));
     }
 }
