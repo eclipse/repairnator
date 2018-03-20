@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import spoon.SpoonException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -104,8 +105,11 @@ public class AstorRepair extends AbstractStep {
                         } else {
                             status = AstorOutputStatus.ERROR;
                         }
+                    } catch (SpoonException e) {
+                        status = AstorOutputStatus.ERROR;
+                        addStepError("Got SpoonException while running Astor", e);
                     } catch (RuntimeException e) {
-                        addStepError("Got runtime exception while running Nopol", e);
+                        addStepError("Got runtime exception while running Astor", e);
                         status = AstorOutputStatus.ERROR;
                     }
                     return status;

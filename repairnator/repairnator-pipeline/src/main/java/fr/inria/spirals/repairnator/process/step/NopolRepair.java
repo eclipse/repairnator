@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import spoon.SpoonException;
 import spoon.reflect.factory.Factory;
 
 import java.io.BufferedWriter;
@@ -132,71 +133,79 @@ public class NopolRepair extends AbstractStep {
 
                     long beforeNopol = new Date().getTime();
 
-                    final NoPol nopol = new NoPol(nopolContext);
-                    Factory spoonFactory = nopol.getSpooner().spoonFactory();
-                    List<PatchAndDiff> patchAndDiffs = new ArrayList<>();
-
-                    final ExecutorService executor = Executors.newSingleThreadExecutor();
-                    final Future<NopolResult> nopolExecution = executor.submit(new Callable<NopolResult>() {
-                        @Override
-                        public NopolResult call() throws Exception {
-                            NopolResult result = null;
-                            try {
-                                result = nopol.build();
-                            } catch (RuntimeException e) {
-                                addStepError("Got runtime exception while running Nopol", e);
-                            }
-                            return result;
-                        }
-                    });
-
                     try {
-                        executor.shutdown();
-                        NopolResult result = nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+                        final NoPol nopol = new NoPol(nopolContext);
+                        Factory spoonFactory = nopol.getSpooner().spoonFactory();
+                        List<PatchAndDiff> patchAndDiffs = new ArrayList<>();
 
-                        if (result == null) {
-                            result = nopol.getNopolResult();
-                        }
-                        nopolInformation.setNbStatements(result.getNbStatements());
-                        nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
-
-                        String failureLocationWithoutDots = failureLocation.getClassName().replace('.','/');
-
-                        metric.addAngelicValueByTest(failureLocationWithoutDots, result.getNbAngelicValues());
-
-                        List<Patch> patches = result.getPatches();
-                        if (patches != null && !patches.isEmpty()) {
-                            for (Patch patch : patches) {
-                                String diff = patch.toDiff(spoonFactory, nopolContext);
-                                patchAndDiffs.add(new PatchAndDiff(patch, diff));
+                        final ExecutorService executor = Executors.newSingleThreadExecutor();
+                        final Future<NopolResult> nopolExecution = executor.submit(new Callable<NopolResult>() {
+                            @Override
+                            public NopolResult call() throws Exception {
+                                NopolResult result = null;
+                                try {
+                                    result = nopol.build();
+                                } catch (RuntimeException e) {
+                                    addStepError("Got runtime exception while running Nopol", e);
+                                }
+                                return result;
                             }
-                            nopolInformation.setPatches(patchAndDiffs);
-                            nopolInformation.setStatus(NopolStatus.PATCH);
-                            patchCreated = true;
-                        } else {
-                            nopolInformation.setStatus(NopolStatus.NOPATCH);
+                        });
+
+                        try {
+                            executor.shutdown();
+                            NopolResult result = nopolExecution.get(nopolContext.getMaxTimeInMinutes(), TimeUnit.MINUTES);
+
+                            if (result == null) {
+                                result = nopol.getNopolResult();
+                            }
+                            nopolInformation.setNbStatements(result.getNbStatements());
+                            nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
+
+                            String failureLocationWithoutDots = failureLocation.getClassName().replace('.','/');
+
+                            metric.addAngelicValueByTest(failureLocationWithoutDots, result.getNbAngelicValues());
+
+                            List<Patch> patches = result.getPatches();
+                            if (patches != null && !patches.isEmpty()) {
+                                for (Patch patch : patches) {
+                                    String diff = patch.toDiff(spoonFactory, nopolContext);
+                                    patchAndDiffs.add(new PatchAndDiff(patch, diff));
+                                }
+                                nopolInformation.setPatches(patchAndDiffs);
+                                nopolInformation.setStatus(NopolStatus.PATCH);
+                                patchCreated = true;
+                            } else {
+                                nopolInformation.setStatus(NopolStatus.NOPATCH);
+                            }
+                        } catch (TimeoutException exception) {
+                            this.addStepError("Timeout: execution time > " + nopolContext.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
+                            nopolExecution.cancel(true);
+                            executor.shutdownNow();
+                            nopolInformation.setStatus(NopolStatus.TIMEOUT);
+
+                            NopolResult result = nopol.getNopolResult();
+                            nopolInformation.setNbStatements(result.getNbStatements());
+                            nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
+
+                        } catch (InterruptedException | ExecutionException e) {
+                            this.addStepError(e.getMessage());
+                            nopolExecution.cancel(true);
+                            executor.shutdownNow();
+                            nopolInformation.setStatus(NopolStatus.EXCEPTION);
+                            nopolInformation.setExceptionDetail(e.getMessage());
+
+                            NopolResult result = nopol.getNopolResult();
+                            nopolInformation.setNbStatements(result.getNbStatements());
+                            nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
                         }
-                    } catch (TimeoutException exception) {
-                        this.addStepError("Timeout: execution time > " + nopolContext.getMaxTimeInMinutes() + " " + TimeUnit.MINUTES);
-                        nopolExecution.cancel(true);
-                        executor.shutdownNow();
-                        nopolInformation.setStatus(NopolStatus.TIMEOUT);
-
-                        NopolResult result = nopol.getNopolResult();
-                        nopolInformation.setNbStatements(result.getNbStatements());
-                        nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
-
-                    } catch (InterruptedException | ExecutionException e) {
+                    } catch (SpoonException e) {
                         this.addStepError(e.getMessage());
-                        nopolExecution.cancel(true);
-                        executor.shutdownNow();
                         nopolInformation.setStatus(NopolStatus.EXCEPTION);
                         nopolInformation.setExceptionDetail(e.getMessage());
-
-                        NopolResult result = nopol.getNopolResult();
-                        nopolInformation.setNbStatements(result.getNbStatements());
-                        nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
                     }
+
+
                     long afterNopol = new Date().getTime();
 
                     nopolInformation.setDateEnd();
