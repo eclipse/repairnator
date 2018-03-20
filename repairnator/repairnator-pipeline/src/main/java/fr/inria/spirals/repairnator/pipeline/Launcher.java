@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
 import fr.inria.spirals.repairnator.serializer.NPEFixSerializer;
+import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -302,6 +303,7 @@ public class Launcher {
         serializers.add(new NPEFixSerializer(this.engines));
         serializers.add(new AstorSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
+        serializers.add(new PipelineErrorSerializer(this.engines));
 
         ProjectInspector inspector;
 
