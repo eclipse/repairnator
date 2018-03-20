@@ -75,8 +75,10 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded(jsap);
             this.checkNopolSolverPath(jsap);
+            LOGGER.info("The pipeline will try to repair the following buildid: "+this.config.getBuildId());
         } else {
             this.checkNextBuildId(jsap, arguments);
+            LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
         }
 
         if (LauncherUtils.getArgDebug(arguments)) {
@@ -84,8 +86,6 @@ public class Launcher {
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
-
-        LOGGER.info("The pipeline will try to repair the following buildid: "+this.config.getBuildId());
 
         this.initSerializerEngines();
         this.initNotifiers();
