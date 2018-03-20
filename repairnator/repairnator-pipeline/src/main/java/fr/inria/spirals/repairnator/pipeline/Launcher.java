@@ -140,7 +140,7 @@ public class Launcher {
         opt2.setShortFlag('w');
         opt2.setDefault("./workspace");
         opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify path to output serialized files");
+        opt2.setHelp("Specify a path to be used by the pipeline at processing things like to clone the project of the build id being processed");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("ghLogin");
