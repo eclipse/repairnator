@@ -31,7 +31,6 @@ export SMTP_SERVER=
 export NOTIFY_TO=
 
 LOCAL_REPAIR_MODE=repair
-export REPAIR_MODE=
 
 LOCAL_BUILD_ID=$BUILD_ID
 export BUILD_ID=
