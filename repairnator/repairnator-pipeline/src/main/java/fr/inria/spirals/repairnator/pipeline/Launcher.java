@@ -261,7 +261,6 @@ public class Launcher {
                 }
             } catch (IOException e) {
                 LOGGER.error("Error while reading projects to be ignored from file "+this.config.getProjectsToIgnoreFilePath(), e);
-                result.clear();
             }
         }
         return result;
