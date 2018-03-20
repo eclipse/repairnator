@@ -21,6 +21,7 @@ public class CloneRepository extends AbstractStep {
         this.build = inspector.getBuggyBuild();
     }
 
+    @Override
     protected void businessExecute() {
         String repository = this.build.getRepository().getSlug();
         String repoRemotePath = GITHUB_ROOT_REPO + repository + ".git";
@@ -29,7 +30,7 @@ public class CloneRepository extends AbstractStep {
         try {
             this.getLogger().debug("Cloning repository " + repository + " in the following directory: " + repoLocalPath);
 
-            Git.cloneRepository().setURI(repoRemotePath).setDirectory(new File(repoLocalPath)).call();
+            Git.cloneRepository().setCloneSubmodules(true).setURI(repoRemotePath).setDirectory(new File(repoLocalPath)).call();
 
             this.writeProperty("repo",this.inspector.getRepoSlug());
             this.setPipelineState(PipelineState.CLONABLE);
@@ -42,6 +43,7 @@ public class CloneRepository extends AbstractStep {
         }
     }
 
+    @Override
     protected void cleanMavenArtifacts() {
     }
 
