@@ -4,6 +4,7 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -388,5 +389,49 @@ public class RepairnatorConfig {
 
     public static void setInstance(RepairnatorConfig instance) {
         RepairnatorConfig.instance = instance;
+    }
+
+    @Override
+    public String toString() {
+        return "RepairnatorConfig{" +
+                "runId='" + runId + '\'' +
+                ", launcherMode=" + launcherMode +
+                ", serializeJson=" + serializeJson +
+                ", inputPath='" + inputPath + '\'' +
+                ", outputPath='" + outputPath + '\'' +
+                ", mongodbHost='" + mongodbHost + '\'' +
+                ", mongodbName='" + mongodbName + '\'' +
+                ", spreadsheetId='" + spreadsheetId + '\'' +
+                ", googleSecretPath='" + googleSecretPath + '\'' +
+                ", googleAccessToken='" + googleAccessToken + '\'' +
+                ", smtpServer='" + smtpServer + '\'' +
+                ", notifyTo=" + Arrays.toString(notifyTo) +
+                ", notifyEndProcess=" + notifyEndProcess +
+                ", push=" + push +
+                ", pushRemoteRepo='" + pushRemoteRepo + '\'' +
+                ", fork=" + fork +
+                ", lookFromDate=" + lookFromDate +
+                ", lookToDate=" + lookToDate +
+                ", buildId=" + buildId +
+                ", z3solverPath='" + z3solverPath + '\'' +
+                ", workspacePath='" + workspacePath + '\'' +
+                ", githubLogin='" + githubLogin + '\'' +
+                ", githubToken='" + githubToken + '\'' +
+                ", dockerImageName='" + dockerImageName + '\'' +
+                ", skipDelete=" + skipDelete +
+                ", createOutputDir=" + createOutputDir +
+                ", logDirectory='" + logDirectory + '\'' +
+                ", nbThreads=" + nbThreads +
+                ", globalTimeout=" + globalTimeout +
+                ", whiteList=" + whiteList +
+                ", blackList=" + blackList +
+                ", jobSleepTime=" + jobSleepTime +
+                ", buildSleepTime=" + buildSleepTime +
+                ", maxInspectedBuilds=" + maxInspectedBuilds +
+                ", duration=" + duration +
+                ", humanPatch=" + humanPatch +
+                ", repository='" + repository + '\'' +
+                ", clean=" + clean +
+                '}';
     }
 }
