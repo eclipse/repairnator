@@ -5,6 +5,7 @@ LABEL Description="Repairnator Pipeline docker image" Vendor="Spirals" Version="
 VOLUME ["/var/log/"]
 
 COPY z3_for_linux /root/
+COPY projects_to_ignore.txt /root/
 COPY logback.xml /root/
 COPY configure_git.sh /root/
 COPY build_repairnator.sh /root/
