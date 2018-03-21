@@ -195,7 +195,6 @@ public class RTLauncher {
         buildRunner.setDockerOutputDir(this.config.getLogDirectory());
         buildRunner.setRunId(runId);
         buildRunner.setCreateOutputDir(this.config.isCreateOutputDir());
-        buildRunner.setSkipDelete(this.config.isSkipDelete());
         buildRunner.setEngines(this.engines);
         buildRunner.setDockerImageName(this.config.getDockerImageName());
         buildRunner.initExecutorService(this.config.getNbThreads());

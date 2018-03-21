@@ -32,7 +32,6 @@ public class RunnablePipelineContainer implements Runnable {
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
-    private boolean skipDelete;
     private boolean createOutputDir;
     private AbstractPoolManager poolManager;
     private String containerId;
@@ -41,14 +40,13 @@ public class RunnablePipelineContainer implements Runnable {
     private List<String> envValues;
     private Set<String> volumes;
 
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
+    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean createOutputDir) {
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.inputBuildId = inputBuildId;
         this.logDirectory = logDirectory;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
-        this.skipDelete = skipDelete;
         this.createOutputDir = createOutputDir;
 
         this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId();
@@ -118,7 +116,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
-            if (!skipDelete && exitStatus.statusCode() == 0) {
+            if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(this.containerId);
                 this.removeVolumes(docker);

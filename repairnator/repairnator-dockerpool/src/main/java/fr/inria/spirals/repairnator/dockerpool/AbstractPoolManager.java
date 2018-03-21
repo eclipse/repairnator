@@ -27,7 +27,6 @@ public class AbstractPoolManager {
     private DockerClient docker;
     private String runId = DEFAULT_RUN_ID;
     private String dockerOutputDir = DEFAULT_OUTPUT_DIR;
-    private boolean skipDelete;
     private boolean createOutputDir;
     private List<SerializerEngine> engines = new ArrayList<>();
 
@@ -81,10 +80,6 @@ public class AbstractPoolManager {
         this.dockerOutputDir = dockerOutputDir;
     }
 
-    public void setSkipDelete(boolean skipDelete) {
-        this.skipDelete = skipDelete;
-    }
-
     public void setCreateOutputDir(boolean createOutputDir) {
         this.createOutputDir = createOutputDir;
     }
@@ -100,7 +95,7 @@ public class AbstractPoolManager {
 
     public RunnablePipelineContainer submitBuild(String imageId, InputBuildId inputBuildId) {
         TreatedBuildTracking treatedBuildTracking = this.prepareBeforeSubmitBuild(inputBuildId.getBuggyBuildId());
-        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, inputBuildId, this.dockerOutputDir, treatedBuildTracking, this.skipDelete, this.createOutputDir);
+        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, inputBuildId, this.dockerOutputDir, treatedBuildTracking, this.createOutputDir);
         this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
 
         return runnablePipelineContainer;
