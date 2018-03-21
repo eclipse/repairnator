@@ -25,17 +25,15 @@ public class RunnablePipelineContainer implements Runnable {
     private String branchName;
     private String output;
     private RepairnatorConfig repairnatorConfig;
-    private boolean skipDelete;
     private String repository;
     private boolean humanPatch;
 
 
-    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output, boolean skipDelete, boolean humanPatch) {
+    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output, boolean humanPatch) {
         this.imageId = imageId;
         this.branchName = branchName;
         this.output = output;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
-        this.skipDelete = skipDelete;
         this.repository = repository;
         this.humanPatch = humanPatch;
     }
@@ -84,7 +82,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
-            if (!skipDelete && exitStatus.statusCode() == 0) {
+            if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(containerId);
             }
