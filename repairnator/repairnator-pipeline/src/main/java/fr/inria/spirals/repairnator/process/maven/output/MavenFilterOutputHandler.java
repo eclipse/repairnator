@@ -1,14 +1,15 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
 /**
  * Created by urli on 09/01/2017.
  */
 public class MavenFilterOutputHandler extends MavenOutputHandler {
 
-    public MavenFilterOutputHandler(ProjectInspector inspector, String name) {
-        super(inspector, name);
+
+    public MavenFilterOutputHandler(MavenHelper mavenHelper) {
+        super(mavenHelper);
     }
 
     @Override

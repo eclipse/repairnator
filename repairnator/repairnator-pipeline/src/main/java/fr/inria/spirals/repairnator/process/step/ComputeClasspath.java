@@ -65,7 +65,12 @@ public class ComputeClasspath extends AbstractStep {
         MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(),
                 this.inspector, true);
 
-        int result = helper.run();
+        int result = MavenHelper.MAVEN_ERROR;
+        try {
+            result = helper.run();
+        } catch (InterruptedException e) {
+            this.addStepError("Error with maven goal", e);
+        }
 
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");

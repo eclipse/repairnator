@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.maven.output;
 
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.junit.Test;
 
 import java.io.File;
@@ -32,7 +33,10 @@ public class TestMavenFilterTestOutputHandler {
 
         JobStatus jobStatus = new JobStatus(tmp.toAbsolutePath().toString());
         when(inspector.getJobStatus()).thenReturn(jobStatus);
-        MavenFilterTestOutputHandler filterTest = new MavenFilterTestOutputHandler(inspector, "test");
+        MavenHelper mavenHelper = mock(MavenHelper.class);
+        when(mavenHelper.getInspector()).thenReturn(inspector);
+        when(mavenHelper.getName()).thenReturn("test");
+        MavenFilterTestOutputHandler filterTest = new MavenFilterTestOutputHandler(mavenHelper);
 
         for (String s : lines) {
             filterTest.consumeLine(s);
@@ -56,7 +60,10 @@ public class TestMavenFilterTestOutputHandler {
 
         JobStatus jobStatus = new JobStatus(tmp.toAbsolutePath().toString());
         when(inspector.getJobStatus()).thenReturn(jobStatus);
-        MavenFilterTestOutputHandler filterTest = new MavenFilterTestOutputHandler(inspector, "test");
+        MavenHelper mavenHelper = mock(MavenHelper.class);
+        when(mavenHelper.getInspector()).thenReturn(inspector);
+        when(mavenHelper.getName()).thenReturn("test");
+        MavenFilterTestOutputHandler filterTest = new MavenFilterTestOutputHandler(mavenHelper);
 
         for (String s : lines) {
             filterTest.consumeLine(s);
