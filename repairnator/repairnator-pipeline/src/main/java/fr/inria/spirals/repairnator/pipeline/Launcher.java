@@ -7,9 +7,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildStatus;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.GithubTokenHelper;
-import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
@@ -17,7 +15,6 @@ import fr.inria.spirals.repairnator.serializer.NPEFixSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
@@ -75,6 +72,10 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded(jsap);
             this.checkNopolSolverPath(jsap);
+            LOGGER.info("The pipeline will try to repair the following buildid: "+this.config.getBuildId());
+        } else {
+            this.checkNextBuildId(jsap, arguments);
+            LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
         }
 
         if (LauncherUtils.getArgDebug(arguments)) {
@@ -82,8 +83,6 @@ public class Launcher {
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
-
-        LOGGER.info("The pipeline will try to repair the following buildid: "+this.config.getBuildId());
 
         this.initSerializerEngines();
         this.initNotifiers();
@@ -124,6 +123,14 @@ public class Launcher {
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setRequired(true);
         opt2.setHelp("Specify the build id to use.");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("nextBuild");
+        opt2.setShortFlag('n');
+        opt2.setLongFlag("nextBuild");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault(InputBuildId.NO_PATCH+"");
+        opt2.setHelp("Specify the next build id to use (only in BEARS mode).");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("z3");
@@ -186,6 +193,9 @@ public class Launcher {
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
         }
         this.config.setBuildId(arguments.getInt("build"));
+        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
+            this.config.setNextBuildId(arguments.getInt("nextBuild"));
+        }
         this.config.setZ3solverPath(arguments.getFile("z3").getPath());
         this.config.setWorkspacePath(arguments.getString("workspace"));
         this.config.setGithubLogin(arguments.getString("ghLogin"));
@@ -222,6 +232,13 @@ public class Launcher {
             }
         } else {
             System.err.println("The Nopol solver path should be provided.");
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        }
+    }
+
+    private void checkNextBuildId(JSAP jsap, JSAPResult arguments) {
+        if (this.config.getNextBuildId() == InputBuildId.NO_PATCH) {
+            System.err.println("A pair of builds needs to be provided in BEARS mode.");
             LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
@@ -277,8 +294,10 @@ public class Launcher {
         String runId = this.config.getRunId();
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
-            Build patchedBuild = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, null);
-            if (patchedBuild == null) {
+            Build patchedBuild = BuildHelper.getBuildFromId(this.config.getNextBuildId(), null);
+            if (patchedBuild != null) {
+                LOGGER.info("The patched build (" + patchedBuild.getId() + ") was successfully retrieved from Travis.");
+            } else {
                 LOGGER.error("Error while getting patched build: obtained null value. The process will exit now.");
                 System.exit(-1);
             }

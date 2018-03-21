@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.dockerpool.AbstractPoolManager;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class BuildRunner extends AbstractPoolManager {
         }
         if (getRunning() < this.nbThreads) {
             LOGGER.info("Build (id: "+build.getId()+") immediately submitted for running.");
-            this.executorService.submit(this.submitBuild(this.dockerImageId, build.getId()));
+            this.executorService.submit(this.submitBuild(this.dockerImageId, new InputBuildId(build.getId())));
         } else {
             LOGGER.info("All threads currently running (Limit: "+this.nbThreads+"). Add build (id: "+build.getId()+") to list");
             if (this.waitingBuilds.size() == this.nbThreads) {
@@ -80,7 +81,7 @@ public class BuildRunner extends AbstractPoolManager {
 
     @Override
     public void removeSubmittedRunnablePipelineContainer(RunnablePipelineContainer pipelineContainer) {
-        LOGGER.info("Build (id: "+pipelineContainer.getBuildId()+") has finished.");
+        LOGGER.info("Build (id: "+pipelineContainer.getInputBuildId().getBuggyBuildId()+") has finished.");
         super.removeSubmittedRunnablePipelineContainer(pipelineContainer);
         if (!this.waitingBuilds.isEmpty()) {
             Build build = this.waitingBuilds.pollFirst();

@@ -8,7 +8,6 @@ import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +22,7 @@ public class TreatedBuildTracking extends ProcessSerializer {
     private String containerId;
     private String status;
 
-    public TreatedBuildTracking(List<SerializerEngine> engines, String runid, Integer buildId) throws IOException {
+    public TreatedBuildTracking(List<SerializerEngine> engines, String runid, Integer buildId) {
         super(engines, SerializerType.TREATEDBUILD);
 
         this.runid = runid;

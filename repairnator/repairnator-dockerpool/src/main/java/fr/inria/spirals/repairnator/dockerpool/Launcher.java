@@ -4,8 +4,10 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
+import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -14,6 +16,7 @@ import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.ManageGoogleAccessToken;
 
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,15 +161,29 @@ public class Launcher extends AbstractPoolManager {
         }
     }
 
-    private List<Integer> readListOfBuildIds() {
-        List<Integer> result = new ArrayList<>();
+    private List<InputBuildId> readListOfBuildIds() {
+        List<InputBuildId> result = new ArrayList<>();
+
         File inputFile = new File(this.config.getInputPath());
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
             while (reader.ready()) {
                 String line = reader.readLine().trim();
-                result.add(Integer.parseInt(line));
+                String[] buildIds = line.split(Utils.COMMA+"");
+                if (buildIds.length > 0) {
+                    int buggyBuildId = Integer.parseInt(buildIds[0]);
+                    if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                        result.add(new InputBuildId(buggyBuildId));
+                    } else {
+                        if (buildIds.length > 1) {
+                            int patchedBuildId = Integer.parseInt(buildIds[1]);
+                            result.add(new InputBuildId(buggyBuildId, patchedBuildId));
+                        } else {
+                            LOGGER.error("The build "+buggyBuildId+" will not be processed because there is no next build for it in the input file.");
+                        }
+                    }
+                }
             }
 
             reader.close();
@@ -183,7 +200,7 @@ public class Launcher extends AbstractPoolManager {
         hardwareInfoSerializer.serialize();
 
         EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, runId);
-        List<Integer> buildIds = this.readListOfBuildIds();
+        List<InputBuildId> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
 
         endProcessSerializer.setNbBuilds(buildIds.size());
@@ -199,8 +216,8 @@ public class Launcher extends AbstractPoolManager {
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
-        for (Integer builId : buildIds) {
-            executorService.submit(this.submitBuild(imageId, builId));
+        for (InputBuildId inputBuildId : buildIds) {
+            executorService.submit(this.submitBuild(imageId, inputBuildId));
         }
 
         executorService.shutdown();

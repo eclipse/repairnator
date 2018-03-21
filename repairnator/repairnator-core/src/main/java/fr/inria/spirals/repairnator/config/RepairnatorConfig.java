@@ -35,6 +35,7 @@ public class RepairnatorConfig {
 
     // Pipeline
     private int buildId;
+    private int nextBuildId;
     private String z3solverPath;
     private String workspacePath;
     private String githubLogin;
@@ -218,6 +219,14 @@ public class RepairnatorConfig {
 
     public void setBuildId(int buildId) {
         this.buildId = buildId;
+    }
+
+    public int getNextBuildId() {
+        return nextBuildId;
+    }
+
+    public void setNextBuildId(int nextBuildId) {
+        this.nextBuildId = nextBuildId;
     }
 
     public String getZ3solverPath() {
