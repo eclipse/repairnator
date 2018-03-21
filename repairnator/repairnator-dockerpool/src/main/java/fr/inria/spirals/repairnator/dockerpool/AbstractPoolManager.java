@@ -11,7 +11,6 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,12 +95,7 @@ public class AbstractPoolManager {
 
     public TreatedBuildTracking prepareBeforeSubmitBuild(int buildId) {
         this.cleanUpOlderContainers();
-        try {
-            return new TreatedBuildTracking(this.engines, this.runId, buildId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new TreatedBuildTracking(this.engines, this.runId, buildId);
     }
 
     public RunnablePipelineContainer submitBuild(String imageId, InputBuildId inputBuildId) {
