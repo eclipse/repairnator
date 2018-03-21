@@ -26,16 +26,14 @@ public class RunnablePipelineContainer implements Runnable {
     private String output;
     private RepairnatorConfig repairnatorConfig;
     private String repository;
-    private boolean humanPatch;
 
 
-    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output, boolean humanPatch) {
+    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output) {
         this.imageId = imageId;
         this.branchName = branchName;
         this.output = output;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.repository = repository;
-        this.humanPatch = humanPatch;
     }
 
     @Override
@@ -49,7 +47,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             String humanPatchStr = "";
 
-            if (humanPatch) {
+            if (this.repairnatorConfig.isHumanPatch()) {
                 humanPatchStr = "--human-patch";
             }
 
