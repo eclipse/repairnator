@@ -7,6 +7,7 @@ import com.martiansoftware.jsap.JSAPResult;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -169,7 +170,7 @@ public class Launcher extends AbstractPoolManager {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
             while (reader.ready()) {
                 String line = reader.readLine().trim();
-                String[] buildIds = line.split(",");
+                String[] buildIds = line.split(Utils.COMMA+"");
                 if (buildIds.length > 0) {
                     int buggyBuildId = Integer.parseInt(buildIds[0]);
                     if (this.config.getLauncherMode() == LauncherMode.REPAIR) {

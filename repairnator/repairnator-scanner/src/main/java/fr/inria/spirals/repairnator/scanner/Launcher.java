@@ -221,7 +221,7 @@ public class Launcher {
                     if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
                         writer.write(buildToBeInspected.getBuggyBuild().getId() + "");
                     } else {
-                        writer.write(buildToBeInspected.getBuggyBuild().getId() + "," + buildToBeInspected.getPatchedBuild().getId());
+                        writer.write(buildToBeInspected.getBuggyBuild().getId() + Utils.COMMA + buildToBeInspected.getPatchedBuild().getId());
                     }
                     writer.newLine();
                     writer.flush();
