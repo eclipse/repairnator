@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
 import java.util.ArrayList;

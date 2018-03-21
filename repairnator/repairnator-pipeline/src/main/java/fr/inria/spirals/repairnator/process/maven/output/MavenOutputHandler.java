@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Instant;
 
 /**
  * Created by urli on 15/02/2017.
