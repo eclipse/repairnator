@@ -218,7 +218,7 @@ public class Launcher {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
 
                 for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-                    if (this.launcherMode == LauncherMode.REPAIR) {
+                    if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
                         writer.write(buildToBeInspected.getBuggyBuild().getId() + "");
                     } else {
                         writer.write(buildToBeInspected.getBuggyBuild().getId() + "," + buildToBeInspected.getPatchedBuild().getId());
