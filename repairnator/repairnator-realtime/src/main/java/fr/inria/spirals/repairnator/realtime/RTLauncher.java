@@ -178,9 +178,6 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
-        rtScanner.getInspectBuilds().setMaxSubmittedBuilds(this.config.getMaxInspectedBuilds());
-        rtScanner.getInspectBuilds().setSleepTime(this.config.getBuildSleepTime());
-        rtScanner.getInspectJobs().setSleepTime(this.config.getJobSleepTime());
 
         if (this.config.getDuration() != null) {
             rtScanner.setDuration(this.config.getDuration());
@@ -190,14 +187,7 @@ public class RTLauncher {
             }
         }
 
-        LOGGER.info("Init build runner");
-        BuildRunner buildRunner = rtScanner.getBuildRunner();
-        buildRunner.setDockerOutputDir(this.config.getLogDirectory());
-        buildRunner.setRunId(runId);
-        buildRunner.setEngines(this.engines);
-        buildRunner.setDockerImageName(this.config.getDockerImageName());
-        buildRunner.initExecutorService(this.config.getNbThreads());
-
+        rtScanner.initBuildRunner();
 
         if (this.config.getWhiteList() != null) {
             rtScanner.initWhiteListedRepository(this.config.getWhiteList());

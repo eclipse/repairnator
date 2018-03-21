@@ -54,7 +54,10 @@ public class RTScanner {
         this.tempBlackList = new HashMap<>();
         this.buildRunner = new BuildRunner(this);
         this.inspectBuilds = new InspectBuilds(this);
+        this.inspectBuilds.setMaxSubmittedBuilds(this.config.getMaxInspectedBuilds());
+        this.inspectBuilds.setSleepTime(this.config.getBuildSleepTime());
         this.inspectJobs = new InspectJobs(this);
+        this.inspectJobs.setSleepTime(this.config.getJobSleepTime());
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
     }
@@ -85,6 +88,15 @@ public class RTScanner {
 
     public InspectJobs getInspectJobs() {
         return inspectJobs;
+    }
+
+    public void initBuildRunner() {
+        LOGGER.info("Init build runner");
+        this.buildRunner.setDockerOutputDir(this.config.getLogDirectory());
+        this.buildRunner.setRunId(runId);
+        this.buildRunner.setEngines(this.engines);
+        this.buildRunner.setDockerImageName(this.config.getDockerImageName());
+        this.buildRunner.initExecutorService(this.config.getNbThreads());
     }
 
     public void initWhiteListedRepository(File whiteListFile) {
