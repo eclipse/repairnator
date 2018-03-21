@@ -23,14 +23,12 @@ public class RunnablePipelineContainer implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RunnablePipelineContainer.class);
     private String imageId;
     private String branchName;
-    private String output;
     private RepairnatorConfig repairnatorConfig;
 
 
-    public RunnablePipelineContainer(String imageId, String branchName, String output) {
+    public RunnablePipelineContainer(String imageId, String branchName) {
         this.imageId = imageId;
         this.branchName = branchName;
-        this.output = output;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
     }
 
@@ -57,7 +55,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             Map<String,String> labels = new HashMap<>();
             labels.put("name",containerName);
-            HostConfig hostConfig = HostConfig.builder().appendBinds(this.output+":/tmp/result.txt").build();
+            HostConfig hostConfig = HostConfig.builder().appendBinds(this.repairnatorConfig.getOutputPath()+":/tmp/result.txt").build();
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
                     .env(envValues)
