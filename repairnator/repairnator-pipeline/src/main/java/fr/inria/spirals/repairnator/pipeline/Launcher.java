@@ -7,9 +7,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildStatus;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.GithubTokenHelper;
-import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
@@ -17,7 +15,6 @@ import fr.inria.spirals.repairnator.serializer.NPEFixSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
@@ -132,7 +129,7 @@ public class Launcher {
         opt2.setShortFlag('n');
         opt2.setLongFlag("nextBuild");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault("0");
+        opt2.setDefault(InputBuildId.NO_PATCH+"");
         opt2.setHelp("Specify the next build id to use (only in BEARS mode).");
         jsap.registerParameter(opt2);
 
@@ -240,7 +237,7 @@ public class Launcher {
     }
 
     private void checkNextBuildId(JSAP jsap, JSAPResult arguments) {
-        if (arguments.getInt("nextBuild") == 0) {
+        if (this.config.getNextBuildId() == InputBuildId.NO_PATCH) {
             System.err.println("A pair of builds needs to be provided in BEARS mode.");
             LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }

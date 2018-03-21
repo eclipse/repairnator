@@ -5,8 +5,10 @@ package fr.inria.spirals.repairnator;
  */
 public class InputBuildId {
 
+    public static final int NO_PATCH = -1;
+
     private int buggyBuildId;
-    private int patchedBuildId;
+    private int patchedBuildId = NO_PATCH;
 
     public InputBuildId(int buggyBuildId) {
         this.buggyBuildId = buggyBuildId;
