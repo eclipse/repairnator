@@ -174,7 +174,7 @@ public class Launcher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, this.config.getRepository(), branchName, this.config.getOutputPath());
+            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, branchName, this.config.getOutputPath());
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }

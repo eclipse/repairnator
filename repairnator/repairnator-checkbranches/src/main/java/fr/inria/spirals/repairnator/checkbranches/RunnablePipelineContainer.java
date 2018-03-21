@@ -25,15 +25,13 @@ public class RunnablePipelineContainer implements Runnable {
     private String branchName;
     private String output;
     private RepairnatorConfig repairnatorConfig;
-    private String repository;
 
 
-    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output) {
+    public RunnablePipelineContainer(String imageId, String branchName, String output) {
         this.imageId = imageId;
         this.branchName = branchName;
         this.output = output;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
-        this.repository = repository;
     }
 
     @Override
@@ -53,7 +51,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             String[] envValues = new String[] {
                 "BRANCH_NAME="+this.branchName,
-                "REPOSITORY="+this.repository,
+                "REPOSITORY="+this.repairnatorConfig.getRepository(),
                 "HUMAN_PATCH="+humanPatchStr
             };
 
