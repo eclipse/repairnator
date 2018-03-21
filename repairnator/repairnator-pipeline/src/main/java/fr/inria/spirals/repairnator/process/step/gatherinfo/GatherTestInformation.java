@@ -122,7 +122,7 @@ public class GatherTestInformation extends AbstractStep {
                                     String failureType = testCase.getFailureType();
 
                                     if (failureType.endsWith(":")) {
-                                        failureType = failureType.substring(0, failureType.length() - 2);
+                                        failureType = failureType.substring(0, failureType.length() - 1);
                                     }
 
                                     this.failureNames.add(failureType);
