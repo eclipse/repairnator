@@ -34,7 +34,7 @@ public class RunnablePipelineContainer implements Runnable {
     private TreatedBuildTracking treatedBuildTracking;
     private AbstractPoolManager poolManager;
     private String containerId;
-    String containerName;
+    private String containerName;
     private List<String> envValues;
     private Set<String> volumes;
 
@@ -54,7 +54,7 @@ public class RunnablePipelineContainer implements Runnable {
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.BEARS) {
             this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
         }
-        this.envValues.add("LOG_FILENAME="+containerName);
+        this.envValues.add("LOG_FILENAME="+this.containerName);
         this.envValues.add("GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"));
         this.envValues.add("GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"));
         this.envValues.add("RUN_ID="+this.repairnatorConfig.getRunId());
@@ -88,7 +88,7 @@ public class RunnablePipelineContainer implements Runnable {
 
 
             Map<String,String> labels = new HashMap<>();
-            labels.put("name",containerName);
+            labels.put("name",this.containerName);
             HostConfig hostConfig = HostConfig.builder().appendBinds(this.logDirectory+":/var/log").build();
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
@@ -98,7 +98,7 @@ public class RunnablePipelineContainer implements Runnable {
                     .labels(labels)
                     .build();
 
-            LOGGER.info("Create the container: "+containerName);
+            LOGGER.info("Create the container: "+this.containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
             this.volumes = containerConfig.volumeNames();
@@ -106,7 +106,7 @@ public class RunnablePipelineContainer implements Runnable {
             this.containerId = container.id();
             treatedBuildTracking.setContainerId(this.containerId);
 
-            LOGGER.info("Start the container: "+containerName);
+            LOGGER.info("Start the container: "+this.containerName);
             docker.startContainer(container.id());
 
             ContainerExit exitStatus = docker.waitContainer(this.containerId);
