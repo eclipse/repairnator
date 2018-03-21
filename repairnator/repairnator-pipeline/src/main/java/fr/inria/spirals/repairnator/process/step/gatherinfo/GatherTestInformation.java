@@ -116,7 +116,16 @@ public class GatherTestInformation extends AbstractStep {
 
                             for (ReportTestCase testCase : testSuite.getTestCases()) {
                                 if (testCase.hasFailure() || testCase.hasError()) {
-                                    this.failureNames.add(testCase.getFailureType());
+
+                                    // sometimes surefire reports a failureType on the form:
+                                    // "java.lang.NullPointerException:" 
+                                    String failureType = testCase.getFailureType();
+
+                                    if (failureType.endsWith(":")) {
+                                        failureType = failureType.substring(0, failureType.length() - 2);
+                                    }
+
+                                    this.failureNames.add(failureType);
                                     FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.hasError());
                                     FailureLocation failureLocation = null;
 

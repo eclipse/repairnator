@@ -215,7 +215,7 @@ public class TestGatherTestInformation {
 
         Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
 
-        assertThat(failureNames.contains("java.lang.NullPointerException"), is(true));
+        assertThat("Got the following errors: "+StringUtils.join(failureNames, ","), failureNames.contains("java.lang.NullPointerException"), is(true));
         assertThat(failureNames.size(), is(3));
 
         assertThat(jobStatus.getFailureLocations().size(), is(4));
