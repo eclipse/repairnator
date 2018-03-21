@@ -37,7 +37,7 @@ public class NPERepair extends AbstractStep {
     private boolean isThereNPE() {
         for (FailureLocation failureLocation : this.inspector.getJobStatus().getFailureLocations()) {
             for (FailureType failureType : failureLocation.getFailures()) {
-                if (failureType.getFailureName().equals("java.lang.NullPointerException")) {
+                if (failureType.getFailureName().startsWith("java.lang.NullPointerException")) {
                     return true;
                 }
             }

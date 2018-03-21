@@ -118,7 +118,7 @@ public class GatherTestInformation extends AbstractStep {
                                 if (testCase.hasFailure() || testCase.hasError()) {
 
                                     // sometimes surefire reports a failureType on the form:
-                                    // "java.lang.NullPointerException:" 
+                                    // "java.lang.NullPointerException:" we should avoid this case
                                     String failureType = testCase.getFailureType();
 
                                     if (failureType.endsWith(":")) {
