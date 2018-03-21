@@ -35,7 +35,6 @@ public class RunnablePipelineContainer implements Runnable {
     private AbstractPoolManager poolManager;
     private String containerId;
     String containerName;
-    String output;
     private List<String> envValues;
     private Set<String> volumes;
 
@@ -48,7 +47,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.treatedBuildTracking = treatedBuildTracking;
 
         this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId();
-        this.output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
+        String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
         this.envValues = new ArrayList<>();
         this.envValues.add("BUILD_ID="+this.inputBuildId.getBuggyBuildId());
