@@ -4,9 +4,9 @@ LABEL Description="Repairnator Pipeline docker image" Vendor="Spirals" Version="
 
 VOLUME ["/var/log/"]
 
-COPY ../shared-files/z3_for_linux /root/
-COPY ../shared-files/logback.xml /root/
-COPY ../shared-files/configure_git.sh /root/
+COPY z3_for_linux /root/
+COPY logback.xml /root/
+COPY configure_git.sh /root/
 COPY build_repairnator4Bears.sh /root/
 COPY pipeline_launcher4Bears.sh /root/
 
