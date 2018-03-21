@@ -28,7 +28,13 @@ public class BuildProject extends AbstractStep {
         this.getLogger().debug("Installing artifacts without test execution...");
         MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getSimpleName(), this.inspector, true);
 
-        int result = helper.run();
+        int result;
+        try {
+            result = helper.run();
+        } catch (InterruptedException e) {
+            this.addStepError("Error while building", e);
+            result = MavenHelper.MAVEN_ERROR;
+        }
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
             this.setPipelineState(PipelineState.BUILDABLE);

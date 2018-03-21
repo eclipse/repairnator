@@ -53,7 +53,12 @@ public class NPERepair extends AbstractStep {
             this.getLogger().info("NPE found, start NPEFix");
 
             MavenHelper mavenHelper = new MavenHelper(this.getPom(), NPEFIX_GOAL, null, this.getName(), this.getInspector(), true );
-            int status = mavenHelper.run();
+            int status = MavenHelper.MAVEN_ERROR;
+            try {
+                status = mavenHelper.run();
+            } catch (InterruptedException e) {
+                this.addStepError("Error while executing Maven goal", e);
+            }
 
             if (status == MavenHelper.MAVEN_ERROR) {
                 this.addStepError("Error while running NPE fix: maybe the project does not contain a NPE?");

@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +15,16 @@ import java.io.IOException;
 public abstract class MavenOutputHandler implements InvocationOutputHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private MavenHelper mavenHelper;
     protected ProjectInspector inspector;
     protected String name;
     private FileWriter fileWriter;
 
-    public MavenOutputHandler(ProjectInspector inspector, String name) {
-        this.inspector = inspector;
-        this.name = name;
+    public MavenOutputHandler(MavenHelper mavenHelper) {
+        this.mavenHelper = mavenHelper;
+        this.inspector = mavenHelper.getInspector();
+        this.name = mavenHelper.getName();
         this.initFileWriter();
     }
 
@@ -48,12 +52,12 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
             } catch (IOException e) {
                 this.getLogger().error("Error while writing to maven log", e);
             }
-
         }
     }
 
     @Override
     public void consumeLine(String s) {
+        this.mavenHelper.updateLastOutputDate();
         this.writeToFile(s + "\n");
     }
 }

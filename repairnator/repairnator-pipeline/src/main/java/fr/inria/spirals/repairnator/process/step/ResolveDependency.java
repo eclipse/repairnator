@@ -24,7 +24,12 @@ public class ResolveDependency extends AbstractStep {
         this.getLogger().debug("Installing artifacts without test execution...");
         MavenHelper helper = new MavenHelper(this.getPom(), "dependency:resolve", null, this.getClass().getSimpleName(), this.inspector, true);
 
-        int result = helper.run();
+        int result = MavenHelper.MAVEN_ERROR;
+        try {
+            result = helper.run();
+        } catch (InterruptedException e) {
+            this.addStepError("Error while executing Maven goal", e);
+        }
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
             this.setPipelineState(PipelineState.DEPENDENCY_RESOLVED);

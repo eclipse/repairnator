@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,8 @@ public class MavenFilterTestOutputHandler extends MavenFilterOutputHandler {
     private List<String> failingClasses;
     private boolean failingWithTest;
 
-    public MavenFilterTestOutputHandler(ProjectInspector inspector, String name) {
-        super(inspector, name);
+    public MavenFilterTestOutputHandler(MavenHelper mavenHelper) {
+        super(mavenHelper);
         this.mvnTestPattern = Pattern.compile(MVN_TEST_PATTERN);
         this.mvnGoalFailPattern = Pattern.compile(MVN_GOAL_FAILED_WITH_TEST_FAILURE);
 

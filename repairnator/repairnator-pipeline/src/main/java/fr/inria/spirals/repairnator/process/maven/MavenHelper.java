@@ -9,18 +9,15 @@ import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
-import org.apache.maven.shared.invoker.DefaultInvocationRequest;
-import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.apache.maven.shared.invoker.Invoker;
-import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -45,6 +42,7 @@ public class MavenHelper {
             "skip.gulp",
             "skip.bower"
     );
+    private static final int TIMEOUT_WITHOUT_OUTPUT = 10; // in minutes
 
     private final Logger logger = LoggerFactory.getLogger(MavenHelper.class);
 
@@ -53,6 +51,7 @@ public class MavenHelper {
     private Properties properties;
     private String name;
     private ProjectInspector inspector;
+    private Instant limitOutputDate;
 
     private InvocationOutputHandler errorHandler;
     private InvocationOutputHandler outputHandler;
@@ -65,11 +64,56 @@ public class MavenHelper {
         this.inspector = inspector;
 
         if (enableHandlers) {
-            this.errorHandler = new MavenErrorHandler(this.inspector, this.name);
-            this.outputHandler = new MavenFilterOutputHandler(this.inspector, this.name);
+            this.errorHandler = new MavenErrorHandler(this);
+            this.outputHandler = new MavenFilterOutputHandler(this);
         } else {
-            this.outputHandler = new MavenMuteOutputHandler(this.inspector, this.name);
+            this.outputHandler = new MavenMuteOutputHandler(this);
         }
+
+        this.updateProperties();
+    }
+
+    private void updateProperties() {
+        if (this.properties == null) {
+            this.properties = new Properties();
+        }
+
+        this.properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
+        for (String skip : SKIP_LIST) {
+            this.properties.setProperty(skip, "true");
+        }
+    }
+
+    public String getGoal() {
+        return goal;
+    }
+
+    public String getPomFile() {
+        return pomFile;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ProjectInspector getInspector() {
+        return inspector;
+    }
+
+    public InvocationOutputHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    public InvocationOutputHandler getOutputHandler() {
+        return outputHandler;
+    }
+
+    public void updateLastOutputDate() {
+        this.limitOutputDate = new Date().toInstant().plus(TIMEOUT_WITHOUT_OUTPUT, ChronoUnit.MINUTES);
     }
 
     public void setErrorHandler(InvocationOutputHandler errorHandler) {
@@ -90,37 +134,23 @@ public class MavenHelper {
         return new DefaultModelBuilderFactory().newInstance().build(req).getEffectiveModel();
     }
 
-    public int run() {
-        InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile(new File(this.pomFile));
-        request.setGoals(Arrays.asList(this.goal));
+    public int run() throws InterruptedException {
+        RunnableMavenInvoker runnableMavenInvoker = new RunnableMavenInvoker(this);
+        Thread t = new Thread(runnableMavenInvoker);
+        this.updateLastOutputDate();
+        t.start();
 
-        if (properties == null) {
-            properties = new Properties();
+        while (t.isAlive()) {
+            Instant now = new Date().toInstant();
+
+            if (now.isAfter(this.limitOutputDate)) {
+                t.interrupt();
+                throw new InterruptedException("Timeout occured because no output in the last "+TIMEOUT_WITHOUT_OUTPUT+" minutes.");
+            } else {
+                Thread.sleep(1000);
+            }
         }
 
-        properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
-        for (String skip : SKIP_LIST) {
-            properties.setProperty(skip, "true");
-        }
-        request.setProperties(properties);
-
-        Invoker invoker = new DefaultInvoker();
-
-        if (this.errorHandler != null) {
-            invoker.setErrorHandler(this.errorHandler);
-        }
-        invoker.setOutputHandler(this.outputHandler);
-
-        try {
-            InvocationResult result = invoker.execute(request);
-            return result.getExitCode();
-        } catch (MavenInvocationException e) {
-            this.logger.error("Error while executing goal :" + this.goal + " on the following pom file: " + this.pomFile
-                    + ". Properties: " + this.properties);
-            this.logger.debug(e.getMessage());
-            this.inspector.getJobStatus().addStepError(name, e.getMessage());
-            return MAVEN_ERROR;
-        }
+        return runnableMavenInvoker.getExitCode();
     }
 }
