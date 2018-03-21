@@ -179,12 +179,8 @@ public class RTLauncher {
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
 
-        if (this.config.getDuration() != null) {
-            rtScanner.setDuration(this.config.getDuration());
-
-            if (this.endProcessNotifier != null) {
-                rtScanner.setEndProcessNotifier(this.endProcessNotifier);
-            }
+        if (this.config.getDuration() != null && this.endProcessNotifier != null) {
+            rtScanner.setEndProcessNotifier(this.endProcessNotifier);
         }
 
         rtScanner.initBuildRunner();

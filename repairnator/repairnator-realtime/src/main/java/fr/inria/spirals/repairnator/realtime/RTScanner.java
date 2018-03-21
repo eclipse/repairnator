@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ public class RTScanner {
     private String runId;
     private List<SerializerEngine> engines;
     private BlacklistedSerializer blacklistedSerializer;
-    private Duration duration;
     private EndProcessNotifier endProcessNotifier;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
@@ -60,10 +58,6 @@ public class RTScanner {
         this.inspectJobs.setSleepTime(this.config.getJobSleepTime());
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
-    }
-
-    public void setDuration(Duration duration) {
-        this.duration = duration;
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -140,12 +134,12 @@ public class RTScanner {
             new Thread(this.inspectJobs).start();
             this.running = true;
 
-            if (this.duration != null) {
+            if (this.config.getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.duration, this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.config.getDuration(), this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.duration, this.inspectBuilds, this.inspectJobs, this.buildRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.config.getDuration(), this.inspectBuilds, this.inspectJobs, this.buildRunner);
                 }
 
                 new Thread(inspectProcessDuration).start();
