@@ -194,7 +194,6 @@ public class RTLauncher {
         BuildRunner buildRunner = rtScanner.getBuildRunner();
         buildRunner.setDockerOutputDir(this.config.getLogDirectory());
         buildRunner.setRunId(runId);
-        buildRunner.setCreateOutputDir(this.config.isCreateOutputDir());
         buildRunner.setEngines(this.engines);
         buildRunner.setDockerImageName(this.config.getDockerImageName());
         buildRunner.initExecutorService(this.config.getNbThreads());

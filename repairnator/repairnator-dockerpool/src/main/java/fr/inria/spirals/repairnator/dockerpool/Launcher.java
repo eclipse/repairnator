@@ -210,7 +210,6 @@ public class Launcher extends AbstractPoolManager {
 
         this.setDockerOutputDir(this.config.getLogDirectory());
         this.setRunId(runId);
-        this.setCreateOutputDir(this.config.isCreateOutputDir());
         this.setEngines(this.engines);
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
