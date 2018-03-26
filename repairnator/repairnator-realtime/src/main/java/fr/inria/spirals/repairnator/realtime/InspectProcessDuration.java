@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +19,13 @@ public class InspectProcessDuration implements Runnable {
     private InspectJobs inspectJobs;
     private BuildRunner buildRunner;
 
-    public InspectProcessDuration(Duration duration, InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner, EndProcessNotifier endProcessNotifier) {
-        this(duration, inspectBuilds, inspectJobs, buildRunner);
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner, EndProcessNotifier endProcessNotifier) {
+        this(inspectBuilds, inspectJobs, buildRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
 
-    public InspectProcessDuration(Duration duration, InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner) {
-        this.duration = duration;
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner) {
+        this.duration = RepairnatorConfig.getInstance().getDuration();
         this.inspectBuilds = inspectBuilds;
         this.inspectJobs = inspectJobs;
         this.buildRunner = buildRunner;

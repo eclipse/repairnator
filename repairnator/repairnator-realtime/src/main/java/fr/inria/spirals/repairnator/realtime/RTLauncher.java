@@ -183,8 +183,6 @@ public class RTLauncher {
             rtScanner.setEndProcessNotifier(this.endProcessNotifier);
         }
 
-        rtScanner.initBuildRunner();
-
         if (this.config.getWhiteList() != null) {
             rtScanner.initWhiteListedRepository(this.config.getWhiteList());
         }
