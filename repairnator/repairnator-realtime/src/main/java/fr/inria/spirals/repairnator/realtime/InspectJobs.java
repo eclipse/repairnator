@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Job;
 import fr.inria.jtravis.helpers.JobHelper;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +18,7 @@ public class InspectJobs implements Runnable {
 
     public InspectJobs(RTScanner scanner) {
         this.rtScanner = scanner;
-        this.sleepTime = -1;
-    }
-
-    public void setSleepTime(int sleepTime) {
-        this.sleepTime = sleepTime;
+        this.sleepTime = RepairnatorConfig.getInstance().getJobSleepTime();
     }
 
     public void switchOff() {

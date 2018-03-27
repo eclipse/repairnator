@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildStatus;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.realtime.serializer.WatchedBuildSerializer;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.slf4j.Logger;
@@ -28,21 +29,13 @@ public class InspectBuilds implements Runnable {
 
     public InspectBuilds(RTScanner rtScanner) {
         this.rtScanner = rtScanner;
-        this.sleepTime = -1;
-        this.maxSubmittedBuilds = -1;
+        this.sleepTime = RepairnatorConfig.getInstance().getBuildSleepTime();
+        this.maxSubmittedBuilds = RepairnatorConfig.getInstance().getMaxInspectedBuilds();
         this.watchedBuildSerializer = new WatchedBuildSerializer(this.rtScanner.getEngines(), this.rtScanner);
     }
 
     public void switchOff() {
         this.shouldStop = true;
-    }
-
-    public void setSleepTime(int sleepTime) {
-        this.sleepTime = sleepTime;
-    }
-
-    public void setMaxSubmittedBuilds(int maxSubmittedBuilds) {
-        this.maxSubmittedBuilds = maxSubmittedBuilds;
     }
 
     public boolean maxSubmittedBuildsReached() {
