@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set --env
+set -e
 
 function usage {
     echo "This script aims at launching repairnator on a given TravisCI build id"
