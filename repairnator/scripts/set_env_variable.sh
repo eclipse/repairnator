@@ -4,12 +4,8 @@
 
 # Mandatory elements for all components of Repairnator
 
-export HOME_REPAIR= # The home directory for the following paths (this path must exist)
-export REPAIRNATOR_GH_REPO_PATH= # Path of the local cloned repository for repairnator (e.g.: $HOME_REPAIR/github/repairnator/repairnator)
-export M2_HOME= # Path to maven home directory
-export GITHUB_LOGIN= # Github Login to use github API
-export GITHUB_OAUTH= # Github personal token (https://github.com/settings/tokens)
-export REPAIR_MODE=repair # Available modes are "repair" or "bears". This is used both for scanner and pipeline
+export GITHUB_OAUTH=XXXX # Github personal token (https://github.com/settings/tokens)
+export HOME_REPAIR=$HOME/repairnator # The home directory for the following pathes
 
 # Optional configuration for all components of Repairnator
 
@@ -26,8 +22,8 @@ export RUN_ID_SUFFIX= # A suffix to add to the run id (useful to retrieve a spec
 
 #### Scanner configuration
 
-export REPAIR_PROJECT_LIST_PATH= # The list of project slug to scan
-export SCANNER_NB_HOURS= # Number of hours to inspect to get last builds (e.g. 4 will mean 4 hours in the past)
+export REPAIR_PROJECT_LIST_PATH=$HOME_REPAIR/project_list.txt # The list of project slug to scan
+export SCANNER_NB_HOURS=1 # Number of hours to inspect to get last builds (e.g. 4 will mean 4 hours in the past)
 #export LOOK_FROM_DATE= # Use with the following one, when wanting to scan a period of time (format: dd/MM/yyyy)
 #export LOOK_TO_DATE=
 
@@ -38,9 +34,9 @@ export DAY_TIMEOUT=1 # Global timeout to stop the docker execution
 
 #### Realtime scanner configuration
 
-export WHITELIST_PATH= # Path of the whitelist of projects (mandatory but the file does not have to exist)
-export BLACKLIST_PATH= # Path of the blacklist (mandatory but the file does not have to exist)
-export DURATION= # Duration execution of the process on the ISO-8601 duration format: PWdTXhYmZs (e.g. PT1h for 1 hour)
+export WHITELIST_PATH=$HOME_REPAIR/whitelist.txt # Path of the whitelist of projects (mandatory but the file does not have to exist)
+export BLACKLIST_PATH=$HOME_REPAIR/blacklist.txt # Path of the blacklist (mandatory but the file does not have to exist)
+export DURATION=PT10m # Duration execution of the process on the ISO-8601 duration format: PWdTXhYmZs (e.g. PT1h for 1 hour)
 export JOB_SLEEP_TIME=10 # Sleep time in seconds for requesting /job endpoint in Travis
 export BUILD_SLEEP_TIME=10 # Sleep time in seconds for refreshing builds status
 export LIMIT_INSPECTED_BUILDS=100 # Maximum number of builds under inspection
@@ -81,7 +77,13 @@ export REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H
 export LOG_DIR=$ROOT_LOG_DIR`date "+%Y-%m-%d_%H%M"` # Log directory: it will contain several logs and serialized files
 export DOCKER_LOG_DIR=$LOG_DIR # Log directory for docker containers (most of the time, it should be the same as LOG_DIR, but sometimes if you use distant host, e.g. g5k you need to specify another value)
 
+export M2_HOME=/opt/maven # Path to the maven home: this value is only used when executing directly repairnator-pipeline.jar (outside a docker container)
+export REPAIRNATOR_ROOT_CLONE=$HOME_REPAIR/github
+export REPAIRNATOR_GITHUB_DIR=$REPAIRNATOR_ROOT_CLONE/repairnator
+export REPAIRNATOR_GH_REPO_PATH=$REPAIRNATOR_GITHUB_DIR/repairnator # Path of the local cloned repository for repairnator
+
 ### Switches
 
+export REPAIR_MODE=repair # Available modes are "repair" or "bears". This is used both for scanner and pipeline
 export SKIP_LAUNCH_REPAIRNATOR=0 # If set to 1, skip the launch of docker pool: it will only launch the scanner. Note that this option might be overriden in some scripts.
 export CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers

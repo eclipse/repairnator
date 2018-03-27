@@ -198,7 +198,6 @@ public class Launcher {
         }
         this.config.setZ3solverPath(arguments.getFile("z3").getPath());
         this.config.setWorkspacePath(arguments.getString("workspace"));
-        this.config.setGithubLogin(arguments.getString("ghLogin"));
         this.config.setGithubToken(arguments.getString("ghOauth"));
         if (arguments.getFile("projectsToIgnore") != null) {
             this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
