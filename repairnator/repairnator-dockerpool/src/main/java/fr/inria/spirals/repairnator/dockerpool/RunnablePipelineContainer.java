@@ -32,34 +32,29 @@ public class RunnablePipelineContainer implements Runnable {
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
-    private boolean skipDelete;
-    private boolean createOutputDir;
     private AbstractPoolManager poolManager;
     private String containerId;
-    String containerName;
-    String output;
+    private String containerName;
     private List<String> envValues;
     private Set<String> volumes;
 
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking, boolean skipDelete, boolean createOutputDir) {
+    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.inputBuildId = inputBuildId;
         this.logDirectory = logDirectory;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
-        this.skipDelete = skipDelete;
-        this.createOutputDir = createOutputDir;
 
         this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId();
-        this.output = (createOutputDir) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
+        String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
         this.envValues = new ArrayList<>();
         this.envValues.add("BUILD_ID="+this.inputBuildId.getBuggyBuildId());
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.BEARS) {
             this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
         }
-        this.envValues.add("LOG_FILENAME="+containerName);
+        this.envValues.add("LOG_FILENAME="+this.containerName);
         this.envValues.add("GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"));
         this.envValues.add("GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"));
         this.envValues.add("RUN_ID="+this.repairnatorConfig.getRunId());
@@ -93,7 +88,7 @@ public class RunnablePipelineContainer implements Runnable {
 
 
             Map<String,String> labels = new HashMap<>();
-            labels.put("name",containerName);
+            labels.put("name",this.containerName);
             HostConfig hostConfig = HostConfig.builder().appendBinds(this.logDirectory+":/var/log").build();
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
@@ -103,7 +98,7 @@ public class RunnablePipelineContainer implements Runnable {
                     .labels(labels)
                     .build();
 
-            LOGGER.info("Create the container: "+containerName);
+            LOGGER.info("Create the container: "+this.containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
             this.volumes = containerConfig.volumeNames();
@@ -111,14 +106,14 @@ public class RunnablePipelineContainer implements Runnable {
             this.containerId = container.id();
             treatedBuildTracking.setContainerId(this.containerId);
 
-            LOGGER.info("Start the container: "+containerName);
+            LOGGER.info("Start the container: "+this.containerName);
             docker.startContainer(container.id());
 
             ContainerExit exitStatus = docker.waitContainer(this.containerId);
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
-            if (!skipDelete && exitStatus.statusCode() == 0) {
+            if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(this.containerId);
                 this.removeVolumes(docker);

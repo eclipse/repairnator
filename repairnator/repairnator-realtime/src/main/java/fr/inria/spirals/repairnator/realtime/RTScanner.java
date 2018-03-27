@@ -7,6 +7,7 @@ import fr.inria.jtravis.entities.Log;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.RepositoryHelper;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -17,7 +18,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,6 +28,8 @@ public class RTScanner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
+
+    private RepairnatorConfig config;
     private final List<Integer> blackListedRepository;
     private final List<Integer> whiteListedRepository;
     private final Map<Integer,Date> tempBlackList;
@@ -40,10 +42,10 @@ public class RTScanner {
     private String runId;
     private List<SerializerEngine> engines;
     private BlacklistedSerializer blacklistedSerializer;
-    private Duration duration;
     private EndProcessNotifier endProcessNotifier;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
+        this.config = RepairnatorConfig.getInstance();
         this.engines = engines;
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
@@ -53,10 +55,6 @@ public class RTScanner {
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
-    }
-
-    public void setDuration(Duration duration) {
-        this.duration = duration;
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -124,12 +122,12 @@ public class RTScanner {
             new Thread(this.inspectJobs).start();
             this.running = true;
 
-            if (this.duration != null) {
+            if (this.config.getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.duration, this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.duration, this.inspectBuilds, this.inspectJobs, this.buildRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner);
                 }
 
                 new Thread(inspectProcessDuration).start();

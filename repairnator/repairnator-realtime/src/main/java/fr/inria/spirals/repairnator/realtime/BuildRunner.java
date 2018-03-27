@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.AbstractPoolManager;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import org.slf4j.Logger;
@@ -27,6 +28,12 @@ public class BuildRunner extends AbstractPoolManager {
 
     public BuildRunner(RTScanner rtScanner) {
         this.rtScanner = rtScanner;
+        LOGGER.info("Init build runner");
+        super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
+        super.setRunId(RepairnatorConfig.getInstance().getRunId());
+        super.setEngines(this.rtScanner.getEngines());
+        this.setDockerImageName(RepairnatorConfig.getInstance().getDockerImageName());
+        this.initExecutorService(RepairnatorConfig.getInstance().getNbThreads());
     }
 
     public void setDockerImageName(String dockerImageName) {
