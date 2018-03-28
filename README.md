@@ -68,6 +68,7 @@ docker logs -f 849ef603b056 # is the name of the docker container
 ls $HOME_REPAIR/logs
 ```
 
+For more information about the usage of Repairnator check out [this page](/doc/usage.md).
 
 ### Launch Repairnator to analyze and repair failing builds in real-time
 

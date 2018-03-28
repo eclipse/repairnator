@@ -149,13 +149,6 @@ public class Launcher {
         opt2.setHelp("Specify a path to be used by the pipeline at processing things like to clone the project of the build id being processed");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("ghLogin");
-        opt2.setLongFlag("ghLogin");
-        opt2.setRequired(true);
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify login for Github use");
-        jsap.registerParameter(opt2);
-
         opt2 = new FlaggedOption("ghOauth");
         opt2.setLongFlag("ghOauth");
         opt2.setRequired(true);

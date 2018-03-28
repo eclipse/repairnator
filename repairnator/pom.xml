@@ -19,12 +19,12 @@
 
     <repositories>
         <repository>
-            <id>tdurieux.github.io/maven-repository-snapshot</id>
+            <id>tdurieux-maven-repository-snapshot</id>
             <name>tdurieux.github.io maven-repository</name>
             <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
         </repository>
         <repository>
-            <id>tdurieux.github.io/maven-repository-release</id>
+            <id>tdurieux-maven-repository-release</id>
             <name>tdurieux.github.io maven-repository</name>
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
