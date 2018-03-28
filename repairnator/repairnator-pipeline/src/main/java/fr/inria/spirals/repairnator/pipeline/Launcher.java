@@ -67,6 +67,7 @@ public class Launcher {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
+        LauncherUtils.checkEnvironmentVariable(Utils.M2_HOME, jsap, LauncherType.PIPELINE);
         this.initConfig(arguments);
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
@@ -74,7 +75,7 @@ public class Launcher {
             this.checkNopolSolverPath(jsap);
             LOGGER.info("The pipeline will try to repair the following buildid: "+this.config.getBuildId());
         } else {
-            this.checkNextBuildId(jsap, arguments);
+            this.checkNextBuildId(jsap);
             LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
         }
 
@@ -198,14 +199,12 @@ public class Launcher {
         }
         this.config.setZ3solverPath(arguments.getFile("z3").getPath());
         this.config.setWorkspacePath(arguments.getString("workspace"));
-        this.config.setGithubLogin(arguments.getString("ghLogin"));
         this.config.setGithubToken(arguments.getString("ghOauth"));
         if (arguments.getFile("projectsToIgnore") != null) {
             this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
 
         GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
-        GithubTokenHelper.getInstance().setGithubLogin(this.config.getGithubLogin());
     }
 
     private void checkToolsLoaded(JSAP jsap) {
@@ -236,7 +235,7 @@ public class Launcher {
         }
     }
 
-    private void checkNextBuildId(JSAP jsap, JSAPResult arguments) {
+    private void checkNextBuildId(JSAP jsap) {
         if (this.config.getNextBuildId() == InputBuildId.NO_PATCH) {
             System.err.println("A pair of builds needs to be provided in BEARS mode.");
             LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);

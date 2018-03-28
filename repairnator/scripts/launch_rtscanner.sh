@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 #!/bin/bash
 set -e
 
@@ -33,6 +31,13 @@ if [ -z "$RUN_ID_SUFFIX" ]; then
     RUN_ID=`uuidgen`
 else
     RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
+fi
+
+if [ ! -f "$WHITELIST_PATH" ]; then
+    touch $WHITELIST_PATH
+fi
+if [ ! -f "$BLACKLIST_PATH" ]; then
+    touch $BLACKLIST_PATH
 fi
 
 echo "This will be run with the following RUN_ID: $RUN_ID"

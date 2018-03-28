@@ -16,7 +16,10 @@ import java.util.List;
  * Created by urli on 02/02/2017.
  */
 public class Utils {
-    public static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH", "GITHUB_LOGIN" };
+
+    public static final String GITHUB_OAUTH = "GITHUB_OAUTH";
+    public static final String M2_HOME = "M2_HOME";
+
     private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");

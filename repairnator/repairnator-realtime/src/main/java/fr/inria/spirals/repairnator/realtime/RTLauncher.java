@@ -32,7 +32,6 @@ public class RTLauncher {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.REALTIME);
-        LauncherUtils.checkEnvironmentVariables(jsap, LauncherType.REALTIME);
         this.launcherMode = LauncherMode.REPAIR;
 
         this.initConfig(arguments);

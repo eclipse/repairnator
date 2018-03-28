@@ -1,8 +1,11 @@
 package fr.inria.spirals.repairnator.config;
 
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
@@ -245,14 +248,6 @@ public class RepairnatorConfig {
         this.workspacePath = workspacePath;
     }
 
-    public String getGithubLogin() {
-        return githubLogin;
-    }
-
-    public void setGithubLogin(String githubLogin) {
-        this.githubLogin = githubLogin;
-    }
-
     public String getGithubToken() {
         return githubToken;
     }
@@ -407,6 +402,11 @@ public class RepairnatorConfig {
 
     public static void setInstance(RepairnatorConfig instance) {
         RepairnatorConfig.instance = instance;
+    }
+
+    public GitHub getGithub() throws IOException {
+        GitHub gitHub = GitHubBuilder.fromEnvironment().withOAuthToken(this.getGithubToken()).build();
+        return gitHub;
     }
 
     @Override

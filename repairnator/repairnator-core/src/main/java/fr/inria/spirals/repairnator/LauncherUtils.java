@@ -330,14 +330,14 @@ public class LauncherUtils {
         if (getArgHelp(arguments)) {
             printUsage(jsap, launcherType);
         }
+
+        checkEnvironmentVariable(Utils.GITHUB_OAUTH, jsap, launcherType);
     }
 
-    public static void checkEnvironmentVariables(JSAP jsap, LauncherType launcherType) {
-        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
-            if (System.getenv(envVar) == null || System.getenv(envVar).equals("")) {
-                System.err.println("You must set the following environment variable: "+envVar);
-                LauncherUtils.printUsage(jsap, launcherType);
-            }
+    public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
+        if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
+            System.err.println("You must set the following environment variable: "+envVariable);
+            LauncherUtils.printUsage(jsap, launcherType);
         }
     }
 
@@ -349,11 +349,10 @@ public class LauncherUtils {
         System.err.println();
         System.err.println(jsap.getHelp());
 
-        if (launcherType == LauncherType.DOCKERPOOL || launcherType == LauncherType.REALTIME) {
-            System.err.println("Please note that the following environment variables must be set: ");
-            for (String env : Utils.ENVIRONMENT_VARIABLES) {
-                System.err.println(" - " + env);
-            }
+        System.err.println("Please note that the " + Utils.GITHUB_OAUTH + " environment variables must be set.");
+
+        if (launcherType == LauncherType.PIPELINE) {
+            System.err.println("The environment variable " + Utils.M2_HOME + " should be set and refer to the path of your maven home installation.");
             System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
         }
 
