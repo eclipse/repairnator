@@ -1,8 +1,9 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.entities.PRInformation;
+import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by fernanda on 02/03/17.
@@ -68,47 +70,49 @@ public abstract class CheckoutRepository extends AbstractStep {
             }
 
             if (build.isPullRequest()) {
-                PRInformation prInformation = build.getPRInformation();
+                Optional<PullRequest> obsPrInformation = RepairnatorConfig.getInstance().getJTravis().pullRequest().fromBuild(build);
 
-                if (prInformation != null) {
+                if (obsPrInformation.isPresent()) {
+                    PullRequest prInformation = obsPrInformation.get();
                     if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
                         this.writeProperty("is-pr", "true");
-                        this.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getSlug());
-                        this.writeProperty("pr-head-commit-id", prInformation.getHead().getSha());
-                        this.writeProperty("pr-head-commit-id-url", prInformation.getHead().getCompareUrl());
-                        this.writeProperty("pr-base-commit-id", prInformation.getBase().getSha());
-                        this.writeProperty("pr-base-commit-id-url", prInformation.getBase().getCompareUrl());
+                        this.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getFullName());
+                        this.writeProperty("pr-head-commit-id", prInformation.getHead().getSHA1());
+                        this.writeProperty("pr-head-commit-id-url", prInformation.getHead().getHtmlUrl());
+                        this.writeProperty("pr-base-commit-id", prInformation.getBase().getSHA1());
+                        this.writeProperty("pr-base-commit-id-url", prInformation.getBase().getHtmlUrl());
                         this.writeProperty("pr-id", build.getPullRequestNumber());
                     }
+
+                    gitHelper.addAndCommitRepairnatorLogAndProperties(this.getInspector().getJobStatus(), git, "After getting PR information");
+
+                    String repository = this.inspector.getRepoSlug();
+                    this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
+
+                    List<String> pathes;
+                    if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
+                        pathes = new ArrayList<String>();
+                        for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
+                            URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
+                            URI pathURI = path.getCanonicalFile().toURI();
+                            String relativePath = gitRepoURI.relativize(pathURI).getPath();
+
+                            pathes.add(relativePath);
+                        }
+                    } else {
+                        pathes = null;
+                    }
+
+                    boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, pathes);
+                    if (!successfulMerge) {
+                        this.getLogger().debug("Error while merging two commits to reproduce the PR.");
+                        this.shouldStop = true;
+                    }
+
                 } else {
                     this.addStepError("Error while getting the PR information...");
                     this.shouldStop = true;
                     return;
-                }
-
-                gitHelper.addAndCommitRepairnatorLogAndProperties(this.getInspector().getJobStatus(), git, "After getting PR information");
-
-                String repository = this.inspector.getRepoSlug();
-                this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
-
-                List<String> pathes;
-                if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
-                    pathes = new ArrayList<String>();
-                    for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
-                        URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
-                        URI pathURI = path.getCanonicalFile().toURI();
-                        String relativePath = gitRepoURI.relativize(pathURI).getPath();
-
-                        pathes.add(relativePath);
-                    }
-                } else {
-                    pathes = null;
-                }
-
-                boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, pathes);
-                if (!successfulMerge) {
-                    this.getLogger().debug("Error while merging two commits to reproduce the PR.");
-                    this.shouldStop = true;
                 }
             } else {
                 String commitCheckout = build.getCommit().getSha();

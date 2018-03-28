@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.Commit;
-import fr.inria.jtravis.entities.PRInformation;
+import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -233,8 +233,8 @@ public class GitHelper {
 
                     // do the commit
                     RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(buildCommit.getAuthorName(), buildCommit.getAuthorEmail())
-                            .setCommitter(buildCommit.getCommitterName(), buildCommit.getCommitterEmail())
+                            .setAuthor(buildCommit.getAuthor().getName(), "noreply@github.com")
+                            .setCommitter(buildCommit.getCommitter().getName(), "noreply@github.com")
                             .setMessage(buildCommit.getMessage()
                                     + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
                             .call();
@@ -297,9 +297,9 @@ public class GitHelper {
                 + " Reset hour: " + dateFormat.format(rateLimit.reset));
     }
 
-    public boolean mergeTwoCommitsForPR(Git git, Build build, PRInformation prInformation, String repository, AbstractStep step, List<String> pathes) {
+    public boolean mergeTwoCommitsForPR(Git git, Build build, PullRequest prInformation, String repository, AbstractStep step, List<String> pathes) {
         try {
-            String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getSlug() + ".git";
+            String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getFullName() + ".git";
 
             RemoteAddCommand remoteBranchCommand = git.remoteAdd();
             remoteBranchCommand.setName("PR");
@@ -308,19 +308,19 @@ public class GitHelper {
 
             git.fetch().setRemote("PR").call();
 
-            String commitHeadSha = this.testCommitExistence(git, prInformation.getHead().getSha(), step, build);
-            String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSha(), step, build);
+            String commitHeadSha = this.testCommitExistence(git, prInformation.getHead().getSHA1(), step, build);
+            String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSHA1(), step, build);
 
             if (commitHeadSha == null) {
                 step.addStepError("Commit head ref cannot be retrieved in the repository: "
-                        + prInformation.getHead().getSha() + ". Operation aborted.");
+                        + prInformation.getHead().getSHA1() + ". Operation aborted.");
                 this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getHead().toString());
                 return false;
             }
 
             if (commitBaseSha == null) {
                 step.addStepError("Commit base ref cannot be retrieved in the repository: "
-                        + prInformation.getBase().getSha() + ". Operation aborted.");
+                        + prInformation.getBase().getSHA1() + ". Operation aborted.");
                 this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getBase().toString());
                 return false;
             }

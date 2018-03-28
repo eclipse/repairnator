@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.config;
 
+import fr.inria.jtravis.JTravis;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
@@ -407,6 +408,10 @@ public class RepairnatorConfig {
     public GitHub getGithub() throws IOException {
         GitHub gitHub = GitHubBuilder.fromEnvironment().withOAuthToken(this.getGithubToken()).build();
         return gitHub;
+    }
+
+    public JTravis getJTravis() {
+        return JTravis.builder().setGithubToken(this.getGithubToken()).build();
     }
 
     @Override

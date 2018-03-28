@@ -4,9 +4,7 @@ import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.entities.BuildStatus;
 import fr.inria.jtravis.helpers.BuildHelper;
-import fr.inria.jtravis.helpers.GithubTokenHelper;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
@@ -196,8 +194,6 @@ public class Launcher {
         if (arguments.getFile("projectsToIgnore") != null) {
             this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
-
-        GithubTokenHelper.getInstance().setGithubOauth(this.config.getGithubToken());
     }
 
     private void checkToolsLoaded(JSAP jsap) {
