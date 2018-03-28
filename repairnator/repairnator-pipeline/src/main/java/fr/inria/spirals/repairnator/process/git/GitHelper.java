@@ -174,7 +174,7 @@ public class GitHelper {
     private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
             addAndCommitRepairnatorLogAndProperties(step.getInspector().getJobStatus(), git, "Commit done before retrieving a commit from GH API.");
-            GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
+            GitHub gh = RepairnatorConfig.getInstance().getGithub();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
 
             String lastKnowParent = getLastKnowParent(gh, ghRepo, git, oldCommitSha, step);
@@ -350,7 +350,7 @@ public class GitHelper {
     }
 
     public String forkRepository(String repository, AbstractStep step) throws IOException {
-        GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
+        GitHub gh = RepairnatorConfig.getInstance().getGithub();
         showGitHubRateInformation(gh, step);
         if (gh.getRateLimit().remaining > 10) {
             GHRepository originalRepo = gh.getRepository(repository);

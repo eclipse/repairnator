@@ -44,7 +44,6 @@ public class Launcher extends AbstractPoolManager {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.DOCKERPOOL);
-        LauncherUtils.checkEnvironmentVariables(jsap, LauncherType.DOCKERPOOL);
 
         this.initConfig(arguments);
         this.initSerializerEngines();

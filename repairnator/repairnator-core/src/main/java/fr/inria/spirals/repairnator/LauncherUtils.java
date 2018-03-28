@@ -330,6 +330,8 @@ public class LauncherUtils {
         if (getArgHelp(arguments)) {
             printUsage(jsap, launcherType);
         }
+
+        checkEnvironmentVariable(Utils.GITHUB_OAUTH, jsap, launcherType);
     }
 
     public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
@@ -347,9 +349,10 @@ public class LauncherUtils {
         System.err.println();
         System.err.println(jsap.getHelp());
 
-        System.err.println("Please note that the GITHUB_OAUTH environment variables must be set.");
+        System.err.println("Please note that the " + Utils.GITHUB_OAUTH + " environment variables must be set.");
 
         if (launcherType == LauncherType.PIPELINE) {
+            System.err.println("The environment variable " + Utils.M2_HOME + " should be set and refer to the path of your maven home installation.");
             System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
         }
 
