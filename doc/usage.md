@@ -1,7 +1,7 @@
 # Usages
 
 This page describes the usage of each tool developped as part of Repairnator. 
-If you want to quickly start to use it, we advise you to first have a look on the [quickstart](/#quickstart).
+If you want to quickly start to use it, we advise you to first have a look on the [quickstart](/README.md#quickstart).
 
 ## Scripts
 

@@ -68,8 +68,6 @@ docker logs -f 849ef603b056 # is the name of the docker container
 ls $HOME_REPAIR/logs
 ```
 
-For more information about the usage of Repairnator check out [this page](/doc/usage.md).
-
 ### Launch Repairnator to analyze and repair failing builds in real-time
 
 You can launch Repairnator to analyze TravisCI builds in realtime and to repair failing ones.
@@ -79,10 +77,13 @@ First open in a file editor `repairnator/scripts/set_env_variable.sh` and edit t
 
 Then just run the script `launch_rtscanner.sh`.
 
+For more information about the usage of Repairnator check out [this page](/doc/usage.md).
+
 ## Content of the repository
 
 This repository is organized as following:
 
+  * [doc](/doc) contains some documentation about Repairnator and its usage
   * [Repairnator](/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
   * [bears-usage](/bears-usage) is a side project dedicated to gather data from repairnator.json files
   * [resources](/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
