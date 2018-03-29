@@ -3,7 +3,9 @@ package fr.inria.spirals.repairnator.pipeline;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
+import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.entities.StateType;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
@@ -36,6 +38,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -273,8 +276,14 @@ public class Launcher {
     }
 
     private void getBuildToBeInspected() {
-        Build buggyBuild = BuildHelper.getBuildFromId(this.config.getBuildId(), null);
+        JTravis jTravis = this.config.getJTravis();
+        Optional<Build> optionalBuild = jTravis.build().fromId(this.config.getBuildId());
+        if (!optionalBuild.isPresent()) {
+            LOGGER.error("Error while retrieving the buggy build.");
+            System.exit(-1);
+        }
 
+        Build buggyBuild = optionalBuild.get();
         if (buggyBuild.getFinishedAt() == null) {
             LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
             System.exit(-1);
@@ -282,24 +291,24 @@ public class Launcher {
         String runId = this.config.getRunId();
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
-            Build patchedBuild = BuildHelper.getBuildFromId(this.config.getNextBuildId(), null);
-            if (patchedBuild != null) {
-                LOGGER.info("The patched build (" + patchedBuild.getId() + ") was successfully retrieved from Travis.");
-            } else {
+            Optional<Build> optionalBuildPatch = jTravis.build().fromId(this.config.getNextBuildId());
+            if (!optionalBuildPatch.isPresent()) {
                 LOGGER.error("Error while getting patched build: obtained null value. The process will exit now.");
                 System.exit(-1);
             }
 
-            if (buggyBuild.getBuildStatus() == BuildStatus.FAILED) {
+            Build patchedBuild = optionalBuildPatch.get();
+            LOGGER.info("The patched build (" + patchedBuild.getId() + ") was successfully retrieved from Travis.");
+
+            if (buggyBuild.getState() == StateType.FAILED) {
                 this.buildToBeInspected = new BuildToBeInspected(buggyBuild, patchedBuild, ScannedBuildStatus.FAILING_AND_PASSING, runId);
             } else {
                 this.buildToBeInspected = new BuildToBeInspected(buggyBuild, patchedBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, runId);
             }
         } else {
-            Build nextPassing = BuildHelper.getNextBuildOfSameBranchOfStatusAfterBuild(buggyBuild, BuildStatus.PASSED);
-
-            if (nextPassing != null) {
-                this.buildToBeInspected = new BuildToBeInspected(buggyBuild, nextPassing, ScannedBuildStatus.FAILING_AND_PASSING, runId);
+            Optional<Build> optionalNextPassing = jTravis.build().getAfter(buggyBuild, true, StateType.PASSED);
+            if (optionalNextPassing.isPresent()) {
+                this.buildToBeInspected = new BuildToBeInspected(buggyBuild, optionalNextPassing.get(), ScannedBuildStatus.FAILING_AND_PASSING, runId);
             } else {
                 this.buildToBeInspected = new BuildToBeInspected(buggyBuild, null, ScannedBuildStatus.ONLY_FAIL, runId);
             }
