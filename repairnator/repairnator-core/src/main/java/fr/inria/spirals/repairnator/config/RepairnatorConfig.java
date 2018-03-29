@@ -406,8 +406,7 @@ public class RepairnatorConfig {
     }
 
     public GitHub getGithub() throws IOException {
-        GitHub gitHub = GitHubBuilder.fromEnvironment().withOAuthToken(this.getGithubToken()).build();
-        return gitHub;
+        return this.getJTravis().getGithub();
     }
 
     public JTravis getJTravis() {

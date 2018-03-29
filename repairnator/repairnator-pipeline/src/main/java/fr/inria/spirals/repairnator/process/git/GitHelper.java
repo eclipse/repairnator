@@ -233,8 +233,8 @@ public class GitHelper {
 
                     // do the commit
                     RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(buildCommit.getAuthor().getName(), "noreply@github.com")
-                            .setCommitter(buildCommit.getCommitter().getName(), "noreply@github.com")
+                            .setAuthor(buildCommit.getAuthor().getName(), build.getAuthorEmail())
+                            .setCommitter(buildCommit.getCommitter().getName(), build.getCommitterEmail())
                             .setMessage(buildCommit.getMessage()
                                     + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
                             .call();

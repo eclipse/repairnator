@@ -43,7 +43,7 @@ public class FixerBuildNotifier extends AbstractNotifier {
                     "\t Url of the buggy build: "+Utils.getTravisUrl(buggyBuild.getId(), slug)+"\n" +
                     "\t Date of the patched build: "+Utils.formatCompleteDate(patchedBuild.getFinishedAt())+"\n" +
                     "\t Url of the patched build: "+Utils.getTravisUrl(patchedBuild.getId(), slug)+"\n" +
-                    "\t Contact: "+patchedBuild.getCommit().getCommitterEmail();
+                    "\t Contact: "+patchedBuild.getAuthorEmail();
 
             this.notifyEngines(subject, text);
             this.alreadyNotified = true;
