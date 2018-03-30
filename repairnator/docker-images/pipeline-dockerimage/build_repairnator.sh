@@ -5,11 +5,11 @@ set -e
 cd /root
 mkdir github
 cd github
-git clone --recursive https://github.com/Spirals-Team/librepair.git
+git clone --recursive https://github.com/Spirals-Team/repairnator.git
 
-echo "LibRepair repository cloned."
+echo "repairnator repository cloned."
 
-cd librepair/repairnator
+cd repairnator/repairnator
 mvn clean install -DskipTests=true
 
 echo "Repairnator compiled and installed"
