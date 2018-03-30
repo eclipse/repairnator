@@ -1,10 +1,12 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildTool;
 import fr.inria.jtravis.entities.Job;
 import fr.inria.jtravis.entities.Log;
 import fr.inria.jtravis.entities.Repository;
+import fr.inria.jtravis.entities.StateType;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -23,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class RTScanner {
 
@@ -184,15 +187,18 @@ public class RTScanner {
             }
         }
 
-        Repository repository = RepositoryHelper.getRepositoryFromId(repositoryId);
-        if (repository != null) {
-            Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false, 5);
+        JTravis jTravis = this.config.getJTravis();
+        Optional<Repository> repositoryOptional = jTravis.repository().fromId(repositoryId);
+        if (repositoryOptional.isPresent()) {
+            Repository repository = repositoryOptional.get();
 
-            if (masterBuild == null) {
+            Optional<Build> optionalBuild = jTravis.build().lastBuildFromMasterWithState(repository, StateType.PASSED);
+            if (!optionalBuild.isPresent()) {
                 this.addInTempBlackList(repository, "No successful build found.");
                 return false;
             } else {
-                if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
+                Build masterBuild = optionalBuild.get();
+                if (masterBuild.getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
                     return false;
                 }

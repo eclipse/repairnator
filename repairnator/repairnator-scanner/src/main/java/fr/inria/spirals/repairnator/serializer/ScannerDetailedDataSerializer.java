@@ -31,7 +31,7 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
         Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
-        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+        String committerEmail = (build.getCommitterEmail() != null) ? build.getCommitterEmail() : "-";
 
         Date date = new Date();
         dataCol.add(build.getId() + "");
@@ -56,7 +56,7 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
         Build previousBuild = buildToBeInspected.getBuggyBuild();
         int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
-        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+        String committerEmail = (build.getCommitterEmail() != null) ? build.getCommitterEmail() : "-";
 
         Date date = new Date();
         result.addProperty("buildId", build.getId());

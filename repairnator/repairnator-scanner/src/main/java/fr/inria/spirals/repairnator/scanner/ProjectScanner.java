@@ -244,65 +244,74 @@ public class ProjectScanner {
         }
 
         Repository repo = build.getRepository();
-        if (build.getConfig().getLanguage().equals("java")) {
-            this.totalBuildInJava++;
+        List<Job> jobs = build.getJobs();
+        if (jobs != null && !jobs.isEmpty()) {
+            String language = jobs.get(0).getLanguage();
+            if ("java".equals(language)) {
+                this.totalBuildInJava++;
 
-            this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
-                    + build.getBuildStatus().name());
-            if (build.getBuildStatus() == BuildStatus.FAILED) {
-                this.totalBuildInJavaFailing++;
+                this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
+                        + build.getState().name());
+                if (build.getState() == StateType.FAILED) {
+                    this.totalBuildInJavaFailing++;
 
-                for (Job job : build.getJobs()) {
-                    if (job.getBuildStatus() == BuildStatus.FAILED) {
-                        Log jobLog = job.getLog();
+                    for (Job job : build.getJobs()) {
+                        if (job.getState() == StateType.FAILED) {
+                            Optional<Log> optionalLog = job.getLog();
 
-                        if (jobLog != null) {
-                            if (jobLog.getBuildTool() == BuildTool.MAVEN) {
-                                TestsInformation testInfo = jobLog.getTestsInformation();
+                            if (optionalLog.isPresent()) {
+                                Log jobLog = optionalLog.get();
+                                if (jobLog.getBuildTool() == BuildTool.MAVEN) {
+                                    TestsInformation testInfo = jobLog.getTestsInformation();
 
-                                // testInfo can be null if the build tool is unknown
-                                if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
-                                    this.totalBuildInJavaFailingWithFailingTests++;
-                                    if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+                                    // testInfo can be null if the build tool is unknown
+                                    if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
+                                        this.totalBuildInJavaFailingWithFailingTests++;
+                                        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+                                            this.slugs.add(repo.getSlug());
+                                            this.repositories.add(repo);
+                                            return true;
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                } else {
+                                    logger.debug("Maven is not used in the build " + build.getId());
+                                }
+                            } else {
+                                logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
+                            }
+                        }
+                    }
+                } else if (build.getState() == StateType.PASSED) {
+                    this.totalJavaPassingBuilds++;
+                    if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
+                        for (Job job : build.getJobs()) {
+                            if (job.getState() == StateType.PASSED) {
+                                Optional<Log> optionalLog = job.getLog();
+
+                                if (optionalLog.isPresent()) {
+                                    Log jobLog = optionalLog.get();
+                                    if (jobLog.getBuildTool() == BuildTool.MAVEN) {
                                         this.slugs.add(repo.getSlug());
                                         this.repositories.add(repo);
                                         return true;
                                     } else {
-                                        return false;
+                                        logger.debug("Maven is not used in the build " + build.getId());
                                     }
                                 }
-                            } else {
-                                logger.debug("Maven is not used in the build " + build.getId());
-                            }
-                        } else {
-                            logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
-                        }
-                    }
-                }
-            } else if (build.getBuildStatus() == BuildStatus.PASSED) {
-                this.totalJavaPassingBuilds++;
-                if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
-                    for (Job job : build.getJobs()) {
-                        if (job.getBuildStatus() == BuildStatus.PASSED) {
-                            Log jobLog = job.getLog();
-
-                            if (jobLog != null) {
-                                if (jobLog.getBuildTool() == BuildTool.MAVEN) {
-                                    this.slugs.add(repo.getSlug());
-                                    this.repositories.add(repo);
-                                    return true;
-                                } else {
-                                    logger.debug("Maven is not used in the build " + build.getId());
-                                }
                             }
                         }
                     }
                 }
+            } else {
+                this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId()
+                        + " is not in java but language: " + language);
             }
         } else {
-            this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId()
-                    + " is not in java but language: " + build.getConfig().getLanguage());
+            this.logger.warn("No job has been found for build " + build.getId());
         }
+
         return false;
     }
 
