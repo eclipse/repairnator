@@ -21,10 +21,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +49,9 @@ public class TestBuildProject {
     public void testBuildProject() throws IOException {
         int buildId = 207924136; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -84,7 +88,9 @@ public class TestBuildProject {
     public void testBuildProjectWithPomNotInRoot() throws IOException {
         int buildId = 218036343;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 

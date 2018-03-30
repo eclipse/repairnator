@@ -26,12 +26,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -56,7 +58,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenFailing() throws IOException {
         int buildId = 207890790; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -109,7 +113,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationOnlyOneErroring() throws IOException {
         int buildId = 208897371; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -171,7 +177,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenErroring() throws IOException {
         int buildId = 208240908; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -225,7 +233,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenNotFailing() throws IOException {
         int buildId = 201176013; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -276,7 +286,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenNotFailingWithPassingContract() throws IOException {
         int buildId = 201176013; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 

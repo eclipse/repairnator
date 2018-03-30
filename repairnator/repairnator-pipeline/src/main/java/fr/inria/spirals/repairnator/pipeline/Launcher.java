@@ -6,7 +6,6 @@ import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
-import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;

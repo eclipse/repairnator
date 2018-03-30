@@ -21,10 +21,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +49,9 @@ public class TestComputeSourceDir {
     public void testComputeSourceDir() throws IOException {
         int buildId = 207924136; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -88,7 +92,9 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject() throws IOException {
         int buildId = 225251586; // Spirals-Team/librepair build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -129,7 +135,9 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject2() throws IOException {
         int buildId = 225251586; // Spirals-Team/librepair build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -170,7 +178,9 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject3() throws IOException {
         int buildId = 225251586; // Spirals-Team/librepair build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -212,11 +222,15 @@ public class TestComputeSourceDir {
         int buildId = 216674182; // pac4j/pac4j
         int patchedBuildId = 218753299;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Build patchedBuild = BuildHelper.getBuildFromId(patchedBuildId, null);
+        Optional<Build> optionalPatchedBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(patchedBuildId);
+        assertTrue(optionalPatchedBuild.isPresent());
+        Build patchedBuild = optionalPatchedBuild.get();
         assertThat(patchedBuild, notNullValue());
         assertThat(patchedBuildId, is(patchedBuild.getId()));
 
@@ -273,7 +287,9 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject5() throws IOException {
         int buildId = 218168470; // Spirals-Team/librepair build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -313,7 +329,9 @@ public class TestComputeSourceDir {
     @Test
     public void testComputeSourceDirWithReflexiveReferences() throws IOException {
         int buildId = 345990212;
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 

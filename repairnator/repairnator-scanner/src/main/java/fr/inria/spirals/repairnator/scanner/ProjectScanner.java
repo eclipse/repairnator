@@ -2,8 +2,6 @@ package fr.inria.spirals.repairnator.scanner;
 
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.*;
-import fr.inria.jtravis.helpers.BuildHelper;
-import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -218,7 +216,7 @@ public class ProjectScanner {
                 Optional<Build> optionalBeforeBuild = this.jTravis.build().getBefore(build, true);
                 if (optionalBeforeBuild.isPresent()) {
                     Build previousBuild = optionalBeforeBuild.get();
-                            this.logger.debug("Build: " + build.getId());
+                    this.logger.debug("Build: " + build.getId());
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     if (previousBuild.getState() == StateType.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {

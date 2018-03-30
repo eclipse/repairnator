@@ -25,10 +25,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,7 +56,9 @@ public class TestCheckoutBuild {
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -110,7 +114,9 @@ public class TestCheckoutBuild {
     public void testCheckoutBuildFromPRWithMissingMerge() throws IOException, GitAPIException {
         int buildId = 199527447; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -146,7 +152,9 @@ public class TestCheckoutBuild {
     public void testCheckoutBuildFromPRWithMerge() throws IOException, GitAPIException {
         int buildId = 199923736; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -182,7 +190,9 @@ public class TestCheckoutBuild {
     public void testCheckoutBuildFromPROtherRepo() throws IOException, GitAPIException {
         int buildId = 196568333; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 

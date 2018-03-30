@@ -3,7 +3,6 @@ package fr.inria.spirals.repairnator.config;
 import fr.inria.jtravis.JTravis;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
 
 import java.io.File;
 import java.io.IOException;

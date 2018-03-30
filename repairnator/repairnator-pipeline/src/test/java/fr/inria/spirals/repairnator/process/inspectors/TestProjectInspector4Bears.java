@@ -32,10 +32,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -88,8 +90,13 @@ public class TestProjectInspector4Bears {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Build passingBuild = BuildHelper.getBuildFromId(buildIdPassing, null);
-        Build failingBuild = BuildHelper.getBuildFromId(buildIdFailing, null);
+        Optional<Build> optionalBuildPassing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdPassing);
+        assertTrue(optionalBuildPassing.isPresent());
+        Build passingBuild = optionalBuildPassing.get();
+
+        Optional<Build> optionalBuildFailing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdFailing);
+        assertTrue(optionalBuildFailing.isPresent());
+        Build failingBuild = optionalBuildPassing.get();
 
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, passingBuild, ScannedBuildStatus.FAILING_AND_PASSING, "test");
@@ -156,9 +163,13 @@ public class TestProjectInspector4Bears {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Build passingBuild = BuildHelper.getBuildFromId(buildIdPassing, null);
-        Build previousPassingBuild = BuildHelper.getBuildFromId(buildIdPreviousPassing, null);
+        Optional<Build> optionalBuildPassing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdPassing);
+        assertTrue(optionalBuildPassing.isPresent());
+        Build passingBuild = optionalBuildPassing.get();
 
+        Optional<Build> optionalPreviousBuildPassing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdPreviousPassing);
+        assertTrue(optionalPreviousBuildPassing.isPresent());
+        Build previousPassingBuild = optionalPreviousBuildPassing.get();
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(previousPassingBuild, passingBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "test");
 

@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -63,7 +64,9 @@ public class TestNopolRepair {
     public void testNopolRepair() throws IOException {
         int buildId = 207890790; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
