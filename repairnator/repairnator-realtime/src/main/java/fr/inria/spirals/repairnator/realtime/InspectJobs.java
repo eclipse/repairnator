@@ -1,12 +1,14 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Job;
+import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.jtravis.helpers.JobHelper;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 public class InspectJobs implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectJobs.class);
@@ -32,17 +34,18 @@ public class InspectJobs implements Runnable {
             throw new RuntimeException("Sleep time has to be set before running this.");
         }
         while (!shouldStop) {
-            List<Job> jobList = JobHelper.getJobList();
+            Optional<List<JobV2>> jobListOpt = RepairnatorConfig.getInstance().getJTravis().job().allFromV2();
 
-            if (jobList != null) {
+            if (jobListOpt.isPresent()) {
+                List<JobV2> jobList = jobListOpt.get();
                 LOGGER.info("Retrieved "+jobList.size()+" jobs");
-                for (Job job : jobList) {
+                for (JobV2 job : jobList) {
                     if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
                         this.rtScanner.submitWaitingBuild(job.getBuildId());
                     }
                 }
             }
-            if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || jobList == null) {
+            if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || !jobListOpt.isPresent()) {
                 LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
                 try {
                     Thread.sleep(sleepTime * 1000);

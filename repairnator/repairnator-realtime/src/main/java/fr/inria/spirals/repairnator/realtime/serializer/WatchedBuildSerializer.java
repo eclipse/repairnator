@@ -29,7 +29,7 @@ public class WatchedBuildSerializer extends Serializer {
         result.add(Utils.formatCompleteDate(new Date()));
         result.add(Utils.formatCompleteDate(build.getFinishedAt()));
         if (build.getRepository() == null) {
-            result.add("ID="+build.getRepositoryId());
+            result.add("ID="+build.getRepository().getId());
         } else {
             result.add(build.getRepository().getSlug());
         }
@@ -49,12 +49,12 @@ public class WatchedBuildSerializer extends Serializer {
         this.addDate(result, "dateBuildEnd", build.getFinishedAt());
         result.addProperty("dateBuildEndStr", Utils.formatCompleteDate(build.getFinishedAt()));
         if (build.getRepository() == null) {
-            result.addProperty("repository", "ID="+build.getRepositoryId());
+            result.addProperty("repository", "ID="+build.getRepository().getId());
         } else {
             result.addProperty("repository", build.getRepository().getSlug());
         }
         result.addProperty("buildId", build.getId());
-        result.addProperty("status", build.getState());
+        result.addProperty("status", build.getState().name());
 
         return result;
     }

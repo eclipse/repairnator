@@ -198,28 +198,40 @@ public class RTScanner {
                 return false;
             } else {
                 Build masterBuild = optionalBuild.get();
-                if (masterBuild.getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
-                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
+                if (masterBuild.getLanguage() == null || !masterBuild.getLanguage().equals("java")) {
+                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getLanguage());
                     return false;
                 }
 
-                if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
+                Optional<BuildTool> optionalBuildTool = masterBuild.getBuildTool();
+                if (!optionalBuildTool.isPresent()) {
+                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
+                    return false;
+                }
+
+                BuildTool buildTool = optionalBuildTool.get();
+                if (buildTool == BuildTool.GRADLE) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
                     return false;
-                } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
+                } else if (buildTool == BuildTool.UNKNOWN) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
                     return false;
                 }
 
                 if (!masterBuild.getJobs().isEmpty()) {
                     Job firstJob = masterBuild.getJobs().get(0);
-                    Log jobLog = firstJob.getLog();
-                    if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
-                        LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-                        this.addInWhitelistRepository(repository);
-                        return true;
+                    Optional<Log> optionalLog = firstJob.getLog();
+                    if (optionalLog.isPresent()) {
+                        Log jobLog = optionalLog.get();
+                        if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
+                            LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
+                            this.addInWhitelistRepository(repository);
+                            return true;
+                        } else {
+                            this.addInTempBlackList(repository, "No test found");
+                        }
                     } else {
-                        this.addInTempBlackList(repository, "No test found");
+                        LOGGER.error("Error while getting log for job "+firstJob.getId());
                     }
                 } else {
                     LOGGER.info("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
@@ -240,10 +252,13 @@ public class RTScanner {
         List<Job> jobs = build.getJobs();
         if (jobs != null) {
             for (Job job : jobs) {
-                Log jobLog = job.getLog();
-                if (jobLog != null && jobLog.getTestsInformation() != null && (jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0)) {
-                    failing = true;
-                    break;
+                Optional<Log> optionalLog = job.getLog();
+                if (optionalLog.isPresent()) {
+                    Log jobLog = optionalLog.get();
+                    if (jobLog.getTestsInformation() != null && (jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0)) {
+                        failing = true;
+                        break;
+                    }
                 }
             }
         }
@@ -257,9 +272,9 @@ public class RTScanner {
     }
 
     public void submitWaitingBuild(int buildId) {
-        Build build = BuildHelper.getBuildFromId(buildId, null);
-        if (build != null) {
-            this.inspectBuilds.submitNewBuild(build);
+        Optional<Build> optionalBuild = this.config.getJTravis().build().fromId(buildId);
+        if (optionalBuild.isPresent()) {
+            this.inspectBuilds.submitNewBuild(optionalBuild.get());
         }
     }
 }
