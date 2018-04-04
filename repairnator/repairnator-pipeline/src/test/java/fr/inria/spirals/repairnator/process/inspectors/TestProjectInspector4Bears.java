@@ -96,7 +96,7 @@ public class TestProjectInspector4Bears {
 
         Optional<Build> optionalBuildFailing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdFailing);
         assertTrue(optionalBuildFailing.isPresent());
-        Build failingBuild = optionalBuildPassing.get();
+        Build failingBuild = optionalBuildFailing.get();
 
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, passingBuild, ScannedBuildStatus.FAILING_AND_PASSING, "test");

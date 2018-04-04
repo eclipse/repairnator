@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 public class TestCheckoutBuggyBuildSourceCode {
     @Before
     public void setup() {
-        Utils.setLoggersLevel(Level.DEBUG);
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     @After
