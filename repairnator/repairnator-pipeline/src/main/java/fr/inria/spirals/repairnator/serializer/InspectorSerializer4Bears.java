@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEng
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.apache.commons.lang3.StringUtils;
+import org.kohsuke.github.GitUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,10 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         String typeOfFailures = StringUtils.join(jobStatus.getMetrics().getFailureNames(), ",")+"";
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
-        String committerEmail = (build.getCommitterEmail() != null) ? build.getCommitterEmail() : "-";
+        String committerEmail = "nobody@github.com";
+        if (build.getCommitter().isPresent()) {
+            committerEmail = build.getCommitter().get().getEmail();
+        }
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
@@ -88,7 +92,10 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         String typeOfFailures = StringUtils.join(jobStatus.getMetrics().getFailureNames(), ",");
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
-        String committerEmail = (build.getCommitterEmail() != null) ? build.getCommitterEmail() : "-";
+        String committerEmail = "nobody@github.com";
+        if (build.getCommitter().isPresent()) {
+            committerEmail = build.getCommitter().get().getEmail();
+        }
 
         JsonObject result = new JsonObject();
 

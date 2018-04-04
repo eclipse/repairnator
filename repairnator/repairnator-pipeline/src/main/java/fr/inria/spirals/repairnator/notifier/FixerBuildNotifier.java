@@ -6,8 +6,10 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import org.kohsuke.github.GitUser;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by urli on 30/03/2017.
@@ -42,8 +44,12 @@ public class FixerBuildNotifier extends AbstractNotifier {
                     "\t Date of the buggy build: "+Utils.formatCompleteDate(buggyBuild.getFinishedAt())+"\n" +
                     "\t Url of the buggy build: "+Utils.getTravisUrl(buggyBuild.getId(), slug)+"\n" +
                     "\t Date of the patched build: "+Utils.formatCompleteDate(patchedBuild.getFinishedAt())+"\n" +
-                    "\t Url of the patched build: "+Utils.getTravisUrl(patchedBuild.getId(), slug)+"\n" +
-                    "\t Contact: "+patchedBuild.getAuthorEmail();
+                    "\t Url of the patched build: "+Utils.getTravisUrl(patchedBuild.getId(), slug)+"\n";
+
+            Optional<GitUser> contactAuthor = patchedBuild.getAuthor();
+            if (contactAuthor.isPresent()) {
+                text += "\tContact: "+contactAuthor.get().getEmail();
+            }
 
             this.notifyEngines(subject, text);
             this.alreadyNotified = true;
