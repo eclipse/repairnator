@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 public class TestCheckoutBuggyBuildSourceCode {
     @Before
     public void setup() {
-        Utils.setLoggersLevel(Level.ERROR);
+        Utils.setLoggersLevel(Level.DEBUG);
     }
 
     @After
@@ -68,7 +68,7 @@ public class TestCheckoutBuggyBuildSourceCode {
 
         Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
         assertTrue(optionalBuild2.isPresent());
-        Build previousBuild = optionalBuild.get();
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
@@ -164,7 +164,7 @@ public class TestCheckoutBuggyBuildSourceCode {
 
         Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
         assertTrue(optionalBuild2.isPresent());
-        Build previousBuild = optionalBuild.get();
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
@@ -260,7 +260,7 @@ public class TestCheckoutBuggyBuildSourceCode {
 
         Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
         assertTrue(optionalBuild2.isPresent());
-        Build previousBuild = optionalBuild.get();
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(true));
