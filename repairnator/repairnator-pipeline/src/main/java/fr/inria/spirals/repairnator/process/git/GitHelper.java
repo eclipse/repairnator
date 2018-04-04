@@ -37,6 +37,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by fernanda on 01/03/17.
@@ -231,10 +232,32 @@ public class GitHelper {
                     // add all file for the next commit
                     git.add().addFilepattern(".").call();
 
+                    Optional<GitUser> author = build.getAuthor();
+                    Optional<GitUser> committer = build.getCommitter();
+
+                    String authorEmail, authorName;
+                    String committerEmail, committerName;
+
+                    if (author.isPresent()) {
+                        authorEmail = author.get().getEmail();
+                        authorName = author.get().getName();
+                    } else {
+                        authorEmail = "nobody@github.com";
+                        authorName = "-";
+                    }
+
+                    if (committer.isPresent()) {
+                        committerEmail = committer.get().getEmail();
+                        committerName = committer.get().getName();
+                    } else {
+                        committerEmail = "nobody@github.com";
+                        committerName = "-";
+                    }
+
                     // do the commit
                     RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(build.getAuthor().getName(), build.getAuthor().getEmail())
-                            .setCommitter(build.getCommitter().getName(), build.getCommitter().getEmail())
+                            .setAuthor(authorName, authorEmail)
+                            .setCommitter(committerName, committerEmail)
                             .setMessage(buildCommit.getMessage()
                                     + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
                             .call();
