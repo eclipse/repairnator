@@ -45,6 +45,7 @@ if [ "$SKIP_SCAN" -eq 1 ]; then
     SKIP_LAUNCH_REPAIRNATOR=0
 else if [ ! -f "$REPAIR_PROJECT_LIST_PATH" ]; then
     touch $REPAIR_PROJECT_LIST_PATH
+    fi
 fi
 
 if [ -z "$RUN_ID_SUFFIX" ]; then

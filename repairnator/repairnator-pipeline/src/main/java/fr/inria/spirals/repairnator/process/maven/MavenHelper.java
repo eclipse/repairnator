@@ -40,7 +40,8 @@ public class MavenHelper {
             "gpg.skip",
             "skip.npm",
             "skip.gulp",
-            "skip.bower"
+            "skip.bower",
+            "dependency-check.skip"
     );
     private static final int TIMEOUT_WITHOUT_OUTPUT = 10; // in minutes
 
