@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +10,7 @@
 
     <groupId>fr.inria.repairnator</groupId>
     <artifactId>repairnator-root</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
     <name>repairnator-root</name>
     <inceptionYear>2017</inceptionYear>
@@ -54,7 +52,7 @@
         <url>https://github.com/Spirals-Team/repairnator</url>
         <connection>scm:git:git://github.com:Spirals-Team/repairnator.git</connection>
         <developerConnection>scm:git:git@github.com:Spirals-Team/repairnator.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>repairnator-root-1.0</tag>
     </scm>
 
     <distributionManagement>
