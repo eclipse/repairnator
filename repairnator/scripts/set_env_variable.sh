@@ -17,9 +17,6 @@ export NOTIFY_TO= # email adresses separated by comma (used for notifier, you mu
 export NOTIFY_ENDPROCESS=0 # If set to 1, the end of dockerpool and scanner will send a notification using smtp and notify_to information
 export RUN_ID_SUFFIX= # A suffix to add to the run id (useful to retrieve a specific run in serialized data).
 
-#export SPREADSHEET= # Spreadsheet ID to put data (note that you MUST specify the path of the JSON secret)
-#export GOOGLE_SECRET_PATH= # Path of the google secret JSON file if spreadsheet is used
-
 #### Scanner configuration
 
 export REPAIR_PROJECT_LIST_PATH=$HOME_REPAIR/project_list.txt # The list of project slug to scan

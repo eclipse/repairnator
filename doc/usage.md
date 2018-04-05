@@ -16,11 +16,6 @@ This sections describe the usage of all modules of Repairnator. All modules are 
 ### Core
 
 This module located at [repairnator-core](/repairnator/repairnator-core) contains all information for other Repairnator modules. 
-It might also be used to generate a proper Google Spreadsheet token [DEPRECATED].
-
-```bash 
-Usage: java -jar repairnator-core.jar path/to/googleSecretFile.json
-```
 
 ### Pipeline
 
@@ -51,12 +46,6 @@ Options:
 
   [--dbname <mongoDBName>]
         Specify mongodb DB name. (default: repairnator)
-
-  [--spreadsheet <spreadsheet>]
-        Specify Google Spreadsheet ID to put data.
-
-  [--googleAccessToken <googleAccessToken>]
-        Specify the google access token to use for serializers.
 
   [--smtpServer <smtpServer>]
         Specify SMTP server to use for Email notification
@@ -122,13 +111,6 @@ Options:
 
   [--dbname <mongoDBName>]
         Specify mongodb DB name. (default: repairnator)
-
-  [--spreadsheet <spreadsheet>]
-        Specify Google Spreadsheet ID to put data.
-
-  [--googleSecretPath <googleSecretPath>]
-        Specify the path to the JSON google secret for serializing. (default:
-        ./client_secret.json)
 
   [--notifyEndProcess]
         Activate the notification when the process ends.
@@ -276,13 +258,6 @@ Options:
 
   [--dbname <mongoDBName>]
         Specify mongodb DB name. (default: repairnator)
-
-  [--spreadsheet <spreadsheet>]
-        Specify Google Spreadsheet ID to put data.
-
-  [--googleSecretPath <googleSecretPath>]
-        Specify the path to the JSON google secret for serializing. (default:
-        ./client_secret.json)
 
   [--notifyEndProcess]
         Activate the notification when the process ends.

@@ -74,7 +74,7 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
 
     elementaryArgs="-m $REPAIR_MODE -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID"
 
-    supplementaryArgs="`ca --googleSecretPath $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca -l $SCANNER_NB_HOURS``ca --lookFromDate $LOOK_FROM_DATE` `ca --lookToDate $LOOK_TO_DATE``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+    supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca -l $SCANNER_NB_HOURS``ca --lookFromDate $LOOK_FROM_DATE` `ca --lookToDate $LOOK_TO_DATE``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 
     if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
         supplementaryArgs="$supplementaryArgs --notifyEndProcess"
@@ -106,7 +106,7 @@ echo "Launch docker pool..."
 
 elementaryArgs="-t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $REPAIR_MODE"
 
-supplementaryArgs="`ca --googleSecretPath $GOOGLE_SECRET_PATH``ca --spreadsheet $SPREADSHEET``ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --notifyEndProcess"
 fi
