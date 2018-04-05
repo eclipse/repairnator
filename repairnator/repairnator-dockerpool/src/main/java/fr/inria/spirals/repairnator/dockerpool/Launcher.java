@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.dockerpool;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
@@ -14,7 +13,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.EndProcessSerializer;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.ManageGoogleAccessToken;
 
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
@@ -24,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -70,10 +67,6 @@ public class Launcher extends AbstractPoolManager {
         jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
         jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
-        // --spreadsheet
-        jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
-        // --googleSecretPath
-        jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
         // --notifyEndProcess
         jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
@@ -107,8 +100,6 @@ public class Launcher extends AbstractPoolManager {
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
         this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
-        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
         this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
         this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
@@ -127,22 +118,6 @@ public class Launcher extends AbstractPoolManager {
 
     private void initSerializerEngines() {
         this.engines = new ArrayList<>();
-
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(LOGGER);
-        if (spreadsheetSerializerEngine != null) {
-            this.engines.add(spreadsheetSerializerEngine);
-
-            try {
-                ManageGoogleAccessToken manageGoogleAccessToken = ManageGoogleAccessToken.getInstance();
-                Credential credential = manageGoogleAccessToken.getCredential();
-
-                if (credential != null) {
-                    this.config.setGoogleAccessToken(credential.getAccessToken());
-                }
-            } catch (IOException | GeneralSecurityException e) {
-                LOGGER.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets from the pipeline.", e);
-            }
-        }
 
         List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
         this.engines.addAll(fileSerializerEngines);

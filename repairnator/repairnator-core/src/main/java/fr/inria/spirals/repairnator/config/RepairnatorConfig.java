@@ -22,9 +22,6 @@ public class RepairnatorConfig {
     private String outputPath;
     private String mongodbHost;
     private String mongodbName;
-    private String spreadsheetId;
-    private String googleSecretPath;
-    private String googleAccessToken;
     private String smtpServer;
     private String[] notifyTo;
     private boolean notifyEndProcess;
@@ -41,7 +38,6 @@ public class RepairnatorConfig {
     private int nextBuildId;
     private String z3solverPath;
     private String workspacePath;
-    private String githubLogin;
     private String githubToken;
     private String projectsToIgnoreFilePath;
 
@@ -142,30 +138,6 @@ public class RepairnatorConfig {
 
     public void setMongodbName(String mongodbName) {
         this.mongodbName = mongodbName;
-    }
-
-    public String getSpreadsheetId() {
-        return spreadsheetId;
-    }
-
-    public void setSpreadsheetId(String spreadsheetId) {
-        this.spreadsheetId = spreadsheetId;
-    }
-
-    public String getGoogleSecretPath() {
-        return googleSecretPath;
-    }
-
-    public void setGoogleSecretPath(String googleSecretPath) {
-        this.googleSecretPath = googleSecretPath;
-    }
-
-    public String getGoogleAccessToken() {
-        return googleAccessToken;
-    }
-
-    public void setGoogleAccessToken(String googleAccessToken) {
-        this.googleAccessToken = googleAccessToken;
     }
 
     public String getSmtpServer() {
@@ -422,9 +394,6 @@ public class RepairnatorConfig {
                 ", outputPath='" + outputPath + '\'' +
                 ", mongodbHost='" + mongodbHost + '\'' +
                 ", mongodbName='" + mongodbName + '\'' +
-                ", spreadsheetId='" + spreadsheetId + '\'' +
-                ", googleSecretPath='" + googleSecretPath + '\'' +
-                ", googleAccessToken='" + googleAccessToken + '\'' +
                 ", smtpServer='" + smtpServer + '\'' +
                 ", notifyTo=" + Arrays.toString(notifyTo) +
                 ", notifyEndProcess=" + notifyEndProcess +
@@ -436,7 +405,6 @@ public class RepairnatorConfig {
                 ", buildId=" + buildId +
                 ", z3solverPath='" + z3solverPath + '\'' +
                 ", workspacePath='" + workspacePath + '\'' +
-                ", githubLogin='" + githubLogin + '\'' +
                 ", githubToken='" + githubToken + '\'' +
                 ", dockerImageName='" + dockerImageName + '\'' +
                 ", skipDelete=" + skipDelete +

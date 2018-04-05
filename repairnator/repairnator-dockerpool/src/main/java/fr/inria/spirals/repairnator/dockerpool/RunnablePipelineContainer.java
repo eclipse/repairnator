@@ -55,12 +55,9 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
         }
         this.envValues.add("LOG_FILENAME="+this.containerName);
-        this.envValues.add("GITHUB_LOGIN="+System.getenv("GITHUB_LOGIN"));
-        this.envValues.add("GITHUB_OAUTH="+System.getenv("GITHUB_OAUTH"));
+        this.envValues.add("GITHUB_OAUTH="+RepairnatorConfig.getInstance().getGithubToken());
         this.envValues.add("RUN_ID="+this.repairnatorConfig.getRunId());
-        this.envValues.add("GOOGLE_ACCESS_TOKEN="+this.repairnatorConfig.getGoogleAccessToken());
         this.envValues.add("REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase());
-        this.envValues.add("SPREADSHEET_ID="+this.repairnatorConfig.getSpreadsheetId());
         this.envValues.add("PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo());
         this.envValues.add("MONGODB_HOST="+this.repairnatorConfig.getMongodbHost());
         this.envValues.add("MONGODB_NAME="+this.repairnatorConfig.getMongodbName());
