@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEng
 import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.apache.commons.lang3.StringUtils;
-import org.kohsuke.github.GitUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
