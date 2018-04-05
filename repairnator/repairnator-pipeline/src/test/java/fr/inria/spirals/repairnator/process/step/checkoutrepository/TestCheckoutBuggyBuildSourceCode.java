@@ -29,11 +29,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -57,12 +59,16 @@ public class TestCheckoutBuggyBuildSourceCode {
         int previousBuildId = 218213030;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
         assertThat(build.isPullRequest(), is(false));
 
-        Build previousBuild = BuildHelper.getBuildFromId(previousBuildId, null);
+        Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
+        assertTrue(optionalBuild2.isPresent());
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
@@ -149,12 +155,16 @@ public class TestCheckoutBuggyBuildSourceCode {
         int previousBuildId = 222016611;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
         assertThat(build.isPullRequest(), is(false));
 
-        Build previousBuild = BuildHelper.getBuildFromId(previousBuildId, null);
+        Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
+        assertTrue(optionalBuild2.isPresent());
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
@@ -241,12 +251,16 @@ public class TestCheckoutBuggyBuildSourceCode {
         int previousBuildId = 222209171;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
         assertThat(build.isPullRequest(), is(true));
 
-        Build previousBuild = BuildHelper.getBuildFromId(previousBuildId, null);
+        Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
+        assertTrue(optionalBuild2.isPresent());
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(true));

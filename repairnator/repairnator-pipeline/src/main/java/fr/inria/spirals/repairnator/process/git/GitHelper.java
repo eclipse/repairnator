@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.Commit;
-import fr.inria.jtravis.entities.PRInformation;
+import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -37,6 +37,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by fernanda on 01/03/17.
@@ -231,10 +232,32 @@ public class GitHelper {
                     // add all file for the next commit
                     git.add().addFilepattern(".").call();
 
+                    Optional<GitUser> author = build.getAuthor();
+                    Optional<GitUser> committer = build.getCommitter();
+
+                    String authorEmail, authorName;
+                    String committerEmail, committerName;
+
+                    if (author.isPresent()) {
+                        authorEmail = author.get().getEmail();
+                        authorName = author.get().getName();
+                    } else {
+                        authorEmail = "nobody@github.com";
+                        authorName = "-";
+                    }
+
+                    if (committer.isPresent()) {
+                        committerEmail = committer.get().getEmail();
+                        committerName = committer.get().getName();
+                    } else {
+                        committerEmail = "nobody@github.com";
+                        committerName = "-";
+                    }
+
                     // do the commit
                     RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(buildCommit.getAuthorName(), buildCommit.getAuthorEmail())
-                            .setCommitter(buildCommit.getCommitterName(), buildCommit.getCommitterEmail())
+                            .setAuthor(authorName, authorEmail)
+                            .setCommitter(committerName, committerEmail)
                             .setMessage(buildCommit.getMessage()
                                     + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
                             .call();
@@ -297,9 +320,9 @@ public class GitHelper {
                 + " Reset hour: " + dateFormat.format(rateLimit.reset));
     }
 
-    public boolean mergeTwoCommitsForPR(Git git, Build build, PRInformation prInformation, String repository, AbstractStep step, List<String> pathes) {
+    public boolean mergeTwoCommitsForPR(Git git, Build build, PullRequest prInformation, String repository, AbstractStep step, List<String> pathes) {
         try {
-            String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getSlug() + ".git";
+            String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getFullName() + ".git";
 
             RemoteAddCommand remoteBranchCommand = git.remoteAdd();
             remoteBranchCommand.setName("PR");
@@ -308,19 +331,19 @@ public class GitHelper {
 
             git.fetch().setRemote("PR").call();
 
-            String commitHeadSha = this.testCommitExistence(git, prInformation.getHead().getSha(), step, build);
-            String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSha(), step, build);
+            String commitHeadSha = this.testCommitExistence(git, prInformation.getHead().getSHA1(), step, build);
+            String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSHA1(), step, build);
 
             if (commitHeadSha == null) {
                 step.addStepError("Commit head ref cannot be retrieved in the repository: "
-                        + prInformation.getHead().getSha() + ". Operation aborted.");
+                        + prInformation.getHead().getSHA1() + ". Operation aborted.");
                 this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getHead().toString());
                 return false;
             }
 
             if (commitBaseSha == null) {
                 step.addStepError("Commit base ref cannot be retrieved in the repository: "
-                        + prInformation.getBase().getSha() + ". Operation aborted.");
+                        + prInformation.getBase().getSHA1() + ". Operation aborted.");
                 this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getBase().toString());
                 return false;
             }

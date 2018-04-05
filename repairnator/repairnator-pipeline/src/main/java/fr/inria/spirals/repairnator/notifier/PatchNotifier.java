@@ -105,7 +105,7 @@ public class PatchNotifier extends AbstractNotifier {
             if (status.isHasBeenPushed()) {
                 String slug = repository.getSlug();
                 String repoURL = Utils.getGithubRepoUrl(slug);
-                String branchName = buggyBuild.getCommit().getBranch();
+                String branchName = buggyBuild.getBranch().getName();
 
                 String[] divideSlug = slug.split("/");
                 String projectName = divideSlug[1];

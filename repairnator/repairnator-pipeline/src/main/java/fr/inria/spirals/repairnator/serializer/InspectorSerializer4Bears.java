@@ -49,7 +49,10 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         String typeOfFailures = StringUtils.join(jobStatus.getMetrics().getFailureNames(), ",")+"";
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
-        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+        String committerEmail = "nobody@github.com";
+        if (build.getCommitter().isPresent()) {
+            committerEmail = build.getCommitter().get().getEmail();
+        }
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
@@ -88,7 +91,10 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         String typeOfFailures = StringUtils.join(jobStatus.getMetrics().getFailureNames(), ",");
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
-        String committerEmail = (build.getCommit().getCommitterEmail() != null) ? build.getCommit().getCommitterEmail() : "-";
+        String committerEmail = "nobody@github.com";
+        if (build.getCommitter().isPresent()) {
+            committerEmail = build.getCommitter().get().getEmail();
+        }
 
         JsonObject result = new JsonObject();
 

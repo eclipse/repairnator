@@ -1,8 +1,7 @@
 package fr.inria.spirals.repairnator.scanner;
 
+import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.*;
-import fr.inria.jtravis.helpers.BuildHelper;
-import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -44,6 +43,7 @@ public class ProjectScanner {
 
     private Date scannerRunningBeginDate;
     private Date scannerRunningEndDate;
+    private JTravis jTravis;
 
     public ProjectScanner(Date lookFromDate, Date lookToDate, String runId) {
         this.lookFromDate = lookFromDate;
@@ -52,6 +52,7 @@ public class ProjectScanner {
         this.slugs = new HashSet<String>();
         this.repositories = new HashSet<Repository>();
         this.runId = runId;
+        this.jTravis = RepairnatorConfig.getInstance().getJTravis();
 
         this.logger.info("Look from " + Utils.formatCompleteDate(this.lookFromDate) + " to " + Utils.formatCompleteDate(this.lookToDate));
     }
@@ -168,10 +169,11 @@ public class ProjectScanner {
 
         for (String slug : allSlugs) {
             this.logger.debug("Get repo " + slug);
-            Repository repo = RepositoryHelper.getRepositoryFromSlug(slug);
-            if (repo != null) {
-                Build lastBuild = repo.getLastBuild(false);
-                if (lastBuild != null) {
+            Optional<Repository> repositoryOptional = this.jTravis.repository().fromSlug(slug);
+            if (repositoryOptional.isPresent()) {
+                Repository repo = repositoryOptional.get();
+                Optional<Build> lastBuild = repo.getLastBuild(false);
+                if (lastBuild.isPresent()) {
                     result.add(repo);
                 } else {
                     this.logger.info("It seems that the repo " + slug + " does not have any Travis build.");
@@ -190,13 +192,15 @@ public class ProjectScanner {
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
         for (Repository repo : repos) {
-            List<Build> repoBuilds = BuildHelper.getBuildsFromRepositoryInTimeInterval(repo, this.lookFromDate, this.lookToDate);
-
-            for (Build build : repoBuilds) {
-                this.totalScannedBuilds++;
-                BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build);
-                if (buildToBeInspected != null) {
-                    buildsToBeInspected.add(buildToBeInspected);
+            Optional<List<Build>> builds = this.jTravis.build().betweenDates(repo.getSlug(), this.lookFromDate, this.lookToDate);
+            if (builds.isPresent()) {
+                List<Build> repoBuilds = builds.get();
+                for (Build build : repoBuilds) {
+                    this.totalScannedBuilds++;
+                    BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build);
+                    if (buildToBeInspected != null) {
+                        buildsToBeInspected.add(buildToBeInspected);
+                    }
                 }
             }
         }
@@ -209,16 +213,17 @@ public class ProjectScanner {
             if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
                 return new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, this.runId);
             } else {
-                Build previousBuild = BuildHelper.getLastBuildOfSameBranchOfStatusBeforeBuild(build, null);
-                if (previousBuild != null) {
+                Optional<Build> optionalBeforeBuild = this.jTravis.build().getBefore(build, true);
+                if (optionalBeforeBuild.isPresent()) {
+                    Build previousBuild = optionalBeforeBuild.get();
                     this.logger.debug("Build: " + build.getId());
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
-                    if (previousBuild.getBuildStatus() == BuildStatus.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
+                    if (previousBuild.getState() == StateType.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
                         this.totalNumberOfFailingAndPassingBuildPairs++;
                         return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.FAILING_AND_PASSING, this.runId);
                     } else {
-                        if (previousBuild.getBuildStatus() == BuildStatus.PASSED && thereIsDiffOnJavaFile(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
+                        if (previousBuild.getState() == StateType.PASSED && thereIsDiffOnJavaFile(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
                             this.totalNumberOfPassingAndPassingBuildPairs++;
                             return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.runId);
                         } else {
@@ -237,19 +242,21 @@ public class ProjectScanner {
         }
 
         Repository repo = build.getRepository();
-        if (build.getConfig().getLanguage().equals("java")) {
+        String language = build.getLanguage();
+        if ("java".equals(language)) {
             this.totalBuildInJava++;
 
             this.logger.debug("Repo " + repo.getSlug() + " with java language - build " + build.getId() + " - Status : "
-                    + build.getBuildStatus().name());
-            if (build.getBuildStatus() == BuildStatus.FAILED) {
+                    + build.getState().name());
+            if (build.getState() == StateType.FAILED) {
                 this.totalBuildInJavaFailing++;
 
                 for (Job job : build.getJobs()) {
-                    if (job.getBuildStatus() == BuildStatus.FAILED) {
-                        Log jobLog = job.getLog();
+                    if (job.getState() == StateType.FAILED) {
+                        Optional<Log> optionalLog = job.getLog();
 
-                        if (jobLog != null) {
+                        if (optionalLog.isPresent()) {
+                            Log jobLog = optionalLog.get();
                             if (jobLog.getBuildTool() == BuildTool.MAVEN) {
                                 TestsInformation testInfo = jobLog.getTestsInformation();
 
@@ -272,14 +279,15 @@ public class ProjectScanner {
                         }
                     }
                 }
-            } else if (build.getBuildStatus() == BuildStatus.PASSED) {
+            } else if (build.getState() == StateType.PASSED) {
                 this.totalJavaPassingBuilds++;
                 if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                     for (Job job : build.getJobs()) {
-                        if (job.getBuildStatus() == BuildStatus.PASSED) {
-                            Log jobLog = job.getLog();
+                        if (job.getState() == StateType.PASSED) {
+                            Optional<Log> optionalLog = job.getLog();
 
-                            if (jobLog != null) {
+                            if (optionalLog.isPresent()) {
+                                Log jobLog = optionalLog.get();
                                 if (jobLog.getBuildTool() == BuildTool.MAVEN) {
                                     this.slugs.add(repo.getSlug());
                                     this.repositories.add(repo);
@@ -294,8 +302,9 @@ public class ProjectScanner {
             }
         } else {
             this.logger.warn("Examine repo " + repo.getSlug() + " Careful the following build " + build.getId()
-                    + " is not in java but language: " + build.getConfig().getLanguage());
+                    + " is not in java but language: " + language);
         }
+
         return false;
     }
 
