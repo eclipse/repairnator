@@ -13,15 +13,11 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,43 +157,6 @@ public class LauncherUtils {
 
     public static String getArgMongoDBName(JSAPResult arguments) {
         return arguments.getString("mongoDBName");
-    }
-
-    public static FlaggedOption defineArgSpreadsheetId() {
-        FlaggedOption opt = new FlaggedOption("spreadsheet");
-        opt.setLongFlag("spreadsheet");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify Google Spreadsheet ID to put data.");
-        return opt;
-    }
-
-    public static String getArgSpreadsheetId(JSAPResult arguments) {
-        return arguments.getString("spreadsheet");
-    }
-
-    public static FlaggedOption defineArgGoogleSecretPath() {
-        FlaggedOption opt = new FlaggedOption("googleSecretPath");
-        opt.setLongFlag("googleSecretPath");
-        opt.setStringParser(FileStringParser.getParser().setMustBeFile(true));
-        opt.setDefault("./client_secret.json");
-        opt.setHelp("Specify the path to the JSON google secret for serializing.");
-        return opt;
-    }
-
-    public static File getArgGoogleSecretPath(JSAPResult arguments) {
-        return arguments.getFile("googleSecretPath");
-    }
-
-    public static FlaggedOption defineArgGoogleAccessToken() {
-        FlaggedOption opt = new FlaggedOption("googleAccessToken");
-        opt.setLongFlag("googleAccessToken");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify the google access token to use for serializers.");
-        return opt;
-    }
-
-    public static String getArgGoogleAccessToken(JSAPResult arguments) {
-        return arguments.getString("googleAccessToken");
     }
 
     public static FlaggedOption defineArgSmtpServer() {
@@ -384,43 +343,6 @@ public class LauncherUtils {
             }
         } else {
             logger.info("MongoDB won't be used for serialization.");
-        }
-        return null;
-    }
-
-    public static SerializerEngine initSpreadsheetSerializerEngineWithFileSecret(Logger logger) {
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        if (config.getSpreadsheetId() != null && (new File(config.getGoogleSecretPath())).exists()) {
-            logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(config.getSpreadsheetId());
-            try {
-                GoogleSpreadSheetFactory.initWithFileSecret(config.getGoogleSecretPath());
-                return new GoogleSpreadsheetSerializerEngine();
-            } catch (IOException | GeneralSecurityException e) {
-                logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
-            }
-        } else {
-            logger.info("Google Spreadsheet won't be used for serialization.");
-        }
-        return null;
-    }
-
-    public static SerializerEngine initSpreadsheetSerializerEngineWithAccessToken(Logger logger) {
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        if (config.getSpreadsheetId() != null && config.getGoogleAccessToken() != null) {
-            logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(config.getSpreadsheetId());
-            try {
-                if (GoogleSpreadSheetFactory.initWithAccessToken(config.getGoogleAccessToken())) {
-                    return new GoogleSpreadsheetSerializerEngine();
-                } else {
-                    logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.");
-                }
-            } catch (IOException | GeneralSecurityException e) {
-                logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
-            }
-        } else {
-            logger.info("Google Spreadsheet won't be used for serialization.");
         }
         return null;
     }

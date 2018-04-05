@@ -72,10 +72,6 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
         jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
-        // --spreadsheet
-        jsap.registerParameter(LauncherUtils.defineArgSpreadsheetId());
-        // --googleSecretPath
-        jsap.registerParameter(LauncherUtils.defineArgGoogleSecretPath());
         // --notifyEndProcess
         jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
@@ -123,8 +119,6 @@ public class Launcher {
         }
         this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
         this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
-        this.config.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
-        this.config.setGoogleSecretPath(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
         this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
         this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
@@ -146,11 +140,6 @@ public class Launcher {
 
     private void initSerializerEngines() {
         this.engines = new ArrayList<>();
-
-        SerializerEngine spreadsheetSerializerEngine = LauncherUtils.initSpreadsheetSerializerEngineWithFileSecret(LOGGER);
-        if (spreadsheetSerializerEngine != null) {
-            this.engines.add(spreadsheetSerializerEngine);
-        }
 
         List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
         this.engines.addAll(fileSerializerEngines);
