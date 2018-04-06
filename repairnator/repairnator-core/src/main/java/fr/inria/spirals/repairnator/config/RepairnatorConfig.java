@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.config;
 
 import fr.inria.jtravis.JTravis;
+import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.kohsuke.github.GitHub;
 
@@ -32,6 +33,7 @@ public class RepairnatorConfig {
     // Scanner
     private Date lookFromDate;
     private Date lookToDate;
+    private BearsMode bearsMode;
 
     // Pipeline
     private int buildId;
@@ -384,6 +386,14 @@ public class RepairnatorConfig {
         return JTravis.builder().setGithubToken(this.getGithubToken()).build();
     }
 
+    public BearsMode getBearsMode() {
+        return bearsMode;
+    }
+
+    public void setBearsMode(BearsMode bearsMode) {
+        this.bearsMode = bearsMode;
+    }
+
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
@@ -425,6 +435,7 @@ public class RepairnatorConfig {
                 ", humanPatch=" + humanPatch +
                 ", repository='" + repository + '\'' +
                 ", clean=" + clean +
+                ", bearsMode=" + bearsMode.name() +
                 '}';
     }
 }

@@ -85,6 +85,7 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
 
     if [ "$BEARS_MDOE" -eq 1 ]; then
         supplementaryArgs="$supplementaryArgs --bears"
+        supplementaryArgs="$supplementaryArgs --bearsMode $BEARS_FIXER_MODE"
     fi
 
     if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then

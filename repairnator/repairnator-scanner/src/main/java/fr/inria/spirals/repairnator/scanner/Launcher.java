@@ -4,12 +4,14 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.DateStringParser;
+import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
 import fr.inria.spirals.repairnator.Utils;
@@ -17,6 +19,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
@@ -104,6 +107,13 @@ public class Launcher {
         opt2.setHelp("Specify the final date to get builds (e.g. 31/01/2017). Note that the search is until 23:59:59 of the specified date.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("bearsMode");
+        opt2.setLongFlag("bearsMode");
+        String options = StringUtils.join(BearsMode.values(), ";").toLowerCase();
+        opt2.setStringParser(EnumeratedStringParser.getParser(options));
+        opt2.setDefault("both");
+        opt2.setHelp("This option is only useful in case of '--bears' is used: it defines the type of fixer build to get. Available values: "+options);
+        jsap.registerParameter(opt2);
         return jsap;
     }
 
@@ -141,6 +151,7 @@ public class Launcher {
         }
         this.config.setLookFromDate(lookFromDate);
         this.config.setLookToDate(lookToDate);
+        this.config.setBearsMode(BearsMode.valueOf(arguments.getString("bearsMode").toUpperCase()));
     }
 
     private void initSerializerEngines() {
