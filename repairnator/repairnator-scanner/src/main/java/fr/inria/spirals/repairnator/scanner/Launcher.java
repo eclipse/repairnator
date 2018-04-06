@@ -158,7 +158,7 @@ public class Launcher {
     }
 
     private void mainProcess() throws IOException {
-
+        LOGGER.info("Configuration: " + this.config.toString());
         List<BuildToBeInspected> buildsToBeInspected = this.runScanner();
 
         if (buildsToBeInspected != null) {
@@ -202,27 +202,35 @@ public class Launcher {
 
     private void processOutput(List<BuildToBeInspected> listOfBuilds) {
         if (this.config.isSerializeJson()) {
-            String outputPath = this.config.getOutputPath();
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
-
-                for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-                    if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                        writer.write(buildToBeInspected.getBuggyBuild().getId() + "");
-                    } else {
-                        writer.write(buildToBeInspected.getBuggyBuild().getId() + Utils.COMMA + buildToBeInspected.getPatchedBuild().getId());
-                    }
-                    writer.newLine();
-                    writer.flush();
-                }
-
-                writer.close();
-                return;
-            } catch (IOException e) {
-                LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
-            }
+            this.printToFile(listOfBuilds);
+        } else {
+            this.printToStdout(listOfBuilds);
         }
+    }
 
+    private void printToFile(List<BuildToBeInspected> listOfBuilds) {
+        String outputPath = this.config.getOutputPath();
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+
+            for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
+                if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                    writer.write(buildToBeInspected.getBuggyBuild().getId() + "");
+                } else {
+                    writer.write(buildToBeInspected.getBuggyBuild().getId() + Utils.COMMA + buildToBeInspected.getPatchedBuild().getId());
+                }
+                writer.newLine();
+                writer.flush();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            LOGGER.error("Error while writing file " + outputPath + ". The content will be printed in the standard output.", e);
+            this.printToStdout(listOfBuilds);
+        }
+    }
+
+    private void printToStdout(List<BuildToBeInspected> listOfBuilds) {
         for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
             System.out.println(buildToBeInspected.getBuggyBuild().getId());
         }
