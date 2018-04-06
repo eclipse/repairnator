@@ -70,7 +70,6 @@ export REPAIRNATOR_REALTIME_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-realtime.j
 
 ### Other pathes
 export REPAIR_OUTPUT_PATH=$ROOT_OUT_DIR`date "+%Y-%m-%d_%H%M%S"` # Where to put output of repairnator
-export REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`.txt # full name of the scanned build list
 export LOG_DIR=$ROOT_LOG_DIR`date "+%Y-%m-%d_%H%M"` # Log directory: it will contain several logs and serialized files
 export DOCKER_LOG_DIR=$LOG_DIR # Log directory for docker containers (most of the time, it should be the same as LOG_DIR, but sometimes if you use distant host, e.g. g5k you need to specify another value)
 
