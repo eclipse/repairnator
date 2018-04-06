@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class RepairnatorConfig {
     private String runId;
-    private LauncherMode launcherMode;
+    private LauncherMode launcherMode = LauncherMode.REPAIR;
 
     private boolean serializeJson;
     private String inputPath;

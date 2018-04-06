@@ -99,8 +99,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
         jsap.registerParameter(LauncherUtils.defineArgRunId());
-        // -m or --launcherMode
-        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if RepairNator will be launch for repairing (REPAIR) or for collecting fixer builds (BEARS)."));
+        // --bears
+        jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
@@ -167,7 +167,11 @@ public class Launcher {
 
         this.config.setClean(true);
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+        if (LauncherUtils.gerArgBearsMode(arguments)) {
+            this.config.setLauncherMode(LauncherMode.BEARS);
+        } else {
+            this.config.setLauncherMode(LauncherMode.REPAIR);
+        }
         if (LauncherUtils.getArgOutput(arguments) != null) {
             this.config.setSerializeJson(true);
             this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
