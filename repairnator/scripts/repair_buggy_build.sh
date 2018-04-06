@@ -31,7 +31,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
 
-$SCRIPT_DIR/utils/init_script.sh
+source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
 $SCRIPT_DIR/utils/create_structure.sh
@@ -45,7 +45,7 @@ DOCKER_ARGS="$DOCKER_ARGS --env GITHUB_OAUTH=$GITHUB_OAUTH"
 DOCKER_ARGS="$DOCKER_ARGS --env LOG_FILENAME=$LOG_FILENAME"
 DOCKER_ARGS="$DOCKER_ARGS --env RUN_ID=$RUN_ID"
 DOCKER_ARGS="$DOCKER_ARGS --env OUTPUT=/var/log"
-if [ "$BEARS_MDOE" -eq 1 ]; then
+if [ "$BEARS_MODE" -eq 1 ]; then
     DOCKER_ARGS="$DOCKER_ARGS --env REPAIR_MODE=bears"
 else
     DOCKER_ARGS="$DOCKER_ARGS --env REPAIR_MODE=repair"
