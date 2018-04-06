@@ -92,7 +92,7 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
 
     echo "Elementary args for scanner: $elementaryArgs"
     echo "Supplementary args for scanner: $supplementaryArgs"
-    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/scanner.log
+    java -jar $REPAIRNATOR_SCANNER_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/scanner_$RUN_ID.log
 fi
 
 NB_LINES=`wc -l < $REPAIRNATOR_BUILD_LIST`
@@ -132,7 +132,7 @@ fi
 
 echo "Elementary args for docker pool: $elementaryArgs"
 echo "Supplementary args for docker pool: $supplementaryArgs"
-java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR $elementaryArgs $supplementaryArgs &> $LOG_DIR/dockerpool.log
+java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR $elementaryArgs $supplementaryArgs &> $LOG_DIR/dockerpool_$RUN_ID.log
 
 echo "Docker pool finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR
