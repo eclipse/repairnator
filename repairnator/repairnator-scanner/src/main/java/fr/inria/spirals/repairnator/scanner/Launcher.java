@@ -109,10 +109,10 @@ public class Launcher {
 
         opt2 = new FlaggedOption("bearsMode");
         opt2.setLongFlag("bearsMode");
-        String options = StringUtils.join(BearsMode.values(), ";");
+        String options = StringUtils.join(BearsMode.values(), ";").toLowerCase();
         opt2.setStringParser(EnumeratedStringParser.getParser(options));
         opt2.setDefault("both");
-        opt2.setHelp("This option is only useful in case of '--bears' is used: it defines the type of fixer build to get.");
+        opt2.setHelp("This option is only useful in case of '--bears' is used: it defines the type of fixer build to get. Available values: "+options);
         jsap.registerParameter(opt2);
         return jsap;
     }
@@ -151,7 +151,7 @@ public class Launcher {
         }
         this.config.setLookFromDate(lookFromDate);
         this.config.setLookToDate(lookToDate);
-        this.config.setBearsMode(BearsMode.valueOf(arguments.getString("bearsMode")));
+        this.config.setBearsMode(BearsMode.valueOf(arguments.getString("bearsMode").toUpperCase()));
     }
 
     private void initSerializerEngines() {

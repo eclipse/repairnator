@@ -282,6 +282,11 @@ Options:
   [(-t|--lookToDate) <lookToDate>]
         Specify the final date to get builds (e.g. 31/01/2017). Note that the
         search is until 23:59:59 of the specified date.
+        
+  [--bearsMode <bearsMode>]
+          This option is only useful in case of '--bears' is used: it defines the
+          type of fixer build to get. Available values:
+          failing_passing;passing_passing;both (default: both)
 
 Please note that the GITHUB_OAUTH environment variables must be set.
 ``` 
