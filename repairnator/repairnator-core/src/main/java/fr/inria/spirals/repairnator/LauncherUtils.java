@@ -4,7 +4,6 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
@@ -14,7 +13,6 @@ import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEn
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -62,24 +60,16 @@ public class LauncherUtils {
         return arguments.getBoolean("notifyEndProcess");
     }
 
-    public static FlaggedOption defineArgLauncherMode(String helpMessage) {
-        String launcherModeValues = "";
-        for (LauncherMode mode : LauncherMode.values()) {
-            launcherModeValues += mode.name() + ";";
-        }
-        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 1);
-
-        FlaggedOption opt = new FlaggedOption("launcherMode");
-        opt.setShortFlag('m');
-        opt.setLongFlag("launcherMode");
-        opt.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
-        opt.setRequired(true);
-        opt.setHelp(helpMessage);
-        return opt;
+    public static Switch defineArgBearsMode() {
+        Switch sw = new Switch("bears");
+        sw.setLongFlag("bears");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator to analyze pairs of bugs and human-produced patches.");
+        return sw;
     }
 
-    public static LauncherMode getArgLauncherMode(JSAPResult arguments) {
-        return LauncherMode.valueOf(arguments.getString("launcherMode").toUpperCase());
+    public static boolean gerArgBearsMode(JSAPResult arguments) {
+        return arguments.getBoolean("bears");
     }
 
     public static FlaggedOption defineArgRunId() {

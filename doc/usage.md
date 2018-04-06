@@ -34,9 +34,9 @@ Options:
   [--runId <runId>]
         Specify the run id for this launch.
 
-  (-m|--launcherMode) <launcherMode>
-        Specify if RepairNator will be launch for repairing (REPAIR) or for
-        collecting fixer builds (BEARS).
+  [--bears]
+        This mode allows to use repairnator to analyze pairs of bugs and
+        human-produced patches.
 
   [(-o|--output) <output>]
         Specify path to output serialized files
@@ -76,6 +76,10 @@ Options:
         Specify the file containing a list of projects that the pipeline should
         deactivate serialization when processing builds from. (default:
         ./projects_to_ignore.txt)
+
+Please note that the GITHUB_OAUTH environment variables must be set.
+The environment variable M2_HOME should be set and refer to the path of your maven home installation.
+For using Nopol, you must add tools.jar in your classpath from your installed jdk
 ``` 
 
 ### Dockerpool
@@ -96,9 +100,9 @@ Options:
   [--runId <runId>]
         Specify the run id for this launch.
 
-  (-m|--launcherMode) <launcherMode>
-        Specify if the dockerpool intends to repair failing builds (REPAIR) or
-        gather builds info (BEARS).
+  [--bears]
+        This mode allows to use repairnator to analyze pairs of bugs and
+        human-produced patches.
 
   (-i|--input) <input>
         Specify the input file containing the list of build ids.
@@ -243,9 +247,9 @@ Options:
   [--runId <runId>]
         Specify the run id for this launch.
 
-  (-m|--launcherMode) <launcherMode>
-        Specify if the scanner intends to get failing builds (REPAIR) or fixer
-        builds (BEARS).
+  [--bears]
+        This mode allows to use repairnator to analyze pairs of bugs and
+        human-produced patches.
 
   (-i|--input) <input>
         Specify where to find the list of projects to scan.

@@ -57,8 +57,8 @@ public class Launcher extends AbstractPoolManager {
         jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
         jsap.registerParameter(LauncherUtils.defineArgRunId());
-        // -m or --launcherMode
-        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the dockerpool intends to repair failing builds (REPAIR) or gather builds info (BEARS)."));
+        // --bears
+        jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // -i or --input
         jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
         // -o or --output
@@ -95,7 +95,11 @@ public class Launcher extends AbstractPoolManager {
         this.config = RepairnatorConfig.getInstance();
 
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+        if (LauncherUtils.gerArgBearsMode(arguments)) {
+            this.config.setLauncherMode(LauncherMode.BEARS);
+        } else {
+            this.config.setLauncherMode(LauncherMode.REPAIR);
+        }
         this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));

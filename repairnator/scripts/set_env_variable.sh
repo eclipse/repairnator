@@ -81,6 +81,6 @@ export REPAIRNATOR_GH_REPO_PATH=$REPAIRNATOR_GITHUB_DIR/repairnator # Path of th
 
 ### Switches
 
-export REPAIR_MODE=repair # Available modes are "repair" or "bears". This is used both for scanner and pipeline
+export BEARS_MODE=0 # Set 1 to use the bears mode
 export SKIP_LAUNCH_REPAIRNATOR=0 # If set to 1, skip the launch of docker pool: it will only launch the scanner. Note that this option might be overriden in some scripts.
 export CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers

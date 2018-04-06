@@ -62,8 +62,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
         jsap.registerParameter(LauncherUtils.defineArgRunId());
-        // -m or --launcherMode
-        jsap.registerParameter(LauncherUtils.defineArgLauncherMode("Specify if the scanner intends to get failing builds (REPAIR) or fixer builds (BEARS)."));
+        // --bears
+        jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // -i or --input
         jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
         // -o or --output
@@ -111,7 +111,12 @@ public class Launcher {
         this.config = RepairnatorConfig.getInstance();
 
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
-        this.config.setLauncherMode(LauncherUtils.getArgLauncherMode(arguments));
+
+        if (LauncherUtils.gerArgBearsMode(arguments)) {
+            this.config.setLauncherMode(LauncherMode.BEARS);
+        } else {
+            this.config.setLauncherMode(LauncherMode.REPAIR);
+        }
         this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
         if (LauncherUtils.getArgOutput(arguments) != null) {
             this.config.setSerializeJson(true);
