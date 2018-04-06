@@ -398,7 +398,7 @@ public class RepairnatorConfig {
     public String toString() {
         String ghToken = this.getGithubToken();
         if (ghToken != null && !ghToken.isEmpty()) {
-            ghToken = ghToken.substring(0,10)+"[...]";
+            ghToken = (ghToken.length() > 10) ? ghToken.substring(0,10)+"[...]" : ghToken;
         }
         return "RepairnatorConfig{" +
                 "runId='" + runId + '\'' +
