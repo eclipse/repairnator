@@ -386,6 +386,10 @@ public class RepairnatorConfig {
 
     @Override
     public String toString() {
+        String ghToken = this.getGithubToken();
+        if (ghToken != null && !ghToken.isEmpty()) {
+            ghToken = ghToken.substring(0,10)+"[...]";
+        }
         return "RepairnatorConfig{" +
                 "runId='" + runId + '\'' +
                 ", launcherMode=" + launcherMode +
@@ -405,7 +409,7 @@ public class RepairnatorConfig {
                 ", buildId=" + buildId +
                 ", z3solverPath='" + z3solverPath + '\'' +
                 ", workspacePath='" + workspacePath + '\'' +
-                ", githubToken='" + githubToken + '\'' +
+                ", githubToken='" + ghToken + '\'' +
                 ", dockerImageName='" + dockerImageName + '\'' +
                 ", skipDelete=" + skipDelete +
                 ", createOutputDir=" + createOutputDir +
