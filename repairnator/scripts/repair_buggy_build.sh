@@ -32,13 +32,7 @@ echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
 
 if [ -z "$HOME_REPAIR" ] || [ ! -d $HOME_REPAIR ]; then
-    echo "The variable HOME_REPAIR must be defined and point to an existing directory."
-    exit -1
-fi
-
-if [ -z "$GITHUB_LOGIN" ] || [ -z "$GITHUB_OAUTH" ]; then
-    echo "The variable GITHUB_OAUTH and GITHUB_LOGIN must be set."
-    exit -1
+    mkdir -p $HOME_REPAIR
 fi
 
 mkdir -p $ROOT_LOG_DIR
