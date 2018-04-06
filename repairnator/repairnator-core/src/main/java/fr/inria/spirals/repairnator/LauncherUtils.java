@@ -4,7 +4,6 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
@@ -14,7 +13,6 @@ import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEn
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 
 import java.io.File;

@@ -63,7 +63,24 @@ echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
 LOG_FILENAME="repairnator-pipeline_`date \"+%Y-%m-%d_%H%M\"`_$BUILD_ID"
-DOCKER_ARGS="--env BUILD_ID=$BUILD_ID --env GITHUB_OAUTH=$GITHUB_OAUTH --env LOG_FILENAME=$LOG_FILENAME --env RUN_ID=$RUN_ID --env REPAIR_MODE=$REPAIR_MODE --env OUTPUT=/var/log `ca \"--env PUSH_URL\" $PUSH_URL``ca \"--env SMTP_SERVER\" $SMTP_SERVER``ca \"--env NOTIFY_TO\" $NOTIFY_TO``ca \"--env MONGODB_HOST\" $MONGODB_HOST``ca \"--env MONGODB_NAME\" $MONGODB_NAME`"
+DOCKER_ARGS="--env BUILD_ID=$BUILD_ID"
+DOCKER_ARGS="$DOCKER_ARGS --env GITHUB_OAUTH=$GITHUB_OAUTH"
+DOCKER_ARGS="$DOCKER_ARGS --env LOG_FILENAME=$LOG_FILENAME"
+DOCKER_ARGS="$DOCKER_ARGS --env RUN_ID=$RUN_ID"
+DOCKER_ARGS="$DOCKER_ARGS --env OUTPUT=/var/log"
+if [ "$BEARS_MDOE" -eq 1 ]; then
+    DOCKER_ARGS="$DOCKER_ARGS --env REPAIR_MODE=bears"
+else
+    DOCKER_ARGS="$DOCKER_ARGS --env REPAIR_MODE=repair"
+fi
+
+DOCKER_ARGS="$DOCKER_ARGS `ca \"--env PUSH_URL\" $PUSH_URL`"
+DOCKER_ARGS="$DOCKER_ARGS `ca \"--env SMTP_SERVER\" $SMTP_SERVER`"
+DOCKER_ARGS="$DOCKER_ARGS `ca \"--env NOTIFY_TO\" $NOTIFY_TO`"
+DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_HOST\" $MONGODB_HOST`"
+DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_NAME\" $MONGODB_NAME`"
+
+
 DOCKER_COMMAND="docker run -d $DOCKER_ARGS -v $LOG_DIR:/var/log $DOCKER_TAG"
 echo "Launch docker container with the following command: $DOCKER_COMMAND"
 

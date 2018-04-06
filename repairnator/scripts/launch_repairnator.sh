@@ -72,9 +72,19 @@ cp $REPAIRNATOR_DOCKERPOOL_JAR $REPAIRNATOR_DOCKERPOOL_DEST_JAR
 if [ "$SKIP_SCAN" -eq 0 ]; then
     echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
 
-    elementaryArgs="-m $REPAIR_MODE -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID"
+    elementaryArgs="-i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID"
 
-    supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca -l $SCANNER_NB_HOURS``ca --lookFromDate $LOOK_FROM_DATE` `ca --lookToDate $LOOK_TO_DATE``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+    supplementaryArgs="`ca --dbhost $MONGODB_HOST`"
+    supplementaryArgs="$supplementaryArgs `ca --dbname $MONGODB_NAME`"
+    supplementaryArgs="$supplementaryArgs `ca -l $SCANNER_NB_HOURS`"
+    supplementaryArgs="$supplementaryArgs `ca --lookFromDate $LOOK_FROM_DATE`"
+    supplementaryArgs="$supplementaryArgs `ca --lookToDate $LOOK_TO_DATE`"
+    supplementaryArgs="$supplementaryArgs `ca --smtpServer $SMTP_SERVER`"
+    supplementaryArgs="$supplementaryArgs `ca --notifyto $NOTIFY_TO`"
+
+    if [ "$BEARS_MDOE" -eq 1 ]; then
+        supplementaryArgs="$supplementaryArgs --bears"
+    fi
 
     if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
         supplementaryArgs="$supplementaryArgs --notifyEndProcess"
@@ -104,9 +114,14 @@ docker pull $DOCKER_TAG
 
 echo "Launch docker pool..."
 
-elementaryArgs="-t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID -m $REPAIR_MODE"
+elementaryArgs="-t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID"
 
 supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+
+if [ "$BEARS_MDOE" -eq 1 ]; then
+    supplementaryArgs="$supplementaryArgs --bears"
+fi
+
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --notifyEndProcess"
 fi
