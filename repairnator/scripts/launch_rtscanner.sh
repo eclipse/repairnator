@@ -46,7 +46,7 @@ echo "Create log directory: $LOG_DIR"
 mkdir $LOG_DIR
 
 echo "Start building a new version of repairnator"
-$SCRIPT_DIR/build_repairnator.sh
+$SCRIPT_DIR/utils/build_repairnator.sh
 
 if [[ $? != 0 ]]
 then

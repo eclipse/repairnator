@@ -31,27 +31,10 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
 
-if [ -z "$HOME_REPAIR" ] || [ ! -d $HOME_REPAIR ]; then
-    mkdir -p $HOME_REPAIR
-fi
-
-mkdir -p $ROOT_LOG_DIR
-mkdir -p $ROOT_BIN_DIR
-mkdir -p $ROOT_OUT_DIR
-
-echo "Create output dir : $REPAIR_OUTPUT_PATH"
-mkdir $REPAIR_OUTPUT_PATH
-
-if [ -z "$RUN_ID_SUFFIX" ]; then
-    RUN_ID=`uuidgen`
-else
-    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
-fi
-
+$SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
-echo "Create log directory: $LOG_DIR"
-mkdir $LOG_DIR
+$SCRIPT_DIR/utils/create_structure.sh
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
@@ -78,4 +61,5 @@ DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_NAME\" $MONGODB_NAME`"
 DOCKER_COMMAND="docker run -d $DOCKER_ARGS -v $LOG_DIR:/var/log $DOCKER_TAG"
 echo "Launch docker container with the following command: $DOCKER_COMMAND"
 
+echo "The container is launched with the following container id: "
 $DOCKER_COMMAND
