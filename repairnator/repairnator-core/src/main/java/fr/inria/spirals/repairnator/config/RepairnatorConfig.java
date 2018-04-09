@@ -33,7 +33,7 @@ public class RepairnatorConfig {
     // Scanner
     private Date lookFromDate;
     private Date lookToDate;
-    private BearsMode bearsMode;
+    private BearsMode bearsMode = BearsMode.BOTH;
 
     // Pipeline
     private int buildId;
