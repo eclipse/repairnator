@@ -45,51 +45,6 @@ public class CommitPatch extends AbstractStep {
         this.pushHumanPatch = pushHumanPatch;
     }
 
-    private void computePatchStats(Git git, RevCommit headRev, RevCommit commit) {
-        try {
-            ObjectReader reader = git.getRepository().newObjectReader();
-            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-            oldTreeIter.reset(reader, headRev.getTree());
-            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-            newTreeIter.reset(reader, commit.getTree());
-
-            DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
-            diffFormatter.setRepository(git.getRepository());
-            diffFormatter.setContext(0);
-            List<DiffEntry> entries = diffFormatter.scan(newTreeIter, oldTreeIter);
-
-            int nbLineAdded = 0;
-            int nbLineDeleted = 0;
-            Set<String> changedFiles = new HashSet<>();
-
-            for (DiffEntry entry : entries) {
-                String path;
-                if (entry.getChangeType() == DiffEntry.ChangeType.DELETE) {
-                    path = entry.getOldPath();
-                } else {
-                    path = entry.getNewPath();
-                }
-                if (!path.contains("repairnator")) {
-                    changedFiles.add(path);
-
-                    FileHeader fileHeader = diffFormatter.toFileHeader(entry);
-                    List<? extends HunkHeader> hunks = fileHeader.getHunks();
-                    for (HunkHeader hunk : hunks) {
-                        nbLineAdded += hunk.getOldImage().getLinesAdded();
-                        nbLineDeleted += hunk.getOldImage().getLinesDeleted();
-                    }
-                }
-            }
-
-            Metrics metric = this.getInspector().getJobStatus().getMetrics();
-            metric.setPatchAddedLines(nbLineAdded);
-            metric.setPatchDeletedLines(nbLineDeleted);
-            metric.setPatchChangedFiles(changedFiles.size());
-        } catch (IOException e) {
-            this.getLogger().error("Error while computing stat on the patch", e);
-        }
-    }
-
     @Override
     protected void businessExecute() {
         if (RepairnatorConfig.getInstance().isPush()) {
@@ -144,7 +99,7 @@ public class CommitPatch extends AbstractStep {
                 RevCommit commit = git.commit().setMessage(commitMsg)
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
-                this.computePatchStats(git, headRev, commit);
+                this.getInspector().getGitHelper().computePatchStats(this.getInspector().getJobStatus().getMetrics(), git, headRev, commit);
 
                 if (this.getInspector().getJobStatus().isHasBeenPushed()) {
                     CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.getConfig().getGithubToken(), "");
