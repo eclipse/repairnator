@@ -61,5 +61,7 @@ DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_NAME\" $MONGODB_NAME`"
 DOCKER_COMMAND="docker run -d $DOCKER_ARGS -v $LOG_DIR:/var/log $DOCKER_TAG"
 echo "Launch docker container with the following command: $DOCKER_COMMAND"
 
-echo "The container is launched with the following container id: "
-$DOCKER_COMMAND
+DOCKER_ID=`$DOCKER_COMMAND`
+echo "The container is launched with the following container id: $DOCKER_ID"
+echo "log command:"
+echo docker logs -f $DOCKER_ID
