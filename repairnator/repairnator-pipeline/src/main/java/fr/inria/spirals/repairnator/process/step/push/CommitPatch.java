@@ -8,26 +8,16 @@ import fr.inria.spirals.repairnator.states.PushState;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.patch.FileHeader;
-import org.eclipse.jgit.patch.HunkHeader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by urli on 27/04/2017.
