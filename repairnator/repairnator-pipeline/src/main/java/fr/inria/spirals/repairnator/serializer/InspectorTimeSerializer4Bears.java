@@ -10,6 +10,7 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatc
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildSourceCode;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.pathes.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;

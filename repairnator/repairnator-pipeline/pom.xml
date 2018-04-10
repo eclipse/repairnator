@@ -53,6 +53,11 @@
             <artifactId>astor</artifactId>
             <version>0.0.2-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>eu.stamp-project</groupId>
+            <artifactId>assert-fixer</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 
     <properties>
