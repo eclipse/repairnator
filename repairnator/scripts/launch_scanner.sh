@@ -64,7 +64,7 @@ supplementaryArgs="$supplementaryArgs `ca --lookToDate $LOOK_TO_DATE`"
 supplementaryArgs="$supplementaryArgs `ca --smtpServer $SMTP_SERVER`"
 supplementaryArgs="$supplementaryArgs `ca --notifyto $NOTIFY_TO`"
 
-if [ "$BEARS_MDOE" -eq 1 ]; then
+if [ "$BEARS_MODE" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --bears"
     supplementaryArgs="$supplementaryArgs --bearsMode $BEARS_FIXER_MODE"
 fi
