@@ -54,8 +54,9 @@ then
 fi
 
 echo "Copy jars"
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:LATEST:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-dockerpool:LATEST:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_DOCKERPOOL_DEST_JAR
+source $SCRIPT_DIR/utils/pom_versions.sh
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-dockerpool:$DOCKERPOOL_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_DOCKERPOOL_DEST_JAR
 
 if [ "$SKIP_SCAN" -eq 0 ]; then
     REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`_$RUN_ID.txt
