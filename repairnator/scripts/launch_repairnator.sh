@@ -109,7 +109,7 @@ elementaryArgs="-t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG
 
 supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 
-if [ "$BEARS_MDOE" -eq 1 ]; then
+if [ "$BEARS_MODE" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --bears"
 fi
 
