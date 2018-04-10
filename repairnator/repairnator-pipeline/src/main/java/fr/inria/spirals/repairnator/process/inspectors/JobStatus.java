@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 
+import eu.stamp.project.assertfixer.AssertFixerResult;
 import fr.inria.main.AstorOutputStatus;
 import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -36,6 +37,8 @@ public class JobStatus {
     private AstorOutputStatus astorStatus;
 
     private JsonElement npeFixResults;
+
+    private List<AssertFixerResult> assertFixerResults;
 
     private boolean isReproducedAsFail;
     private boolean isReproducedAsError;
@@ -288,5 +291,13 @@ public class JobStatus {
 
     public void setForkURL(String forkURL) {
         this.forkURL = forkURL;
+    }
+
+    public List<AssertFixerResult> getAssertFixerResults() {
+        return assertFixerResults;
+    }
+
+    public void setAssertFixerResults(List<AssertFixerResult> assertFixerResults) {
+        this.assertFixerResults = assertFixerResults;
     }
 }
