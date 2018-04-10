@@ -36,7 +36,7 @@ then
 fi
 
 echo "Copy jars"
-cp $REPAIRNATOR_SCANNER_JAR $REPAIRNATOR_SCANNER_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:LATEST:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR
 
 REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`_$RUN_ID.txt
 

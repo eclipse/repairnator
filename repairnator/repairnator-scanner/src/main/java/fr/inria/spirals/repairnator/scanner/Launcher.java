@@ -40,6 +40,19 @@ public class Launcher {
     private EndProcessNotifier endProcessNotifier;
 
     public Launcher(String[] args) throws JSAPException {
+        InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
+        Properties properties = new Properties();
+        if (propertyStream != null) {
+            try {
+                properties.load(propertyStream);
+            } catch (IOException e) {
+                LOGGER.error("Error while loading property file", e);
+            }
+            LOGGER.info("SCANNER VERSION: "+properties.getProperty("SCANNER_VERSION"));
+        } else {
+            LOGGER.info("No information about SCANNER VERSION has been found.");
+        }
+
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);

@@ -44,8 +44,7 @@ then
 fi
 
 echo "Copy jars and prepare docker image"
-mkdir $REPAIRNATOR_RUN_DIR
-cp $REPAIRNATOR_REALTIME_JAR $REPAIRNATOR_REALTIME_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-realtime:LATEST:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_REALTIME_DEST_JAR
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG

@@ -59,13 +59,9 @@ export ROOT_BIN_DIR=$HOME_REPAIR/bin/ # The directory will be created if it does
 
 ### Binary pathes
 export REPAIRNATOR_RUN_DIR=$ROOT_BIN_DIR`date "+%Y-%m-%d_%H%M"` # Where to put executables used (will be created automatically and deleted)
-export REPAIRNATOR_SCANNER_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-scanner/target/repairnator-scanner-*-jar-with-dependencies.jar" # full name of the scanner jar
 export REPAIRNATOR_SCANNER_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-scanner.jar
-export REPAIRNATOR_DOCKERPOOL_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-dockerpool/target/repairnator-dockerpool-*-jar-with-dependencies.jar" # full name of docker pool jar
 export REPAIRNATOR_DOCKERPOOL_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-dockerpool.jar
-export REPAIRNATOR_CHECKBRANCHES_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-checkbranches/target/repairnator-checkbranches-*-jar-with-dependencies.jar" # full name of the scanner jar
 export REPAIRNATOR_CHECKBRANCHES_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-checkbranches.jar
-export REPAIRNATOR_REALTIME_JAR="$REPAIRNATOR_GH_REPO_PATH/repairnator-realtime/target/repairnator-realtime-*-jar-with-dependencies.jar" # full name of the scanner jar
 export REPAIRNATOR_REALTIME_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-realtime.jar
 
 ### Other pathes
