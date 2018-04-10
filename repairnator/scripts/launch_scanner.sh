@@ -21,25 +21,13 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
 
-echo "Create output directory: $REPAIR_OUTPUT_PATH"
-mkdir -p $REPAIR_OUTPUT_PATH
-
-echo "Create log directory: $LOG_DIR"
-mkdir -p $LOG_DIR
-
-echo "Create bin directory: $REPAIRNATOR_RUN_DIR"
-mkdir -p $REPAIRNATOR_RUN_DIR
-
-if [ -z "$RUN_ID_SUFFIX" ]; then
-    RUN_ID=`uuidgen`
-else
-    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
-fi
-
+source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
+$SCRIPT_DIR/utils/create_structure.sh
+
 echo "Start building a new version of repairnator"
-$SCRIPT_DIR/build_repairnator.sh
+$SCRIPT_DIR/utils/build_repairnator.sh
 
 if [[ $? != 0 ]]
 then

@@ -31,14 +31,10 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
 
-echo "Create output directory: $REPAIR_OUTPUT_PATH"
-mkdir -p $REPAIR_OUTPUT_PATH
+source $SCRIPT_DIR/utils/init_script.sh
+echo "This will be run with the following RUN_ID: $RUN_ID"
 
-echo "Create log directory: $LOG_DIR"
-mkdir -p $LOG_DIR
-
-echo "Create bin directory: $REPAIRNATOR_RUN_DIR"
-mkdir -p $REPAIRNATOR_RUN_DIR
+$SCRIPT_DIR/utils/create_structure.sh
 
 if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1
@@ -47,14 +43,6 @@ else if [ ! -f "$REPAIR_PROJECT_LIST_PATH" ]; then
     touch $REPAIR_PROJECT_LIST_PATH
     fi
 fi
-
-if [ -z "$RUN_ID_SUFFIX" ]; then
-    RUN_ID=`uuidgen`
-else
-    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
-fi
-
-echo "This will be run with the following RUN_ID: $RUN_ID"
 
 echo "Start building a new version of repairnator"
 $SCRIPT_DIR/build_repairnator.sh

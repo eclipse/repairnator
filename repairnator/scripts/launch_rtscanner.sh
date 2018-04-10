@@ -21,17 +21,11 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
 
-mkdir -p $ROOT_LOG_DIR
-mkdir -p $ROOT_BIN_DIR
-mkdir -p $ROOT_OUT_DIR
+source $SCRIPT_DIR/utils/init_script.sh
+echo "This will be run with the following RUN_ID: $RUN_ID"
 
-mkdir $REPAIR_OUTPUT_PATH
+$SCRIPT_DIR/utils/create_structure.sh
 
-if [ -z "$RUN_ID_SUFFIX" ]; then
-    RUN_ID=`uuidgen`
-else
-    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
-fi
 
 if [ ! -f "$WHITELIST_PATH" ]; then
     touch $WHITELIST_PATH
@@ -39,11 +33,6 @@ fi
 if [ ! -f "$BLACKLIST_PATH" ]; then
     touch $BLACKLIST_PATH
 fi
-
-echo "This will be run with the following RUN_ID: $RUN_ID"
-
-echo "Create log directory: $LOG_DIR"
-mkdir $LOG_DIR
 
 echo "Start building a new version of repairnator"
 $SCRIPT_DIR/utils/build_repairnator.sh
