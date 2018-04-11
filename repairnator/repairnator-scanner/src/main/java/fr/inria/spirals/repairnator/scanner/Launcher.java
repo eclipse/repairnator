@@ -214,7 +214,6 @@ public class Launcher {
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(this.config.getInputPath());
 
         ProcessSerializer scannerSerializer;
-
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
@@ -222,11 +221,12 @@ public class Launcher {
             ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
             scannerDetailedDataSerializer.serialize();
         }
-
         scannerSerializer.serialize();
 
         if (buildsToBeInspected.isEmpty()) {
             Launcher.LOGGER.info("No interesting build to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
+        } else {
+            Launcher.LOGGER.info(buildsToBeInspected.size()+" interesting builds to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
         }
         return buildsToBeInspected;
     }
