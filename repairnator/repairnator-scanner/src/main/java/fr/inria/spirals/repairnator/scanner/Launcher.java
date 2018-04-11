@@ -226,7 +226,7 @@ public class Launcher {
         scannerSerializer.serialize();
 
         if (buildsToBeInspected.isEmpty()) {
-            Launcher.LOGGER.info("No build has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
+            Launcher.LOGGER.info("No interesting build to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
         }
         return buildsToBeInspected;
     }
