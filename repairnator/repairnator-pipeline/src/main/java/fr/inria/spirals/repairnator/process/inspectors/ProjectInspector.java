@@ -10,6 +10,7 @@ import fr.inria.spirals.repairnator.process.step.pathes.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
+import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
 import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
@@ -149,6 +150,7 @@ public class ProjectInspector {
                     .setNextStep(new NPERepair(this))
                     .setNextStep(new ComputeClasspath(this))
                     .setNextStep(new ComputeSourceDir(this, false))
+                    .setNextStep(new AssertFixerRepair(this))
                     .setNextStep(new AstorRepair(this))
                     .setNextStep(new NopolRepair(this))
                     .setNextStep(new CommitPatch(this, false))
