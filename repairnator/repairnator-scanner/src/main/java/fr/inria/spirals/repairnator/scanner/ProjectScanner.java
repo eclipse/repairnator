@@ -169,6 +169,9 @@ public class ProjectScanner {
     private List<Repository> getListOfValidRepository(List<String> allSlugs) {
         List<Repository> result = new ArrayList<Repository>();
 
+        this.logger.debug("---------------------------------------------------------------");
+        this.logger.debug("Checking the "+this.totalRepoNumber+" repositories.");
+        this.logger.debug("---------------------------------------------------------------");
         for (String slug : allSlugs) {
             this.logger.debug("Get repo " + slug);
             Optional<Repository> repositoryOptional = this.jTravis.repository().fromSlug(slug);
@@ -194,6 +197,9 @@ public class ProjectScanner {
     private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos) {
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
+        this.logger.debug("---------------------------------------------------------------");
+        this.logger.debug("Scanning builds.");
+        this.logger.debug("---------------------------------------------------------------");
         for (Repository repo : repos) {
             Optional<List<Build>> builds = this.jTravis.build().betweenDates(repo.getSlug(), this.lookFromDate, this.lookToDate);
             if (builds.isPresent()) {
