@@ -359,7 +359,7 @@ public class ProjectScanner {
 
             GHRateLimit rateLimit = gh.getRateLimit();
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-            this.logger.debug("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
+            this.logger.debug("GitHub rate limit: Limit: " + rateLimit.limit + " - Remaining: " + rateLimit.remaining + " - Reset hour: " + dateFormat.format(rateLimit.reset));
 
             if (rateLimit.remaining > 2) {
                 GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
@@ -368,10 +368,10 @@ public class ProjectScanner {
                 GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
                 return compare;
             } else {
-                this.logger.warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
+                this.logger.warn("You reached your rate limit for GitHub. You have to wait until " + dateFormat.format(rateLimit.reset) + " to get data. PRInformation will be null for build "+build.getId()+".");
             }
         } catch (IOException e) {
-            this.logger.warn("Error while getting commit from Github: " + e);
+            this.logger.warn("Error while getting commit from GitHub: " + e);
         }
         return null;
     }
