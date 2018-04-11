@@ -44,15 +44,6 @@ else if [ ! -f "$REPAIR_PROJECT_LIST_PATH" ]; then
     fi
 fi
 
-echo "Start building a new version of repairnator"
-$SCRIPT_DIR/build_repairnator.sh
-
-if [[ $? != 0 ]]
-then
-   echo "Error while building a new version of repairnator"
-   exit -1
-fi
-
 echo "Copy jars"
 source $SCRIPT_DIR/utils/pom_versions.sh
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR

@@ -69,10 +69,7 @@ export REPAIR_OUTPUT_PATH=$ROOT_OUT_DIR`date "+%Y-%m-%d_%H%M%S"` # Where to put 
 export LOG_DIR=$ROOT_LOG_DIR`date "+%Y-%m-%d_%H%M"` # Log directory: it will contain several logs and serialized files
 export DOCKER_LOG_DIR=$LOG_DIR # Log directory for docker containers (most of the time, it should be the same as LOG_DIR, but sometimes if you use distant host, e.g. g5k you need to specify another value)
 
-export M2_HOME=/opt/maven # Path to the maven home: this value is only used when executing directly repairnator-pipeline.jar (outside a docker container)
-export REPAIRNATOR_ROOT_CLONE=$HOME_REPAIR/github
-export REPAIRNATOR_GITHUB_DIR=$REPAIRNATOR_ROOT_CLONE/repairnator
-export REPAIRNATOR_GH_REPO_PATH=$REPAIRNATOR_GITHUB_DIR/repairnator # Path of the local cloned repository for repairnator
+export M2_HOME=$MAVEN_HOME # Path to the maven home: this value is only used when executing directly repairnator-pipeline.jar (outside a docker container)
 
 ### Switches
 

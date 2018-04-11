@@ -26,15 +26,6 @@ echo "This will be run with the following RUN_ID: $RUN_ID"
 
 $SCRIPT_DIR/utils/create_structure.sh
 
-echo "Start building a new version of repairnator"
-$SCRIPT_DIR/utils/build_repairnator.sh
-
-if [[ $? != 0 ]]
-then
-   echo "Error while building a new version of repairnator"
-   exit -1
-fi
-
 echo "Copy jars"
 source $SCRIPT_DIR/utils/pom_versions.sh
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR

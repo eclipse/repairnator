@@ -5,3 +5,6 @@ sudo: true
 jdk: openjdk8
 
 script: "./.travis/travis-run.sh"
+
+after_success:
+  - "./.travis/travis-deploy.sh"
