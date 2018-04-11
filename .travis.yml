@@ -7,4 +7,4 @@ jdk: openjdk8
 script: "./.travis/travis-run.sh"
 
 after_success:
-  script: "./.travis/travis-deploy.sh"
+  - "./.travis/travis-deploy.sh"
