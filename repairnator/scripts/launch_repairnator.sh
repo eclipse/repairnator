@@ -45,7 +45,6 @@ else if [ ! -f "$REPAIR_PROJECT_LIST_PATH" ]; then
 fi
 
 echo "Copy jars"
-source $SCRIPT_DIR/utils/pom_versions.sh
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-dockerpool:$DOCKERPOOL_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_DOCKERPOOL_DEST_JAR
 

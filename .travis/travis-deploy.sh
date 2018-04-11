@@ -5,7 +5,15 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     cp .travis/travis-settings.xml $HOME/.m2/settings.xml
     cd repairnator
     mvn deploy -DskipTests
-    curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/surli/repairnator/trigger/$DOCKER_HUB_TOKEN # Trigger docker container build
+    docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    if [ "$TRAVIS_TAG" = "$TRAVIS_BRANCH" ]; then
+        TAG=$TRAVIS_TAG
+    else
+        TAG="latest"
+    fi
+
+    docker build -f docker-images/pipeline-dockerimage -t surli/repairnator:$TAG
+    docker push surli/repairnator:$TAG
 else
     echo "Nothing to deploy when on PR or other branch"
 fi

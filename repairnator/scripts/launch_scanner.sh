@@ -27,7 +27,6 @@ echo "This will be run with the following RUN_ID: $RUN_ID"
 $SCRIPT_DIR/utils/create_structure.sh
 
 echo "Copy jars"
-source $SCRIPT_DIR/utils/pom_versions.sh
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR
 
 REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`_$RUN_ID.txt

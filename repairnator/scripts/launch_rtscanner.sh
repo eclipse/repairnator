@@ -35,7 +35,6 @@ if [ ! -f "$BLACKLIST_PATH" ]; then
 fi
 
 echo "Copy jars and prepare docker image"
-source $SCRIPT_DIR/utils/pom_versions.sh
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-realtime:$REALTIME_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots -Ddest=$REPAIRNATOR_REALTIME_DEST_JAR
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."

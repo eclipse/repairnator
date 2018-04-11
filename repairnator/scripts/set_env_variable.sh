@@ -47,6 +47,13 @@ export HUMAN_PATCH=0 # Test the human patch for check branches ?
 
 # Change the following configuration only if you know exactly what you're doing.
 
+### Versions
+
+export SCANNER_VERSION=LATEST
+export DOCKERPOOL_VERSION=LATEST
+export REALTIME_VERSION=LATEST
+export PIPELINE_VERSION=LATEST
+
 ### Docker tags
 export DOCKER_TAG=surli/repairnator:latest # Tag of the docker image to use for pipeline
 export DOCKER_CHECKBRANCHES_TAG=surli/checkbranches:latest # Tag of the docker image to use for checkbranches
