@@ -1,12 +1,12 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
+import com.google.gson.GsonBuilder;
 import eu.stamp.project.assertfixer.AssertFixerResult;
 import eu.stamp.project.assertfixer.Configuration;
 import eu.stamp.project.assertfixer.Main;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.net.URL;
@@ -37,18 +37,29 @@ public class AssertFixerRepair extends AbstractStep {
         File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
         File[] tests = this.inspector.getJobStatus().getTestDir();
 
-        if (sources.length == 0) {
+        if (tests == null || tests.length == 0) {
+            addStepError("No test directory found, this step won't be executed.");
             return;
         }
 
         Configuration configuration = new Configuration();
         configuration.setVerbose(true);
 
-        configuration.setPathToSourceFolder(sources[0].getAbsolutePath());
-        if (tests.length > 0) {
-            configuration.setPathToTestFolder(tests[0].getAbsolutePath());
+        if (sources != null && sources.length > 0) {
+            configuration.setPathToSourceFolder(sources[0].getAbsolutePath());
         }
-        configuration.setClasspath(StringUtils.join(classPath, ":"));
+
+        configuration.setPathToTestFolder(tests[0].getAbsolutePath());
+
+        StringBuilder classpathBuilder = new StringBuilder();
+        for (int i = 0; i < classPath.size(); i++) {
+            classpathBuilder.append(classPath.get(i).getPath());
+
+            if (i < classPath.size() - 1) {
+                classpathBuilder.append(":");
+            }
+        }
+        configuration.setClasspath(classpathBuilder.toString());
 
         Map<String, List<String>> multipleTestCases = new HashMap<>();
         for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
@@ -58,6 +69,10 @@ public class AssertFixerRepair extends AbstractStep {
         }
 
         configuration.setMultipleTestCases(multipleTestCases);
+
+        String asJson = new GsonBuilder().setPrettyPrinting().create().toJson(configuration);
+        this.getLogger().info("Launcher AssertFixer with the following configuration: "+asJson);
+
 
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final Future<List<AssertFixerResult>> assertFixerExecution = executor.submit(() -> {

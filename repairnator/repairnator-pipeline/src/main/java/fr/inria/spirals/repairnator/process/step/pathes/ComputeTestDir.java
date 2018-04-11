@@ -38,86 +38,88 @@ public class ComputeTestDir extends AbstractStep {
 
         if (defaultTestDir.exists()) {
             result.add(defaultTestDir);
-        }
-
-        this.getLogger().debug("The default test directory (" + defaultTestDir.getPath()
-                + ") does not exists. Try to read pom.xml to get informations.");
-        File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
-
-        if (!pomIncriminatedModule.exists()) {
-            pomIncriminatedModule = new File(this.getPom());
-        }
-
-        if (this.visitedFiles.contains(pomIncriminatedModule)) {
-            this.getLogger().info("It seems we are entering in a loop while searching the test dir. The following file has already been visited: "+pomIncriminatedModule.getAbsolutePath());
             return result.toArray(new File[0]);
         } else {
-            this.visitedFiles.add(pomIncriminatedModule);
-        }
 
-        try {
-            Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
+            this.getLogger().debug("The default test directory (" + defaultTestDir.getPath()
+                    + ") does not exists. Try to read pom.xml to get informations.");
+            File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
-            Build buildSection = model.getBuild();
+            if (!pomIncriminatedModule.exists()) {
+                pomIncriminatedModule = new File(this.getPom());
+            }
 
-            if (buildSection != null) {
-                String pathTestDirFromPom = model.getBuild().getTestSourceDirectory();
-
-                File srcDirFromPom = new File(pathTestDirFromPom);
-
-                if (srcDirFromPom.exists()) {
-                    result.add(srcDirFromPom);
-                    return result.toArray(new File[result.size()]);
-                }
-
-                this.getLogger().debug("The test directory given in pom.xml (" + pathTestDirFromPom
-                        + ") does not exists. Try to get test dir from all modules if multimodule.");
+            if (this.visitedFiles.contains(pomIncriminatedModule)) {
+                this.getLogger().info("It seems we are entering in a loop while searching the test dir. The following file has already been visited: " + pomIncriminatedModule.getAbsolutePath());
+                return result.toArray(new File[0]);
             } else {
-                this.getLogger().debug(
-                        "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
+                this.visitedFiles.add(pomIncriminatedModule);
             }
 
-            for (String module : model.getModules()) {
-                File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
-                        false);
-                if (srcDir != null) {
-                    result.addAll(Arrays.asList(srcDir));
+            try {
+                Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
+
+                Build buildSection = model.getBuild();
+
+                if (buildSection != null) {
+                    String pathTestDirFromPom = model.getBuild().getTestSourceDirectory();
+
+                    File srcDirFromPom = new File(pathTestDirFromPom);
+
+                    if (srcDirFromPom.exists()) {
+                        result.add(srcDirFromPom);
+                        return result.toArray(new File[result.size()]);
+                    }
+
+                    this.getLogger().debug("The test directory given in pom.xml (" + pathTestDirFromPom
+                            + ") does not exists. Try to get test dir from all modules if multimodule.");
+                } else {
+                    this.getLogger().debug(
+                            "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
                 }
-            }
 
-            if (result.size() > 0) {
-                return result.toArray(new File[result.size()]);
-            }
-
-            if (model.getParent() != null && rootCall) {
-                String relativePath = "../pom.xml";
-
-                if (model.getParent().getRelativePath() != null) {
-                    relativePath = model.getParent().getRelativePath();
-                }
-
-                File parentPomXml = new File(incriminatedModulePath + File.separator + relativePath);
-
-                if (parentPomXml.exists()) {
-                    File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent(),false);
+                for (String module : model.getModules()) {
+                    File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
+                            false);
                     if (srcDir != null) {
                         result.addAll(Arrays.asList(srcDir));
                     }
+                }
 
-                    if (result.size() > 0) {
-                        return result.toArray(new File[result.size()]);
+                if (result.size() > 0) {
+                    return result.toArray(new File[result.size()]);
+                }
+
+                if (model.getParent() != null && rootCall) {
+                    String relativePath = "../pom.xml";
+
+                    if (model.getParent().getRelativePath() != null) {
+                        relativePath = model.getParent().getRelativePath();
+                    }
+
+                    File parentPomXml = new File(incriminatedModulePath + File.separator + relativePath);
+
+                    if (parentPomXml.exists()) {
+                        File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent(), false);
+                        if (srcDir != null) {
+                            result.addAll(Arrays.asList(srcDir));
+                        }
+
+                        if (result.size() > 0) {
+                            return result.toArray(new File[result.size()]);
+                        }
                     }
                 }
+
+
+            } catch (ModelBuildingException e) {
+                this.addStepError("Error while building pom.xml model: " + e);
             }
 
-
-        } catch (ModelBuildingException e) {
-            this.addStepError("Error while building pom.xml model: " + e);
+            this.addStepError(
+                    "Source directory is not at default location or specified in build section and no parent can be found.");
+            return result.toArray(new File[0]);
         }
-
-        this.addStepError(
-                "Source directory is not at default location or specified in build section and no parent can be found.");
-        return null;
     }
 
     private void computeMetricsOnTest(File[] sources) {
@@ -136,6 +138,7 @@ public class ComputeTestDir extends AbstractStep {
         this.getLogger().debug("Computing the test directory ...");
         File[] sources = this.searchForSourcesDirectory(this.inspector.getRepoLocalPath(), true);
 
+        this.getInspector().getJobStatus().setTestDir(sources);
         this.computeMetricsOnTest(sources);
 
         if (sources == null) {

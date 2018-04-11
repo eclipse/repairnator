@@ -1,15 +1,20 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.repair;
 
+import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -28,6 +33,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestNPERepair {
 
+    @Before
+    public void setup() {
+        Utils.setLoggersLevel(Level.ERROR);
+    }
+
     @Test
     public void testNPERepair() throws IOException {
         int buildId = 252712792; // surli/failingProject build
@@ -41,7 +51,6 @@ public class TestNPERepair {
         Path tmpDirPath = Files.createTempDirectory("test_nperepair");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
-        System.out.println("Dirpath : "+tmpDirPath);
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
@@ -56,7 +65,7 @@ public class TestNPERepair {
                 .setNextStep(npeRepair);
         cloneStep.execute();
 
-        assertThat(npeRepair.shouldStop, is(false));
+        assertThat(npeRepair.isShouldStop(), is(false));
         assertThat(npeRepair.getPipelineState(), is(PipelineState.NPEFIX_PATCHED));
         assertThat(inspector.getJobStatus().getNpeFixPatches().size(), is(6));
     }

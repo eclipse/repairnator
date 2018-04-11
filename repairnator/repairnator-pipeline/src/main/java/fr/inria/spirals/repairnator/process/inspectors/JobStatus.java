@@ -71,6 +71,7 @@ public class JobStatus {
         this.nopolPatches = new ArrayList<>();
         this.astorPatches = new ArrayList<>();
         this.npeFixPatches = new ArrayList<>();
+        this.assertFixerResults = new ArrayList<>();
     }
 
     public PipelineState getPipelineState() {

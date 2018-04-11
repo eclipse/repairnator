@@ -1,25 +1,30 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.pathes;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.TestProject;
+import fr.inria.spirals.repairnator.process.step.pathes.ComputeClasspath;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
-import fr.inria.spirals.repairnator.process.step.pathes.ComputeTestDir;
-import fr.inria.spirals.repairnator.states.PipelineState;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -32,7 +37,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by urli on 07/03/2017.
  */
-public class TestComputeTestDir {
+public class TestComputeClasspath {
 
     @Before
     public void setup() {
@@ -45,15 +50,16 @@ public class TestComputeTestDir {
     }
 
     @Test
-    public void testComputeTestDirWithReflexiveReferences() throws IOException {
-        int buildId = 345990212;
+    public void testComputeClasspath() throws IOException {
+        int buildId = 201176013; // surli/failingProject build
+
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
         Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        Path tmpDirPath = Files.createTempDirectory("computetestdir");
+        Path tmpDirPath = Files.createTempDirectory("test_computecp");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
@@ -74,14 +80,27 @@ public class TestComputeTestDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeTestDir computeTestDir = new ComputeTestDir(inspector);
+        ComputeClasspath computeClasspath = new ComputeClasspath(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeTestDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeClasspath);
         cloneStep.execute();
 
-        assertThat(computeTestDir.shouldStop, is(false));
-        assertThat(computeTestDir.getPipelineState(), is(PipelineState.TESTDIRNOTCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.TESTDIRNOTCOMPUTED));
+        assertThat(computeClasspath.isShouldStop(), is(false));
+        assertThat(computeClasspath.getPipelineState(), is(PipelineState.CLASSPATHCOMPUTED));
+        assertThat(jobStatus.getPipelineState(), is(PipelineState.CLASSPATHCOMPUTED));
 
+        List<URL> expectedClasspath = new ArrayList<URL>();
+
+        URL classDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/classes/");
+        URL testDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/test-classes/");
+        URL junit = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.11/junit-4.11.jar");
+        URL hamcrest = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar");
+
+        expectedClasspath.add(classDir);
+        expectedClasspath.add(testDir);
+        expectedClasspath.add(junit);
+        expectedClasspath.add(hamcrest);
+
+        assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
     }
 }

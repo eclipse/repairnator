@@ -1,8 +1,10 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.repair;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
@@ -93,7 +95,7 @@ public class TestNopolRepair {
                 .setNextStep(nopolRepair);
         cloneStep.execute();
 
-        assertThat(nopolRepair.shouldStop, is(false));
+        assertThat(nopolRepair.isShouldStop(), is(false));
         assertThat(nopolRepair.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(nopolRepair.getNopolInformations().size(), is(11));
 

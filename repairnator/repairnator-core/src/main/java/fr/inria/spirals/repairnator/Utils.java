@@ -61,7 +61,7 @@ public class Utils {
     }
 
     public static void setLoggersLevel(Level level) {
-        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria.spirals.jtravis.helpers");
+        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria.jtravis.helpers");
         jtravis.setLevel(level);
 
         Logger nopol = (Logger) LoggerFactory.getLogger("fr.inria.lille.repair.nopol");
