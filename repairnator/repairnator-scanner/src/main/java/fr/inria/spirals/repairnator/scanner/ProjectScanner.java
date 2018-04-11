@@ -238,7 +238,7 @@ public class ProjectScanner {
         return null;
     }
 
-    private boolean testBuild(Build build) {
+    protected boolean testBuild(Build build) {
         if (build.isPullRequest()) {
             this.totalPRBuilds++;
         }
@@ -254,6 +254,7 @@ public class ProjectScanner {
                 this.totalBuildInJavaFailing++;
 
                 for (Job job : build.getJobs()) {
+                    RepairnatorConfig.getInstance().getJTravis().refresh(job);
                     if (job.getState() == StateType.FAILED) {
                         Optional<Log> optionalLog = job.getLog();
 
@@ -272,6 +273,8 @@ public class ProjectScanner {
                                     } else {
                                         return false;
                                     }
+                                } else {
+                                    logger.debug("No failing or erroring test found in build " + build.getId());
                                 }
                             } else {
                                 logger.debug("Maven is not used in the build " + build.getId());
@@ -285,6 +288,7 @@ public class ProjectScanner {
                 this.totalJavaPassingBuilds++;
                 if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                     for (Job job : build.getJobs()) {
+                        RepairnatorConfig.getInstance().getJTravis().refresh(job);
                         if (job.getState() == StateType.PASSED) {
                             Optional<Log> optionalLog = job.getLog();
 
