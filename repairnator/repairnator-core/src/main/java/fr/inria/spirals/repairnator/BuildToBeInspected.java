@@ -3,6 +3,8 @@ package fr.inria.spirals.repairnator;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 
+import java.util.Objects;
+
 /**
  * Created by fernanda on 24/02/17.
  */
@@ -35,5 +37,32 @@ public class BuildToBeInspected {
 
     public String getRunId() {
         return runId;
+    }
+
+    @Override
+    public String toString() {
+        return "BuildToBeInspected{" +
+                "patchedBuild=" + patchedBuild +
+                ", buggyBuild=" + buggyBuild +
+                ", status=" + status +
+                ", runId='" + runId + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final BuildToBeInspected that = (BuildToBeInspected) o;
+        return Objects.equals(patchedBuild, that.patchedBuild) &&
+                Objects.equals(buggyBuild, that.buggyBuild) &&
+                status == that.status &&
+                Objects.equals(runId, that.runId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(patchedBuild, buggyBuild, status, runId);
     }
 }
