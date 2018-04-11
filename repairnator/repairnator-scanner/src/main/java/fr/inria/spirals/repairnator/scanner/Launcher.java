@@ -48,7 +48,7 @@ public class Launcher {
             try {
                 properties.load(propertyStream);
             } catch (IOException e) {
-                LOGGER.error("Error while loading property file", e);
+                LOGGER.error("Error while loading property file.", e);
             }
             LOGGER.info("SCANNER VERSION: "+properties.getProperty("SCANNER_VERSION"));
         } else {
@@ -194,12 +194,12 @@ public class Launcher {
 
         if (buildsToBeInspected != null) {
             for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-                Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
+                Launcher.LOGGER.info("Incriminated project: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
             }
 
             this.processOutput(buildsToBeInspected);
         } else {
-            Launcher.LOGGER.warn("Builds inspected has null value.");
+            Launcher.LOGGER.warn("The variable 'builds to be inspected' has null value.");
         }
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
@@ -207,7 +207,7 @@ public class Launcher {
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {
-        Launcher.LOGGER.info("Start to scan projects in travis...");
+        Launcher.LOGGER.info("Start to scan projects in Travis...");
 
         ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId());
 
@@ -224,9 +224,9 @@ public class Launcher {
         scannerSerializer.serialize();
 
         if (buildsToBeInspected.isEmpty()) {
-            Launcher.LOGGER.info("No interesting build to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
+            Launcher.LOGGER.info("No build interesting to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
         } else {
-            Launcher.LOGGER.info(buildsToBeInspected.size()+" interesting builds to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
+            Launcher.LOGGER.info(buildsToBeInspected.size()+" builds interesting to be inspected have been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
         }
         return buildsToBeInspected;
     }
