@@ -156,6 +156,7 @@ public class ProjectScanner {
 
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
+        this.logger.info("# Repositories found: "+this.totalRepoNumber);
 
         List<Repository> repos = getListOfValidRepository(slugs);
         List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos);
@@ -186,6 +187,7 @@ public class ProjectScanner {
         }
 
         this.totalRepoUsingTravis = result.size();
+        this.logger.info("# Repositories using Travis: "+this.totalRepoUsingTravis);
         return result;
     }
 
@@ -212,28 +214,35 @@ public class ProjectScanner {
     public BuildToBeInspected getBuildToBeInspected(Build build) {
         if (testBuild(build)) {
             if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+                this.logger.debug("Build "+build.getId()+" is interesting to be inspected.");
                 return new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, this.runId);
             } else {
+                this.logger.debug("Build "+build.getId()+" seems interesting to be inspected, thus get its previous build...");
                 Optional<Build> optionalBeforeBuild = this.jTravis.build().getBefore(build, true);
                 if (optionalBeforeBuild.isPresent()) {
                     Build previousBuild = optionalBeforeBuild.get();
-                    this.logger.debug("Build: " + build.getId());
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     BearsMode mode = RepairnatorConfig.getInstance().getBearsMode();
                     if ((mode == BearsMode.BOTH || mode == BearsMode.FAILING_PASSING) && previousBuild.getState() == StateType.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
                         this.totalNumberOfFailingAndPassingBuildPairs++;
+                        this.logger.debug("The pair "+previousBuild.getId()+" ["+previousBuild.getState()+"], "+build.getId()+" ["+build.getState()+"] is interesting to be inspected.");
                         return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.FAILING_AND_PASSING, this.runId);
                     } else {
                         if ((mode == BearsMode.BOTH || mode == BearsMode.PASSING_PASSING) && previousBuild.getState() == StateType.PASSED && thereIsDiffOnJavaFile(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
                             this.totalNumberOfPassingAndPassingBuildPairs++;
+                            this.logger.debug("The pair "+previousBuild.getId()+" ["+previousBuild.getState()+"], "+build.getId()+" ["+build.getState()+"] is interesting to be inspected.");
                             return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.runId);
                         } else {
-                            this.logger.debug("The pair of builds is not interesting.");
+                            this.logger.debug("The pair "+previousBuild.getId()+" ["+previousBuild.getState()+"], "+build.getId()+" ["+build.getState()+"] is NOT interesting to be inspected.");
                         }
                     }
+                } else {
+                    this.logger.debug("The previous build from "+build.getId()+" was not retrieved.");
                 }
             }
+        } else {
+            this.logger.debug("Build "+build.getId()+" is not interesting to be inspected.");
         }
         return null;
     }
