@@ -1,0 +1,9 @@
+<settings>
+    <servers>
+        <server>
+            <id>ossrh-repairnator-snapshot</id>
+            <username>${env.OSS_REPAIRNATOR_USERNAME}</username>
+            <password>${env.OSS_REPAIRNATOR_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>
