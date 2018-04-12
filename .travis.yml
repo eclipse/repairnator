@@ -4,4 +4,10 @@ sudo: true
 
 jdk: openjdk8
 
+services:
+ - docker
+
 script: "./.travis/travis-run.sh"
+
+after_success:
+  - "./.travis/travis-deploy.sh"

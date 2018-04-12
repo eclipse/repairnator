@@ -16,11 +16,6 @@ This sections describe the usage of all modules of Repairnator. All modules are 
 ### Core
 
 This module located at [repairnator-core](/repairnator/repairnator-core) contains all information for other Repairnator modules. 
-It might also be used to generate a proper Google Spreadsheet token [DEPRECATED].
-
-```bash 
-Usage: java -jar repairnator-core.jar path/to/googleSecretFile.json
-```
 
 ### Pipeline
 
@@ -39,9 +34,9 @@ Options:
   [--runId <runId>]
         Specify the run id for this launch.
 
-  (-m|--launcherMode) <launcherMode>
-        Specify if RepairNator will be launch for repairing (REPAIR) or for
-        collecting fixer builds (BEARS).
+  [--bears]
+        This mode allows to use repairnator to analyze pairs of bugs and
+        human-produced patches.
 
   [(-o|--output) <output>]
         Specify path to output serialized files
@@ -51,12 +46,6 @@ Options:
 
   [--dbname <mongoDBName>]
         Specify mongodb DB name. (default: repairnator)
-
-  [--spreadsheet <spreadsheet>]
-        Specify Google Spreadsheet ID to put data.
-
-  [--googleAccessToken <googleAccessToken>]
-        Specify the google access token to use for serializers.
 
   [--smtpServer <smtpServer>]
         Specify SMTP server to use for Email notification
@@ -87,6 +76,10 @@ Options:
         Specify the file containing a list of projects that the pipeline should
         deactivate serialization when processing builds from. (default:
         ./projects_to_ignore.txt)
+
+Please note that the GITHUB_OAUTH environment variables must be set.
+The environment variable M2_HOME should be set and refer to the path of your maven home installation.
+For using Nopol, you must add tools.jar in your classpath from your installed jdk
 ``` 
 
 ### Dockerpool
@@ -107,9 +100,9 @@ Options:
   [--runId <runId>]
         Specify the run id for this launch.
 
-  (-m|--launcherMode) <launcherMode>
-        Specify if the dockerpool intends to repair failing builds (REPAIR) or
-        gather builds info (BEARS).
+  [--bears]
+        This mode allows to use repairnator to analyze pairs of bugs and
+        human-produced patches.
 
   (-i|--input) <input>
         Specify the input file containing the list of build ids.
@@ -122,13 +115,6 @@ Options:
 
   [--dbname <mongoDBName>]
         Specify mongodb DB name. (default: repairnator)
-
-  [--spreadsheet <spreadsheet>]
-        Specify Google Spreadsheet ID to put data.
-
-  [--googleSecretPath <googleSecretPath>]
-        Specify the path to the JSON google secret for serializing. (default:
-        ./client_secret.json)
 
   [--notifyEndProcess]
         Activate the notification when the process ends.
@@ -261,9 +247,9 @@ Options:
   [--runId <runId>]
         Specify the run id for this launch.
 
-  (-m|--launcherMode) <launcherMode>
-        Specify if the scanner intends to get failing builds (REPAIR) or fixer
-        builds (BEARS).
+  [--bears]
+        This mode allows to use repairnator to analyze pairs of bugs and
+        human-produced patches.
 
   (-i|--input) <input>
         Specify where to find the list of projects to scan.
@@ -276,13 +262,6 @@ Options:
 
   [--dbname <mongoDBName>]
         Specify mongodb DB name. (default: repairnator)
-
-  [--spreadsheet <spreadsheet>]
-        Specify Google Spreadsheet ID to put data.
-
-  [--googleSecretPath <googleSecretPath>]
-        Specify the path to the JSON google secret for serializing. (default:
-        ./client_secret.json)
 
   [--notifyEndProcess]
         Activate the notification when the process ends.
@@ -303,6 +282,11 @@ Options:
   [(-t|--lookToDate) <lookToDate>]
         Specify the final date to get builds (e.g. 31/01/2017). Note that the
         search is until 23:59:59 of the specified date.
+        
+  [--bearsMode <bearsMode>]
+          This option is only useful in case of '--bears' is used: it defines the
+          type of fixer build to get. Available values:
+          failing_passing;passing_passing;both (default: both)
 
 Please note that the GITHUB_OAUTH environment variables must be set.
 ``` 

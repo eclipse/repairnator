@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.config;
 
 import fr.inria.jtravis.JTravis;
+import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.kohsuke.github.GitHub;
 
@@ -15,7 +16,7 @@ import java.util.Date;
  */
 public class RepairnatorConfig {
     private String runId;
-    private LauncherMode launcherMode;
+    private LauncherMode launcherMode = LauncherMode.REPAIR;
 
     private boolean serializeJson;
     private String inputPath;
@@ -32,6 +33,7 @@ public class RepairnatorConfig {
     // Scanner
     private Date lookFromDate;
     private Date lookToDate;
+    private BearsMode bearsMode = BearsMode.BOTH;
 
     // Pipeline
     private int buildId;
@@ -384,8 +386,20 @@ public class RepairnatorConfig {
         return JTravis.builder().setGithubToken(this.getGithubToken()).build();
     }
 
+    public BearsMode getBearsMode() {
+        return bearsMode;
+    }
+
+    public void setBearsMode(BearsMode bearsMode) {
+        this.bearsMode = bearsMode;
+    }
+
     @Override
     public String toString() {
+        String ghToken = this.getGithubToken();
+        if (ghToken != null && !ghToken.isEmpty()) {
+            ghToken = (ghToken.length() > 10) ? ghToken.substring(0,10)+"[...]" : ghToken;
+        }
         return "RepairnatorConfig{" +
                 "runId='" + runId + '\'' +
                 ", launcherMode=" + launcherMode +
@@ -405,7 +419,7 @@ public class RepairnatorConfig {
                 ", buildId=" + buildId +
                 ", z3solverPath='" + z3solverPath + '\'' +
                 ", workspacePath='" + workspacePath + '\'' +
-                ", githubToken='" + githubToken + '\'' +
+                ", githubToken='" + ghToken + '\'' +
                 ", dockerImageName='" + dockerImageName + '\'' +
                 ", skipDelete=" + skipDelete +
                 ", createOutputDir=" + createOutputDir +
@@ -421,6 +435,7 @@ public class RepairnatorConfig {
                 ", humanPatch=" + humanPatch +
                 ", repository='" + repository + '\'' +
                 ", clean=" + clean +
+                ", bearsMode=" + bearsMode.name() +
                 '}';
     }
 }

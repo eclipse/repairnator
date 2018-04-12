@@ -5,6 +5,7 @@ import fr.inria.jtravis.entities.Commit;
 import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import okhttp3.Call;
@@ -20,12 +21,21 @@ import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.PatchApplyException;
 import org.eclipse.jgit.api.errors.PatchFormatException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.EditList;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.patch.FileHeader;
+import org.eclipse.jgit.patch.HunkHeader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.kohsuke.github.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +46,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by fernanda on 01/03/17.
@@ -382,5 +394,67 @@ public class GitHelper {
             }
         }
         return null;
+    }
+
+    public void computePatchStats(Metrics metric, Git git, RevCommit headRev, RevCommit commit) {
+        try {
+            ObjectReader reader = git.getRepository().newObjectReader();
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, headRev.getTree());
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, commit.getTree());
+
+            DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
+            diffFormatter.setRepository(git.getRepository());
+            diffFormatter.setContext(0);
+            List<DiffEntry> entries = diffFormatter.scan(newTreeIter, oldTreeIter);
+
+            int nbLineAdded = 0;
+            int nbLineDeleted = 0;
+            Set<String> changedFiles = new HashSet<>();
+
+            for (DiffEntry entry : entries) {
+                String path;
+                if (entry.getChangeType() == DiffEntry.ChangeType.DELETE) {
+                    path = entry.getOldPath();
+                } else {
+                    path = entry.getNewPath();
+                }
+                if (!path.contains("repairnator")) {
+                    changedFiles.add(path);
+
+                    FileHeader fileHeader = diffFormatter.toFileHeader(entry);
+                    List<? extends HunkHeader> hunks = fileHeader.getHunks();
+                    for (HunkHeader hunk : hunks) {
+                        EditList edits = hunk.toEditList();
+                        for (Edit edit : edits) {
+                            switch (edit.getType()) {
+                                case INSERT:
+                                    nbLineAdded += edit.getLengthB();
+                                    break;
+
+                                case DELETE:
+                                    nbLineDeleted += edit.getLengthA();
+                                    break;
+
+                                case REPLACE:
+                                    nbLineDeleted += edit.getLengthA();
+                                    nbLineAdded += edit.getLengthB();
+                                    break;
+
+                                case EMPTY:
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            metric.setPatchAddedLines(nbLineAdded);
+            metric.setPatchDeletedLines(nbLineDeleted);
+            metric.setPatchChangedFiles(changedFiles.size());
+        } catch (IOException e) {
+            this.getLogger().error("Error while computing stat on the patch", e);
+        }
     }
 }

@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -78,5 +79,11 @@ public class TestRepairnatorConfig {
         GHRateLimit ghRateLimit = gitHub.rateLimit();
 
         assertEquals("OAuth is not working", 5000, ghRateLimit.limit);
+    }
+
+    @Test
+    public void testToString() {
+        String s = RepairnatorConfig.getInstance().toString();
+        assertNotNull(s);
     }
 }
