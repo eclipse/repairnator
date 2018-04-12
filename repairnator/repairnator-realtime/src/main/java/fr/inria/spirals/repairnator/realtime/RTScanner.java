@@ -119,6 +119,7 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
+            this.buildRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             this.running = true;
@@ -140,24 +141,36 @@ public class RTScanner {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
         this.blacklistedSerializer.serialize(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
-        try {
-            this.blacklistWriter.append(repository.getId()+"");
-            this.blacklistWriter.append("\n");
-            this.blacklistWriter.flush();
-        } catch (IOException e) {
-            LOGGER.error("Error while writing entry in blacklist");
+
+        if (this.blacklistWriter != null) {
+            try {
+                this.blacklistWriter.append(repository.getId()+"");
+                this.blacklistWriter.append("\n");
+                this.blacklistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in blacklist");
+            }
+        } else {
+            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
         }
+
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-        try {
-            this.whitelistWriter.append(repository.getId()+"");
-            this.whitelistWriter.append("\n");
-            this.whitelistWriter.flush();
-        } catch (IOException e) {
-            LOGGER.error("Error while writing entry in whitelist");
+
+        if (this.whitelistWriter != null) {
+            try {
+                this.whitelistWriter.append(repository.getId()+"");
+                this.whitelistWriter.append("\n");
+                this.whitelistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in whitelist");
+            }
+        } else {
+            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
         }
+
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
