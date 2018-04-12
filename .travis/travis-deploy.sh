@@ -5,7 +5,7 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     cp .travis/travis-settings.xml $HOME/.m2/settings.xml
     cd repairnator
     mvn deploy -DskipTests
-    docker login -u $DOCKER_USERNAME -p "$DOCKER_PASSWORD"
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     if [ "$TRAVIS_TAG" = "$TRAVIS_BRANCH" ]; then
         TAG=$TRAVIS_TAG
     else
