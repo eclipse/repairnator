@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +47,10 @@ public class AssertFixerRepair extends AbstractStep {
         configuration.setVerbose(true);
 
         if (sources != null && sources.length > 0) {
-            configuration.setPathToSourceFolder(sources[0].getAbsolutePath());
+            configuration.setPathToSourceFolder(Arrays.asList(sources));
         }
 
-        configuration.setPathToTestFolder(tests[0].getAbsolutePath());
+        configuration.setPathToTestFolder(Arrays.asList(tests));
 
         StringBuilder classpathBuilder = new StringBuilder();
         for (int i = 0; i < classPath.size(); i++) {
