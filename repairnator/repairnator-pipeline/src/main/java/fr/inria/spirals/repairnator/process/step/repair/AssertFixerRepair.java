@@ -11,7 +11,6 @@ import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
