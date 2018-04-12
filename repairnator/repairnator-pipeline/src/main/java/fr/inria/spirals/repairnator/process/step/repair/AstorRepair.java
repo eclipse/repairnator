@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -8,6 +8,7 @@ import fr.inria.main.AstorOutputStatus;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;

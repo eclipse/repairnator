@@ -61,8 +61,8 @@ public class Utils {
     }
 
     public static void setLoggersLevel(Level level) {
-        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria");
-        jtravis.setLevel(level);
+        Logger allinria = (Logger) LoggerFactory.getLogger("fr.inria");
+        allinria.setLevel(level);
 
         Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
         jgit.setLevel(Level.WARN);

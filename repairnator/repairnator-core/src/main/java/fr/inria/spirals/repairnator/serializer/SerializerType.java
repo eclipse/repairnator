@@ -13,6 +13,7 @@ public enum SerializerType {
     NPEFIX("npefix"),
     ASTOR("astor"),
     PIPELINE_ERRORS("pipeline-errors"),
+    ASSERT_FIXER("assertFixer"),
 
     // dockerpool
     TREATEDBUILD("treatedbuild"),

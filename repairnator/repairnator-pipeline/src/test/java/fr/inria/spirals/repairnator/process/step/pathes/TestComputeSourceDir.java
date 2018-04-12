@@ -1,9 +1,11 @@
-package fr.inria.spirals.repairnator.process.step;
+package fr.inria.spirals.repairnator.process.step.pathes;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.TestProject;
+import fr.inria.spirals.repairnator.process.step.pathes.ComputeSourceDir;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -81,7 +83,7 @@ public class TestComputeSourceDir {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.isShouldStop(), is(false));
         assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
 
@@ -124,7 +126,7 @@ public class TestComputeSourceDir {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.isShouldStop(), is(false));
         assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
 
@@ -167,7 +169,7 @@ public class TestComputeSourceDir {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.isShouldStop(), is(false));
         assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
 
@@ -210,7 +212,7 @@ public class TestComputeSourceDir {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.isShouldStop(), is(false));
         assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
 
@@ -261,7 +263,7 @@ public class TestComputeSourceDir {
         cloneStep.setNextStep(new CheckoutPatchedBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.isShouldStop(), is(false));
         assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
 
@@ -319,7 +321,7 @@ public class TestComputeSourceDir {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.isShouldStop(), is(false));
         assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
 
@@ -361,7 +363,7 @@ public class TestComputeSourceDir {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.shouldStop, is(false));
+        assertThat(computeSourceDir.isShouldStop(), is(false));
         assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRNOTCOMPUTED));
         assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRNOTCOMPUTED));
 

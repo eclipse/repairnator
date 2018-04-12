@@ -8,6 +8,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
+import fr.inria.spirals.repairnator.serializer.AssertFixerSerializer;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
 import fr.inria.spirals.repairnator.serializer.NPEFixSerializer;
@@ -337,6 +338,7 @@ public class Launcher {
         serializers.add(new AstorSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
         serializers.add(new PipelineErrorSerializer(this.engines));
+        serializers.add(new AssertFixerSerializer(this.engines));
 
         ProjectInspector inspector;
 
