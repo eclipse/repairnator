@@ -47,10 +47,20 @@ public class AssertFixerRepair extends AbstractStep {
         configuration.setVerbose(true);
 
         if (sources != null && sources.length > 0) {
-            configuration.setPathToSourceFolder(Arrays.asList(sources));
+            List<String> sourceList = new ArrayList<>();
+            for (File source : sources) {
+                sourceList.add(source.getAbsolutePath());
+            }
+
+            configuration.setPathToSourceFolder(sourceList);
         }
 
-        configuration.setPathToTestFolder(Arrays.asList(tests));
+        List<String> testList = new ArrayList<>();
+        for (String testFolder : testList) {
+            testList.add(testFolder);
+        }
+
+        configuration.setPathToTestFolder(testList);
 
         StringBuilder classpathBuilder = new StringBuilder();
         for (int i = 0; i < classPath.size(); i++) {
