@@ -10,6 +10,7 @@ COPY logback.xml /root/
 COPY configure_git.sh /root/
 COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
+copy version.ini /root/
 
 RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone 
@@ -19,14 +20,11 @@ RUN /root/configure_git.sh
 RUN /root/build_repairnator.sh
 
 ENV M2_HOME=$MAVEN_HOME
-ENV GITHUB_LOGIN=
 ENV GITHUB_OAUTH=
 ENV REPAIR_MODE=
 ENV BUILD_ID=
 ENV LOG_FILENAME=
 ENV RUN_ID=
-ENV GOOGLE_ACCESS_TOKEN=
-ENV SPREADSHEET_ID=
 ENV MONGODB_HOST=
 ENV MONGODB_NAME=
 ENV OUTPUT=

@@ -31,14 +31,10 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
 
-echo "Create output directory: $REPAIR_OUTPUT_PATH"
-mkdir -p $REPAIR_OUTPUT_PATH
+source $SCRIPT_DIR/utils/init_script.sh
+echo "This will be run with the following RUN_ID: $RUN_ID"
 
-echo "Create log directory: $LOG_DIR"
-mkdir -p $LOG_DIR
-
-echo "Create bin directory: $REPAIRNATOR_RUN_DIR"
-mkdir -p $REPAIRNATOR_RUN_DIR
+$SCRIPT_DIR/utils/create_structure.sh
 
 if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1
@@ -48,26 +44,9 @@ else if [ ! -f "$REPAIR_PROJECT_LIST_PATH" ]; then
     fi
 fi
 
-if [ -z "$RUN_ID_SUFFIX" ]; then
-    RUN_ID=`uuidgen`
-else
-    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
-fi
-
-echo "This will be run with the following RUN_ID: $RUN_ID"
-
-echo "Start building a new version of repairnator"
-$SCRIPT_DIR/build_repairnator.sh
-
-if [[ $? != 0 ]]
-then
-   echo "Error while building a new version of repairnator"
-   exit -1
-fi
-
 echo "Copy jars"
-cp $REPAIRNATOR_SCANNER_JAR $REPAIRNATOR_SCANNER_DEST_JAR
-cp $REPAIRNATOR_DOCKERPOOL_JAR $REPAIRNATOR_DOCKERPOOL_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-dockerpool:$DOCKERPOOL_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_DOCKERPOOL_DEST_JAR
 
 if [ "$SKIP_SCAN" -eq 0 ]; then
     REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`_$RUN_ID.txt
@@ -120,7 +99,7 @@ elementaryArgs="-t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG
 
 supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 
-if [ "$BEARS_MDOE" -eq 1 ]; then
+if [ "$BEARS_MODE" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --bears"
 fi
 

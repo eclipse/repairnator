@@ -25,10 +25,12 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by urli on 23/12/2016.
@@ -40,6 +42,19 @@ public class Launcher {
     private EndProcessNotifier endProcessNotifier;
 
     public Launcher(String[] args) throws JSAPException {
+        InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
+        Properties properties = new Properties();
+        if (propertyStream != null) {
+            try {
+                properties.load(propertyStream);
+            } catch (IOException e) {
+                LOGGER.error("Error while loading property file.", e);
+            }
+            LOGGER.info("SCANNER VERSION: "+properties.getProperty("SCANNER_VERSION"));
+        } else {
+            LOGGER.info("No information about SCANNER VERSION has been found.");
+        }
+
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
@@ -179,12 +194,12 @@ public class Launcher {
 
         if (buildsToBeInspected != null) {
             for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-                Launcher.LOGGER.info("Incriminated project : " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
+                Launcher.LOGGER.info("Incriminated project: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
             }
 
             this.processOutput(buildsToBeInspected);
         } else {
-            Launcher.LOGGER.warn("Builds inspected has null value.");
+            Launcher.LOGGER.warn("The variable 'builds to be inspected' has null value.");
         }
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
@@ -192,14 +207,13 @@ public class Launcher {
     }
 
     private List<BuildToBeInspected> runScanner() throws IOException {
-        Launcher.LOGGER.info("Start to scan projects in travis...");
+        Launcher.LOGGER.info("Start to scan projects in Travis...");
 
         ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId());
 
         List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(this.config.getInputPath());
 
         ProcessSerializer scannerSerializer;
-
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             scannerSerializer = new ScannerSerializer(this.engines, scanner);
         } else {
@@ -207,11 +221,12 @@ public class Launcher {
             ScannerDetailedDataSerializer scannerDetailedDataSerializer = new ScannerDetailedDataSerializer(this.engines, buildsToBeInspected);
             scannerDetailedDataSerializer.serialize();
         }
-
         scannerSerializer.serialize();
 
         if (buildsToBeInspected.isEmpty()) {
-            Launcher.LOGGER.info("No build has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
+            Launcher.LOGGER.info("No build interesting to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
+        } else {
+            Launcher.LOGGER.info(buildsToBeInspected.size()+" builds interesting to be inspected have been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
         }
         return buildsToBeInspected;
     }
