@@ -119,7 +119,7 @@
                 <version>3.0.0</version>
                 <configuration>
                     <expression>project.version</expression>
-                    <output>../../docker-images/pipeline-dockerimage/version.ini</output>
+                    <output>../docker-images/pipeline-dockerimage/version.ini</output>
                 </configuration>
                 <executions>
                     <execution>
