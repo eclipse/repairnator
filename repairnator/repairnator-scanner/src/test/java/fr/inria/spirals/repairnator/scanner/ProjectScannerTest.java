@@ -68,9 +68,9 @@ public class ProjectScannerTest {
 
         Build build = buildOptional.get();
         ProjectScanner projectScanner = new ProjectScanner(new Date(), new Date(), "test");
-        boolean isOKForRepair = projectScanner.testBuild(build);
+        boolean isOKForBears = projectScanner.testBuild(build);
 
-        assertFalse(isOKForRepair);
+        assertFalse(isOKForBears);
     }
 
     @Test
@@ -84,9 +84,9 @@ public class ProjectScannerTest {
 
         Build build = buildOptional.get();
         ProjectScanner projectScanner = new ProjectScanner(new Date(), new Date(), "test");
-        boolean isOKForRepair = projectScanner.testBuild(build);
+        boolean isOKForBears = projectScanner.testBuild(build);
 
-        assertTrue(isOKForRepair);
+        assertTrue(isOKForBears);
     }
 
     @Test
@@ -99,6 +99,7 @@ public class ProjectScannerTest {
         assertTrue(buildOptional.isPresent());
 
         Build build = buildOptional.get();
+        assertEquals(StateType.FAILED, build.getState());
         ProjectScanner projectScanner = new ProjectScanner(new Date(), new Date(), "test");
 
         BuildToBeInspected expectedBuildToBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "test");
