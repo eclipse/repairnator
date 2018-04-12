@@ -11,8 +11,8 @@
         "failingPassing"
       ],
       "enum": [
-        "failingPassing",
-        "passingPassing"
+        "failing_passing",
+        "passing_passing"
       ]
     },
     "repository": {

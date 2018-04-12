@@ -1,27 +1,27 @@
 {
-  "type": "failingPassing",
+  "type": "failing_passing",
   "repository": {
     "name": "bowenli86/flink",
     "githubId": 122434,
     "url": "http://github.com/bowenli86/flink/",
     "fork": true,
-    "isPR": true,
-    "PRID": 12,
     "original": {
       "name": "another/flink",
       "githubId": 122435,
       "url": "http://github.com/another/flink/"
-    }
+    },
+    "isPR": true,
+    "PRID": 12
   },
   "builds": {
     "buggyBuild": {
       "id": 122232233,
-      "url": "http://travis-ci.org/bowenli86/flink/builds/362501329",
+      "url": "http://travis-ci.org/bowenli86/flink/builds/122232233",
       "date": "Apr 5, 2018 6:12:24 AM"
     },
     "fixerBuild": {
       "id": 122232233,
-      "url": "http://travis-ci.org/bowenli86/flink/builds/362501329",
+      "url": "http://travis-ci.org/bowenli86/flink/builds/122232233",
       "date": "Apr 5, 2018 6:12:24 AM"
     }
   },
@@ -79,7 +79,7 @@
       "numberPassing": 343
     },
     "failingModule": "flink-tests",
-    "failingClasses": [
+    "failingTests": [
       {
         "testClass": "org.apache.flink.util.FileUtilsTest",
         "failures": [
