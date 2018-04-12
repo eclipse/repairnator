@@ -156,6 +156,7 @@ public class ProjectScanner {
 
         List<String> slugs = getFileContent(path);
         this.totalRepoNumber = slugs.size();
+        this.logger.info("# Repositories found: "+this.totalRepoNumber);
 
         List<Repository> repos = getListOfValidRepository(slugs);
         List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos);
@@ -168,6 +169,9 @@ public class ProjectScanner {
     private List<Repository> getListOfValidRepository(List<String> allSlugs) {
         List<Repository> result = new ArrayList<Repository>();
 
+        this.logger.debug("---------------------------------------------------------------");
+        this.logger.debug("Checking the "+this.totalRepoNumber+" repositories.");
+        this.logger.debug("---------------------------------------------------------------");
         for (String slug : allSlugs) {
             this.logger.debug("Get repo " + slug);
             Optional<Repository> repositoryOptional = this.jTravis.repository().fromSlug(slug);
@@ -186,12 +190,16 @@ public class ProjectScanner {
         }
 
         this.totalRepoUsingTravis = result.size();
+        this.logger.info("# Repositories using Travis: "+this.totalRepoUsingTravis);
         return result;
     }
 
     private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos) {
         List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
 
+        this.logger.debug("---------------------------------------------------------------");
+        this.logger.debug("Scanning builds.");
+        this.logger.debug("---------------------------------------------------------------");
         for (Repository repo : repos) {
             Optional<List<Build>> builds = this.jTravis.build().betweenDates(repo.getSlug(), this.lookFromDate, this.lookToDate);
             if (builds.isPresent()) {
@@ -212,28 +220,35 @@ public class ProjectScanner {
     public BuildToBeInspected getBuildToBeInspected(Build build) {
         if (testBuild(build)) {
             if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+                this.logger.debug("Build "+build.getId()+" is interesting to be inspected.");
                 return new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, this.runId);
             } else {
+                this.logger.debug("Build "+build.getId()+" seems interesting to be inspected, thus get its previous build...");
                 Optional<Build> optionalBeforeBuild = this.jTravis.build().getBefore(build, true);
                 if (optionalBeforeBuild.isPresent()) {
                     Build previousBuild = optionalBeforeBuild.get();
-                    this.logger.debug("Build: " + build.getId());
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     BearsMode mode = RepairnatorConfig.getInstance().getBearsMode();
                     if ((mode == BearsMode.BOTH || mode == BearsMode.FAILING_PASSING) && previousBuild.getState() == StateType.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
                         this.totalNumberOfFailingAndPassingBuildPairs++;
+                        this.logger.debug("The pair "+previousBuild.getId()+" ["+previousBuild.getState()+"], "+build.getId()+" ["+build.getState()+"] is interesting to be inspected.");
                         return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.FAILING_AND_PASSING, this.runId);
                     } else {
                         if ((mode == BearsMode.BOTH || mode == BearsMode.PASSING_PASSING) && previousBuild.getState() == StateType.PASSED && thereIsDiffOnJavaFile(build, previousBuild) && thereIsDiffOnTests(build, previousBuild)) {
                             this.totalNumberOfPassingAndPassingBuildPairs++;
+                            this.logger.debug("The pair "+previousBuild.getId()+" ["+previousBuild.getState()+"], "+build.getId()+" ["+build.getState()+"] is interesting to be inspected.");
                             return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, this.runId);
                         } else {
-                            this.logger.debug("The pair of builds is not interesting.");
+                            this.logger.debug("The pair "+previousBuild.getId()+" ["+previousBuild.getState()+"], "+build.getId()+" ["+build.getState()+"] is NOT interesting to be inspected.");
                         }
                     }
+                } else {
+                    this.logger.debug("The previous build from "+build.getId()+" was not retrieved.");
                 }
             }
+        } else {
+            this.logger.debug("Build "+build.getId()+" is not interesting to be inspected.");
         }
         return null;
     }
@@ -348,7 +363,7 @@ public class ProjectScanner {
 
             GHRateLimit rateLimit = gh.getRateLimit();
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-            this.logger.debug("GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining + " Reset hour: " + dateFormat.format(rateLimit.reset));
+            this.logger.debug("GitHub rate limit: Limit: " + rateLimit.limit + " - Remaining: " + rateLimit.remaining + " - Reset hour: " + dateFormat.format(rateLimit.reset));
 
             if (rateLimit.remaining > 2) {
                 GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
@@ -357,10 +372,10 @@ public class ProjectScanner {
                 GHCompare compare = ghRepo.getCompare(previousBuildCommit, buildCommit);
                 return compare;
             } else {
-                this.logger.warn("You reach your rate limit for github, you have to wait " + rateLimit.reset + " to get datas. PRInformation will be null for build "+build.getId());
+                this.logger.warn("You reached your rate limit for GitHub. You have to wait until " + dateFormat.format(rateLimit.reset) + " to get data. PRInformation will be null for build "+build.getId()+".");
             }
         } catch (IOException e) {
-            this.logger.warn("Error while getting commit from Github: " + e);
+            this.logger.warn("Error while getting commit from GitHub: " + e);
         }
         return null;
     }
