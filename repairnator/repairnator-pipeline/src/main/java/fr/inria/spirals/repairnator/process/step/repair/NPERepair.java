@@ -25,6 +25,7 @@ import java.util.List;
  * Created by urli on 10/07/2017.
  */
 public class NPERepair extends AbstractStep {
+    public static final String REPAIR_TOOL_NAME = "NPEFix";
     private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:npefix-maven:1.3:npefix";
 
     public NPERepair(ProjectInspector inspector) {
@@ -46,8 +47,16 @@ public class NPERepair extends AbstractStep {
         return false;
     }
 
+    public static void init() {
+        declareRepairTool(REPAIR_TOOL_NAME);
+    }
+
     @Override
     protected void businessExecute() {
+        if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
+            this.getLogger().warn(REPAIR_TOOL_NAME + " is not declared to be used and will be ignored");
+            return;
+        }
         this.getLogger().debug("Entrance in NPERepair step...");
 
         if (isThereNPE()) {

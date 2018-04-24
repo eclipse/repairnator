@@ -32,6 +32,7 @@ import java.util.concurrent.*;
  * Created by urli on 05/01/2017.
  */
 public class NopolRepair extends AbstractStep {
+    public static final String REPAIR_TOOL_NAME = "Nopol";
     public static int TOTAL_MAX_TIME = 60 * 4; // We expect it to run 4
                                                       // hours top.
     private static final int MIN_TIMEOUT = 2;
@@ -47,8 +48,16 @@ public class NopolRepair extends AbstractStep {
         return nopolInformations;
     }
 
+    public static void init() {
+        declareRepairTool(REPAIR_TOOL_NAME);
+    }
+
     @Override
     protected void businessExecute() {
+        if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
+            this.getLogger().warn(REPAIR_TOOL_NAME + " is not declared to be used and will be ignored");
+            return;
+        }
         this.getLogger().debug("Start to use nopol to repair...");
 
         this.setPipelineState(PipelineState.NOPOL_NOTPATCHED);

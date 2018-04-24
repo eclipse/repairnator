@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * Created by urli on 17/08/2017.
  */
 public class AstorRepair extends AbstractStep {
-
+    public static final String REPAIR_TOOL_NAME = "Astor";
     private static final int MAX_TIME_EXECUTION = 100; // in minutes
     public AstorRepair(ProjectInspector inspector) {
         super(inspector);
@@ -41,8 +41,16 @@ public class AstorRepair extends AbstractStep {
         super(inspector, name);
     }
 
+    public static void init() {
+        declareRepairTool(REPAIR_TOOL_NAME);
+    }
+
     @Override
     protected void businessExecute() {
+        if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
+        	this.getLogger().info("Astor is not declared to be used and will be ignored.");
+        	return;
+		}
         this.getLogger().info("Start to repair using Astor");
 
         JobStatus jobStatus = this.getInspector().getJobStatus();

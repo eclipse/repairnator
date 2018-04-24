@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
@@ -67,6 +68,10 @@ public abstract class AbstractStep {
         this.serializers = new ArrayList<AbstractDataSerializer>();
         this.properties = new Properties();
         this.config = RepairnatorConfig.getInstance();
+    }
+
+    protected static void declareRepairTool(String name) {
+        RepairToolsManager.registerRepairTool(name);
     }
 
     public void setNotifiers(List<AbstractNotifier> notifiers) {
