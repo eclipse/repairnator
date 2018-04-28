@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -24,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,6 +51,7 @@ public class TestNopolRepair {
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(solverPath);
+        config.setRepairTools(Collections.singleton(NopolRepair.REPAIR_TOOL_NAME));
         Utils.setLoggersLevel(Level.ERROR);
     }
 

@@ -168,12 +168,6 @@ public class Launcher {
         opt2.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
-
-        AssertFixerRepair.init();
-        AstorRepair.init();
-        NopolRepair.init();
-        NPERepair.init();
-
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String repairTools = StringUtils.join(RepairToolsManager.getAvailableRepairTools(), ";");

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -46,6 +47,7 @@ public class TestAssertFixerRepair {
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(AssertFixerRepair.REPAIR_TOOL_NAME));
         Path tmpDirPath = Files.createTempDirectory("test_assertfixer");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
