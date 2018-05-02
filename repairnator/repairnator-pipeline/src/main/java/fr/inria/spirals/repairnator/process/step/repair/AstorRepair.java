@@ -35,14 +35,6 @@ public class AstorRepair extends AbstractRepairStep {
 
     public AstorRepair() {}
 
-    public AstorRepair(ProjectInspector inspector) {
-        super(inspector);
-    }
-
-    public AstorRepair(ProjectInspector inspector, String name) {
-        super(inspector, name);
-    }
-
     @Override
     public String getRepairToolName() {
         return TOOL_NAME;

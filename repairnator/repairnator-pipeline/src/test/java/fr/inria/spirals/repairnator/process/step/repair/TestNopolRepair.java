@@ -85,7 +85,8 @@ public class TestNopolRepair {
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        NopolRepair nopolRepair = new NopolRepair(inspector);
+        NopolRepair nopolRepair = new NopolRepair();
+        nopolRepair.setProjectInspector(inspector);
         NopolRepair.TOTAL_MAX_TIME = 2;
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector))

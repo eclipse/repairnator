@@ -57,7 +57,8 @@ public class TestAssertFixerRepair {
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        AssertFixerRepair assertFixerRepair = new AssertFixerRepair(inspector);
+        AssertFixerRepair assertFixerRepair = new AssertFixerRepair();
+        assertFixerRepair.setProjectInspector(inspector);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector))
                 .setNextStep(new TestProject(inspector))

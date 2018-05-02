@@ -24,14 +24,6 @@ public class AssertFixerRepair extends AbstractRepairStep {
 
     public AssertFixerRepair() {}
 
-    public AssertFixerRepair(ProjectInspector inspector) {
-        super(inspector);
-    }
-
-    public AssertFixerRepair(ProjectInspector inspector, String name) {
-        super(inspector, name);
-    }
-
     @Override
     public String getRepairToolName() {
         return TOOL_NAME;

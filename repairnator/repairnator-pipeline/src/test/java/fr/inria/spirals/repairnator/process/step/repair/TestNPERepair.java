@@ -58,7 +58,8 @@ public class TestNPERepair {
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        NPERepair npeRepair = new NPERepair(inspector);
+        NPERepair npeRepair = new NPERepair();
+        npeRepair.setProjectInspector(inspector);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector))
                 .setNextStep(new TestProject(inspector))

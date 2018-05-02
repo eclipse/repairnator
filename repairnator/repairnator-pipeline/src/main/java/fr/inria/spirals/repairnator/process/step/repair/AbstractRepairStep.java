@@ -9,14 +9,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
         super(null);
     }
 
-    public AbstractRepairStep(ProjectInspector inspector) {
-        super(inspector);
-    }
-
-    public AbstractRepairStep(ProjectInspector inspector, String name) {
-        super(inspector, name);
-    }
-
     public void setProjectInspector(ProjectInspector inspector) {
         this.inspector = inspector;
         this.setName(this.getRepairToolName());

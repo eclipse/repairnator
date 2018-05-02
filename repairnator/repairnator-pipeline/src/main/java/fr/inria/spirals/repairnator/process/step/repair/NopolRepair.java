@@ -37,11 +37,13 @@ public class NopolRepair extends AbstractRepairStep {
     private static final int MIN_TIMEOUT = 2;
     private List<NopolInformation> nopolInformations;
 
-    public NopolRepair() {}
-
-    public NopolRepair(ProjectInspector inspector) {
-        super(inspector);
+    public NopolRepair() {
         this.nopolInformations = new ArrayList<>();
+    }
+
+    @Override
+    public void setProjectInspector(ProjectInspector inspector) {
+        super.setProjectInspector(inspector);
         inspector.getJobStatus().setNopolInformations(this.nopolInformations);
     }
 

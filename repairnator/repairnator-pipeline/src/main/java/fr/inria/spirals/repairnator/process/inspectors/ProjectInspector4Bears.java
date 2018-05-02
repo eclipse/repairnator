@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.process.step.pathes.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
-import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -54,7 +53,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new ComputeClasspath(this))
-                    .setNextStep(new NopolRepair(this))
                     .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))
@@ -74,7 +72,6 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this))
-                        .setNextStep(new NopolRepair(this))
                         .setNextStep(new CommitPatch(this, false))
                         .setNextStep(new CheckoutPatchedBuild(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build"))

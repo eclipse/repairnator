@@ -29,14 +29,6 @@ public class NPERepair extends AbstractRepairStep {
 
     public NPERepair() {}
 
-    public NPERepair(ProjectInspector inspector) {
-        super(inspector);
-    }
-
-    public NPERepair(ProjectInspector inspector, String name) {
-        super(inspector, name);
-    }
-
     @Override
     public String getRepairToolName() {
         return TOOL_NAME;
