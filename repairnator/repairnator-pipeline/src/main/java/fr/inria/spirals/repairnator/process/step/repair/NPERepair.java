@@ -25,7 +25,7 @@ import java.util.List;
  * Created by urli on 10/07/2017.
  */
 public class NPERepair extends AbstractStep {
-    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:npefix-maven:1.3:npefix";
+    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.4-SNAPSHOT:npefix";
 
     public NPERepair(ProjectInspector inspector) {
         super(inspector);
