@@ -121,8 +121,8 @@ public class RTLauncher {
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
-        opt2.setList(true);
-        opt2.setHelp("Specify one or several repair tools to use (available tools might depend of your docker image)");
+        opt2.setListSeparator(',');
+        opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
         opt2.setRequired(true);
         jsap.registerParameter(opt2);
 

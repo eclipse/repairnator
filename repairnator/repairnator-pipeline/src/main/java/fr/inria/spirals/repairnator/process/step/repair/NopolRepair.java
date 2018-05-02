@@ -8,7 +8,6 @@ import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
@@ -31,12 +30,14 @@ import java.util.concurrent.*;
 /**
  * Created by urli on 05/01/2017.
  */
-public class NopolRepair extends AbstractStep {
-    public static final String REPAIR_TOOL_NAME = "Nopol";
+public class NopolRepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "Nopol";
     public static int TOTAL_MAX_TIME = 60 * 4; // We expect it to run 4
                                                       // hours top.
     private static final int MIN_TIMEOUT = 2;
     private List<NopolInformation> nopolInformations;
+
+    public NopolRepair() {}
 
     public NopolRepair(ProjectInspector inspector) {
         super(inspector);
@@ -44,20 +45,17 @@ public class NopolRepair extends AbstractStep {
         inspector.getJobStatus().setNopolInformations(this.nopolInformations);
     }
 
+    @Override
+    public String getRepairToolName() {
+        return TOOL_NAME;
+    }
+
     public List<NopolInformation> getNopolInformations() {
         return nopolInformations;
     }
 
-    public static void init() {
-        declareRepairTool(REPAIR_TOOL_NAME);
-    }
-
     @Override
     protected void businessExecute() {
-        if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
-            this.getLogger().warn(REPAIR_TOOL_NAME + " is not declared to be used and will be ignored");
-            return;
-        }
         this.getLogger().debug("Start to use nopol to repair...");
 
         this.setPipelineState(PipelineState.NOPOL_NOTPATCHED);

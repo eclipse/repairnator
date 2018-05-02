@@ -73,7 +73,7 @@ public class TestProjectInspector {
         config.setZ3solverPath(solverPath);
         config.setPush(true);
         config.setPushRemoteRepo("");
-        config.setRepairTools(RepairToolsManager.getAvailableRepairTools());
+        config.setRepairTools(RepairToolsManager.getRepairToolsName());
         Utils.setLoggersLevel(Level.DEBUG);
     }
 

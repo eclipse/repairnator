@@ -11,7 +11,6 @@ import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.junit.Before;
@@ -55,7 +54,7 @@ public class TestNPERepair {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.REPAIR_TOOL_NAME));
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);

@@ -166,12 +166,13 @@ public class Launcher {
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
-        String repairTools = StringUtils.join(RepairToolsManager.getAvailableRepairTools(), ";");
-        opt2.setStringParser(EnumeratedStringParser.getParser(repairTools, true));
+        String repairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
+        opt2.setStringParser(EnumeratedStringParser.getParser(repairTools.replace(',',';'), true));
         opt2.setList(true);
-        opt2.setHelp("Specify one or several repair tools to use among: "+repairTools.replaceAll(";", ", "));
+        opt2.setListSeparator(',');
+        opt2.setHelp("Specify one or several repair tools to use among: "+repairTools);
         opt2.setRequired(true);
-        opt2.setDefault(repairTools.replaceAll(";", ":"));
+        opt2.setDefault(repairTools);
         jsap.registerParameter(opt2);
 
         return jsap;

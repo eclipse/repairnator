@@ -5,7 +5,6 @@ import eu.stamp.project.assertfixer.AssertFixerResult;
 import eu.stamp.project.assertfixer.Configuration;
 import eu.stamp.project.assertfixer.Main;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.io.File;
@@ -19,9 +18,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class AssertFixerRepair extends AbstractStep {
-    public static final String REPAIR_TOOL_NAME = "AssertFixer";
+public class AssertFixerRepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "AssertFixer";
     private static final int TOTAL_TIME = 30; // 30 minutes
+
+    public AssertFixerRepair() {}
 
     public AssertFixerRepair(ProjectInspector inspector) {
         super(inspector);
@@ -31,16 +32,13 @@ public class AssertFixerRepair extends AbstractStep {
         super(inspector, name);
     }
 
-    public static void init() {
-        declareRepairTool(REPAIR_TOOL_NAME);
+    @Override
+    public String getRepairToolName() {
+        return TOOL_NAME;
     }
 
     @Override
     protected void businessExecute() {
-        if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
-            this.getLogger().warn(REPAIR_TOOL_NAME + " is not declared to be used and will be ignored");
-            return;
-        }
         this.getLogger().info("Start AssertFixerRepair");
         List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
         File[] sources = this.inspector.getJobStatus().getRepairSourceDir();

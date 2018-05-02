@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -24,9 +23,11 @@ import java.util.List;
 /**
  * Created by urli on 10/07/2017.
  */
-public class NPERepair extends AbstractStep {
-    public static final String REPAIR_TOOL_NAME = "NPEFix";
+public class NPERepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "NPEFix";
     private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:npefix-maven:1.3:npefix";
+
+    public NPERepair() {}
 
     public NPERepair(ProjectInspector inspector) {
         super(inspector);
@@ -34,6 +35,11 @@ public class NPERepair extends AbstractStep {
 
     public NPERepair(ProjectInspector inspector, String name) {
         super(inspector, name);
+    }
+
+    @Override
+    public String getRepairToolName() {
+        return TOOL_NAME;
     }
 
     private boolean isThereNPE() {
@@ -47,16 +53,8 @@ public class NPERepair extends AbstractStep {
         return false;
     }
 
-    public static void init() {
-        declareRepairTool(REPAIR_TOOL_NAME);
-    }
-
     @Override
     protected void businessExecute() {
-        if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
-            this.getLogger().warn(REPAIR_TOOL_NAME + " is not declared to be used and will be ignored");
-            return;
-        }
         this.getLogger().debug("Entrance in NPERepair step...");
 
         if (isThereNPE()) {

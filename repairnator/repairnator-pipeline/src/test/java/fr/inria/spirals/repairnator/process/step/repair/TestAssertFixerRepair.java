@@ -47,7 +47,7 @@ public class TestAssertFixerRepair {
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
-        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(AssertFixerRepair.REPAIR_TOOL_NAME));
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(AssertFixerRepair.TOOL_NAME));
         Path tmpDirPath = Files.createTempDirectory("test_assertfixer");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
