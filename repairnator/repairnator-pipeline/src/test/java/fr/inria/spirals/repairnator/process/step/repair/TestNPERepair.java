@@ -36,7 +36,7 @@ public class TestNPERepair {
 
     @Before
     public void setup() {
-        Utils.setLoggersLevel(Level.ERROR);
+        Utils.setLoggersLevel(Level.DEBUG);
     }
 
     @Test

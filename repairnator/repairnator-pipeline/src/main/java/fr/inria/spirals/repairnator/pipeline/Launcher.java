@@ -4,16 +4,11 @@ import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
-import fr.inria.astor.util.StringUtil;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
-import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.serializer.AssertFixerSerializer;
 import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
@@ -168,10 +163,10 @@ public class Launcher {
         opt2.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String repairTools = StringUtils.join(RepairToolsManager.getAvailableRepairTools(), ";");
-        LOGGER.warn("Options : " + repairTools);
         opt2.setStringParser(EnumeratedStringParser.getParser(repairTools, true));
         opt2.setList(true);
         opt2.setHelp("Specify one or several repair tools to use among: "+repairTools.replaceAll(";", ", "));

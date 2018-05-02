@@ -48,9 +48,9 @@ public class AstorRepair extends AbstractStep {
     @Override
     protected void businessExecute() {
         if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
-        	this.getLogger().info("Astor is not declared to be used and will be ignored.");
-        	return;
-		}
+            this.getLogger().info("Astor is not declared to be used and will be ignored.");
+            return;
+        }
         this.getLogger().info("Start to repair using Astor");
 
         JobStatus jobStatus = this.getInspector().getJobStatus();

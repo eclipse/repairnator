@@ -11,37 +11,37 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class RepairToolsManager {
-	private static RepairToolsManager instance;
-	private static Logger LOGGER = LoggerFactory.getLogger(RepairToolsManager.class);
-	private Set<String> availableRepairTools;
+    private static RepairToolsManager instance;
+    private static Logger LOGGER = LoggerFactory.getLogger(RepairToolsManager.class);
+    private Set<String> availableRepairTools;
 
-	static {
-		AssertFixerRepair.init();
-		AstorRepair.init();
-		NopolRepair.init();
-		NPERepair.init();
-	}
+    static {
+        AssertFixerRepair.init();
+        AstorRepair.init();
+        NopolRepair.init();
+        NPERepair.init();
+    }
 
-	private RepairToolsManager() {
-		this.availableRepairTools = new HashSet<>();
-	}
+    private RepairToolsManager() {
+        this.availableRepairTools = new HashSet<>();
+    }
 
-	private static RepairToolsManager getInstance() {
-		if (instance == null) {
-			instance = new RepairToolsManager();
-		}
-		return instance;
-	}
+    private static RepairToolsManager getInstance() {
+        if (instance == null) {
+            instance = new RepairToolsManager();
+        }
+        return instance;
+    }
 
-	public static void registerRepairTool(String name) {
-		LOGGER.info("Record repair tool: " + name);
-		if (getInstance().availableRepairTools.contains(name)) {
-			LOGGER.warn(name+" tool has already been registered. Previous one will be ignored.");
-		}
-		getInstance().availableRepairTools.add(name);
-	}
+    public static void registerRepairTool(String name) {
+        LOGGER.info("Record repair tool: " + name);
+        if (getInstance().availableRepairTools.contains(name)) {
+            LOGGER.warn(name+" tool has already been registered. Previous one will be ignored.");
+        }
+        getInstance().availableRepairTools.add(name);
+    }
 
-	public static Set<String> getAvailableRepairTools() {
-		return getInstance().availableRepairTools;
-	}
+    public static Set<String> getAvailableRepairTools() {
+        return getInstance().availableRepairTools;
+    }
 }

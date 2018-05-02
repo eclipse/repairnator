@@ -1,8 +1,10 @@
 package fr.inria.spirals.repairnator.dockerpool;
 
+import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
@@ -15,6 +17,7 @@ import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +26,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -88,6 +93,13 @@ public class Launcher extends AbstractPoolManager {
         // --pushurl
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
 
+        FlaggedOption opt2 = new FlaggedOption("repairTools");
+        opt2.setLongFlag("repairTools");
+        opt2.setList(true);
+        opt2.setHelp("Specify one or several repair tools to use (available tools might depend of your docker image)");
+        opt2.setRequired(true);
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -118,6 +130,7 @@ public class Launcher extends AbstractPoolManager {
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
             this.config.setFork(true);
         }
+        this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
     }
 
     private void initSerializerEngines() {

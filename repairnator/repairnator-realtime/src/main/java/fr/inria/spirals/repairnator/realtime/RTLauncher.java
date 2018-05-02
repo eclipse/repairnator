@@ -4,6 +4,7 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
@@ -14,11 +15,14 @@ import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class RTLauncher {
@@ -115,6 +119,13 @@ public class RTLauncher {
         opt2.setHelp("Duration of the execution. If not given, the execution never stop. This argument should be given on the ISO-8601 duration format: PWdTXhYmZs where W, X, Y, Z respectively represents number of Days, Hours, Minutes and Seconds. T is mandatory before the number of hours and P is always mandatory.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("repairTools");
+        opt2.setLongFlag("repairTools");
+        opt2.setList(true);
+        opt2.setHelp("Specify one or several repair tools to use (available tools might depend of your docker image)");
+        opt2.setRequired(true);
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -150,6 +161,8 @@ public class RTLauncher {
         if (arguments.getObject("duration") != null) {
             this.config.setDuration((Duration) arguments.getObject("duration"));
         }
+
+        this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
     }
 
     private void initSerializerEngines() {

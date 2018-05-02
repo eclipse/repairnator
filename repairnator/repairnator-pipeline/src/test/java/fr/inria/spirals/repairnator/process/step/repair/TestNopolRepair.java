@@ -52,7 +52,7 @@ public class TestNopolRepair {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(solverPath);
         config.setRepairTools(Collections.singleton(NopolRepair.REPAIR_TOOL_NAME));
-        Utils.setLoggersLevel(Level.ERROR);
+        Utils.setLoggersLevel(Level.DEBUG);
     }
 
     @After

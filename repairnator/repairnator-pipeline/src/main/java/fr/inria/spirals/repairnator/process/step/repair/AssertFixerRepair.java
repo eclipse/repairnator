@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class AssertFixerRepair extends AbstractStep {
-	public static final String REPAIR_TOOL_NAME = "AssertFixer";
+    public static final String REPAIR_TOOL_NAME = "AssertFixer";
     private static final int TOTAL_TIME = 30; // 30 minutes
 
     public AssertFixerRepair(ProjectInspector inspector) {
@@ -37,10 +37,10 @@ public class AssertFixerRepair extends AbstractStep {
 
     @Override
     protected void businessExecute() {
-    	if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
-    		this.getLogger().warn(REPAIR_TOOL_NAME + " is not declared to be used and will be ignored");
-    		return;
-		}
+        if (!this.getConfig().getRepairTools().contains(REPAIR_TOOL_NAME)) {
+            this.getLogger().warn(REPAIR_TOOL_NAME + " is not declared to be used and will be ignored");
+            return;
+        }
         this.getLogger().info("Start AssertFixerRepair");
         List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
         File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
