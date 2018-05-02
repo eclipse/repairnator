@@ -32,6 +32,9 @@ public class BuildRunner extends AbstractPoolManager {
         super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
         super.setRunId(RepairnatorConfig.getInstance().getRunId());
         super.setEngines(this.rtScanner.getEngines());
+    }
+
+    public void initRunner() {
         this.setDockerImageName(RepairnatorConfig.getInstance().getDockerImageName());
         this.initExecutorService(RepairnatorConfig.getInstance().getNbThreads());
     }
