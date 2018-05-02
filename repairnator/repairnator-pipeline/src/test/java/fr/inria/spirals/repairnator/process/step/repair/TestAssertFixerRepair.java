@@ -34,7 +34,7 @@ public class TestAssertFixerRepair {
 
     @Before
     public void setup() {
-        Utils.setLoggersLevel(Level.DEBUG);
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     @Test

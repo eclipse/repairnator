@@ -74,7 +74,7 @@ public class TestProjectInspector {
         config.setPush(true);
         config.setPushRemoteRepo("");
         config.setRepairTools(RepairToolsManager.getRepairToolsName());
-        Utils.setLoggersLevel(Level.DEBUG);
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     public static boolean isMac() {
