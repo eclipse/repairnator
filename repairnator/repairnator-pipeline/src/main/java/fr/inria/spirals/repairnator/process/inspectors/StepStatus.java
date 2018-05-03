@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import java.util.Objects;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.states.PipelineState;
 
 public class StepStatus {
     public enum StatusKind {
@@ -11,26 +12,32 @@ public class StepStatus {
 
     private StatusKind status;
     private String diagnostic;
+    private AbstractStep step;
 
-    public StepStatus(StatusKind status, String diagnostic) {
+    public StepStatus(AbstractStep step, StatusKind status, String diagnostic) {
+        this.step = step;
         this.status = status;
         this.diagnostic = diagnostic;
     }
 
-    public static StepStatus buildSuccess() {
-        return new StepStatus(StatusKind.SUCCESS, "");
+    public static StepStatus buildSuccess(AbstractStep step) {
+        return new StepStatus(step, StatusKind.SUCCESS, "");
     }
 
-    public static StepStatus buildError(String diagnostic) {
-        return new StepStatus(StatusKind.FAILURE, diagnostic);
+    public static StepStatus buildError(AbstractStep step, PipelineState diagnostic) {
+        return new StepStatus(step, StatusKind.FAILURE, diagnostic.name());
     }
 
-    public static StepStatus buildSkipped() {
-        return new StepStatus(StatusKind.SKIPPED, "");
+    public static StepStatus buildSkipped(AbstractStep step, String reason) {
+        return new StepStatus(step, StatusKind.SKIPPED, reason);
     }
 
-    public static StepStatus buildSkipped(String reason) {
-        return new StepStatus(StatusKind.SKIPPED, reason);
+    public static StepStatus buildSkipped(AbstractStep step) {
+        return new StepStatus(step, StatusKind.SKIPPED, "");
+    }
+
+    public AbstractStep getStep() {
+        return step;
     }
 
     public String getDiagnostic() {
@@ -41,22 +48,12 @@ public class StepStatus {
         return status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final StepStatus that = (StepStatus) o;
-        return status == that.status &&
-                Objects.equals(diagnostic, that.diagnostic);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(status, diagnostic);
-    }
-
     public boolean isSuccess() {
         return this.getStatus() == StatusKind.SUCCESS;
+    }
+
+    public String toString() {
+        String suffix = (this.diagnostic.isEmpty()) ? "" : " ( " + this.diagnostic + " )";
+        return "[ " + this.step.getName() + " : " + this.status.name() + suffix + " ]";
     }
 }

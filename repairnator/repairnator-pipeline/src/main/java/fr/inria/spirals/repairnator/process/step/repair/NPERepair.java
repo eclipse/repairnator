@@ -63,7 +63,7 @@ public class NPERepair extends AbstractRepairStep {
 
             if (status == MavenHelper.MAVEN_ERROR) {
                 this.addStepError("Error while running NPE fix: maybe the project does not contain a NPE?");
-                return StepStatus.buildError("Error while running maven goal for NPEFix.");
+                return StepStatus.buildSkipped(this,"Error while running maven goal for NPEFix.");
             } else {
                 Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { "json"}, false);
                 if (!files.isEmpty()) {
@@ -119,21 +119,21 @@ public class NPERepair extends AbstractRepairStep {
 
                     if (effectivelyPatched) {
                         this.getInspector().getJobStatus().setHasBeenPatched(true);
-                        return StepStatus.buildSuccess();
+                        return StepStatus.buildSuccess(this);
                     } else {
-                        return StepStatus.buildError("No patch found.");
+                        return StepStatus.buildSkipped(this,"No patch found.");
                     }
 
                 } else {
                     this.addStepError("Error while getting the patch json file: no file found.");
-                    return StepStatus.buildError("Error while reading patch file.");
+                    return StepStatus.buildSkipped(this,"Error while reading patch file.");
                 }
 
 
             }
         } else {
             this.getLogger().info("No NPE found, this step will be skipped.");
-            return StepStatus.buildSkipped("No NPE found.");
+            return StepStatus.buildSkipped(this, "No NPE found.");
         }
     }
 }

@@ -18,7 +18,7 @@ public class CheckoutBuggyBuildSourceCode extends CheckoutRepository {
 
         if (this.getInspector().getJobStatus().getRepairSourceDir() == null) {
             this.getLogger().error("Repair source dir is null: it is therefore impossible to continue.");
-            return StepStatus.buildError("Repair source dir is null: it is therefore impossible to continue.");
+            return StepStatus.buildError(this, PipelineState.SOURCEDIRNOTCOMPUTED);
         }
 
         super.setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);

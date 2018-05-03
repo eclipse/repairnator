@@ -21,7 +21,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
             super.execute();
         } else {
             this.getLogger().warn("Skipping repair step "+this.getRepairToolName());
-            this.getInspector().getJobStatus().putStatusStep(this, StepStatus.buildSkipped("Not configured to run."));
+            this.getInspector().getJobStatus().addStepStatus(StepStatus.buildSkipped(this,"Not configured to run."));
             super.executeNextStep();
         }
     }

@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.serializer;
 
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
 import java.util.List;
@@ -29,7 +30,16 @@ public abstract class AbstractDataSerializer extends Serializer {
             return "test failure";
         }
 
-        return jobStatus.getPipelineState().name();
+        List<StepStatus> stepStatuses = jobStatus.getStepStatuses();
+
+        for (int i = stepStatuses.size()-1; i > 0; i--) {
+            StepStatus stepStatus = stepStatuses.get(i);
+            if (stepStatus.getStatus() == StepStatus.StatusKind.FAILURE) {
+                return stepStatus.getDiagnostic();
+            }
+        }
+
+        return "UNKNOWN";
     }
 
     public abstract void serializeData(ProjectInspector inspector);

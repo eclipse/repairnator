@@ -32,12 +32,12 @@ public class CloneRepository extends AbstractStep {
             Git.cloneRepository().setCloneSubmodules(true).setURI(repoRemotePath).setDirectory(new File(repoLocalPath)).call();
 
             this.writeProperty("repo",this.getInspector().getRepoSlug());
-            return StepStatus.buildSuccess();
+            return StepStatus.buildSuccess(this);
         } catch (Exception e) {
             this.getLogger().warn("Repository " + repository + " cannot be cloned.");
             this.getLogger().debug(e.toString());
             this.addStepError(e.getMessage());
-            return StepStatus.buildError("Repository " + repository + " cannot be cloned.");
+            return StepStatus.buildError(this,"NOTCLONABLE");
         }
     }
 

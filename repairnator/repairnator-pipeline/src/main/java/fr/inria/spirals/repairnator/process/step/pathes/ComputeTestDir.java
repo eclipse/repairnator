@@ -4,6 +4,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
@@ -143,9 +144,9 @@ public class ComputeTestDir extends AbstractStep {
 
         if (sources == null || sources.length == 0) {
             this.addStepError("Fail to find the tests directory.");
-            return StepStatus.buildError("Error while getting the test directory.");
+            return StepStatus.buildError(this, PipelineState.TESTDIRNOTCOMPUTED);
         } else {
-            return StepStatus.buildSuccess();
+            return StepStatus.buildSuccess(this);
         }
     }
 

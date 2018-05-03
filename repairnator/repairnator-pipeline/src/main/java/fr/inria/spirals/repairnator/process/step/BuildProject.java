@@ -37,10 +37,10 @@ public class BuildProject extends AbstractStep {
         }
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
-            return StepStatus.buildSuccess();
+            return StepStatus.buildSuccess(this);
         } else {
             this.getLogger().warn("Repository " + this.getInspector().getRepoSlug() + " cannot be built.");
-            return StepStatus.buildError("Repository " + this.getInspector().getRepoSlug() + " cannot be built.");
+            return StepStatus.buildError(this,"Repository " + this.getInspector().getRepoSlug() + " cannot be built.");
         }
     }
 

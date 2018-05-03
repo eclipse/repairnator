@@ -76,7 +76,7 @@ public class ComputeClasspath extends AbstractStep {
 
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");
-            return StepStatus.buildError("Error during maven goal to compute classpath");
+            return StepStatus.buildError(this, PipelineState.CLASSPATHERROR);
         }
 
         String classpathPath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
@@ -109,6 +109,6 @@ public class ComputeClasspath extends AbstractStep {
 
         this.getInspector().getJobStatus().setRepairClassPath(this.classPath);
         this.getInspector().getJobStatus().getMetrics().setNbLibraries(this.classPath.size()-2);
-        return StepStatus.buildSuccess();
+        return StepStatus.buildSuccess(this);
     }
 }

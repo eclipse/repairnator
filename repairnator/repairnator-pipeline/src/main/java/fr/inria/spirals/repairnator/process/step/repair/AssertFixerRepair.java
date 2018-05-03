@@ -43,7 +43,7 @@ public class AssertFixerRepair extends AbstractRepairStep {
 
         if (tests == null || tests.length == 0) {
             addStepError("No test directory found, this step won't be executed.");
-            return StepStatus.buildError("No test directory found, this step won't be executed.");
+            return StepStatus.buildSkipped(this, "No test directory found, this step won't be executed.");
         }
 
         Configuration configuration = new Configuration();
@@ -108,6 +108,6 @@ public class AssertFixerRepair extends AbstractRepairStep {
         }
 
         this.getInspector().getJobStatus().setAssertFixerResults(assertFixerResults);
-        return StepStatus.buildSuccess();
+        return StepStatus.buildSuccess(this);
     }
 }

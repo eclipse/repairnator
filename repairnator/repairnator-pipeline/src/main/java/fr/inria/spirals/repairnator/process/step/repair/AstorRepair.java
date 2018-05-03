@@ -175,12 +175,12 @@ public class AstorRepair extends AbstractRepairStep {
 
 
             if (astorPatches.isEmpty()) {
-                return StepStatus.buildError("No patch found.");
+                return StepStatus.buildSkipped(this,"No patch found.");
             } else {
                 this.getInspector().getJobStatus().setHasBeenPatched(true);
-                return StepStatus.buildSuccess();
+                return StepStatus.buildSuccess(this);
             }
         }
-        return StepStatus.buildSkipped("Classpath or sources not computed.");
+        return StepStatus.buildSkipped(this,"Classpath or sources not computed.");
     }
 }

@@ -39,14 +39,14 @@ public class TestProject extends AbstractStep {
             } else {
                 this.addStepError("No test recorded.");
             }
-            return StepStatus.buildSuccess();
+            return StepStatus.buildSuccess(this);
         } else {
             if (outputTestFilter.isFailingWithTest()) {
                 this.getLogger().debug(outputTestFilter.getFailingTests() + " tests failed, go to next step.");
-                return StepStatus.buildSuccess();
+                return StepStatus.buildSuccess(this);
             } else {
                 this.addStepError("Error while testing the project.");
-                return StepStatus.buildError("Error while testing the project.");
+                return StepStatus.buildError(this,"Error while testing the project.");
             }
         }
     }

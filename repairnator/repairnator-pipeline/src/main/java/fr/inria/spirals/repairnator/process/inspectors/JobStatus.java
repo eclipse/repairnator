@@ -58,7 +58,7 @@ public class JobStatus {
     private boolean hasBeenForked;
     private String forkURL;
 
-    private Map<AbstractStep, StepStatus> stepStatusMap;
+    private List<StepStatus> stepStatuses;
 
     public JobStatus(String pomDirPath) {
         this.stepErrors = new HashMap<>();
@@ -71,7 +71,7 @@ public class JobStatus {
         this.astorPatches = new ArrayList<>();
         this.npeFixPatches = new ArrayList<>();
         this.assertFixerResults = new ArrayList<>();
-        this.stepStatusMap = new HashMap<>();
+        this.stepStatuses = new ArrayList<>();
     }
 
     public List<URL> getRepairClassPath() {
@@ -286,11 +286,11 @@ public class JobStatus {
         this.assertFixerResults = assertFixerResults;
     }
 
-    public Map<AbstractStep, StepStatus> getStepStatusMap() {
-        return stepStatusMap;
+    public List<StepStatus> getStepStatuses() {
+        return stepStatuses;
     }
 
-    public void putStatusStep(AbstractStep step, StepStatus status) {
-        this.stepStatusMap.put(step, status);
+    public void addStepStatus(StepStatus stepStatus) {
+        this.stepStatuses.add(stepStatus);
     }
 }

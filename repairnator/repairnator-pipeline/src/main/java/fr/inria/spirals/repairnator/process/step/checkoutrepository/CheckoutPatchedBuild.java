@@ -25,7 +25,7 @@ public class CheckoutPatchedBuild extends CheckoutRepository {
             return stepStatus;
         } else {
             this.addStepError("There is no patched build retrieved. This will stop now.");
-            return StepStatus.buildError("There is no patched build retrieved. This will stop now.");
+            return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
         }
     }
 

@@ -289,7 +289,7 @@ public abstract class AbstractStep {
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
-        this.inspector.getJobStatus().putStatusStep(this, stepStatus);
+        this.inspector.getJobStatus().addStepStatus(stepStatus);
 
         this.shouldStop = this.shouldStop || (this.isBlockingStep() && !stepStatus.isSuccess());
         if (!this.shouldStop) {

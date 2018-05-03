@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -106,12 +107,12 @@ public abstract class CheckoutRepository extends AbstractStep {
 
                     boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, pathes);
                     if (!successfulMerge) {
-                        return StepStatus.buildError("Error while merging two commits to reproduce the PR.");
+                        return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                     }
 
                 } else {
                     this.addStepError("Error while getting the PR information...");
-                    return StepStatus.buildError("Error while getting the PR information...");
+                    return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                 }
             } else {
                 String commitCheckout = build.getCommit().getSha();
@@ -141,12 +142,12 @@ public abstract class CheckoutRepository extends AbstractStep {
                     this.writeProperty("bugCommit", this.getInspector().getBuggyBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
-                    return StepStatus.buildError("Error while getting the commit to checkout from the repo.");
+                    return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                 }
             }
         } catch (IOException | GitAPIException e) {
             this.addStepError("Exception while getting the commit to checkout from the repo.", e);
-            return StepStatus.buildError("Exception while getting the commit to checkout from the repo.");
+            return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
         }
 
         this.writeProperty("hostname", Utils.getHostname());
@@ -165,7 +166,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                 break;
         }
 
-        return StepStatus.buildSuccess();
+        return StepStatus.buildSuccess(this);
     }
 
     protected CheckoutType getCheckoutType() {

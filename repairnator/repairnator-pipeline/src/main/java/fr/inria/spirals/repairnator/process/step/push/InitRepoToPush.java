@@ -126,7 +126,7 @@ public class InitRepoToPush extends AbstractStep {
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
                 this.setPushState(PushState.REPO_INITIALIZED);
-                return StepStatus.buildSuccess();
+                return StepStatus.buildSuccess(this);
             } catch (IOException e) {
                 this.addStepError("Error while copying the folder to prepare the git repository.", e);
                 this.setPushState(PushState.REPO_NOT_INITIALIZED);
@@ -134,10 +134,10 @@ public class InitRepoToPush extends AbstractStep {
                 this.addStepError("Error while initializing the new git repository.", e);
                 this.setPushState(PushState.REPO_NOT_INITIALIZED);
             }
-            return StepStatus.buildError("Error while initializing the new git repository.");
+            return StepStatus.buildSkipped(this, "Error while initializing the new git repository.");
         } else {
             this.getLogger().info("Repairnator configured to NOT push. Step bypassed.");
-            return StepStatus.buildSkipped();
+            return StepStatus.buildSkipped(this);
         }
     }
 }

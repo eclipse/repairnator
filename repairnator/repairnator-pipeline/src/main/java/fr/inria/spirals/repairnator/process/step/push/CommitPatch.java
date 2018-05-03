@@ -104,16 +104,16 @@ public class CommitPatch extends AbstractStep {
                 } else {
                     this.setPushState(PushState.REPAIR_INFO_COMMITTED);
                 }
-                return StepStatus.buildSuccess();
+                return StepStatus.buildSuccess(this);
             } catch (IOException e) {
                 this.addStepError("Error while copying the folder to prepare the git repository.", e);
             } catch (GitAPIException e) {
                 this.addStepError("Error while opening the git repository, maybe it has not been initialized yet.", e);
             }
-            return StepStatus.buildError("Error while pushing or committed info.");
+            return StepStatus.buildSkipped(this,"Error while pushing or committed info.");
         } else {
             this.getLogger().info("Repairnator is configured to not push anything. This step will be bypassed.");
-            return StepStatus.buildSkipped();
+            return StepStatus.buildSkipped(this);
         }
     }
 }

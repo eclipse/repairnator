@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -32,13 +33,13 @@ public class BuildShouldPass implements ContractForGatherTestInformation {
                     }
                 }
             }
-            return StepStatus.buildSuccess();
+            return StepStatus.buildSuccess(gatherTestInformation);
         }
 
         if (gatherTestInformation.getNbRunningTests() == 0) {
-            return StepStatus.buildError("No running test recorded.");
+            return StepStatus.buildError(gatherTestInformation, PipelineState.TESTERRORS);
         } else {
-            return StepStatus.buildError(gatherTestInformation.getNbErroringTests() + gatherTestInformation.getNbFailingTests() + " tests were failing against " + gatherTestInformation.getNbRunningTests() + " tests in total.");
+            return StepStatus.buildError(gatherTestInformation, PipelineState.TESTFAILURES);
         }
     }
 
