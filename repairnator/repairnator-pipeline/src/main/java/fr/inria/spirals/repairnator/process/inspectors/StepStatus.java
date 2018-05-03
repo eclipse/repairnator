@@ -55,4 +55,8 @@ public class StepStatus {
 
         return Objects.hash(status, diagnostic);
     }
+
+    public boolean isSuccess() {
+        return this.getStatus() == StatusKind.SUCCESS;
+    }
 }

@@ -29,10 +29,6 @@ public abstract class AbstractDataSerializer extends Serializer {
             return "test failure";
         }
 
-        if (jobStatus.isReproducedAsError()) {
-            return "test errors";
-        }
-
         return jobStatus.getPipelineState().name();
     }
 

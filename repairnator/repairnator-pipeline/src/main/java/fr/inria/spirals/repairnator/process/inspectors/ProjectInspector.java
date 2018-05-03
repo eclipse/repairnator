@@ -13,7 +13,6 @@ import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
@@ -136,17 +135,18 @@ public class ProjectInspector {
     public void run() {
         if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
-            AbstractStep lastStep = cloneRepo.setNextStep(new CheckoutBuggyBuild(this))
-                    .setNextStep(new ComputeSourceDir(this, true))
-                    .setNextStep(new ComputeTestDir(this))
+            AbstractStep lastStep = cloneRepo
+                    .setNextStep(new CheckoutBuggyBuild(this, true))
+                    .setNextStep(new ComputeSourceDir(this, true, true)) // TODO: check, should it be really blocking?
+                    .setNextStep(new ComputeTestDir(this, true))                    // IDEM
                     .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldFail(), false))
+                    .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new PushIncriminatedBuild(this))
-                    .setNextStep(new ComputeClasspath(this))
-                    .setNextStep(new ComputeSourceDir(this, false));
+                    .setNextStep(new ComputeClasspath(this, false))
+                    .setNextStep(new ComputeSourceDir(this, false, false));
 
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
@@ -159,15 +159,14 @@ public class ProjectInspector {
             }
 
             lastStep.setNextStep(new CommitPatch(this, false))
-                    .setNextStep(new CheckoutPatchedBuild(this))
+                    .setNextStep(new CheckoutPatchedBuild(this, false))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, new BuildShouldPass(), true))
+                    .setNextStep(new GatherTestInformation(this, false, new BuildShouldPass(), true))
                     .setNextStep(new CommitPatch(this, true));
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);
-            cloneRepo.setPipelineState(PipelineState.INIT);
 
             try {
                 cloneRepo.execute();

@@ -5,7 +5,6 @@ import eu.stamp.project.assertfixer.AssertFixerResult;
 import fr.inria.main.AstorOutputStatus;
 import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -22,7 +21,6 @@ import java.util.Map;
  * Created by urli on 23/03/2017.
  */
 public class JobStatus {
-    private PipelineState pipelineState;
     private PushState pushState;
     private List<URL> repairClassPath;
 
@@ -63,7 +61,6 @@ public class JobStatus {
     private Map<AbstractStep, StepStatus> stepStatusMap;
 
     public JobStatus(String pomDirPath) {
-        this.pipelineState = PipelineState.NONE;
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
         this.repairSourceDir = new File[]{new File("src/main/java")};
@@ -75,14 +72,6 @@ public class JobStatus {
         this.npeFixPatches = new ArrayList<>();
         this.assertFixerResults = new ArrayList<>();
         this.stepStatusMap = new HashMap<>();
-    }
-
-    public PipelineState getPipelineState() {
-        return pipelineState;
-    }
-
-    public void setPipelineState(PipelineState pipelineState) {
-        this.pipelineState = pipelineState;
     }
 
     public List<URL> getRepairClassPath() {

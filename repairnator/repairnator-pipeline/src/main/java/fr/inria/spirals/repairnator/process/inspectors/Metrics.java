@@ -36,6 +36,8 @@ public class Metrics {
     private int patchDeletedLines;
 
     private int nbFailingTests;
+    private int nbErroringTests;
+    private int nbSkippingTests;
     private int nbRunningTests;
 
     private Set<String> failureNames;
@@ -78,6 +80,22 @@ public class Metrics {
 
     public void setNbFailingTests(int nbFailingTests) {
         this.nbFailingTests = nbFailingTests;
+    }
+
+    public int getNbErroringTests() {
+        return nbErroringTests;
+    }
+
+    public void setNbErroringTests(int nbErroringTests) {
+        this.nbErroringTests = nbErroringTests;
+    }
+
+    public int getNbSkippingTests() {
+        return nbSkippingTests;
+    }
+
+    public void setNbSkippingTests(int nbSkippingTests) {
+        this.nbSkippingTests = nbSkippingTests;
     }
 
     public void setNbRunningTests(int nbRunningTests) {

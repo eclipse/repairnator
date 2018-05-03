@@ -291,7 +291,7 @@ public abstract class AbstractStep {
 
         this.inspector.getJobStatus().putStatusStep(this, stepStatus);
 
-        this.shouldStop = this.shouldStop || (this.isBlockingStep() && stepStatus.getStatus() == StepStatus.StatusKind.FAILURE);
+        this.shouldStop = this.shouldStop || (this.isBlockingStep() && !stepStatus.isSuccess());
         if (!this.shouldStop) {
             this.executeNextStep();
         } else {
