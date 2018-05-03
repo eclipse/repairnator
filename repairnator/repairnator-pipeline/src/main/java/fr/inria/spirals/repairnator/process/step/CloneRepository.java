@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class CloneRepository extends AbstractStep {
             this.getLogger().warn("Repository " + repository + " cannot be cloned.");
             this.getLogger().debug(e.toString());
             this.addStepError(e.getMessage());
-            return StepStatus.buildError(this,"NOTCLONABLE");
+            return StepStatus.buildError(this, PipelineState.NOTCLONABLE);
         }
     }
 

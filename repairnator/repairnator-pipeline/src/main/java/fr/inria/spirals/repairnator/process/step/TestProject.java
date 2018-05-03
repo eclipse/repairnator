@@ -4,6 +4,7 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.maven.output.MavenFilterTestOutputHandler;
+import fr.inria.spirals.repairnator.states.PipelineState;
 
 /**
  * Created by urli on 03/01/2017.
@@ -46,7 +47,7 @@ public class TestProject extends AbstractStep {
                 return StepStatus.buildSuccess(this);
             } else {
                 this.addStepError("Error while testing the project.");
-                return StepStatus.buildError(this,"Error while testing the project.");
+                return StepStatus.buildError(this, PipelineState.NOTTESTABLE);
             }
         }
     }

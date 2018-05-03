@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.states.PipelineState;
 
 /**
  * Created by urli on 14/04/2017.
@@ -35,7 +36,7 @@ public class ResolveDependency extends AbstractStep {
             return StepStatus.buildSuccess(this);
         } else {
             this.getLogger().warn("Repository " + this.getInspector().getRepoSlug() + " may have unresolvable dependencies.");
-            return StepStatus.buildError(this,"Repository " + this.getInspector().getRepoSlug() + " have unresolvable dependencies.");
+            return StepStatus.buildError(this, PipelineState.NOTBUILDABLE);
         }
     }
 
