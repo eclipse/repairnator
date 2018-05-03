@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 
@@ -10,19 +10,19 @@ import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 public class ResolveDependency extends AbstractStep {
 
     public ResolveDependency(ProjectInspector inspector) {
-        super(inspector);
+        super(inspector, true);
     }
 
-    public ResolveDependency(ProjectInspector inspector, String stepName) {
-        super(inspector, stepName);
+    public ResolveDependency(ProjectInspector inspector, String stepName, boolean blockingStep) {
+        super(inspector, stepName, blockingStep);
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Resolve dependencies with maven (skip tests)...");
 
         this.getLogger().debug("Installing artifacts without test execution...");
-        MavenHelper helper = new MavenHelper(this.getPom(), "dependency:resolve", null, this.getClass().getSimpleName(), this.inspector, true);
+        MavenHelper helper = new MavenHelper(this.getPom(), "dependency:resolve", null, this.getClass().getSimpleName(), this.getInspector(), true);
 
         int result = MavenHelper.MAVEN_ERROR;
         try {
@@ -32,10 +32,10 @@ public class ResolveDependency extends AbstractStep {
         }
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
-            this.setPipelineState(PipelineState.DEPENDENCY_RESOLVED);
+            return StepStatus.buildSuccess();
         } else {
-            this.getLogger().warn("Repository " + this.inspector.getRepoSlug() + " may have unresolvable dependencies.");
-            this.setPipelineState(PipelineState.DEPENDENCY_UNRESOLVABLE);
+            this.getLogger().warn("Repository " + this.getInspector().getRepoSlug() + " may have unresolvable dependencies.");
+            return StepStatus.buildError("Repository " + this.getInspector().getRepoSlug() + " have unresolvable dependencies.");
         }
     }
 

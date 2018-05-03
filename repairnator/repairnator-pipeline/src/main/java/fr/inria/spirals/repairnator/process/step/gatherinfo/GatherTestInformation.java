@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -31,6 +32,8 @@ public class GatherTestInformation extends AbstractStep {
     private int nbSkippingTests;
     private int nbFailingTests;
     private int nbErroringTests;
+    private int nbRunningTests;
+
     private Set<FailureLocation> failureLocations;
     private Set<String> failureNames;
     private String failingModulePath;
@@ -46,16 +49,16 @@ public class GatherTestInformation extends AbstractStep {
      * @param contract The contract to know in which case the step should stop the pipeline
      * @param skipSettingStatusInformation If set to true, the step won't push any information to the JobStatus of the inspector.
      */
-    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation, String stepName) {
-        super(inspector, stepName);
+    public GatherTestInformation(ProjectInspector inspector, boolean blockingStep, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation, String stepName) {
+        super(inspector, stepName, blockingStep);
         this.failureLocations = new HashSet<>();
         this.failureNames = new HashSet<>();
         this.contract = contract;
         this.skipSettingStatusInformation = skipSettingStatusInformation;
     }
 
-    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
-        this(inspector, contract, skipSettingStatusInformation, GatherTestInformation.class.getSimpleName());
+    public GatherTestInformation(ProjectInspector inspector, boolean blockingStep, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
+        this(inspector, blockingStep, contract, skipSettingStatusInformation, GatherTestInformation.class.getSimpleName());
     }
 
     public int getNbFailingTests() {
@@ -74,11 +77,15 @@ public class GatherTestInformation extends AbstractStep {
         return nbSkippingTests;
     }
 
+    public int getNbRunningTests() {
+        return nbRunningTests;
+    }
+
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Gathering test information...");
 
-        File rootRepo = new File(this.inspector.getJobStatus().getPomDirPath());
+        File rootRepo = new File(this.getInspector().getJobStatus().getPomDirPath());
         final List<File> surefireDirs = new ArrayList<File>();
 
         try {
@@ -106,6 +113,7 @@ public class GatherTestInformation extends AbstractStep {
                     if (!skipSettingStatusInformation) {
                         this.nbTotalTests += testSuite.getNumberOfTests();
                         this.nbSkippingTests += testSuite.getNumberOfSkipped();
+                        this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
 
                         if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                             File failingModule = surefireDir.getParentFile().getParentFile();
@@ -154,14 +162,6 @@ public class GatherTestInformation extends AbstractStep {
                     this.nbErroringTests += testSuite.getNumberOfErrors();
                     this.nbFailingTests += testSuite.getNumberOfFailures();
                 }
-
-                if (this.nbFailingTests > 0) {
-                    this.setPipelineState(PipelineState.HASTESTFAILURE);
-                } else if (this.nbErroringTests > 0) {
-                    this.setPipelineState(PipelineState.HASTESTERRORS);
-                } else {
-                    this.setPipelineState(PipelineState.NOTFAILING);
-                }
             } catch (MavenReportException e) {
                 this.addStepError("Error while parsing files to get test information:",e);
             } catch (IOException e) {
@@ -176,16 +176,15 @@ public class GatherTestInformation extends AbstractStep {
             this.writeProperty("totalNumberErroringTests", this.nbErroringTests);
             this.writeProperty("totalNumberSkippingTests", this.nbSkippingTests);
             this.writeProperty("totalNumberRunningTests", this.nbTotalTests);
-            this.inspector.getJobStatus().setFailureLocations(this.failureLocations);
+            this.getInspector().getJobStatus().setFailureLocations(this.failureLocations);
 
-            Metrics metrics = this.inspector.getJobStatus().getMetrics();
+            Metrics metrics = this.getInspector().getJobStatus().getMetrics();
             metrics.setFailureNames(this.failureNames);
             metrics.setNbFailingTests(this.nbErroringTests+this.nbFailingTests);
             metrics.setNbRunningTests(this.nbTotalTests);
         }
 
-
-        this.shouldStop = contract.shouldBeStopped(this);
+        return contract.shouldBeStopped(this);
     }
 
 }

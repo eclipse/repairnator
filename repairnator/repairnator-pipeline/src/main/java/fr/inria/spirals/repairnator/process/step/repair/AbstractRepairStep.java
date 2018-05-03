@@ -1,18 +1,18 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public AbstractRepairStep() {
-        super(null);
+        super(null, false);
     }
 
     public void setProjectInspector(ProjectInspector inspector) {
-        this.inspector = inspector;
+        super.setProjectInspector(inspector);
         this.setName(this.getRepairToolName());
-        this.initStates();
     }
 
     @Override
@@ -21,6 +21,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
             super.execute();
         } else {
             this.getLogger().warn("Skipping repair step "+this.getRepairToolName());
+            this.getInspector().getJobStatus().putStatusStep(this, StepStatus.buildSkipped("Not configured to run."));
             super.executeNextStep();
         }
     }

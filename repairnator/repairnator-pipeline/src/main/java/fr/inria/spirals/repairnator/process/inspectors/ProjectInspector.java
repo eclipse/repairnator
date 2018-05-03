@@ -81,7 +81,6 @@ public class ProjectInspector {
         } catch (Exception e) {
             this.logger.error("Error while initializing metrics value", e);
         }
-
     }
 
     public JobStatus getJobStatus() {

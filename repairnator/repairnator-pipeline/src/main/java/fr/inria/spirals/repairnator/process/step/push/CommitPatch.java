@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.push;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.apache.commons.io.FileUtils;
@@ -26,23 +27,24 @@ public class CommitPatch extends AbstractStep {
     private boolean pushHumanPatch;
 
     public CommitPatch(ProjectInspector inspector, boolean pushHumanPatch) {
-        super(inspector);
+        super(inspector, false);
         this.pushHumanPatch = pushHumanPatch;
     }
 
     public CommitPatch(ProjectInspector inspector, String name, boolean pushHumanPatch) {
-        super(inspector, name);
+        super(inspector, name, false);
         this.pushHumanPatch = pushHumanPatch;
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         if (RepairnatorConfig.getInstance().isPush()) {
             this.getLogger().info("Start the step push patch");
 
             File sourceDir = new File(this.getInspector().getRepoLocalPath());
             File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
 
+            // FIXME: all git stuff should be supported through GitHelper
             try {
                 Git git = Git.open(targetDir);
                 Ref oldHeadRef = git.getRepository().exactRef("HEAD");
@@ -60,6 +62,7 @@ public class CommitPatch extends AbstractStep {
 
                 git.add().addFilepattern(".").call();
 
+                // FIXME: this code is duplicated in AbstractStep
                 for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
                     // add force is not supported by JGit...
                     ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", fileToPush)
@@ -101,19 +104,16 @@ public class CommitPatch extends AbstractStep {
                 } else {
                     this.setPushState(PushState.REPAIR_INFO_COMMITTED);
                 }
-                return;
+                return StepStatus.buildSuccess();
             } catch (IOException e) {
                 this.addStepError("Error while copying the folder to prepare the git repository.", e);
             } catch (GitAPIException e) {
                 this.addStepError("Error while opening the git repository, maybe it has not been initialized yet.", e);
             }
-            if (pushHumanPatch) {
-                this.setPushState(PushState.PATCH_COMMITTED);
-            } else {
-                this.setPushState(PushState.REPAIR_INFO_COMMITTED);
-            }
+            return StepStatus.buildError("Error while pushing or committed info.");
         } else {
             this.getLogger().info("Repairnator is configured to not push anything. This step will be bypassed.");
+            return StepStatus.buildSkipped();
         }
     }
 }

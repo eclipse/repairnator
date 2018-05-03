@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -37,12 +38,16 @@ import java.util.Properties;
  */
 public abstract class AbstractStep {
     private static final String PROPERTY_FILENAME = "repairnator.json";
-    private String name;
-    protected ProjectInspector inspector;
-    private PipelineState pipelineState;
-    private PushState pushState;
 
-    protected boolean shouldStop;
+    /**
+     * The name of the step, by default it's the class name
+     * We can use a custom name to distinguish two different instances.
+     */
+    private String name;
+
+    private ProjectInspector inspector;
+
+    private boolean shouldStop;
     private AbstractStep nextStep;
     private long dateBegin;
     private long dateEnd;
@@ -52,12 +57,19 @@ public abstract class AbstractStep {
     private Properties properties;
     private RepairnatorConfig config;
 
-    public AbstractStep(ProjectInspector inspector) {
-        this(inspector, "");
+    private PushState pushState;
+
+    /**
+     * If set to true, the failure of the step means a stop of the entire pipeline.
+     */
+    private boolean blockingStep;
+
+    public AbstractStep(ProjectInspector inspector, boolean blockingStep) {
+        this(inspector, "", blockingStep);
         this.name = this.getClass().getSimpleName();
     }
 
-    public AbstractStep(ProjectInspector inspector, String name) {
+    public AbstractStep(ProjectInspector inspector, String name, boolean blockingStep) {
         this.name = name;
         this.inspector = inspector;
         this.shouldStop = false;
@@ -65,12 +77,20 @@ public abstract class AbstractStep {
         this.serializers = new ArrayList<>();
         this.properties = new Properties();
         this.config = RepairnatorConfig.getInstance();
+        this.blockingStep = blockingStep;
         this.initStates();
+    }
+
+    public void setBlockingStep(boolean blockingStep) {
+        this.blockingStep = blockingStep;
+    }
+
+    public boolean isBlockingStep() {
+        return blockingStep;
     }
 
     protected void initStates() {
         if (this.inspector != null) {
-            this.setPipelineState(PipelineState.NONE);
             this.setPushState(PushState.NONE);
         }
     }
@@ -121,29 +141,10 @@ public abstract class AbstractStep {
         nextStep.setDataSerializer(this.serializers);
         nextStep.setNotifiers(this.notifiers);
         nextStep.setProperties(this.properties);
-        nextStep.setPipelineState(this.pipelineState);
         return nextStep;
     }
 
-    public PipelineState getPipelineState() {
-        return pipelineState;
-    }
-
-    public void setPipelineState(PipelineState pipelineState) {
-        if (pipelineState != null) {
-            this.pipelineState = pipelineState;
-            this.inspector.getJobStatus().setPipelineState(this.pipelineState);
-            if (this.nextStep != null) {
-                this.nextStep.setPipelineState(pipelineState);
-            }
-        }
-    }
-
-    public PushState getPushState() {
-        return pushState;
-    }
-
-    public void setPushState(PushState pushState) {
+    protected void setPushState(PushState pushState) {
         if (pushState != null) {
             this.pushState = pushState;
             this.inspector.getJobStatus().setPushState(this.pushState);
@@ -170,7 +171,6 @@ public abstract class AbstractStep {
     protected void executeNextStep() {
         this.observeAndNotify();
         if (this.nextStep != null) {
-            this.nextStep.setPipelineState(this.pipelineState);
             this.nextStep.execute();
         } else {
             this.terminatePipeline();
@@ -248,10 +248,6 @@ public abstract class AbstractStep {
         }
     }
 
-    public boolean isShouldStop() {
-        return shouldStop;
-    }
-
     protected String getPom() {
         if (!pomLocationTested) {
             testPomLocation();
@@ -279,18 +275,24 @@ public abstract class AbstractStep {
         }
     }
 
+    public void setProjectInspector(ProjectInspector inspector) {
+        this.inspector = inspector;
+        this.initStates();
+    }
+
     public void execute() {
         this.dateBegin = new Date().getTime();
-        this.businessExecute();
+        StepStatus stepStatus = this.businessExecute();
         this.dateEnd = new Date().getTime();
 
         Metrics metric = this.inspector.getJobStatus().getMetrics();
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
-        this.inspector.getJobStatus().setPipelineState(this.pipelineState);
+        this.inspector.getJobStatus().putStatusStep(this, stepStatus);
 
-        if (!shouldStop) {
+        this.shouldStop = this.shouldStop || (this.isBlockingStep() && stepStatus.getStatus() == StepStatus.StatusKind.FAILURE);
+        if (!this.shouldStop) {
             this.executeNextStep();
         } else {
             this.terminatePipeline();
@@ -320,6 +322,7 @@ public abstract class AbstractStep {
         return Math.round((dateEnd - dateBegin) / 1000);
     }
 
+    // FIXME: this method should not be placed here
     private void lastPush() {
         if (RepairnatorConfig.getInstance().isPush() && this.getInspector().getJobStatus().getPushState() != PushState.NONE) {
             File sourceDir = new File(this.getInspector().getRepoLocalPath());
@@ -397,5 +400,5 @@ public abstract class AbstractStep {
         return config;
     }
 
-    protected abstract void businessExecute();
+    protected abstract StepStatus businessExecute();
 }

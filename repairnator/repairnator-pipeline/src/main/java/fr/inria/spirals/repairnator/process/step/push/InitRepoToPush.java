@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.push;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.apache.commons.io.FileUtils;
@@ -25,11 +26,7 @@ public class InitRepoToPush extends AbstractStep {
     private static final String TRAVIS_FILE = ".travis.yml";
 
     public InitRepoToPush(ProjectInspector inspector) {
-        super(inspector);
-    }
-
-    public InitRepoToPush(ProjectInspector inspector, String name) {
-        super(inspector, name);
+        super(inspector, false);
     }
 
     private void removeNotificationFromTravisYML(File directory) {
@@ -83,7 +80,7 @@ public class InitRepoToPush extends AbstractStep {
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
 
         if (RepairnatorConfig.getInstance().isPush()) {
             this.getLogger().info("Repairnator configured to push. Start init repo to push.");
@@ -129,6 +126,7 @@ public class InitRepoToPush extends AbstractStep {
                         .setAuthor(personIdent).setCommitter(personIdent).call();
 
                 this.setPushState(PushState.REPO_INITIALIZED);
+                return StepStatus.buildSuccess();
             } catch (IOException e) {
                 this.addStepError("Error while copying the folder to prepare the git repository.", e);
                 this.setPushState(PushState.REPO_NOT_INITIALIZED);
@@ -136,9 +134,10 @@ public class InitRepoToPush extends AbstractStep {
                 this.addStepError("Error while initializing the new git repository.", e);
                 this.setPushState(PushState.REPO_NOT_INITIALIZED);
             }
-
+            return StepStatus.buildError("Error while initializing the new git repository.");
         } else {
             this.getLogger().info("Repairnator configured to NOT push. Step bypassed.");
+            return StepStatus.buildSkipped();
         }
     }
 }

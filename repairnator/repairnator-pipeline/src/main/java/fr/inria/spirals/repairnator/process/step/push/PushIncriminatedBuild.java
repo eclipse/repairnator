@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.eclipse.jgit.api.Git;
@@ -29,18 +30,18 @@ public class PushIncriminatedBuild extends AbstractStep {
     private String remoteRepoUrl;
 
     public PushIncriminatedBuild(ProjectInspector inspector) {
-        super(inspector);
+        super(inspector, false);
         this.remoteRepoUrl = this.getConfig().getPushRemoteRepo();
-        this.branchName = this.inspector.getRemoteBranchName();
+        this.branchName = this.getInspector().getRemoteBranchName();
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         if (this.getConfig().isPush()) {
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
                 this.getLogger().error("Remote repo should be set !");
                 this.setPushState(PushState.REPO_NOT_PUSHED);
-                return;
+                return StepStatus.buildError("Remote remote information was not provided");
             }
 
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
@@ -48,13 +49,13 @@ public class PushIncriminatedBuild extends AbstractStep {
             this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
 
             if (this.getConfig().getGithubToken() == null || this.getConfig().getGithubToken().equals("")) {
-                this.getLogger().warn("You must the GITHUB_OAUTH env property to push incriminated build.");
+                this.getLogger().warn("You must have the GITHUB_OAUTH env property to push incriminated build.");
                 this.setPushState(PushState.REPO_NOT_PUSHED);
-                return;
+                return StepStatus.buildError("Github authentication information was not provided.");
             }
 
             try {
-                Git git = Git.open(new File(inspector.getRepoToPushLocalPath()));
+                Git git = Git.open(new File(this.getInspector().getRepoToPushLocalPath()));
                 this.getLogger().debug("Add the remote repository to push the current pipelineState");
 
                 RemoteAddCommand remoteAdd = git.remoteAdd();
@@ -66,7 +67,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
                 this.getLogger().debug("Check if a branch already exists in the remote repository");
                 ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh","-c","git remote show "+REMOTE_NAME+" | grep "+branchName)
-                        .directory(new File(this.inspector.getRepoLocalPath()));
+                        .directory(new File(this.getInspector().getRepoLocalPath()));
 
                 Process p = processBuilder.start();
                 BufferedReader stdin = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -82,7 +83,7 @@ public class PushIncriminatedBuild extends AbstractStep {
                 if (!processReturn .equals("")) {
                     this.getLogger().warn("A branch already exist in the remote repo with the following name: " + branchName);
                     this.getLogger().debug("Here the grep return: "+processReturn);
-                    return;
+                    return StepStatus.buildError("A branch already exist in the remote repo with the following name: " + branchName);
                 }
 
                 this.getLogger().debug("Prepare the branch and push");
@@ -94,10 +95,10 @@ public class PushIncriminatedBuild extends AbstractStep {
 
                 this.getInspector().getJobStatus().setGitBranchUrl(this.remoteRepoUrl+"/tree/"+branchName);
                 this.setPushState(PushState.REPO_PUSHED);
-                return;
+                return StepStatus.buildSuccess();
             } catch (IOException e) {
                 this.getLogger().error("Error while reading git directory at the following location: "
-                        + inspector.getRepoLocalPath() + " : " + e);
+                        + this.getInspector().getRepoLocalPath() + " : " + e);
                 this.addStepError(e.getMessage());
             } catch (URISyntaxException e) {
                 this.getLogger()
@@ -110,8 +111,10 @@ public class PushIncriminatedBuild extends AbstractStep {
                 this.addStepError("Error while executing git command to check branch presence" + e.getMessage());
             }
             this.setPushState(PushState.REPO_NOT_PUSHED);
+            return StepStatus.buildError("Error while pushing.");
         } else {
             this.getLogger().info("The push argument is set to false. Nothing will be pushed.");
+            return StepStatus.buildSkipped();
         }
     }
 

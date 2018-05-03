@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
-import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**
@@ -9,19 +9,13 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 public class BuildShouldFail implements ContractForGatherTestInformation {
 
     @Override
-    public boolean shouldBeStopped(GatherTestInformation gatherTestInformation) {
+    public StepStatus shouldBeStopped(GatherTestInformation gatherTestInformation) {
         ProjectInspector inspector = gatherTestInformation.getInspector();
-        if (gatherTestInformation.getPipelineState() == PipelineState.HASTESTFAILURE) {
+        if (gatherTestInformation.getNbErroringTests() + gatherTestInformation.getNbFailingTests() > 0) {
             inspector.getJobStatus().setReproducedAsFail(true);
-            return false;
+            return StepStatus.buildSuccess();
         } else {
-            if (gatherTestInformation.getPipelineState() == PipelineState.HASTESTERRORS) {
-                gatherTestInformation.addStepError("Only get test errors, no failing tests. It will try to repair it.");
-                inspector.getJobStatus().setReproducedAsError(true);
-                return false;
-            } else {
-                return true;
-            }
+            return StepStatus.buildError("No failing test recorded on " + gatherTestInformation.getNbRunningTests() + " running tests");
         }
     }
 

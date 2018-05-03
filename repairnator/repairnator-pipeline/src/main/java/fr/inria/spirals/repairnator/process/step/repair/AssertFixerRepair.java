@@ -4,7 +4,9 @@ import com.google.gson.GsonBuilder;
 import eu.stamp.project.assertfixer.AssertFixerResult;
 import eu.stamp.project.assertfixer.Configuration;
 import eu.stamp.project.assertfixer.Main;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.io.File;
@@ -22,7 +24,9 @@ public class AssertFixerRepair extends AbstractRepairStep {
     protected static final String TOOL_NAME = "AssertFixer";
     private static final int TOTAL_TIME = 30; // 30 minutes
 
-    public AssertFixerRepair() {}
+    public AssertFixerRepair() {
+
+    }
 
     @Override
     public String getRepairToolName() {
@@ -30,15 +34,16 @@ public class AssertFixerRepair extends AbstractRepairStep {
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().info("Start AssertFixerRepair");
-        List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
-        File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
-        File[] tests = this.inspector.getJobStatus().getTestDir();
+        JobStatus jobStatus = this.getInspector().getJobStatus();
+        List<URL> classPath = jobStatus.getRepairClassPath();
+        File[] sources = jobStatus.getRepairSourceDir();
+        File[] tests = jobStatus.getTestDir();
 
         if (tests == null || tests.length == 0) {
             addStepError("No test directory found, this step won't be executed.");
-            return;
+            return StepStatus.buildError("No test directory found, this step won't be executed.");
         }
 
         Configuration configuration = new Configuration();
@@ -103,5 +108,6 @@ public class AssertFixerRepair extends AbstractRepairStep {
         }
 
         this.getInspector().getJobStatus().setAssertFixerResults(assertFixerResults);
+        return StepStatus.buildSuccess();
     }
 }

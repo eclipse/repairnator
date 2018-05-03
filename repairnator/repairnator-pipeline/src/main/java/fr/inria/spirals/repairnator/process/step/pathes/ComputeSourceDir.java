@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.pathes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -32,13 +33,13 @@ public class ComputeSourceDir extends AbstractStep {
     private boolean allModules;
     private Set<File> visitedFiles = new HashSet<>();
 
-    public ComputeSourceDir(ProjectInspector inspector, boolean allModules) {
-        super(inspector);
+    public ComputeSourceDir(ProjectInspector inspector, boolean blockingStep, boolean allModules) {
+        super(inspector, blockingStep);
         this.allModules = allModules;
     }
 
-    public ComputeSourceDir(ProjectInspector inspector, String name, boolean allModules) {
-        super(inspector, name);
+    public ComputeSourceDir(ProjectInspector inspector, String name, boolean blockingStep, boolean allModules) {
+        super(inspector, name, blockingStep);
         this.allModules = allModules;
     }
 
@@ -69,7 +70,7 @@ public class ComputeSourceDir extends AbstractStep {
         }
 
         try {
-            Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
+            Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.getInspector().getM2LocalPath());
 
             Build buildSection = model.getBuild();
 
@@ -140,14 +141,14 @@ public class ComputeSourceDir extends AbstractStep {
                 int nbFile = FileUtils.listFiles(f, new String[] {"java"}, true).size();
                 totalAppFiles += nbFile;
             }
-            this.inspector.getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
+            this.getInspector().getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
         }
     }
 
     private void computeMetricsOnCompleteRepo() {
         this.getLogger().debug("Compute the line of code of the project");
         ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh","-c",COMPUTE_TOTAL_CLOC)
-                .directory(new File(this.inspector.getRepoLocalPath()));
+                .directory(new File(this.getInspector().getRepoLocalPath()));
 
         try {
             Process p = processBuilder.start();
@@ -164,16 +165,16 @@ public class ComputeSourceDir extends AbstractStep {
             Gson gson = new GsonBuilder().create();
             JsonObject json = gson.fromJson(processReturn, JsonObject.class);
 
-            this.inspector.getJobStatus().getMetrics().setSizeProjectLOC(json);
+            this.getInspector().getJobStatus().getMetrics().setSizeProjectLOC(json);
         } catch (IOException | InterruptedException e) {
             this.getLogger().error("Error while computing metrics on source code of the whole repo.", e);
         }
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Computing the source directory ...");
-        String incriminatedModule = (this.allModules) ? this.inspector.getRepoLocalPath() : this.inspector.getJobStatus().getFailingModulePath();
+        String incriminatedModule = (this.allModules) ? this.getInspector().getRepoLocalPath() : this.getInspector().getJobStatus().getFailingModulePath();
 
         File[] sources = this.searchForSourcesDirectory(incriminatedModule, true);
 
@@ -182,13 +183,13 @@ public class ComputeSourceDir extends AbstractStep {
             this.computeMetricsOnSources(sources);
         }
 
-        if (sources == null) {
+        if (sources == null || sources.length == 0) {
             this.addStepError("Fail to find the sources directory.");
-            this.setPipelineState(PipelineState.SOURCEDIRNOTCOMPUTED);
-            this.inspector.getJobStatus().setRepairSourceDir(null);
+            this.getInspector().getJobStatus().setRepairSourceDir(null);
+            return StepStatus.buildError("Error while getting source directory.");
         } else {
-            this.inspector.getJobStatus().setRepairSourceDir(sources);
-            this.setPipelineState(PipelineState.SOURCEDIRCOMPUTED);
+            this.getInspector().getJobStatus().setRepairSourceDir(sources);
+            return StepStatus.buildSuccess();
         }
     }
 

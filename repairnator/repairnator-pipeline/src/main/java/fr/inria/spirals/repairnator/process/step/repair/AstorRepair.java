@@ -8,6 +8,7 @@ import fr.inria.main.AstorOutputStatus;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -41,14 +42,14 @@ public class AstorRepair extends AbstractRepairStep {
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().info("Start to repair using Astor");
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
         List<String> astorPatches = new ArrayList<>();
 
-        List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
-        File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
+        List<URL> classPath = this.getInspector().getJobStatus().getRepairClassPath();
+        File[] sources = this.getInspector().getJobStatus().getRepairSourceDir();
 
         if (classPath != null && sources != null) {
             List<String> dependencies = new ArrayList<>();
@@ -174,11 +175,12 @@ public class AstorRepair extends AbstractRepairStep {
 
 
             if (astorPatches.isEmpty()) {
-                this.setPipelineState(PipelineState.ASTOR_NOTPATCHED);
+                return StepStatus.buildError("No patch found.");
             } else {
-                this.setPipelineState(PipelineState.ASTOR_PATCHED);
                 this.getInspector().getJobStatus().setHasBeenPatched(true);
+                return StepStatus.buildSuccess();
             }
         }
+        return StepStatus.buildSkipped("Classpath or sources not computed.");
     }
 }
