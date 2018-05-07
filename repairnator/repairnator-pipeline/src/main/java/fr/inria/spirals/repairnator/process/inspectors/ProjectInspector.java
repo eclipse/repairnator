@@ -159,7 +159,7 @@ public class ProjectInspector {
             }
 
             lastStep.setNextStep(new CommitPatch(this, false))
-                    .setNextStep(new CheckoutPatchedBuild(this, false))
+                    .setNextStep(new CheckoutPatchedBuild(this, true))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, false, new BuildShouldPass(), true))

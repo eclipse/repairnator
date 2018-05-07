@@ -2,12 +2,18 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import eu.stamp.project.assertfixer.asserts.AssertFixer;
 import fr.inria.main.AstorOutputStatus;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.ResolveDependency;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
 import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
 import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -38,8 +44,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -77,7 +85,7 @@ public class TestProjectInspector {
         config.setPush(true);
         config.setPushRemoteRepo("");
         config.setRepairTools(RepairToolsManager.getRepairToolsName());
-        Utils.setLoggersLevel(Level.ERROR);
+        Utils.setLoggersLevel(Level.DEBUG);
     }
 
     public static boolean isMac() {
@@ -302,7 +310,8 @@ public class TestProjectInspector {
 
     @Test
     public void testSpoonException() throws IOException {
-        int buildId = 355743087; // surli/failingProject only-one-failing
+        // one dependency missing: should not be buildable
+        int buildId = 355743087; // ministryofjustice/laa-saml-mock
 
         Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
         File tmpDir = tmpDirPath.toFile();
@@ -335,23 +344,30 @@ public class TestProjectInspector {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() instanceof AstorRepair) {
+            if (stepStatus.getStep() instanceof ResolveDependency) {
                 assertThat(stepStatus.isSuccess(), is(false));
-            } else if (stepStatus.getStep() instanceof NopolRepair) {
-                assertThat(stepStatus.isSuccess(), is(false));
-            } else {
-                assertThat(stepStatus.isSuccess(), is(true));
             }
         }
 
-        assertThat(jobStatus.getNopolInformations().isEmpty(), is(false));
-        assertThat(jobStatus.getNopolInformations().get(0).getStatus(), is(NopolStatus.EXCEPTION));
-
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-        assertThat(finalStatus, is("test failure"));
+        assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
 
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
 
+    }
+
+    private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
+        for (StepStatus stepStatus : statuses) {
+            if (!expectedValues.containsKey(stepStatus.getStep().getClass())) {
+                assertThat("Step failing: "+stepStatus, stepStatus.isSuccess(), is(true));
+            } else {
+                StepStatus.StatusKind expectedStatus = expectedValues.get(stepStatus.getStep().getClass());
+                assertThat("Status was not as expected" + stepStatus, stepStatus.getStatus(), is(expectedStatus));
+                expectedValues.remove(stepStatus.getStep().getClass());
+            }
+        }
+
+        assertThat(expectedValues.isEmpty(), is(true));
     }
 
     @Test
@@ -391,22 +407,22 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(AstorRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
+        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+        expectedStatuses.put(AssertFixerRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by AssertFixer
+        expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
+
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
         assertThat(jobStatus.isHasBeenPatched(), is(true));
         assertThat(jobStatus.getNpeFixPatches().size(), is(6));
-
-        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-
-        for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() instanceof AstorRepair) {
-                assertThat(stepStatus.isSuccess(), is(false));
-            } else {
-                assertThat(stepStatus.isSuccess(), is(true));
-            }
-        }
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
