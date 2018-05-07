@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatc
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
 import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -85,7 +86,7 @@ public class TestProjectInspector {
         config.setPush(true);
         config.setPushRemoteRepo("");
         config.setRepairTools(RepairToolsManager.getRepairToolsName());
-        Utils.setLoggersLevel(Level.DEBUG);
+        Utils.setLoggersLevel(Level.ERROR);
     }
 
     public static boolean isMac() {
@@ -138,13 +139,14 @@ public class TestProjectInspector {
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
-        for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() instanceof AstorRepair) {
-                assertThat(stepStatus.isSuccess(), is(false));
-            } else {
-                assertThat(stepStatus.isSuccess(), is(true));
-            }
-        }
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(AstorRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
+        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+        expectedStatuses.put(AssertFixerRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by AssertFixer
+        expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
+        expectedStatuses.put(NPERepair.class, StepStatus.StatusKind.SKIPPED); // No NPE
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
 
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
