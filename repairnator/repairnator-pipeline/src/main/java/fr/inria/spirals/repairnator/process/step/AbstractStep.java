@@ -307,6 +307,7 @@ public abstract class AbstractStep {
         this.recordMetrics();
         this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
         this.lastPush();
+        this.getLogger().error("Serializing data...");
         this.serializeData();
         this.cleanMavenArtifacts();
     }

@@ -140,10 +140,10 @@ public class NopolSerializer extends AbstractDataSerializer {
                         patchNumber++;
                     }
                 }
+            }
 
-                for (SerializerEngine engine : this.getEngines()) {
-                    engine.serialize(allDatas, this.getType());
-                }
+            for (SerializerEngine engine : this.getEngines()) {
+                engine.serialize(allDatas, this.getType());
             }
         }
     }
