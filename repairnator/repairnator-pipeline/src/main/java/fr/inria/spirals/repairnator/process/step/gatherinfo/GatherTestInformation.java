@@ -110,51 +110,52 @@ public class GatherTestInformation extends AbstractStep {
             try {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
-                    if (!skipSettingStatusInformation) {
-                        this.nbTotalTests += testSuite.getNumberOfTests();
-                        this.nbSkippingTests += testSuite.getNumberOfSkipped();
-                        this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
+                    this.nbTotalTests += testSuite.getNumberOfTests();
+                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
+                    this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
 
-                        if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
-                            File failingModule = surefireDir.getParentFile().getParentFile();
-                            this.failingModulePath = failingModule.getCanonicalPath();
+                    if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
+                        File failingModule = surefireDir.getParentFile().getParentFile();
+                        this.failingModulePath = failingModule.getCanonicalPath();
+
+                        if (!this.skipSettingStatusInformation) {
                             this.getInspector().getJobStatus().setFailingModulePath(this.failingModulePath);
                             this.writeProperty("failingModule", this.failingModulePath);
-                            getLogger().info("Get the following failing module path: "+failingModulePath);
+                            getLogger().info("Get the following failing module path: " + failingModulePath);
+                        }
 
-                            for (ReportTestCase testCase : testSuite.getTestCases()) {
-                                if (testCase.hasFailure() || testCase.hasError()) {
+                        for (ReportTestCase testCase : testSuite.getTestCases()) {
+                            if (testCase.hasFailure() || testCase.hasError()) {
 
-                                    // sometimes surefire reports a failureType on the form:
-                                    // "java.lang.NullPointerException:" we should avoid this case
-                                    String failureType = testCase.getFailureType();
+                                // sometimes surefire reports a failureType on the form:
+                                // "java.lang.NullPointerException:" we should avoid this case
+                                String failureType = testCase.getFailureType();
 
-                                    if (failureType.endsWith(":")) {
-                                        failureType = failureType.substring(0, failureType.length() - 1);
+                                if (failureType.endsWith(":")) {
+                                    failureType = failureType.substring(0, failureType.length() - 1);
+                                }
+
+                                this.failureNames.add(failureType);
+                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.hasError());
+                                FailureLocation failureLocation = null;
+
+                                for (FailureLocation location : this.failureLocations) {
+                                    if (location.getClassName().equals(testCase.getFullClassName())) {
+                                        failureLocation = location;
+                                        break;
                                     }
+                                }
 
-                                    this.failureNames.add(failureType);
-                                    FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.hasError());
-                                    FailureLocation failureLocation = null;
+                                if (failureLocation == null) {
+                                    failureLocation = new FailureLocation(testCase.getFullClassName());
+                                    this.failureLocations.add(failureLocation);
+                                }
+                                failureLocation.addFailure(typeTof);
 
-                                    for (FailureLocation location : this.failureLocations) {
-                                        if (location.getClassName().equals(testCase.getFullClassName())) {
-                                            failureLocation = location;
-                                            break;
-                                        }
-                                    }
-
-                                    if (failureLocation == null) {
-                                        failureLocation = new FailureLocation(testCase.getFullClassName());
-                                        this.failureLocations.add(failureLocation);
-                                    }
-                                    failureLocation.addFailure(typeTof);
-
-                                    if (testCase.hasError()) {
-                                        failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
-                                    } else {
-                                        failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
-                                    }
+                                if (testCase.hasError()) {
+                                    failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
+                                } else {
+                                    failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
                                 }
                             }
                         }

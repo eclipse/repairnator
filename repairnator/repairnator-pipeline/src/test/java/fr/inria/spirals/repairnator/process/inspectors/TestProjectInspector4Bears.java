@@ -4,7 +4,12 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
 import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -31,8 +36,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -81,6 +88,20 @@ public class TestProjectInspector4Bears {
         RepairnatorConfig.deleteInstance();
     }
 
+    private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
+        for (StepStatus stepStatus : statuses) {
+            if (!expectedValues.containsKey(stepStatus.getStep().getClass())) {
+                assertThat("Step failing: "+stepStatus, stepStatus.isSuccess(), is(true));
+            } else {
+                StepStatus.StatusKind expectedStatus = expectedValues.get(stepStatus.getStep().getClass());
+                assertThat("Status was not as expected" + stepStatus, stepStatus.getStatus(), is(expectedStatus));
+                expectedValues.remove(stepStatus.getStep().getClass());
+            }
+        }
+
+        assertThat(expectedValues.isEmpty(), is(true));
+    }
+
     @Test
     public void testFailingPassingProject() throws IOException, GitAPIException {
         int buildIdPassing = 203800961;
@@ -127,9 +148,10 @@ public class TestProjectInspector4Bears {
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
-        for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
-        }
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
 
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase1(), is(true));
@@ -207,9 +229,10 @@ public class TestProjectInspector4Bears {
         JobStatus jobStatus = inspector.getJobStatus();
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
-        for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
-        }
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
 
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase2(), is(true));
