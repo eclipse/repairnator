@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -123,11 +124,19 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE1));
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is(PipelineState.FIXERBUILDCASE1.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
@@ -195,11 +204,19 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE2));
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is(PipelineState.FIXERBUILDCASE2.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));

@@ -7,6 +7,8 @@ import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
+import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
+import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -125,10 +127,22 @@ public class TestProjectInspector {
 
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() instanceof AstorRepair) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         String remoteBranchName = "surli-failingProject-208897371-20170308-040702";
         assertEquals(remoteBranchName, inspector.getRemoteBranchName());
@@ -194,10 +208,22 @@ public class TestProjectInspector {
 
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.STOP_BY_PATCH_FOUND));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_NOTPATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() instanceof NopolRepair) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         verify(notifierEngine, times(3)).notify(anyString(), anyString()); // notify for Astor, NPEFix and Nopol
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
@@ -252,8 +278,21 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTBUILDABLE));
         assertThat(jobStatus.getPushState(), is(PushState.NONE));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (int i = 0; i < stepStatusList.size(); i++) {
+            StepStatus stepStatus = stepStatusList.get(i);
+            if (i == stepStatusList.size() - 1) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
 
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
 
@@ -291,6 +330,20 @@ public class TestProjectInspector {
 
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getNopolInformations().get(0).getStatus(), is(NopolStatus.EXCEPTION));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (int i = 0; i < stepStatusList.size(); i++) {
+            StepStatus stepStatus = stepStatusList.get(i);
+            if (i == stepStatusList.size() - 1) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("test failure"));
 
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
 
@@ -334,12 +387,24 @@ public class TestProjectInspector {
 
         JobStatus jobStatus = inspector.getJobStatus();
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
         assertThat(jobStatus.isHasBeenPatched(), is(true));
         assertThat(jobStatus.getNpeFixPatches().size(), is(6));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() instanceof AstorRepair) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         verify(notifierEngine, times(2)).notify(anyString(), anyString()); // Nopol and NPEFix
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));

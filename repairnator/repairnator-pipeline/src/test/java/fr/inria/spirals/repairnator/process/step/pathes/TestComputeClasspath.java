@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.pathes;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeClasspath;
@@ -80,14 +81,22 @@ public class TestComputeClasspath {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeClasspath computeClasspath = new ComputeClasspath(inspector);
+        ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeClasspath);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+                .setNextStep(new TestProject(inspector))
+                .setNextStep(computeClasspath);
         cloneStep.execute();
 
         assertThat(computeClasspath.isShouldStop(), is(false));
-        assertThat(computeClasspath.getPipelineState(), is(PipelineState.CLASSPATHCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.CLASSPATHCOMPUTED));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus classpathStatus = stepStatusList.get(3);
+        assertThat(classpathStatus.getStep(), is(computeClasspath));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         List<URL> expectedClasspath = new ArrayList<URL>();
 

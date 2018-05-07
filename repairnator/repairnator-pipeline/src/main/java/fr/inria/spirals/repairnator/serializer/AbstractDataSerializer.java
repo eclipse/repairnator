@@ -2,8 +2,10 @@ package fr.inria.spirals.repairnator.serializer;
 
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.states.PipelineState;
 
 import java.util.List;
 
@@ -19,9 +21,18 @@ public abstract class AbstractDataSerializer extends Serializer {
         super(engines, type);
     }
 
-    protected String getPrettyPrintState(ProjectInspector inspector) {
+    public static String getPrettyPrintState(ProjectInspector inspector) {
 
         JobStatus jobStatus = inspector.getJobStatus();
+
+        if (inspector instanceof ProjectInspector4Bears) {
+            if (((ProjectInspector4Bears) inspector).isFixerBuildCase1()) {
+                return PipelineState.FIXERBUILDCASE1.name();
+            } else if (((ProjectInspector4Bears) inspector).isFixerBuildCase2()) {
+                return PipelineState.FIXERBUILDCASE2.name();
+            }
+        }
+
         if (jobStatus.isHasBeenPatched()) {
             return "PATCHED";
         }

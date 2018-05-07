@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -20,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -75,12 +78,17 @@ public class TestTestProject {
         TestProject testProject = new TestProject(inspector);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(testProject);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(testProject);
         cloneStep.execute();
 
-        assertThat(testProject.shouldStop, is(false));
-        assertThat(testProject.getPipelineState(), is(PipelineState.TESTABLE));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.TESTABLE));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus testStatus = stepStatusList.get(2);
+        assertThat(testStatus.getStep(), is(testProject));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
     }
 
     @Test
@@ -114,12 +122,17 @@ public class TestTestProject {
         TestProject testProject = new TestProject(inspector);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(testProject);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(testProject);
         cloneStep.execute();
 
-        assertThat(testProject.shouldStop, is(false));
-        assertThat(testProject.getPipelineState(), is(PipelineState.TESTABLE));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.TESTABLE));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus testStatus = stepStatusList.get(2);
+        assertThat(testStatus.getStep(), is(testProject));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
     }
 
     @Test
@@ -153,11 +166,16 @@ public class TestTestProject {
         TestProject testProject = new TestProject(inspector);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(testProject);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(testProject);
         cloneStep.execute();
 
-        assertThat(testProject.shouldStop, is(false));
-        assertThat(testProject.getPipelineState(), is(PipelineState.NOTFAILING));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTFAILING));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus testStatus = stepStatusList.get(2);
+        assertThat(testStatus.getStep(), is(testProject));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
     }
 }

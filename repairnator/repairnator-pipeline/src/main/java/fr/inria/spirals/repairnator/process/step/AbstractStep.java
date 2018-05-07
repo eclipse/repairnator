@@ -280,6 +280,10 @@ public abstract class AbstractStep {
         this.initStates();
     }
 
+    public boolean isShouldStop() {
+        return this.shouldStop;
+    }
+
     public void execute() {
         this.dateBegin = new Date().getTime();
         StepStatus stepStatus = this.businessExecute();
