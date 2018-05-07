@@ -107,14 +107,21 @@ public class AssertFixerRepair extends AbstractRepairStep {
             addStepError("Error while executing AssertFixer", e);
         }
 
-        this.getInspector().getJobStatus().setAssertFixerResults(assertFixerResults);
+        jobStatus.setAssertFixerResults(assertFixerResults);
 
+        boolean success = false;
         for (AssertFixerResult result : assertFixerResults) {
             if (result.isSuccess()) {
-                jobStatus.setHasBeenPatched(true);
+                success = true;
                 break;
             }
         }
-        return StepStatus.buildSuccess(this);
+
+        if (success) {
+            jobStatus.setHasBeenPatched(true);
+            return StepStatus.buildSuccess(this);
+        } else {
+            return StepStatus.buildSkipped(this, "No patch found");
+        }
     }
 }

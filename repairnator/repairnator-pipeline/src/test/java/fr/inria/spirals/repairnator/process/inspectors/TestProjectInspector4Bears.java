@@ -124,16 +124,17 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
-        assertThat(inspector.isFixerBuildCase1(), is(true));
-        assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         for (StepStatus stepStatus : stepStatusList) {
             assertThat(stepStatus.isSuccess(), is(true));
         }
+
+        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
+        assertThat(inspector.isFixerBuildCase1(), is(true));
+        assertThat(jobStatus.getFailureLocations().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is(PipelineState.FIXERBUILDCASE1.name()));
@@ -204,16 +205,16 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
-        assertThat(inspector.isFixerBuildCase2(), is(true));
-        assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
-
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         for (StepStatus stepStatus : stepStatusList) {
             assertThat(stepStatus.isSuccess(), is(true));
         }
+
+        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
+        assertThat(inspector.isFixerBuildCase2(), is(true));
+        assertThat(jobStatus.getFailureLocations().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is(PipelineState.FIXERBUILDCASE2.name()));

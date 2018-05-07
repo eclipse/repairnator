@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.inria.main.AstorOutputStatus;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
@@ -126,10 +127,6 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
-        assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
-        assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
@@ -140,6 +137,11 @@ public class TestProjectInspector {
                 assertThat(stepStatus.isSuccess(), is(true));
             }
         }
+
+        assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
+        assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
+        assertThat(jobStatus.getFailureLocations().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
@@ -207,11 +209,6 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.STOP_BY_PATCH_FOUND));
-        assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
-        assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
-
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         for (StepStatus stepStatus : stepStatusList) {
@@ -221,6 +218,11 @@ public class TestProjectInspector {
                 assertThat(stepStatus.isSuccess(), is(true));
             }
         }
+
+        assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.STOP_BY_PATCH_FOUND));
+        assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
+        assertThat(jobStatus.getFailureLocations().size(), is(1));
+        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
@@ -299,7 +301,7 @@ public class TestProjectInspector {
     }
 
     @Test
-    public void testSpoonException() throws IOException, GitAPIException {
+    public void testSpoonException() throws IOException {
         int buildId = 355743087; // surli/failingProject only-one-failing
 
         Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
@@ -329,18 +331,21 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getNopolInformations().get(0).getStatus(), is(NopolStatus.EXCEPTION));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
-        for (int i = 0; i < stepStatusList.size(); i++) {
-            StepStatus stepStatus = stepStatusList.get(i);
-            if (i == stepStatusList.size() - 1) {
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() instanceof AstorRepair) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else if (stepStatus.getStep() instanceof NopolRepair) {
                 assertThat(stepStatus.isSuccess(), is(false));
             } else {
                 assertThat(stepStatus.isSuccess(), is(true));
             }
         }
+
+        assertThat(jobStatus.getNopolInformations().isEmpty(), is(false));
+        assertThat(jobStatus.getNopolInformations().get(0).getStatus(), is(NopolStatus.EXCEPTION));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("test failure"));
