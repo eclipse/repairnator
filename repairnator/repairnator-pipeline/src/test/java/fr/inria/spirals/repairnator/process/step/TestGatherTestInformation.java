@@ -302,7 +302,12 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
 
         for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
+            if (stepStatus.getStep() != gatherTestInformation) {
+                assertThat(stepStatus.isSuccess(), is(true));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(false));
+            }
+
         }
 
         String serializedStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
@@ -364,9 +369,6 @@ public class TestGatherTestInformation {
         for (StepStatus stepStatus : stepStatusList) {
             assertThat(stepStatus.isSuccess(), is(true));
         }
-
-        String serializedStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-        assertThat(serializedStatus, is(PipelineState.NOTFAILING));
 
         assertThat(jobStatus.getFailingModulePath(), is(tmpDir.getAbsolutePath()+"/repo"));
         assertThat(gatherTestInformation.getNbTotalTests(), is(1));

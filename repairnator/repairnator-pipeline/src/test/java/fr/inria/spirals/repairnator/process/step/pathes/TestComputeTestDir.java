@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -82,16 +83,19 @@ public class TestComputeTestDir {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeTestDir);
         cloneStep.execute();
 
-        assertThat(computeTestDir.isShouldStop(), is(false));
+        assertThat(computeTestDir.isShouldStop(), is(true));
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
         assertThat(stepStatusList.size(), is(3));
         StepStatus computeTestDirStatus = stepStatusList.get(2);
         assertThat(computeTestDirStatus.getStep(), is(computeTestDir));
 
         for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
+            if (stepStatus.getStep() != computeTestDir) {
+                assertThat(stepStatus.isSuccess(), is(true));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(false));
+            }
+
         }
-
-
     }
 }

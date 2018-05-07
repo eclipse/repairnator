@@ -108,6 +108,13 @@ public class AssertFixerRepair extends AbstractRepairStep {
         }
 
         this.getInspector().getJobStatus().setAssertFixerResults(assertFixerResults);
+
+        for (AssertFixerResult result : assertFixerResults) {
+            if (result.isSuccess()) {
+                jobStatus.setHasBeenPatched(true);
+                break;
+            }
+        }
         return StepStatus.buildSuccess(this);
     }
 }
