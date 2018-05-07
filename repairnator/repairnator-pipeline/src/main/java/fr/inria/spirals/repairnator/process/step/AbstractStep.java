@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -307,7 +306,6 @@ public abstract class AbstractStep {
         this.recordMetrics();
         this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
         this.lastPush();
-        this.getLogger().error("Serializing data...");
         this.serializeData();
         this.cleanMavenArtifacts();
     }

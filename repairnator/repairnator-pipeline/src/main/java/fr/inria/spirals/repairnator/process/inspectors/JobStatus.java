@@ -4,7 +4,6 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import eu.stamp.project.assertfixer.AssertFixerResult;
 import fr.inria.main.AstorOutputStatus;
 import com.google.gson.JsonElement;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;

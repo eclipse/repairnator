@@ -9,7 +9,6 @@ import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
