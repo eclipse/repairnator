@@ -142,7 +142,6 @@ public class TestProjectInspector {
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
         expectedStatuses.put(AstorRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
         expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
-        expectedStatuses.put(AssertFixerRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by AssertFixer
         expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
         expectedStatuses.put(NPERepair.class, StepStatus.StatusKind.SKIPPED); // No NPE
 
@@ -414,7 +413,6 @@ public class TestProjectInspector {
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
         expectedStatuses.put(AstorRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
         expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
-        expectedStatuses.put(AssertFixerRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by AssertFixer
         expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
 
         this.checkStepStatus(stepStatusList, expectedStatuses);
