@@ -107,6 +107,7 @@ public abstract class CheckoutRepository extends AbstractStep {
 
                     boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, pathes);
                     if (!successfulMerge) {
+                        this.getLogger().debug("Error while merging two commits to reproduce the PR.");
                         return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                     }
 

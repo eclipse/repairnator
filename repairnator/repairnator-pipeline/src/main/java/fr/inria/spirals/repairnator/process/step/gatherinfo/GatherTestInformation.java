@@ -112,6 +112,8 @@ public class GatherTestInformation extends AbstractStep {
                     this.nbTotalTests += testSuite.getNumberOfTests();
                     this.nbSkippingTests += testSuite.getNumberOfSkipped();
                     this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
+                    this.nbErroringTests += testSuite.getNumberOfErrors();
+                    this.nbFailingTests += testSuite.getNumberOfFailures();
 
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
@@ -159,8 +161,6 @@ public class GatherTestInformation extends AbstractStep {
                             }
                         }
                     }
-                    this.nbErroringTests += testSuite.getNumberOfErrors();
-                    this.nbFailingTests += testSuite.getNumberOfFailures();
                 }
             } catch (MavenReportException e) {
                 this.addStepError("Error while parsing files to get test information:",e);
@@ -180,8 +180,11 @@ public class GatherTestInformation extends AbstractStep {
 
             Metrics metrics = this.getInspector().getJobStatus().getMetrics();
             metrics.setFailureNames(this.failureNames);
-            metrics.setNbFailingTests(this.nbErroringTests+this.nbFailingTests);
+            metrics.setNbFailingTests(this.nbFailingTests);
             metrics.setNbRunningTests(this.nbTotalTests);
+            metrics.setNbSkippingTests(this.nbSkippingTests);
+            metrics.setNbErroringTests(this.nbErroringTests);
+            metrics.setNbSucceedingTests(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
         }
 
         return contract.shouldBeStopped(this);

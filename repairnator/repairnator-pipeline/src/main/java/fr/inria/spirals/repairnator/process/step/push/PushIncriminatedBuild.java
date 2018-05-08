@@ -41,7 +41,7 @@ public class PushIncriminatedBuild extends AbstractStep {
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
                 this.getLogger().error("Remote repo should be set !");
                 this.setPushState(PushState.REPO_NOT_PUSHED);
-                return StepStatus.buildSkipped(this, "Remote remote information was not provided");
+                return StepStatus.buildSkipped(this, "Remote information was not provided");
             }
 
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
@@ -49,7 +49,7 @@ public class PushIncriminatedBuild extends AbstractStep {
             this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
 
             if (this.getConfig().getGithubToken() == null || this.getConfig().getGithubToken().equals("")) {
-                this.getLogger().warn("You must have the GITHUB_OAUTH env property to push incriminated build.");
+                this.getLogger().warn("You must set the GITHUB_OAUTH env property to push incriminated build.");
                 this.setPushState(PushState.REPO_NOT_PUSHED);
                 return StepStatus.buildSkipped(this, "Github authentication information was not provided.");
             }

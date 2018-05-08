@@ -18,19 +18,15 @@ public class BuildShouldPass implements ContractForGatherTestInformation {
         ProjectInspector inspector = gatherTestInformation.getInspector();
 
         if (gatherTestInformation.getNbFailingTests() + gatherTestInformation.getNbErroringTests() == 0 && gatherTestInformation.getNbRunningTests() > 0) {
-            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
+            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS && inspector instanceof ProjectInspector4Bears) {
                 if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                     // So, 1) the current passing build can be reproduced and 2) its previous build is a failing build
                     // with failing tests and it can also be reproduced
-                    if (inspector instanceof ProjectInspector4Bears) {
-                        ((ProjectInspector4Bears) inspector).setFixerBuildCase1(true);
-                    }
+                    ((ProjectInspector4Bears) inspector).setFixerBuildCase1(true);
                 } else if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                     // So, 1) the current passing build can be reproduced and 2) its previous build is a passing build
                     // that fails when tested with new tests and it can also be reproduced
-                    if (inspector instanceof ProjectInspector4Bears) {
-                        ((ProjectInspector4Bears) inspector).setFixerBuildCase2(true);
-                    }
+                    ((ProjectInspector4Bears) inspector).setFixerBuildCase2(true);
                 }
             }
             return StepStatus.buildSuccess(gatherTestInformation);

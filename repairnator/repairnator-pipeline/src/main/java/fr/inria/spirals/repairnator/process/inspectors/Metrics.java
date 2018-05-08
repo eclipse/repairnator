@@ -39,6 +39,7 @@ public class Metrics {
     private int nbErroringTests;
     private int nbSkippingTests;
     private int nbRunningTests;
+    private int nbSucceedingTests;
 
     private Set<String> failureNames;
 
@@ -304,5 +305,13 @@ public class Metrics {
 
     public Map<String, Long> getFreeMemoryByStep() {
         return freeMemoryByStep;
+    }
+
+    public int getNbSucceedingTests() {
+        return nbSucceedingTests;
+    }
+
+    public void setNbSucceedingTests(int nbSucceedingTests) {
+        this.nbSucceedingTests = nbSucceedingTests;
     }
 }

@@ -162,7 +162,7 @@ public class ProjectInspector {
                     .setNextStep(new CheckoutPatchedBuild(this, true))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, false, new BuildShouldPass(), true))
+                    .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
                     .setNextStep(new CommitPatch(this, true));
 
             cloneRepo.setDataSerializer(this.serializers);

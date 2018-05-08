@@ -139,13 +139,12 @@ public class ComputeTestDir extends AbstractStep {
         this.getLogger().debug("Computing the test directory ...");
         File[] sources = this.searchForSourcesDirectory(this.getInspector().getRepoLocalPath(), true);
 
-        this.getInspector().getJobStatus().setTestDir(sources);
-        this.computeMetricsOnTest(sources);
-
         if (sources == null || sources.length == 0) {
             this.addStepError("Fail to find the tests directory.");
             return StepStatus.buildError(this, PipelineState.TESTDIRNOTCOMPUTED);
         } else {
+            this.getInspector().getJobStatus().setTestDir(sources);
+            this.computeMetricsOnTest(sources);
             return StepStatus.buildSuccess(this);
         }
     }
