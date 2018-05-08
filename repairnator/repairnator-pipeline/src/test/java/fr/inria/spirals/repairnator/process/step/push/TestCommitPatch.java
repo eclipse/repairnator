@@ -84,7 +84,7 @@ public class TestCommitPatch {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new CommitPatch(inspector, true));
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new CommitPatch(inspector, true));
         cloneStep.execute();
 
         assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));

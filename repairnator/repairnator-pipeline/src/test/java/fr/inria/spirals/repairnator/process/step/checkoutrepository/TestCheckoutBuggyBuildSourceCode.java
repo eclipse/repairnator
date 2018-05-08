@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -92,13 +93,19 @@ public class TestCheckoutBuggyBuildSourceCode {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(2));
+        StepStatus checkoutStatus = stepStatusList.get(1);
+        assertThat(checkoutStatus.getStep(), is(checkoutBuild));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(checkoutBuild.isShouldStop(), is(false));
 
@@ -188,13 +195,19 @@ public class TestCheckoutBuggyBuildSourceCode {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(2));
+        StepStatus checkoutStatus = stepStatusList.get(1);
+        assertThat(checkoutStatus.getStep(), is(checkoutBuild));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(checkoutBuild.isShouldStop(), is(false));
 
@@ -284,13 +297,19 @@ public class TestCheckoutBuggyBuildSourceCode {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(2));
+        StepStatus checkoutStatus = stepStatusList.get(1);
+        assertThat(checkoutStatus.getStep(), is(checkoutBuild));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(checkoutBuild.isShouldStop(), is(false));
 

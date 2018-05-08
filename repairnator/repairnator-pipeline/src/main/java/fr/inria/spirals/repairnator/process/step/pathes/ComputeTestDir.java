@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.pathes;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -24,12 +25,12 @@ public class ComputeTestDir extends AbstractStep {
     private static final String COMPUTE_TOTAL_CLOC = "cloc --json --vcs=git .";
     private Set<File> visitedFiles = new HashSet<>();
 
-    public ComputeTestDir(ProjectInspector inspector) {
-        super(inspector);
+    public ComputeTestDir(ProjectInspector inspector, boolean blockingStep) {
+        super(inspector, blockingStep);
     }
 
-    public ComputeTestDir(ProjectInspector inspector, String name) {
-        super(inspector, name);
+    public ComputeTestDir(ProjectInspector inspector, String name, boolean blockingStep) {
+        super(inspector, name, blockingStep);
     }
 
     private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
@@ -57,7 +58,7 @@ public class ComputeTestDir extends AbstractStep {
             }
 
             try {
-                Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.inspector.getM2LocalPath());
+                Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.getInspector().getM2LocalPath());
 
                 Build buildSection = model.getBuild();
 
@@ -129,23 +130,22 @@ public class ComputeTestDir extends AbstractStep {
                 int nbFile = FileUtils.listFiles(f, new String[] {"java"}, true).size();
                 totalAppFiles += nbFile;
             }
-            this.inspector.getJobStatus().getMetrics().setNbFileTests(totalAppFiles);
+            this.getInspector().getJobStatus().getMetrics().setNbFileTests(totalAppFiles);
         }
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Computing the test directory ...");
-        File[] sources = this.searchForSourcesDirectory(this.inspector.getRepoLocalPath(), true);
+        File[] sources = this.searchForSourcesDirectory(this.getInspector().getRepoLocalPath(), true);
 
-        this.getInspector().getJobStatus().setTestDir(sources);
-        this.computeMetricsOnTest(sources);
-
-        if (sources == null) {
+        if (sources == null || sources.length == 0) {
             this.addStepError("Fail to find the tests directory.");
-            this.setPipelineState(PipelineState.TESTDIRNOTCOMPUTED);
+            return StepStatus.buildError(this, PipelineState.TESTDIRNOTCOMPUTED);
         } else {
-            this.setPipelineState(PipelineState.TESTDIRCOMPUTED);
+            this.getInspector().getJobStatus().setTestDir(sources);
+            this.computeMetricsOnTest(sources);
+            return StepStatus.buildSuccess(this);
         }
     }
 

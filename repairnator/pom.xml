@@ -77,16 +77,6 @@
 
     <repositories>
         <repository>
-            <id>tdurieux-maven-repository-snapshot</id>
-            <name>tdurieux.github.io maven-repository</name>
-            <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
-        </repository>
-        <repository>
-            <id>tdurieux-maven-repository-release</id>
-            <name>tdurieux.github.io maven-repository</name>
-            <url>https://tdurieux.github.io/maven-repository/releases/</url>
-        </repository>
-        <repository>
             <id>oss-snapshot</id>
             <name>oss-snapshot</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>

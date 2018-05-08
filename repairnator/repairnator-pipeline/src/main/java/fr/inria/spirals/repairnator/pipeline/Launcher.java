@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.pipeline;
 
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
+import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
@@ -30,6 +31,7 @@ import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,8 @@ import java.io.*;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -160,6 +164,17 @@ public class Launcher {
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("repairTools");
+        opt2.setLongFlag("repairTools");
+        String repairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
+        opt2.setStringParser(EnumeratedStringParser.getParser(repairTools.replace(',',';'), true));
+        opt2.setList(true);
+        opt2.setListSeparator(',');
+        opt2.setHelp("Specify one or several repair tools to use among: "+repairTools);
+        opt2.setRequired(true);
+        opt2.setDefault(repairTools);
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -195,6 +210,9 @@ public class Launcher {
         if (arguments.getFile("projectsToIgnore") != null) {
             this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
+
+        this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.config.getRepairTools(), ", "));
     }
 
     private void checkToolsLoaded(JSAP jsap) {

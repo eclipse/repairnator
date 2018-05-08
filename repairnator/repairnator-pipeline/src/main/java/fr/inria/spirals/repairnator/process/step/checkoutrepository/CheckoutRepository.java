@@ -7,7 +7,9 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -26,47 +28,47 @@ public abstract class CheckoutRepository extends AbstractStep {
 
     private CheckoutType checkoutType;
 
-    public CheckoutRepository(ProjectInspector inspector) {
-        super(inspector);
+    public CheckoutRepository(ProjectInspector inspector, boolean blockingStep) {
+        super(inspector, blockingStep);
     }
 
     private String getCommitUrl(String commitId) {
-        return "http://github.com/"+this.inspector.getRepoSlug()+"/commit/"+commitId;
+        return "http://github.com/"+this.getInspector().getRepoSlug()+"/commit/"+commitId;
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
 
         Metrics metric = this.getInspector().getJobStatus().getMetrics();
         Git git;
         try {
             GitHelper gitHelper = this.getInspector().getGitHelper();
-            git = Git.open(new File(inspector.getRepoLocalPath()));
+            git = Git.open(new File(this.getInspector().getRepoLocalPath()));
             Build build;
 
             switch (checkoutType) {
                 case CHECKOUT_BUGGY_BUILD:
-                    build = inspector.getBuggyBuild();
+                    build = this.getInspector().getBuggyBuild();
                     metric.setBugCommit(build.getCommit().getSha());
                     metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
                     break;
 
                 case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
-                    build = inspector.getBuggyBuild();
+                    build = this.getInspector().getBuggyBuild();
                     metric.setBugCommit(build.getCommit().getSha());
                     metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
                     metric.setReconstructedBugCommit(true);
                     break;
 
                 case CHECKOUT_PATCHED_BUILD:
-                    build = inspector.getPatchedBuild();
+                    build = this.getInspector().getPatchedBuild();
                     metric.setPatchCommit(build.getCommit().getSha());
                     metric.setPatchCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
                     break;
 
                 default:
                     this.getLogger().warn("A case seems not to have been considered. Buggy build will be used.");
-                    build = inspector.getBuggyBuild();
+                    build = this.getInspector().getBuggyBuild();
             }
 
             if (build.isPullRequest()) {
@@ -86,7 +88,7 @@ public abstract class CheckoutRepository extends AbstractStep {
 
                     gitHelper.addAndCommitRepairnatorLogAndProperties(this.getInspector().getJobStatus(), git, "After getting PR information");
 
-                    String repository = this.inspector.getRepoSlug();
+                    String repository = this.getInspector().getRepoSlug();
                     this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
                     List<String> pathes;
@@ -106,24 +108,25 @@ public abstract class CheckoutRepository extends AbstractStep {
                     boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, pathes);
                     if (!successfulMerge) {
                         this.getLogger().debug("Error while merging two commits to reproduce the PR.");
-                        this.shouldStop = true;
+                        return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                     }
 
                 } else {
                     this.addStepError("Error while getting the PR information...");
-                    this.shouldStop = true;
-                    return;
+                    return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                 }
             } else {
                 String commitCheckout = build.getCommit().getSha();
                 commitCheckout = gitHelper.testCommitExistence(git, commitCheckout, this, build);
                 if (commitCheckout != null) {
-                    this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.inspector.getRepoSlug());
+                    this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.getInspector().getRepoSlug());
                     if (checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
                         git.checkout().setName(commitCheckout).call();
                     } else {
 
                         List<String> pathes = new ArrayList<String>();
+
+                        // FIXME: duplicated code
                         for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
                             URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
                             URI pathURI = path.getCanonicalFile().toURI();
@@ -133,19 +136,19 @@ public abstract class CheckoutRepository extends AbstractStep {
                         }
                         git.checkout().setStartPoint(commitCheckout).addPaths(pathes).call();
 
+                        // FIXME: commit should not be there
                         PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                         git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
                     }
-                    this.writeProperty("bugCommit", this.inspector.getBuggyBuild().getCommit().getCompareUrl());
+                    this.writeProperty("bugCommit", this.getInspector().getBuggyBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
-                    this.shouldStop = true;
-                    return;
+                    return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                 }
             }
         } catch (IOException | GitAPIException e) {
-            this.addStepError("Error while getting the commit to checkout from the repo.");
-            this.shouldStop = true;
+            this.addStepError("Exception while getting the commit to checkout from the repo.", e);
+            return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
         }
 
         this.writeProperty("hostname", Utils.getHostname());
@@ -163,6 +166,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                 this.writeProperty("bugType", "passing_passing");
                 break;
         }
+
+        return StepStatus.buildSuccess(this);
     }
 
     protected CheckoutType getCheckoutType() {
