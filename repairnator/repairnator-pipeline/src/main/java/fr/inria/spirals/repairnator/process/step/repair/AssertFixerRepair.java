@@ -58,8 +58,8 @@ public class AssertFixerRepair extends AbstractRepairStep {
         }
 
         List<String> testList = new ArrayList<>();
-        for (String testFolder : testList) {
-            testList.add(testFolder);
+        for (File testFolder : tests) {
+            testList.add(testFolder.getAbsolutePath());
         }
 
         configuration.setPathToTestFolder(testList);
