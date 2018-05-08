@@ -154,9 +154,9 @@ public class GatherTestInformation extends AbstractStep {
                                 failureLocation.addFailure(typeTof);
 
                                 if (testCase.hasError()) {
-                                    failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
+                                    failureLocation.addErroringMethod(testCase.getName());
                                 } else {
-                                    failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
+                                    failureLocation.addFailingMethod(testCase.getName());
                                 }
                             }
                         }

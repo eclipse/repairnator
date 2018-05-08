@@ -41,8 +41,6 @@ public class TestAssertFixerRepair {
         Utils.setLoggersLevel(Level.ERROR);
     }
 
-    // FIXME
-    @Ignore
     @Test
     public void testAssertFixerFixes() throws IOException {
         int buildId = 365127838; // surli/failingProject build
@@ -84,7 +82,7 @@ public class TestAssertFixerRepair {
         assertThat(assertFixerStatus.getStep(), is(assertFixerRepair));
 
         for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
+            assertThat("Failing step :" + stepStatus, stepStatus.isSuccess(), is(true));
         }
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
