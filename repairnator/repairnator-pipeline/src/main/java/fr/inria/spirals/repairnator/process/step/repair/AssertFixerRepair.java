@@ -66,6 +66,7 @@ public class AssertFixerRepair extends AbstractRepairStep {
         configuration.setPathToTestFolder(testList);
 
         StringBuilder classpathBuilder = new StringBuilder();
+        // FIXME: AssertFixer is not compliant with junit 4.4
         for (int i = 0; i < classPath.size(); i++) {
             classpathBuilder.append(classPath.get(i).getPath());
 

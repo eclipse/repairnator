@@ -126,7 +126,7 @@ public class AstorRepair extends AbstractRepairStep {
                     if (solutions != null) {
                         for (ProgramVariant pv : solutions) {
                             if (pv.isSolution()) {
-                                astorPatches.add(pv.getPatchDiff());
+                                astorPatches.add(pv.getPatchDiff().getFormattedDiff());
                             }
                         }
                     }
