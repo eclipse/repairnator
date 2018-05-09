@@ -194,7 +194,11 @@ public class Launcher {
 
         if (buildsToBeInspected != null) {
             for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
-                Launcher.LOGGER.info("Incriminated project: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
+                if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                    Launcher.LOGGER.info("Incriminated project and build: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
+                } else {
+                    Launcher.LOGGER.info("Incriminated project and pair of builds: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
+                }
             }
 
             this.processOutput(buildsToBeInspected);
@@ -223,6 +227,9 @@ public class Launcher {
         }
         scannerSerializer.serialize();
 
+        Launcher.LOGGER.info("---------------------------------------------------------------");
+        Launcher.LOGGER.info("Scanner results.");
+        Launcher.LOGGER.info("---------------------------------------------------------------");
         if (buildsToBeInspected.isEmpty()) {
             Launcher.LOGGER.info("No build interesting to be inspected has been found ("+scanner.getTotalScannedBuilds()+" scanned builds.)");
         } else {
@@ -263,7 +270,11 @@ public class Launcher {
 
     private void printToStdout(List<BuildToBeInspected> listOfBuilds) {
         for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-            System.out.println(buildToBeInspected.getBuggyBuild().getId());
+            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                System.out.println(buildToBeInspected.getBuggyBuild().getId());
+            } else {
+                System.out.println(buildToBeInspected.getBuggyBuild().getId() + Utils.COMMA + buildToBeInspected.getPatchedBuild().getId());
+            }
         }
     }
 
