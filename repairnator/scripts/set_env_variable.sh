@@ -74,7 +74,7 @@ export REPAIRNATOR_REALTIME_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-realtime.j
 
 ### Other pathes
 export REPAIR_OUTPUT_PATH=$ROOT_OUT_DIR`date "+%Y-%m-%d_%H%M%S"` # Where to put output of repairnator
-export LOG_DIR=$ROOT_LOG_DIR`date "+%Y-%m-%d_%H%M"` # Log directory: it will contain several logs and serialized files
+export LOG_DIR=$ROOT_LOG_DIR`date "+%Y-%m-%d_%H%M%S"` # Log directory: it will contain several logs and serialized files
 export DOCKER_LOG_DIR=$LOG_DIR # Log directory for docker containers (most of the time, it should be the same as LOG_DIR, but sometimes if you use distant host, e.g. g5k you need to specify another value)
 
 export M2_HOME=$MAVEN_HOME # Path to the maven home: this value is only used when executing directly repairnator-pipeline.jar (outside a docker container)
