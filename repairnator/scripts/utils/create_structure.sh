@@ -11,10 +11,8 @@ mkdir -p $ROOT_LOG_DIR
 mkdir -p $ROOT_BIN_DIR
 mkdir -p $ROOT_OUT_DIR
 
-if [ ! -z "$RUN_ID" ]; then
-    export REPAIR_OUTPUT_PATH=$REPAIR_OUTPUT_PATH"_$RUN_ID"
-    export LOG_DIR=$LOG_DIR"_$RUN_ID"
-fi
+export REPAIR_OUTPUT_PATH=$REPAIR_OUTPUT_PATH"_$RUN_ID"
+export LOG_DIR=$LOG_DIR"_$RUN_ID"
 
 echo "Create output dir: $REPAIR_OUTPUT_PATH"
 mkdir $REPAIR_OUTPUT_PATH
