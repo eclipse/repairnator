@@ -28,11 +28,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by urli on 17/08/2017.
  */
-public class AstorRepair extends AbstractRepairStep {
-    protected static final String TOOL_NAME = "Astor";
+public class AstorJGenProgRepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "AstorJGenProg";
     private static final int MAX_TIME_EXECUTION = 100; // in minutes
 
-    public AstorRepair() {}
+    public AstorJGenProgRepair() {}
 
     @Override
     public String getRepairToolName() {

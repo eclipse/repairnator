@@ -16,7 +16,7 @@ export SMTP_SERVER= # Smtp server to notify by email
 export NOTIFY_TO= # email adresses separated by comma (used for notifier, you must have specify an smtp server)
 export NOTIFY_ENDPROCESS=0 # If set to 1, the end of dockerpool and scanner will send a notification using smtp and notify_to information
 export RUN_ID_SUFFIX= # A suffix to add to the run id (useful to retrieve a specific run in serialized data).
-export REPAIR_TOOLS=Nopol,Astor,NPEFix # The available repair tools to use. Possible values (comma separated): Astor, Nopol, NPEFix, AssertFixer
+export REPAIR_TOOLS=Nopol,AstorJGenProg,NPEFix # The available repair tools to use. Possible values (comma separated): AstorJGenProg, Nopol, NPEFix, AssertFixer
 
 #### Scanner configuration
 
