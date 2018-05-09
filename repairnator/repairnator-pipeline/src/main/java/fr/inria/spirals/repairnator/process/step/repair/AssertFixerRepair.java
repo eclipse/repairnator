@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
+import com.google.common.io.Files;
 import com.google.gson.GsonBuilder;
 import eu.stamp.project.assertfixer.AssertFixerResult;
 import eu.stamp.project.assertfixer.Configuration;
@@ -82,6 +83,8 @@ public class AssertFixerRepair extends AbstractRepairStep {
         }
 
         configuration.setMultipleTestCases(multipleTestCases);
+        File outDir = Files.createTempDir();
+        configuration.setOutput(outDir.getAbsolutePath());
 
         String asJson = new GsonBuilder().setPrettyPrinting().create().toJson(configuration);
         this.getLogger().info("Launcher AssertFixer with the following configuration: "+asJson);
@@ -115,6 +118,8 @@ public class AssertFixerRepair extends AbstractRepairStep {
                 break;
             }
         }
+
+        outDir.delete();
 
         if (success) {
             jobStatus.setHasBeenPatched(true);
