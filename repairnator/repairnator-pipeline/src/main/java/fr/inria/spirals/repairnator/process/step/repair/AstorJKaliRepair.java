@@ -28,11 +28,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by urli on 17/08/2017.
  */
-public class AstorJGenProgRepair extends AbstractRepairStep {
-    protected static final String TOOL_NAME = "AstorJGenProg";
+public class AstorJKaliRepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "AstorJKali";
     private static final int MAX_TIME_EXECUTION = 100; // in minutes
 
-    public AstorJGenProgRepair() {}
+    public AstorJKaliRepair() {}
 
     @Override
     public String getRepairToolName() {
@@ -41,7 +41,7 @@ public class AstorJGenProgRepair extends AbstractRepairStep {
 
     @Override
     protected StepStatus businessExecute() {
-        this.getLogger().info("Start to repair using Astor JGenProg");
+        this.getLogger().info("Start to repair using AstorJKali");
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
         List<String> astorPatches = new ArrayList<>();
@@ -62,7 +62,7 @@ public class AstorJGenProgRepair extends AbstractRepairStep {
             astorArgs.add(StringUtils.join(dependencies,":"));
 
             astorArgs.add("-mode");
-            astorArgs.add("jgenprog");
+            astorArgs.add("jkali");
 
             astorArgs.add("-location");
             astorArgs.add(jobStatus.getFailingModulePath());
@@ -81,7 +81,7 @@ public class AstorJGenProgRepair extends AbstractRepairStep {
             //astorArgs.add("DEBUG");
 
             astorArgs.add("-parameters");
-            astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.astor.jgenprog.log");
+            astorArgs.add("timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.astor.jkali.log");
 
             astorArgs.add("-maxtime");
             astorArgs.add(MAX_TIME_EXECUTION+"");
@@ -106,9 +106,9 @@ public class AstorJGenProgRepair extends AbstractRepairStep {
                         }
                     } catch (SpoonException e) {
                         status = AstorOutputStatus.ERROR;
-                        addStepError("Got SpoonException while running Astor JGenProg", e);
+                        addStepError("Got SpoonException while running Astor JKali", e);
                     } catch (RuntimeException e) {
-                        addStepError("Got runtime exception while running Astor JGenProg", e);
+                        addStepError("Got runtime exception while running Astor JKali", e);
                         status = AstorOutputStatus.ERROR;
                     }
                     return status;
@@ -134,10 +134,10 @@ public class AstorJGenProgRepair extends AbstractRepairStep {
 
             } catch (Exception e) {
                 status = AstorOutputStatus.ERROR;
-                this.addStepError("Error while executing astor jgenprog with args: "+ StringUtils.join(astorArgs,","), e);
+                this.addStepError("Error while executing astor with args: "+ StringUtils.join(astorArgs,","), e);
             }
 
-            jobStatus.addFileToPush("repairnator.astor.jgenprog.log");
+            jobStatus.addFileToPush("repairnator.astor.jkali.log");
 
             jobStatus.setAstorPatches(astorPatches);
             jobStatus.setAstorStatus(status);
@@ -154,9 +154,9 @@ public class AstorJGenProgRepair extends AbstractRepairStep {
                 if (jsonResultFile.exists()) {
 
                     try {
-                        FileUtils.copyFile(jsonResultFile, new File(this.getInspector().getRepoLocalPath()+"/repairnator.astor.jgenprog.results.json"));
+                        FileUtils.copyFile(jsonResultFile, new File(this.getInspector().getRepoLocalPath()+"/repairnator.astor.jkali.results.json"));
                     } catch (IOException e) {
-                        this.addStepError("Error while moving astor jgenprog JSON results", e);
+                        this.addStepError("Error while moving astor jkali JSON results", e);
                     }
 
                     JsonParser jsonParser = new JsonParser();
@@ -164,10 +164,10 @@ public class AstorJGenProgRepair extends AbstractRepairStep {
                         JsonElement root = jsonParser.parse(new FileReader(jsonResultFile));
                         this.getInspector().getJobStatus().setAstorResults(root);
                     } catch (FileNotFoundException e) {
-                        this.addStepError("Error while reading astor jgenprog JSON results", e);
+                        this.addStepError("Error while reading astor jkali JSON results", e);
                     }
 
-                    jobStatus.addFileToPush("repairnator.astor.jgenprog.results.json");
+                    jobStatus.addFileToPush("repairnator.astor.jkali.results.json");
                 }
             }
 
