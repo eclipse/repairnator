@@ -273,7 +273,7 @@ public class Launcher {
             if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
                 System.out.println(buildToBeInspected.getBuggyBuild().getId());
             } else {
-                System.out.println(buildToBeInspected.getBuggyBuild().getId() + Utils.COMMA + buildToBeInspected.getPatchedBuild().getId());
+                System.out.println(buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
             }
         }
     }
