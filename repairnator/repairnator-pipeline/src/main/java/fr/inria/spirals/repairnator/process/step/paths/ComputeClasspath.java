@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.step.pathes;
+package fr.inria.spirals.repairnator.process.step.paths;
 
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;

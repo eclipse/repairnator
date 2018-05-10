@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.step.pathes;
+package fr.inria.spirals.repairnator.process.step.paths;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
@@ -6,8 +6,6 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
-import fr.inria.spirals.repairnator.process.step.pathes.ComputeSourceDir;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
