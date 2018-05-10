@@ -1,0 +1,28 @@
+nohup: ignoring input
+Set environment variables
+This will be run with the following RUN_ID: f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1
+Create output dir: /home/spirals/surli/out/2018-05-10_101528_f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1
+Create log directory: /home/spirals/surli/logs/2018-05-10_101528_f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1
+Copy jars
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:get (default-cli) @ standalone-pom ---
+[INFO] Resolving fr.inria.repairnator:repairnator-scanner:jar:jar-with-dependencies:2.0 with transitive dependencies
+[WARNING] destination/dest parameter is deprecated: it will disappear in future version.
+[INFO] Copying /home/spirals/surli/.m2/repository/fr/inria/repairnator/repairnator-scanner/2.0/repairnator-scanner-2.0-jar-with-dependencies.jar to /home/spirals/surli/bin/2018-05-10_101528/repairnator-scanner.jar
+[WARNING] Notice transitive dependencies won't be copied.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.616 s
+[INFO] Finished at: 2018-05-10T10:15:32+02:00
+[INFO] Final Memory: 10M/304M
+[INFO] ------------------------------------------------------------------------
+Start to scan projects for builds (dest file: /home/spirals/surli/out/2018-05-10_101528_f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1/list_build_2018-05-10_1015_f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1.txt)...
+Elementary args for scanner: -i /home/spirals/surli/project_list.txt -o /home/spirals/surli/out/2018-05-10_101528_f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1/list_build_2018-05-10_1015_f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1.txt --runId f676d407-ef1e-4f00-8d05-c048e4aea9a5_fp-01-2018-week-1
+Supplementary args for scanner: --dbhost mongodb://lucesape:librepairluc59@spirals-librepair.lille.inria.fr:27017  --dbname bears   --lookFromDate 01/01/2018  --lookToDate 07/01/2018  --smtpServer sic-mailserv.lille.inria.fr  --notifyto simon.urli@inria.fr,fer.madeiral@gmail.com  --bears --bearsMode failing_passing --notifyEndProcess
+Scanner finished, delete the run directory (/home/spirals/surli/bin/2018-05-10_101528)
