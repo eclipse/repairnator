@@ -34,7 +34,7 @@ source $SCRIPT_DIR/set_env_variable.sh
 source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
-$SCRIPT_DIR/utils/create_structure.sh
+source $SCRIPT_DIR/utils/create_structure.sh
 
 if [ "$SKIP_SCAN" -eq 1 ]; then
     REPAIRNATOR_BUILD_LIST=$1

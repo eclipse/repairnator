@@ -47,7 +47,7 @@ source $SCRIPT_DIR/set_env_variable.sh
 source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
-$SCRIPT_DIR/utils/create_structure.sh
+source $SCRIPT_DIR/utils/create_structure.sh
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
