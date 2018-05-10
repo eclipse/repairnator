@@ -280,15 +280,17 @@ public class LauncherUtils {
             printUsage(jsap, launcherType);
         }
 
-        checkEnvironmentVariable(Utils.GITHUB_OAUTH, jsap, launcherType);
+        if (launcherType != LauncherType.PIPELINE) {
+            checkEnvironmentVariable(Utils.GITHUB_OAUTH, jsap, launcherType);
+        } else {
+            checkEnvironmentVariable(Utils.M2_HOME, jsap, launcherType);
+        }
     }
 
     public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
-        if (launcherType != LauncherType.PIPELINE) {
-            if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
-                System.err.println("You must set the following environment variable: "+envVariable);
-                LauncherUtils.printUsage(jsap, launcherType);
-            }
+        if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
+            System.err.println("You must set the following environment variable: "+envVariable);
+            LauncherUtils.printUsage(jsap, launcherType);
         }
     }
 
