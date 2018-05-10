@@ -1,11 +1,12 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
+import com.google.common.io.Files;
 import com.google.gson.GsonBuilder;
 import eu.stamp.project.assertfixer.AssertFixerResult;
 import eu.stamp.project.assertfixer.Configuration;
 import eu.stamp.project.assertfixer.Main;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.io.File;
@@ -19,27 +20,30 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class AssertFixerRepair extends AbstractStep {
+public class AssertFixerRepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "AssertFixer";
     private static final int TOTAL_TIME = 30; // 30 minutes
 
-    public AssertFixerRepair(ProjectInspector inspector) {
-        super(inspector);
-    }
+    public AssertFixerRepair() {
 
-    public AssertFixerRepair(ProjectInspector inspector, String name) {
-        super(inspector, name);
     }
 
     @Override
-    protected void businessExecute() {
+    public String getRepairToolName() {
+        return TOOL_NAME;
+    }
+
+    @Override
+    protected StepStatus businessExecute() {
         this.getLogger().info("Start AssertFixerRepair");
-        List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
-        File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
-        File[] tests = this.inspector.getJobStatus().getTestDir();
+        JobStatus jobStatus = this.getInspector().getJobStatus();
+        List<URL> classPath = jobStatus.getRepairClassPath();
+        File[] sources = jobStatus.getRepairSourceDir();
+        File[] tests = jobStatus.getTestDir();
 
         if (tests == null || tests.length == 0) {
             addStepError("No test directory found, this step won't be executed.");
-            return;
+            return StepStatus.buildSkipped(this, "No test directory found, this step won't be executed.");
         }
 
         Configuration configuration = new Configuration();
@@ -55,13 +59,14 @@ public class AssertFixerRepair extends AbstractStep {
         }
 
         List<String> testList = new ArrayList<>();
-        for (String testFolder : testList) {
-            testList.add(testFolder);
+        for (File testFolder : tests) {
+            testList.add(testFolder.getAbsolutePath());
         }
 
         configuration.setPathToTestFolder(testList);
 
         StringBuilder classpathBuilder = new StringBuilder();
+        // FIXME: AssertFixer is not compliant with junit 4.4
         for (int i = 0; i < classPath.size(); i++) {
             classpathBuilder.append(classPath.get(i).getPath());
 
@@ -79,6 +84,8 @@ public class AssertFixerRepair extends AbstractStep {
         }
 
         configuration.setMultipleTestCases(multipleTestCases);
+        File outDir = Files.createTempDir();
+        configuration.setOutput(outDir.getAbsolutePath());
 
         String asJson = new GsonBuilder().setPrettyPrinting().create().toJson(configuration);
         this.getLogger().info("Launcher AssertFixer with the following configuration: "+asJson);
@@ -103,6 +110,23 @@ public class AssertFixerRepair extends AbstractStep {
             addStepError("Error while executing AssertFixer", e);
         }
 
-        this.getInspector().getJobStatus().setAssertFixerResults(assertFixerResults);
+        jobStatus.setAssertFixerResults(assertFixerResults);
+
+        boolean success = false;
+        for (AssertFixerResult result : assertFixerResults) {
+            if (result.isSuccess()) {
+                success = true;
+                break;
+            }
+        }
+
+        outDir.delete();
+
+        if (success) {
+            jobStatus.setHasBeenPatched(true);
+            return StepStatus.buildSuccess(this);
+        } else {
+            return StepStatus.buildSkipped(this, "No patch found");
+        }
     }
 }

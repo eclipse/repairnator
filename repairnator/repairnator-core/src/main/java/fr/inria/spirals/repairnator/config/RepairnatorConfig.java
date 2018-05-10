@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.config;
 import fr.inria.jtravis.JTravis;
 import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.GitHub;
 
 import java.io.File;
@@ -10,6 +11,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by urli on 08/03/2017.
@@ -42,6 +45,7 @@ public class RepairnatorConfig {
     private String workspacePath;
     private String githubToken;
     private String projectsToIgnoreFilePath;
+    private Set<String> repairTools;
 
     // Dockerpool
     private String dockerImageName;
@@ -67,7 +71,9 @@ public class RepairnatorConfig {
 
     private static RepairnatorConfig instance;
 
-    private RepairnatorConfig() {}
+    private RepairnatorConfig() {
+        this.repairTools = new HashSet<>();
+    }
 
     public void readFromFile() throws RepairnatorConfigException {
         RepairnatorConfigReader configReader = new RepairnatorConfigReader();
@@ -394,6 +400,14 @@ public class RepairnatorConfig {
         this.bearsMode = bearsMode;
     }
 
+    public Set<String> getRepairTools() {
+        return repairTools;
+    }
+
+    public void setRepairTools(Set<String> repairTools) {
+        this.repairTools = repairTools;
+    }
+
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
@@ -436,6 +450,7 @@ public class RepairnatorConfig {
                 ", repository='" + repository + '\'' +
                 ", clean=" + clean +
                 ", bearsMode=" + bearsMode.name() +
+                ", repairTools=" + StringUtils.join(this.repairTools, ",") +
                 '}';
     }
 }

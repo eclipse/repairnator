@@ -64,6 +64,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("SMTP_SERVER="+this.repairnatorConfig.getSmtpServer());
         this.envValues.add("NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','));
         this.envValues.add("OUTPUT="+output);
+        this.envValues.add("REPAIR_TOOLS="+StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
     }
 
     public InputBuildId getInputBuildId() {
@@ -110,7 +111,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
-            if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
+            if (!this.repairnatorConfig.isSkipDelete()) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(this.containerId);
                 this.removeVolumes(docker);

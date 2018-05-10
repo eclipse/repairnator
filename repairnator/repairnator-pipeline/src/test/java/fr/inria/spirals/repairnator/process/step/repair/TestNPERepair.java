@@ -6,12 +6,13 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.junit.Before;
@@ -21,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -54,19 +57,32 @@ public class TestNPERepair {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        NPERepair npeRepair = new NPERepair(inspector);
+        NPERepair npeRepair = new NPERepair();
+        npeRepair.setProjectInspector(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector))
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
                 .setNextStep(new TestProject(inspector))
-                .setNextStep(new GatherTestInformation(inspector, new BuildShouldFail(), false))
+                .setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                 .setNextStep(npeRepair);
         cloneStep.execute();
 
         assertThat(npeRepair.isShouldStop(), is(false));
-        assertThat(npeRepair.getPipelineState(), is(PipelineState.NPEFIX_PATCHED));
         assertThat(inspector.getJobStatus().getNpeFixPatches().size(), is(6));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+        assertThat(stepStatusList.size(), is(5));
+        StepStatus npeStatus = stepStatusList.get(4);
+        assertThat(npeStatus.getStep(), is(npeRepair));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
     }
 }

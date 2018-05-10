@@ -7,9 +7,7 @@ import fr.inria.astor.core.setup.ConfigurationProperties;
 import fr.inria.main.AstorOutputStatus;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import spoon.SpoonException;
@@ -30,26 +28,26 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by urli on 17/08/2017.
  */
-public class AstorRepair extends AbstractStep {
-
+public class AstorRepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "Astor";
     private static final int MAX_TIME_EXECUTION = 100; // in minutes
-    public AstorRepair(ProjectInspector inspector) {
-        super(inspector);
-    }
 
-    public AstorRepair(ProjectInspector inspector, String name) {
-        super(inspector, name);
+    public AstorRepair() {}
+
+    @Override
+    public String getRepairToolName() {
+        return TOOL_NAME;
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().info("Start to repair using Astor");
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
         List<String> astorPatches = new ArrayList<>();
 
-        List<URL> classPath = this.inspector.getJobStatus().getRepairClassPath();
-        File[] sources = this.inspector.getJobStatus().getRepairSourceDir();
+        List<URL> classPath = this.getInspector().getJobStatus().getRepairClassPath();
+        File[] sources = this.getInspector().getJobStatus().getRepairSourceDir();
 
         if (classPath != null && sources != null) {
             List<String> dependencies = new ArrayList<>();
@@ -128,7 +126,7 @@ public class AstorRepair extends AbstractStep {
                     if (solutions != null) {
                         for (ProgramVariant pv : solutions) {
                             if (pv.isSolution()) {
-                                astorPatches.add(pv.getPatchDiff());
+                                astorPatches.add(pv.getPatchDiff().getFormattedDiff());
                             }
                         }
                     }
@@ -175,11 +173,12 @@ public class AstorRepair extends AbstractStep {
 
 
             if (astorPatches.isEmpty()) {
-                this.setPipelineState(PipelineState.ASTOR_NOTPATCHED);
+                return StepStatus.buildSkipped(this,"No patch found.");
             } else {
-                this.setPipelineState(PipelineState.ASTOR_PATCHED);
                 this.getInspector().getJobStatus().setHasBeenPatched(true);
+                return StepStatus.buildSuccess(this);
             }
         }
+        return StepStatus.buildSkipped(this,"Classpath or sources not computed.");
     }
 }

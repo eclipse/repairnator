@@ -24,7 +24,7 @@ source $SCRIPT_DIR/set_env_variable.sh
 source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
-$SCRIPT_DIR/utils/create_structure.sh
+source $SCRIPT_DIR/utils/create_structure.sh
 
 echo "Copy jars"
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR

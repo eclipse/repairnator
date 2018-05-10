@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.pathes;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeSourceDir;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -78,14 +80,22 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+                .setNextStep(new TestProject(inspector))
+                .setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus computeSourceDirStatus = stepStatusList.get(3);
+        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/src/main/java")}));
     }
@@ -121,14 +131,21 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+                .setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
+        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
     }
@@ -164,14 +181,20 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
+        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder")}));
     }
@@ -207,14 +230,20 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
+        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder"), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
     }
@@ -258,14 +287,20 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutPatchedBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutPatchedBuild(inspector, true)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
+        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {
                 new File(repoDir.getAbsolutePath()+"/pac4j-core/src/main/java"),
@@ -316,14 +351,20 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRCOMPUTED));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
+        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         //assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder"), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
     }
@@ -358,14 +399,23 @@ public class TestComputeSourceDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, false);
+        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeSourceDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
         cloneStep.execute();
 
-        assertThat(computeSourceDir.isShouldStop(), is(false));
-        assertThat(computeSourceDir.getPipelineState(), is(PipelineState.SOURCEDIRNOTCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.SOURCEDIRNOTCOMPUTED));
+        assertThat(computeSourceDir.isShouldStop(), is(true));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
+        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
+        assertThat(computeSourceDirStatus.isSuccess(), is(false));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() != computeSourceDir) {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
 
     }
 }

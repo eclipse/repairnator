@@ -1,22 +1,28 @@
 package fr.inria.spirals.repairnator.notifier;
 
+import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by urli on 30/03/2017.
  */
 public class PatchNotifier extends AbstractNotifier {
+    private Logger logger = LoggerFactory.getLogger(PatchNotifier.class);
     private boolean alreadyNotifiedForNopol;
     private boolean alreadyNotifiedForNPEFix;
     private boolean alreadyNotifiedForAstor;
@@ -115,6 +121,18 @@ public class PatchNotifier extends AbstractNotifier {
                 text += "mkdir "+projectName+"\n";
                 text += "cd "+projectName+"\n";
                 text += "git init\n";
+
+                if (buggyBuild.isPullRequest()) {
+                    Optional<PullRequest> pullRequestOptional = RepairnatorConfig.getInstance().getJTravis().pullRequest().fromBuild(buggyBuild);
+                    if (pullRequestOptional.isPresent()) {
+                        PullRequest pullRequest = pullRequestOptional.get();
+                        repoURL = Utils.getGithubRepoUrl(pullRequest.getOtherRepo().getFullName());
+                        branchName = pullRequest.getHeadRef().getRef();
+                    } else {
+                        this.logger.error("Error while getting pull request information for notification.");
+                    }
+                }
+
                 text += "git fetch "+repoURL+" "+branchName+"\n";
                 text += "git checkout -b patch FETCH_HEAD\n";
                 text += "vi [file_to_patch]\n";
@@ -123,7 +141,7 @@ public class PatchNotifier extends AbstractNotifier {
                 if (status.isHasBeenForked()) {
                     text += "git push "+status.getForkURL()+"\n";
                 } else {
-                    text += "Then fork the repository ("+slug+") from Github interface\n";
+                    text += "Then fork the repository ("+repoURL+") from Github interface\n";
                     text += "git push [url to the fork]\n";
                 }
 

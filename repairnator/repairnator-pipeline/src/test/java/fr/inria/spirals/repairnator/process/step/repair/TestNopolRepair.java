@@ -3,11 +3,12 @@ package fr.inria.spirals.repairnator.process.step.repair;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -24,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,6 +54,7 @@ public class TestNopolRepair {
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(solverPath);
+        config.setRepairTools(Collections.singleton(NopolRepair.TOOL_NAME));
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -84,20 +88,32 @@ public class TestNopolRepair {
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        NopolRepair nopolRepair = new NopolRepair(inspector);
+        NopolRepair nopolRepair = new NopolRepair();
+        nopolRepair.setProjectInspector(inspector);
         NopolRepair.TOTAL_MAX_TIME = 2;
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector))
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
                 .setNextStep(new TestProject(inspector))
-                .setNextStep(new GatherTestInformation(inspector, new BuildShouldFail(), false))
-                .setNextStep(new ComputeClasspath(inspector))
-                .setNextStep(new ComputeSourceDir(inspector, false))
+                .setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .setNextStep(new ComputeClasspath(inspector, true))
+                .setNextStep(new ComputeSourceDir(inspector, true, false))
                 .setNextStep(nopolRepair);
         cloneStep.execute();
 
         assertThat(nopolRepair.isShouldStop(), is(false));
-        assertThat(nopolRepair.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(nopolRepair.getNopolInformations().size(), is(11));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+        assertThat(stepStatusList.size(), is(7));
+        StepStatus nopolStatus = stepStatusList.get(6);
+        assertThat(nopolStatus.getStep(), is(nopolRepair));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         // The following assertion is working when the test is launched in the current module
         // however it does not work properly when launched from the root module,

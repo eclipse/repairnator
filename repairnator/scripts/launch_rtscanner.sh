@@ -24,7 +24,7 @@ source $SCRIPT_DIR/set_env_variable.sh
 source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
-$SCRIPT_DIR/utils/create_structure.sh
+source $SCRIPT_DIR/utils/create_structure.sh
 
 
 if [ ! -f "$WHITELIST_PATH" ]; then
@@ -55,4 +55,4 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
 fi
 
 echo "Supplementary args for realtime scanner $args"
-java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID $args 2> $LOG_DIR/errors_$RUN_ID.log 1> /dev/null
+java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID --repairTools $REPAIR_TOOLS $args 2> $LOG_DIR/errors_$RUN_ID.log 1> /dev/null

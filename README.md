@@ -93,5 +93,5 @@ Each directory contains its own Readme explaining its own internal organization.
 
 ## License
 
-This project has been funded by InriaHub. The content of this repository is licensed under the AGPL terms. 
+This project has been funded by InriaHub. The content of this repository is licensed under the MIT terms. 
 

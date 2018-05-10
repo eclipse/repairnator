@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.pathes.ComputeTestDir;
@@ -21,10 +22,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -75,14 +78,24 @@ public class TestComputeTestDir {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeTestDir computeTestDir = new ComputeTestDir(inspector);
+        ComputeTestDir computeTestDir = new ComputeTestDir(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(computeTestDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeTestDir);
         cloneStep.execute();
 
-        assertThat(computeTestDir.isShouldStop(), is(false));
-        assertThat(computeTestDir.getPipelineState(), is(PipelineState.TESTDIRCOMPUTED));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.TESTDIRCOMPUTED));
+        assertThat(computeTestDir.isShouldStop(), is(true));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeTestDirStatus = stepStatusList.get(2);
+        assertThat(computeTestDirStatus.getStep(), is(computeTestDir));
 
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() != computeTestDir) {
+                assertThat(stepStatus.isSuccess(), is(true));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(false));
+            }
+
+        }
     }
 }

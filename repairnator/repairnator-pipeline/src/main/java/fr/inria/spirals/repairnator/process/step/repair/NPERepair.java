@@ -4,12 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedWriter;
@@ -24,19 +22,19 @@ import java.util.List;
 /**
  * Created by urli on 10/07/2017.
  */
-public class NPERepair extends AbstractStep {
-    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.4-SNAPSHOT:npefix";
+public class NPERepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "NPEFix";
+    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.4:npefix";
 
-    public NPERepair(ProjectInspector inspector) {
-        super(inspector);
-    }
+    public NPERepair() {}
 
-    public NPERepair(ProjectInspector inspector, String name) {
-        super(inspector, name);
+    @Override
+    public String getRepairToolName() {
+        return TOOL_NAME;
     }
 
     private boolean isThereNPE() {
-        for (FailureLocation failureLocation : this.inspector.getJobStatus().getFailureLocations()) {
+        for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
             for (FailureType failureType : failureLocation.getFailures()) {
                 if (failureType.getFailureName().startsWith("java.lang.NullPointerException")) {
                     return true;
@@ -47,7 +45,7 @@ public class NPERepair extends AbstractStep {
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Entrance in NPERepair step...");
 
         if (isThereNPE()) {
@@ -63,7 +61,7 @@ public class NPERepair extends AbstractStep {
 
             if (status == MavenHelper.MAVEN_ERROR) {
                 this.addStepError("Error while running NPE fix: maybe the project does not contain a NPE?");
-                this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
+                return StepStatus.buildSkipped(this,"Error while running maven goal for NPEFix.");
             } else {
                 Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { "json"}, false);
                 if (!files.isEmpty()) {
@@ -118,22 +116,22 @@ public class NPERepair extends AbstractStep {
                     }
 
                     if (effectivelyPatched) {
-                        this.setPipelineState(PipelineState.NPEFIX_PATCHED);
                         this.getInspector().getJobStatus().setHasBeenPatched(true);
+                        return StepStatus.buildSuccess(this);
                     } else {
-                        this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
+                        return StepStatus.buildSkipped(this,"No patch found.");
                     }
 
                 } else {
                     this.addStepError("Error while getting the patch json file: no file found.");
-                    this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
+                    return StepStatus.buildSkipped(this,"Error while reading patch file.");
                 }
 
 
             }
         } else {
             this.getLogger().info("No NPE found, this step will be skipped.");
-            this.setPipelineState(PipelineState.NPEFIX_NOTPATCHED);
+            return StepStatus.buildSkipped(this, "No NPE found.");
         }
     }
 }

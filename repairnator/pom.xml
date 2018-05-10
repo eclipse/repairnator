@@ -10,15 +10,15 @@
 
     <groupId>fr.inria.repairnator</groupId>
     <artifactId>repairnator-root</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>repairnator-root</name>
     <inceptionYear>2017</inceptionYear>
 
     <licenses>
         <license>
-            <name>AGPL-3.0</name>
-            <url>https://www.gnu.org/licenses/agpl-3.0.en.html</url>
+            <name>MIT</name>
+            <url>https://github.com/Spirals-Team/repairnator/blob/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -77,16 +77,6 @@
 
     <repositories>
         <repository>
-            <id>tdurieux-maven-repository-snapshot</id>
-            <name>tdurieux.github.io maven-repository</name>
-            <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
-        </repository>
-        <repository>
-            <id>tdurieux-maven-repository-release</id>
-            <name>tdurieux.github.io maven-repository</name>
-            <url>https://tdurieux.github.io/maven-repository/releases/</url>
-        </repository>
-        <repository>
             <id>oss-snapshot</id>
             <name>oss-snapshot</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -118,7 +108,7 @@
         <dependency>
             <groupId>fr.inria.jtravis</groupId>
             <artifactId>jtravis</artifactId>
-            <version>2.2-SNAPSHOT</version>
+            <version>2.2</version>
         </dependency>
         <dependency>
             <groupId>com.martiansoftware</groupId>

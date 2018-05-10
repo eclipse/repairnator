@@ -16,6 +16,7 @@ export SMTP_SERVER= # Smtp server to notify by email
 export NOTIFY_TO= # email adresses separated by comma (used for notifier, you must have specify an smtp server)
 export NOTIFY_ENDPROCESS=0 # If set to 1, the end of dockerpool and scanner will send a notification using smtp and notify_to information
 export RUN_ID_SUFFIX= # A suffix to add to the run id (useful to retrieve a specific run in serialized data).
+export REPAIR_TOOLS=Nopol,Astor,NPEFix # The available repair tools to use. Possible values (comma separated): Astor, Nopol, NPEFix, AssertFixer
 
 #### Scanner configuration
 
@@ -73,7 +74,7 @@ export REPAIRNATOR_REALTIME_DEST_JAR=$REPAIRNATOR_RUN_DIR/repairnator-realtime.j
 
 ### Other pathes
 export REPAIR_OUTPUT_PATH=$ROOT_OUT_DIR`date "+%Y-%m-%d_%H%M%S"` # Where to put output of repairnator
-export LOG_DIR=$ROOT_LOG_DIR`date "+%Y-%m-%d_%H%M"` # Log directory: it will contain several logs and serialized files
+export LOG_DIR=$ROOT_LOG_DIR`date "+%Y-%m-%d_%H%M%S"` # Log directory: it will contain several logs and serialized files
 export DOCKER_LOG_DIR=$LOG_DIR # Log directory for docker containers (most of the time, it should be the same as LOG_DIR, but sometimes if you use distant host, e.g. g5k you need to specify another value)
 
 export M2_HOME=$MAVEN_HOME # Path to the maven home: this value is only used when executing directly repairnator-pipeline.jar (outside a docker container)

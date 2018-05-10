@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.pathes;
 
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -25,8 +26,8 @@ public class ComputeClasspath extends AbstractStep {
 
     private List<URL> classPath;
 
-    public ComputeClasspath(ProjectInspector inspector) {
-        super(inspector);
+    public ComputeClasspath(ProjectInspector inspector, boolean blockingStep) {
+        super(inspector, blockingStep);
         this.classPath = new ArrayList<>();
     }
 
@@ -45,7 +46,7 @@ public class ComputeClasspath extends AbstractStep {
     }
 
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Computing classpath from incriminated module...");
 
         String incriminatedModule = this.getInspector().getJobStatus().getFailingModulePath();
@@ -64,7 +65,7 @@ public class ComputeClasspath extends AbstractStep {
         String pomModule = incriminatedModule + File.separator + "pom.xml";
 
         MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(),
-                this.inspector, true);
+                this.getInspector(), true);
 
         int result = MavenHelper.MAVEN_ERROR;
         try {
@@ -75,8 +76,7 @@ public class ComputeClasspath extends AbstractStep {
 
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");
-            this.setPipelineState(PipelineState.CLASSPATHNOTCOMPUTED);
-            return;
+            return StepStatus.buildError(this, PipelineState.CLASSPATHERROR);
         }
 
         String classpathPath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
@@ -93,8 +93,6 @@ public class ComputeClasspath extends AbstractStep {
             }
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath: " + e);
-            this.setPipelineState(PipelineState.CLASSPATHNOTCOMPUTED);
-            //return ?
         }
 
         boolean containJunit = false;
@@ -109,8 +107,8 @@ public class ComputeClasspath extends AbstractStep {
             this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
         }
 
-        this.inspector.getJobStatus().setRepairClassPath(this.classPath);
-        this.inspector.getJobStatus().getMetrics().setNbLibraries(this.classPath.size()-2);
-        this.setPipelineState(PipelineState.CLASSPATHCOMPUTED);
+        this.getInspector().getJobStatus().setRepairClassPath(this.classPath);
+        this.getInspector().getJobStatus().getMetrics().setNbLibraries(this.classPath.size()-2);
+        return StepStatus.buildSuccess(this);
     }
 }
