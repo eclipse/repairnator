@@ -72,7 +72,6 @@ public class Launcher {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
-        LauncherUtils.checkEnvironmentVariable(Utils.M2_HOME, jsap, LauncherType.PIPELINE);
         this.initConfig(arguments);
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
