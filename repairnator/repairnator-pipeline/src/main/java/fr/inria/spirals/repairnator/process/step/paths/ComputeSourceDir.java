@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.step.pathes;
+package fr.inria.spirals.repairnator.process.step.paths;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
