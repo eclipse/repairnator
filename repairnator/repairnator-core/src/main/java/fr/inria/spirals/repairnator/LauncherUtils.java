@@ -284,11 +284,9 @@ public class LauncherUtils {
     }
 
     public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
-        if (launcherType != LauncherType.PIPELINE) {
-            if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
-                System.err.println("You must set the following environment variable: "+envVariable);
-                LauncherUtils.printUsage(jsap, launcherType);
-            }
+        if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
+            System.err.println("You must set the following environment variable: "+envVariable);
+            LauncherUtils.printUsage(jsap, launcherType);
         }
     }
 
