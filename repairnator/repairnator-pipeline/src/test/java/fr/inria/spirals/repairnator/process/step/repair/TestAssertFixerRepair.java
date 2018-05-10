@@ -12,13 +12,12 @@ import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.pathes.ComputeClasspath;
-import fr.inria.spirals.repairnator.process.step.pathes.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.pathes.ComputeTestDir;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
