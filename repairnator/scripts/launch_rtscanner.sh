@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 #!/bin/bash
 set -e
 
@@ -22,37 +20,32 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 echo "Set environment variables"
 source $SCRIPT_DIR/set_env_variable.sh
-mkdir $REPAIR_OUTPUT_PATH
 
-if [ -z "$RUN_ID_SUFFIX" ]; then
-    RUN_ID=`uuidgen`
-else
-    RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
-fi
-
+source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
-echo "Create log directory: $LOG_DIR"
-mkdir $LOG_DIR
+source $SCRIPT_DIR/utils/create_structure.sh
 
-echo "Start building a new version of repairnator"
-$SCRIPT_DIR/build_repairnator.sh
 
-if [[ $? != 0 ]]
-then
-   echo "Error while building a new version of repairnator"
-   exit -1
+if [ ! -f "$WHITELIST_PATH" ]; then
+    touch $WHITELIST_PATH
+fi
+if [ ! -f "$BLACKLIST_PATH" ]; then
+    touch $BLACKLIST_PATH
 fi
 
 echo "Copy jars and prepare docker image"
-mkdir $REPAIRNATOR_RUN_DIR
-cp $REPAIRNATOR_REALTIME_JAR $REPAIRNATOR_REALTIME_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-realtime:$REALTIME_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots -Ddest=$REPAIRNATOR_REALTIME_DEST_JAR
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
 echo "Launch repairnator realtime scanner..."
-args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME``ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH``ca --blacklist $BLACKLIST_PATH`"
+args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL`"
+args="$args`ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME`"
+args="$args`ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH`"
+args="$args`ca --blacklist $BLACKLIST_PATH``ca --duration $DURATION`"
+
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"
 fi
@@ -62,4 +55,4 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
 fi
 
 echo "Supplementary args for realtime scanner $args"
-java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID $args 2> $ROOT_LOG_DIR/realtime/errors.log 1> /dev/null
+java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID --repairTools $REPAIR_TOOLS $args 2> $LOG_DIR/errors_$RUN_ID.log 1> /dev/null

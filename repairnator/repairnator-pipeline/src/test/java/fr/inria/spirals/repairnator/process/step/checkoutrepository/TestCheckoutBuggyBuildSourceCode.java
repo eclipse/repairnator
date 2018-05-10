@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -29,11 +30,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -57,12 +60,16 @@ public class TestCheckoutBuggyBuildSourceCode {
         int previousBuildId = 218213030;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
         assertThat(build.isPullRequest(), is(false));
 
-        Build previousBuild = BuildHelper.getBuildFromId(previousBuildId, null);
+        Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
+        assertTrue(optionalBuild2.isPresent());
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
@@ -86,13 +93,19 @@ public class TestCheckoutBuggyBuildSourceCode {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(2));
+        StepStatus checkoutStatus = stepStatusList.get(1);
+        assertThat(checkoutStatus.getStep(), is(checkoutBuild));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(checkoutBuild.isShouldStop(), is(false));
 
@@ -149,12 +162,16 @@ public class TestCheckoutBuggyBuildSourceCode {
         int previousBuildId = 222016611;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
         assertThat(build.isPullRequest(), is(false));
 
-        Build previousBuild = BuildHelper.getBuildFromId(previousBuildId, null);
+        Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
+        assertTrue(optionalBuild2.isPresent());
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(false));
@@ -178,13 +195,19 @@ public class TestCheckoutBuggyBuildSourceCode {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(2));
+        StepStatus checkoutStatus = stepStatusList.get(1);
+        assertThat(checkoutStatus.getStep(), is(checkoutBuild));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(checkoutBuild.isShouldStop(), is(false));
 
@@ -241,12 +264,16 @@ public class TestCheckoutBuggyBuildSourceCode {
         int previousBuildId = 222209171;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
         assertThat(build.isPullRequest(), is(true));
 
-        Build previousBuild = BuildHelper.getBuildFromId(previousBuildId, null);
+        Optional<Build> optionalBuild2 = RepairnatorConfig.getInstance().getJTravis().build().fromId(previousBuildId);
+        assertTrue(optionalBuild2.isPresent());
+        Build previousBuild = optionalBuild2.get();
         assertThat(previousBuild, notNullValue());
         assertThat(previousBuild.getId(), is(previousBuildId));
         assertThat(previousBuild.isPullRequest(), is(true));
@@ -270,13 +297,19 @@ public class TestCheckoutBuggyBuildSourceCode {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector);
+        CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
         cloneStep.setNextStep(checkoutBuild);
         cloneStep.execute();
 
-        assertThat(checkoutBuild.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.PREVIOUSBUILDCODECHECKEDOUT));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(2));
+        StepStatus checkoutStatus = stepStatusList.get(1);
+        assertThat(checkoutStatus.getStep(), is(checkoutBuild));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(checkoutBuild.isShouldStop(), is(false));
 

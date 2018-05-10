@@ -22,23 +22,25 @@ See [How to Design a Program Repair Bot? Insights from the Repairnator Project](
 
 ### Requirements
 
-In order to run Repairnator with the provided scripts, you'll need the following components installed: 
+In order to run Repairnator with the provided scripts, you'll need: 
   - git
   - docker
   - uuidgen utility tools (available for Mac & Linux)
- 
-You also need to get a Github API key: Go to [Github Personal Access Tokens](https://github.com/settings/tokens), and click on "Generate new token". 
-You don't need to tick any box for Repairnator. Then just copy and keep the generated token somewhere safe.
-
+  - a Github API key (Go to [Github Personal Access Tokens](https://github.com/settings/tokens), and click on "Generate new token".)
+  
 ### Setup Repairnator
 
 All Repairnator scripts are located in the directory `repairnator/scripts`. 
 The scripts use the configuration set in `repairnator/scripts/set_env_variable.sh`.
 
-In order to use Repairnator: 
-   1. clone this repository, 
-   2. open in a file editor `repairnator/scripts/set_env_variable.sh`
-   3. edit the file to specify the mandatory elements (you must add the Github Personal Access Token here)
+```bash
+git clone https://github.com/Spirals-Team/repairnator/
+cd repairnator
+
+# edit the file to specify the mandatory elements (you must add the Github Personal Access Token here)
+vi repairnator/scripts/set_env_variable.sh
+```
+
 
 ### Launch Repairnator on a given Travis Build ID
 
@@ -48,17 +50,40 @@ Here it is: `352395977`.
 All you have to do, to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
 ```bash
-cd github/repairnator/repairnator/scripts
+# set $HOME_REPAIR and $GITHUB_OAUTH in repairnator/scripts/set_env_variable.sh
+vi repairnator/scripts/set_env_variable.sh
+
+cd repairnator/scripts
+
+# start a docker container and run Repairnator on your specified Build ID.
 ./repair_buggy_build.sh 352395977
+
+# find the container name
+docker ps
+
+# look at the logs
+docker logs -f 849ef603b056 # is the name of the docker container
+
+# When the docker container is done you can find logs and serialized files in the `$HOME_REPAIR/logs` path.
+ls $HOME_REPAIR/logs
 ```
 
-The script will start a docker container to run Repairnator on your specified Build ID.
-When the docker container is finished you can find logs and serialized files in the $HOME_REPAIR/logs path.
+### Launch Repairnator to analyze and repair failing builds in real-time
+
+You can launch Repairnator to analyze TravisCI builds in realtime and to repair failing ones.
+First open in a file editor `repairnator/scripts/set_env_variable.sh` and edit the values under `Realtime scanner configuration` section:
+  - `WHITELIST_PATH` and `BLACKLIST_PATH` should point on existing files: it can be empty files, or you can use those available in `repairnator/repairnator-realtime/src/main/resources`
+  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
+
+Then just run the script `launch_rtscanner.sh`.
+
+For more information about the usage of Repairnator check out [this page](/doc/usage.md).
 
 ## Content of the repository
 
 This repository is organized as following:
 
+  * [doc](/doc) contains some documentation about Repairnator and its usage
   * [Repairnator](/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
   * [bears-usage](/bears-usage) is a side project dedicated to gather data from repairnator.json files
   * [resources](/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
@@ -68,5 +93,5 @@ Each directory contains its own Readme explaining its own internal organization.
 
 ## License
 
-This project has been funded by InriaHub. The content of this repository is licensed under the AGPL terms. 
+This project has been funded by InriaHub. The content of this repository is licensed under the MIT terms. 
 

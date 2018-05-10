@@ -5,12 +5,12 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Image;
+import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,8 +27,6 @@ public class AbstractPoolManager {
     private DockerClient docker;
     private String runId = DEFAULT_RUN_ID;
     private String dockerOutputDir = DEFAULT_OUTPUT_DIR;
-    private boolean skipDelete;
-    private boolean createOutputDir;
     private List<SerializerEngine> engines = new ArrayList<>();
 
     public void initDockerClient() {
@@ -81,27 +79,18 @@ public class AbstractPoolManager {
         this.dockerOutputDir = dockerOutputDir;
     }
 
-    public void setSkipDelete(boolean skipDelete) {
-        this.skipDelete = skipDelete;
-    }
-
-    public void setCreateOutputDir(boolean createOutputDir) {
-        this.createOutputDir = createOutputDir;
-    }
-
     public void setEngines(List<SerializerEngine> engines) {
         this.engines = engines;
     }
 
-    public RunnablePipelineContainer submitBuild(String imageId, int buildId) {
+    public TreatedBuildTracking prepareBeforeSubmitBuild(int buildId) {
         this.cleanUpOlderContainers();
-        TreatedBuildTracking treatedBuildTracking = null;
-        try {
-            treatedBuildTracking = new TreatedBuildTracking(this.engines, this.runId, buildId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, buildId, this.dockerOutputDir, treatedBuildTracking, this.skipDelete, this.createOutputDir);
+        return new TreatedBuildTracking(this.engines, this.runId, buildId);
+    }
+
+    public RunnablePipelineContainer submitBuild(String imageId, InputBuildId inputBuildId) {
+        TreatedBuildTracking treatedBuildTracking = this.prepareBeforeSubmitBuild(inputBuildId.getBuggyBuildId());
+        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, inputBuildId, this.dockerOutputDir, treatedBuildTracking);
         this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
 
         return runnablePipelineContainer;

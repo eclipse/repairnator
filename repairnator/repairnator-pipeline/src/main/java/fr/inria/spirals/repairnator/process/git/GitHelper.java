@@ -2,9 +2,10 @@ package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.Commit;
-import fr.inria.jtravis.entities.PRInformation;
+import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import okhttp3.Call;
@@ -20,12 +21,21 @@ import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.PatchApplyException;
 import org.eclipse.jgit.api.errors.PatchFormatException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.EditList;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.patch.FileHeader;
+import org.eclipse.jgit.patch.HunkHeader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.kohsuke.github.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +46,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by fernanda on 01/03/17.
@@ -174,7 +187,7 @@ public class GitHelper {
     private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
         try {
             addAndCommitRepairnatorLogAndProperties(step.getInspector().getJobStatus(), git, "Commit done before retrieving a commit from GH API.");
-            GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
+            GitHub gh = RepairnatorConfig.getInstance().getGithub();
             GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
 
             String lastKnowParent = getLastKnowParent(gh, ghRepo, git, oldCommitSha, step);
@@ -231,10 +244,32 @@ public class GitHelper {
                     // add all file for the next commit
                     git.add().addFilepattern(".").call();
 
+                    Optional<GitUser> author = build.getAuthor();
+                    Optional<GitUser> committer = build.getCommitter();
+
+                    String authorEmail, authorName;
+                    String committerEmail, committerName;
+
+                    if (author.isPresent()) {
+                        authorEmail = author.get().getEmail();
+                        authorName = author.get().getName();
+                    } else {
+                        authorEmail = "nobody@github.com";
+                        authorName = "-";
+                    }
+
+                    if (committer.isPresent()) {
+                        committerEmail = committer.get().getEmail();
+                        committerName = committer.get().getName();
+                    } else {
+                        committerEmail = "nobody@github.com";
+                        committerName = "-";
+                    }
+
                     // do the commit
                     RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(buildCommit.getAuthorName(), buildCommit.getAuthorEmail())
-                            .setCommitter(buildCommit.getCommitterName(), buildCommit.getCommitterEmail())
+                            .setAuthor(authorName, authorEmail)
+                            .setCommitter(committerName, committerEmail)
                             .setMessage(buildCommit.getMessage()
                                     + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
                             .call();
@@ -297,9 +332,9 @@ public class GitHelper {
                 + " Reset hour: " + dateFormat.format(rateLimit.reset));
     }
 
-    public boolean mergeTwoCommitsForPR(Git git, Build build, PRInformation prInformation, String repository, AbstractStep step, List<String> pathes) {
+    public boolean mergeTwoCommitsForPR(Git git, Build build, PullRequest prInformation, String repository, AbstractStep step, List<String> pathes) {
         try {
-            String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getSlug() + ".git";
+            String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getFullName() + ".git";
 
             RemoteAddCommand remoteBranchCommand = git.remoteAdd();
             remoteBranchCommand.setName("PR");
@@ -308,19 +343,19 @@ public class GitHelper {
 
             git.fetch().setRemote("PR").call();
 
-            String commitHeadSha = this.testCommitExistence(git, prInformation.getHead().getSha(), step, build);
-            String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSha(), step, build);
+            String commitHeadSha = this.testCommitExistence(git, prInformation.getHead().getSHA1(), step, build);
+            String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSHA1(), step, build);
 
             if (commitHeadSha == null) {
                 step.addStepError("Commit head ref cannot be retrieved in the repository: "
-                        + prInformation.getHead().getSha() + ". Operation aborted.");
+                        + prInformation.getHead().getSHA1() + ". Operation aborted.");
                 this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getHead().toString());
                 return false;
             }
 
             if (commitBaseSha == null) {
                 step.addStepError("Commit base ref cannot be retrieved in the repository: "
-                        + prInformation.getBase().getSha() + ". Operation aborted.");
+                        + prInformation.getBase().getSHA1() + ". Operation aborted.");
                 this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getBase().toString());
                 return false;
             }
@@ -350,7 +385,7 @@ public class GitHelper {
     }
 
     public String forkRepository(String repository, AbstractStep step) throws IOException {
-        GitHub gh = GitHubBuilder.fromEnvironment().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken(), RepairnatorConfig.getInstance().getGithubLogin()).build();
+        GitHub gh = RepairnatorConfig.getInstance().getGithub();
         showGitHubRateInformation(gh, step);
         if (gh.getRateLimit().remaining > 10) {
             GHRepository originalRepo = gh.getRepository(repository);
@@ -359,5 +394,67 @@ public class GitHelper {
             }
         }
         return null;
+    }
+
+    public void computePatchStats(Metrics metric, Git git, RevCommit headRev, RevCommit commit) {
+        try {
+            ObjectReader reader = git.getRepository().newObjectReader();
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, headRev.getTree());
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, commit.getTree());
+
+            DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
+            diffFormatter.setRepository(git.getRepository());
+            diffFormatter.setContext(0);
+            List<DiffEntry> entries = diffFormatter.scan(newTreeIter, oldTreeIter);
+
+            int nbLineAdded = 0;
+            int nbLineDeleted = 0;
+            Set<String> changedFiles = new HashSet<>();
+
+            for (DiffEntry entry : entries) {
+                String path;
+                if (entry.getChangeType() == DiffEntry.ChangeType.DELETE) {
+                    path = entry.getOldPath();
+                } else {
+                    path = entry.getNewPath();
+                }
+                if (!path.contains("repairnator")) {
+                    changedFiles.add(path);
+
+                    FileHeader fileHeader = diffFormatter.toFileHeader(entry);
+                    List<? extends HunkHeader> hunks = fileHeader.getHunks();
+                    for (HunkHeader hunk : hunks) {
+                        EditList edits = hunk.toEditList();
+                        for (Edit edit : edits) {
+                            switch (edit.getType()) {
+                                case INSERT:
+                                    nbLineAdded += edit.getLengthB();
+                                    break;
+
+                                case DELETE:
+                                    nbLineDeleted += edit.getLengthA();
+                                    break;
+
+                                case REPLACE:
+                                    nbLineDeleted += edit.getLengthA();
+                                    nbLineAdded += edit.getLengthB();
+                                    break;
+
+                                case EMPTY:
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            metric.setPatchAddedLines(nbLineAdded);
+            metric.setPatchDeletedLines(nbLineDeleted);
+            metric.setPatchChangedFiles(changedFiles.size());
+        } catch (IOException e) {
+            this.getLogger().error("Error while computing stat on the patch", e);
+        }
     }
 }

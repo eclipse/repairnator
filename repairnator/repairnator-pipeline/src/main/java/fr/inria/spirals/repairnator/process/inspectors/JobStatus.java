@@ -1,9 +1,9 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 
+import eu.stamp.project.assertfixer.AssertFixerResult;
 import fr.inria.main.AstorOutputStatus;
 import com.google.gson.JsonElement;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -20,7 +20,6 @@ import java.util.Map;
  * Created by urli on 23/03/2017.
  */
 public class JobStatus {
-    private PipelineState pipelineState;
     private PushState pushState;
     private List<URL> repairClassPath;
 
@@ -37,8 +36,9 @@ public class JobStatus {
 
     private JsonElement npeFixResults;
 
+    private List<AssertFixerResult> assertFixerResults;
+
     private boolean isReproducedAsFail;
-    private boolean isReproducedAsError;
     private String pomDirPath;
     private boolean hasBeenPushed;
 
@@ -57,8 +57,9 @@ public class JobStatus {
     private boolean hasBeenForked;
     private String forkURL;
 
+    private List<StepStatus> stepStatuses;
+
     public JobStatus(String pomDirPath) {
-        this.pipelineState = PipelineState.NONE;
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
         this.repairSourceDir = new File[]{new File("src/main/java")};
@@ -68,14 +69,8 @@ public class JobStatus {
         this.nopolPatches = new ArrayList<>();
         this.astorPatches = new ArrayList<>();
         this.npeFixPatches = new ArrayList<>();
-    }
-
-    public PipelineState getPipelineState() {
-        return pipelineState;
-    }
-
-    public void setPipelineState(PipelineState pipelineState) {
-        this.pipelineState = pipelineState;
+        this.assertFixerResults = new ArrayList<>();
+        this.stepStatuses = new ArrayList<>();
     }
 
     public List<URL> getRepairClassPath() {
@@ -108,14 +103,6 @@ public class JobStatus {
 
     public void setReproducedAsFail(boolean reproducedAsFail) {
         isReproducedAsFail = reproducedAsFail;
-    }
-
-    public boolean isReproducedAsError() {
-        return isReproducedAsError;
-    }
-
-    public void setReproducedAsError(boolean reproducedAsError) {
-        isReproducedAsError = reproducedAsError;
     }
 
     public String getPomDirPath() {
@@ -288,5 +275,21 @@ public class JobStatus {
 
     public void setForkURL(String forkURL) {
         this.forkURL = forkURL;
+    }
+
+    public List<AssertFixerResult> getAssertFixerResults() {
+        return assertFixerResults;
+    }
+
+    public void setAssertFixerResults(List<AssertFixerResult> assertFixerResults) {
+        this.assertFixerResults = assertFixerResults;
+    }
+
+    public List<StepStatus> getStepStatuses() {
+        return stepStatuses;
+    }
+
+    public void addStepStatus(StepStatus stepStatus) {
+        this.stepStatuses.add(stepStatus);
     }
 }

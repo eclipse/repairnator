@@ -1,10 +1,22 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import eu.stamp.project.assertfixer.asserts.AssertFixer;
 import fr.inria.main.AstorOutputStatus;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
+import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.ResolveDependency;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
+import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -33,13 +45,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -69,6 +85,7 @@ public class TestProjectInspector {
         config.setZ3solverPath(solverPath);
         config.setPush(true);
         config.setPushRemoteRepo("");
+        config.setRepairTools(RepairToolsManager.getRepairToolsName());
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -90,7 +107,9 @@ public class TestProjectInspector {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build failingBuild = optionalBuild.get();
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
@@ -117,11 +136,24 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(AstorRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
+        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+        expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
+        expectedStatuses.put(NPERepair.class, StepStatus.StatusKind.SKIPPED); // No NPE
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
+
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         String remoteBranchName = "surli-failingProject-208897371-20170308-040702";
         assertEquals(remoteBranchName, inspector.getRemoteBranchName());
@@ -157,7 +189,9 @@ public class TestProjectInspector {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build failingBuild = optionalBuild.get();
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
@@ -184,11 +218,23 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() instanceof NopolRepair) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
+
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.STOP_BY_PATCH_FOUND));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_NOTPATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         verify(notifierEngine, times(3)).notify(anyString(), anyString()); // notify for Astor, NPEFix and Nopol
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
@@ -220,7 +266,9 @@ public class TestProjectInspector {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build failingBuild = optionalBuild.get();
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
@@ -241,11 +289,86 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTBUILDABLE));
         assertThat(jobStatus.getPushState(), is(PushState.NONE));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (int i = 0; i < stepStatusList.size(); i++) {
+            StepStatus stepStatus = stepStatusList.get(i);
+            if (i == stepStatusList.size() - 1) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(true));
+            }
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
 
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
 
+    }
+
+    @Test
+    public void testSpoonException() throws IOException {
+        // one dependency missing: should not be buildable
+        int buildId = 355743087; // ministryofjustice/laa-saml-mock
+
+        Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
+        File tmpDir = tmpDirPath.toFile();
+        tmpDir.deleteOnExit();
+
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build failingBuild = optionalBuild.get();
+
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
+
+        List<AbstractDataSerializer> serializers = new ArrayList<>();
+        List<AbstractNotifier> notifiers = new ArrayList<>();
+
+        List<SerializerEngine> serializerEngines = new ArrayList<>();
+        SerializerEngine serializerEngine = mock(SerializerEngine.class);
+        serializerEngines.add(serializerEngine);
+
+        serializers.add(new InspectorSerializer(serializerEngines));
+        serializers.add(new NopolSerializer(serializerEngines));
+
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.REPAIR);
+
+        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        inspector.run();
+
+        JobStatus jobStatus = inspector.getJobStatus();
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() instanceof ResolveDependency) {
+                assertThat(stepStatus.isSuccess(), is(false));
+            }
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
+
+        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
+
+    }
+
+    private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
+        for (StepStatus stepStatus : statuses) {
+            if (!expectedValues.containsKey(stepStatus.getStep().getClass())) {
+                assertThat("Step failing: "+stepStatus, stepStatus.isSuccess(), is(true));
+            } else {
+                StepStatus.StatusKind expectedStatus = expectedValues.get(stepStatus.getStep().getClass());
+                assertThat("Status was not as expected" + stepStatus, stepStatus.getStatus(), is(expectedStatus));
+                expectedValues.remove(stepStatus.getStep().getClass());
+            }
+        }
+
+        assertThat(expectedValues.isEmpty(), is(true));
     }
 
     @Test
@@ -256,7 +379,9 @@ public class TestProjectInspector {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Build failingBuild = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build failingBuild = optionalBuild.get();
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "testnpe");
 
@@ -283,13 +408,24 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(AstorRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
+        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+        expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
+
         assertThat(jobStatus.getAstorStatus(), is(AstorOutputStatus.MAX_GENERATION));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOPOL_PATCHED));
         assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
         assertThat(jobStatus.isHasBeenPatched(), is(true));
         assertThat(jobStatus.getNpeFixPatches().size(), is(6));
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         verify(notifierEngine, times(2)).notify(anyString(), anyString()); // Nopol and NPEFix
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));

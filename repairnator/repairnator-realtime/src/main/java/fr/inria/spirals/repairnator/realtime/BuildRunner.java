@@ -1,6 +1,8 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.AbstractPoolManager;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import org.slf4j.Logger;
@@ -26,6 +28,15 @@ public class BuildRunner extends AbstractPoolManager {
 
     public BuildRunner(RTScanner rtScanner) {
         this.rtScanner = rtScanner;
+        LOGGER.info("Init build runner");
+        super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
+        super.setRunId(RepairnatorConfig.getInstance().getRunId());
+        super.setEngines(this.rtScanner.getEngines());
+    }
+
+    public void initRunner() {
+        this.setDockerImageName(RepairnatorConfig.getInstance().getDockerImageName());
+        this.initExecutorService(RepairnatorConfig.getInstance().getNbThreads());
     }
 
     public void setDockerImageName(String dockerImageName) {
@@ -56,7 +67,7 @@ public class BuildRunner extends AbstractPoolManager {
         }
         if (getRunning() < this.nbThreads) {
             LOGGER.info("Build (id: "+build.getId()+") immediately submitted for running.");
-            this.executorService.submit(this.submitBuild(this.dockerImageId, build.getId()));
+            this.executorService.submit(this.submitBuild(this.dockerImageId, new InputBuildId(build.getId())));
         } else {
             LOGGER.info("All threads currently running (Limit: "+this.nbThreads+"). Add build (id: "+build.getId()+") to list");
             if (this.waitingBuilds.size() == this.nbThreads) {
@@ -67,9 +78,20 @@ public class BuildRunner extends AbstractPoolManager {
         }
     }
 
+    public void switchOff() {
+        LOGGER.warn("The process will now stop. "+this.getRunning()+" docker containers will be stopped.");
+        this.waitingBuilds.clear();
+        for (RunnablePipelineContainer container : this.submittedRunnablePipelineContainers) {
+            container.serialize("ABORT");
+            container.killDockerContainer(this.getDockerClient(), false);
+        }
+
+        this.executorService.shutdownNow();
+    }
+
     @Override
     public void removeSubmittedRunnablePipelineContainer(RunnablePipelineContainer pipelineContainer) {
-        LOGGER.info("Build (id: "+pipelineContainer.getBuildId()+") has finished.");
+        LOGGER.info("Build (id: "+pipelineContainer.getInputBuildId().getBuggyBuildId()+") has finished.");
         super.removeSubmittedRunnablePipelineContainer(pipelineContainer);
         if (!this.waitingBuilds.isEmpty()) {
             Build build = this.waitingBuilds.pollFirst();

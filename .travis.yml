@@ -4,11 +4,14 @@ sudo: true
 
 jdk: openjdk8
 
+services:
+ - docker
+
 script: "./.travis/travis-run.sh"
 
-cache:
-  directories:
-    - $HOME/.m2
+after_success:
+  - "./.travis/travis-deploy.sh"
 
-before_cache:
-  - rm -f $HOME/.m2/repository/fr/inria/spirals
+branches:
+  only:
+  - master

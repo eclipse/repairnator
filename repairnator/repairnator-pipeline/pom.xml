@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>repairnator</artifactId>
-        <groupId>fr.inria.spirals</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>repairnator-root</artifactId>
+        <groupId>fr.inria.repairnator</groupId>
+        <version>2.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,17 +11,22 @@
 
     <repositories>
         <repository>
-            <id>apache-snapshots</id>
-            <name>apache-snapshots</name>
-            <url>https://repository.apache.org/content/groups/snapshots/</url>
+            <id>tdurieux-maven-repository-snapshot</id>
+            <name>tdurieux.github.io maven-repository</name>
+            <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
+        </repository>
+        <repository>
+            <id>tdurieux-maven-repository-release</id>
+            <name>tdurieux.github.io maven-repository</name>
+            <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>fr.inria.spirals</groupId>
+            <groupId>fr.inria.repairnator</groupId>
             <artifactId>repairnator-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -33,7 +36,7 @@
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-invoker</artifactId>
-            <version>2.2</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.surefire</groupId>
@@ -43,7 +46,7 @@
         <dependency>
             <groupId>fr.inria.gforge.spirals</groupId>
             <artifactId>nopol</artifactId>
-            <version>4613b76307ffa6812b699f8740c1bf81e550ffc0</version>
+            <version>57043332ea5b37025924f46eb13944b0283eae8e</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -54,6 +57,17 @@
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
             <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.stamp-project</groupId>
+            <artifactId>assert-fixer</artifactId>
+            <version>1.0.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -72,7 +86,9 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
                 <configuration>
                     <encoding>${default.encoding}</encoding>
                 </configuration>
@@ -98,6 +114,23 @@
                         <phase>package</phase><!-- append to the packaging phase. -->
                         <goals>
                             <goal>single</goal><!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <expression>project.version</expression>
+                    <output>../docker-images/pipeline-dockerimage/version.ini</output>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>evaluate</goal>
                         </goals>
                     </execution>
                 </executions>

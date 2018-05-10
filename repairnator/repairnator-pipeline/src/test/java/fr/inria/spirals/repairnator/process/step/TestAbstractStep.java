@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import ch.qos.logback.classic.Level;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -26,12 +27,12 @@ public class TestAbstractStep {
     public class AbstractStepNop extends AbstractStep {
 
         public AbstractStepNop(ProjectInspector inspector) {
-            super(inspector);
+            super(inspector, false);
         }
 
         @Override
-        protected void businessExecute() {
-            // do nothing
+        protected StepStatus businessExecute() {
+            return StepStatus.buildSuccess(this);
         }
     }
 
@@ -63,26 +64,6 @@ public class TestAbstractStep {
         step1.setProperties(properties);
 
         assertThat(step3.getProperties(), is(properties));
-    }
-
-    @Test
-    public void testSetStateWillGiveStateToOtherSteps() {
-        ProjectInspector mockInspector = mock(ProjectInspector.class);
-        JobStatus jobStatus = new JobStatus("");
-        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
-
-        AbstractStep step1 = new AbstractStepNop(mockInspector);
-        AbstractStep step2 = new AbstractStepNop(mockInspector);
-        AbstractStep step3 = new AbstractStepNop(mockInspector);
-
-
-
-        PipelineState state = PipelineState.NOTFAILING;
-
-        step1.setNextStep(step2).setNextStep(step3);
-        step1.setPipelineState(state);
-
-        assertThat(step3.getPipelineState(), is(state));
     }
 
     @Test
@@ -118,7 +99,7 @@ public class TestAbstractStep {
 
         // return this path but set the flag to stop
         assertThat(step1.getPom(), is(expectedPomPath));
-        assertThat(step1.shouldStop, is(true));
+        assertThat(step1.isShouldStop(), is(true));
     }
 
     @Test

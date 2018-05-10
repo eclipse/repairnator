@@ -1,8 +1,12 @@
 package fr.inria.spirals.repairnator.config;
 
+import fr.inria.spirals.repairnator.Utils;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.kohsuke.github.GHRateLimit;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +15,8 @@ import java.nio.file.Path;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -31,7 +37,7 @@ public class TestRepairnatorConfig {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.readFromFile();
 
-        assertThat(config.getJsonOutputPath(), is("/tmp"));
+        assertThat(config.getOutputPath(), is("/tmp"));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(false));
         assertThat(config.isSerializeJson(), is(true));
@@ -54,7 +60,7 @@ public class TestRepairnatorConfig {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.readFromFile();
 
-        assertThat(config.getJsonOutputPath(), is(""));
+        assertThat(config.getOutputPath(), is(""));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(true));
         assertThat(config.isSerializeJson(), is(false));
@@ -63,5 +69,21 @@ public class TestRepairnatorConfig {
         assertThat(config.getZ3solverPath(), is("/tmp/z3/z3_for_linux"));
 
         System.setProperty("user.dir", CURRENT_USERDIR);
+    }
+
+    @Test
+    public void testGithubOauth() throws IOException {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setGithubToken(System.getenv(Utils.GITHUB_OAUTH));
+        GitHub gitHub = config.getGithub();
+        GHRateLimit ghRateLimit = gitHub.rateLimit();
+
+        assertEquals("OAuth is not working", 5000, ghRateLimit.limit);
+    }
+
+    @Test
+    public void testToString() {
+        String s = RepairnatorConfig.getInstance().toString();
+        assertNotNull(s);
     }
 }

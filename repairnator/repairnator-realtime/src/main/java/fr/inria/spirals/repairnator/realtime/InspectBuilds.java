@@ -1,7 +1,8 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.entities.BuildStatus;
+import fr.inria.jtravis.entities.StateType;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.realtime.serializer.WatchedBuildSerializer;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.slf4j.Logger;
@@ -24,20 +25,17 @@ public class InspectBuilds implements Runnable {
     private int sleepTime;
     private int maxSubmittedBuilds;
     private WatchedBuildSerializer watchedBuildSerializer;
+    private boolean shouldStop;
 
     public InspectBuilds(RTScanner rtScanner) {
         this.rtScanner = rtScanner;
-        this.sleepTime = -1;
-        this.maxSubmittedBuilds = -1;
+        this.sleepTime = RepairnatorConfig.getInstance().getBuildSleepTime();
+        this.maxSubmittedBuilds = RepairnatorConfig.getInstance().getMaxInspectedBuilds();
         this.watchedBuildSerializer = new WatchedBuildSerializer(this.rtScanner.getEngines(), this.rtScanner);
     }
 
-    public void setSleepTime(int sleepTime) {
-        this.sleepTime = sleepTime;
-    }
-
-    public void setMaxSubmittedBuilds(int maxSubmittedBuilds) {
-        this.maxSubmittedBuilds = maxSubmittedBuilds;
+    public void switchOff() {
+        this.shouldStop = true;
     }
 
     public boolean maxSubmittedBuildsReached() {
@@ -68,24 +66,28 @@ public class InspectBuilds implements Runnable {
         if (this.sleepTime == -1) {
             throw new RuntimeException("You must set sleepTime before running this.");
         }
-        while (true) {
+        while (!this.shouldStop) {
             LOGGER.info("Refresh all inspected build status (nb builds: "+this.nbSubmittedBuilds+")");
             for (Build build : this.waitingBuilds) {
-                build.refreshStatus();
-                if (build.getFinishedAt() != null) {
-                    LOGGER.debug("Build finished (id:"+build.getId()+" | Status: "+build.getBuildStatus()+")");
-                    if (build.getBuildStatus() == BuildStatus.FAILED) {
-                        this.rtScanner.submitBuildToExecution(build);
-                    }
-                    try {
-                        this.watchedBuildSerializer.serialize(build);
-                    } catch (Throwable e) {
-                        LOGGER.error("Error while serializing", e);
-                    }
+                boolean refreshStatus = RepairnatorConfig.getInstance().getJTravis().refresh(build);
+                if (!refreshStatus) {
+                    LOGGER.error("Error while refreshing build: "+build.getId());
+                } else {
+                    if (build.getFinishedAt() != null) {
+                        LOGGER.debug("Build finished (id:"+build.getId()+" | Status: "+build.getState()+")");
+                        if (build.getState() == StateType.FAILED) {
+                            this.rtScanner.submitBuildToExecution(build);
+                        }
+                        try {
+                            this.watchedBuildSerializer.serialize(build);
+                        } catch (Throwable e) {
+                            LOGGER.error("Error while serializing", e);
+                        }
 
-                    this.waitingBuilds.remove(build);
-                    synchronized (this) {
-                        this.nbSubmittedBuilds--;
+                        this.waitingBuilds.remove(build);
+                        synchronized (this) {
+                            this.nbSubmittedBuilds--;
+                        }
                     }
                 }
             }
@@ -96,5 +98,6 @@ public class InspectBuilds implements Runnable {
                 e.printStackTrace();
             }
         }
+        LOGGER.info("This will now stop.");
     }
 }

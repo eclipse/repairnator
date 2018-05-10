@@ -16,12 +16,16 @@ import java.util.List;
  * Created by urli on 02/02/2017.
  */
 public class Utils {
-    public static final String[] ENVIRONMENT_VARIABLES = new String[] { "M2_HOME", "GITHUB_OAUTH", "GITHUB_LOGIN" };
+
+    public static final String GITHUB_OAUTH = "GITHUB_OAUTH";
+    public static final String M2_HOME = "M2_HOME";
+
     private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
     private static final String TRAVIS_URL = "http://travis-ci.org/";
     private static final String GITHUB_URL = "https://github.com/";
+    public static final char COMMA = ',';
 
     public static String formatCompleteDate(Date date) {
         return tsvCompleteDateFormat.format(date);
@@ -57,14 +61,8 @@ public class Utils {
     }
 
     public static void setLoggersLevel(Level level) {
-        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria.spirals.jtravis.helpers");
-        jtravis.setLevel(level);
-
-        Logger nopol = (Logger) LoggerFactory.getLogger("fr.inria.lille.repair.nopol");
-        nopol.setLevel(level);
-
-        Logger repairnator = (Logger) LoggerFactory.getLogger("fr.inria.spirals.repairnator");
-        repairnator.setLevel(level);
+        Logger allinria = (Logger) LoggerFactory.getLogger("fr.inria");
+        allinria.setLevel(level);
 
         Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
         jgit.setLevel(Level.WARN);

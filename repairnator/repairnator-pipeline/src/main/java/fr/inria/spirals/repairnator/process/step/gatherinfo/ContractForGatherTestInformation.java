@@ -1,10 +1,11 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+
 /**
  * Created by fermadeiral.
  */
 public interface ContractForGatherTestInformation {
 
-    boolean shouldBeStopped(GatherTestInformation gatherTestInformation);
-
+    StepStatus shouldBeStopped(GatherTestInformation gatherTestInformation);
 }

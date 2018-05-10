@@ -4,23 +4,18 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.GoogleSpreadsheetSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.gspreadsheet.GoogleSpreadSheetFactory;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,24 +60,16 @@ public class LauncherUtils {
         return arguments.getBoolean("notifyEndProcess");
     }
 
-    public static FlaggedOption defineArgLauncherMode(String helpMessage) {
-        String launcherModeValues = "";
-        for (LauncherMode mode : LauncherMode.values()) {
-            launcherModeValues += mode.name() + ";";
-        }
-        launcherModeValues = launcherModeValues.substring(0, launcherModeValues.length() - 1);
-
-        FlaggedOption opt = new FlaggedOption("launcherMode");
-        opt.setShortFlag('m');
-        opt.setLongFlag("launcherMode");
-        opt.setStringParser(EnumeratedStringParser.getParser(launcherModeValues));
-        opt.setRequired(true);
-        opt.setHelp(helpMessage);
-        return opt;
+    public static Switch defineArgBearsMode() {
+        Switch sw = new Switch("bears");
+        sw.setLongFlag("bears");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator to analyze pairs of bugs and human-produced patches.");
+        return sw;
     }
 
-    public static LauncherMode getArgLauncherMode(JSAPResult arguments) {
-        return LauncherMode.valueOf(arguments.getString("launcherMode").toUpperCase());
+    public static boolean gerArgBearsMode(JSAPResult arguments) {
+        return arguments.getBoolean("bears");
     }
 
     public static FlaggedOption defineArgRunId() {
@@ -160,43 +147,6 @@ public class LauncherUtils {
 
     public static String getArgMongoDBName(JSAPResult arguments) {
         return arguments.getString("mongoDBName");
-    }
-
-    public static FlaggedOption defineArgSpreadsheetId() {
-        FlaggedOption opt = new FlaggedOption("spreadsheet");
-        opt.setLongFlag("spreadsheet");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify Google Spreadsheet ID to put data.");
-        return opt;
-    }
-
-    public static String getArgSpreadsheetId(JSAPResult arguments) {
-        return arguments.getString("spreadsheet");
-    }
-
-    public static FlaggedOption defineArgGoogleSecretPath() {
-        FlaggedOption opt = new FlaggedOption("googleSecretPath");
-        opt.setLongFlag("googleSecretPath");
-        opt.setStringParser(FileStringParser.getParser().setMustBeFile(true));
-        opt.setDefault("./client_secret.json");
-        opt.setHelp("Specify the path to the JSON google secret for serializing.");
-        return opt;
-    }
-
-    public static File getArgGoogleSecretPath(JSAPResult arguments) {
-        return arguments.getFile("googleSecretPath");
-    }
-
-    public static FlaggedOption defineArgGoogleAccessToken() {
-        FlaggedOption opt = new FlaggedOption("googleAccessToken");
-        opt.setLongFlag("googleAccessToken");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify the google access token to use for serializers.");
-        return opt;
-    }
-
-    public static String getArgGoogleAccessToken(JSAPResult arguments) {
-        return arguments.getString("googleAccessToken");
     }
 
     public static FlaggedOption defineArgSmtpServer() {
@@ -330,17 +280,13 @@ public class LauncherUtils {
             printUsage(jsap, launcherType);
         }
 
-        if (launcherType == LauncherType.SCANNER) {
-            if (!(LauncherUtils.getArgLauncherMode(arguments) == LauncherMode.BEARS) && arguments.getBoolean("skip-failing")) {
-                printUsage(jsap, launcherType);
-            }
-        }
+        checkEnvironmentVariable(Utils.GITHUB_OAUTH, jsap, launcherType);
     }
 
-    public static void checkEnvironmentVariables(JSAP jsap, LauncherType launcherType) {
-        for (String envVar : Utils.ENVIRONMENT_VARIABLES) {
-            if (System.getenv(envVar) == null || System.getenv(envVar).equals("")) {
-                System.err.println("You must set the following environment variable: "+envVar);
+    public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
+        if (launcherType != LauncherType.PIPELINE) {
+            if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
+                System.err.println("You must set the following environment variable: "+envVariable);
                 LauncherUtils.printUsage(jsap, launcherType);
             }
         }
@@ -354,33 +300,34 @@ public class LauncherUtils {
         System.err.println();
         System.err.println(jsap.getHelp());
 
-        if (launcherType == LauncherType.DOCKERPOOL || launcherType == LauncherType.REALTIME) {
-            System.err.println("Please note that the following environment variables must be set: ");
-            for (String env : Utils.ENVIRONMENT_VARIABLES) {
-                System.err.println(" - " + env);
-            }
+        System.err.println("Please note that the " + Utils.GITHUB_OAUTH + " environment variables must be set.");
+
+        if (launcherType == LauncherType.PIPELINE) {
+            System.err.println("The environment variable " + Utils.M2_HOME + " should be set and refer to the path of your maven home installation.");
             System.err.println("For using Nopol, you must add tools.jar in your classpath from your installed jdk");
         }
 
         System.exit(-1);
     }
 
-    public static List<NotifierEngine> initNotifierEngines(JSAPResult arguments, Logger logger) {
+    public static List<NotifierEngine> initNotifierEngines(Logger logger) {
         List<NotifierEngine> notifierEngines = new ArrayList<>();
-        if (LauncherUtils.getArgSmtpServer(arguments) != null && LauncherUtils.getArgNotifyto(arguments) != null) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getSmtpServer() != null && config.getNotifyTo() != null) {
             logger.info("The email notifier engine will be used.");
 
-            notifierEngines.add(new EmailNotifierEngine(LauncherUtils.getArgNotifyto(arguments), LauncherUtils.getArgSmtpServer(arguments)));
+            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer()));
         } else {
             logger.info("The email notifier engine won't be used.");
         }
         return notifierEngines;
     }
 
-    public static SerializerEngine initMongoDBSerializerEngine(JSAPResult arguments, Logger logger) {
-        if (LauncherUtils.getArgMongoDBHost(arguments) != null) {
+    public static SerializerEngine initMongoDBSerializerEngine(Logger logger) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getMongodbHost() != null) {
             logger.info("Initialize mongoDB serializer engine.");
-            MongoConnection mongoConnection = new MongoConnection(LauncherUtils.getArgMongoDBHost(arguments), LauncherUtils.getArgMongoDBName(arguments));
+            MongoConnection mongoConnection = new MongoConnection(config.getMongodbHost(), config.getMongodbName());
             if (mongoConnection.isConnected()) {
                 return new MongoDBSerializerEngine(mongoConnection);
             } else {
@@ -392,48 +339,14 @@ public class LauncherUtils {
         return null;
     }
 
-    public static SerializerEngine initSpreadsheetSerializerEngineWithFileSecret(JSAPResult arguments, Logger logger) {
-        if (LauncherUtils.getArgSpreadsheetId(arguments) != null && LauncherUtils.getArgGoogleSecretPath(arguments).exists()) {
-            logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
-            try {
-                GoogleSpreadSheetFactory.initWithFileSecret(LauncherUtils.getArgGoogleSecretPath(arguments).getPath());
-                return new GoogleSpreadsheetSerializerEngine();
-            } catch (IOException | GeneralSecurityException e) {
-                logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
-            }
-        } else {
-            logger.info("Google Spreadsheet won't be used for serialization.");
-        }
-        return null;
-    }
-
-    public static SerializerEngine initSpreadsheetSerializerEngineWithAccessToken(JSAPResult arguments, Logger logger) {
-        if (LauncherUtils.getArgSpreadsheetId(arguments) != null && LauncherUtils.getArgGoogleAccessToken(arguments) != null) {
-            logger.info("Initialize Google spreadsheet serializer engine.");
-            GoogleSpreadSheetFactory.setSpreadsheetId(LauncherUtils.getArgSpreadsheetId(arguments));
-            try {
-                if (GoogleSpreadSheetFactory.initWithAccessToken(LauncherUtils.getArgGoogleAccessToken(arguments))) {
-                    return new GoogleSpreadsheetSerializerEngine();
-                } else {
-                    logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.");
-                }
-            } catch (IOException | GeneralSecurityException e) {
-                logger.error("Error while initializing Google Spreadsheet, no information will be serialized in spreadsheets.", e);
-            }
-        } else {
-            logger.info("Google Spreadsheet won't be used for serialization.");
-        }
-        return null;
-    }
-
-    public static List<SerializerEngine> initFileSerializerEngines(JSAPResult arguments, Logger logger) {
+    public static List<SerializerEngine> initFileSerializerEngines(Logger logger) {
         List<SerializerEngine> fileSerializerEngines = new ArrayList<>();
-        if (LauncherUtils.getArgOutput(arguments) != null) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if (config.getOutputPath() != null) {
             logger.info("Initialize file serializer engines.");
 
-            String path = LauncherUtils.getArgOutput(arguments).getPath();
-            path += arguments.contains("build") ? "/"+arguments.getInt("build") : "";
+            String path = config.getOutputPath();
+            path += config.getBuildId() > 0 ? "/"+config.getBuildId() : "";
 
             fileSerializerEngines.add(new CSVSerializerEngine(path));
             fileSerializerEngines.add(new JSONFileSerializerEngine(path));

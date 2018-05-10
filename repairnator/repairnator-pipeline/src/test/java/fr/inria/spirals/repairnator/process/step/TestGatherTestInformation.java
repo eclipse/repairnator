@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -26,12 +28,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -56,7 +61,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenFailing() throws IOException {
         int buildId = 207890790; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -81,15 +88,25 @@ public class TestGatherTestInformation {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
+        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+                .setNextStep(new TestProject(inspector))
+                .setNextStep(gatherTestInformation);
         cloneStep.execute();
 
-        assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.HASTESTFAILURE));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.HASTESTFAILURE));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String serializedStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(serializedStatus, is("test failure"));
 
         assertThat(jobStatus.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(98));
@@ -109,14 +126,15 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationOnlyOneErroring() throws IOException {
         int buildId = 208897371; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
-        System.out.println("Dirpath : "+tmpDirPath);
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
@@ -134,15 +152,23 @@ public class TestGatherTestInformation {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
+        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
-        assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.HASTESTERRORS));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.HASTESTERRORS));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String serializedStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(serializedStatus, is("test failure"));
 
         assertThat(jobStatus.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(8));
@@ -160,7 +186,7 @@ public class TestGatherTestInformation {
         FailureLocation expectedFailureLocation = new FailureLocation("nopol_examples.nopol_example_1.NopolExampleTest");
         FailureType failureType = new FailureType("java.lang.StringIndexOutOfBoundsException", "String index out of range: -5", true);
         expectedFailureLocation.addFailure(failureType);
-        expectedFailureLocation.addErroringMethod("nopol_examples.nopol_example_1.NopolExampleTest#test5");
+        expectedFailureLocation.addErroringMethod("test5");
 
         FailureLocation actualLocation = jobStatus.getFailureLocations().iterator().next();
 
@@ -171,7 +197,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenErroring() throws IOException {
         int buildId = 208240908; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -197,15 +225,23 @@ public class TestGatherTestInformation {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
+        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
-        assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.HASTESTERRORS));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.HASTESTERRORS));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String serializedStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(serializedStatus, is("test failure"));
 
         assertThat(jobStatus.getFailingModulePath(), is(repoDir.getCanonicalPath()));
         assertThat(gatherTestInformation.getNbTotalTests(), is(26));
@@ -215,7 +251,7 @@ public class TestGatherTestInformation {
 
         Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
 
-        assertThat(failureNames.contains("java.lang.NullPointerException"), is(true));
+        assertThat("Got the following errors: "+StringUtils.join(failureNames, ","), failureNames.contains("java.lang.NullPointerException"), is(true));
         assertThat(failureNames.size(), is(3));
 
         assertThat(jobStatus.getFailureLocations().size(), is(4));
@@ -225,7 +261,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenNotFailing() throws IOException {
         int buildId = 201176013; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -251,15 +289,28 @@ public class TestGatherTestInformation {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldFail(), false);
+        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
         cloneStep.execute();
 
-        assertThat(gatherTestInformation.shouldStop, is(true));
-        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.NOTFAILING));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTFAILING));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            if (stepStatus.getStep() != gatherTestInformation) {
+                assertThat(stepStatus.isSuccess(), is(true));
+            } else {
+                assertThat(stepStatus.isSuccess(), is(false));
+            }
+
+        }
+
+        String serializedStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(serializedStatus, is(PipelineState.NOTFAILING.name()));
 
         assertThat(jobStatus.getFailingModulePath(), is(tmpDir.getAbsolutePath()+"/repo"));
         assertThat(gatherTestInformation.getNbTotalTests(), is(1));
@@ -276,7 +327,9 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenNotFailingWithPassingContract() throws IOException {
         int buildId = 201176013; // surli/failingProject build
 
-        Build build = BuildHelper.getBuildFromId(buildId, null);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+        Build build = optionalBuild.get();
         assertThat(build, notNullValue());
         assertThat(buildId, is(build.getId()));
 
@@ -299,15 +352,22 @@ public class TestGatherTestInformation {
         when(inspector.getJobStatus()).thenReturn(jobStatus);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, new BuildShouldPass(), false);
+        GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldPass(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+                .setNextStep(new TestProject(inspector))
+                .setNextStep(gatherTestInformation);
         cloneStep.execute();
 
-        assertThat(gatherTestInformation.shouldStop, is(false));
-        assertThat(gatherTestInformation.getPipelineState(), is(PipelineState.NOTFAILING));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.NOTFAILING));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
 
         assertThat(jobStatus.getFailingModulePath(), is(tmpDir.getAbsolutePath()+"/repo"));
         assertThat(gatherTestInformation.getNbTotalTests(), is(1));

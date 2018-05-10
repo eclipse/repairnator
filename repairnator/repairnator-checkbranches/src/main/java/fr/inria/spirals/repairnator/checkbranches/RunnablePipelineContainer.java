@@ -23,21 +23,13 @@ public class RunnablePipelineContainer implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RunnablePipelineContainer.class);
     private String imageId;
     private String branchName;
-    private String output;
     private RepairnatorConfig repairnatorConfig;
-    private boolean skipDelete;
-    private String repository;
-    private boolean humanPatch;
 
 
-    public RunnablePipelineContainer(String imageId, String repository, String branchName, String output, boolean skipDelete, boolean humanPatch) {
+    public RunnablePipelineContainer(String imageId, String branchName) {
         this.imageId = imageId;
         this.branchName = branchName;
-        this.output = output;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
-        this.skipDelete = skipDelete;
-        this.repository = repository;
-        this.humanPatch = humanPatch;
     }
 
     @Override
@@ -51,19 +43,19 @@ public class RunnablePipelineContainer implements Runnable {
 
             String humanPatchStr = "";
 
-            if (humanPatch) {
+            if (this.repairnatorConfig.isHumanPatch()) {
                 humanPatchStr = "--human-patch";
             }
 
             String[] envValues = new String[] {
                 "BRANCH_NAME="+this.branchName,
-                "REPOSITORY="+this.repository,
+                "REPOSITORY="+this.repairnatorConfig.getRepository(),
                 "HUMAN_PATCH="+humanPatchStr
             };
 
             Map<String,String> labels = new HashMap<>();
             labels.put("name",containerName);
-            HostConfig hostConfig = HostConfig.builder().appendBinds(this.output+":/tmp/result.txt").build();
+            HostConfig hostConfig = HostConfig.builder().appendBinds(this.repairnatorConfig.getOutputPath()+":/tmp/result.txt").build();
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
                     .env(envValues)
@@ -84,7 +76,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
-            if (!skipDelete && exitStatus.statusCode() == 0) {
+            if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(containerId);
             }

@@ -1,12 +1,14 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildTool;
 import fr.inria.jtravis.entities.Job;
 import fr.inria.jtravis.entities.Log;
 import fr.inria.jtravis.entities.Repository;
-import fr.inria.jtravis.helpers.BuildHelper;
-import fr.inria.jtravis.helpers.RepositoryHelper;
+import fr.inria.jtravis.entities.StateType;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
@@ -21,11 +23,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class RTScanner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
+
+    private RepairnatorConfig config;
     private final List<Integer> blackListedRepository;
     private final List<Integer> whiteListedRepository;
     private final Map<Integer,Date> tempBlackList;
@@ -38,8 +43,10 @@ public class RTScanner {
     private String runId;
     private List<SerializerEngine> engines;
     private BlacklistedSerializer blacklistedSerializer;
+    private EndProcessNotifier endProcessNotifier;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
+        this.config = RepairnatorConfig.getInstance();
         this.engines = engines;
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
@@ -49,6 +56,10 @@ public class RTScanner {
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+    }
+
+    public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
+        this.endProcessNotifier = endProcessNotifier;
     }
 
     public List<SerializerEngine> getEngines() {
@@ -108,9 +119,21 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
+            this.buildRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             this.running = true;
+
+            if (this.config.getDuration() != null) {
+                InspectProcessDuration inspectProcessDuration;
+                if (this.endProcessNotifier != null) {
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
+                } else {
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner);
+                }
+
+                new Thread(inspectProcessDuration).start();
+            }
         }
     }
 
@@ -118,24 +141,36 @@ public class RTScanner {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
         this.blacklistedSerializer.serialize(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
-        try {
-            this.blacklistWriter.append(repository.getId()+"");
-            this.blacklistWriter.append("\n");
-            this.blacklistWriter.flush();
-        } catch (IOException e) {
-            LOGGER.error("Error while writing entry in blacklist");
+
+        if (this.blacklistWriter != null) {
+            try {
+                this.blacklistWriter.append(repository.getId()+"");
+                this.blacklistWriter.append("\n");
+                this.blacklistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in blacklist");
+            }
+        } else {
+            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
         }
+
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-        try {
-            this.whitelistWriter.append(repository.getId()+"");
-            this.whitelistWriter.append("\n");
-            this.whitelistWriter.flush();
-        } catch (IOException e) {
-            LOGGER.error("Error while writing entry in whitelist");
+
+        if (this.whitelistWriter != null) {
+            try {
+                this.whitelistWriter.append(repository.getId()+"");
+                this.whitelistWriter.append("\n");
+                this.whitelistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in whitelist");
+            }
+        } else {
+            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
         }
+
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
@@ -163,36 +198,51 @@ public class RTScanner {
             }
         }
 
-        Repository repository = RepositoryHelper.getRepositoryFromId(repositoryId);
-        if (repository != null) {
-            Build masterBuild = BuildHelper.getLastSuccessfulBuildFromMaster(repository, false, 5);
+        JTravis jTravis = this.config.getJTravis();
+        Optional<Repository> repositoryOptional = jTravis.repository().fromId(repositoryId);
+        if (repositoryOptional.isPresent()) {
+            Repository repository = repositoryOptional.get();
 
-            if (masterBuild == null) {
+            Optional<Build> optionalBuild = jTravis.build().lastBuildFromMasterWithState(repository, StateType.PASSED);
+            if (!optionalBuild.isPresent()) {
                 this.addInTempBlackList(repository, "No successful build found.");
                 return false;
             } else {
-                if (masterBuild.getConfig().getLanguage() == null || !masterBuild.getConfig().getLanguage().equals("java")) {
-                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getConfig().getLanguage());
+                Build masterBuild = optionalBuild.get();
+                if (masterBuild.getLanguage() == null || !masterBuild.getLanguage().equals("java")) {
+                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getLanguage());
                     return false;
                 }
 
-                if (masterBuild.getBuildTool() == BuildTool.GRADLE) {
+                Optional<BuildTool> optionalBuildTool = masterBuild.getBuildTool();
+                if (!optionalBuildTool.isPresent()) {
+                    this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
+                    return false;
+                }
+
+                BuildTool buildTool = optionalBuildTool.get();
+                if (buildTool == BuildTool.GRADLE) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
                     return false;
-                } else if (masterBuild.getBuildTool() == BuildTool.UNKNOWN) {
+                } else if (buildTool == BuildTool.UNKNOWN) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
                     return false;
                 }
 
                 if (!masterBuild.getJobs().isEmpty()) {
                     Job firstJob = masterBuild.getJobs().get(0);
-                    Log jobLog = firstJob.getLog();
-                    if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
-                        LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-                        this.addInWhitelistRepository(repository);
-                        return true;
+                    Optional<Log> optionalLog = firstJob.getLog();
+                    if (optionalLog.isPresent()) {
+                        Log jobLog = optionalLog.get();
+                        if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
+                            LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
+                            this.addInWhitelistRepository(repository);
+                            return true;
+                        } else {
+                            this.addInTempBlackList(repository, "No test found");
+                        }
                     } else {
-                        this.addInTempBlackList(repository, "No test found");
+                        LOGGER.error("Error while getting log for job "+firstJob.getId());
                     }
                 } else {
                     LOGGER.info("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
@@ -213,10 +263,13 @@ public class RTScanner {
         List<Job> jobs = build.getJobs();
         if (jobs != null) {
             for (Job job : jobs) {
-                Log jobLog = job.getLog();
-                if (jobLog != null && jobLog.getTestsInformation() != null && (jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0)) {
-                    failing = true;
-                    break;
+                Optional<Log> optionalLog = job.getLog();
+                if (optionalLog.isPresent()) {
+                    Log jobLog = optionalLog.get();
+                    if (jobLog.getTestsInformation() != null && (jobLog.getTestsInformation().getErrored() >= 0 || jobLog.getTestsInformation().getFailing() >= 0)) {
+                        failing = true;
+                        break;
+                    }
                 }
             }
         }
@@ -230,9 +283,9 @@ public class RTScanner {
     }
 
     public void submitWaitingBuild(int buildId) {
-        Build build = BuildHelper.getBuildFromId(buildId, null);
-        if (build != null) {
-            this.inspectBuilds.submitNewBuild(build);
+        Optional<Build> optionalBuild = this.config.getJTravis().build().fromId(buildId);
+        if (optionalBuild.isPresent()) {
+            this.inspectBuilds.submitNewBuild(optionalBuild.get());
         }
     }
 }

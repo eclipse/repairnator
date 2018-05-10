@@ -30,3 +30,4 @@ repairnator/repairconfig.ini
 dockerImage/.credentials
 dockerImage/client_secret.json
 dockerImage/repairnator-pipeline.jar
+repairnator/docker-images/pipeline-dockerimage/version.ini
