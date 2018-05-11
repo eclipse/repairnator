@@ -281,7 +281,7 @@ public class Launcher {
             for (ScannedBuildStatus status : ScannedBuildStatus.values()) {
                 if (!listOfBuilds.get(status).isEmpty()) {
                     if (this.config.isBearsDelimiter()) {
-                        String statusPath = filePath + "_" + status.name() + "." + extension;
+                        String statusPath = filePath + "_" + status.name() + extension;
                         writer = new BufferedWriter(new FileWriter(statusPath));
                     }
                     for (BuildToBeInspected buildToBeInspected : listOfBuilds.get(status)) {
