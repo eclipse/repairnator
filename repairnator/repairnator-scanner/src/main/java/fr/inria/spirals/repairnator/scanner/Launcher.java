@@ -276,11 +276,13 @@ public class Launcher {
         try {
             BufferedWriter writer = null;
 
-            writer = new BufferedWriter(new FileWriter(outputPath));
+            if (this.config.getLauncherMode() != LauncherMode.BEARS || !this.config.isBearsDelimiter()) {
+                writer = new BufferedWriter(new FileWriter(outputPath));
+            }
 
             for (ScannedBuildStatus status : ScannedBuildStatus.values()) {
                 if (!listOfBuilds.get(status).isEmpty()) {
-                    if (this.config.isBearsDelimiter()) {
+                    if (this.config.getLauncherMode() == LauncherMode.BEARS && this.config.isBearsDelimiter()) {
                         String statusPath = filePath + "_" + status.name() + extension;
                         writer = new BufferedWriter(new FileWriter(statusPath));
                     }
