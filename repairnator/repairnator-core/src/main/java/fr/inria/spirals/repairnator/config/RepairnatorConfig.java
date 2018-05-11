@@ -414,13 +414,21 @@ public class RepairnatorConfig {
         if (ghToken != null && !ghToken.isEmpty()) {
             ghToken = (ghToken.length() > 10) ? ghToken.substring(0,10)+"[...]" : ghToken;
         }
+        String mongoDbInfo = this.getMongodbHost();
+        if (mongoDbInfo != null && !mongoDbInfo.isEmpty()) {
+            int indexOfArobase = mongoDbInfo.indexOf('@');
+            if (indexOfArobase != -1) {
+                mongoDbInfo = "mongodb://[hidden]" + mongoDbInfo.substring(indexOfArobase);
+            }
+        }
+
         return "RepairnatorConfig{" +
                 "runId='" + runId + '\'' +
                 ", launcherMode=" + launcherMode +
                 ", serializeJson=" + serializeJson +
                 ", inputPath='" + inputPath + '\'' +
                 ", outputPath='" + outputPath + '\'' +
-                ", mongodbHost='" + mongodbHost + '\'' +
+                ", mongodbHost='" + mongoDbInfo + '\'' +
                 ", mongodbName='" + mongodbName + '\'' +
                 ", smtpServer='" + smtpServer + '\'' +
                 ", notifyTo=" + Arrays.toString(notifyTo) +
