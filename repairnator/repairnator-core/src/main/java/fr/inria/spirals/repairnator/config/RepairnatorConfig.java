@@ -37,6 +37,7 @@ public class RepairnatorConfig {
     private Date lookFromDate;
     private Date lookToDate;
     private BearsMode bearsMode = BearsMode.BOTH;
+    private boolean bearsDelimiter;
 
     // Pipeline
     private int buildId;
@@ -408,6 +409,14 @@ public class RepairnatorConfig {
         this.repairTools = repairTools;
     }
 
+    public boolean isBearsDelimiter() {
+        return bearsDelimiter;
+    }
+
+    public void setBearsDelimiter(boolean bearsDelimiter) {
+        this.bearsDelimiter = bearsDelimiter;
+    }
+
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
@@ -450,6 +459,7 @@ public class RepairnatorConfig {
                 ", repository='" + repository + '\'' +
                 ", clean=" + clean +
                 ", bearsMode=" + bearsMode.name() +
+                ", bearsDelimiter = " + bearsDelimiter +
                 ", repairTools=" + StringUtils.join(this.repairTools, ",") +
                 '}';
     }

@@ -7,19 +7,21 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fernanda on 13/03/17.
  */
 public class ScannerDetailedDataSerializer extends ProcessSerializer {
 
-    private List<BuildToBeInspected> buildsToBeInspected;
+    private Map<ScannedBuildStatus, List<BuildToBeInspected>> buildsToBeInspected;
 
-    public ScannerDetailedDataSerializer(List<SerializerEngine> engines, List<BuildToBeInspected> buildsToBeInspected) {
+    public ScannerDetailedDataSerializer(List<SerializerEngine> engines, Map<ScannedBuildStatus, List<BuildToBeInspected>> buildsToBeInspected) {
         super(engines, SerializerType.DETAILEDDATA);
         this.buildsToBeInspected = buildsToBeInspected;
     }
@@ -85,8 +87,10 @@ public class ScannerDetailedDataSerializer extends ProcessSerializer {
         if (!this.buildsToBeInspected.isEmpty()) {
             List<SerializedData> allData = new ArrayList<>();
 
-            for (BuildToBeInspected buildToBeInspected : this.buildsToBeInspected) {
-                allData.add(new SerializedData(this.serializeAsList(buildToBeInspected), this.serializeAsJson(buildToBeInspected)));
+            for (ScannedBuildStatus status : ScannedBuildStatus.values()) {
+                for (BuildToBeInspected buildToBeInspected : this.buildsToBeInspected.get(status)) {
+                    allData.add(new SerializedData(this.serializeAsList(buildToBeInspected), this.serializeAsJson(buildToBeInspected)));
+                }
             }
 
             for (SerializerEngine engine : this.getEngines()) {
