@@ -151,7 +151,7 @@ public class ProjectScanner {
      * @return a list of failing builds
      * @throws IOException
      */
-    public List<BuildToBeInspected> getListOfBuildsToBeInspectedFromProjects(String path) throws IOException {
+    public Map<ScannedBuildStatus, List<BuildToBeInspected>> getListOfBuildsToBeInspectedFromProjects(String path) throws IOException {
         this.scannerRunningBeginDate = new Date();
 
         List<String> slugs = getFileContent(path);
@@ -159,7 +159,7 @@ public class ProjectScanner {
         this.logger.info("# Repositories found: "+this.totalRepoNumber);
 
         List<Repository> repos = getListOfValidRepository(slugs);
-        List<BuildToBeInspected> builds = getListOfBuildsFromRepo(repos);
+        Map<ScannedBuildStatus, List<BuildToBeInspected>> builds = getListOfBuildsFromRepo(repos);
 
         this.scannerRunningEndDate = new Date();
 
@@ -194,8 +194,11 @@ public class ProjectScanner {
         return result;
     }
 
-    private List<BuildToBeInspected> getListOfBuildsFromRepo(List<Repository> repos) {
-        List<BuildToBeInspected> buildsToBeInspected = new ArrayList<BuildToBeInspected>();
+    private Map<ScannedBuildStatus, List<BuildToBeInspected>> getListOfBuildsFromRepo(List<Repository> repos) {
+        Map<ScannedBuildStatus, List<BuildToBeInspected>> results = new HashMap<>();
+        for (ScannedBuildStatus status : ScannedBuildStatus.values()) {
+            results.put(status, new ArrayList<>());
+        }
 
         this.logger.debug("---------------------------------------------------------------");
         this.logger.debug("Scanning builds.");
@@ -208,13 +211,13 @@ public class ProjectScanner {
                     this.totalScannedBuilds++;
                     BuildToBeInspected buildToBeInspected = getBuildToBeInspected(build);
                     if (buildToBeInspected != null) {
-                        buildsToBeInspected.add(buildToBeInspected);
+                        results.get(buildToBeInspected.getStatus()).add(buildToBeInspected);
                     }
                 }
             }
         }
 
-        return buildsToBeInspected;
+        return results;
     }
 
     public BuildToBeInspected getBuildToBeInspected(Build build) {

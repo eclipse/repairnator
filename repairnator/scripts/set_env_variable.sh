@@ -82,7 +82,8 @@ export M2_HOME=$MAVEN_HOME # Path to the maven home: this value is only used whe
 ### Switches
 
 export BEARS_MODE=0 # Set 1 to use the bears mode
-export BEARS_FIXER_MODE=both # Possible values are both, failing_passing or passing_passing
+export BEARS_FIXER_MODE=both # Possible values are both, failing_passing, passing_passing or both
+export BEARS_DELIMITER=1 # When set to 1, the scanner writes different files for the different kind of statuses.
 export SKIP_LAUNCH_REPAIRNATOR=0 # If set to 1, skip the launch of docker pool: it will only launch the scanner. Note that this option might be overriden in some scripts.
 export CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers
 
