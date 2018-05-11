@@ -31,4 +31,5 @@ dockerImage/.credentials
 dockerImage/client_secret.json
 dockerImage/repairnator-pipeline.jar
 repairnator/docker-images/pipeline-dockerimage/version.ini
+repairnator/repairnator-pipeline/spooned*
 repairnator/repairnator-pipeline/output_astor
