@@ -50,7 +50,7 @@ public class TestCloneRepositoryStep {
 
     @Test
     public void testCloneMasterBuild() throws IOException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -97,7 +97,7 @@ public class TestCloneRepositoryStep {
 
     @Test
     public void testCloneBuildWithSubmodule() throws IOException {
-        int buildId = 355839305; // surli/failingProject build
+        long buildId = 355839305; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());

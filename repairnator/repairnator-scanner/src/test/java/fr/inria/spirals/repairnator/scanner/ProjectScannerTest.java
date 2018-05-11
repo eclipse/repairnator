@@ -27,7 +27,7 @@ public class ProjectScannerTest {
 
     @Test
     public void testTestBuildWithFailingWithoutFailingTestAndRepairMode() {
-        int buildId = 230022061; // inria/spoon failing from PR without failing tests
+        long buildId = 230022061; // inria/spoon failing from PR without failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.REPAIR);
 
@@ -43,7 +43,7 @@ public class ProjectScannerTest {
 
     @Test
     public void testTestBuildWithFailingTestAndRepairMode() {
-        int buildId = 364156914; // inria/spoon failing from PR with failing tests
+        long buildId = 364156914; // inria/spoon failing from PR with failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.REPAIR);
 
@@ -59,7 +59,7 @@ public class ProjectScannerTest {
 
     @Test
     public void testTestBuildWithFailingAndBearsMode() {
-        int buildId = 230022061; // inria/spoon failing from PR without failing tests
+        long buildId = 230022061; // inria/spoon failing from PR without failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
 
@@ -75,7 +75,7 @@ public class ProjectScannerTest {
 
     @Test
     public void testTestBuildWithPassingAndBearsMode() {
-        int buildId = 230049446; // inria/spoon passing from PR
+        long buildId = 230049446; // inria/spoon passing from PR
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
 
@@ -91,7 +91,7 @@ public class ProjectScannerTest {
 
     @Test
     public void testGetBuildToBeInspectedWithFailingFromPR() {
-        int buildId = 364156914; // inria/spoon failing from PR with failing tests
+        long buildId = 364156914; // inria/spoon failing from PR with failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.REPAIR);
 
@@ -109,8 +109,8 @@ public class ProjectScannerTest {
 
     @Test
     public void testGetBuildToBeInspectedWithPassingWithPreviousFailingFromPR() {
-        int buildIdFailing = 230022061; // inria/spoon
-        int buildIdNextPassing = 230049446;
+        long buildIdFailing = 230022061; // inria/spoon
+        long buildIdNextPassing = 230049446;
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
 
@@ -134,8 +134,8 @@ public class ProjectScannerTest {
 
     @Test
     public void testGetBuildToBeInspectedWithPassingWithPreviousPassingFromPR() {
-        int buildIdPassing = 210093951; // inria/spoon
-        int buildIdNextPassing = 211479830;
+        long buildIdPassing = 210093951; // inria/spoon
+        long buildIdNextPassing = 211479830;
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
 

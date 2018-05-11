@@ -49,7 +49,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDir() throws IOException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -100,7 +100,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDirWithMultiModuleProject() throws IOException {
-        int buildId = 225251586; // Spirals-Team/librepair build
+        long buildId = 225251586; // Spirals-Team/librepair build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -150,7 +150,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDirWithMultiModuleProject2() throws IOException {
-        int buildId = 225251586; // Spirals-Team/librepair build
+        long buildId = 225251586; // Spirals-Team/librepair build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -199,7 +199,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDirWithMultiModuleProject3() throws IOException {
-        int buildId = 225251586; // Spirals-Team/librepair build
+        long buildId = 225251586; // Spirals-Team/librepair build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -248,8 +248,8 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDirWithMultiModuleProject4() throws IOException {
-        int buildId = 216674182; // pac4j/pac4j
-        int patchedBuildId = 218753299;
+        long buildId = 216674182; // pac4j/pac4j
+        long patchedBuildId = 218753299;
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -320,7 +320,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDirWithMultiModuleProject5() throws IOException {
-        int buildId = 218168470; // Spirals-Team/librepair build
+        long buildId = 218168470; // Spirals-Team/librepair build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -369,7 +369,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDirWithReflexiveReferences() throws IOException {
-        int buildId = 345990212;
+        long buildId = 345990212;
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
         Build build = optionalBuild.get();

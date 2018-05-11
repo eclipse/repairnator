@@ -49,7 +49,7 @@ public class TestTestProject {
 
     @Test
     public void testTestProjectWhenFailing() throws IOException {
-        int buildId = 207890790; // surli/failingProject build
+        long buildId = 207890790; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -93,7 +93,7 @@ public class TestTestProject {
 
     @Test
     public void testTestProjectWhenErroring() throws IOException {
-        int buildId = 208240908; // surli/failingProject build
+        long buildId = 208240908; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -137,7 +137,7 @@ public class TestTestProject {
 
     @Test
     public void testTestProjectWhenNotFailing() throws IOException {
-        int buildId = 201176013; // surli/failingProject build
+        long buildId = 201176013; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());

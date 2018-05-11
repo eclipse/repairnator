@@ -54,7 +54,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuggyBuild() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -121,7 +121,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuildFromPRWithMissingMerge() throws IOException, GitAPIException {
-        int buildId = 199527447; // surli/failingProject build
+        long buildId = 199527447; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -171,7 +171,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuildFromPRWithMerge() throws IOException, GitAPIException {
-        int buildId = 199923736; // surli/failingProject build
+        long buildId = 199923736; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -215,7 +215,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuildFromPROtherRepo() throws IOException, GitAPIException {
-        int buildId = 196568333; // surli/failingProject build
+        long buildId = 196568333; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());

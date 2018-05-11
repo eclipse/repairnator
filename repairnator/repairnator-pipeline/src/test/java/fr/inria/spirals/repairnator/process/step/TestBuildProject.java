@@ -51,7 +51,7 @@ public class TestBuildProject {
 
     @Test
     public void testBuildProject() throws IOException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -94,7 +94,7 @@ public class TestBuildProject {
 
     @Test
     public void testBuildProjectWithPomNotInRoot() throws IOException {
-        int buildId = 218036343;
+        long buildId = 218036343;
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
