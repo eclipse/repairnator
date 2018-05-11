@@ -134,10 +134,10 @@ public class Launcher {
         jsap.registerParameter(opt2);
 
         Switch aSwitch = new Switch("bearsDelimiter");
-        opt2.setLongFlag("bearsDelimiter");
-        opt2.setHelp("This option is only useful in case of '--bears' is used and '--bearsMode both' (default) is used: it allows to" +
+        aSwitch.setLongFlag("bearsDelimiter");
+        aSwitch.setHelp("This option is only useful in case of '--bears' is used and '--bearsMode both' (default) is used: it allows to" +
                         " define a delimiter to output the failing passing and then the passing passing in order to consider them separately");
-        jsap.registerParameter(opt2);
+        jsap.registerParameter(aSwitch);
         return jsap;
     }
 
