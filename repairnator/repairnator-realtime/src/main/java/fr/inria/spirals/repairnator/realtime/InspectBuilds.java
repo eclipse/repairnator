@@ -18,7 +18,7 @@ public class InspectBuilds implements Runnable {
     public static final int LIMIT_SUBMITTED_BUILDS = 100;
     private static final int NB_ELEMENT_TRAVIS_JOB = 250; // the number of elements returned by Travis Job endpoint
 
-    private CircularFifoQueue<Integer> observedBuilds = new CircularFifoQueue<>(NB_ELEMENT_TRAVIS_JOB);
+    private CircularFifoQueue<Long> observedBuilds = new CircularFifoQueue<>(NB_ELEMENT_TRAVIS_JOB);
     private Deque<Build> waitingBuilds = new ConcurrentLinkedDeque<>();
     private int nbSubmittedBuilds;
     private RTScanner rtScanner;

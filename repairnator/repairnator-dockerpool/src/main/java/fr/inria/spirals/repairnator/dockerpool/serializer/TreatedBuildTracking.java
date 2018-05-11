@@ -18,11 +18,11 @@ import java.util.List;
 public class TreatedBuildTracking extends ProcessSerializer {
 
     private String runid;
-    private Integer buildId;
+    private Long buildId;
     private String containerId;
     private String status;
 
-    public TreatedBuildTracking(List<SerializerEngine> engines, String runid, Integer buildId) {
+    public TreatedBuildTracking(List<SerializerEngine> engines, String runid, Long buildId) {
         super(engines, SerializerType.TREATEDBUILD);
 
         this.runid = runid;

@@ -60,7 +60,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         Build build = inspector.getPatchedBuild();
 
         Build previousBuild = inspector.getBuggyBuild();
-        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
+        long previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
@@ -116,7 +116,7 @@ public class InspectorTimeSerializer4Bears extends AbstractDataSerializer {
         Build build = inspector.getPatchedBuild();
 
         Build previousBuild = inspector.getBuggyBuild();
-        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
+        long previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
         JsonObject result = new JsonObject();
 
         result.addProperty("buildId", build.getId());
