@@ -42,7 +42,7 @@ public class TestAssertFixerRepair {
 
     @Test
     public void testAssertFixerFixes() throws IOException {
-        int buildId = 365127838; // surli/failingProject build
+        long buildId = 365127838; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());

@@ -55,7 +55,7 @@ public class TestInitRepoToPush {
 
     @Test
     public void testInitRepoToPushSimpleCase() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -107,7 +107,7 @@ public class TestInitRepoToPush {
 
     @Test
     public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
-        int buildId = 331637757;
+        long buildId = 331637757;
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);

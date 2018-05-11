@@ -48,7 +48,7 @@ public class TestComputeTestDir {
 
     @Test
     public void testComputeTestDirWithReflexiveReferences() throws IOException {
-        int buildId = 345990212;
+        long buildId = 345990212;
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
         Build build = optionalBuild.get();

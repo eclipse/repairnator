@@ -83,7 +83,7 @@ public class AbstractPoolManager {
         this.engines = engines;
     }
 
-    public TreatedBuildTracking prepareBeforeSubmitBuild(int buildId) {
+    public TreatedBuildTracking prepareBeforeSubmitBuild(long buildId) {
         this.cleanUpOlderContainers();
         return new TreatedBuildTracking(this.engines, this.runId, buildId);
     }

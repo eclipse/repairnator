@@ -69,7 +69,7 @@ public class TestNopolRepair {
 
     @Test
     public void testNopolRepair() throws IOException {
-        int buildId = 207890790; // surli/failingProject build
+        long buildId = 207890790; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
