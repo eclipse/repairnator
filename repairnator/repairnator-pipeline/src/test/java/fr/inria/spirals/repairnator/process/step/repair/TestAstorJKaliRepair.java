@@ -41,7 +41,7 @@ public class TestAstorJKaliRepair {
 
 	@Test
 	public void testAstorJkali() throws IOException {
-		int buildId = 376820338; // surli/failingProject astor-jkali-failure
+		long buildId = 376820338; // surli/failingProject astor-jkali-failure
 
 		Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
 		assertTrue(optionalBuild.isPresent());
