@@ -85,8 +85,6 @@ public class GitHelper {
             ObjectId commitObject = git.getRepository().resolve(oldCommitSha);
             git.getRepository().open(commitObject);
             return oldCommitSha;
-        } catch (MissingObjectException e) {
-            return retrieveAndApplyCommitFromGithub(git, oldCommitSha, step, build);
         } catch (IOException e) {
             step.addStepError("Error while testing commit: " + e);
         }
@@ -172,129 +170,6 @@ public class GitHelper {
             this.getLogger().error("Error while committing repairnator properties/log files ",e);
             return false;
         }
-    }
-
-    /**
-     * When a commit has been force deleted it still can be retrieved from
-     * GitHub API. This function intend to retrieve a patch from the Github API
-     * and to apply it back on the repo
-     *
-     * @param git
-     * @param oldCommitSha
-     * @return the SHA of the commit created after applying the patch or null if
-     *         an error occured.
-     */
-    private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
-        try {
-            addAndCommitRepairnatorLogAndProperties(step.getInspector().getJobStatus(), git, "Commit done before retrieving a commit from GH API.");
-            GitHub gh = RepairnatorConfig.getInstance().getGithub();
-            GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
-
-            String lastKnowParent = getLastKnowParent(gh, ghRepo, git, oldCommitSha, step);
-
-            // checkout the repo to the last known parent of the deleted commit
-            git.checkout().setName(lastKnowParent).call();
-
-            // get from github a patch between that commit and the targeted
-            // commit
-            // note that this patch could contain changes of multiple commits
-            GHCompare compare = ghRepo.getCompare(lastKnowParent, oldCommitSha);
-
-            showGitHubRateInformation(gh, step);
-
-            URL patchUrl = compare.getPatchUrl();
-
-            this.getLogger().debug("Step " + step.getName() + " - Retrieve commit patch from the following URL: " + patchUrl);
-
-            // retrieve it through a simple HTTP request
-            // some errors occurs when applying patch from snippets contained in
-            // GHCompare object
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(patchUrl).build();
-            Call call = client.newCall(request);
-            Response response = call.execute();
-
-            File tempFile = File.createTempFile(build.getRepository().getSlug(), "patch");
-
-            // apply the patch and commit changes using message and authors of
-            // the referenced commit.
-            if (response.code() == 200) {
-
-                FileWriter writer = new FileWriter(tempFile);
-                writer.write(response.body().string());
-                writer.flush();
-                writer.close();
-
-                this.getLogger().info("Step " + step.getName() + " - Exec following command: git apply " + tempFile.getAbsolutePath());
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", tempFile.getAbsolutePath())
-                        .directory(new File(step.getInspector().getRepoLocalPath())).inheritIO();
-
-                Process p = processBuilder.start();
-                try {
-                    p.waitFor();
-
-                    // Applying patch does not work as the move of file is
-                    // broken in JGit
-                    // It assumes the target directory exists.
-                    // ApplyResult result =
-                    // git.apply().setPatch(response.body().byteStream()).call();
-
-                    Commit buildCommit = build.getCommit();
-
-                    // add all file for the next commit
-                    git.add().addFilepattern(".").call();
-
-                    Optional<GitUser> author = build.getAuthor();
-                    Optional<GitUser> committer = build.getCommitter();
-
-                    String authorEmail, authorName;
-                    String committerEmail, committerName;
-
-                    if (author.isPresent()) {
-                        authorEmail = author.get().getEmail();
-                        authorName = author.get().getName();
-                    } else {
-                        authorEmail = "nobody@github.com";
-                        authorName = "-";
-                    }
-
-                    if (committer.isPresent()) {
-                        committerEmail = committer.get().getEmail();
-                        committerName = committer.get().getName();
-                    } else {
-                        committerEmail = "nobody@github.com";
-                        committerName = "-";
-                    }
-
-                    // do the commit
-                    RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(authorName, authorEmail)
-                            .setCommitter(committerName, committerEmail)
-                            .setMessage(buildCommit.getMessage()
-                                    + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
-                            .call();
-
-                    this.nbCommits++;
-
-                    tempFile.delete();
-
-                    step.getInspector().getJobStatus().setCommitRetrievedFromGithub(true);
-                    return ref.getName();
-                } catch (InterruptedException e) {
-                    step.addStepError("Error while executing git command to apply patch: " + e);
-                }
-
-            }
-        } catch (IOException e) {
-            step.addStepError("Error while getting commit from Github: " + e);
-        } catch (PatchFormatException e) {
-            step.addStepError("Error while getting patch from Github: " + e);
-        } catch (PatchApplyException e) {
-            step.addStepError("Error while applying patch from Github: " + e);
-        } catch (GitAPIException e) {
-            step.addStepError("Error with Git API: " + e);
-        }
-        return null;
     }
 
     private String getLastKnowParent(GitHub gh, GHRepository ghRepo, Git git, String oldCommitSha, AbstractStep step) throws IOException {
