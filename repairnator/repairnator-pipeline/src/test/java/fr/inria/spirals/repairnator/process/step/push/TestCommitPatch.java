@@ -53,7 +53,7 @@ public class TestCommitPatch {
 
     @Test
     public void testPushHumanPatchSimpleCase() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);

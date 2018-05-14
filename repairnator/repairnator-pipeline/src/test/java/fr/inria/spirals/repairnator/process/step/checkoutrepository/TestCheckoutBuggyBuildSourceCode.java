@@ -56,8 +56,8 @@ public class TestCheckoutBuggyBuildSourceCode {
 
     @Test
     public void testCheckoutPreviousBuildSourceCodeNoPR() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 221992429; // INRIA/spoon
-        int previousBuildId = 218213030;
+        long buildId = 221992429; // INRIA/spoon
+        long previousBuildId = 218213030;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
@@ -158,8 +158,8 @@ public class TestCheckoutBuggyBuildSourceCode {
 
     @Test
     public void testCheckoutPreviousBuildSourceCodeNoPR2() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 222020421; // alibaba/fastjson
-        int previousBuildId = 222016611;
+        long buildId = 222020421; // alibaba/fastjson
+        long previousBuildId = 222016611;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
@@ -260,8 +260,8 @@ public class TestCheckoutBuggyBuildSourceCode {
 
     @Test
     public void testCheckoutPreviousBuildSourceCodeWithPR() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 223248816; // HubSpot/Singularity
-        int previousBuildId = 222209171;
+        long buildId = 223248816; // HubSpot/Singularity
+        long previousBuildId = 222209171;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);

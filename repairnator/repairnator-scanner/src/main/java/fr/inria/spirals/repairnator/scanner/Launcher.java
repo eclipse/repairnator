@@ -19,10 +19,12 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer;
 import fr.inria.spirals.repairnator.serializer.ScannerSerializer4Bears;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -129,6 +132,12 @@ public class Launcher {
         opt2.setDefault("both");
         opt2.setHelp("This option is only useful in case of '--bears' is used: it defines the type of fixer build to get. Available values: "+options);
         jsap.registerParameter(opt2);
+
+        Switch aSwitch = new Switch("bearsDelimiter");
+        aSwitch.setLongFlag("bearsDelimiter");
+        aSwitch.setHelp("This option is only useful in case of '--bears' is used and '--bearsMode both' (default) is used: it allows to" +
+                        " define a delimiter to output the failing passing and then the passing passing in order to consider them separately");
+        jsap.registerParameter(aSwitch);
         return jsap;
     }
 
@@ -167,6 +176,7 @@ public class Launcher {
         this.config.setLookFromDate(lookFromDate);
         this.config.setLookToDate(lookToDate);
         this.config.setBearsMode(BearsMode.valueOf(arguments.getString("bearsMode").toUpperCase()));
+        this.config.setBearsDelimiter(arguments.getBoolean("bearsDelimiter"));
     }
 
     private void initSerializerEngines() {
@@ -190,16 +200,16 @@ public class Launcher {
 
     private void mainProcess() throws IOException {
         LOGGER.info("Configuration: " + this.config.toString());
-        List<BuildToBeInspected> buildsToBeInspected = this.runScanner();
+        Map<ScannedBuildStatus, List<BuildToBeInspected>> buildsToBeInspected = this.runScanner();
 
         if (buildsToBeInspected != null) {
-            for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
+            /*for (BuildToBeInspected buildToBeInspected : buildsToBeInspected) {
                 if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
                     Launcher.LOGGER.info("Incriminated project and build: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
                 } else {
                     Launcher.LOGGER.info("Incriminated project and pair of builds: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
                 }
-            }
+            }*/
 
             this.processOutput(buildsToBeInspected);
         } else {
@@ -210,12 +220,12 @@ public class Launcher {
         }
     }
 
-    private List<BuildToBeInspected> runScanner() throws IOException {
+    private Map<ScannedBuildStatus, List<BuildToBeInspected>> runScanner() throws IOException {
         Launcher.LOGGER.info("Start to scan projects in Travis...");
 
         ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId());
 
-        List<BuildToBeInspected> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(this.config.getInputPath());
+        Map<ScannedBuildStatus, List<BuildToBeInspected>> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(this.config.getInputPath());
 
         ProcessSerializer scannerSerializer;
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
@@ -238,7 +248,7 @@ public class Launcher {
         return buildsToBeInspected;
     }
 
-    private void processOutput(List<BuildToBeInspected> listOfBuilds) {
+    private void processOutput(Map<ScannedBuildStatus, List<BuildToBeInspected>> listOfBuilds) {
         if (this.config.isSerializeJson()) {
             this.printToFile(listOfBuilds);
         } else {
@@ -246,19 +256,48 @@ public class Launcher {
         }
     }
 
-    private void printToFile(List<BuildToBeInspected> listOfBuilds) {
+    private void printToFile(Map<ScannedBuildStatus, List<BuildToBeInspected>> listOfBuilds) {
         String outputPath = this.config.getOutputPath();
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+        int lastIndexOfSeparator = outputPath.lastIndexOf(File.separatorChar);
+        String dirPath = outputPath.substring(0, lastIndexOfSeparator);
+        String filePathExtension = outputPath.substring(lastIndexOfSeparator);
 
-            for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-                if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                    writer.write(buildToBeInspected.getBuggyBuild().getId() + "");
-                } else {
-                    writer.write(buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
+        int lastIndexOfDot = filePathExtension.lastIndexOf('.');
+
+        String filePath, extension;
+        if (lastIndexOfDot > -1) {
+            filePath = dirPath + filePathExtension.substring(0, lastIndexOfDot);
+            extension = filePathExtension.substring(lastIndexOfDot);
+        } else {
+            filePath = outputPath;
+            extension = "";
+        }
+
+        try {
+            BufferedWriter writer = null;
+
+            if (this.config.getLauncherMode() != LauncherMode.BEARS || !this.config.isBearsDelimiter()) {
+                writer = new BufferedWriter(new FileWriter(outputPath));
+            }
+
+            for (ScannedBuildStatus status : ScannedBuildStatus.values()) {
+                if (!listOfBuilds.get(status).isEmpty()) {
+                    if (this.config.getLauncherMode() == LauncherMode.BEARS && this.config.isBearsDelimiter()) {
+                        String statusPath = filePath + "_" + status.name() + extension;
+                        writer = new BufferedWriter(new FileWriter(statusPath));
+                    }
+                    for (BuildToBeInspected buildToBeInspected : listOfBuilds.get(status)) {
+                        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                            Launcher.LOGGER.info("Incriminated project and build: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
+                            writer.write(buildToBeInspected.getBuggyBuild().getId() + "");
+                        } else {
+                            Launcher.LOGGER.info("Incriminated project and pair of builds: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
+                            writer.write(buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
+                        }
+                        writer.newLine();
+                        writer.flush();
+                    }
                 }
-                writer.newLine();
-                writer.flush();
             }
 
             writer.close();
@@ -268,12 +307,21 @@ public class Launcher {
         }
     }
 
-    private void printToStdout(List<BuildToBeInspected> listOfBuilds) {
-        for (BuildToBeInspected buildToBeInspected : listOfBuilds) {
-            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                System.out.println(buildToBeInspected.getBuggyBuild().getId());
-            } else {
-                System.out.println(buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
+    private void printToStdout(Map<ScannedBuildStatus, List<BuildToBeInspected>> listOfBuilds) {
+        for (ScannedBuildStatus status : ScannedBuildStatus.values()) {
+            if (!listOfBuilds.get(status).isEmpty()) {
+                if (this.config.isBearsDelimiter()) {
+                    System.out.println("[Status="+status.name()+"]");
+                }
+                for (BuildToBeInspected buildToBeInspected : listOfBuilds.get(status)) {
+                    if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                        Launcher.LOGGER.info("Incriminated project and build: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
+                        System.out.println(buildToBeInspected.getBuggyBuild().getId());
+                    } else {
+                        Launcher.LOGGER.info("Incriminated project and pair of builds: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
+                        System.out.println(buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
+                    }
+                }
             }
         }
     }

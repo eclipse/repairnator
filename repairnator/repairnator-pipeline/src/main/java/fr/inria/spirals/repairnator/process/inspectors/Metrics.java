@@ -15,8 +15,8 @@ import java.util.Set;
 public class Metrics {
     private Date reproductionDate;
 
-    private int buggyBuildId;
-    private int patchedBuilId;
+    private long buggyBuildId;
+    private long patchedBuilId;
 
     private String buggyBuildURL;
     private String patchedBuildURL;
@@ -171,11 +171,11 @@ public class Metrics {
         this.patchChangedFiles = patchChangedFiles;
     }
 
-    public void setBuggyBuildId(int buggyBuildId) {
+    public void setBuggyBuildId(long buggyBuildId) {
         this.buggyBuildId = buggyBuildId;
     }
 
-    public void setPatchedBuilId(int patchedBuilId) {
+    public void setPatchedBuilId(long patchedBuilId) {
         this.patchedBuilId = patchedBuilId;
     }
 
@@ -199,11 +199,11 @@ public class Metrics {
         return reproductionDate;
     }
 
-    public int getBuggyBuildId() {
+    public long getBuggyBuildId() {
         return buggyBuildId;
     }
 
-    public int getPatchedBuilId() {
+    public long getPatchedBuilId() {
         return patchedBuilId;
     }
 

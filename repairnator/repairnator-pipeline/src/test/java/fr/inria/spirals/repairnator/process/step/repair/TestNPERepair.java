@@ -43,7 +43,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepair() throws IOException {
-        int buildId = 252712792; // surli/failingProject build
+        long buildId = 252712792; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());

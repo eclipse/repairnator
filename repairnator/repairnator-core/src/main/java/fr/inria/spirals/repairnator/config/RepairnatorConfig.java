@@ -37,6 +37,7 @@ public class RepairnatorConfig {
     private Date lookFromDate;
     private Date lookToDate;
     private BearsMode bearsMode = BearsMode.BOTH;
+    private boolean bearsDelimiter;
 
     // Pipeline
     private int buildId;
@@ -408,19 +409,35 @@ public class RepairnatorConfig {
         this.repairTools = repairTools;
     }
 
+    public boolean isBearsDelimiter() {
+        return bearsDelimiter;
+    }
+
+    public void setBearsDelimiter(boolean bearsDelimiter) {
+        this.bearsDelimiter = bearsDelimiter;
+    }
+
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
         if (ghToken != null && !ghToken.isEmpty()) {
             ghToken = (ghToken.length() > 10) ? ghToken.substring(0,10)+"[...]" : ghToken;
         }
+        String mongoDbInfo = this.getMongodbHost();
+        if (mongoDbInfo != null && !mongoDbInfo.isEmpty()) {
+            int indexOfArobase = mongoDbInfo.indexOf('@');
+            if (indexOfArobase != -1) {
+                mongoDbInfo = "mongodb://[hidden]" + mongoDbInfo.substring(indexOfArobase);
+            }
+        }
+
         return "RepairnatorConfig{" +
                 "runId='" + runId + '\'' +
                 ", launcherMode=" + launcherMode +
                 ", serializeJson=" + serializeJson +
                 ", inputPath='" + inputPath + '\'' +
                 ", outputPath='" + outputPath + '\'' +
-                ", mongodbHost='" + mongodbHost + '\'' +
+                ", mongodbHost='" + mongoDbInfo + '\'' +
                 ", mongodbName='" + mongodbName + '\'' +
                 ", smtpServer='" + smtpServer + '\'' +
                 ", notifyTo=" + Arrays.toString(notifyTo) +
@@ -450,6 +467,7 @@ public class RepairnatorConfig {
                 ", repository='" + repository + '\'' +
                 ", clean=" + clean +
                 ", bearsMode=" + bearsMode.name() +
+                ", bearsDelimiter = " + bearsDelimiter +
                 ", repairTools=" + StringUtils.join(this.repairTools, ",") +
                 '}';
     }

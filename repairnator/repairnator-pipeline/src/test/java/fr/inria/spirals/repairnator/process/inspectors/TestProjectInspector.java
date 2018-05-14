@@ -96,7 +96,7 @@ public class TestProjectInspector {
 
     @Test
     public void testPatchFailingProject() throws IOException, GitAPIException {
-        int buildId = 208897371; // surli/failingProject only-one-failing
+        long buildId = 208897371; // surli/failingProject only-one-failing
 
         Path tmpDirPath = Files.createTempDirectory("test_complete");
         File tmpDir = tmpDirPath.toFile();
@@ -178,7 +178,7 @@ public class TestProjectInspector {
     @Ignore
     @Test
     public void testPatchFailingProjectM70() throws IOException, GitAPIException {
-        int buildId = 269201915; // surli/failingProject only-one-failing
+        long buildId = 269201915; // surli/failingProject only-one-failing
 
         Path tmpDirPath = Files.createTempDirectory("test_complete");
         File tmpDir = tmpDirPath.toFile();
@@ -255,7 +255,7 @@ public class TestProjectInspector {
 
     @Test
     public void testFailingProjectNotBuildable() throws IOException, GitAPIException {
-        int buildId = 228303218; // surli/failingProject only-one-failing
+        long buildId = 228303218; // surli/failingProject only-one-failing
 
         Path tmpDirPath = Files.createTempDirectory("test_complete2");
         File tmpDir = tmpDirPath.toFile();
@@ -307,7 +307,7 @@ public class TestProjectInspector {
     @Test
     public void testSpoonException() throws IOException {
         // one dependency missing: should not be buildable
-        int buildId = 355743087; // ministryofjustice/laa-saml-mock
+        long buildId = 355743087; // ministryofjustice/laa-saml-mock
 
         Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
         File tmpDir = tmpDirPath.toFile();
@@ -368,7 +368,7 @@ public class TestProjectInspector {
 
     @Test
     public void testRepairingWithNPEFix() throws IOException, GitAPIException {
-        int buildId = 253130137; // surli/failingProject npe
+        long buildId = 253130137; // surli/failingProject npe
 
         Path tmpDirPath = Files.createTempDirectory("test_complete_npe");
         File tmpDir = tmpDirPath.toFile();

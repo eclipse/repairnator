@@ -31,9 +31,9 @@ public class RTScanner {
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
 
     private RepairnatorConfig config;
-    private final List<Integer> blackListedRepository;
-    private final List<Integer> whiteListedRepository;
-    private final Map<Integer,Date> tempBlackList;
+    private final List<Long> blackListedRepository;
+    private final List<Long> whiteListedRepository;
+    private final Map<Long,Date> tempBlackList;
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final BuildRunner buildRunner;
@@ -88,7 +88,7 @@ public class RTScanner {
             List<String> lines = Files.readAllLines(whiteListFile.toPath());
             for (String repoId : lines) {
                 if (!repoId.trim().isEmpty()) {
-                    this.whiteListedRepository.add(Integer.parseInt(repoId));
+                    this.whiteListedRepository.add(Long.parseLong(repoId));
                 }
             }
 
@@ -105,7 +105,7 @@ public class RTScanner {
             List<String> lines = Files.readAllLines(blackListFile.toPath());
             for (String repoId : lines) {
                 if (!repoId.trim().isEmpty()) {
-                    this.blackListedRepository.add(Integer.parseInt(repoId));
+                    this.blackListedRepository.add(Long.parseLong(repoId));
                 }
             }
 
@@ -179,7 +179,7 @@ public class RTScanner {
         this.tempBlackList.put(repository.getId(), expirationDate);
     }
 
-    public boolean isRepositoryInteresting(int repositoryId) {
+    public boolean isRepositoryInteresting(long repositoryId) {
         if (this.blackListedRepository.contains(repositoryId)) {
             //LOGGER.debug("Repo already blacklisted (id: "+repositoryId+")");
             return false;

@@ -32,7 +32,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         Build build = inspector.getPatchedBuild();
 
         Build previousBuild = inspector.getBuggyBuild();
-        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
+        long previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
         String state = getPrettyPrintState(inspector);
 
@@ -74,7 +74,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
         Build build = inspector.getPatchedBuild();
 
         Build previousBuild = inspector.getBuggyBuild();
-        int previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
+        long previousBuildId = (previousBuild != null) ? previousBuild.getId() : -1;
 
         String state = getPrettyPrintState(inspector);
 

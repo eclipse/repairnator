@@ -48,8 +48,8 @@ public class Utils {
         }
     }
 
-    public static String getTravisUrl(int buildId, String slug) {
-        return TRAVIS_URL + slug + "/builds/" + buildId;
+    public static String getTravisUrl(long buildId, String slug) {
+        return TRAVIS_URL + slug + "/builds/" + String.valueOf(buildId);
     }
 
     public static String getGithubRepoUrl(String slug) {

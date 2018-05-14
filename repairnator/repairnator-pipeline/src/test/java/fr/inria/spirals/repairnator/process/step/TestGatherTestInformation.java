@@ -59,7 +59,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenFailing() throws IOException {
-        int buildId = 207890790; // surli/failingProject build
+        long buildId = 207890790; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -124,7 +124,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationOnlyOneErroring() throws IOException {
-        int buildId = 208897371; // surli/failingProject build
+        long buildId = 208897371; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -195,7 +195,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenErroring() throws IOException {
-        int buildId = 208240908; // surli/failingProject build
+        long buildId = 208240908; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -259,7 +259,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenNotFailing() throws IOException {
-        int buildId = 201176013; // surli/failingProject build
+        long buildId = 201176013; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -325,7 +325,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenNotFailingWithPassingContract() throws IOException {
-        int buildId = 201176013; // surli/failingProject build
+        long buildId = 201176013; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
