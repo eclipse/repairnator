@@ -1,5 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
 import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
@@ -8,9 +10,9 @@ import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
@@ -19,9 +21,7 @@ import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import spoon.SpoonException;
 import spoon.reflect.factory.Factory;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -36,25 +36,10 @@ public class NopolRepair extends AbstractRepairStep {
     public static int TOTAL_MAX_TIME = 60 * 4; // We expect it to run 4
                                                       // hours top.
     private static final int MIN_TIMEOUT = 2;
-    private List<NopolInformation> nopolInformations;
-
-    public NopolRepair() {
-        this.nopolInformations = new ArrayList<>();
-    }
-
-    @Override
-    public void setProjectInspector(ProjectInspector inspector) {
-        super.setProjectInspector(inspector);
-        inspector.getJobStatus().setNopolInformations(this.nopolInformations);
-    }
 
     @Override
     public String getRepairToolName() {
         return TOOL_NAME;
-    }
-
-    public List<NopolInformation> getNopolInformations() {
-        return nopolInformations;
     }
 
     @Override
@@ -63,6 +48,9 @@ public class NopolRepair extends AbstractRepairStep {
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
 
+        JsonArray toolDiag = new JsonArray();
+        List<RepairPatch> repairPatches = new ArrayList<>();
+        Gson gson = new Gson();
         Metrics metric = jobStatus.getMetrics();
         List<URL> classPath = jobStatus.getRepairClassPath();
         File[] sources = jobStatus.getRepairSourceDir();
@@ -112,7 +100,7 @@ public class NopolRepair extends AbstractRepairStep {
                             nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.IGNORE_FAILING);
                         }
                     }
-                    this.nopolInformations.add(nopolInformation);
+
                     nopolInformation.setStatus(NopolStatus.RUNNING);
 
                     String testClass = failureLocation.getClassName();
@@ -182,6 +170,9 @@ public class NopolRepair extends AbstractRepairStep {
                                 for (Patch patch : patches) {
                                     String diff = patch.toDiff(spoonFactory, nopolContext);
                                     patchAndDiffs.add(new PatchAndDiff(patch, diff));
+
+                                    RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", diff);
+                                    repairPatches.add(repairPatch);
                                 }
                                 nopolInformation.setPatches(patchAndDiffs);
                                 nopolInformation.setStatus(NopolStatus.PATCH);
@@ -224,6 +215,8 @@ public class NopolRepair extends AbstractRepairStep {
                     int localPassingTime = Math.round((afterNopol - beforeNopol) / 60000);
                     nopolInformation.setPassingTime(localPassingTime);
 
+                    toolDiag.add(gson.toJsonTree(nopolInformation));
+
                     passingTime += localPassingTime;
                 }
             }
@@ -239,72 +232,15 @@ public class NopolRepair extends AbstractRepairStep {
                     getLogger().error("Error while renaming nopol log", e);
                 }
             }
-            File nopolProperties = new File(this.getInspector().getRepoLocalPath()+"/repairnator.nopol.results");
 
-            jobStatus.addFileToPush("repairnator.nopol.results");
-
-            File patchDir = new File(this.getInspector().getRepoLocalPath()+"/repairnatorPatches");
-
-            patchDir.mkdir();
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(nopolProperties));
-
-                int infoNumber = 0;
-                for (NopolInformation information : this.nopolInformations) {
-                    String informationStr = "nopolinfo #"+(infoNumber++)+"\n"
-                                            +"location: "+information.getLocation()+"\n"
-                                            +"status: "+information.getStatus().name()+"\n"
-                                            +"dateEnd: "+information.getDateEnd().toString()+"\n"
-                                            +"allocatedtime: "+information.getAllocatedTime()+"minutes \n"
-                                            +"passingTime: "+information.getPassingTime()+"minutes \n"
-                                            +"nb patches: "+information.getPatches().size()+"\n"
-                                            +"nopol context: "+information.getNopolContext()+"\n"
-                                            +"exception: "+information.getExceptionDetail()+"\n"
-                                            +"nbStatements: "+information.getNbStatements()+"\n"
-                                            +"nbAngelicValues: "+information.getNbAngelicValues()+"\n"
-                                            +"ignoreStatus: "+information.getIgnoreStatus().name()+"\n"
-                                            +"----------\n\n";
-
-                    writer.write(informationStr);
-                    writer.newLine();
-                    writer.newLine();
-                    writer.flush();
-
-                    int patchNumber = 0;
-                    for (PatchAndDiff patchAndDiff : information.getPatches()) {
-                        File patchFile = new File(patchDir.getPath()+"/"+information.getLocation().getClassName()+"_patch_"+(patchNumber++));
-
-                        Patch patch = patchAndDiff.getPatch();
-                        BufferedWriter patchWriter = new BufferedWriter(new FileWriter(patchFile));
-                        String patchWrite = "location: "+patch.getSourceLocation()+"\n"
-                                            +"type: "+patch.getType()+"\n"
-                                            +"patch: "+patchAndDiff.getDiff();
-
-                        patchWriter.write(patchWrite);
-                        patchWriter.flush();
-
-                        patchWriter.close();
-                    }
-                }
-                writer.close();
-            } catch (IOException e) {
-                this.addStepError("Error while writing nopol informations");
-                this.getLogger().error("Error while writing nopol informations", e);
-            }
-
+            this.recordPatches(repairPatches);
+            this.recordToolDiagnostic(toolDiag);
 
             if (!patchCreated) {
                 this.addStepError("No patch has been generated by Nopol. Look at the trace to get more information.");
                 return StepStatus.buildSkipped(this,"No patch has been found.");
             }
-            jobStatus.setHasBeenPatched(true);
-            List<String> nopolPatches = new ArrayList<>();
-            for (NopolInformation information : this.nopolInformations) {
-                for (PatchAndDiff p : information.getPatches()) {
-                    nopolPatches.add(p.getDiff());
-                }
-            }
-            jobStatus.setNopolPatches(nopolPatches);
+
             return StepStatus.buildSuccess(this);
         } else {
             this.addStepError("No classpath or sources directory has been given. Nopol can't be launched.");

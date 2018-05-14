@@ -2,11 +2,13 @@ package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import fr.inria.astor.core.entities.ProgramVariant;
 import fr.inria.astor.core.setup.ConfigurationProperties;
 import fr.inria.main.AstorOutputStatus;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -44,7 +46,7 @@ public class AstorRepair extends AbstractRepairStep {
         this.getLogger().info("Start to repair using Astor");
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
-        List<String> astorPatches = new ArrayList<>();
+        List<RepairPatch> astorPatches = new ArrayList<>();
 
         List<URL> classPath = this.getInspector().getJobStatus().getRepairClassPath();
         File[] sources = this.getInspector().getJobStatus().getRepairSourceDir();
@@ -126,7 +128,8 @@ public class AstorRepair extends AbstractRepairStep {
                     if (solutions != null) {
                         for (ProgramVariant pv : solutions) {
                             if (pv.isSolution()) {
-                                astorPatches.add(pv.getPatchDiff().getFormattedDiff());
+                                RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "" , pv.getPatchDiff().getFormattedDiff());
+                                astorPatches.add(repairPatch);
                             }
                         }
                     }
@@ -138,9 +141,6 @@ public class AstorRepair extends AbstractRepairStep {
             }
 
             jobStatus.addFileToPush("repairnator.astor.log");
-
-            jobStatus.setAstorPatches(astorPatches);
-            jobStatus.setAstorStatus(status);
 
             String jsonpath;
             try {
@@ -162,7 +162,8 @@ public class AstorRepair extends AbstractRepairStep {
                     JsonParser jsonParser = new JsonParser();
                     try {
                         JsonElement root = jsonParser.parse(new FileReader(jsonResultFile));
-                        this.getInspector().getJobStatus().setAstorResults(root);
+                        root.getAsJsonObject().add("status", new JsonPrimitive(status.name()));
+                        this.recordToolDiagnostic(root);
                     } catch (FileNotFoundException e) {
                         this.addStepError("Error while reading astor JSON results", e);
                     }
@@ -175,6 +176,8 @@ public class AstorRepair extends AbstractRepairStep {
             if (astorPatches.isEmpty()) {
                 return StepStatus.buildSkipped(this,"No patch found.");
             } else {
+
+
                 this.getInspector().getJobStatus().setHasBeenPatched(true);
                 return StepStatus.buildSuccess(this);
             }
