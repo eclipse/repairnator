@@ -58,8 +58,10 @@ public class PatchesSerializer extends AbstractDataSerializer {
             allData.add(new SerializedData(this.serializeAsList(inspector.getBuildToBeInspected(), repairPatch), this.serializeAsJson(inspector.getBuildToBeInspected(), repairPatch)));
         }
 
-        for (SerializerEngine engine : this.getEngines()) {
-            engine.serialize(allData, this.getType());
+        if (!allData.isEmpty()) {
+            for (SerializerEngine engine : this.getEngines()) {
+                engine.serialize(allData, this.getType());
+            }
         }
     }
 }
