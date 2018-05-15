@@ -18,6 +18,4 @@ public class AstorJGenProgRepair extends AstorRepair {
     public String getRepairToolName() {
         return TOOL_NAME;
     }
-
-
 }
