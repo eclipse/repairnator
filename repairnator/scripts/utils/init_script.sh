@@ -8,7 +8,7 @@ command -v docker >/dev/null 2>&1 || { echo >&2 "Repairnator require docker to b
 command -v uuidgen >/dev/null 2>&1 || { echo >&2 "Repairnator requires uuidgen to be installed."; exit 1; }
 
 echo "Read global configuration"
-. INIT_SCRIPT_DIR/../config/repairnator.cfg
+. $INIT_SCRIPT_DIR/../config/repairnator.cfg
 
 echo "Read user configuration"
 if [ -r ~/repairnator.cfg ]; then
