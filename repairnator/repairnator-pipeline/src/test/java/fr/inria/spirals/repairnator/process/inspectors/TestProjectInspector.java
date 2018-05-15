@@ -37,7 +37,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class TestProjectInspector {
         config.setZ3solverPath(solverPath);
         config.setPush(true);
         config.setPushRemoteRepo("");
-        config.setRepairTools(RepairToolsManager.getRepairToolsName());
+        config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "Nopol")));
         Utils.setLoggersLevel(Level.ERROR);
     }
 
