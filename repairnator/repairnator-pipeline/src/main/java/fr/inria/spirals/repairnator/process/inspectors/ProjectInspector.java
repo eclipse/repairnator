@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
+import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
@@ -47,6 +48,7 @@ public class ProjectInspector {
     private List<AbstractDataSerializer> serializers;
     private JobStatus jobStatus;
     private List<AbstractNotifier> notifiers;
+    private PatchNotifier patchNotifier;
 
     private CheckoutType checkoutType;
 
@@ -139,7 +141,6 @@ public class ProjectInspector {
                     .setNextStep(new CheckoutBuggyBuild(this, true))
                     .setNextStep(new ComputeSourceDir(this, true, true)) // TODO: check, should it be really blocking?
                     .setNextStep(new ComputeTestDir(this, true))                    // IDEM
-                    .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
@@ -199,5 +200,13 @@ public class ProjectInspector {
 
     public List<AbstractNotifier> getNotifiers() {
         return notifiers;
+    }
+
+    public PatchNotifier getPatchNotifier() {
+        return patchNotifier;
+    }
+
+    public void setPatchNotifier(PatchNotifier patchNotifier) {
+        this.patchNotifier = patchNotifier;
     }
 }

@@ -4,16 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,6 +50,8 @@ public class NPERepair extends AbstractRepairStep {
         if (isThereNPE()) {
             this.getLogger().info("NPE found, start NPEFix");
 
+            List<RepairPatch> repairPatches = new ArrayList<>();
+
             MavenHelper mavenHelper = new MavenHelper(this.getPom(), NPEFIX_GOAL, null, this.getName(), this.getInspector(), true );
             int status = MavenHelper.MAVEN_ERROR;
             try {
@@ -82,9 +83,7 @@ public class NPERepair extends AbstractRepairStep {
                     try {
                         JsonParser jsonParser = new JsonParser();
                         JsonElement root = jsonParser.parse(new FileReader(patchesFiles));
-                        this.getInspector().getJobStatus().setNpeFixResults(root);
-
-                        List<String> npePatches = new ArrayList<String>();
+                        this.recordToolDiagnostic(root);
 
                         JsonArray executions = root.getAsJsonObject().getAsJsonArray("executions");
                         if (executions != null) {
@@ -94,29 +93,22 @@ public class NPERepair extends AbstractRepairStep {
 
                                 if (success) {
                                     effectivelyPatched = true;
-                                    String testName = execution.getAsJsonObject().getAsJsonObject("test").get("name").getAsString();
-                                    long startDate = execution.getAsJsonObject().get("startDate").getAsLong();
 
-                                    String filename = "npefix_"+testName+"_"+startDate+".patch";
+
                                     String content = execution.getAsJsonObject().get("diff").getAsString();
 
-                                    File patchFile = new File(patchDir.getPath()+"/"+filename);
-                                    BufferedWriter patchWriter = new BufferedWriter(new FileWriter(patchFile));
-                                    patchWriter.write(content);
-                                    patchWriter.flush();
-                                    patchWriter.close();
-
-                                    npePatches.add(content);
+                                    RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", content);
+                                    repairPatches.add(repairPatch);
                                 }
                             }
+
+                            this.recordPatches(repairPatches);
                         }
-                        this.getInspector().getJobStatus().setNpeFixPatches(npePatches);
                     } catch (IOException e) {
                         this.addStepError("Error while parsing JSON patch files");
                     }
 
                     if (effectivelyPatched) {
-                        this.getInspector().getJobStatus().setHasBeenPatched(true);
                         return StepStatus.buildSuccess(this);
                     } else {
                         return StepStatus.buildSkipped(this,"No patch found.");
