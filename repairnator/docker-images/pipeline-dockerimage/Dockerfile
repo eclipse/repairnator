@@ -10,7 +10,7 @@ COPY logback.xml /root/
 COPY configure_git.sh /root/
 COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
-copy version.ini /root/
+COPY version.ini /root/
 
 RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone 
