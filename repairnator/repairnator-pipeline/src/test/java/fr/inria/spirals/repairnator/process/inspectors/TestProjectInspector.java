@@ -304,54 +304,6 @@ public class TestProjectInspector {
 
     }
 
-    @Test
-    public void testSpoonException() throws IOException {
-        // one dependency missing: should not be buildable
-        long buildId = 355743087; // ministryofjustice/laa-saml-mock
-
-        Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
-
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build failingBuild = optionalBuild.get();
-
-        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
-
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-        List<AbstractNotifier> notifiers = new ArrayList<>();
-
-        List<SerializerEngine> serializerEngines = new ArrayList<>();
-        SerializerEngine serializerEngine = mock(SerializerEngine.class);
-        serializerEngines.add(serializerEngine);
-
-        serializers.add(new InspectorSerializer(serializerEngines));
-        serializers.add(new NopolSerializer(serializerEngines));
-
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.REPAIR);
-
-        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
-        inspector.run();
-
-        JobStatus jobStatus = inspector.getJobStatus();
-
-        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-
-        for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() instanceof BuildProject) {
-                assertThat(stepStatus.isSuccess(), is(false));
-            }
-        }
-
-        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-        assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
-
-        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
-
-    }
-
     private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
         for (StepStatus stepStatus : statuses) {
             if (!expectedValues.containsKey(stepStatus.getStep().getClass())) {
