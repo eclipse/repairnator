@@ -52,6 +52,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -150,7 +151,7 @@ public class TestProjectInspector {
         String remoteBranchName = "surli-failingProject-208897371-20170308-040702";
         assertEquals(remoteBranchName, inspector.getRemoteBranchName());
 
-        verify(notifierEngine, times(1)).notify(anyString(), anyString());
+        verify(notifierEngine, atLeast(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.PATCHES));
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.TOOL_DIAGNOSTIC));
