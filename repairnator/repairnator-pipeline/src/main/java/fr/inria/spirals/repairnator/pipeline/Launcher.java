@@ -9,11 +9,10 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.serializer.AssertFixerSerializer;
-import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
-import fr.inria.spirals.repairnator.serializer.NPEFixSerializer;
+import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
+import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -28,7 +27,6 @@ import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
-import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -53,6 +51,7 @@ public class Launcher {
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
+    private PatchNotifier patchNotifier;
 
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
@@ -265,8 +264,9 @@ public class Launcher {
         ErrorNotifier.getInstance(notifierEngines);
 
         this.notifiers = new ArrayList<>();
-        this.notifiers.add(new PatchNotifier(notifierEngines));
         this.notifiers.add(new FixerBuildNotifier(notifierEngines));
+
+        this.patchNotifier = new PatchNotifier(notifierEngines);
     }
 
     private List<String> getListOfProjectsToIgnore() {
@@ -347,13 +347,12 @@ public class Launcher {
         } else {
             serializers.add(new InspectorSerializer4Bears(this.engines));
         }
+
         serializers.add(new InspectorTimeSerializer(this.engines));
-        serializers.add(new NopolSerializer(this.engines));
-        serializers.add(new NPEFixSerializer(this.engines));
-        serializers.add(new AstorSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
         serializers.add(new PipelineErrorSerializer(this.engines));
-        serializers.add(new AssertFixerSerializer(this.engines));
+        serializers.add(new PatchesSerializer(this.engines));
+        serializers.add(new ToolDiagnosticSerializer(this.engines));
 
         ProjectInspector inspector;
 
@@ -362,6 +361,8 @@ public class Launcher {
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         }
+
+        inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
         LOGGER.info("Inspector is finished. The process will now exit.");

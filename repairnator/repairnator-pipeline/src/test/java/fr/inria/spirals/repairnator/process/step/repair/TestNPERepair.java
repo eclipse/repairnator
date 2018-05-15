@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
@@ -71,7 +72,6 @@ public class TestNPERepair {
         cloneStep.execute();
 
         assertThat(npeRepair.isShouldStop(), is(false));
-        assertThat(inspector.getJobStatus().getNpeFixPatches().size(), is(6));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
         assertThat(stepStatusList.size(), is(5));
@@ -84,5 +84,9 @@ public class TestNPERepair {
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
+
+        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+        assertThat(allPatches.size(), is(6));
+        assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
     }
 }
