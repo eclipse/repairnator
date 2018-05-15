@@ -11,7 +11,7 @@ public class AstorJKaliRepair extends AstorRepair {
 
     @Override
     public String getAstorMode() {
-        return "jkali";
+        return "statement-remove";
     }
 
     @Override

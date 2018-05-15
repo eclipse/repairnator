@@ -173,9 +173,8 @@ public abstract class AstorRepair extends AbstractRepairStep {
             if (astorPatches.isEmpty()) {
                 return StepStatus.buildSkipped(this,"No patch found.");
             } else {
-
-
                 this.getInspector().getJobStatus().setHasBeenPatched(true);
+                this.recordPatches(astorPatches);
                 return StepStatus.buildSuccess(this);
             }
         }
