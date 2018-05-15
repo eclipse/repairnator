@@ -9,11 +9,9 @@ public enum SerializerType {
     INSPECTOR4BEARS("inspector4bears"),
     TIMES("times"),
     TIMES4BEARS("times4bears"),
-    NOPOL("nopol"),
-    NPEFIX("npefix"),
-    ASTOR("astor"),
     PIPELINE_ERRORS("pipeline-errors"),
-    ASSERT_FIXER("assertFixer"),
+    PATCHES("patches"),
+    TOOL_DIAGNOSTIC("tool-diagnostic"),
 
     // dockerpool
     TREATEDBUILD("treatedbuild"),

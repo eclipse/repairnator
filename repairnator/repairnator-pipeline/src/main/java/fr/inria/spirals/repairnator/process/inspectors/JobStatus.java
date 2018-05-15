@@ -211,8 +211,20 @@ public class JobStatus {
         this.toolDiagnostic.put(toolName, diagnostic);
     }
 
+    public List<StepStatus> getStepStatuses() {
+        return stepStatuses;
+    }
+
     public void addPatches(String toolName, List<RepairPatch> patches) {
         this.listOfPatches.put(toolName, patches);
+    }
+
+    public List<RepairPatch> getAllPatches() {
+        List<RepairPatch> allPatches = new ArrayList<>();
+        for (List<RepairPatch> repairPatches : this.listOfPatches.values()) {
+            allPatches.addAll(repairPatches);
+        }
+        return allPatches;
     }
 
     public Map<String, List<RepairPatch>> getListOfPatches() {
