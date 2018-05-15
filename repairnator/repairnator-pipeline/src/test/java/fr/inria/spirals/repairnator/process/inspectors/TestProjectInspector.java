@@ -121,12 +121,11 @@ public class TestProjectInspector {
         serializers.add(new PatchesSerializer(serializerEngines));
         serializers.add(new ToolDiagnosticSerializer(serializerEngines));
 
-        notifiers.add(new PatchNotifier(notifierEngines));
-
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.REPAIR);
 
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        inspector.setPatchNotifier(new PatchNotifier(notifierEngines));
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
