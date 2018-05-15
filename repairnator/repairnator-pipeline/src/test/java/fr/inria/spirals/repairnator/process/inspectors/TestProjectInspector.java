@@ -1,37 +1,32 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import eu.stamp.project.assertfixer.asserts.AssertFixer;
-import fr.inria.main.AstorOutputStatus;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
+import fr.inria.main.AstorOutputStatus;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
-import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.ResolveDependency;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
-import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
-import fr.inria.spirals.repairnator.states.LauncherMode;
-import fr.inria.spirals.repairnator.states.PipelineState;
-import fr.inria.spirals.repairnator.states.PushState;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.PushState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -345,7 +340,7 @@ public class TestProjectInspector {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() instanceof ResolveDependency) {
+            if (stepStatus.getStep() instanceof BuildProject) {
                 assertThat(stepStatus.isSuccess(), is(false));
             }
         }
