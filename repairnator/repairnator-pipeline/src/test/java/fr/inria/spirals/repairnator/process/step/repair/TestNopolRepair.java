@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.repair;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
@@ -100,7 +101,6 @@ public class TestNopolRepair {
         cloneStep.execute();
 
         assertThat(nopolRepair.isShouldStop(), is(false));
-        assertThat(nopolRepair.getNopolInformations().size(), is(11));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
         assertThat(stepStatusList.size(), is(7));
@@ -114,10 +114,8 @@ public class TestNopolRepair {
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
 
-        // The following assertion is working when the test is launched in the current module
-        // however it does not work properly when launched from the root module,
-        // so it breaks the CI. The nopol logs should be treaten differently inside Nopol
-        //File nopolLog = new File(inspector.getRepoLocalPath(), "repairnator.nopol.log");
-        //assertTrue(nopolLog.exists());
+        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+        assertThat(allPatches.size(), is(11));
+        assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
     }
 }
