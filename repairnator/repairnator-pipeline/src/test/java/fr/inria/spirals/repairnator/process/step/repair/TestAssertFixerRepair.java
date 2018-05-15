@@ -88,7 +88,7 @@ public class TestAssertFixerRepair {
         assertThat(finalStatus, is("PATCHED"));
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertThat(allPatches.size(), is(13));
+        assertThat(allPatches.size(), is(6));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(assertFixerRepair.getRepairToolName()), notNullValue());
     }
 }

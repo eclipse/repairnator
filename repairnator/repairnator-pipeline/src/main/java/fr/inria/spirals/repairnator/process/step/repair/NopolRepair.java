@@ -12,7 +12,6 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.nopol.PatchAndDiff;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
@@ -135,7 +134,6 @@ public class NopolRepair extends AbstractRepairStep {
                     try {
                         final NoPol nopol = new NoPol(nopolContext);
                         Factory spoonFactory = nopol.getSpooner().spoonFactory();
-                        List<PatchAndDiff> patchAndDiffs = new ArrayList<>();
 
                         final ExecutorService executor = Executors.newSingleThreadExecutor();
                         final Future<NopolResult> nopolExecution = executor.submit(new Callable<NopolResult>() {
@@ -169,12 +167,10 @@ public class NopolRepair extends AbstractRepairStep {
                             if (patches != null && !patches.isEmpty()) {
                                 for (Patch patch : patches) {
                                     String diff = patch.toDiff(spoonFactory, nopolContext);
-                                    patchAndDiffs.add(new PatchAndDiff(patch, diff));
 
                                     RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", diff);
                                     repairPatches.add(repairPatch);
                                 }
-                                nopolInformation.setPatches(patchAndDiffs);
                                 nopolInformation.setStatus(NopolStatus.PATCH);
                                 patchCreated = true;
                             } else {
@@ -209,8 +205,6 @@ public class NopolRepair extends AbstractRepairStep {
 
 
                     long afterNopol = new Date().getTime();
-
-                    nopolInformation.setDateEnd();
 
                     int localPassingTime = Math.round((afterNopol - beforeNopol) / 60000);
                     nopolInformation.setPassingTime(localPassingTime);
