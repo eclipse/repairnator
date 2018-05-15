@@ -12,7 +12,7 @@ import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.repair.AstorJGenProgRepair;
+import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJGenProgRepair;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;

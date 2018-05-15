@@ -16,6 +16,8 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformatio
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
+import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair;
+import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.junit.Before;
@@ -34,7 +36,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class TestAstorJKaliRepair {
+public class TestAstorRepair {
 	@Before
 	public void setup() {
 		Utils.setLoggersLevel(Level.ERROR);
@@ -50,7 +52,9 @@ public class TestAstorJKaliRepair {
 		assertThat(build, notNullValue());
 		assertThat(buildId, is(build.getId()));
 
-		RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(AstorJKaliRepair.TOOL_NAME));
+		AstorJKaliRepair astorJKaliRepair = new AstorJKaliRepair();
+
+		RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(astorJKaliRepair.getRepairToolName()));
 		Path tmpDirPath = Files.createTempDirectory("test_astorjkali");
 		File tmpDir = tmpDirPath.toFile();
 		tmpDir.deleteOnExit();
@@ -60,7 +64,7 @@ public class TestAstorJKaliRepair {
 		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
 		CloneRepository cloneStep = new CloneRepository(inspector);
-		AstorJKaliRepair astorJKaliRepair = new AstorJKaliRepair();
+
 		astorJKaliRepair.setProjectInspector(inspector);
 
 		cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
@@ -86,7 +90,58 @@ public class TestAstorJKaliRepair {
 		String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
 		assertThat(finalStatus, is("PATCHED"));
 		List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-		assertThat(allPatches.size(), is(6));
+		assertThat(allPatches.isEmpty(), is(false));
 		assertThat(inspector.getJobStatus().getToolDiagnostic().get(astorJKaliRepair.getRepairToolName()), notNullValue());
+	}
+
+	@Test
+	public void testAstorJMut() throws IOException {
+		long buildId = 376847154; // surli/failingProject astor-jkali-failure
+
+		Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+		assertTrue(optionalBuild.isPresent());
+		Build build = optionalBuild.get();
+		assertThat(build, notNullValue());
+		assertThat(buildId, is(build.getId()));
+
+		AstorJMutRepair astorJMutRepair = new AstorJMutRepair();
+
+		RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(astorJMutRepair.getRepairToolName()));
+		Path tmpDirPath = Files.createTempDirectory("test_astorjkali");
+		File tmpDir = tmpDirPath.toFile();
+		tmpDir.deleteOnExit();
+
+		BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
+
+		CloneRepository cloneStep = new CloneRepository(inspector);
+
+		astorJMutRepair.setProjectInspector(inspector);
+
+		cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+				.setNextStep(new TestProject(inspector))
+				.setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+				.setNextStep(new ComputeClasspath(inspector, true))
+				.setNextStep(new ComputeSourceDir(inspector, true, false))
+				.setNextStep(new ComputeTestDir(inspector, true))
+				.setNextStep(astorJMutRepair);
+		cloneStep.execute();
+
+		assertThat(astorJMutRepair.isShouldStop(), is(false));
+
+		List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+		assertThat(stepStatusList.size(), is(8));
+		StepStatus assertFixerStatus = stepStatusList.get(7);
+		assertThat(assertFixerStatus.getStep(), is(astorJMutRepair));
+
+		for (StepStatus stepStatus : stepStatusList) {
+			assertThat("Failing step :" + stepStatus, stepStatus.isSuccess(), is(true));
+		}
+
+		String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+		assertThat(finalStatus, is("PATCHED"));
+		List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+		assertThat(allPatches.isEmpty(), is(false));
 	}
 }
