@@ -1,37 +1,32 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import eu.stamp.project.assertfixer.asserts.AssertFixer;
-import fr.inria.main.AstorOutputStatus;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
+import fr.inria.main.AstorOutputStatus;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
-import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.ResolveDependency;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
-import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
-import fr.inria.spirals.repairnator.states.LauncherMode;
-import fr.inria.spirals.repairnator.states.PipelineState;
-import fr.inria.spirals.repairnator.states.PushState;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.step.repair.NopolRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.states.PushState;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -299,54 +294,6 @@ public class TestProjectInspector {
                 assertThat(stepStatus.isSuccess(), is(false));
             } else {
                 assertThat(stepStatus.isSuccess(), is(true));
-            }
-        }
-
-        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-        assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
-
-        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
-
-    }
-
-    @Test
-    public void testSpoonException() throws IOException {
-        // one dependency missing: should not be buildable
-        long buildId = 355743087; // ministryofjustice/laa-saml-mock
-
-        Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
-
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build failingBuild = optionalBuild.get();
-
-        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
-
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-        List<AbstractNotifier> notifiers = new ArrayList<>();
-
-        List<SerializerEngine> serializerEngines = new ArrayList<>();
-        SerializerEngine serializerEngine = mock(SerializerEngine.class);
-        serializerEngines.add(serializerEngine);
-
-        serializers.add(new InspectorSerializer(serializerEngines));
-        serializers.add(new NopolSerializer(serializerEngines));
-
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.REPAIR);
-
-        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
-        inspector.run();
-
-        JobStatus jobStatus = inspector.getJobStatus();
-
-        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-
-        for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() instanceof ResolveDependency) {
-                assertThat(stepStatus.isSuccess(), is(false));
             }
         }
 

@@ -28,7 +28,6 @@ import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
@@ -334,7 +333,7 @@ public class Launcher {
         }
     }
 
-    private void mainProcess() throws IOException {
+    private void mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.config.getBuildId()+") with the following config: "+this.config);
         this.getBuildToBeInspected();
 
@@ -345,11 +344,10 @@ public class Launcher {
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             serializers.add(new InspectorSerializer(this.engines));
-            serializers.add(new InspectorTimeSerializer(this.engines));
         } else {
             serializers.add(new InspectorSerializer4Bears(this.engines));
-            serializers.add(new InspectorTimeSerializer4Bears(this.engines));
         }
+        serializers.add(new InspectorTimeSerializer(this.engines));
         serializers.add(new NopolSerializer(this.engines));
         serializers.add(new NPEFixSerializer(this.engines));
         serializers.add(new AstorSerializer(this.engines));
@@ -370,7 +368,7 @@ public class Launcher {
         System.exit(0);
     }
 
-    public static void main(String[] args) throws IOException, JSAPException {
+    public static void main(String[] args) throws JSAPException {
         Launcher launcher = new Launcher(args);
         launcher.mainProcess();
     }
