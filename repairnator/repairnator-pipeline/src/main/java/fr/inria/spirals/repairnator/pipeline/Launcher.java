@@ -52,6 +52,7 @@ public class Launcher {
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
+    private PatchNotifier patchNotifier;
 
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
@@ -264,8 +265,9 @@ public class Launcher {
         ErrorNotifier.getInstance(notifierEngines);
 
         this.notifiers = new ArrayList<>();
-        this.notifiers.add(new PatchNotifier(notifierEngines));
         this.notifiers.add(new FixerBuildNotifier(notifierEngines));
+
+        this.patchNotifier = new PatchNotifier(notifierEngines);
     }
 
     private List<String> getListOfProjectsToIgnore() {
@@ -360,6 +362,8 @@ public class Launcher {
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         }
+
+        inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
         LOGGER.info("Inspector is finished. The process will now exit.");
