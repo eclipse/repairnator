@@ -39,12 +39,12 @@ if ! [[ $BUILD_ID =~ $re ]]; then
     echo "Build id should be a number"
     usage
 fi
+
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 echo "Set environment variables"
-source $SCRIPT_DIR/set_env_variable.sh
+. $SCRIPT_DIR/utils/init_script.sh
 
-source $SCRIPT_DIR/utils/init_script.sh
 echo "This will be run with the following RUN_ID: $RUN_ID"
 
 source $SCRIPT_DIR/utils/create_structure.sh

@@ -31,16 +31,17 @@ In order to run Repairnator with the provided scripts, you'll need:
 ### Setup Repairnator
 
 All Repairnator scripts are located in the directory `repairnator/scripts`. 
-The scripts use the configuration set in `repairnator/scripts/set_env_variable.sh`.
+The scripts use the global configuration set in `repairnator/scripts/config/repairnator.cfg`.
+You can define your own configuration in a file `repairnator.cfg` located in your home.
 
 ```bash
 git clone https://github.com/Spirals-Team/repairnator/
 cd repairnator
 
 # edit the file to specify the mandatory elements (you must add the Github Personal Access Token here)
-vi repairnator/scripts/set_env_variable.sh
+cp repairnator/scripts/config/repairnator.cfg ~
+vi ~/repairnator.cfg
 ```
-
 
 ### Launch Repairnator on a given Travis Build ID
 
@@ -50,8 +51,9 @@ Here it is: `352395977`.
 All you have to do, to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
 ```bash
-# set $HOME_REPAIR and $GITHUB_OAUTH in repairnator/scripts/set_env_variable.sh
-vi repairnator/scripts/set_env_variable.sh
+# set $HOME_REPAIR and $GITHUB_OAUTH in repairnator/scripts/config/repairnator.cfg
+cp repairnator/scripts/config/repairnator.cfg ~
+vi ~/repairnator.cfg
 
 cd repairnator/scripts
 

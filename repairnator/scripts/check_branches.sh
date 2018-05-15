@@ -40,21 +40,12 @@ touch $OUTPUT
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 echo "Set environment variables"
-source $SCRIPT_DIR/set_env_variable.sh
+. $SCRIPT_DIR/utils/init_script.sh
 
 echo "Create log directory: $LOG_DIR"
 mkdir $LOG_DIR
 
 RUN_ID=`date "+%Y-%m-%d_%H%M%S"`
-
-echo "Start building a new version of repairnator"
-$SCRIPT_DIR/build_repairnator.sh
-
-if [[ $? != 0 ]]
-then
-   echo "Error while building a new version of repairnator"
-   exit -1
-fi
 
 echo "Copy jar and prepare docker image"
 mkdir $REPAIRNATOR_RUN_DIR
