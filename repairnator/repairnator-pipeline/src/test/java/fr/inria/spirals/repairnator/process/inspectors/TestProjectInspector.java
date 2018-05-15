@@ -10,7 +10,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.ResolveDependency;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
@@ -213,53 +213,6 @@ public class TestProjectInspector {
                 assertThat(stepStatus.isSuccess(), is(false));
             } else {
                 assertThat(stepStatus.isSuccess(), is(true));
-            }
-        }
-
-        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-        assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
-
-        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR));
-
-    }
-
-    @Test
-    public void testSpoonException() throws IOException {
-        // one dependency missing: should not be buildable
-        long buildId = 355743087; // ministryofjustice/laa-saml-mock
-
-        Path tmpDirPath = Files.createTempDirectory("test_spoonexception");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
-
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build failingBuild = optionalBuild.get();
-
-        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
-
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-        List<AbstractNotifier> notifiers = new ArrayList<>();
-
-        List<SerializerEngine> serializerEngines = new ArrayList<>();
-        SerializerEngine serializerEngine = mock(SerializerEngine.class);
-        serializerEngines.add(serializerEngine);
-
-        serializers.add(new InspectorSerializer(serializerEngines));
-
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.REPAIR);
-
-        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
-        inspector.run();
-
-        JobStatus jobStatus = inspector.getJobStatus();
-
-        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-
-        for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() instanceof ResolveDependency) {
-                assertThat(stepStatus.isSuccess(), is(false));
             }
         }
 
