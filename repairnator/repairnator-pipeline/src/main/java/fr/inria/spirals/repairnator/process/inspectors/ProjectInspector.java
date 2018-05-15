@@ -139,7 +139,6 @@ public class ProjectInspector {
                     .setNextStep(new CheckoutBuggyBuild(this, true))
                     .setNextStep(new ComputeSourceDir(this, true, true)) // TODO: check, should it be really blocking?
                     .setNextStep(new ComputeTestDir(this, true))                    // IDEM
-                    .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
