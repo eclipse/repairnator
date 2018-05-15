@@ -73,10 +73,11 @@ ls $HOME_REPAIR/logs
 ### Launch Repairnator to analyze and repair failing builds in real-time
 
 You can launch Repairnator to analyze TravisCI builds in realtime and to repair failing ones.
-First open in a file editor `repairnator/scripts/set_env_variable.sh` and edit the values under `Realtime scanner configuration` section:
-  - `WHITELIST_PATH` and `BLACKLIST_PATH` should point on existing files: it can be empty files, or you can use those available in `repairnator/repairnator-realtime/src/main/resources`
-  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
 
+First open your `repairnator.cfg` config file (see above) and edit the values under `Realtime scanner configuration` section:
+  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
+  - `WHITELIST_PATH` and `BLACKLIST_PATH` can be left on the default value, or you can use the files available in `repairnator/repairnator-realtime/src/main/resources`
+  
 Then just run the script `launch_rtscanner.sh`.
 
 For more information about the usage of Repairnator check out [this page](/doc/usage.md).
