@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+function usage {
+    echo "This script aims at launching repairnator on a given list of TravisCI build ids."
+    echo "Error: $1"
+    echo "Usage: launch_dockerpool.sh <path_to_file>"
+    exit -1
+}
+
 # Use to create args in the command line for optional arguments
 function ca {
   if [ -z "$2" ];
@@ -17,13 +24,11 @@ function ca {
 }
 
 if [ "$#" -eq 0 ]; then
-    echo "A list of build ids must be provided"
-    exit -1
+    usage "A file with a list of build ids must be provided"
 fi
 
 if [ ! -f $1 ]; then
-    echo "The list of build ids must be an existing file ($1 not found)"
-    exit -1
+    usage "The file with the list of build ids must exist ($1 not found)"
 fi
 
 REPAIRNATOR_BUILD_LIST=$1
