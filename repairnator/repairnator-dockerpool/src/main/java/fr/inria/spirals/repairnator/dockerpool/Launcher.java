@@ -90,6 +90,8 @@ public class Launcher extends AbstractPoolManager {
         jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
         // --pushurl
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        // --ghOauth
+        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
 
         FlaggedOption opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
@@ -106,6 +108,7 @@ public class Launcher extends AbstractPoolManager {
         this.config = RepairnatorConfig.getInstance();
 
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
         } else {
