@@ -39,11 +39,11 @@ else if [ ! -f "$REPAIR_PROJECT_LIST_PATH" ]; then
 fi
 
 if [ "$SKIP_SCAN" -eq 0 ]; then
-    . $SCRIPT_DIR/launch_scanner.sh 1
+    . $SCRIPT_DIR/launch_scanner.sh
 fi
 
 if [ "$SKIP_LAUNCH_REPAIRNATOR" -eq 0 ]; then
-    . $SCRIPT_DIR/launch_dockerpool.sh $REPAIRNATOR_BUILD_LIST 1
+    . $SCRIPT_DIR/launch_dockerpool.sh $REPAIRNATOR_BUILD_LIST
 fi
 
 echo "Delete the run directory ($REPAIRNATOR_RUN_DIR)."

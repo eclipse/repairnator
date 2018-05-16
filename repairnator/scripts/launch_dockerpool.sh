@@ -36,10 +36,13 @@ else
     echo "$NB_LINES builds have been found."
 fi
 
-if [ "$#" -eq 1 ]; then
+DELETE_RUN_DIR=0
+if [ -z "$REPAIRNATOR_INITIALIZED" ]; then
     SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
     . $SCRIPT_DIR/utils/init_script.sh
+
+    DELETE_RUN_DIR=1
 fi
 
 echo "Copy jar into $REPAIRNATOR_DOCKERPOOL_DEST_JAR"
@@ -71,7 +74,7 @@ echo "Supplementary args for docker pool: $supplementaryArgs"
 java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR $elementaryArgs $supplementaryArgs &> $LOG_DIR/dockerpool_$RUN_ID.log
 
 echo "Docker pool finished."
-if [ "$#" -eq 1 ]; then
+if [ "$DELETE_RUN_DIR" -eq 1 ]; then
     echo "Delete the run directory ($REPAIRNATOR_RUN_DIR)."
     rm -rf $REPAIRNATOR_RUN_DIR
 fi

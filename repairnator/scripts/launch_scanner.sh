@@ -16,10 +16,13 @@ function ca {
   fi
 }
 
-if [ "$#" -eq 0 ]; then
+DELETE_RUN_DIR=0
+if [ -z "$REPAIRNATOR_INITIALIZED" ]; then
     SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
     . $SCRIPT_DIR/utils/init_script.sh
+
+    DELETE_RUN_DIR=1
 fi
 
 echo "Copy jar into $REPAIRNATOR_SCANNER_DEST_JAR"
@@ -57,7 +60,7 @@ echo "Supplementary args for scanner: $supplementaryArgs"
 java -jar $REPAIRNATOR_SCANNER_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/scanner_$RUN_ID.log
 
 echo "Scanner finished."
-if [ "$#" -eq 0 ]; then
+if [ "$DELETE_RUN_DIR" -eq 1 ]; then
     echo "Delete the run directory ($REPAIRNATOR_RUN_DIR)."
     rm -rf $REPAIRNATOR_RUN_DIR
 fi

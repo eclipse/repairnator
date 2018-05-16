@@ -2,6 +2,8 @@
 
 set -e
 
+REPAIRNATOR_INITIALIZED=1
+
 echo "Set environment variables"
 
 INIT_SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
