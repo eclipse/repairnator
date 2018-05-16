@@ -39,13 +39,7 @@ touch $OUTPUT
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-echo "Set environment variables"
 . $SCRIPT_DIR/utils/init_script.sh
-
-echo "Create log directory: $LOG_DIR"
-mkdir $LOG_DIR
-
-RUN_ID=`date "+%Y-%m-%d_%H%M%S"`
 
 echo "Copy jar and prepare docker image"
 mkdir $REPAIRNATOR_RUN_DIR

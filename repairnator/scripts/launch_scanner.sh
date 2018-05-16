@@ -19,12 +19,7 @@ function ca {
 if [ "$#" -eq 0 ]; then
     SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-    echo "Set environment variables"
     . $SCRIPT_DIR/utils/init_script.sh
-
-    echo "This will be run with the following RUN_ID: $RUN_ID"
-
-    source $SCRIPT_DIR/utils/create_structure.sh
 fi
 
 echo "Copy jar into $REPAIRNATOR_SCANNER_DEST_JAR"
