@@ -37,7 +37,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class TestProjectInspector {
         config.setZ3solverPath(solverPath);
         config.setPush(true);
         config.setPushRemoteRepo("");
-        config.setRepairTools(RepairToolsManager.getRepairToolsName());
+        config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "Nopol")));
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -133,7 +135,6 @@ public class TestProjectInspector {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
-        expectedStatuses.put(AstorJGenProgRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
         expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
         expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
         expectedStatuses.put(NPERepair.class, StepStatus.StatusKind.SKIPPED); // No NPE

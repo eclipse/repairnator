@@ -267,6 +267,19 @@ public class LauncherUtils {
         return arguments.getString("imageName");
     }
 
+    public static FlaggedOption defineArgGithubOAuth() {
+        FlaggedOption opt = new FlaggedOption("ghOauth");
+        opt.setLongFlag("ghOauth");
+        opt.setRequired(true);
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify Github Token to use");
+        return opt;
+    }
+
+    public static String getArgGithubOAuth(JSAPResult arguments) {
+        return arguments.getString("ghOauth");
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
@@ -280,9 +293,7 @@ public class LauncherUtils {
             printUsage(jsap, launcherType);
         }
 
-        if (launcherType != LauncherType.PIPELINE) {
-            checkEnvironmentVariable(Utils.GITHUB_OAUTH, jsap, launcherType);
-        } else {
+        if (launcherType == LauncherType.PIPELINE) {
             checkEnvironmentVariable(Utils.M2_HOME, jsap, launcherType);
         }
     }

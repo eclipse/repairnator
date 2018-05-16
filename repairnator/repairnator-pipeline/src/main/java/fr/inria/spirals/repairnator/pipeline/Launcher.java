@@ -115,6 +115,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // --pushurl
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        // --ghOauth
+        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -147,13 +149,6 @@ public class Launcher {
         opt2.setHelp("Specify a path to be used by the pipeline at processing things like to clone the project of the build id being processed");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("ghOauth");
-        opt2.setLongFlag("ghOauth");
-        opt2.setRequired(true);
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify oauth for Github use");
-        jsap.registerParameter(opt2);
-
         opt2 = new FlaggedOption("projectsToIgnore");
         opt2.setLongFlag("projectsToIgnore");
         opt2.setDefault("./projects_to_ignore.txt");
@@ -180,6 +175,7 @@ public class Launcher {
 
         this.config.setClean(true);
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
         } else {
@@ -203,7 +199,7 @@ public class Launcher {
         }
         this.config.setZ3solverPath(arguments.getFile("z3").getPath());
         this.config.setWorkspacePath(arguments.getString("workspace"));
-        this.config.setGithubToken(arguments.getString("ghOauth"));
+
         if (arguments.getFile("projectsToIgnore") != null) {
             this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }

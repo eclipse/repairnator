@@ -34,7 +34,7 @@ REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`_$R
 
 echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
 
-elementaryArgs="-i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID"
+elementaryArgs="-i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID --ghOauth $GITHUB_OAUTH"
 
 supplementaryArgs="`ca --dbhost $MONGODB_HOST`"
 supplementaryArgs="$supplementaryArgs `ca --dbname $MONGODB_NAME`"
