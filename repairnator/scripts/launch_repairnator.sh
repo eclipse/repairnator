@@ -51,7 +51,7 @@ if [ "$SKIP_SCAN" -eq 0 ]; then
     REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`_$RUN_ID.txt
     echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
 
-    elementaryArgs="-i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID"
+    elementaryArgs="-i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID --ghOauth $GITHUB_OAUTH"
 
     supplementaryArgs="`ca --dbhost $MONGODB_HOST`"
     supplementaryArgs="$supplementaryArgs `ca --dbname $MONGODB_NAME`"
@@ -98,7 +98,7 @@ docker pull $DOCKER_TAG
 
 echo "Launch docker pool..."
 
-elementaryArgs="-t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID --repairTools $REPAIR_TOOLS"
+elementaryArgs="-t $NB_THREADS -n $DOCKER_TAG -i $REPAIRNATOR_BUILD_LIST -o $LOG_DIR -l $DOCKER_LOG_DIR -g $DAY_TIMEOUT --runId $RUN_ID  --ghOauth $GITHUB_OAUTH --repairTools $REPAIR_TOOLS"
 
 supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 

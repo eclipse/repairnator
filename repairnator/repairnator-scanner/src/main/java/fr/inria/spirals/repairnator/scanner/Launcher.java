@@ -99,6 +99,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        // --ghOauth
+        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
 
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
@@ -145,6 +147,7 @@ public class Launcher {
         this.config = RepairnatorConfig.getInstance();
 
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
 
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
