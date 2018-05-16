@@ -135,7 +135,6 @@ public class TestProjectInspector {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
-        expectedStatuses.put(AstorJGenProgRepair.class, StepStatus.StatusKind.SKIPPED); // no patch found by Astor
         expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
         expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
         expectedStatuses.put(NPERepair.class, StepStatus.StatusKind.SKIPPED); // No NPE
