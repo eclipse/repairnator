@@ -2,6 +2,10 @@
 
 set -e
 
+REPAIRNATOR_INITIALIZED=1
+
+echo "Set environment variables"
+
 INIT_SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 command -v docker >/dev/null 2>&1 || { echo >&2 "Repairnator require docker to be installed. Check it out at https://www.docker.com"; exit 1; }
@@ -21,3 +25,6 @@ else
     export RUN_ID=`uuidgen`_$RUN_ID_SUFFIX
 fi
 
+echo "This will run with the following RUN_ID: $RUN_ID"
+
+source $SCRIPT_DIR/utils/create_structure.sh

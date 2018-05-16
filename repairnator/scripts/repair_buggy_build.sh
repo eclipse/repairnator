@@ -42,12 +42,7 @@ fi
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-echo "Set environment variables"
 . $SCRIPT_DIR/utils/init_script.sh
-
-echo "This will be run with the following RUN_ID: $RUN_ID"
-
-source $SCRIPT_DIR/utils/create_structure.sh
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
