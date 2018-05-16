@@ -14,7 +14,7 @@
 	</appender>
 
 	<logger name="fr.inria.spirals.jtravis.helpers" level="info" />
-	<logger name="fr.inria.spirals.repairnator" level="info" />
+	<logger name="fr.inria.spirals.repairnator" level="${LOG_LEVEL:-info}" />
 	<logger name="fr.inria.lille.nopol" level="info" />
 
 
@@ -22,7 +22,7 @@
 	<logger name="ch.qos.logback" level="OFF" />
 	<logger name="org.eclipse.jgit" level="OFF" />
 
-	<root level="info">
+	<root level="${LOG_LEVEL:-info}">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>

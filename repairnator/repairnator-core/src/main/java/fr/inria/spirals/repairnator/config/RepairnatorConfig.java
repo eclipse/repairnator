@@ -32,6 +32,7 @@ public class RepairnatorConfig {
     private boolean push;
     private String pushRemoteRepo;
     private boolean fork;
+    private boolean debug;
 
     // Scanner
     private Date lookFromDate;
@@ -195,6 +196,14 @@ public class RepairnatorConfig {
 
     public void setFork(boolean fork) {
         this.fork = fork;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     public int getBuildId() {

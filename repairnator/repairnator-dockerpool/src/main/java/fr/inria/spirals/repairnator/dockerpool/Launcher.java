@@ -107,6 +107,9 @@ public class Launcher extends AbstractPoolManager {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {

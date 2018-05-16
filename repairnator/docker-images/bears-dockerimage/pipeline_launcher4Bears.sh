@@ -45,5 +45,9 @@ export OUTPUT=
 LOCAL_GITHUB_OAUTH=$GITHUB_OAUTH
 export GITHUB_OAUTH=
 
+if [ "$LOG_LEVEL" == "DEBUG" ]; then
+    args="$args -d"
+fi
+
 echo "Execute pipeline with following supplementary args: $args"
-java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --bears -b $LOCAL_BUILD_ID -n $LOCAL_NEXT_BUILD_ID --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH $args
+java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher --bears -b $LOCAL_BUILD_ID -n $LOCAL_NEXT_BUILD_ID --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH $args
