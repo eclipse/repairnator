@@ -23,7 +23,7 @@ function ca {
   fi
 }
 
-if [ "$#" -eq 0 ]; then
+if [ "$#" -ne 1 ]; then
     usage "A file with a list of build ids must be provided"
 fi
 
