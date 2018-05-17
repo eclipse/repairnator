@@ -53,6 +53,10 @@ fi
 echo "Copy jar into $REPAIRNATOR_DOCKERPOOL_DEST_JAR"
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-dockerpool:$DOCKERPOOL_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_DOCKERPOOL_DEST_JAR
 
+if [ "$BEARS_MODE" -eq 1 ]; then
+    DOCKER_TAG=$DOCKER_TAG_BEARS
+fi
+
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
