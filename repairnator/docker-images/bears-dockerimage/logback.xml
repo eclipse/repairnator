@@ -13,7 +13,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="fr.inria.spirals.jtravis.helpers" level="info" />
+	<logger name="fr.inria.spirals.jtravis" level="${LOG_LEVEL:-info}" />
 	<logger name="fr.inria.spirals.repairnator" level="${LOG_LEVEL:-info}" />
 	<logger name="fr.inria.lille.nopol" level="info" />
 
