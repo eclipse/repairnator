@@ -2,35 +2,17 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.*;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by urli on 03/01/2017.
@@ -303,11 +285,13 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
-        this.recordMetrics();
-        this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
-        this.lastPush();
-        this.serializeData();
-        this.cleanMavenArtifacts();
+        if (!(this.pushState == PushState.END_PUSHED)) {
+            this.recordMetrics();
+            this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
+            this.inspector.getFinalStep().execute();
+            this.serializeData();
+            this.cleanMavenArtifacts();
+        }
     }
 
     private void recordMetrics() {
@@ -323,53 +307,6 @@ public abstract class AbstractStep {
             return 0;
         }
         return Math.round((dateEnd - dateBegin) / 1000);
-    }
-
-    // FIXME: this method should not be placed here
-    private void lastPush() {
-        if (RepairnatorConfig.getInstance().isPush() && this.getInspector().getJobStatus().getPushState() != PushState.NONE) {
-            File sourceDir = new File(this.getInspector().getRepoLocalPath());
-            File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
-
-            try {
-                Git git = Git.open(targetDir);
-
-                org.apache.commons.io.FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
-                    @Override
-                    public boolean accept(File pathname) {
-                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2") && !pathname.toString().contains(".travis.yml");
-                    }
-                });
-
-                git.add().addFilepattern(".").call();
-
-                for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f",fileToPush)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                    }
-                }
-
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("End of the repairnator process")
-                        .setAuthor(personIdent).setCommitter(personIdent).call();
-
-                if (this.getInspector().getJobStatus().isHasBeenPushed()) {
-                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.config.getGithubToken(), "");
-                    git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
-                }
-            } catch (GitAPIException | IOException e) {
-                this.getLogger().error("Error while trying to commit last information for repairnator", e);
-            }
-        }
-
-
     }
 
     protected void writeProperty(String propertyName, Object value) {
