@@ -62,7 +62,7 @@ public class Launcher {
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+        if (this.config.isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -146,6 +146,9 @@ public class Launcher {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
 
