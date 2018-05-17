@@ -1,12 +1,12 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -17,7 +17,6 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 
 /**
@@ -53,28 +52,12 @@ public class CommitPatch extends AbstractStep {
                 RevCommit headRev = revWalk.parseCommit(oldHeadRef.getObjectId());
                 revWalk.dispose();
 
-                FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
-                    @Override
-                    public boolean accept(File pathname) {
-                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2");
-                    }
-                });
+                GitHelper gitHelper = this.getInspector().getGitHelper();
+                gitHelper.copyDirectory(sourceDir, targetDir, this);
 
                 git.add().addFilepattern(".").call();
 
-                // FIXME: this code is duplicated in AbstractStep
-                for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", fileToPush)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                    }
-                }
+                gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);
 
 
 
@@ -106,9 +89,9 @@ public class CommitPatch extends AbstractStep {
                 }
                 return StepStatus.buildSuccess(this);
             } catch (IOException e) {
-                this.addStepError("Error while copying the folder to prepare the git repository.", e);
-            } catch (GitAPIException e) {
                 this.addStepError("Error while opening the git repository, maybe it has not been initialized yet.", e);
+            } catch (GitAPIException e) {
+                this.addStepError("Error while pushing or committed info.", e);
             }
             return StepStatus.buildSkipped(this,"Error while pushing or committed info.");
         } else {

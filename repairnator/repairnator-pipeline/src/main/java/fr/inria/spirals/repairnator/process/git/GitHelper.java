@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
@@ -36,6 +37,8 @@ import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -134,19 +137,7 @@ public class GitHelper {
 
                 this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
 
-                for (String fileToAdd : filesToAdd) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", fileToAdd)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                        return false;
-                    }
-                }
+                this.gitAdd(filesToAdd, git);
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
@@ -324,4 +315,33 @@ public class GitHelper {
             this.getLogger().error("Error while computing stat on the patch", e);
         }
     }
+
+    public void gitAdd(List<String> files, Git git) {
+        for (String file : files) {
+            // add force is not supported by JGit...
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", file)
+                    .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+
+            try {
+                Process p = processBuilder.start();
+                p.waitFor();
+            } catch (InterruptedException|IOException e) {
+                this.getLogger().error("Error while executing git command to add files: " + e);
+            }
+        }
+    }
+
+    public void copyDirectory(File sourceDir, File targetDir, AbstractStep step) {
+        try {
+            FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2");
+                }
+            });
+        } catch (IOException e) {
+            step.addStepError("Error while copying the folder to prepare the git repository.", e);
+        }
+    }
+
 }
