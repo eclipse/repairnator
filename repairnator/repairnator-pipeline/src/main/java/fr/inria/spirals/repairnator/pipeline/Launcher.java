@@ -81,7 +81,7 @@ public class Launcher {
             LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
         }
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+        if (this.config.isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -173,6 +173,9 @@ public class Launcher {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setClean(true);
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
