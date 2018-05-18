@@ -39,7 +39,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,6 +52,8 @@ import java.util.Set;
  * Created by fernanda on 01/03/17.
  */
 public class GitHelper {
+
+    private static final String TRAVIS_FILE = ".travis.yml";
 
     private int nbCommits;
 
@@ -331,12 +335,12 @@ public class GitHelper {
         }
     }
 
-    public void copyDirectory(File sourceDir, File targetDir, String[] nonDesirableFileExtensions, AbstractStep step) {
+    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, AbstractStep step) {
         try {
             FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
-                    for (String fileExtension : nonDesirableFileExtensions) {
+                    for (String fileExtension : excludedFileNames) {
                         if (pathname.toString().contains(fileExtension)) {
                             return false;
                         }
@@ -346,6 +350,56 @@ public class GitHelper {
             });
         } catch (IOException e) {
             step.addStepError("Error while copying the folder to prepare the git repository.", e);
+        }
+    }
+
+    public void removeNotificationFromTravisYML(File directory, AbstractStep step) {
+        File travisFile = new File(directory, TRAVIS_FILE);
+
+        if (!travisFile.exists()) {
+            getLogger().warn("Travis file has not been detected. It should however exists.");
+        } else {
+            try {
+                List<String> lines = Files.readAllLines(travisFile.toPath());
+                List<String> newLines = new ArrayList<>();
+                boolean changed = false;
+                boolean inNotifBlock = false;
+
+                for (String line : lines) {
+                    if (line.trim().equals("notifications:")) {
+                        changed = true;
+                        inNotifBlock = true;
+                    }
+                    if (inNotifBlock) {
+                        if (line.trim().isEmpty()) {
+                            inNotifBlock = false;
+                            newLines.add(line);
+                        } else {
+                            newLines.add("#"+line);
+                        }
+                    } else {
+                        newLines.add(line);
+                    }
+                }
+
+                if (changed) {
+                    getLogger().info("Notification block detected. The travis file will be changed.");
+                    File bakTravis = new File(directory, "bak"+TRAVIS_FILE);
+                    Files.move(travisFile.toPath(), bakTravis.toPath());
+                    FileWriter fw = new FileWriter(travisFile);
+                    for (String line : newLines) {
+                        fw.append(line);
+                        fw.append("\n");
+                        fw.flush();
+                    }
+                    fw.close();
+
+                    step.getInspector().getJobStatus().getCreatedFilesToPush().add(".travis.yml");
+                    step.getInspector().getJobStatus().getCreatedFilesToPush().add("bak.travis.yml");
+                }
+            } catch (IOException e) {
+                getLogger().warn("Error while changing travis file", e);
+            }
         }
     }
 

@@ -337,8 +337,10 @@ public abstract class AbstractStep {
 
                 GitHelper gitHelper = this.getInspector().getGitHelper();
 
-                String[] nonDesirableFileExtensions = { ".git", ".m2", ".travis.yml" };
-                gitHelper.copyDirectory(sourceDir, targetDir, nonDesirableFileExtensions, this);
+                String[] excludedFileNames = { ".git", ".m2" };
+                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, this);
+
+                gitHelper.removeNotificationFromTravisYML(targetDir, this);
 
                 git.add().addFilepattern(".").call();
 
