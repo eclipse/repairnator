@@ -51,8 +51,10 @@ public class ToolDiagnosticSerializer extends AbstractDataSerializer {
             data.add(serializedData);
         }
 
-        for (SerializerEngine engine : this.getEngines()) {
-            engine.serialize(data, this.getType());
+        if (!data.isEmpty()) {
+            for (SerializerEngine engine : this.getEngines()) {
+                engine.serialize(data, this.getType());
+            }
         }
     }
 }
