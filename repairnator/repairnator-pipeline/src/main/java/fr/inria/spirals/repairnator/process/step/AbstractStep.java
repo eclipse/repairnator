@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
@@ -334,27 +335,12 @@ public abstract class AbstractStep {
             try {
                 Git git = Git.open(targetDir);
 
-                org.apache.commons.io.FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
-                    @Override
-                    public boolean accept(File pathname) {
-                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2") && !pathname.toString().contains(".travis.yml");
-                    }
-                });
+                GitHelper gitHelper = this.getInspector().getGitHelper();
+                gitHelper.copyDirectory(sourceDir, targetDir, this);
 
                 git.add().addFilepattern(".").call();
 
-                for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f",fileToPush)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                    }
-                }
+                gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("End of the repairnator process")

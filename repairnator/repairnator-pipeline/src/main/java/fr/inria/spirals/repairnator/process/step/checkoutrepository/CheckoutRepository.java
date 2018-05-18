@@ -91,21 +91,14 @@ public abstract class CheckoutRepository extends AbstractStep {
                     String repository = this.getInspector().getRepoSlug();
                     this.getLogger().debug("Reproduce the PR for " + repository + " by fetching remote branch and merging.");
 
-                    List<String> pathes;
+                    List<String> paths;
                     if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
-                        pathes = new ArrayList<String>();
-                        for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
-                            URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
-                            URI pathURI = path.getCanonicalFile().toURI();
-                            String relativePath = gitRepoURI.relativize(pathURI).getPath();
-
-                            pathes.add(relativePath);
-                        }
+                        paths = this.getPaths(this.getInspector().getJobStatus().getRepairSourceDir(), git);
                     } else {
-                        pathes = null;
+                        paths = null;
                     }
 
-                    boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, pathes);
+                    boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, paths);
                     if (!successfulMerge) {
                         this.getLogger().debug("Error while merging two commits to reproduce the PR.");
                         return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
@@ -123,18 +116,9 @@ public abstract class CheckoutRepository extends AbstractStep {
                     if (checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
                         git.checkout().setName(commitCheckout).call();
                     } else {
+                        List<String> paths = this.getPaths(this.getInspector().getJobStatus().getRepairSourceDir(), git);
 
-                        List<String> pathes = new ArrayList<String>();
-
-                        // FIXME: duplicated code
-                        for (File path : this.getInspector().getJobStatus().getRepairSourceDir()) {
-                            URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
-                            URI pathURI = path.getCanonicalFile().toURI();
-                            String relativePath = gitRepoURI.relativize(pathURI).getPath();
-
-                            pathes.add(relativePath);
-                        }
-                        git.checkout().setStartPoint(commitCheckout).addPaths(pathes).call();
+                        git.checkout().setStartPoint(commitCheckout).addPaths(paths).call();
 
                         // FIXME: commit should not be there
                         PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
@@ -168,6 +152,22 @@ public abstract class CheckoutRepository extends AbstractStep {
         }
 
         return StepStatus.buildSuccess(this);
+    }
+
+    private List<String> getPaths(File[] dir, Git git) {
+        List<String> paths = new ArrayList<>();
+        try {
+            for (File path : dir) {
+                URI gitRepoURI = git.getRepository().getDirectory().getParentFile().toURI();
+                URI pathURI = path.getCanonicalFile().toURI();
+                String relativePath = gitRepoURI.relativize(pathURI).getPath();
+
+                paths.add(relativePath);
+            }
+        } catch (IOException e) {
+            this.addStepError("Exception while getting paths.", e);
+        }
+        return paths;
     }
 
     protected CheckoutType getCheckoutType() {
