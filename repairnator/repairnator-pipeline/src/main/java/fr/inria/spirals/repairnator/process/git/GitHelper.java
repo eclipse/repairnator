@@ -331,12 +331,17 @@ public class GitHelper {
         }
     }
 
-    public void copyDirectory(File sourceDir, File targetDir, AbstractStep step) {
+    public void copyDirectory(File sourceDir, File targetDir, String[] nonDesirableFileExtensions, AbstractStep step) {
         try {
             FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
-                    return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2");
+                    for (String fileExtension : nonDesirableFileExtensions) {
+                        if (pathname.toString().contains(fileExtension)) {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
             });
         } catch (IOException e) {

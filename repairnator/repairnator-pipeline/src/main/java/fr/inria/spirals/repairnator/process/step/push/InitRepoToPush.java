@@ -89,7 +89,9 @@ public class InitRepoToPush extends AbstractStep {
 
             try {
                 GitHelper gitHelper = this.getInspector().getGitHelper();
-                gitHelper.copyDirectory(sourceDir, targetDir, this);
+
+                String[] nonDesirableFileExtensions = { ".git", ".m2" };
+                gitHelper.copyDirectory(sourceDir, targetDir, nonDesirableFileExtensions, this);
 
                 this.removeNotificationFromTravisYML(targetDir);
 
