@@ -2,6 +2,10 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
+import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;

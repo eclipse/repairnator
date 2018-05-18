@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
@@ -36,7 +37,11 @@ import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,6 +52,8 @@ import java.util.Set;
  * Created by fernanda on 01/03/17.
  */
 public class GitHelper {
+
+    private static final String TRAVIS_FILE = ".travis.yml";
 
     private int nbCommits;
 
@@ -134,19 +141,7 @@ public class GitHelper {
 
                 this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
 
-                for (String fileToAdd : filesToAdd) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", fileToAdd)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                        return false;
-                    }
-                }
+                this.gitAdd(filesToAdd, git);
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
@@ -324,4 +319,88 @@ public class GitHelper {
             this.getLogger().error("Error while computing stat on the patch", e);
         }
     }
+
+    public void gitAdd(List<String> files, Git git) {
+        for (String file : files) {
+            // add force is not supported by JGit...
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", file)
+                    .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+
+            try {
+                Process p = processBuilder.start();
+                p.waitFor();
+            } catch (InterruptedException|IOException e) {
+                this.getLogger().error("Error while executing git command to add files: " + e);
+            }
+        }
+    }
+
+    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, AbstractStep step) {
+        try {
+            FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    for (String fileExtension : excludedFileNames) {
+                        if (pathname.toString().contains(fileExtension)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            });
+        } catch (IOException e) {
+            step.addStepError("Error while copying the folder to prepare the git repository.", e);
+        }
+    }
+
+    public void removeNotificationFromTravisYML(File directory, AbstractStep step) {
+        File travisFile = new File(directory, TRAVIS_FILE);
+
+        if (!travisFile.exists()) {
+            getLogger().warn("Travis file has not been detected. It should however exists.");
+        } else {
+            try {
+                List<String> lines = Files.readAllLines(travisFile.toPath());
+                List<String> newLines = new ArrayList<>();
+                boolean changed = false;
+                boolean inNotifBlock = false;
+
+                for (String line : lines) {
+                    if (line.trim().equals("notifications:")) {
+                        changed = true;
+                        inNotifBlock = true;
+                    }
+                    if (inNotifBlock) {
+                        if (line.trim().isEmpty()) {
+                            inNotifBlock = false;
+                            newLines.add(line);
+                        } else {
+                            newLines.add("#"+line);
+                        }
+                    } else {
+                        newLines.add(line);
+                    }
+                }
+
+                if (changed) {
+                    getLogger().info("Notification block detected. The travis file will be changed.");
+                    File bakTravis = new File(directory, "bak"+TRAVIS_FILE);
+                    Files.move(travisFile.toPath(), bakTravis.toPath());
+                    FileWriter fw = new FileWriter(travisFile);
+                    for (String line : newLines) {
+                        fw.append(line);
+                        fw.append("\n");
+                        fw.flush();
+                    }
+                    fw.close();
+
+                    step.getInspector().getJobStatus().getCreatedFilesToPush().add(".travis.yml");
+                    step.getInspector().getJobStatus().getCreatedFilesToPush().add("bak.travis.yml");
+                }
+            } catch (IOException e) {
+                getLogger().warn("Error while changing travis file", e);
+            }
+        }
+    }
+
 }
