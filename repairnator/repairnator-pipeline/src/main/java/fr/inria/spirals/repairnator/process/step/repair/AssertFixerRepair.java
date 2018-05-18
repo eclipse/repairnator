@@ -124,6 +124,7 @@ public class AssertFixerRepair extends AbstractRepairStep {
             diag.addProperty("className", result.getTestClass());
             diag.addProperty("methodName", result.getTestMethod());
             diag.addProperty("exceptionMessage",result.getExceptionMessage());
+            diag.addProperty("repairType", result.getRepairType().name());
             toolDiagnostic.add(diag);
 
             if (result.isSuccess()) {

@@ -61,7 +61,7 @@
         <dependency>
             <groupId>eu.stamp-project</groupId>
             <artifactId>assert-fixer</artifactId>
-            <version>1.0.5-SNAPSHOT</version>
+            <version>1.0.5</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
