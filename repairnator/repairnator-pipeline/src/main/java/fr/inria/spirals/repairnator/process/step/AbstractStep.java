@@ -132,7 +132,7 @@ public abstract class AbstractStep {
     protected void setPushState(PushState pushState) {
         if (pushState != null) {
             this.pushState = pushState;
-            this.inspector.getJobStatus().setPushState(this.pushState);
+            this.inspector.getJobStatus().addPushState(this.pushState);
             if (this.nextStep != null) {
                 this.nextStep.setPushState(pushState);
             }
@@ -289,10 +289,13 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
-        if (!(this.pushState == PushState.END_PUSHED)) {
+        if (!this.inspector.isPipelineEnding()) {
+            this.inspector.setPipelineEnding(true);
             this.recordMetrics();
             this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
-            this.inspector.getFinalStep().execute();
+            if (this.inspector.getFinalStep() != null) {
+                this.inspector.getFinalStep().execute();
+            }
             this.serializeData();
             this.cleanMavenArtifacts();
         }

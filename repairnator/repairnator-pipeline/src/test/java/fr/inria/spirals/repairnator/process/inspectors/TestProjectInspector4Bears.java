@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
+import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -144,11 +144,11 @@ public class TestProjectInspector4Bears {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
-        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+        expectedStatuses.put(PushProcessEnd.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
 
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
-        assertThat(jobStatus.getPushState(), is(PushState.REPO_NOT_PUSHED));
+        assertThat(jobStatus.getLastPushState(), is(PushState.REPO_NOT_PUSHED));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
@@ -222,11 +222,11 @@ public class TestProjectInspector4Bears {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
-        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+        expectedStatuses.put(PushProcessEnd.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
 
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
-        assertThat(jobStatus.getPushState(), is(PushState.REPO_NOT_PUSHED));
+        assertThat(jobStatus.getLastPushState(), is(PushState.REPO_NOT_PUSHED));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));

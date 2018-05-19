@@ -8,11 +8,10 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
-import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJGenProgRepair;
+import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
@@ -135,13 +134,13 @@ public class TestProjectInspector {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
-        expectedStatuses.put(PushIncriminatedBuild.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+        expectedStatuses.put(PushProcessEnd.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
         expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
         expectedStatuses.put(NPERepair.class, StepStatus.StatusKind.SKIPPED); // No NPE
 
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
-        assertThat(jobStatus.getPushState(), is(PushState.REPAIR_INFO_COMMITTED));
+        assertThat(jobStatus.getPushStates().contains(PushState.REPAIR_INFO_COMMITTED), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
@@ -204,18 +203,15 @@ public class TestProjectInspector {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPushState(), is(PushState.NONE));
+        assertThat(jobStatus.getLastPushState(), is(PushState.REPO_NOT_PUSHED));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
 
-        for (int i = 0; i < stepStatusList.size(); i++) {
-            StepStatus stepStatus = stepStatusList.get(i);
-            if (i == stepStatusList.size() - 1) {
-                assertThat(stepStatus.isSuccess(), is(false));
-            } else {
-                assertThat(stepStatus.isSuccess(), is(true));
-            }
-        }
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(BuildProject.class, StepStatus.StatusKind.FAILURE); // step supposed to fail by this test case
+        expectedStatuses.put(PushProcessEnd.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is(PipelineState.NOTBUILDABLE.name()));
