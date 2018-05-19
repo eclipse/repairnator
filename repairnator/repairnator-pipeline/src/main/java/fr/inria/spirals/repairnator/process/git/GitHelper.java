@@ -385,6 +385,7 @@ public class GitHelper {
                 if (changed) {
                     getLogger().info("Notification block detected. The travis file will be changed.");
                     File bakTravis = new File(directory, "bak"+TRAVIS_FILE);
+                    Files.deleteIfExists(bakTravis.toPath());
                     Files.move(travisFile.toPath(), bakTravis.toPath());
                     FileWriter fw = new FileWriter(travisFile);
                     for (String line : newLines) {
