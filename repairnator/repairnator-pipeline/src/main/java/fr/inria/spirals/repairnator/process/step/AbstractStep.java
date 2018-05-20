@@ -65,11 +65,11 @@ public abstract class AbstractStep {
     private boolean blockingStep;
 
     public AbstractStep(ProjectInspector inspector, boolean blockingStep) {
-        this(inspector, "", blockingStep);
+        this(inspector, blockingStep, "");
         this.name = this.getClass().getSimpleName();
     }
 
-    public AbstractStep(ProjectInspector inspector, String name, boolean blockingStep) {
+    public AbstractStep(ProjectInspector inspector, boolean blockingStep, String name) {
         this.name = name;
         this.inspector = inspector;
         this.shouldStop = false;

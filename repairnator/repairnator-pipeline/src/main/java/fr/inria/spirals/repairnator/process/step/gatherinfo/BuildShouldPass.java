@@ -22,11 +22,11 @@ public class BuildShouldPass implements ContractForGatherTestInformation {
                 if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                     // So, 1) the current passing build can be reproduced and 2) its previous build is a failing build
                     // with failing tests and it can also be reproduced
-                    ((ProjectInspector4Bears) inspector).setFixerBuildCase1(true);
+                    ((ProjectInspector4Bears) inspector).setBug(true, PipelineState.BUG_FAILING_PASSING.name());
                 } else if (inspector.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                     // So, 1) the current passing build can be reproduced and 2) its previous build is a passing build
                     // that fails when tested with new tests and it can also be reproduced
-                    ((ProjectInspector4Bears) inspector).setFixerBuildCase2(true);
+                    ((ProjectInspector4Bears) inspector).setBug(true, PipelineState.BUG_PASSING_PASSING.name());
                 }
             }
             return StepStatus.buildSuccess(gatherTestInformation);

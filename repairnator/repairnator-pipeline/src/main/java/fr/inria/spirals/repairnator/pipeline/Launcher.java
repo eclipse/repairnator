@@ -17,7 +17,7 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
+import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -263,7 +263,7 @@ public class Launcher {
         ErrorNotifier.getInstance(notifierEngines);
 
         this.notifiers = new ArrayList<>();
-        this.notifiers.add(new FixerBuildNotifier(notifierEngines));
+        this.notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
         this.patchNotifier = new PatchNotifier(notifierEngines);
     }

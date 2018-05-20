@@ -12,7 +12,7 @@ import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
+import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
@@ -131,7 +131,7 @@ public class TestProjectInspector4Bears {
 
         serializers.add(new InspectorSerializer4Bears(serializerEngines));
 
-        notifiers.add(new FixerBuildNotifier(notifierEngines));
+        notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
@@ -149,12 +149,13 @@ public class TestProjectInspector4Bears {
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
         assertThat(jobStatus.getPushState(), is(PushState.REPO_NOT_PUSHED));
-        assertThat(inspector.isFixerBuildCase1(), is(true));
+        assertThat(inspector.isBug(), is(true));
+        assertThat(inspector.getBugType(), is("BUG_FAILING_PASSING"));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-        assertThat(finalStatus, is(PipelineState.FIXERBUILDCASE1.name()));
+        assertThat(finalStatus, is(PipelineState.BUG_FAILING_PASSING.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
@@ -210,7 +211,7 @@ public class TestProjectInspector4Bears {
 
         serializers.add(new InspectorSerializer4Bears(serializerEngines));
 
-        notifiers.add(new FixerBuildNotifier(notifierEngines));
+        notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
@@ -227,12 +228,13 @@ public class TestProjectInspector4Bears {
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
         assertThat(jobStatus.getPushState(), is(PushState.REPO_NOT_PUSHED));
-        assertThat(inspector.isFixerBuildCase2(), is(true));
+        assertThat(inspector.isBug(), is(true));
+        assertThat(inspector.getBugType(), is("BUG_PASSING_PASSING"));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-        assertThat(finalStatus, is(PipelineState.FIXERBUILDCASE2.name()));
+        assertThat(finalStatus, is(PipelineState.BUG_PASSING_PASSING.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));

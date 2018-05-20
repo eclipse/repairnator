@@ -31,7 +31,7 @@ public class CommitPatch extends AbstractStep {
     }
 
     public CommitPatch(ProjectInspector inspector, String name, boolean pushHumanPatch) {
-        super(inspector, name, false);
+        super(inspector, false, name);
         this.pushHumanPatch = pushHumanPatch;
     }
 
