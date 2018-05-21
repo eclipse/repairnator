@@ -92,7 +92,7 @@ public class CommitFiles extends AbstractStep {
                 break;
 
             case COMMIT_REPAIR_INFO:
-                commitMsg = "Automatic repair information (optionally automatic patches).";
+                commitMsg = "Automatic repair information (optional automatic patches)";
                 break;
 
             case COMMIT_PROCESS_END:
