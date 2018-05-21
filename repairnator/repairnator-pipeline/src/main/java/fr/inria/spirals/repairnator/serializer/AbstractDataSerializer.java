@@ -26,10 +26,13 @@ public abstract class AbstractDataSerializer extends Serializer {
         JobStatus jobStatus = inspector.getJobStatus();
 
         if (inspector instanceof ProjectInspector4Bears) {
-            if (((ProjectInspector4Bears) inspector).isFixerBuildCase1()) {
+            ProjectInspector4Bears inspector4Bears = (ProjectInspector4Bears) inspector;
+            if (inspector4Bears.isFixerBuildCase1()) {
                 return PipelineState.FIXERBUILDCASE1.name();
-            } else if (((ProjectInspector4Bears) inspector).isFixerBuildCase2()) {
+            } else if (inspector4Bears.isFixerBuildCase2()) {
                 return PipelineState.FIXERBUILDCASE2.name();
+            } else if (inspector4Bears.getJobStatus().isReproducedAsFail()) {
+                return "BUG REPRODUCED";
             }
         }
 
