@@ -11,8 +11,8 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
+import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -53,6 +53,8 @@ public class ProjectInspector {
     private CheckoutType checkoutType;
 
     private List<AbstractStep> steps;
+    private AbstractStep finalStep;
+    private boolean pipelineEnding;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
@@ -148,7 +150,6 @@ public class ProjectInspector {
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
                     .setNextStep(new InitRepoToPush(this))
-                    .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this, false))
                     .setNextStep(new ComputeSourceDir(this, false, false));
 
@@ -168,6 +169,8 @@ public class ProjectInspector {
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
                     .setNextStep(new CommitPatch(this, true));
+
+            this.finalStep = new PushProcessEnd(this);
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);
@@ -213,6 +216,22 @@ public class ProjectInspector {
 
     public void setPatchNotifier(PatchNotifier patchNotifier) {
         this.patchNotifier = patchNotifier;
+    }
+
+    public AbstractStep getFinalStep() {
+        return finalStep;
+    }
+
+    public void setFinalStep(AbstractStep finalStep) {
+        this.finalStep = finalStep;
+    }
+
+    public boolean isPipelineEnding() {
+        return pipelineEnding;
+    }
+
+    public void setPipelineEnding(boolean pipelineEnding) {
+        this.pipelineEnding = pipelineEnding;
     }
 
     public void registerStep(AbstractStep step) {

@@ -83,7 +83,7 @@ public class CommitPatch extends AbstractStep {
 
                 if (this.getInspector().getJobStatus().isHasBeenPushed()) {
                     CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.getConfig().getGithubToken(), "");
-                    git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
+                    git.push().setRemote(PushProcessEnd.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
                 }
 
                 if (pushHumanPatch) {
@@ -96,6 +96,11 @@ public class CommitPatch extends AbstractStep {
                 this.addStepError("Error while opening the git repository, maybe it has not been initialized yet.", e);
             } catch (GitAPIException e) {
                 this.addStepError("Error while pushing or committed info.", e);
+            }
+            if (pushHumanPatch) {
+                this.setPushState(PushState.PATCH_NOT_COMMITTED);
+            } else {
+                this.setPushState(PushState.REPAIR_INFO_NOT_COMMITTED);
             }
             return StepStatus.buildSkipped(this,"Error while pushing or committed info.");
         } else {

@@ -87,7 +87,7 @@ public class TestCommitPatch {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new CommitPatch(inspector, true));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
+        assertThat(jobStatus.getPushStates().contains(PushState.PATCH_COMMITTED), is(true));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();
@@ -96,9 +96,6 @@ public class TestCommitPatch {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
-
-        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
