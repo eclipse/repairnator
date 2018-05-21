@@ -5,7 +5,6 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.states.PipelineState;
 
 import java.util.List;
 
@@ -27,10 +26,8 @@ public abstract class AbstractDataSerializer extends Serializer {
 
         if (inspector instanceof ProjectInspector4Bears) {
             ProjectInspector4Bears inspector4Bears = (ProjectInspector4Bears) inspector;
-            if (inspector4Bears.isFixerBuildCase1()) {
-                return PipelineState.FIXERBUILDCASE1.name();
-            } else if (inspector4Bears.isFixerBuildCase2()) {
-                return PipelineState.FIXERBUILDCASE2.name();
+            if (inspector4Bears.isBug()) {
+                return inspector4Bears.getBugType();
             } else if (inspector4Bears.getJobStatus().isReproducedAsFail()) {
                 return "BUG REPRODUCED";
             }

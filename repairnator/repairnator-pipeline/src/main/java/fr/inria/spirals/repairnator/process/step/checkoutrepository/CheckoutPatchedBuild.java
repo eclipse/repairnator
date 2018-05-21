@@ -13,6 +13,10 @@ public class CheckoutPatchedBuild extends CheckoutRepository {
         super(inspector, blockingStep);
     }
 
+    public CheckoutPatchedBuild(ProjectInspector inspector, boolean blockingStep, String stepName) {
+        super(inspector, blockingStep, stepName);
+    }
+
     protected StepStatus businessExecute() {
         this.getLogger().debug("Checking out build...");
 

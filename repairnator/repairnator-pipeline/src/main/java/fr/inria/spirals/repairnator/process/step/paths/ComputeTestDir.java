@@ -29,8 +29,8 @@ public class ComputeTestDir extends AbstractStep {
         super(inspector, blockingStep);
     }
 
-    public ComputeTestDir(ProjectInspector inspector, String name, boolean blockingStep) {
-        super(inspector, name, blockingStep);
+    public ComputeTestDir(ProjectInspector inspector, boolean blockingStep, String name) {
+        super(inspector, blockingStep, name);
     }
 
     private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
