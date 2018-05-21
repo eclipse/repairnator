@@ -52,6 +52,7 @@ public class ProjectInspector {
 
     private CheckoutType checkoutType;
 
+    private List<AbstractStep> steps;
     private AbstractStep finalStep;
     private boolean pipelineEnding;
 
@@ -67,6 +68,7 @@ public class ProjectInspector {
         this.jobStatus = new JobStatus(repoLocalPath);
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
         this.initMetricsValue();
     }
 
@@ -173,6 +175,8 @@ public class ProjectInspector {
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);
 
+            this.printPipeline();
+
             try {
                 cloneRepo.execute();
             } catch (Exception e) {
@@ -229,4 +233,68 @@ public class ProjectInspector {
     public void setPipelineEnding(boolean pipelineEnding) {
         this.pipelineEnding = pipelineEnding;
     }
+
+    public void registerStep(AbstractStep step) {
+        this.steps.add(this.steps.size(), step);
+    }
+
+    public List<AbstractStep> getSteps() {
+        return steps;
+    }
+
+    public void printPipeline() {
+        this.logger.info("----------------------------------------------------------------------");
+        this.logger.info("PIPELINE STEPS");
+        this.logger.info("----------------------------------------------------------------------");
+        for (int i = 0; i < this.steps.size(); i++) {
+            this.logger.info(this.steps.get(i).getName());
+        }
+    }
+
+    public void printPipelineEnd() {
+        this.logger.info("----------------------------------------------------------------------");
+        this.logger.info("PIPELINE EXECUTION SUMMARY");
+        this.logger.info("----------------------------------------------------------------------");
+        int higherDuration = 0;
+        for (int i = 0; i < this.steps.size(); i++) {
+            AbstractStep step = this.steps.get(i);
+            int stepDuration = step.getDuration();
+            if (stepDuration > higherDuration) {
+                higherDuration = stepDuration;
+            }
+        }
+        for (int i = 0; i < this.steps.size(); i++) {
+            AbstractStep step = this.steps.get(i);
+            String stepName = step.getName();
+            String stepStatus = (step.getStepStatus() != null) ? step.getStepStatus().getStatus().name() : "NOT RUN";
+            String stepDuration = String.valueOf(step.getDuration());
+
+            StringBuilder stepDurationFormatted = new StringBuilder();
+            if (!stepStatus.equals("SKIPPED") && !stepStatus.equals("NOT RUN")) {
+                stepDurationFormatted.append(" [ ");
+                for (int j = 0; j < (String.valueOf(higherDuration).length() - stepDuration.length()); j++) {
+                    stepDurationFormatted.append(" ");
+                }
+                stepDurationFormatted.append(stepDuration + " s ]");
+            } else {
+                for (int j = 0; j < (String.valueOf(higherDuration).length() + 7); j++) {
+                    stepDurationFormatted.append(" ");
+                }
+            }
+
+            int stringSize = stepName.length() + stepStatus.length() + stepDurationFormatted.length();
+            int nbDot = 70 - stringSize;
+            StringBuilder stepNameFormatted = new StringBuilder(stepName);
+            for (int j = 0; j < nbDot; j++) {
+                stepNameFormatted.append(".");
+            }
+            this.logger.info(stepNameFormatted + stepStatus + stepDurationFormatted);
+        }
+        String finding = AbstractDataSerializer.getPrettyPrintState(this).toUpperCase();
+        finding = (finding.equals("UNKNOWN")) ? "-" : finding;
+        this.logger.info("----------------------------------------------------------------------");
+        this.logger.info("PIPELINE FINDING: "+finding);
+        this.logger.info("----------------------------------------------------------------------");
+    }
+
 }

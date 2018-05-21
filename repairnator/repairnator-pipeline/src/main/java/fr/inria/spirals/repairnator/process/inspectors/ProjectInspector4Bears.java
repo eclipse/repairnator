@@ -84,6 +84,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
         firstStep.setDataSerializer(this.getSerializers());
         firstStep.setNotifiers(this.getNotifiers());
 
+        this.printPipeline();
+
         try {
             firstStep.execute();
         } catch (Exception e) {
