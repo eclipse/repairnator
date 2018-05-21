@@ -38,8 +38,8 @@ public class ComputeSourceDir extends AbstractStep {
         this.allModules = allModules;
     }
 
-    public ComputeSourceDir(ProjectInspector inspector, String name, boolean blockingStep, boolean allModules) {
-        super(inspector, name, blockingStep);
+    public ComputeSourceDir(ProjectInspector inspector, boolean blockingStep, String name, boolean allModules) {
+        super(inspector, blockingStep, name);
         this.allModules = allModules;
     }
 

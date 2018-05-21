@@ -49,7 +49,7 @@ public class GatherTestInformation extends AbstractStep {
      * @param skipSettingStatusInformation If set to true, the step won't push any information to the JobStatus of the inspector.
      */
     public GatherTestInformation(ProjectInspector inspector, boolean blockingStep, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation, String stepName) {
-        super(inspector, stepName, blockingStep);
+        super(inspector, blockingStep, stepName);
         this.failureLocations = new HashSet<>();
         this.failureNames = new HashSet<>();
         this.contract = contract;

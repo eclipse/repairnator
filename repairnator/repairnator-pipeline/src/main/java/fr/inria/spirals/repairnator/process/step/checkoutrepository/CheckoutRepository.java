@@ -32,6 +32,10 @@ public abstract class CheckoutRepository extends AbstractStep {
         super(inspector, blockingStep);
     }
 
+    public CheckoutRepository(ProjectInspector inspector, boolean blockingStep, String stepName) {
+        super(inspector, blockingStep, stepName);
+    }
+
     private String getCommitUrl(String commitId) {
         return "http://github.com/"+this.getInspector().getRepoSlug()+"/commit/"+commitId;
     }
