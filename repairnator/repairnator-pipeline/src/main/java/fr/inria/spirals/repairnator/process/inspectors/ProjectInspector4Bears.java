@@ -4,9 +4,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
-import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
-import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
-import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
+import fr.inria.spirals.repairnator.process.step.push.*;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.step.*;
@@ -55,7 +53,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build", true))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build", true))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                    .setNextStep(new CommitPatch(this, true));
+                    .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutPatchedBuild(this, true))
@@ -71,14 +69,15 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build", true))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build", true))
                         .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                        .setNextStep(new CommitPatch(this, true));
+                        .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
                 return;
             }
         }
 
-        super.setFinalStep(new PushProcessEnd(this));
+        super.setFinalStep(new CommitProcessEnd(this));
+        super.getFinalStep().setNextStep(new PushProcessEnd(this));
 
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.getSerializers());

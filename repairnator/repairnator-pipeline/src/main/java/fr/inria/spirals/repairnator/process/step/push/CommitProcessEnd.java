@@ -4,28 +4,25 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PushState;
 
-/**
- * Created by urli on 26/04/2017.
- */
-public class InitRepoToPush extends CommitFiles {
+public class CommitProcessEnd extends CommitFiles {
 
-    public InitRepoToPush(ProjectInspector inspector) {
+    public CommitProcessEnd(ProjectInspector inspector) {
         super(inspector);
     }
 
     @Override
     protected StepStatus businessExecute() {
         if (this.getConfig().isPush()) {
-            this.getLogger().info("Repairnator is configured to push. Init local repo to push and commit buggy build...");
+            this.getLogger().info("Commit process end...");
 
-            super.setCommitType(CommitType.COMMIT_BUGGY_BUILD);
+            super.setCommitType(CommitType.COMMIT_PROCESS_END);
 
             StepStatus stepStatus = super.businessExecute();
 
             if (stepStatus.isSuccess()) {
-                this.setPushState(PushState.REPO_INITIALIZED);
+                this.setPushState(PushState.PROCESS_END_COMMITTED);
             } else {
-                this.setPushState(PushState.REPO_NOT_INITIALIZED);
+                this.setPushState(PushState.PROCESS_END_NOT_COMMITTED);
             }
             return stepStatus;
         } else {
