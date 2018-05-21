@@ -23,7 +23,7 @@ public class CommitFiles extends AbstractStep {
     }
 
     public CommitFiles(ProjectInspector inspector, String stepName) {
-        super(inspector, stepName, false);
+        super(inspector, false, stepName);
     }
 
     @Override
