@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by urli on 23/03/2017.
  */
 public class JobStatus {
-    private PushState pushState;
+    private List<PushState> pushStates;
     private List<URL> repairClassPath;
 
     private File[] repairSourceDir;
@@ -59,6 +59,7 @@ public class JobStatus {
         this.metrics = new Metrics();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
+        this.pushStates = new ArrayList<>();
         this.listOfPatches = new HashMap<>();
         this.toolDiagnostic = new HashMap<>();
     }
@@ -149,12 +150,16 @@ public class JobStatus {
         this.hasBeenPatched = hasBeenPatched;
     }
 
-    public PushState getPushState() {
-        return pushState;
+    public List<PushState> getPushStates() {
+        return pushStates;
     }
 
-    public void setPushState(PushState pushState) {
-        this.pushState = pushState;
+    public PushState getLastPushState() {
+        return pushStates.get(pushStates.size() - 1);
+    }
+
+    public void addPushState(PushState pushState) {
+        this.pushStates.add(pushState);
     }
 
     public Metrics getMetrics() {

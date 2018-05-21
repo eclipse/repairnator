@@ -25,8 +25,11 @@ public abstract class AbstractDataSerializer extends Serializer {
         JobStatus jobStatus = inspector.getJobStatus();
 
         if (inspector instanceof ProjectInspector4Bears) {
-            if (((ProjectInspector4Bears) inspector).isBug()) {
-                return ((ProjectInspector4Bears) inspector).getBugType();
+            ProjectInspector4Bears inspector4Bears = (ProjectInspector4Bears) inspector;
+            if (inspector4Bears.isBug()) {
+                return inspector4Bears.getBugType();
+            } else if (inspector4Bears.getJobStatus().isReproducedAsFail()) {
+                return "BUG REPRODUCED";
             }
         }
 
