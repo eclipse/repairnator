@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
@@ -56,6 +57,7 @@ public abstract class AbstractStep {
     private Properties properties;
     private RepairnatorConfig config;
 
+    private StepStatus stepStatus;
     private PushState pushState;
 
     /**
@@ -70,14 +72,13 @@ public abstract class AbstractStep {
 
     public AbstractStep(ProjectInspector inspector, String name, boolean blockingStep) {
         this.name = name;
-        this.inspector = inspector;
         this.shouldStop = false;
         this.pomLocationTested = false;
         this.serializers = new ArrayList<>();
         this.properties = new Properties();
         this.config = RepairnatorConfig.getInstance();
         this.blockingStep = blockingStep;
-        this.initStates();
+        this.setProjectInspector(inspector);
     }
 
     public void setBlockingStep(boolean blockingStep) {
@@ -120,6 +121,10 @@ public abstract class AbstractStep {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public StepStatus getStepStatus() {
+        return stepStatus;
     }
 
     public void setDataSerializer(List<AbstractDataSerializer> serializers) {
@@ -275,8 +280,11 @@ public abstract class AbstractStep {
     }
 
     public void setProjectInspector(ProjectInspector inspector) {
-        this.inspector = inspector;
-        this.initStates();
+        if (inspector != null) {
+            this.inspector = inspector;
+            this.inspector.registerStep(this);
+            this.initStates();
+        }
     }
 
     public boolean isShouldStop() {
@@ -284,20 +292,30 @@ public abstract class AbstractStep {
     }
 
     public void execute() {
+        List<AbstractStep> steps = this.inspector.getSteps();
+        this.getLogger().debug("----------------------------------------------------------------------");
+        this.getLogger().debug("STEP "+ (steps.indexOf(this) + 1)+"/"+ steps.size() +": "+this.name);
+        this.getLogger().debug("----------------------------------------------------------------------");
+
         this.dateBegin = new Date().getTime();
-        StepStatus stepStatus = this.businessExecute();
+        this.stepStatus = this.businessExecute();
         this.dateEnd = new Date().getTime();
+
+        this.getLogger().debug("STEP STATUS: "+this.stepStatus);
+        this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
 
         Metrics metric = this.inspector.getJobStatus().getMetrics();
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
-        this.inspector.getJobStatus().addStepStatus(stepStatus);
+        this.inspector.getJobStatus().addStepStatus(this.stepStatus);
 
-        this.shouldStop = this.shouldStop || (this.isBlockingStep() && !stepStatus.isSuccess());
+        this.shouldStop = this.shouldStop || (this.isBlockingStep() && !this.stepStatus.isSuccess());
         if (!this.shouldStop) {
+            this.getLogger().debug("EXECUTE NEXT STEP");
             this.executeNextStep();
         } else {
+            this.getLogger().debug("TERMINATE PIPELINE");
             this.terminatePipeline();
         }
     }
@@ -308,6 +326,7 @@ public abstract class AbstractStep {
         this.lastPush();
         this.serializeData();
         this.cleanMavenArtifacts();
+        this.inspector.printPipelineEnd();
     }
 
     private void recordMetrics() {
@@ -318,7 +337,7 @@ public abstract class AbstractStep {
         metric.setNbCPU(Runtime.getRuntime().availableProcessors());
     }
 
-    private int getDuration() {
+    public int getDuration() {
         if (dateEnd == 0 || dateBegin == 0) {
             return 0;
         }
@@ -334,27 +353,16 @@ public abstract class AbstractStep {
             try {
                 Git git = Git.open(targetDir);
 
-                org.apache.commons.io.FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
-                    @Override
-                    public boolean accept(File pathname) {
-                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2") && !pathname.toString().contains(".travis.yml");
-                    }
-                });
+                GitHelper gitHelper = this.getInspector().getGitHelper();
+
+                String[] excludedFileNames = { ".git", ".m2" };
+                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, this);
+
+                gitHelper.removeNotificationFromTravisYML(targetDir, this);
 
                 git.add().addFilepattern(".").call();
 
-                for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f",fileToPush)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                    }
-                }
+                gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("End of the repairnator process")

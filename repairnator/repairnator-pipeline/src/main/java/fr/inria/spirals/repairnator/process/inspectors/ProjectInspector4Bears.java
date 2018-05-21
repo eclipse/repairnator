@@ -46,38 +46,34 @@ public class ProjectInspector4Bears extends ProjectInspector {
             cloneRepo.setNextStep(new CheckoutBuggyBuild(this, true))
                     .setNextStep(new ComputeSourceDir(this, true, true))
                     .setNextStep(new ComputeTestDir(this, false))
-                    .setNextStep(new ResolveDependency(this))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuild", true))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuild", true))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuild"))
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new ComputeClasspath(this, false))
-                    .setNextStep(new CommitPatch(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this, true))
                     .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build", true))
                     .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build", true))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                    .setNextStep(new PushIncriminatedBuild(this))
-                    .setNextStep(new CommitPatch(this, true));
+                    .setNextStep(new CommitPatch(this, true))
+                    .setNextStep(new PushIncriminatedBuild(this));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutPatchedBuild(this, true))
                         .setNextStep(new ComputeSourceDir(this, true, true))
                         .setNextStep(new ComputeTestDir(this, false))
                         .setNextStep(new CheckoutBuggyBuildSourceCode(this, true))
-                        .setNextStep(new ResolveDependency(this))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"PreviousBuildSourceCode", true))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"PreviousBuildSourceCode", true))
                         .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"PreviousBuildSourceCode"))
                         .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this, false))
-                        .setNextStep(new CommitPatch(this, false))
                         .setNextStep(new CheckoutPatchedBuild(this, true))
                         .setNextStep(new BuildProject(this, BuildProject.class.getSimpleName()+"Build", true))
                         .setNextStep(new TestProject(this, TestProject.class.getSimpleName()+"Build", true))
                         .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"Build"))
-                        .setNextStep(new PushIncriminatedBuild(this))
-                        .setNextStep(new CommitPatch(this, true));
+                        .setNextStep(new CommitPatch(this, true))
+                        .setNextStep(new PushIncriminatedBuild(this));
             } else {
                 this.logger.debug("The pair of scanned builds is not interesting.");
                 return;
@@ -87,6 +83,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
         firstStep = cloneRepo;
         firstStep.setDataSerializer(this.getSerializers());
         firstStep.setNotifiers(this.getNotifiers());
+
+        this.printPipeline();
 
         try {
             firstStep.execute();

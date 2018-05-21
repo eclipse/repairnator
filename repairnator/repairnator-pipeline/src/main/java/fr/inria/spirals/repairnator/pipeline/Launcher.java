@@ -9,11 +9,10 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.serializer.AssertFixerSerializer;
-import fr.inria.spirals.repairnator.serializer.AstorSerializer;
 import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
-import fr.inria.spirals.repairnator.serializer.NPEFixSerializer;
+import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
+import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -28,8 +27,6 @@ import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.NopolSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,6 +51,7 @@ public class Launcher {
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
+    private PatchNotifier patchNotifier;
 
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
@@ -83,7 +81,7 @@ public class Launcher {
             LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
         }
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+        if (this.config.isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -117,6 +115,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // --pushurl
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        // --ghOauth
+        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -149,17 +149,10 @@ public class Launcher {
         opt2.setHelp("Specify a path to be used by the pipeline at processing things like to clone the project of the build id being processed");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("ghOauth");
-        opt2.setLongFlag("ghOauth");
-        opt2.setRequired(true);
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify oauth for Github use");
-        jsap.registerParameter(opt2);
-
         opt2 = new FlaggedOption("projectsToIgnore");
         opt2.setLongFlag("projectsToIgnore");
         opt2.setDefault("./projects_to_ignore.txt");
-        opt2.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
+        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
 
@@ -180,8 +173,12 @@ public class Launcher {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setClean(true);
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
         } else {
@@ -205,7 +202,7 @@ public class Launcher {
         }
         this.config.setZ3solverPath(arguments.getFile("z3").getPath());
         this.config.setWorkspacePath(arguments.getString("workspace"));
-        this.config.setGithubToken(arguments.getString("ghOauth"));
+
         if (arguments.getFile("projectsToIgnore") != null) {
             this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
@@ -266,8 +263,9 @@ public class Launcher {
         ErrorNotifier.getInstance(notifierEngines);
 
         this.notifiers = new ArrayList<>();
-        this.notifiers.add(new PatchNotifier(notifierEngines));
         this.notifiers.add(new FixerBuildNotifier(notifierEngines));
+
+        this.patchNotifier = new PatchNotifier(notifierEngines);
     }
 
     private List<String> getListOfProjectsToIgnore() {
@@ -334,7 +332,7 @@ public class Launcher {
         }
     }
 
-    private void mainProcess() throws IOException {
+    private void mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.config.getBuildId()+") with the following config: "+this.config);
         this.getBuildToBeInspected();
 
@@ -345,17 +343,15 @@ public class Launcher {
 
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             serializers.add(new InspectorSerializer(this.engines));
-            serializers.add(new InspectorTimeSerializer(this.engines));
         } else {
             serializers.add(new InspectorSerializer4Bears(this.engines));
-            serializers.add(new InspectorTimeSerializer4Bears(this.engines));
         }
-        serializers.add(new NopolSerializer(this.engines));
-        serializers.add(new NPEFixSerializer(this.engines));
-        serializers.add(new AstorSerializer(this.engines));
+
+        serializers.add(new InspectorTimeSerializer(this.engines));
         serializers.add(new MetricsSerializer(this.engines));
         serializers.add(new PipelineErrorSerializer(this.engines));
-        serializers.add(new AssertFixerSerializer(this.engines));
+        serializers.add(new PatchesSerializer(this.engines));
+        serializers.add(new ToolDiagnosticSerializer(this.engines));
 
         ProjectInspector inspector;
 
@@ -364,13 +360,15 @@ public class Launcher {
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         }
+
+        inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
         LOGGER.info("Inspector is finished. The process will now exit.");
         System.exit(0);
     }
 
-    public static void main(String[] args) throws IOException, JSAPException {
+    public static void main(String[] args) throws JSAPException {
         Launcher launcher = new Launcher(args);
         launcher.mainProcess();
     }

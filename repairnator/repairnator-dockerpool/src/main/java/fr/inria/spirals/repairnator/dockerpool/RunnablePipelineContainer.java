@@ -53,6 +53,11 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("BUILD_ID="+this.inputBuildId.getBuggyBuildId());
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.BEARS) {
             this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
+            if (this.repairnatorConfig.isDebug()) {
+                this.envValues.add("LOG_LEVEL=DEBUG");
+            } else {
+                this.envValues.add("LOG_LEVEL=INFO");
+            }
         }
         this.envValues.add("LOG_FILENAME="+this.containerName);
         this.envValues.add("GITHUB_OAUTH="+RepairnatorConfig.getInstance().getGithubToken());
@@ -113,7 +118,7 @@ public class RunnablePipelineContainer implements Runnable {
 
             LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
 
-            if (!this.repairnatorConfig.isSkipDelete()) {
+            if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
                 LOGGER.info("Container will be removed.");
                 docker.removeContainer(this.containerId);
                 this.removeVolumes(docker);

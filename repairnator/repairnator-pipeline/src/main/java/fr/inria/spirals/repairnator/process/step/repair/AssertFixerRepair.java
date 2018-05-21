@@ -2,10 +2,13 @@ package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.common.io.Files;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import eu.stamp.project.assertfixer.AssertFixerResult;
 import eu.stamp.project.assertfixer.Configuration;
 import eu.stamp.project.assertfixer.Main;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
@@ -110,15 +113,29 @@ public class AssertFixerRepair extends AbstractRepairStep {
             addStepError("Error while executing AssertFixer", e);
         }
 
-        jobStatus.setAssertFixerResults(assertFixerResults);
+        List<RepairPatch> listPatches = new ArrayList<>();
+        JsonArray toolDiagnostic = new JsonArray();
 
         boolean success = false;
         for (AssertFixerResult result : assertFixerResults) {
+            JsonObject diag = new JsonObject();
+
+            diag.addProperty("success", result.isSuccess());
+            diag.addProperty("className", result.getTestClass());
+            diag.addProperty("methodName", result.getTestMethod());
+            diag.addProperty("exceptionMessage",result.getExceptionMessage());
+            diag.addProperty("repairType", result.getRepairType().name());
+            toolDiagnostic.add(diag);
+
             if (result.isSuccess()) {
                 success = true;
-                break;
+                RepairPatch patch = new RepairPatch(this.getRepairToolName(), result.getTestClass(), result.getDiff());
+                listPatches.add(patch);
             }
         }
+
+        this.recordPatches(listPatches);
+        this.recordToolDiagnostic(toolDiagnostic);
 
         outDir.delete();
 

@@ -56,12 +56,12 @@
         <dependency>
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>072027c4611b41b0ff2c486bfb6d9be8814ea745</version>
         </dependency>
         <dependency>
             <groupId>eu.stamp-project</groupId>
             <artifactId>assert-fixer</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

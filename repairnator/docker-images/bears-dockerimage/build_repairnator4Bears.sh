@@ -2,7 +2,7 @@
 
 set -e
 
-PIPELINE_VERSION=1.1-SNAPSHOT
+PIPELINE_VERSION=`cat /root/version.ini`
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-pipeline:$PIPELINE_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots -Ddest=/root/repairnator-pipeline.jar
 
 echo "Pipeline version:"

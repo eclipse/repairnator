@@ -62,7 +62,7 @@ public class Launcher {
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+        if (this.config.isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -99,6 +99,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         // --notifyto
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+        // --ghOauth
+        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
 
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
@@ -144,7 +146,11 @@ public class Launcher {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
 
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);

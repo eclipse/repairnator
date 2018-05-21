@@ -2,14 +2,9 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
-import fr.inria.spirals.repairnator.process.step.repair.AstorRepair;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -153,7 +148,7 @@ public class TestProjectInspector4Bears {
 
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
+        assertThat(jobStatus.getPushState(), is(PushState.REPO_NOT_PUSHED));
         assertThat(inspector.isFixerBuildCase1(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
@@ -175,9 +170,6 @@ public class TestProjectInspector4Bears {
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
-
-        commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Bug commit"));
@@ -234,7 +226,7 @@ public class TestProjectInspector4Bears {
 
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
+        assertThat(jobStatus.getPushState(), is(PushState.REPO_NOT_PUSHED));
         assertThat(inspector.isFixerBuildCase2(), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
@@ -256,9 +248,6 @@ public class TestProjectInspector4Bears {
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
-
-        commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Bug commit"));
