@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
-import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -8,7 +7,6 @@ import fr.inria.spirals.repairnator.states.PushState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
@@ -35,42 +33,24 @@ public class PushProcessEnd extends AbstractStep {
     @Override
     protected StepStatus businessExecute() {
         if (this.getConfig().isPush() && this.getInspector().getJobStatus().getLastPushState() != PushState.NONE) {
-            File sourceDir = new File(this.getInspector().getRepoLocalPath());
-            File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
+            if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
+                this.getLogger().error("Remote repo URL should be set !");
+                this.setPushState(PushState.REPO_NOT_PUSHED);
+                return StepStatus.buildSkipped(this, "Remote repo information was not provided.");
+            }
 
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
 
+            this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
+
+            if (this.getConfig().getGithubToken() == null || this.getConfig().getGithubToken().equals("")) {
+                this.getLogger().warn("You must set the GITHUB_OAUTH env property to push incriminated build.");
+                this.setPushState(PushState.REPO_NOT_PUSHED);
+                return StepStatus.buildSkipped(this, "Github authentication information was not provided.");
+            }
+
             try {
-                Git git = Git.open(targetDir);
-
-                GitHelper gitHelper = this.getInspector().getGitHelper();
-
-                String[] excludedFileNames = { ".git", ".m2" };
-                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, this);
-
-                gitHelper.removeNotificationFromTravisYML(targetDir, this);
-
-                git.add().addFilepattern(".").call();
-
-                gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);
-
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("End of the repairnator process")
-                        .setAuthor(personIdent).setCommitter(personIdent).call();
-
-                if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
-                    this.getLogger().error("Remote repo should be set !");
-                    this.setPushState(PushState.REPO_NOT_PUSHED);
-                    return StepStatus.buildSkipped(this, "Remote information was not provided");
-                }
-
-                this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
-
-                if (this.getConfig().getGithubToken() == null || this.getConfig().getGithubToken().equals("")) {
-                    this.getLogger().warn("You must set the GITHUB_OAUTH env property to push incriminated build.");
-                    this.setPushState(PushState.REPO_NOT_PUSHED);
-                    return StepStatus.buildSkipped(this, "Github authentication information was not provided.");
-                }
+                Git git = Git.open(new File(this.getInspector().getRepoToPushLocalPath()));
 
                 this.getLogger().debug("Add the remote repository to push the current pipelineState");
 
@@ -129,7 +109,7 @@ public class PushProcessEnd extends AbstractStep {
             this.setPushState(PushState.REPO_NOT_PUSHED);
             return StepStatus.buildSkipped(this, "Error while pushing.");
         } else {
-            this.getLogger().info("The push argument is set to false. Nothing will be pushed.");
+            this.getLogger().info("Repairnator is configured NOT to push. Step bypassed.");
             this.setPushState(PushState.REPO_NOT_PUSHED);
             return StepStatus.buildSkipped(this);
         }
