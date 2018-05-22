@@ -2,36 +2,21 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.*;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by urli on 03/01/2017.
@@ -66,11 +51,11 @@ public abstract class AbstractStep {
     private boolean blockingStep;
 
     public AbstractStep(ProjectInspector inspector, boolean blockingStep) {
-        this(inspector, "", blockingStep);
+        this(inspector, blockingStep, "");
         this.name = this.getClass().getSimpleName();
     }
 
-    public AbstractStep(ProjectInspector inspector, String name, boolean blockingStep) {
+    public AbstractStep(ProjectInspector inspector, boolean blockingStep, String name) {
         this.name = name;
         this.shouldStop = false;
         this.pomLocationTested = false;
@@ -151,7 +136,7 @@ public abstract class AbstractStep {
     protected void setPushState(PushState pushState) {
         if (pushState != null) {
             this.pushState = pushState;
-            this.inspector.getJobStatus().setPushState(this.pushState);
+            this.inspector.getJobStatus().addPushState(this.pushState);
             if (this.nextStep != null) {
                 this.nextStep.setPushState(pushState);
             }
@@ -321,12 +306,17 @@ public abstract class AbstractStep {
     }
 
     private void terminatePipeline() {
-        this.recordMetrics();
-        this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
-        this.lastPush();
-        this.serializeData();
-        this.cleanMavenArtifacts();
-        this.inspector.printPipelineEnd();
+        if (!this.inspector.isPipelineEnding()) {
+            this.inspector.setPipelineEnding(true);
+            this.recordMetrics();
+            this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
+            if (this.inspector.getFinalStep() != null) {
+                this.inspector.getFinalStep().execute();
+            }
+            this.serializeData();
+            this.cleanMavenArtifacts();
+            this.inspector.printPipelineEnd();
+        }
     }
 
     private void recordMetrics() {
@@ -342,42 +332,6 @@ public abstract class AbstractStep {
             return 0;
         }
         return Math.round((dateEnd - dateBegin) / 1000);
-    }
-
-    // FIXME: this method should not be placed here
-    private void lastPush() {
-        if (RepairnatorConfig.getInstance().isPush() && this.getInspector().getJobStatus().getPushState() != PushState.NONE) {
-            File sourceDir = new File(this.getInspector().getRepoLocalPath());
-            File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
-
-            try {
-                Git git = Git.open(targetDir);
-
-                GitHelper gitHelper = this.getInspector().getGitHelper();
-
-                String[] excludedFileNames = { ".git", ".m2" };
-                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, this);
-
-                gitHelper.removeNotificationFromTravisYML(targetDir, this);
-
-                git.add().addFilepattern(".").call();
-
-                gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);
-
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("End of the repairnator process")
-                        .setAuthor(personIdent).setCommitter(personIdent).call();
-
-                if (this.getInspector().getJobStatus().isHasBeenPushed()) {
-                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.config.getGithubToken(), "");
-                    git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
-                }
-            } catch (GitAPIException | IOException e) {
-                this.getLogger().error("Error while trying to commit last information for repairnator", e);
-            }
-        }
-
-
     }
 
     protected void writeProperty(String propertyName, Object value) {

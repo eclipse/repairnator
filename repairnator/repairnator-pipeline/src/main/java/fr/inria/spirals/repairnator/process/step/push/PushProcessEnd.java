@@ -12,16 +12,11 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URISyntaxException;
 
-/**
- * Created by urli on 05/01/2017.
- */
-public class PushIncriminatedBuild extends AbstractStep {
+public class PushProcessEnd extends AbstractStep {
+
     private static final String REMOTE_REPO_EXT = ".git";
 
     public static final String REMOTE_NAME = "saveFail";
@@ -29,7 +24,7 @@ public class PushIncriminatedBuild extends AbstractStep {
     private String branchName;
     private String remoteRepoUrl;
 
-    public PushIncriminatedBuild(ProjectInspector inspector) {
+    public PushProcessEnd(ProjectInspector inspector) {
         super(inspector, false);
         this.remoteRepoUrl = this.getConfig().getPushRemoteRepo();
         this.branchName = this.getInspector().getRemoteBranchName();
@@ -37,11 +32,11 @@ public class PushIncriminatedBuild extends AbstractStep {
 
     @Override
     protected StepStatus businessExecute() {
-        if (this.getConfig().isPush()) {
+        if (this.getConfig().isPush() && this.getInspector().getJobStatus().getLastPushState() != PushState.NONE) {
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
-                this.getLogger().error("Remote repo should be set !");
+                this.getLogger().error("Remote repo URL should be set !");
                 this.setPushState(PushState.REPO_NOT_PUSHED);
-                return StepStatus.buildSkipped(this, "Remote information was not provided");
+                return StepStatus.buildSkipped(this, "Remote repo information was not provided.");
             }
 
             String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
@@ -56,6 +51,7 @@ public class PushIncriminatedBuild extends AbstractStep {
 
             try {
                 Git git = Git.open(new File(this.getInspector().getRepoToPushLocalPath()));
+
                 this.getLogger().debug("Add the remote repository to push the current pipelineState");
 
                 RemoteAddCommand remoteAdd = git.remoteAdd();
@@ -113,9 +109,9 @@ public class PushIncriminatedBuild extends AbstractStep {
             this.setPushState(PushState.REPO_NOT_PUSHED);
             return StepStatus.buildSkipped(this, "Error while pushing.");
         } else {
-            this.getLogger().info("The push argument is set to false. Nothing will be pushed.");
+            this.getLogger().info("Repairnator is configured NOT to push. Step bypassed.");
+            this.setPushState(PushState.REPO_NOT_PUSHED);
             return StepStatus.buildSkipped(this);
         }
     }
-
 }
