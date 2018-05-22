@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildTestCode;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
@@ -60,8 +61,11 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
                         .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
                         .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
+                        .setNextStep(new CheckoutBuggyBuildTestCode(this, true))
                         .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this, false))
+                        .setNextStep(new CheckoutBuggyBuildSourceCode(this, true))
+                        .setNextStep(new CommitChangedTests(this))
                         .setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
                         .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
                         .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"PatchedBuildCandidate"))
