@@ -335,19 +335,28 @@ public class GitHelper {
         }
     }
 
-    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, AbstractStep step) {
+    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToRemove, AbstractStep step) {
         try {
-            FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    for (String fileExtension : excludedFileNames) {
-                        if (pathname.toString().contains(fileExtension)) {
-                            return false;
-                        }
-                    }
-                    return true;
+            if (isToRemove) {
+                FileUtils.copyDirectory(sourceDir, targetDir);
+
+                for (String fileName : excludedFileNames) {
+                    File targetFolder = new File(targetDir, fileName);
+                    FileUtils.deleteDirectory(targetFolder);
                 }
-            });
+            } else {
+                FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
+                    @Override
+                    public boolean accept(File pathname) {
+                        for (String fileName : excludedFileNames) {
+                            if (pathname.toString().contains(fileName)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                });
+            }
         } catch (IOException e) {
             step.addStepError("Error while copying the folder to prepare the git repository.", e);
         }
