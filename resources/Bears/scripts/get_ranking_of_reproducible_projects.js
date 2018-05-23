@@ -13,7 +13,7 @@ db.inspector.aggregate(
 			        },
 			        {
 			            "buildFinishedDate": {
-			                  $lt: ISODate("2018-04-01T00:00:00.000+0000")
+			                  $lt: ISODate("2018-05-01T00:00:00.000+0000")
 			            }
 			        },
 			        {

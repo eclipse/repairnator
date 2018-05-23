@@ -48,8 +48,8 @@ public class Utils {
         }
     }
 
-    public static String getTravisUrl(int buildId, String slug) {
-        return TRAVIS_URL + slug + "/builds/" + buildId;
+    public static String getTravisUrl(long buildId, String slug) {
+        return TRAVIS_URL + slug + "/builds/" + String.valueOf(buildId);
     }
 
     public static String getGithubRepoUrl(String slug) {
@@ -61,14 +61,8 @@ public class Utils {
     }
 
     public static void setLoggersLevel(Level level) {
-        Logger jtravis = (Logger) LoggerFactory.getLogger("fr.inria.spirals.jtravis.helpers");
-        jtravis.setLevel(level);
-
-        Logger nopol = (Logger) LoggerFactory.getLogger("fr.inria.lille.repair.nopol");
-        nopol.setLevel(level);
-
-        Logger repairnator = (Logger) LoggerFactory.getLogger("fr.inria.spirals.repairnator");
-        repairnator.setLevel(level);
+        Logger allinria = (Logger) LoggerFactory.getLogger("fr.inria");
+        allinria.setLevel(level);
 
         Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
         jgit.setLevel(Level.WARN);

@@ -1,10 +1,6 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-
-import fr.inria.main.AstorOutputStatus;
 import com.google.gson.JsonElement;
-import fr.inria.spirals.repairnator.states.PipelineState;
-import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;
 
@@ -20,25 +16,23 @@ import java.util.Map;
  * Created by urli on 23/03/2017.
  */
 public class JobStatus {
-    private PipelineState pipelineState;
-    private PushState pushState;
+    private List<PushState> pushStates;
     private List<URL> repairClassPath;
 
     private File[] repairSourceDir;
     private File[] testDir;
 
-    private List<NopolInformation> nopolInformations;
-    private List<String> nopolPatches;
-    private List<String> npeFixPatches;
+    /**
+     * List of patches indexed by the name of the tool to produce them
+     */
+    private Map<String, List<RepairPatch>> listOfPatches;
 
-    private JsonElement astorResults;
-    private List<String> astorPatches;
-    private AstorOutputStatus astorStatus;
-
-    private JsonElement npeFixResults;
+    /**
+     * Diagnostic about repair tool on the form of a JsonElement
+     */
+    private Map<String, JsonElement> toolDiagnostic;
 
     private boolean isReproducedAsFail;
-    private boolean isReproducedAsError;
     private String pomDirPath;
     private boolean hasBeenPushed;
 
@@ -47,8 +41,6 @@ public class JobStatus {
     private Map<String, List<String>> stepErrors;
     private String gitBranchUrl;
     private boolean hasBeenPatched;
-
-    private boolean commitRetrievedFromGithub;
     private Throwable fatalError;
 
     private Metrics metrics;
@@ -57,25 +49,19 @@ public class JobStatus {
     private boolean hasBeenForked;
     private String forkURL;
 
+    private List<StepStatus> stepStatuses;
+
     public JobStatus(String pomDirPath) {
-        this.pipelineState = PipelineState.NONE;
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
         this.createdFilesToPush = new ArrayList<>();
-        this.nopolPatches = new ArrayList<>();
-        this.astorPatches = new ArrayList<>();
-        this.npeFixPatches = new ArrayList<>();
-    }
-
-    public PipelineState getPipelineState() {
-        return pipelineState;
-    }
-
-    public void setPipelineState(PipelineState pipelineState) {
-        this.pipelineState = pipelineState;
+        this.stepStatuses = new ArrayList<>();
+        this.pushStates = new ArrayList<>();
+        this.listOfPatches = new HashMap<>();
+        this.toolDiagnostic = new HashMap<>();
     }
 
     public List<URL> getRepairClassPath() {
@@ -94,28 +80,12 @@ public class JobStatus {
         this.repairSourceDir = repairSourceDir;
     }
 
-    public List<NopolInformation> getNopolInformations() {
-        return nopolInformations;
-    }
-
-    public void setNopolInformations(List<NopolInformation> nopolInformations) {
-        this.nopolInformations = nopolInformations;
-    }
-
     public boolean isReproducedAsFail() {
         return isReproducedAsFail;
     }
 
     public void setReproducedAsFail(boolean reproducedAsFail) {
         isReproducedAsFail = reproducedAsFail;
-    }
-
-    public boolean isReproducedAsError() {
-        return isReproducedAsError;
-    }
-
-    public void setReproducedAsError(boolean reproducedAsError) {
-        isReproducedAsError = reproducedAsError;
     }
 
     public String getPomDirPath() {
@@ -180,12 +150,16 @@ public class JobStatus {
         this.hasBeenPatched = hasBeenPatched;
     }
 
-    public PushState getPushState() {
-        return pushState;
+    public List<PushState> getPushStates() {
+        return pushStates;
     }
 
-    public void setPushState(PushState pushState) {
-        this.pushState = pushState;
+    public PushState getLastPushState() {
+        return pushStates.get(pushStates.size() - 1);
+    }
+
+    public void addPushState(PushState pushState) {
+        this.pushStates.add(pushState);
     }
 
     public Metrics getMetrics() {
@@ -200,60 +174,12 @@ public class JobStatus {
         this.testDir = testDir;
     }
 
-    public List<String> getNpeFixPatches() {
-        return npeFixPatches;
-    }
-
-    public void setNpeFixPatches(List<String> npeFixPatches) {
-        this.npeFixPatches = npeFixPatches;
-    }
-
-    public List<String> getAstorPatches() {
-        return astorPatches;
-    }
-
-    public void setAstorPatches(List<String> astorPatches) {
-        this.astorPatches = astorPatches;
-    }
-
-    public AstorOutputStatus getAstorStatus() {
-        return astorStatus;
-    }
-
-    public void setAstorStatus(AstorOutputStatus astorStatus) {
-        this.astorStatus = astorStatus;
-    }
-
-    public boolean isCommitRetrievedFromGithub() {
-        return commitRetrievedFromGithub;
-    }
-
-    public void setCommitRetrievedFromGithub(boolean commitRetrievedFromGithub) {
-        this.commitRetrievedFromGithub = commitRetrievedFromGithub;
-    }
-
     public Throwable getFatalError() {
         return fatalError;
     }
 
     public void setFatalError(Throwable fatalError) {
         this.fatalError = fatalError;
-    }
-
-    public JsonElement getNpeFixResults() {
-        return npeFixResults;
-    }
-
-    public void setNpeFixResults(JsonElement npeFixResults) {
-        this.npeFixResults = npeFixResults;
-    }
-
-    public JsonElement getAstorResults() {
-        return astorResults;
-    }
-
-    public void setAstorResults(JsonElement astorResults) {
-        this.astorResults = astorResults;
     }
 
     public void addFileToPush(String filePath) {
@@ -266,20 +192,12 @@ public class JobStatus {
         return createdFilesToPush;
     }
 
-    public List<String> getNopolPatches() {
-        return nopolPatches;
-    }
-
-    public void setNopolPatches(List<String> nopolPatches) {
-        this.nopolPatches = nopolPatches;
+    public void setHasBeenForked(boolean hasBeenForked) {
+        this.hasBeenForked = hasBeenForked;
     }
 
     public boolean isHasBeenForked() {
         return hasBeenForked;
-    }
-
-    public void setHasBeenForked(boolean hasBeenForked) {
-        this.hasBeenForked = hasBeenForked;
     }
 
     public String getForkURL() {
@@ -288,5 +206,37 @@ public class JobStatus {
 
     public void setForkURL(String forkURL) {
         this.forkURL = forkURL;
+    }
+
+    public void addStepStatus(StepStatus stepStatus) {
+        this.stepStatuses.add(stepStatus);
+    }
+
+    public void addToolDiagnostic(String toolName, JsonElement diagnostic) {
+        this.toolDiagnostic.put(toolName, diagnostic);
+    }
+
+    public List<StepStatus> getStepStatuses() {
+        return stepStatuses;
+    }
+
+    public void addPatches(String toolName, List<RepairPatch> patches) {
+        this.listOfPatches.put(toolName, patches);
+    }
+
+    public List<RepairPatch> getAllPatches() {
+        List<RepairPatch> allPatches = new ArrayList<>();
+        for (List<RepairPatch> repairPatches : this.listOfPatches.values()) {
+            allPatches.addAll(repairPatches);
+        }
+        return allPatches;
+    }
+
+    public Map<String, List<RepairPatch>> getListOfPatches() {
+        return listOfPatches;
+    }
+
+    public Map<String, JsonElement> getToolDiagnostic() {
+        return toolDiagnostic;
     }
 }

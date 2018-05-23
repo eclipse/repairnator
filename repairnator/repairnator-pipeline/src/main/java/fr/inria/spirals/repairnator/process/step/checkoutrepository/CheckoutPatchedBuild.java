@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
@@ -8,30 +9,28 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
  */
 public class CheckoutPatchedBuild extends CheckoutRepository {
 
-    public CheckoutPatchedBuild(ProjectInspector inspector) {
-        super(inspector);
+    public CheckoutPatchedBuild(ProjectInspector inspector, boolean blockingStep) {
+        super(inspector, blockingStep);
     }
 
-    protected void businessExecute() {
+    public CheckoutPatchedBuild(ProjectInspector inspector, boolean blockingStep, String stepName) {
+        super(inspector, blockingStep, stepName);
+    }
+
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Checking out build...");
 
         if (this.getInspector().getPatchedBuild() != null) {
             super.setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);
 
-            super.businessExecute();
+            StepStatus stepStatus = super.businessExecute();
 
-            if (this.shouldStop) {
-                this.setPipelineState(PipelineState.PATCHEDBUILDNOTCHECKEDOUT);
-            } else {
-                this.setPipelineState(PipelineState.PATCHEDBUILDCHECKEDOUT);
-                inspector.setCheckoutType(getCheckoutType());
-            }
+            this.getInspector().setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);
+            return stepStatus;
         } else {
             this.addStepError("There is no patched build retrieved. This will stop now.");
-            this.shouldStop = true;
+            return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
         }
-
-
     }
 
 }

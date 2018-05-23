@@ -31,16 +31,17 @@ In order to run Repairnator with the provided scripts, you'll need:
 ### Setup Repairnator
 
 All Repairnator scripts are located in the directory `repairnator/scripts`. 
-The scripts use the configuration set in `repairnator/scripts/set_env_variable.sh`.
+The scripts use the global configuration set in `repairnator/scripts/config/repairnator.cfg`.
+You can define your own configuration in a file `repairnator.cfg` located in your home.
 
 ```bash
 git clone https://github.com/Spirals-Team/repairnator/
 cd repairnator
 
 # edit the file to specify the mandatory elements (you must add the Github Personal Access Token here)
-vi repairnator/scripts/set_env_variable.sh
+cp repairnator/scripts/config/repairnator.cfg ~
+vi ~/repairnator.cfg
 ```
-
 
 ### Launch Repairnator on a given Travis Build ID
 
@@ -50,8 +51,9 @@ Here it is: `352395977`.
 All you have to do, to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
 ```bash
-# set $HOME_REPAIR and $GITHUB_OAUTH in repairnator/scripts/set_env_variable.sh
-vi repairnator/scripts/set_env_variable.sh
+# set $HOME_REPAIR and $GITHUB_OAUTH in repairnator/scripts/config/repairnator.cfg
+cp repairnator/scripts/config/repairnator.cfg ~
+vi ~/repairnator.cfg
 
 cd repairnator/scripts
 
@@ -71,10 +73,11 @@ ls $HOME_REPAIR/logs
 ### Launch Repairnator to analyze and repair failing builds in real-time
 
 You can launch Repairnator to analyze TravisCI builds in realtime and to repair failing ones.
-First open in a file editor `repairnator/scripts/set_env_variable.sh` and edit the values under `Realtime scanner configuration` section:
-  - `WHITELIST_PATH` and `BLACKLIST_PATH` should point on existing files: it can be empty files, or you can use those available in `repairnator/repairnator-realtime/src/main/resources`
-  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
 
+First open your `repairnator.cfg` config file (see above) and edit the values under `Realtime scanner configuration` section:
+  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
+  - `WHITELIST_PATH` and `BLACKLIST_PATH` can be left on the default value, or you can use the files available in `repairnator/repairnator-realtime/src/main/resources`
+  
 Then just run the script `launch_rtscanner.sh`.
 
 For more information about the usage of Repairnator check out [this page](/doc/usage.md).
@@ -93,5 +96,5 @@ Each directory contains its own Readme explaining its own internal organization.
 
 ## License
 
-This project has been funded by InriaHub. The content of this repository is licensed under the AGPL terms. 
+This project has been funded by InriaHub. The content of this repository is licensed under the MIT terms. 
 

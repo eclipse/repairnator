@@ -53,6 +53,11 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("BUILD_ID="+this.inputBuildId.getBuggyBuildId());
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.BEARS) {
             this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
+            if (this.repairnatorConfig.isDebug()) {
+                this.envValues.add("LOG_LEVEL=DEBUG");
+            } else {
+                this.envValues.add("LOG_LEVEL=INFO");
+            }
         }
         this.envValues.add("LOG_FILENAME="+this.containerName);
         this.envValues.add("GITHUB_OAUTH="+RepairnatorConfig.getInstance().getGithubToken());
@@ -64,6 +69,9 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("SMTP_SERVER="+this.repairnatorConfig.getSmtpServer());
         this.envValues.add("NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','));
         this.envValues.add("OUTPUT="+output);
+        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR) {
+            this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
+        }
     }
 
     public InputBuildId getInputBuildId() {

@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.states.PipelineState;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
@@ -31,6 +31,8 @@ public class GatherTestInformation extends AbstractStep {
     private int nbSkippingTests;
     private int nbFailingTests;
     private int nbErroringTests;
+    private int nbRunningTests;
+
     private Set<FailureLocation> failureLocations;
     private Set<String> failureNames;
     private String failingModulePath;
@@ -46,16 +48,16 @@ public class GatherTestInformation extends AbstractStep {
      * @param contract The contract to know in which case the step should stop the pipeline
      * @param skipSettingStatusInformation If set to true, the step won't push any information to the JobStatus of the inspector.
      */
-    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation, String stepName) {
-        super(inspector, stepName);
+    public GatherTestInformation(ProjectInspector inspector, boolean blockingStep, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation, String stepName) {
+        super(inspector, blockingStep, stepName);
         this.failureLocations = new HashSet<>();
         this.failureNames = new HashSet<>();
         this.contract = contract;
         this.skipSettingStatusInformation = skipSettingStatusInformation;
     }
 
-    public GatherTestInformation(ProjectInspector inspector, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
-        this(inspector, contract, skipSettingStatusInformation, GatherTestInformation.class.getSimpleName());
+    public GatherTestInformation(ProjectInspector inspector, boolean blockingStep, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation) {
+        this(inspector, blockingStep, contract, skipSettingStatusInformation, GatherTestInformation.class.getSimpleName());
     }
 
     public int getNbFailingTests() {
@@ -74,11 +76,15 @@ public class GatherTestInformation extends AbstractStep {
         return nbSkippingTests;
     }
 
+    public int getNbRunningTests() {
+        return nbRunningTests;
+    }
+
     @Override
-    protected void businessExecute() {
+    protected StepStatus businessExecute() {
         this.getLogger().debug("Gathering test information...");
 
-        File rootRepo = new File(this.inspector.getJobStatus().getPomDirPath());
+        File rootRepo = new File(this.getInspector().getJobStatus().getPomDirPath());
         final List<File> surefireDirs = new ArrayList<File>();
 
         try {
@@ -103,64 +109,58 @@ public class GatherTestInformation extends AbstractStep {
             try {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
-                    if (!skipSettingStatusInformation) {
-                        this.nbTotalTests += testSuite.getNumberOfTests();
-                        this.nbSkippingTests += testSuite.getNumberOfSkipped();
+                    this.nbTotalTests += testSuite.getNumberOfTests();
+                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
+                    this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
+                    this.nbErroringTests += testSuite.getNumberOfErrors();
+                    this.nbFailingTests += testSuite.getNumberOfFailures();
 
-                        if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
-                            File failingModule = surefireDir.getParentFile().getParentFile();
-                            this.failingModulePath = failingModule.getCanonicalPath();
+                    if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
+                        File failingModule = surefireDir.getParentFile().getParentFile();
+                        this.failingModulePath = failingModule.getCanonicalPath();
+
+                        if (!this.skipSettingStatusInformation) {
                             this.getInspector().getJobStatus().setFailingModulePath(this.failingModulePath);
                             this.writeProperty("failingModule", this.failingModulePath);
-                            getLogger().info("Get the following failing module path: "+failingModulePath);
+                            getLogger().info("Get the following failing module path: " + failingModulePath);
+                        }
 
-                            for (ReportTestCase testCase : testSuite.getTestCases()) {
-                                if (testCase.hasFailure() || testCase.hasError()) {
+                        for (ReportTestCase testCase : testSuite.getTestCases()) {
+                            if (testCase.hasFailure() || testCase.hasError()) {
 
-                                    // sometimes surefire reports a failureType on the form:
-                                    // "java.lang.NullPointerException:" we should avoid this case
-                                    String failureType = testCase.getFailureType();
+                                // sometimes surefire reports a failureType on the form:
+                                // "java.lang.NullPointerException:" we should avoid this case
+                                String failureType = testCase.getFailureType();
 
-                                    if (failureType.endsWith(":")) {
-                                        failureType = failureType.substring(0, failureType.length() - 1);
+                                if (failureType.endsWith(":")) {
+                                    failureType = failureType.substring(0, failureType.length() - 1);
+                                }
+
+                                this.failureNames.add(failureType);
+                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.hasError());
+                                FailureLocation failureLocation = null;
+
+                                for (FailureLocation location : this.failureLocations) {
+                                    if (location.getClassName().equals(testCase.getFullClassName())) {
+                                        failureLocation = location;
+                                        break;
                                     }
+                                }
 
-                                    this.failureNames.add(failureType);
-                                    FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.hasError());
-                                    FailureLocation failureLocation = null;
+                                if (failureLocation == null) {
+                                    failureLocation = new FailureLocation(testCase.getFullClassName());
+                                    this.failureLocations.add(failureLocation);
+                                }
+                                failureLocation.addFailure(typeTof);
 
-                                    for (FailureLocation location : this.failureLocations) {
-                                        if (location.getClassName().equals(testCase.getFullClassName())) {
-                                            failureLocation = location;
-                                            break;
-                                        }
-                                    }
-
-                                    if (failureLocation == null) {
-                                        failureLocation = new FailureLocation(testCase.getFullClassName());
-                                        this.failureLocations.add(failureLocation);
-                                    }
-                                    failureLocation.addFailure(typeTof);
-
-                                    if (testCase.hasError()) {
-                                        failureLocation.addErroringMethod(testCase.getFullClassName()+"#"+testCase.getName());
-                                    } else {
-                                        failureLocation.addFailingMethod(testCase.getFullClassName()+"#"+testCase.getName());
-                                    }
+                                if (testCase.hasError()) {
+                                    failureLocation.addErroringMethod(testCase.getName());
+                                } else {
+                                    failureLocation.addFailingMethod(testCase.getName());
                                 }
                             }
                         }
                     }
-                    this.nbErroringTests += testSuite.getNumberOfErrors();
-                    this.nbFailingTests += testSuite.getNumberOfFailures();
-                }
-
-                if (this.nbFailingTests > 0) {
-                    this.setPipelineState(PipelineState.HASTESTFAILURE);
-                } else if (this.nbErroringTests > 0) {
-                    this.setPipelineState(PipelineState.HASTESTERRORS);
-                } else {
-                    this.setPipelineState(PipelineState.NOTFAILING);
                 }
             } catch (MavenReportException e) {
                 this.addStepError("Error while parsing files to get test information:",e);
@@ -176,16 +176,18 @@ public class GatherTestInformation extends AbstractStep {
             this.writeProperty("totalNumberErroringTests", this.nbErroringTests);
             this.writeProperty("totalNumberSkippingTests", this.nbSkippingTests);
             this.writeProperty("totalNumberRunningTests", this.nbTotalTests);
-            this.inspector.getJobStatus().setFailureLocations(this.failureLocations);
+            this.getInspector().getJobStatus().setFailureLocations(this.failureLocations);
 
-            Metrics metrics = this.inspector.getJobStatus().getMetrics();
+            Metrics metrics = this.getInspector().getJobStatus().getMetrics();
             metrics.setFailureNames(this.failureNames);
-            metrics.setNbFailingTests(this.nbErroringTests+this.nbFailingTests);
+            metrics.setNbFailingTests(this.nbFailingTests);
             metrics.setNbRunningTests(this.nbTotalTests);
+            metrics.setNbSkippingTests(this.nbSkippingTests);
+            metrics.setNbErroringTests(this.nbErroringTests);
+            metrics.setNbSucceedingTests(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
         }
 
-
-        this.shouldStop = contract.shouldBeStopped(this);
+        return contract.shouldBeStopped(this);
     }
 
 }

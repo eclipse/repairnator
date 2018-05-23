@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -21,8 +23,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -47,7 +51,7 @@ public class TestBuildProject {
 
     @Test
     public void testBuildProject() throws IOException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -75,18 +79,22 @@ public class TestBuildProject {
         CloneRepository cloneStep = new CloneRepository(inspector);
         BuildProject buildStep = new BuildProject(inspector);
 
-
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(buildStep);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(buildStep);
         cloneStep.execute();
 
-        assertThat(buildStep.shouldStop, is(false));
-        assertThat(buildStep.getPipelineState(), is(PipelineState.BUILDABLE));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.BUILDABLE));
+        assertThat(buildStep.isShouldStop(), is(false));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus statusBuild = stepStatusList.get(2);
+        assertThat(statusBuild.getStep(), is(buildStep));
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
     }
 
     @Test
     public void testBuildProjectWithPomNotInRoot() throws IOException {
-        int buildId = 218036343;
+        long buildId = 218036343;
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -107,11 +115,17 @@ public class TestBuildProject {
         CloneRepository cloneStep = new CloneRepository(inspector);
         BuildProject buildStep = new BuildProject(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(buildStep);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(buildStep);
         cloneStep.execute();
 
-        assertThat(buildStep.shouldStop, is(false));
-        assertThat(buildStep.getPipelineState(), is(PipelineState.BUILDABLE));
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.BUILDABLE));
+        assertThat(buildStep.isShouldStop(), is(false));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus statusBuild = stepStatusList.get(2);
+        assertThat(statusBuild.getStep(), is(buildStep));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
     }
 }

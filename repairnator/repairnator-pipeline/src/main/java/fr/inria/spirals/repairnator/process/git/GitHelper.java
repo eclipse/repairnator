@@ -1,17 +1,13 @@
 package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.entities.Commit;
 import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
@@ -19,8 +15,6 @@ import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.PatchApplyException;
-import org.eclipse.jgit.api.errors.PatchFormatException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
@@ -36,25 +30,30 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
-import org.kohsuke.github.*;
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHRateLimit;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
  * Created by fernanda on 01/03/17.
  */
 public class GitHelper {
+
+    private static final String TRAVIS_FILE = ".travis.yml";
 
     private int nbCommits;
 
@@ -85,8 +84,6 @@ public class GitHelper {
             ObjectId commitObject = git.getRepository().resolve(oldCommitSha);
             git.getRepository().open(commitObject);
             return oldCommitSha;
-        } catch (MissingObjectException e) {
-            return retrieveAndApplyCommitFromGithub(git, oldCommitSha, step, build);
         } catch (IOException e) {
             step.addStepError("Error while testing commit: " + e);
         }
@@ -144,19 +141,7 @@ public class GitHelper {
 
                 this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
 
-                for (String fileToAdd : filesToAdd) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", fileToAdd)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                        return false;
-                    }
-                }
+                this.gitAdd(filesToAdd, git);
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
@@ -172,129 +157,6 @@ public class GitHelper {
             this.getLogger().error("Error while committing repairnator properties/log files ",e);
             return false;
         }
-    }
-
-    /**
-     * When a commit has been force deleted it still can be retrieved from
-     * GitHub API. This function intend to retrieve a patch from the Github API
-     * and to apply it back on the repo
-     *
-     * @param git
-     * @param oldCommitSha
-     * @return the SHA of the commit created after applying the patch or null if
-     *         an error occured.
-     */
-    private String retrieveAndApplyCommitFromGithub(Git git, String oldCommitSha, AbstractStep step, Build build) {
-        try {
-            addAndCommitRepairnatorLogAndProperties(step.getInspector().getJobStatus(), git, "Commit done before retrieving a commit from GH API.");
-            GitHub gh = RepairnatorConfig.getInstance().getGithub();
-            GHRepository ghRepo = gh.getRepository(build.getRepository().getSlug());
-
-            String lastKnowParent = getLastKnowParent(gh, ghRepo, git, oldCommitSha, step);
-
-            // checkout the repo to the last known parent of the deleted commit
-            git.checkout().setName(lastKnowParent).call();
-
-            // get from github a patch between that commit and the targeted
-            // commit
-            // note that this patch could contain changes of multiple commits
-            GHCompare compare = ghRepo.getCompare(lastKnowParent, oldCommitSha);
-
-            showGitHubRateInformation(gh, step);
-
-            URL patchUrl = compare.getPatchUrl();
-
-            this.getLogger().debug("Step " + step.getName() + " - Retrieve commit patch from the following URL: " + patchUrl);
-
-            // retrieve it through a simple HTTP request
-            // some errors occurs when applying patch from snippets contained in
-            // GHCompare object
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(patchUrl).build();
-            Call call = client.newCall(request);
-            Response response = call.execute();
-
-            File tempFile = File.createTempFile(build.getRepository().getSlug(), "patch");
-
-            // apply the patch and commit changes using message and authors of
-            // the referenced commit.
-            if (response.code() == 200) {
-
-                FileWriter writer = new FileWriter(tempFile);
-                writer.write(response.body().string());
-                writer.flush();
-                writer.close();
-
-                this.getLogger().info("Step " + step.getName() + " - Exec following command: git apply " + tempFile.getAbsolutePath());
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", tempFile.getAbsolutePath())
-                        .directory(new File(step.getInspector().getRepoLocalPath())).inheritIO();
-
-                Process p = processBuilder.start();
-                try {
-                    p.waitFor();
-
-                    // Applying patch does not work as the move of file is
-                    // broken in JGit
-                    // It assumes the target directory exists.
-                    // ApplyResult result =
-                    // git.apply().setPatch(response.body().byteStream()).call();
-
-                    Commit buildCommit = build.getCommit();
-
-                    // add all file for the next commit
-                    git.add().addFilepattern(".").call();
-
-                    Optional<GitUser> author = build.getAuthor();
-                    Optional<GitUser> committer = build.getCommitter();
-
-                    String authorEmail, authorName;
-                    String committerEmail, committerName;
-
-                    if (author.isPresent()) {
-                        authorEmail = author.get().getEmail();
-                        authorName = author.get().getName();
-                    } else {
-                        authorEmail = "nobody@github.com";
-                        authorName = "-";
-                    }
-
-                    if (committer.isPresent()) {
-                        committerEmail = committer.get().getEmail();
-                        committerName = committer.get().getName();
-                    } else {
-                        committerEmail = "nobody@github.com";
-                        committerName = "-";
-                    }
-
-                    // do the commit
-                    RevCommit ref = git.commit().setAll(true)
-                            .setAuthor(authorName, authorEmail)
-                            .setCommitter(committerName, committerEmail)
-                            .setMessage(buildCommit.getMessage()
-                                    + "\n(This is a retrieve from the following deleted commit: " + oldCommitSha + ")")
-                            .call();
-
-                    this.nbCommits++;
-
-                    tempFile.delete();
-
-                    step.getInspector().getJobStatus().setCommitRetrievedFromGithub(true);
-                    return ref.getName();
-                } catch (InterruptedException e) {
-                    step.addStepError("Error while executing git command to apply patch: " + e);
-                }
-
-            }
-        } catch (IOException e) {
-            step.addStepError("Error while getting commit from Github: " + e);
-        } catch (PatchFormatException e) {
-            step.addStepError("Error while getting patch from Github: " + e);
-        } catch (PatchApplyException e) {
-            step.addStepError("Error while applying patch from Github: " + e);
-        } catch (GitAPIException e) {
-            step.addStepError("Error with Git API: " + e);
-        }
-        return null;
     }
 
     private String getLastKnowParent(GitHub gh, GHRepository ghRepo, Git git, String oldCommitSha, AbstractStep step) throws IOException {
@@ -457,4 +319,89 @@ public class GitHelper {
             this.getLogger().error("Error while computing stat on the patch", e);
         }
     }
+
+    public void gitAdd(List<String> files, Git git) {
+        for (String file : files) {
+            // add force is not supported by JGit...
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f", file)
+                    .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+
+            try {
+                Process p = processBuilder.start();
+                p.waitFor();
+            } catch (InterruptedException|IOException e) {
+                this.getLogger().error("Error while executing git command to add files: " + e);
+            }
+        }
+    }
+
+    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, AbstractStep step) {
+        try {
+            FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    for (String fileExtension : excludedFileNames) {
+                        if (pathname.toString().contains(fileExtension)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            });
+        } catch (IOException e) {
+            step.addStepError("Error while copying the folder to prepare the git repository.", e);
+        }
+    }
+
+    public void removeNotificationFromTravisYML(File directory, AbstractStep step) {
+        File travisFile = new File(directory, TRAVIS_FILE);
+
+        if (!travisFile.exists()) {
+            getLogger().warn("Travis file has not been detected. It should however exists.");
+        } else {
+            try {
+                List<String> lines = Files.readAllLines(travisFile.toPath());
+                List<String> newLines = new ArrayList<>();
+                boolean changed = false;
+                boolean inNotifBlock = false;
+
+                for (String line : lines) {
+                    if (line.trim().equals("notifications:")) {
+                        changed = true;
+                        inNotifBlock = true;
+                    }
+                    if (inNotifBlock) {
+                        if (line.trim().isEmpty()) {
+                            inNotifBlock = false;
+                            newLines.add(line);
+                        } else {
+                            newLines.add("#"+line);
+                        }
+                    } else {
+                        newLines.add(line);
+                    }
+                }
+
+                if (changed) {
+                    getLogger().info("Notification block detected. The travis file will be changed.");
+                    File bakTravis = new File(directory, "bak"+TRAVIS_FILE);
+                    Files.deleteIfExists(bakTravis.toPath());
+                    Files.move(travisFile.toPath(), bakTravis.toPath());
+                    FileWriter fw = new FileWriter(travisFile);
+                    for (String line : newLines) {
+                        fw.append(line);
+                        fw.append("\n");
+                        fw.flush();
+                    }
+                    fw.close();
+
+                    step.getInspector().getJobStatus().getCreatedFilesToPush().add(".travis.yml");
+                    step.getInspector().getJobStatus().getCreatedFilesToPush().add("bak.travis.yml");
+                }
+            } catch (IOException e) {
+                getLogger().warn("Error while changing travis file", e);
+            }
+        }
+    }
+
 }

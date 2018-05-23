@@ -39,27 +39,10 @@ touch $OUTPUT
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-echo "Set environment variables"
-source $SCRIPT_DIR/set_env_variable.sh
-
-echo "Create log directory: $LOG_DIR"
-mkdir $LOG_DIR
-
-RUN_ID=`date "+%Y-%m-%d_%H%M%S"`
-
-echo "Start building a new version of repairnator"
-$SCRIPT_DIR/build_repairnator.sh
-
-if [[ $? != 0 ]]
-then
-   echo "Error while building a new version of repairnator"
-   exit -1
-fi
+. $SCRIPT_DIR/utils/init_script.sh
 
 echo "Copy jar and prepare docker image"
-mkdir $REPAIRNATOR_RUN_DIR
-
-cp $REPAIRNATOR_CHECKBRANCHES_JAR $REPAIRNATOR_CHECKBRANCHES_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-checkbranches:$CHECKBRANCHES_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_CHECKBRANCHES_DEST_JAR
 
 echo "Pull the docker machine (name: $DOCKER_CHECKBRANCHES_TAG)..."
 docker pull $DOCKER_CHECKBRANCHES_TAG

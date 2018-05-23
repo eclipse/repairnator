@@ -31,9 +31,9 @@ public class RTScanner {
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
 
     private RepairnatorConfig config;
-    private final List<Integer> blackListedRepository;
-    private final List<Integer> whiteListedRepository;
-    private final Map<Integer,Date> tempBlackList;
+    private final List<Long> blackListedRepository;
+    private final List<Long> whiteListedRepository;
+    private final Map<Long,Date> tempBlackList;
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final BuildRunner buildRunner;
@@ -88,7 +88,7 @@ public class RTScanner {
             List<String> lines = Files.readAllLines(whiteListFile.toPath());
             for (String repoId : lines) {
                 if (!repoId.trim().isEmpty()) {
-                    this.whiteListedRepository.add(Integer.parseInt(repoId));
+                    this.whiteListedRepository.add(Long.parseLong(repoId));
                 }
             }
 
@@ -105,7 +105,7 @@ public class RTScanner {
             List<String> lines = Files.readAllLines(blackListFile.toPath());
             for (String repoId : lines) {
                 if (!repoId.trim().isEmpty()) {
-                    this.blackListedRepository.add(Integer.parseInt(repoId));
+                    this.blackListedRepository.add(Long.parseLong(repoId));
                 }
             }
 
@@ -119,6 +119,7 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
+            this.buildRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             this.running = true;
@@ -140,24 +141,36 @@ public class RTScanner {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
         this.blacklistedSerializer.serialize(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
-        try {
-            this.blacklistWriter.append(repository.getId()+"");
-            this.blacklistWriter.append("\n");
-            this.blacklistWriter.flush();
-        } catch (IOException e) {
-            LOGGER.error("Error while writing entry in blacklist");
+
+        if (this.blacklistWriter != null) {
+            try {
+                this.blacklistWriter.append(repository.getId()+"");
+                this.blacklistWriter.append("\n");
+                this.blacklistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in blacklist");
+            }
+        } else {
+            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
         }
+
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-        try {
-            this.whitelistWriter.append(repository.getId()+"");
-            this.whitelistWriter.append("\n");
-            this.whitelistWriter.flush();
-        } catch (IOException e) {
-            LOGGER.error("Error while writing entry in whitelist");
+
+        if (this.whitelistWriter != null) {
+            try {
+                this.whitelistWriter.append(repository.getId()+"");
+                this.whitelistWriter.append("\n");
+                this.whitelistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in whitelist");
+            }
+        } else {
+            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
         }
+
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
@@ -166,7 +179,7 @@ public class RTScanner {
         this.tempBlackList.put(repository.getId(), expirationDate);
     }
 
-    public boolean isRepositoryInteresting(int repositoryId) {
+    public boolean isRepositoryInteresting(long repositoryId) {
         if (this.blackListedRepository.contains(repositoryId)) {
             //LOGGER.debug("Repo already blacklisted (id: "+repositoryId+")");
             return false;

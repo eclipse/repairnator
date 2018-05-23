@@ -28,8 +28,8 @@ public class RunnableMavenInvoker implements Runnable {
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile(new File(this.mavenHelper.getPomFile()));
         request.setGoals(Arrays.asList(this.mavenHelper.getGoal()));
-
         request.setProperties(this.mavenHelper.getProperties());
+        request.setBatchMode(true);
 
         Invoker invoker = new DefaultInvoker();
 

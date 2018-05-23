@@ -55,7 +55,7 @@ public class TestInitRepoToPush {
 
     @Test
     public void testInitRepoToPushSimpleCase() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -86,10 +86,10 @@ public class TestInitRepoToPush {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector));
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushState(), is(PushState.REPO_INITIALIZED));
+        assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();
@@ -98,16 +98,13 @@ public class TestInitRepoToPush {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
-
-        RevCommit firstCommit = iterator.next();
-        assertThat(firstCommit.getShortMessage(), containsString("Bug commit"));
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
         assertThat(iterator.hasNext(), is(false));
     }
 
     @Test
     public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
-        int buildId = 331637757;
+        long buildId = 331637757;
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -138,10 +135,10 @@ public class TestInitRepoToPush {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector));
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushState(), is(PushState.REPO_INITIALIZED));
+        assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));
         File bak = new File(tmpDir.getAbsolutePath()+"/repotopush/bak.travis.yml");
         File travis = new File(tmpDir.getAbsolutePath()+"/repotopush/.travis.yml");
 

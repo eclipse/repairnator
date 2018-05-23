@@ -15,8 +15,8 @@ import java.util.Set;
 public class Metrics {
     private Date reproductionDate;
 
-    private int buggyBuildId;
-    private int patchedBuilId;
+    private long buggyBuildId;
+    private long patchedBuilId;
 
     private String buggyBuildURL;
     private String patchedBuildURL;
@@ -36,7 +36,10 @@ public class Metrics {
     private int patchDeletedLines;
 
     private int nbFailingTests;
+    private int nbErroringTests;
+    private int nbSkippingTests;
     private int nbRunningTests;
+    private int nbSucceedingTests;
 
     private Set<String> failureNames;
 
@@ -78,6 +81,22 @@ public class Metrics {
 
     public void setNbFailingTests(int nbFailingTests) {
         this.nbFailingTests = nbFailingTests;
+    }
+
+    public int getNbErroringTests() {
+        return nbErroringTests;
+    }
+
+    public void setNbErroringTests(int nbErroringTests) {
+        this.nbErroringTests = nbErroringTests;
+    }
+
+    public int getNbSkippingTests() {
+        return nbSkippingTests;
+    }
+
+    public void setNbSkippingTests(int nbSkippingTests) {
+        this.nbSkippingTests = nbSkippingTests;
     }
 
     public void setNbRunningTests(int nbRunningTests) {
@@ -152,11 +171,11 @@ public class Metrics {
         this.patchChangedFiles = patchChangedFiles;
     }
 
-    public void setBuggyBuildId(int buggyBuildId) {
+    public void setBuggyBuildId(long buggyBuildId) {
         this.buggyBuildId = buggyBuildId;
     }
 
-    public void setPatchedBuilId(int patchedBuilId) {
+    public void setPatchedBuilId(long patchedBuilId) {
         this.patchedBuilId = patchedBuilId;
     }
 
@@ -180,11 +199,11 @@ public class Metrics {
         return reproductionDate;
     }
 
-    public int getBuggyBuildId() {
+    public long getBuggyBuildId() {
         return buggyBuildId;
     }
 
-    public int getPatchedBuilId() {
+    public long getPatchedBuilId() {
         return patchedBuilId;
     }
 
@@ -286,5 +305,13 @@ public class Metrics {
 
     public Map<String, Long> getFreeMemoryByStep() {
         return freeMemoryByStep;
+    }
+
+    public int getNbSucceedingTests() {
+        return nbSucceedingTests;
+    }
+
+    public void setNbSucceedingTests(int nbSucceedingTests) {
+        this.nbSucceedingTests = nbSucceedingTests;
     }
 }

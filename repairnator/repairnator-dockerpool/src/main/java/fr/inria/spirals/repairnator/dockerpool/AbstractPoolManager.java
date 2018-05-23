@@ -83,7 +83,7 @@ public class AbstractPoolManager {
         this.engines = engines;
     }
 
-    public TreatedBuildTracking prepareBeforeSubmitBuild(int buildId) {
+    public TreatedBuildTracking prepareBeforeSubmitBuild(long buildId) {
         this.cleanUpOlderContainers();
         return new TreatedBuildTracking(this.engines, this.runId, buildId);
     }
@@ -102,7 +102,7 @@ public class AbstractPoolManager {
 
         int nbKilled = 0;
         for (RunnablePipelineContainer runnablePipelineContainer : this.submittedRunnablePipelineContainers) {
-            if (runnablePipelineContainer.getLimitDateBeforeKilling().toInstant().isBefore(now)) {
+            if (runnablePipelineContainer.getLimitDateBeforeKilling() != null && runnablePipelineContainer.getLimitDateBeforeKilling().toInstant().isBefore(now)) {
                 runnablePipelineContainer.killDockerContainer(this.docker, false);
                 nbKilled++;
             }

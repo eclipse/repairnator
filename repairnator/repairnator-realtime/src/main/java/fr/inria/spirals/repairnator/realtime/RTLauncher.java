@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class RTLauncher {
@@ -73,6 +75,8 @@ public class RTLauncher {
         jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // --pushurl
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        // --ghOauth
+        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
 
         FlaggedOption opt2 = new FlaggedOption("whitelist");
         opt2.setShortFlag('w');
@@ -115,12 +119,22 @@ public class RTLauncher {
         opt2.setHelp("Duration of the execution. If not given, the execution never stop. This argument should be given on the ISO-8601 duration format: PWdTXhYmZs where W, X, Y, Z respectively represents number of Days, Hours, Minutes and Seconds. T is mandatory before the number of hours and P is always mandatory.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("repairTools");
+        opt2.setLongFlag("repairTools");
+        opt2.setListSeparator(',');
+        opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
+        opt2.setRequired(true);
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setLauncherMode(this.launcherMode);
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
@@ -134,6 +148,7 @@ public class RTLauncher {
         this.config.setCreateOutputDir(LauncherUtils.getArgCreateOutputDir(arguments));
         this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(arguments));
         this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
+        this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
@@ -150,6 +165,8 @@ public class RTLauncher {
         if (arguments.getObject("duration") != null) {
             this.config.setDuration((Duration) arguments.getObject("duration"));
         }
+
+        this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
     }
 
     private void initSerializerEngines() {

@@ -2,8 +2,9 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -11,7 +12,7 @@ import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
+import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
@@ -30,8 +31,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -80,6 +83,20 @@ public class TestProjectInspector4Bears {
         RepairnatorConfig.deleteInstance();
     }
 
+    private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
+        for (StepStatus stepStatus : statuses) {
+            if (!expectedValues.containsKey(stepStatus.getStep().getClass())) {
+                assertThat("Step failing: "+stepStatus, stepStatus.isSuccess(), is(true));
+            } else {
+                StepStatus.StatusKind expectedStatus = expectedValues.get(stepStatus.getStep().getClass());
+                assertThat("Status was not as expected" + stepStatus, stepStatus.getStatus(), is(expectedStatus));
+                expectedValues.remove(stepStatus.getStep().getClass());
+            }
+        }
+
+        assertThat(expectedValues.isEmpty(), is(true));
+    }
+
     @Test
     public void testFailingPassingProject() throws IOException, GitAPIException {
         int buildIdPassing = 203800961;
@@ -114,7 +131,7 @@ public class TestProjectInspector4Bears {
 
         serializers.add(new InspectorSerializer4Bears(serializerEngines));
 
-        notifiers.add(new FixerBuildNotifier(notifierEngines));
+        notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
@@ -123,11 +140,22 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE1));
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
-        assertThat(inspector.isFixerBuildCase1(), is(true));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(PushProcessEnd.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
+
+        assertThat(jobStatus.getLastPushState(), is(PushState.REPO_NOT_PUSHED));
+        assertThat(inspector.isBug(), is(true));
+        assertThat(inspector.getBugType(), is("BUG_FAILING_PASSING"));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is(PipelineState.BUG_FAILING_PASSING.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
@@ -143,9 +171,6 @@ public class TestProjectInspector4Bears {
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
-
-        commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Bug commit"));
@@ -186,7 +211,7 @@ public class TestProjectInspector4Bears {
 
         serializers.add(new InspectorSerializer4Bears(serializerEngines));
 
-        notifiers.add(new FixerBuildNotifier(notifierEngines));
+        notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
@@ -195,11 +220,21 @@ public class TestProjectInspector4Bears {
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.FIXERBUILDCASE2));
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
-        assertThat(inspector.isFixerBuildCase2(), is(true));
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+
+        Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
+        expectedStatuses.put(PushProcessEnd.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
+
+        this.checkStepStatus(stepStatusList, expectedStatuses);
+
+        assertThat(jobStatus.getLastPushState(), is(PushState.REPO_NOT_PUSHED));
+        assertThat(inspector.isBug(), is(true));
+        assertThat(inspector.getBugType(), is("BUG_PASSING_PASSING"));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
         assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is(PipelineState.BUG_PASSING_PASSING.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
         verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
@@ -215,9 +250,6 @@ public class TestProjectInspector4Bears {
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
-
-        commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
 
         commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Bug commit"));

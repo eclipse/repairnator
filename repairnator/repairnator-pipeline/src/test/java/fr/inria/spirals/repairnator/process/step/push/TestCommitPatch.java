@@ -53,7 +53,7 @@ public class TestCommitPatch {
 
     @Test
     public void testPushHumanPatchSimpleCase() throws IOException, GitAPIException, RepairnatorConfigException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -84,10 +84,10 @@ public class TestCommitPatch {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new CommitPatch(inspector, true));
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new CommitPatch(inspector, CommitType.COMMIT_HUMAN_PATCH));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushState(), is(PushState.PATCH_COMMITTED));
+        assertThat(jobStatus.getPushStates().contains(PushState.PATCH_COMMITTED), is(true));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();
@@ -96,9 +96,6 @@ public class TestCommitPatch {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
-
-        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();

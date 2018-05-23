@@ -3,20 +3,14 @@ package fr.inria.spirals.repairnator.process.nopol;
 import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by urli on 16/02/2017.
  */
 public class NopolInformation {
     private FailureLocation location;
     private NopolStatus status;
-    private Date dateEnd;
     private int allocatedTime;
     private int passingTime;
-    private List<PatchAndDiff> patches;
     private NopolContext nopolContext;
     private String exceptionDetail;
     private int nbStatements;
@@ -25,7 +19,6 @@ public class NopolInformation {
 
     public NopolInformation(FailureLocation location, IgnoreStatus ignoreStatus) {
         this.status = NopolStatus.NOTLAUNCHED;
-        this.patches = new ArrayList<>();
         this.location = location;
         this.ignoreStatus = ignoreStatus;
     }
@@ -40,14 +33,6 @@ public class NopolInformation {
 
     public void setStatus(NopolStatus status) {
         this.status = status;
-    }
-
-    public Date getDateEnd() {
-        return dateEnd;
-    }
-
-    public void setDateEnd() {
-        this.dateEnd = new Date();
     }
 
     public int getAllocatedTime() {
@@ -74,13 +59,6 @@ public class NopolInformation {
         this.exceptionDetail = exceptionDetail;
     }
 
-    public List<PatchAndDiff> getPatches() {
-        return patches;
-    }
-
-    public void setPatches(List<PatchAndDiff> patches) {
-        this.patches = patches;
-    }
 
     public FailureLocation getLocation() {
         return location;
@@ -115,10 +93,8 @@ public class NopolInformation {
         return "NopolInformation{" +
                 "location=" + location +
                 ", status=" + status +
-                ", dateEnd=" + dateEnd +
                 ", allocatedTime=" + allocatedTime +
                 ", passingTime=" + passingTime +
-                ", nbPatches=" + patches.size() +
                 ", nopolContext=" + nopolContext +
                 ", exceptionDetail='" + exceptionDetail + '\'' +
                 ", nbStatements=" + nbStatements +

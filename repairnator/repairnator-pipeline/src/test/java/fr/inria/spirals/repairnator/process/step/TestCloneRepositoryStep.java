@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertThat;
@@ -48,7 +50,7 @@ public class TestCloneRepositoryStep {
 
     @Test
     public void testCloneMasterBuild() throws IOException {
-        int buildId = 207924136; // surli/failingProject build
+        long buildId = 207924136; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -75,9 +77,13 @@ public class TestCloneRepositoryStep {
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.execute();
 
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.CLONABLE));
-        assertThat(cloneStep.getPipelineState(), is(PipelineState.CLONABLE));
-        assertThat(cloneStep.shouldStop, is(false));
+        assertThat(cloneStep.isShouldStop(), is(false));
+
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(1));
+        StepStatus cloneStatus = stepStatusList.get(0);
+        assertThat(cloneStatus.getStep(), is(cloneStep));
+        assertThat(cloneStatus.isSuccess(), is(true));
 
         Git gitDir = Git.open(new File(tmpDir, "repo"));
         Ref ref = gitDir.getRepository().exactRef("HEAD");
@@ -91,7 +97,7 @@ public class TestCloneRepositoryStep {
 
     @Test
     public void testCloneBuildWithSubmodule() throws IOException {
-        int buildId = 355839305; // surli/failingProject build
+        long buildId = 355839305; // surli/failingProject build
 
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
@@ -118,9 +124,11 @@ public class TestCloneRepositoryStep {
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.execute();
 
-        assertThat(jobStatus.getPipelineState(), is(PipelineState.CLONABLE));
-        assertThat(cloneStep.getPipelineState(), is(PipelineState.CLONABLE));
-        assertThat(cloneStep.shouldStop, is(false));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(1));
+        StepStatus cloneStatus = stepStatusList.get(0);
+        assertThat(cloneStatus.getStep(), is(cloneStep));
+        assertThat(cloneStatus.isSuccess(), is(true));
 
         File licenceInSubmodule = new File(tmpDirPath.toFile(), "repo/grakn-spec/LICENSE");
         assertThat("Submodule are not supported", licenceInSubmodule.exists(), is(true));

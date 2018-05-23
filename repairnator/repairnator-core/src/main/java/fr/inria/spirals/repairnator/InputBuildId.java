@@ -7,23 +7,23 @@ public class InputBuildId {
 
     public static final int NO_PATCH = -1;
 
-    private int buggyBuildId;
-    private int patchedBuildId = NO_PATCH;
+    private long buggyBuildId;
+    private long patchedBuildId = NO_PATCH;
 
-    public InputBuildId(int buggyBuildId) {
+    public InputBuildId(long buggyBuildId) {
         this.buggyBuildId = buggyBuildId;
     }
 
-    public InputBuildId(int buggyBuildId, int patchedBuildId) {
+    public InputBuildId(long buggyBuildId, long patchedBuildId) {
         this(buggyBuildId);
         this.patchedBuildId = patchedBuildId;
     }
 
-    public int getBuggyBuildId() {
+    public long getBuggyBuildId() {
         return this.buggyBuildId;
     }
 
-    public int getPatchedBuildId() {
+    public long getPatchedBuildId() {
         return this.patchedBuildId;
     }
 
