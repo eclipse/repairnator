@@ -43,7 +43,7 @@ public abstract class AbstractDataSerializer extends Serializer {
 
         List<StepStatus> stepStatuses = jobStatus.getStepStatuses();
 
-        for (int i = stepStatuses.size()-1; i > 0; i--) {
+        for (int i = stepStatuses.size()-1; i >= 0; i--) {
             StepStatus stepStatus = stepStatuses.get(i);
             if (stepStatus.getStatus() == StepStatus.StatusKind.FAILURE) {
                 return stepStatus.getDiagnostic();
