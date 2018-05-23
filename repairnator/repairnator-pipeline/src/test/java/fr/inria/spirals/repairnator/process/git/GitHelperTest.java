@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.git;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -37,7 +38,8 @@ public class GitHelperTest {
 
         GitHelper gitHelper = new GitHelper();
         Metrics metrics = jobStatus.getMetrics();
-        gitHelper.computePatchStats(metrics, git, revCommit, revParentCommit);
+        Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
+        gitHelper.computePatchStats(metrics, metrics4Bears, git, revCommit, revParentCommit);
         assertEquals(14, metrics.getPatchChangedFiles());
         assertEquals(443, metrics.getPatchAddedLines());
         assertEquals(104, metrics.getPatchDeletedLines());

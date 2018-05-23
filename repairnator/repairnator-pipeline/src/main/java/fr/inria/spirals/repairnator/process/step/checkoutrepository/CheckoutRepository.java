@@ -2,12 +2,13 @@ package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.PullRequest;
-import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.commits.Commit;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
@@ -49,12 +50,17 @@ public abstract class CheckoutRepository extends AbstractStep {
             GitHelper gitHelper = this.getInspector().getGitHelper();
             git = Git.open(new File(this.getInspector().getRepoLocalPath()));
             Build build;
+            Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+            Commit commit;
 
             switch (checkoutType) {
                 case CHECKOUT_BUGGY_BUILD:
                     build = this.getInspector().getBuggyBuild();
                     metric.setBugCommit(build.getCommit().getSha());
                     metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+
+                    commit = this.createCommitForMetrics(build);
+                    metrics4Bears.getCommits().setBuggyBuild(commit);
                     break;
 
                 case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
@@ -62,12 +68,18 @@ public abstract class CheckoutRepository extends AbstractStep {
                     metric.setBugCommit(build.getCommit().getSha());
                     metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
                     metric.setReconstructedBugCommit(true);
+
+                    commit = this.createCommitForMetrics(build);
+                    metrics4Bears.getCommits().setBuggyBuild(commit);
                     break;
 
                 case CHECKOUT_PATCHED_BUILD:
                     build = this.getInspector().getPatchedBuild();
                     metric.setPatchCommit(build.getCommit().getSha());
                     metric.setPatchCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+
+                    commit = this.createCommitForMetrics(build);
+                    metrics4Bears.getCommits().setFixerBuild(commit);
                     break;
 
                 default:
@@ -88,6 +100,17 @@ public abstract class CheckoutRepository extends AbstractStep {
                         this.writeProperty("pr-base-commit-id", prInformation.getBase().getSHA1());
                         this.writeProperty("pr-base-commit-id-url", prInformation.getBase().getHtmlUrl());
                         this.writeProperty("pr-id", build.getPullRequestNumber());
+
+                        commit = this.createCommitForMetrics(build, prInformation, false);
+                        metrics4Bears.getCommits().setFixerBuildForkRepo(commit);
+                        commit = this.createCommitForMetrics(build, prInformation, true);
+                        metrics4Bears.getCommits().setFixerBuildBaseRepo(commit);
+                    } else if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD ||
+                            checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
+                        commit = this.createCommitForMetrics(build, prInformation, false);
+                        metrics4Bears.getCommits().setBuggyBuildForkRepo(commit);
+                        commit = this.createCommitForMetrics(build, prInformation, true);
+                        metrics4Bears.getCommits().setBuggyBuildBaseRepo(commit);
                     }
 
                     gitHelper.addAndCommitRepairnatorLogAndProperties(this.getInspector().getJobStatus(), git, "After getting PR information");
@@ -139,22 +162,6 @@ public abstract class CheckoutRepository extends AbstractStep {
             return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
         }
 
-        this.writeProperty("hostname", Utils.getHostname());
-
-        switch (this.getInspector().getBuildToBeInspected().getStatus()) {
-            case ONLY_FAIL:
-                this.writeProperty("bugType", "only_fail");
-                break;
-
-            case FAILING_AND_PASSING:
-                this.writeProperty("bugType", "failing_passing");
-                break;
-
-            case PASSING_AND_PASSING_WITH_TEST_CHANGES:
-                this.writeProperty("bugType", "passing_passing");
-                break;
-        }
-
         return StepStatus.buildSuccess(this);
     }
 
@@ -172,6 +179,31 @@ public abstract class CheckoutRepository extends AbstractStep {
             this.addStepError("Exception while getting paths.", e);
         }
         return paths;
+    }
+
+    private Commit createCommitForMetrics(Build build) {
+        Commit commit = new Commit();
+        commit.setRepoName(build.getRepository().getName());
+        commit.setBranchName(build.getBranch().getName());
+        commit.setSha(build.getCommit().getSha());
+        commit.setUrl(this.getCommitUrl(build.getCommit().getSha()));
+        commit.setDate(build.getCommit().getCommittedAt());
+        return commit;
+    }
+
+    private Commit createCommitForMetrics(Build build, PullRequest prInformation, boolean base) {
+        Commit commit = new Commit();
+        commit.setRepoName(prInformation.getOtherRepo().getFullName());
+        commit.setBranchName(build.getBranch().getName());
+        commit.setDate(build.getCommit().getCommittedAt());
+        if (base) {
+            commit.setSha(prInformation.getBase().getSHA1());
+            commit.setUrl(prInformation.getBase().getHtmlUrl().toString());
+        } else {
+            commit.setSha(prInformation.getHead().getSHA1());
+            commit.setUrl(prInformation.getHead().getHtmlUrl().toString());
+        }
+        return commit;
     }
 
     protected CheckoutType getCheckoutType() {

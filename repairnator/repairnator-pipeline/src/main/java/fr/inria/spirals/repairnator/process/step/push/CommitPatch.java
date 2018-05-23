@@ -1,7 +1,9 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
@@ -51,7 +53,9 @@ public class CommitPatch extends CommitFiles {
 
                 if (stepStatus.isSuccess()) {
                     RevCommit commit = super.getCommit();
-                    this.getInspector().getGitHelper().computePatchStats(this.getInspector().getJobStatus().getMetrics(), git, headRev, commit);
+                    Metrics metrics = this.getInspector().getJobStatus().getMetrics();
+                    Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+                    this.getInspector().getGitHelper().computePatchStats(metrics, metrics4Bears, git, headRev, commit);
 
                     if (this.commitType == CommitType.COMMIT_HUMAN_PATCH) {
                         this.setPushState(PushState.PATCH_COMMITTED);

@@ -3,9 +3,15 @@ package fr.inria.spirals.repairnator.process.step.gatherinfo;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.FailingClass;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Failure;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.FailureDetail;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Tests;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
 import org.apache.maven.plugins.surefire.report.ReportTestSuite;
 import org.apache.maven.plugins.surefire.report.SurefireReportParser;
@@ -115,6 +121,25 @@ public class GatherTestInformation extends AbstractStep {
                     this.nbErroringTests += testSuite.getNumberOfErrors();
                     this.nbFailingTests += testSuite.getNumberOfFailures();
 
+                    if (!this.skipSettingStatusInformation) {
+                        Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+                        for (ReportTestCase testCase : testSuite.getTestCases()) {
+                            FailingClass failingClass = metrics4Bears.getTests().addFailingClass(testCase.getFullClassName());
+                            if (!testCase.hasSkipped()) {
+                                failingClass.incNumberExecuted();
+                            }
+                            if (testCase.isSuccessful()) {
+                                failingClass.incNumberPassed();
+                            } else if (testCase.hasFailure()) {
+                                failingClass.incNumberFailed();
+                            } else if (testCase.hasError()) {
+                                failingClass.incNumberErrored();
+                            } else if (testCase.hasSkipped()) {
+                                failingClass.incNumberSkipped();
+                            }
+                        }
+                    }
+
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
                         this.failingModulePath = failingModule.getCanonicalPath();
@@ -122,6 +147,7 @@ public class GatherTestInformation extends AbstractStep {
                         if (!this.skipSettingStatusInformation) {
                             this.getInspector().getJobStatus().setFailingModulePath(this.failingModulePath);
                             this.writeProperty("failingModule", this.failingModulePath);
+                            this.getInspector().getJobStatus().getMetrics4Bears().getTests().setFailingModule(this.failingModulePath);
                             getLogger().info("Get the following failing module path: " + failingModulePath);
                         }
 
@@ -137,7 +163,7 @@ public class GatherTestInformation extends AbstractStep {
                                 }
 
                                 this.failureNames.add(failureType);
-                                FailureType typeTof = new FailureType(testCase.getFailureType(), testCase.getFailureMessage(), testCase.hasError());
+                                FailureType typeTof = new FailureType(failureType, testCase.getFailureMessage(), testCase.hasError());
                                 FailureLocation failureLocation = null;
 
                                 for (FailureLocation location : this.failureLocations) {
@@ -157,6 +183,17 @@ public class GatherTestInformation extends AbstractStep {
                                     failureLocation.addErroringMethod(testCase.getName());
                                 } else {
                                     failureLocation.addFailingMethod(testCase.getName());
+                                }
+
+                                if (!this.skipSettingStatusInformation) {
+                                    FailureDetail failureDetail = new FailureDetail();
+                                    failureDetail.setTestClass(failureLocation.getClassName());
+                                    failureDetail.setTestMethod(testCase.getName());
+                                    failureDetail.setFailureName(typeTof.getFailureName());
+                                    failureDetail.setDetails(typeTof.getFailureDetail());
+                                    failureDetail.setError(typeTof.isError());
+                                    Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+                                    metrics4Bears.getTests().addFailureDetail(failureDetail);
                                 }
                             }
                         }
@@ -185,6 +222,39 @@ public class GatherTestInformation extends AbstractStep {
             metrics.setNbSkippingTests(this.nbSkippingTests);
             metrics.setNbErroringTests(this.nbErroringTests);
             metrics.setNbSucceedingTests(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+
+            Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+            Tests tests = metrics4Bears.getTests();
+            tests.getOverallMetrics().setNumberExecuted(this.nbTotalTests);
+            tests.getOverallMetrics().setNumberFailed(this.nbFailingTests);
+            tests.getOverallMetrics().setNumberErrored(this.nbErroringTests);
+            tests.getOverallMetrics().setNumberSkipped(this.nbSkippingTests);
+            tests.getOverallMetrics().setNumberPassed(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            Map<String, Map<Boolean, Integer>> mapFailureNameToErrorToNbOccurrences = new HashMap<>();
+            for (FailureLocation failureLocation : this.failureLocations) {
+                for (FailureType failureType : failureLocation.getFailures()) {
+                    String failureName = failureType.getFailureName();
+                    boolean isError = failureType.isError();
+                    if (!mapFailureNameToErrorToNbOccurrences.containsKey(failureName)) {
+                        mapFailureNameToErrorToNbOccurrences.put(failureName, new HashMap<>());
+                    }
+                    if (!mapFailureNameToErrorToNbOccurrences.get(failureName).containsKey(isError)) {
+                        mapFailureNameToErrorToNbOccurrences.get(failureName).put(isError, 0);
+                    }
+                    int occurrences = mapFailureNameToErrorToNbOccurrences.get(failureName).get(isError);
+                    mapFailureNameToErrorToNbOccurrences.get(failureName).put(isError, occurrences + 1);
+                }
+            }
+            for (String failureName : mapFailureNameToErrorToNbOccurrences.keySet()) {
+                for (boolean isError : mapFailureNameToErrorToNbOccurrences.get(failureName).keySet()) {
+                    int occurrences = mapFailureNameToErrorToNbOccurrences.get(failureName).get(isError);
+                    Failure failure = new Failure();
+                    failure.setFailureName(failureName);
+                    failure.setIsError(isError);
+                    failure.setOccurrences(occurrences);
+                    tests.getOverallMetrics().addFailure(failure);
+                }
+            }
         }
 
         return contract.shouldBeStopped(this);

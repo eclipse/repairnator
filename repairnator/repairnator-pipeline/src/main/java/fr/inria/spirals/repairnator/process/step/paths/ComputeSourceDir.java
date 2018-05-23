@@ -142,6 +142,7 @@ public class ComputeSourceDir extends AbstractStep {
                 totalAppFiles += nbFile;
             }
             this.getInspector().getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
+            this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberSourceFiles(totalAppFiles);
         }
     }
 

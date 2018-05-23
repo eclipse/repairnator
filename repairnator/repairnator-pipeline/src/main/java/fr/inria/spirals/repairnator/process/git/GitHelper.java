@@ -5,6 +5,8 @@ import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff.PatchDiff;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import org.apache.commons.io.FileUtils;
@@ -258,7 +260,7 @@ public class GitHelper {
         return null;
     }
 
-    public void computePatchStats(Metrics metric, Git git, RevCommit headRev, RevCommit commit) {
+    public void computePatchStats(Metrics metric, Metrics4Bears metrics4Bears, Git git, RevCommit headRev, RevCommit commit) {
         try {
             ObjectReader reader = git.getRepository().newObjectReader();
             CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
@@ -274,6 +276,8 @@ public class GitHelper {
             int nbLineAdded = 0;
             int nbLineDeleted = 0;
             Set<String> changedFiles = new HashSet<>();
+            Set<String> addedFiles = new HashSet<>();
+            Set<String> deletedFiles = new HashSet<>();
 
             for (DiffEntry entry : entries) {
                 String path;
@@ -282,8 +286,16 @@ public class GitHelper {
                 } else {
                     path = entry.getNewPath();
                 }
-                if (!path.contains("repairnator")) {
-                    changedFiles.add(path);
+                if (!path.contains("repairnator") && !path.contains("bears")) {
+                    if (entry.getChangeType() == DiffEntry.ChangeType.MODIFY ||
+                            entry.getChangeType() == DiffEntry.ChangeType.RENAME) {
+                        changedFiles.add(path);
+                    } else if (entry.getChangeType() == DiffEntry.ChangeType.ADD ||
+                            entry.getChangeType() == DiffEntry.ChangeType.COPY) {
+                        addedFiles.add(path);
+                    } else if (entry.getChangeType() == DiffEntry.ChangeType.DELETE) {
+                        deletedFiles.add(path);
+                    }
 
                     FileHeader fileHeader = diffFormatter.toFileHeader(entry);
                     List<? extends HunkHeader> hunks = fileHeader.getHunks();
@@ -315,6 +327,13 @@ public class GitHelper {
             metric.setPatchAddedLines(nbLineAdded);
             metric.setPatchDeletedLines(nbLineDeleted);
             metric.setPatchChangedFiles(changedFiles.size());
+
+            PatchDiff patchDiff = metrics4Bears.getPatchDiff();
+            patchDiff.getFiles().setNumberAdded(addedFiles.size());
+            patchDiff.getFiles().setNumberChanged(changedFiles.size());
+            patchDiff.getFiles().setNumberDeleted(deletedFiles.size());
+            patchDiff.getLines().setNumberAdded(nbLineAdded);
+            patchDiff.getLines().setNumberDeleted(nbLineDeleted);
         } catch (IOException e) {
             this.getLogger().error("Error while computing stat on the patch", e);
         }

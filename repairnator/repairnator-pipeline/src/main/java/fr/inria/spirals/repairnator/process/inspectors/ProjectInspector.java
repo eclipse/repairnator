@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
@@ -82,6 +83,22 @@ public class ProjectInspector {
                 metrics.setPatchedBuildURL(Utils.getTravisUrl(this.getPatchedBuild().getId(), this.getRepoSlug()));
                 metrics.setPatchedBuildDate(this.getPatchedBuild().getFinishedAt());
             }
+
+            Metrics4Bears metrics4Bears = this.jobStatus.getMetrics4Bears();
+
+            Build build = this.getBuggyBuild();
+            long id = build.getId();
+            String url = Utils.getTravisUrl(build.getId(), this.getRepoSlug());
+            Date date = build.getFinishedAt();
+            fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build buggyBuild = new fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build(id, url, date);
+            metrics4Bears.getBuilds().setBuggyBuild(buggyBuild);
+
+            build = this.getPatchedBuild();
+            id = build.getId();
+            url = Utils.getTravisUrl(build.getId(), this.getRepoSlug());
+            date = build.getFinishedAt();
+            fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build patchedBuild = new fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build(id, url, date);
+            metrics4Bears.getBuilds().setFixerBuild(patchedBuild);
         } catch (Exception e) {
             this.logger.error("Error while initializing metrics value", e);
         }
