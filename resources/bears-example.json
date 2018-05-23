@@ -1,4 +1,5 @@
 {
+  "version": "Bears 2.2 build 22/05/2018 15:18:04",
   "type": "failing_passing",
   "repository": {
     "name": "bowenli86/flink",
