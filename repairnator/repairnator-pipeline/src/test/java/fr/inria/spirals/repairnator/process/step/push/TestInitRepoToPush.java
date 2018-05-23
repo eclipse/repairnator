@@ -89,7 +89,7 @@ public class TestInitRepoToPush {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushState(), is(PushState.REPO_INITIALIZED));
+        assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();
@@ -98,10 +98,7 @@ public class TestInitRepoToPush {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the repairnator process"));
-
-        RevCommit firstCommit = iterator.next();
-        assertThat(firstCommit.getShortMessage(), containsString("Bug commit"));
+        assertThat(commit.getShortMessage(), containsString("Bug commit"));
         assertThat(iterator.hasNext(), is(false));
     }
 
@@ -141,7 +138,7 @@ public class TestInitRepoToPush {
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushState(), is(PushState.REPO_INITIALIZED));
+        assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));
         File bak = new File(tmpDir.getAbsolutePath()+"/repotopush/bak.travis.yml");
         File travis = new File(tmpDir.getAbsolutePath()+"/repotopush/.travis.yml");
 

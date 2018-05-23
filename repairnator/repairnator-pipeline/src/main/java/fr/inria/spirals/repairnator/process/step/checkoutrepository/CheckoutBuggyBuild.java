@@ -12,6 +12,10 @@ public class CheckoutBuggyBuild extends CheckoutRepository {
         super(inspector, blockingStep);
     }
 
+    public CheckoutBuggyBuild(ProjectInspector inspector, boolean blockingStep, String stepName) {
+        super(inspector, blockingStep, stepName);
+    }
+
     protected StepStatus businessExecute() {
         this.getLogger().debug("Checking out previous build...");
 

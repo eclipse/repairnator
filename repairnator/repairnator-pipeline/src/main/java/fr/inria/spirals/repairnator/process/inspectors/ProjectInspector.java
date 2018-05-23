@@ -10,9 +10,7 @@ import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
-import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
-import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
+import fr.inria.spirals.repairnator.process.step.push.*;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -52,6 +50,10 @@ public class ProjectInspector {
 
     private CheckoutType checkoutType;
 
+    private List<AbstractStep> steps;
+    private AbstractStep finalStep;
+    private boolean pipelineEnding;
+
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
 
@@ -64,6 +66,7 @@ public class ProjectInspector {
         this.jobStatus = new JobStatus(repoLocalPath);
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
         this.initMetricsValue();
     }
 
@@ -145,7 +148,6 @@ public class ProjectInspector {
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
                     .setNextStep(new InitRepoToPush(this))
-                    .setNextStep(new PushIncriminatedBuild(this))
                     .setNextStep(new ComputeClasspath(this, false))
                     .setNextStep(new ComputeSourceDir(this, false, false));
 
@@ -159,15 +161,20 @@ public class ProjectInspector {
                 }
             }
 
-            lastStep.setNextStep(new CommitPatch(this, false))
+            lastStep.setNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
                     .setNextStep(new CheckoutPatchedBuild(this, true))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
-                    .setNextStep(new CommitPatch(this, true));
+                    .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
+
+            this.finalStep = new CommitProcessEnd(this);
+            this.finalStep.setNextStep(new PushProcessEnd(this));
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);
+
+            this.printPipeline();
 
             try {
                 cloneRepo.execute();
@@ -209,4 +216,84 @@ public class ProjectInspector {
     public void setPatchNotifier(PatchNotifier patchNotifier) {
         this.patchNotifier = patchNotifier;
     }
+
+    public AbstractStep getFinalStep() {
+        return finalStep;
+    }
+
+    public void setFinalStep(AbstractStep finalStep) {
+        this.finalStep = finalStep;
+    }
+
+    public boolean isPipelineEnding() {
+        return pipelineEnding;
+    }
+
+    public void setPipelineEnding(boolean pipelineEnding) {
+        this.pipelineEnding = pipelineEnding;
+    }
+
+    public void registerStep(AbstractStep step) {
+        this.steps.add(this.steps.size(), step);
+    }
+
+    public List<AbstractStep> getSteps() {
+        return steps;
+    }
+
+    public void printPipeline() {
+        this.logger.info("----------------------------------------------------------------------");
+        this.logger.info("PIPELINE STEPS");
+        this.logger.info("----------------------------------------------------------------------");
+        for (int i = 0; i < this.steps.size(); i++) {
+            this.logger.info(this.steps.get(i).getName());
+        }
+    }
+
+    public void printPipelineEnd() {
+        this.logger.info("----------------------------------------------------------------------");
+        this.logger.info("PIPELINE EXECUTION SUMMARY");
+        this.logger.info("----------------------------------------------------------------------");
+        int higherDuration = 0;
+        for (int i = 0; i < this.steps.size(); i++) {
+            AbstractStep step = this.steps.get(i);
+            int stepDuration = step.getDuration();
+            if (stepDuration > higherDuration) {
+                higherDuration = stepDuration;
+            }
+        }
+        for (int i = 0; i < this.steps.size(); i++) {
+            AbstractStep step = this.steps.get(i);
+            String stepName = step.getName();
+            String stepStatus = (step.getStepStatus() != null) ? step.getStepStatus().getStatus().name() : "NOT RUN";
+            String stepDuration = String.valueOf(step.getDuration());
+
+            StringBuilder stepDurationFormatted = new StringBuilder();
+            if (!stepStatus.equals("SKIPPED") && !stepStatus.equals("NOT RUN")) {
+                stepDurationFormatted.append(" [ ");
+                for (int j = 0; j < (String.valueOf(higherDuration).length() - stepDuration.length()); j++) {
+                    stepDurationFormatted.append(" ");
+                }
+                stepDurationFormatted.append(stepDuration + " s ]");
+            } else {
+                for (int j = 0; j < (String.valueOf(higherDuration).length() + 7); j++) {
+                    stepDurationFormatted.append(" ");
+                }
+            }
+
+            int stringSize = stepName.length() + stepStatus.length() + stepDurationFormatted.length();
+            int nbDot = 70 - stringSize;
+            StringBuilder stepNameFormatted = new StringBuilder(stepName);
+            for (int j = 0; j < nbDot; j++) {
+                stepNameFormatted.append(".");
+            }
+            this.logger.info(stepNameFormatted + stepStatus + stepDurationFormatted);
+        }
+        String finding = AbstractDataSerializer.getPrettyPrintState(this).toUpperCase();
+        finding = (finding.equals("UNKNOWN")) ? "-" : finding;
+        this.logger.info("----------------------------------------------------------------------");
+        this.logger.info("PIPELINE FINDING: "+finding);
+        this.logger.info("----------------------------------------------------------------------");
+    }
+
 }
