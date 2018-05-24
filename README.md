@@ -60,12 +60,6 @@ cd repairnator/scripts
 # start a docker container and run Repairnator on your specified Build ID.
 ./repair_buggy_build.sh 352395977
 
-# find the container name
-docker ps
-
-# look at the logs
-docker logs -f 849ef603b056 # is the name of the docker container
-
 # When the docker container is done you can find logs and serialized files in the `$HOME_REPAIR/logs` path.
 ls $HOME_REPAIR/logs
 ```
