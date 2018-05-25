@@ -37,13 +37,13 @@ Then, Yyou create a new Java class in package `fr.inria.spirals.repairnator.proc
  
 (Technical note: Repairnator use a Java SPI to automatically discover the available repair tools step.)
 
-#### Implement the RepairStep Java Class
+#### Implementing the RepairStep Java Class
 
 When you inherit from the `AbstractRepairStep` class, you first need to implement the abstract method `getRepairToolName()`: this method should only returns a String with the name of the tool you are bringing.
 
 Then you need to override and implement the method `businessExecute()`. This method is automatically called to execute the repair step: it's always called after the failing builds has been reproduced, and thus you can get access to information about the test failures and about some pathes of the project.
 
-##### Context information with JobStatus
+##### Accessing the context information with JobStatus
 
 Most of the information you need to get access to are stored in a class named `fr.inria.spirals.repairnator.process.inspectors.JobStatus` and is available through the inspector from the RepairStep:
 `this.getInspector().getJobStatus()`.
@@ -84,7 +84,7 @@ You can directly make those return calls in case of success or failure:
   
 Have a look on `fr.inria.spirals.repairnator.process.inspectors.StepStatus` to get more information about this class.
 
-##### Record patches
+##### Recording patches
 
 When the tool manage to produce a patch, this one must be recorded in database and send by email to the Repairnator administrators to propose a pull request.
 In order to do so, you first need to create an object `fr.inria.spirals.repairnator.process.inspectors.RepairPatch` for each patch generated.
@@ -100,7 +100,7 @@ In most cases, even if no patch has been generated, the repair tools create some
 In order to record all data created during an execution of a repair tool, a method `this.recordToolDiagnostic(JsonElement)` is available.
 This method takes as input a `JsonElement` which might be a `JsonObject` or a `JsonArray` and this element will be directly stored in database for further investigation.
 
-##### How to test the Repairnator integration
+#### How to test the Repairnator integration
 
 We advise you the following process in order to ease your life when testing. 
 
@@ -110,7 +110,7 @@ We advise you the following process in order to ease your life when testing.
 * If everything's right, you should get some patches for fixing your own code. 
 
 
-##### Managing errors
+#### Managing errors
 
 At each point, if you need to handle an exception or an error without exception, you can use the dedicated method:
 
