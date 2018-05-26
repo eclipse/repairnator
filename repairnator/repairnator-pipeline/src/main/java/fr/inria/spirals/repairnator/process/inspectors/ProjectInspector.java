@@ -94,11 +94,13 @@ public class ProjectInspector {
             metrics4Bears.getBuilds().setBuggyBuild(buggyBuild);
 
             build = this.getPatchedBuild();
-            id = build.getId();
-            url = Utils.getTravisUrl(build.getId(), this.getRepoSlug());
-            date = build.getFinishedAt();
-            fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build patchedBuild = new fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build(id, url, date);
-            metrics4Bears.getBuilds().setFixerBuild(patchedBuild);
+            if (build != null) {
+                id = build.getId();
+                url = Utils.getTravisUrl(build.getId(), this.getRepoSlug());
+                date = build.getFinishedAt();
+                fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build patchedBuild = new fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build(id, url, date);
+                metrics4Bears.getBuilds().setFixerBuild(patchedBuild);
+            }
         } catch (Exception e) {
             this.logger.error("Error while initializing metrics value", e);
         }
