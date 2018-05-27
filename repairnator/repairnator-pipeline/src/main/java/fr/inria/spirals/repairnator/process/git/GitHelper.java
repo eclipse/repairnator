@@ -110,7 +110,7 @@ public class GitHelper {
                 List<String> filesToAdd = new ArrayList<>(status.getCreatedFilesToPush());
                 List<String> filesToCheckout = new ArrayList<>();
                 for (String fileName : filesChanged) {
-                    if (!fileName.contains("repairnator")) {
+                    if (!fileName.contains("repairnator") && !fileName.contains("bears")) {
                         filesToCheckout.add(fileName);
                     } else {
                         filesToAdd.add(fileName);
