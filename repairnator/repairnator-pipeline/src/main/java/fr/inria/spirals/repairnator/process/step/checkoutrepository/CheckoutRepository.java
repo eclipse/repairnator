@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.kohsuke.github.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,7 +184,7 @@ public abstract class CheckoutRepository extends AbstractStep {
 
     private Commit createCommitForMetrics(Build build) {
         Commit commit = new Commit();
-        commit.setRepoName(build.getRepository().getName());
+        commit.setRepoName(build.getRepository().getSlug());
         commit.setBranchName(build.getBranch().getName());
         commit.setSha(build.getCommit().getSha());
         commit.setUrl(this.getCommitUrl(build.getCommit().getSha()));
@@ -193,17 +194,29 @@ public abstract class CheckoutRepository extends AbstractStep {
 
     private Commit createCommitForMetrics(Build build, PullRequest prInformation, boolean base) {
         Commit commit = new Commit();
-        commit.setRepoName(prInformation.getOtherRepo().getFullName());
-        commit.setBranchName(build.getBranch().getName());
-        commit.setDate(build.getCommit().getCommittedAt());
+        GHCommitPointer ghCommitPointer;
+        GHCommit ghCommit;
         if (base) {
-            commit.setSha(prInformation.getBase().getSHA1());
-            commit.setUrl(prInformation.getBase().getHtmlUrl().toString());
+            ghCommitPointer = prInformation.getBaseRef();
         } else {
-            commit.setSha(prInformation.getHead().getSHA1());
-            commit.setUrl(prInformation.getHead().getHtmlUrl().toString());
+            ghCommitPointer = prInformation.getHeadRef();
         }
-        return commit;
+        try {
+            ghCommit = ghCommitPointer.getCommit();
+
+            String branchLabel = ghCommitPointer.getLabel();
+            String branchName = branchLabel.substring(branchLabel.indexOf(":") + 1, branchLabel.length());
+
+            commit.setRepoName(ghCommitPointer.getRepository().getFullName());
+            commit.setBranchName(branchName);
+            commit.setSha(ghCommit.getSHA1());
+            commit.setUrl(ghCommit.getHtmlUrl().toString());
+            commit.setDate(ghCommit.getCommitDate());
+            return commit;
+        } catch (IOException e) {
+            this.addStepError("Exception while writing properties related to commits.", e);
+        }
+        return null;
     }
 
     protected CheckoutType getCheckoutType() {

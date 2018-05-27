@@ -21,39 +21,39 @@ public class FailingClass {
         return numberExecuted;
     }
 
-    public void incNumberExecuted() {
-        this.numberExecuted++;
+    public void setNumberExecuted(int numberExecuted) {
+        this.numberExecuted = numberExecuted;
     }
 
     public int getNumberFailed() {
         return numberFailed;
     }
 
-    public void incNumberFailed() {
-        this.numberFailed++;
+    public void setNumberFailed(int numberFailed) {
+        this.numberFailed = numberFailed;
     }
 
     public int getNumberErrored() {
         return numberErrored;
     }
 
-    public void incNumberErrored() {
-        this.numberErrored++;
+    public void setNumberErrored(int numberErrored) {
+        this.numberErrored = numberErrored;
     }
 
     public int getNumberPassed() {
         return numberPassed;
     }
 
-    public void incNumberPassed() {
-        this.numberPassed++;
+    public void setNumberPassed(int numberPassed) {
+        this.numberPassed = numberPassed;
     }
 
     public int getNumberSkipped() {
         return numberSkipped;
     }
 
-    public void incNumberSkipped() {
-        this.numberSkipped++;
+    public void setNumberSkipped(int numberSkipped) {
+        this.numberSkipped = numberSkipped;
     }
 }

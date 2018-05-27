@@ -75,9 +75,10 @@ public class CloneRepository extends AbstractStep {
             gitHub = new GitHubBuilder().withOAuthToken(this.getConfig().getGithubToken()).build();
             GHRepository repo = gitHub.getRepository(this.getInspector().getRepoSlug());
             if (repo.isFork()) {
-                repository.getOriginal().setName(repo.getFullName());
-                repository.getOriginal().setGithubId(repo.getId());
-                repository.getOriginal().setUrl(Utils.getGithubRepoUrl(repo.getFullName()));
+                repository.setFork(true);
+                repository.getOriginal().setName(repo.getParent().getFullName());
+                repository.getOriginal().setGithubId(repo.getParent().getId());
+                repository.getOriginal().setUrl(Utils.getGithubRepoUrl(repo.getParent().getFullName()));
             }
         } catch (IOException e) {
             this.getLogger().warn("It was not possible to retrieve information to check if " + this.getInspector().getRepoSlug() + " is a fork.");

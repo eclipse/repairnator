@@ -120,25 +120,6 @@ public class GatherTestInformation extends AbstractStep {
                     this.nbErroringTests += testSuite.getNumberOfErrors();
                     this.nbFailingTests += testSuite.getNumberOfFailures();
 
-                    if (!this.skipSettingStatusInformation) {
-                        Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
-                        for (ReportTestCase testCase : testSuite.getTestCases()) {
-                            FailingClass failingClass = metrics4Bears.getTests().addFailingClass(testCase.getFullClassName());
-                            if (!testCase.hasSkipped()) {
-                                failingClass.incNumberExecuted();
-                            }
-                            if (testCase.isSuccessful()) {
-                                failingClass.incNumberPassed();
-                            } else if (testCase.hasFailure()) {
-                                failingClass.incNumberFailed();
-                            } else if (testCase.hasError()) {
-                                failingClass.incNumberErrored();
-                            } else if (testCase.hasSkipped()) {
-                                failingClass.incNumberSkipped();
-                            }
-                        }
-                    }
-
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
                         this.failingModulePath = failingModule.getCanonicalPath();
@@ -148,6 +129,14 @@ public class GatherTestInformation extends AbstractStep {
                             this.writeProperty("failingModule", this.failingModulePath);
                             this.getInspector().getJobStatus().getMetrics4Bears().getTests().setFailingModule(this.failingModulePath);
                             getLogger().info("Get the following failing module path: " + failingModulePath);
+
+                            Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+                            FailingClass failingClass = metrics4Bears.getTests().addFailingClass(testSuite.getFullClassName());
+                            failingClass.setNumberExecuted(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped());
+                            failingClass.setNumberFailed(testSuite.getNumberOfFailures());
+                            failingClass.setNumberErrored(testSuite.getNumberOfErrors());
+                            failingClass.setNumberSkipped(testSuite.getNumberOfSkipped());
+                            failingClass.setNumberPassed(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped() - testSuite.getNumberOfFailures() - testSuite.getNumberOfErrors());
                         }
 
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
