@@ -132,11 +132,11 @@ public class GatherTestInformation extends AbstractStep {
 
                             Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
                             FailingClass failingClass = metrics4Bears.getTests().addFailingClass(testSuite.getFullClassName());
-                            failingClass.setNumberExecuted(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped());
-                            failingClass.setNumberFailed(testSuite.getNumberOfFailures());
-                            failingClass.setNumberErrored(testSuite.getNumberOfErrors());
-                            failingClass.setNumberSkipped(testSuite.getNumberOfSkipped());
-                            failingClass.setNumberPassed(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped() - testSuite.getNumberOfFailures() - testSuite.getNumberOfErrors());
+                            failingClass.setNumberRunning(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped());
+                            failingClass.setNumberPassing(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped() - testSuite.getNumberOfFailures() - testSuite.getNumberOfErrors());
+                            failingClass.setNumberFailing(testSuite.getNumberOfFailures());
+                            failingClass.setNumberErroring(testSuite.getNumberOfErrors());
+                            failingClass.setNumberSkipping(testSuite.getNumberOfSkipped());
                         }
 
                         for (ReportTestCase testCase : testSuite.getTestCases()) {
@@ -178,7 +178,7 @@ public class GatherTestInformation extends AbstractStep {
                                     failureDetail.setTestClass(failureLocation.getClassName());
                                     failureDetail.setTestMethod(testCase.getName());
                                     failureDetail.setFailureName(typeTof.getFailureName());
-                                    failureDetail.setDetails(typeTof.getFailureDetail());
+                                    failureDetail.setDetail(typeTof.getFailureDetail());
                                     failureDetail.setError(typeTof.isError());
                                     Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
                                     metrics4Bears.getTests().addFailureDetail(failureDetail);
@@ -213,11 +213,11 @@ public class GatherTestInformation extends AbstractStep {
 
             Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
             Tests tests = metrics4Bears.getTests();
-            tests.getOverallMetrics().setNumberExecuted(this.nbTotalTests);
-            tests.getOverallMetrics().setNumberFailed(this.nbFailingTests);
-            tests.getOverallMetrics().setNumberErrored(this.nbErroringTests);
-            tests.getOverallMetrics().setNumberSkipped(this.nbSkippingTests);
-            tests.getOverallMetrics().setNumberPassed(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            tests.getOverallMetrics().setNumberRunning(this.nbTotalTests);
+            tests.getOverallMetrics().setNumberPassing(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            tests.getOverallMetrics().setNumberFailing(this.nbFailingTests);
+            tests.getOverallMetrics().setNumberErroring(this.nbErroringTests);
+            tests.getOverallMetrics().setNumberSkipping(this.nbSkippingTests);
             Map<String, Map<Boolean, Integer>> mapFailureNameToErrorToNbOccurrences = new HashMap<>();
             for (FailureLocation failureLocation : this.failureLocations) {
                 for (FailureType failureType : failureLocation.getFailures()) {

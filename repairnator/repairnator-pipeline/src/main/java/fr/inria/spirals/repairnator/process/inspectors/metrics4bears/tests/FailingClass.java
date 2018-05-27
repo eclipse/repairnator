@@ -3,11 +3,11 @@ package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests;
 public class FailingClass {
 
     private String testClass;
-    private int numberExecuted;
-    private int numberFailed;
-    private int numberErrored;
-    private int numberPassed;
-    private int numberSkipped;
+    private int numberRunning;
+    private int numberPassing;
+    private int numberFailing;
+    private int numberErroring;
+    private int numberSkipping;
 
     public FailingClass(String testClass) {
         this.testClass = testClass;
@@ -17,43 +17,43 @@ public class FailingClass {
         return testClass;
     }
 
-    public int getNumberExecuted() {
-        return numberExecuted;
+    public int getNumberRunning() {
+        return numberRunning;
     }
 
-    public void setNumberExecuted(int numberExecuted) {
-        this.numberExecuted = numberExecuted;
+    public void setNumberRunning(int numberRunning) {
+        this.numberRunning = numberRunning;
     }
 
-    public int getNumberFailed() {
-        return numberFailed;
+    public int getNumberPassing() {
+        return numberPassing;
     }
 
-    public void setNumberFailed(int numberFailed) {
-        this.numberFailed = numberFailed;
+    public void setNumberPassing(int numberPassing) {
+        this.numberPassing = numberPassing;
     }
 
-    public int getNumberErrored() {
-        return numberErrored;
+    public int getNumberFailing() {
+        return numberFailing;
     }
 
-    public void setNumberErrored(int numberErrored) {
-        this.numberErrored = numberErrored;
+    public void setNumberFailing(int numberFailing) {
+        this.numberFailing = numberFailing;
     }
 
-    public int getNumberPassed() {
-        return numberPassed;
+    public int getNumberErroring() {
+        return numberErroring;
     }
 
-    public void setNumberPassed(int numberPassed) {
-        this.numberPassed = numberPassed;
+    public void setNumberErroring(int numberErroring) {
+        this.numberErroring = numberErroring;
     }
 
-    public int getNumberSkipped() {
-        return numberSkipped;
+    public int getNumberSkipping() {
+        return numberSkipping;
     }
 
-    public void setNumberSkipped(int numberSkipped) {
-        this.numberSkipped = numberSkipped;
+    public void setNumberSkipping(int numberSkipping) {
+        this.numberSkipping = numberSkipping;
     }
 }

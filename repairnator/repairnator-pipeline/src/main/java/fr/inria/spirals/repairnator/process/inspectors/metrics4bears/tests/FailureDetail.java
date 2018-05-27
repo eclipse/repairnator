@@ -5,7 +5,7 @@ public class FailureDetail {
     private String testClass;
     private String testMethod;
     private String failureName;
-    private String details;
+    private String detail;
     private boolean isError;
 
     public FailureDetail() {}
@@ -34,12 +34,12 @@ public class FailureDetail {
         this.failureName = failureName;
     }
 
-    public String getDetails() {
-        return details;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public boolean getIsError() {

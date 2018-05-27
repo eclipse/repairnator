@@ -5,7 +5,7 @@ public class Repository {
     private String name;
     private long githubId;
     private String url;
-    private boolean fork;
+    private boolean isFork;
     private Original original;
     private boolean isPullRequest;
     private int pullRequestId;
@@ -38,12 +38,12 @@ public class Repository {
         this.url = url;
     }
 
-    public boolean getFork() {
-        return fork;
+    public boolean getIsFork() {
+        return isFork;
     }
 
-    public void setFork(boolean fork) {
-        this.fork = fork;
+    public void setIsFork(boolean isFork) {
+        this.isFork = isFork;
     }
 
     public Original getOriginal() {
