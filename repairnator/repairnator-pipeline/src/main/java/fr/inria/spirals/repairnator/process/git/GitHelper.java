@@ -326,7 +326,7 @@ public class GitHelper {
 
             metric.setPatchAddedLines(nbLineAdded);
             metric.setPatchDeletedLines(nbLineDeleted);
-            metric.setPatchChangedFiles(changedFiles.size());
+            metric.setPatchChangedFiles(changedFiles.size() + addedFiles.size() + deletedFiles.size());
 
             PatchDiff patchDiff = metrics4Bears.getPatchDiff();
             patchDiff.getFiles().setNumberAdded(addedFiles.size());

@@ -41,6 +41,9 @@ public class GitHelperTest {
         Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
         gitHelper.computePatchStats(metrics, metrics4Bears, git, revCommit, revParentCommit);
         assertEquals(14, metrics.getPatchChangedFiles());
+        assertEquals(9, metrics4Bears.getPatchDiff().getFiles().getNumberAdded());
+        assertEquals(1, metrics4Bears.getPatchDiff().getFiles().getNumberDeleted());
+        assertEquals(4, metrics4Bears.getPatchDiff().getFiles().getNumberChanged());
         assertEquals(443, metrics.getPatchAddedLines());
         assertEquals(104, metrics.getPatchDeletedLines());
     }
