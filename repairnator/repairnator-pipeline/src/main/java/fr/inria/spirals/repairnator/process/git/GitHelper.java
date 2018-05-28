@@ -335,19 +335,39 @@ public class GitHelper {
         }
     }
 
-    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, AbstractStep step) {
+    /**
+     * Copy the files from a directory to another.
+     *
+     * @param sourceDir is the directory containing the files to be copied from.
+     * @param targetDir is the directory where the files from sourceDir are going to be copied to.
+     * @param excludedFileNames is a list of file names not to be included in targetDir.
+     * @param isToRemove when set as "true", all files will be copied from sourceDir to targetDir, and after that files with the names in excludedFileNames will be removed from targetDir.
+     *                   when set as "false", during the process of copying the files from sourceDir to targetDir, file names containing substrings of the names in excludedFileNames will not be copied.
+     *                   For instance, if excludedFileNames contains ".git", when isToRemove=true, the file ".gitignore" will be kept in targetDir, and when isToRemove=false, the file ".gitignore" will not be copied into targetDir.
+     * @param step is the pipeline step from where this method was called (the info from the step is only used for logging purpose).
+     *
+     */
+    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToRemove, AbstractStep step) {
         try {
-            FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    for (String fileExtension : excludedFileNames) {
-                        if (pathname.toString().contains(fileExtension)) {
-                            return false;
-                        }
-                    }
-                    return true;
+            if (isToRemove) {
+                FileUtils.copyDirectory(sourceDir, targetDir);
+                for (String fileName : excludedFileNames) {
+                    File targetFolder = new File(targetDir, fileName);
+                    FileUtils.deleteDirectory(targetFolder);
                 }
-            });
+            } else {
+                FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
+                    @Override
+                    public boolean accept(File pathname) {
+                        for (String fileName : excludedFileNames) {
+                            if (pathname.toString().contains(fileName)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                });
+            }
         } catch (IOException e) {
             step.addStepError("Error while copying the folder to prepare the git repository.", e);
         }

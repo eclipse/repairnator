@@ -45,7 +45,11 @@ public class CommitFiles extends AbstractStep {
                 GitHelper gitHelper = this.getInspector().getGitHelper();
 
                 String[] excludedFileNames = {".git", ".m2"};
-                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, this);
+                if (this.commitType == CommitType.COMMIT_BUGGY_BUILD) {
+                    gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, true, this);
+                } else {
+                    gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, false, this);
+                }
 
                 gitHelper.removeNotificationFromTravisYML(targetDir, this);
 
