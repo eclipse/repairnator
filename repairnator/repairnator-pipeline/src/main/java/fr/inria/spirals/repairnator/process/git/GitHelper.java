@@ -417,7 +417,7 @@ public class GitHelper {
                 Charset charset = StandardCharsets.UTF_8;
                 try {
                     String content = new String(Files.readAllBytes(file.toPath()), charset);
-                    String updatedContent = content.replaceAll(ghOauthPattern, "");
+                    String updatedContent = content.replaceAll(ghOauthPattern, "[REMOVED]");
                     if (!content.equals(updatedContent)) {
                         getLogger().info("ghOauth info detected in file "+file.toPath()+". Such file will be changed.");
                         Files.write(file.toPath(), updatedContent.getBytes(charset));
