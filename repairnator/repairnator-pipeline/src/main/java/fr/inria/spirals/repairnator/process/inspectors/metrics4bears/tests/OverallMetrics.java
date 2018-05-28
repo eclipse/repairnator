@@ -60,7 +60,16 @@ public class OverallMetrics {
         return failures;
     }
 
-    public void addFailure(Failure failure) {
+    public void addFailure(String failureName, boolean isError) {
+        for (Failure failure : this.failures) {
+            if (failure.getFailureName().equals(failureName) &&
+                    failure.getIsError() == isError) {
+                failure.setOccurrences(failure.getOccurrences() + 1);
+                return;
+            }
+        }
+        Failure failure = new Failure(failureName, isError);
+        failure.setOccurrences(1);
         this.failures.add(failure);
     }
 

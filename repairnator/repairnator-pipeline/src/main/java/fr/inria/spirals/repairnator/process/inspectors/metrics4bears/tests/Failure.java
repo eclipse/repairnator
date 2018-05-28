@@ -6,22 +6,17 @@ public class Failure {
     private boolean isError;
     private int occurrences;
 
-    public Failure() {}
+    public Failure(String failureName, boolean isError) {
+        this.failureName = failureName;
+        this.isError = isError;
+    }
 
     public String getFailureName() {
         return failureName;
     }
 
-    public void setFailureName(String failureName) {
-        this.failureName = failureName;
-    }
-
     public boolean getIsError() {
         return isError;
-    }
-
-    public void setIsError(boolean isError) {
-        isError = isError;
     }
 
     public int getOccurrences() {

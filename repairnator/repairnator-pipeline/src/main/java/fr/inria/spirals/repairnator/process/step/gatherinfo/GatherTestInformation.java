@@ -3,11 +3,8 @@ package fr.inria.spirals.repairnator.process.step.gatherinfo;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.FailingClass;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Failure;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.*;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.FailureDetail;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Tests;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
@@ -174,13 +171,15 @@ public class GatherTestInformation extends AbstractStep {
                                 }
 
                                 if (!this.skipSettingStatusInformation) {
+                                    Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+                                    metrics4Bears.getTests().getOverallMetrics().addFailure(typeTof.getFailureName(), typeTof.isError());
+
                                     FailureDetail failureDetail = new FailureDetail();
                                     failureDetail.setTestClass(failureLocation.getClassName());
                                     failureDetail.setTestMethod(testCase.getName());
                                     failureDetail.setFailureName(typeTof.getFailureName());
                                     failureDetail.setDetail(typeTof.getFailureDetail());
                                     failureDetail.setError(typeTof.isError());
-                                    Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
                                     metrics4Bears.getTests().addFailureDetail(failureDetail);
                                 }
                             }
@@ -213,36 +212,12 @@ public class GatherTestInformation extends AbstractStep {
 
             Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
             Tests tests = metrics4Bears.getTests();
-            tests.getOverallMetrics().setNumberRunning(this.nbTotalTests);
-            tests.getOverallMetrics().setNumberPassing(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
-            tests.getOverallMetrics().setNumberFailing(this.nbFailingTests);
-            tests.getOverallMetrics().setNumberErroring(this.nbErroringTests);
-            tests.getOverallMetrics().setNumberSkipping(this.nbSkippingTests);
-            Map<String, Map<Boolean, Integer>> mapFailureNameToErrorToNbOccurrences = new HashMap<>();
-            for (FailureLocation failureLocation : this.failureLocations) {
-                for (FailureType failureType : failureLocation.getFailures()) {
-                    String failureName = failureType.getFailureName();
-                    boolean isError = failureType.isError();
-                    if (!mapFailureNameToErrorToNbOccurrences.containsKey(failureName)) {
-                        mapFailureNameToErrorToNbOccurrences.put(failureName, new HashMap<>());
-                    }
-                    if (!mapFailureNameToErrorToNbOccurrences.get(failureName).containsKey(isError)) {
-                        mapFailureNameToErrorToNbOccurrences.get(failureName).put(isError, 0);
-                    }
-                    int occurrences = mapFailureNameToErrorToNbOccurrences.get(failureName).get(isError);
-                    mapFailureNameToErrorToNbOccurrences.get(failureName).put(isError, occurrences + 1);
-                }
-            }
-            for (String failureName : mapFailureNameToErrorToNbOccurrences.keySet()) {
-                for (boolean isError : mapFailureNameToErrorToNbOccurrences.get(failureName).keySet()) {
-                    int occurrences = mapFailureNameToErrorToNbOccurrences.get(failureName).get(isError);
-                    Failure failure = new Failure();
-                    failure.setFailureName(failureName);
-                    failure.setIsError(isError);
-                    failure.setOccurrences(occurrences);
-                    tests.getOverallMetrics().addFailure(failure);
-                }
-            }
+            OverallMetrics overallMetrics = tests.getOverallMetrics();
+            overallMetrics.setNumberRunning(this.nbTotalTests);
+            overallMetrics.setNumberPassing(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            overallMetrics.setNumberFailing(this.nbFailingTests);
+            overallMetrics.setNumberErroring(this.nbErroringTests);
+            overallMetrics.setNumberSkipping(this.nbSkippingTests);
         }
 
         return contract.shouldBeStopped(this);

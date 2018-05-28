@@ -60,14 +60,11 @@ public class CloneRepository extends AbstractStep {
         fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository.Repository repository = this.getInspector().getJobStatus().getMetrics4Bears().getRepository();
         repository.setName(this.getInspector().getRepoSlug());
         repository.setGithubId(this.build.getRepository().getId());
-        repository.setUrl(Utils.getGithubRepoUrl(this.getInspector().getRepoSlug()));
+        repository.setUrl(GITHUB_ROOT_REPO + this.getInspector().getRepoSlug());
 
         if (this.build.isPullRequest()) {
             repository.setIsPullRequest(true);
             repository.setPullRequestId(this.build.getPullRequestNumber());
-        } else {
-            repository.setIsPullRequest(false);
-            repository.setPullRequestId(0);
         }
 
         GitHub gitHub;
@@ -78,7 +75,7 @@ public class CloneRepository extends AbstractStep {
                 repository.setIsFork(true);
                 repository.getOriginal().setName(repo.getParent().getFullName());
                 repository.getOriginal().setGithubId(repo.getParent().getId());
-                repository.getOriginal().setUrl(Utils.getGithubRepoUrl(repo.getParent().getFullName()));
+                repository.getOriginal().setUrl(GITHUB_ROOT_REPO + repo.getParent().getFullName());
             }
         } catch (IOException e) {
             this.getLogger().warn("It was not possible to retrieve information to check if " + this.getInspector().getRepoSlug() + " is a fork.");
