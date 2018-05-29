@@ -338,40 +338,50 @@ public class GitHelper {
     }
 
     /**
-     * Copy the files from a directory to another.
+     * Copy the files from a directory into another.
      *
      * @param sourceDir is the directory containing the files to be copied from.
      * @param targetDir is the directory where the files from sourceDir are going to be copied to.
-     * @param excludedFileNames is a list of file names not to be included in targetDir.
-     * @param isToRemove when set as "true", all files will be copied from sourceDir to targetDir, and after that files with the names in excludedFileNames will be removed from targetDir.
-     *                   when set as "false", during the process of copying the files from sourceDir to targetDir, file names containing substrings of the names in excludedFileNames will not be copied.
-     *                   For instance, if excludedFileNames contains ".git", when isToRemove=true, the file ".gitignore" will be kept in targetDir, and when isToRemove=false, the file ".gitignore" will not be copied into targetDir.
+     * @param excludedFileNames is an optional parameter that may contain a list of file names not to be included into targetDir.
+     * @param isToPerfectlyMatch is a parameter to be used when excludedFileNames is set with one or more file names.
+     *                           When isToPerfectlyMatch is set as "true", the files with the exactly names in excludedFileNames will not be copied into targetDir.
+     *                           When isToPerfectlyMatch is set as "false", the file with names containing substring of the names in excludedFileNames will not be copied into targetDir.
+     *                           For instance, if excludedFileNames contains the file name ".git", when isToPerfectlyMatch is true, the file ".gitignore" will be copied into targetDir, and when isToPerfectlyMatch is false, the file ".gitignore" will NOT be copied into targetDir.
      * @param step is the pipeline step from where this method was called (the info from the step is only used for logging purpose).
      *
      */
-    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToRemove, AbstractStep step) {
-        try {
-            if (isToRemove) {
-                FileUtils.copyDirectory(sourceDir, targetDir);
-                for (String fileName : excludedFileNames) {
-                    File targetFolder = new File(targetDir, fileName);
-                    FileUtils.deleteDirectory(targetFolder);
-                }
-            } else {
+    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToPerfectlyMatch, AbstractStep step) {
+        getLogger().debug("Copying files...");
+        if (sourceDir != null && targetDir != null) {
+            getLogger().debug("Source dir: " + sourceDir.getPath());
+            getLogger().debug("Target dir: " + targetDir.getPath());
+
+            try {
                 FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
                     @Override
-                    public boolean accept(File pathname) {
-                        for (String fileName : excludedFileNames) {
-                            if (pathname.toString().contains(fileName)) {
-                                return false;
+                    public boolean accept(File file) {
+                        for (String excludedFileName : excludedFileNames) {
+                            if (isToPerfectlyMatch) {
+                                String excludedFilePath = sourceDir.getPath() + "/" + excludedFileName;
+                                if (file.getPath().equals(excludedFilePath)) {
+                                    getLogger().debug("File not copied: " + file.getPath());
+                                    return false;
+                                }
+                            } else {
+                                if (file.getPath().contains(excludedFileName)) {
+                                    getLogger().debug("File not copied: " + file.getPath());
+                                    return false;
+                                }
                             }
                         }
                         return true;
                     }
                 });
+            } catch (IOException e) {
+                step.addStepError("Error while copying files to prepare the git repository folder towards to push data.", e);
             }
-        } catch (IOException e) {
-            step.addStepError("Error while copying the folder to prepare the git repository.", e);
+        } else {
+            step.addStepError("Error while copying files to prepare the git repository folder towards to push data: the source and/or target folders are null.");
         }
     }
 
