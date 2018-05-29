@@ -49,6 +49,8 @@ public class CommitFiles extends AbstractStep {
 
                 gitHelper.removeNotificationFromTravisYML(targetDir, this);
 
+                gitHelper.removeGhOauthFromCreatedFilesToPush(targetDir, this.getInspector().getJobStatus().getCreatedFilesToPush());
+
                 git.add().addFilepattern(".").call();
 
                 gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);

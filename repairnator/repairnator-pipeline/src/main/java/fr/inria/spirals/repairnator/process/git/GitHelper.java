@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -400,6 +402,29 @@ public class GitHelper {
                 }
             } catch (IOException e) {
                 getLogger().warn("Error while changing travis file", e);
+            }
+        }
+    }
+
+    public void removeGhOauthFromCreatedFilesToPush(File directory, List<String> fileNames) {
+        String ghOauthPattern = "--ghOauth\\s+[\\w]+";
+        for (String fileName : fileNames) {
+            File file = new File(directory, fileName);
+
+            if (!file.exists()) {
+                getLogger().warn("The file "+file.toPath()+" does not exist.");
+            } else {
+                Charset charset = StandardCharsets.UTF_8;
+                try {
+                    String content = new String(Files.readAllBytes(file.toPath()), charset);
+                    String updatedContent = content.replaceAll(ghOauthPattern, "[REMOVED]");
+                    if (!content.equals(updatedContent)) {
+                        getLogger().info("ghOauth info detected in file "+file.toPath()+". Such file will be changed.");
+                        Files.write(file.toPath(), updatedContent.getBytes(charset));
+                    }
+                } catch (IOException e) {
+                    getLogger().warn("Error while checking if file "+file.toPath()+" contains ghOauth info.", e);
+                }
             }
         }
     }
