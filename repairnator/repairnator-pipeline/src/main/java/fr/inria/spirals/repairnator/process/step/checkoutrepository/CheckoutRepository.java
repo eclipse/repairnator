@@ -122,7 +122,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                     } else {
                         List<String> paths = this.getPaths(this.getInspector().getJobStatus().getRepairSourceDir(), git);
 
-                        git.checkout().setStartPoint(commitCheckout).addPaths(paths).call();
+                        gitHelper.gitResetPaths(commitCheckout, paths, git.getRepository().getDirectory().getParentFile());
 
                         // FIXME: commit should not be there
                         PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
