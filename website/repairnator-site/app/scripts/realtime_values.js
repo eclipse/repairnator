@@ -47,7 +47,9 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fu
 
       if (fieldName == 'prNumber') {
         if (dataValue != 0) {
-          dataValue = '<a href="https://github.com/'+data['repositoryName']+'/pull/'+data[fieldName]+'">'+dataValue+'</a>';
+          dataValue = '<a href="https://github.com/'+data['repositoryName']+'/pull/'+data[fieldName]+'"><img src="images/github-logo.svg" style="width: 40px; height: 40px" alt="'+dataValue+'" /></a>';
+        } else {
+          dataValue = '';
         }
       }
 
@@ -56,12 +58,12 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fu
       }
 
       if (fieldName == 'travisURL') {
-        dataValue = '<a href="'+dataValue+'">'+dataValue+'</a>';
+        dataValue = '<a href="'+dataValue+'"><img src="images/travis-ci.png" style="width: 40px; height: 40px" alt="'+dataValue+'" /></a>';
       }
 
       if (fieldName == 'branchURL') {
         if (dataValue != undefined && dataValue != null) {
-          dataValue = '<a href="'+dataValue+'">Go to branch</a>';
+          dataValue = '<a href="'+dataValue+'"><img src="images/github-logo.svg" style="width: 40px; height: 40px" alt="Go to branch" /></a>';
         } else {
           dataValue = 'N/A';
         }

@@ -94,11 +94,15 @@ public class NPERepair extends AbstractRepairStep {
                                 if (success) {
                                     effectivelyPatched = true;
 
+                                    JsonElement diff = execution.getAsJsonObject().get("diff");
+                                    if (diff != null) {
+                                        String content = diff.getAsString();
 
-                                    String content = execution.getAsJsonObject().get("diff").getAsString();
-
-                                    RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", content);
-                                    repairPatches.add(repairPatch);
+                                        RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", content);
+                                        repairPatches.add(repairPatch);
+                                    } else {
+                                        this.addStepError("Error while parsing JSON path file: diff content is null.");
+                                    }
                                 }
                             }
 
