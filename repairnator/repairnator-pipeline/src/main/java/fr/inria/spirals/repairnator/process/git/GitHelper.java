@@ -196,7 +196,7 @@ public class GitHelper {
                 + " Reset hour: " + dateFormat.format(rateLimit.reset));
     }
 
-    public boolean mergeTwoCommitsForPR(Git git, Build build, PullRequest prInformation, String repository, AbstractStep step, List<String> pathes) {
+    public boolean mergeTwoCommitsForPR(Git git, Build build, PullRequest prInformation, String repository, AbstractStep step, List<String> paths) {
         try {
             String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getFullName() + ".git";
 
@@ -226,8 +226,8 @@ public class GitHelper {
 
             this.getLogger().debug("Step " + step.getName() + " - Get the commit " + commitHeadSha + " for repo " + repository);
 
-            if (pathes != null) {
-                git.checkout().setName(commitHeadSha).addPaths(pathes).call();
+            if (paths != null) {
+                this.gitResetPaths(commitHeadSha, paths, git.getRepository().getDirectory().getParentFile());
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                 git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
             } else {
@@ -335,6 +335,41 @@ public class GitHelper {
                 this.getLogger().error("Error while executing git command to add files: " + e);
             }
         }
+    }
+
+    public void gitResetPaths(String commit, List<String> paths, File gitDirectory) {
+        paths = this.removeDuplicatePaths(paths);
+
+        String[] gitReset = {"git", "reset", commit, "--", StringUtils.join(paths, " ")};
+        this.executeGitCommand(gitReset, gitDirectory);
+
+        String[] gitClean = {"git", "clean", "-fd", "--", StringUtils.join(paths, " ")};
+        this.executeGitCommand(gitClean, gitDirectory);
+
+        String[] gitCheckout = {"git", "checkout", "--", "."};
+        this.executeGitCommand(gitCheckout, gitDirectory);
+    }
+
+    public void executeGitCommand(String[] gitCommand, File gitDirectory) {
+        this.getLogger().debug("Executing git command: " + StringUtils.join(gitCommand, " "));
+
+        ProcessBuilder processBuilder = new ProcessBuilder(gitCommand).directory(gitDirectory).inheritIO();
+        try {
+            Process process = processBuilder.start();
+            process.waitFor();
+        } catch (InterruptedException|IOException e) {
+            this.getLogger().error("Error while executing git command: " + e);
+        }
+    }
+
+    public List<String> removeDuplicatePaths(List<String> paths) {
+        List<String> newPaths = new ArrayList<>();
+        for (String path : paths) {
+            if (!newPaths.contains(path)) {
+                newPaths.add(path);
+            }
+        }
+        return newPaths;
     }
 
     /**
