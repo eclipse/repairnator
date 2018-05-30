@@ -33,6 +33,19 @@ public class CommitFiles extends AbstractStep {
             File sourceDir = new File(this.getInspector().getRepoLocalPath());
             File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
 
+            GitHelper gitHelper = this.getInspector().getGitHelper();
+
+            String[] excludedFileNames = {".git", ".m2"};
+            if (this.commitType == CommitType.COMMIT_BUGGY_BUILD) {
+                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, true, this);
+            } else {
+                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, false, this);
+            }
+
+            gitHelper.removeNotificationFromTravisYML(targetDir, this);
+
+            gitHelper.removeGhOauthFromCreatedFilesToPush(targetDir, this.getInspector().getJobStatus().getCreatedFilesToPush());
+
             try {
                 Git git;
 
@@ -41,13 +54,6 @@ public class CommitFiles extends AbstractStep {
                 } else {
                     git = Git.open(targetDir);
                 }
-
-                GitHelper gitHelper = this.getInspector().getGitHelper();
-
-                String[] excludedFileNames = {".git", ".m2"};
-                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, this);
-
-                gitHelper.removeNotificationFromTravisYML(targetDir, this);
 
                 git.add().addFilepattern(".").call();
 
