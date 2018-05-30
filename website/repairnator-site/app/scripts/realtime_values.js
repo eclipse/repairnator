@@ -2,8 +2,8 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fu
   var htmlElement = $('#tablerealtime');
 
   var fieldNames = [
-    {id:'buildFinishedDateStr', readable: 'Original date'},
-    {id: 'buildReproductionDateStr', readable: 'Date of the reproduction'},
+    {id:'buildFinishedDate', readable: 'Original date'},
+    {id: 'buildReproductionDate', readable: 'Date of the reproduction'},
     {id: 'buildId', readable: 'Build ID'},
     {id: 'repositoryName', readable: 'Github Repository'},
     {id: 'status', readable: 'Status'},
@@ -36,6 +36,14 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/', fu
       var td = $('<td></td>');
 
       var dataValue = data[fieldName];
+
+      if (fieldName == 'buildFinishedDate') {
+        dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+      }
+
+      if (fieldName == 'buildReproductionDate') {
+        dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+      }
 
       if (fieldName == 'status') {
         if (data[fieldName] == 'PATCHED') {
