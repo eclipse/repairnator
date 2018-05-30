@@ -15,10 +15,13 @@ var simplifyStatuses = function (dataArray) {
     'NOTCLONABLE': errorCloning,
     'NOTFAILING': withoutFailure,
     'NOTTESTABLE': errorTesting,
-    'TESTDIRNOTCOMPUTED': errorTesting,
     'TESTABLE': errorTesting,
-    'BUILDNOTCHECKEDOUT': errorCheckout
+    'BUILDNOTCHECKEDOUT': errorCheckout,
+    'TESTDIRNOTCOMPUTED': errorTesting
   };
+
+  var total = 0;
+  dataArray.forEach(element => {total += element.counted});
 
   var dataNewName = dataArray.reduce(function (acc, elem) {
     var status = statusMap[elem._id];
@@ -33,24 +36,22 @@ var simplifyStatuses = function (dataArray) {
   var finalArray = Object.keys(dataNewName).reduce(function (acc, id) {
     acc.push({
       'name': id,
-      'y': dataNewName[id]
+      'y': dataNewName[id],
+      'percentage': (dataNewName[id] / total)*100
     });
     return acc;
   }, []);
 
-  return finalArray;
+  return finalArray.sort(function (a, b) {
+    return b.y - a.y;
+  });
 };
-
 $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
-  var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
+  var htmlElement = $('<div></div>');
+  $('#charts').append(htmlElement);
 
   var total = 0;
   data.forEach(element => {total += element.counted});
-
-
-  // return acc.set(item._id, item.counted + acc.get(item._id));
-
-  $('#charts').append(htmlElement);
   Highcharts.chart({
     chart: {
       plotBackgroundColor: null,
@@ -59,19 +60,23 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statu
       type: 'bar',
       renderTo: htmlElement[0]
     },
+    colors: ["#7cb5ec", "#828282", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"],
     title: {
       text: 'Build statuses (all times - '+total+' builds)'
     },
+    xAxis: {
+      type: 'category'
+    },
     tooltip: {
-      pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
+      pointFormat: '{series.name}: <b> ({point.y})</b>'
     },
     plotOptions: {
-      pie: {
+      bar: {
         allowPointSelect: true,
         cursor: 'pointer',
         dataLabels: {
           enabled: true,
-          format: '<b>{point.name}</b>: {point.percentage:.1f}% ({point.y})',
+          format: '{point.y} ({point.percentage:.1f}%)',
           style: {
             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
           }
@@ -82,6 +87,9 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statu
       name: 'Statuses',
       colorByPoint: true,
       data: simplifyStatuses(data)
-    }]
+    }],
+    legend: {
+      enabled: false
+    }
   });
 });
