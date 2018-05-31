@@ -10,6 +10,7 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.building.FileModelSource;
@@ -118,6 +119,11 @@ class RepositoryModelResolver implements ModelResolver {
     @Override
     public ModelSource resolveModel(Parent parent) throws UnresolvableModelException {
         return resolveModel(parent.getGroupId(), parent.getArtifactId(), parent.getVersion());
+    }
+
+    @Override
+    public ModelSource resolveModel(Dependency dependency) throws UnresolvableModelException {
+        return resolveModel(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion());
     }
 
     @Override
