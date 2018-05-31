@@ -142,14 +142,13 @@ public class ProjectInspector {
             AbstractStep cloneRepo = new CloneRepository(this);
             AbstractStep lastStep = cloneRepo
                     .setNextStep(new CheckoutBuggyBuild(this, true))
-                    .setNextStep(new ComputeSourceDir(this, true, true)) // TODO: check, should it be really blocking?
-                    .setNextStep(new ComputeTestDir(this, true))                    // IDEM
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new ComputeClasspath(this, false))
-                    .setNextStep(new ComputeSourceDir(this, false, false));
+                    .setNextStep(new ComputeSourceDir(this, false, false))
+                    .setNextStep(new ComputeTestDir(this, false));
 
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
@@ -168,8 +167,12 @@ public class ProjectInspector {
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
                     .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
 
-            this.finalStep = new CommitProcessEnd(this);
-            this.finalStep.setNextStep(new PushProcessEnd(this));
+            this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
+
+
+            this.finalStep.
+                    setNextStep(new CommitProcessEnd(this)).
+                    setNextStep(new PushProcessEnd(this));
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);
