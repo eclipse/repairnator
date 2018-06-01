@@ -245,7 +245,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("pushUrl");
         opt.setLongFlag("pushurl");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify repository URL to push data.");
+        opt.setHelp("Specify repository URL to push data on the format https://github.com/user/repo.");
         return opt;
     }
 
@@ -296,12 +296,23 @@ public class LauncherUtils {
         if (launcherType == LauncherType.PIPELINE) {
             checkEnvironmentVariable(Utils.M2_HOME, jsap, launcherType);
         }
+
+        checkPushUrlArg(jsap, arguments, launcherType);
     }
 
     public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
         if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
             System.err.println("You must set the following environment variable: "+envVariable);
             LauncherUtils.printUsage(jsap, launcherType);
+        }
+    }
+
+    public static void checkPushUrlArg(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
+        if (getArgPushUrl(arguments) != null) {
+            if (!Utils.matchesGithubRepoUrl(getArgPushUrl(arguments))) {
+                System.err.println("The value of the argument pushurl is wrong.");
+                LauncherUtils.printUsage(jsap, launcherType);
+            }
         }
     }
 
