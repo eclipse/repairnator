@@ -340,11 +340,25 @@ public class GitHelper {
     public void gitResetPaths(String commit, List<String> paths, File gitDirectory) {
         paths = this.removeDuplicatePaths(paths);
 
-        String[] gitReset = {"git", "reset", commit, "--", StringUtils.join(paths, " ")};
-        this.executeGitCommand(gitReset, gitDirectory);
+        List<String> gitReset = new ArrayList<>();
+        gitReset.add("git");
+        gitReset.add("reset");
+        gitReset.add(commit);
+        gitReset.add("--");
+        for (String path : paths) {
+            gitReset.add(path);
+        }
+        this.executeGitCommand(gitReset.toArray(new String[0]), gitDirectory);
 
-        String[] gitClean = {"git", "clean", "-fd", "--", StringUtils.join(paths, " ")};
-        this.executeGitCommand(gitClean, gitDirectory);
+        List<String> gitClean = new ArrayList<>();
+        gitClean.add("git");
+        gitClean.add("clean");
+        gitClean.add("-fd");
+        gitClean.add("--");
+        for (String path : paths) {
+            gitClean.add(path);
+        }
+        this.executeGitCommand(gitClean.toArray(new String[0]), gitDirectory);
 
         String[] gitCheckout = {"git", "checkout", "--", "."};
         this.executeGitCommand(gitCheckout, gitDirectory);
