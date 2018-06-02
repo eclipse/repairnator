@@ -958,7 +958,7 @@
                   "type": "integer",
                   "title": "Number of steps for cloning",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     2
                   ]
                 },
@@ -967,14 +967,27 @@
                   "type": "integer",
                   "title": "Total duration of the global step in seconds",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     120
                   ]
+                },
+                "stepNames": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration"
+                "duration",
+                "stepNames"
               ]
             },
             "building": {
@@ -986,7 +999,7 @@
                   "type": "integer",
                   "title": "Number of steps for building",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     2
                   ]
                 },
@@ -995,14 +1008,27 @@
                   "type": "integer",
                   "title": "Total duration of the global step in seconds",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     120
                   ]
+                },
+                "stepNames": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration"
+                "duration",
+                "stepNames"
               ]
             },
             "testing": {
@@ -1014,7 +1040,7 @@
                   "type": "integer",
                   "title": "Number of steps for testing",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     2
                   ]
                 },
@@ -1023,14 +1049,27 @@
                   "type": "integer",
                   "title": "Total duration of the global step in seconds",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     120
                   ]
+                },
+                "stepNames": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration"
+                "duration",
+                "stepNames"
               ]
             },
             "fixing": {
@@ -1042,7 +1081,7 @@
                   "type": "integer",
                   "title": "Number of steps for fixing",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     2
                   ]
                 },
@@ -1051,14 +1090,27 @@
                   "type": "integer",
                   "title": "Total duration of the global step in seconds",
                   "default": 0,
-                  "exmples": [
+                  "exemples": [
                     120
                   ]
+                },
+                "stepNames": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration"
+                "duration",
+                "stepNames"
               ]
             }
           },
