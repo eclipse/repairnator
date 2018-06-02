@@ -56,7 +56,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
                         .setNextStep(new ComputeSourceDir(this, true, true))
-                        .setNextStep(new ComputeTestDir(this, false))
+                        .setNextStep(new ComputeTestDir(this, true))
                         .setNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
                         .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
                         .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
