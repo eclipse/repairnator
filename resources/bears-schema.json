@@ -944,12 +944,137 @@
           "examples": [
             8
           ]
+        },
+        "stepDurations": {
+          "$id": "/properties/projectMetrics/properties/stepDurations",
+          "type": "object",
+          "properties": {
+            "cloning": {
+              "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for cloning",
+                  "default": 0,
+                  "exmples": [
+                    2
+                  ]
+                },
+                "duration": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/duration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exmples": [
+                    120
+                  ]
+                }
+              },
+              "required": [
+                "nbSteps",
+                "duration"
+              ]
+            },
+            "building": {
+              "$id": "/properties/projectMetrics/properties/stepDurations/properties/building",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for building",
+                  "default": 0,
+                  "exmples": [
+                    2
+                  ]
+                },
+                "duration": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/duration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exmples": [
+                    120
+                  ]
+                }
+              },
+              "required": [
+                "nbSteps",
+                "duration"
+              ]
+            },
+            "testing": {
+              "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for testing",
+                  "default": 0,
+                  "exmples": [
+                    2
+                  ]
+                },
+                "duration": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/duration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exmples": [
+                    120
+                  ]
+                }
+              },
+              "required": [
+                "nbSteps",
+                "duration"
+              ]
+            },
+            "fixing": {
+              "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for fixing",
+                  "default": 0,
+                  "exmples": [
+                    2
+                  ]
+                },
+                "duration": {
+                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/duration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exmples": [
+                    120
+                  ]
+                }
+              },
+              "required": [
+                "nbSteps",
+                "duration"
+              ]
+            }
+          },
+          "required": [
+            "cloning",
+            "building",
+            "testing",
+            "fixing"
+          ]
         }
       },
       "required": [
         "numberLibraries",
         "numberSourceFiles",
-        "numberTestFiles"
+        "numberTestFiles",
+        "stepDurations"
       ]
     }
   },
