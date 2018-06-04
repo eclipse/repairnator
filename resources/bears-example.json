@@ -70,7 +70,6 @@
       "date": "Apr 5, 2018 6:12:36 AM"
     }
   },
-  "reproductionDate": "Apr 5, 2018 6:12:24 AM",
   "tests": {
     "overallMetrics": {
       "numberExecuted": 353,
@@ -155,40 +154,63 @@
   "projectMetrics": {
     "numberLibraries": 12,
     "numberSourceFiles": 10,
-    "numberTestFiles": 8,
-    "stepDurations": {
+    "numberTestFiles": 8
+  },
+  "reproductionBuggyBuild": {
+    "reproductionDateBeginning": "Apr 5, 2018 6:12:24 AM",
+    "reproductionDateEnd": "Apr 5, 2018 7:23:38 AM",
+    "totalDuration": 4274,
+    "processDurations": {
       "cloning": {
         "nbSteps": 2,
-        "duration": 300,
+        "totalDuration": 300,
         "stepNames": [
           "CloneRepository",
           "CheckoutRepository"
+        ],
+        "stepDurations": [
+          181,
+          119
         ]
       },
       "building": {
         "nbSteps": 1,
-        "duration": 108,
+        "totalDuration": 108,
         "stepNames": [
           "BuildRepository"
+        ],
+        "stepDurations": [
+          108
         ]
       },
       "testing": {
         "nbSteps": 3,
-        "duration": 190,
+        "totalDuration": 190,
         "stepNames": [
           "TestRepository",
           "ComputeSourceDir",
           "ComputeTestDir"
+        ],
+        "stepDurations": [
+          188,
+          1,
+          1
         ]
       },
       "fixing": {
         "nbSteps": 4,
-        "duration": 3676,
+        "totalDuration": 3676,
         "stepNames": [
           "NopolRepair",
           "AstorRepair",
           "NPEFixRepair",
           "AssertFixerRepair"
+        ],
+        "stepDurations": [
+          1204,
+          1395,
+          6,
+          1071
         ]
       }
     }

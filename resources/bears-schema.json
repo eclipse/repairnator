@@ -573,15 +573,6 @@
         "fixerBuild"
       ]
     },
-    "reproductionDate": {
-      "$id": "/properties/reproductionDate",
-      "type": "string",
-      "title": "The Reproductiondate Schema ",
-      "default": "",
-      "examples": [
-        "Apr 5, 2018 6:12:24 AM"
-      ]
-    },
     "tests": {
       "$id": "/properties/tests",
       "type": "object",
@@ -944,17 +935,55 @@
           "examples": [
             8
           ]
+        }
+      },
+      "required": [
+        "numberLibraries",
+        "numberSourceFiles",
+        "numberTestFiles"
+      ]
+    },
+    "reproductionBuggyBuild": {
+      "$id": "/properties/reproductionBuggyBuild",
+      "type": "object",
+      "properties": {
+        "reproductionDateBegin": {
+          "$id": "/properties/reproductionBuggyBuild/properties/reproductionDateBegin",
+          "type": "string",
+          "title": "Date of the beginning of the process as a string",
+          "default": "",
+          "examples": [
+            "Apr 5, 2018 6:12:24 AM CET"
+          ]
         },
-        "stepDurations": {
-          "$id": "/properties/projectMetrics/properties/stepDurations",
+        "reproductionDateEnd": {
+          "$id": "/properties/reproductionBuggyBuild/properties/reproductionDateEnd",
+          "type": "string",
+          "title": "Date of the end of the process as a string",
+          "default": "",
+          "examples": [
+            "Apr 5, 2018 6:12:38 AM CET"
+          ]
+        },
+        "totalDuration": {
+          "$id": "/properties/reproductionBuggyBuild/properties/totalDuration",
+          "type": "integer",
+          "title": "Total duration of the reproduction in seconds",
+          "default": "",
+          "examples": [
+            472
+          ]
+        },
+        "processDurations": {
+          "$id": "/properties/reproductionBuggyBuild/properties/processDurations",
           "type": "object",
           "properties": {
             "cloning": {
-              "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning",
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning",
               "type": "object",
               "properties": {
                 "nbSteps": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/nbSteps",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/nbSteps",
                   "type": "integer",
                   "title": "Number of steps for cloning",
                   "default": 0,
@@ -962,40 +991,53 @@
                     2
                   ]
                 },
-                "duration": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/duration",
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/totalDuration",
                   "type": "integer",
-                  "title": "Total duration of the global step in seconds",
+                  "title": "Total duration of the cloning in seconds",
                   "default": 0,
                   "exemples": [
                     120
                   ]
                 },
                 "stepNames": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/stepNames",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepNames",
                   "type": "array",
                   "items": {
-                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/cloning/properties/stepNames/items",
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepNames/items",
                     "type": "string",
-                    "title": "Name of the steps",
+                    "title": "Name of the steps (same order as in stepDurations)",
                     "exemples": [
                       "CheckoutRepository"
+                    ]
+                  }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
                     ]
                   }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration",
-                "stepNames"
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
               ]
             },
             "building": {
-              "$id": "/properties/projectMetrics/properties/stepDurations/properties/building",
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building",
               "type": "object",
               "properties": {
                 "nbSteps": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/nbSteps",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/nbSteps",
                   "type": "integer",
                   "title": "Number of steps for building",
                   "default": 0,
@@ -1003,8 +1045,8 @@
                     2
                   ]
                 },
-                "duration": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/duration",
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/totalDuration",
                   "type": "integer",
                   "title": "Total duration of the global step in seconds",
                   "default": 0,
@@ -1013,30 +1055,43 @@
                   ]
                 },
                 "stepNames": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/stepNames",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepNames",
                   "type": "array",
                   "items": {
-                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/building/properties/stepNames/items",
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepNames/items",
                     "type": "string",
                     "title": "Name of the steps",
                     "exemples": [
                       "CheckoutRepository"
                     ]
                   }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration",
-                "stepNames"
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
               ]
             },
             "testing": {
-              "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing",
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing",
               "type": "object",
               "properties": {
                 "nbSteps": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/nbSteps",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/nbSteps",
                   "type": "integer",
                   "title": "Number of steps for testing",
                   "default": 0,
@@ -1044,8 +1099,8 @@
                     2
                   ]
                 },
-                "duration": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/duration",
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/totalDuration",
                   "type": "integer",
                   "title": "Total duration of the global step in seconds",
                   "default": 0,
@@ -1054,30 +1109,43 @@
                   ]
                 },
                 "stepNames": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/stepNames",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepNames",
                   "type": "array",
                   "items": {
-                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/testing/properties/stepNames/items",
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepNames/items",
                     "type": "string",
                     "title": "Name of the steps",
                     "exemples": [
                       "CheckoutRepository"
                     ]
                   }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration",
-                "stepNames"
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
               ]
             },
             "fixing": {
-              "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing",
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing",
               "type": "object",
               "properties": {
                 "nbSteps": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/nbSteps",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/nbSteps",
                   "type": "integer",
                   "title": "Number of steps for fixing",
                   "default": 0,
@@ -1085,8 +1153,8 @@
                     2
                   ]
                 },
-                "duration": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/duration",
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/totalDuration",
                   "type": "integer",
                   "title": "Total duration of the global step in seconds",
                   "default": 0,
@@ -1095,22 +1163,35 @@
                   ]
                 },
                 "stepNames": {
-                  "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/stepNames",
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepNames",
                   "type": "array",
                   "items": {
-                    "$id": "/properties/projectMetrics/properties/stepDurations/properties/fixing/properties/stepNames/items",
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepNames/items",
                     "type": "string",
                     "title": "Name of the steps",
                     "exemples": [
                       "CheckoutRepository"
                     ]
                   }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
                 }
               },
               "required": [
                 "nbSteps",
-                "duration",
-                "stepNames"
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
               ]
             }
           },
@@ -1123,10 +1204,10 @@
         }
       },
       "required": [
-        "numberLibraries",
-        "numberSourceFiles",
-        "numberTestFiles",
-        "stepDurations"
+        "reproductionDateBeginning",
+        "reproductionDateEnd",
+        "totalDuration",
+        "processDurations"
       ]
     }
   },
@@ -1135,7 +1216,6 @@
     "repository",
     "builds",
     "commits",
-    "reproductionDate",
     "tests",
     "patchDiff",
     "projectMetrics"
