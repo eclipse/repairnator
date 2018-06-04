@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.maven.output;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.maven.TestMavenHelper;
 import org.junit.Test;
 
 import java.io.File;
