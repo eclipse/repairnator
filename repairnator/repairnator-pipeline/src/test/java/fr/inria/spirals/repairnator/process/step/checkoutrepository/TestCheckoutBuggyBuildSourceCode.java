@@ -81,6 +81,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         BuildToBeInspected toBeInspected = new BuildToBeInspected(previousBuild, build, status, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getRepoToPushLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repotopush");
@@ -183,6 +184,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, previousBuild, status, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getRepoToPushLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repotopush");
@@ -285,6 +287,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         BuildToBeInspected toBeInspected = new BuildToBeInspected(previousBuild, build, status, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getRepoToPushLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repotopush");

@@ -67,6 +67,7 @@ public class TestComputeClasspath {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);

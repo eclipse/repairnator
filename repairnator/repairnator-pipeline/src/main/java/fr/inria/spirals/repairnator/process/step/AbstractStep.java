@@ -9,7 +9,10 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -23,6 +26,7 @@ import java.util.*;
  */
 public abstract class AbstractStep {
     private static final String PROPERTY_FILENAME = "repairnator.json";
+    private static final String PROPERTY_FILENAME_BEARS = "bears.json";
 
     /**
      * The name of the step, by default it's the class name
@@ -309,7 +313,11 @@ public abstract class AbstractStep {
         if (!this.inspector.isPipelineEnding()) {
             this.inspector.setPipelineEnding(true);
             this.recordMetrics();
-            this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
+            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
+            } else {
+                this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics4Bears());
+            }
             if (this.inspector.getFinalStep() != null) {
                 this.inspector.getFinalStep().execute();
             }
@@ -336,29 +344,47 @@ public abstract class AbstractStep {
 
     protected void writeProperty(String propertyName, Object value) {
         if (value != null) {
-            this.properties.put(propertyName, value);
 
-            String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
-            File file = new File(filePath);
-
-            Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-            String jsonString = gson.toJson(this.properties);
-
-            try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
-                outputStream.write(jsonString);
-                outputStream.flush();
-                outputStream.close();
-            } catch (IOException e) {
-                this.getLogger().error("Cannot write property to the following file: " + filePath, e);
+            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                this.properties.put(propertyName, value);
             }
+
+            String filePath;
+            File file;
+            Gson gson;
+            String jsonString;
+
+            // repairnator.json
+            filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
+            gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
+            jsonString = gson.toJson(this.properties);
+            file = new File(filePath);
+            this.writeJsonFile(file, jsonString);
+
+            // bears.json
+            filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
+            gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics4Bears.class, new MetricsSerializerAdapter4Bears()).create();
+            jsonString = gson.toJson(this.getInspector().getJobStatus().getMetrics4Bears());
+            file = new File(filePath);
+            this.writeJsonFile(file, jsonString);
         } else {
             this.getLogger().warn("Trying to write property null for key: "+propertyName);
         }
 
+    }
+
+    private void writeJsonFile(File file, String jsonString) {
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
+            outputStream.write(jsonString);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            this.getLogger().error("Cannot write property to the following file: " + file.getPath(), e);
+        }
     }
 
     public RepairnatorConfig getConfig() {

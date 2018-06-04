@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;
 
@@ -44,6 +45,7 @@ public class JobStatus {
     private Throwable fatalError;
 
     private Metrics metrics;
+    private Metrics4Bears metrics4Bears;
 
     private List<String> createdFilesToPush;
     private boolean hasBeenForked;
@@ -57,6 +59,7 @@ public class JobStatus {
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
+        this.metrics4Bears = new Metrics4Bears();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
         this.pushStates = new ArrayList<>();
@@ -164,6 +167,10 @@ public class JobStatus {
 
     public Metrics getMetrics() {
         return metrics;
+    }
+
+    public Metrics4Bears getMetrics4Bears() {
+        return metrics4Bears;
     }
 
     public File[] getTestDir() {
