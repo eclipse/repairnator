@@ -252,6 +252,9 @@ public class TestProjectInspector4Bears {
         assertThat(commit.getShortMessage(), containsString("Human patch"));
 
         commit = iterator.next();
+        assertThat(commit.getShortMessage(), containsString("Changes in the tests"));
+
+        commit = iterator.next();
         assertThat(commit.getShortMessage(), containsString("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));

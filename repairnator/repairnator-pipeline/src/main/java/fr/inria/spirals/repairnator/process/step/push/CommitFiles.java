@@ -104,6 +104,10 @@ public class CommitFiles extends AbstractStep {
             case COMMIT_PROCESS_END:
                 commitMsg = "End of the repairnator process";
                 break;
+
+            case COMMIT_CHANGED_TESTS:
+                commitMsg = "Changes in the tests";
+                break;
         }
 
         return commitMsg;
