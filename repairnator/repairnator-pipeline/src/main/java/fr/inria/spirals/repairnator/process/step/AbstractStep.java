@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -38,8 +39,10 @@ public abstract class AbstractStep {
 
     private boolean shouldStop;
     private AbstractStep nextStep;
-    private long dateBegin;
-    private long dateEnd;
+    private Date dateBegin;
+    private Date dateEnd;
+    private long timeBegin;
+    private long timeEnd;
     private boolean pomLocationTested;
     private List<AbstractDataSerializer> serializers;
     private List<AbstractNotifier> notifiers;
@@ -286,9 +289,11 @@ public abstract class AbstractStep {
         this.getLogger().debug("STEP "+ (steps.indexOf(this) + 1)+"/"+ steps.size() +": "+this.name);
         this.getLogger().debug("----------------------------------------------------------------------");
 
-        this.dateBegin = new Date().getTime();
+        this.dateBegin = new Date();
+        this.timeBegin = dateBegin.getTime();
         this.stepStatus = this.businessExecute();
-        this.dateEnd = new Date().getTime();
+        this.dateEnd = new Date();
+        this.timeEnd = dateEnd.getTime();
 
         this.getLogger().debug("STEP STATUS: "+this.stepStatus);
         this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
@@ -296,6 +301,9 @@ public abstract class AbstractStep {
         Metrics metric = this.inspector.getJobStatus().getMetrics();
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
+
+        ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild();
+        reproductionBuggyBuild.addStep(this);
 
         this.inspector.getJobStatus().addStepStatus(this.stepStatus);
 
@@ -335,11 +343,19 @@ public abstract class AbstractStep {
         metric.setNbCPU(Runtime.getRuntime().availableProcessors());
     }
 
+    public Date getDateBegin() {
+        return dateBegin;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
     public int getDuration() {
-        if (dateEnd == 0 || dateBegin == 0) {
+        if (timeEnd == 0 || timeBegin == 0) {
             return 0;
         }
-        return Math.round((dateEnd - dateBegin) / 1000);
+        return Math.round((timeEnd - timeBegin) / 1000);
     }
 
     protected void writeProperty(String propertyName, Object value) {

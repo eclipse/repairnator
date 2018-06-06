@@ -5,15 +5,13 @@ import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.commits.Com
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff.PatchDiff;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.projectMetrics.ProjectMetrics;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository.Repository;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Tests;
-
-import java.util.Date;
 
 public class Metrics4Bears {
 
     private String version;
     private String type;
-    private Date reproductionDate;
 
     private Repository repository;
     private Builds builds;
@@ -21,15 +19,16 @@ public class Metrics4Bears {
     private Tests tests;
     private PatchDiff patchDiff;
     private ProjectMetrics projectMetrics;
+    private ReproductionBuggyBuild reproductionBuggyBuild;
 
     public Metrics4Bears() {
-        this.reproductionDate = new Date();
         this.repository = new Repository();
         this.builds = new Builds();
         this.commits = new Commits();
         this.tests = new Tests();
         this.patchDiff = new PatchDiff();
         this.projectMetrics = new ProjectMetrics();
+        this.reproductionBuggyBuild = new ReproductionBuggyBuild();
     }
 
     public String getVersion() {
@@ -46,10 +45,6 @@ public class Metrics4Bears {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Date getReproductionDate() {
-        return reproductionDate;
     }
 
     public Repository getRepository() {
@@ -76,4 +71,7 @@ public class Metrics4Bears {
         return projectMetrics;
     }
 
+    public ReproductionBuggyBuild getReproductionBuggyBuild() {
+        return reproductionBuggyBuild;
+    }
 }
