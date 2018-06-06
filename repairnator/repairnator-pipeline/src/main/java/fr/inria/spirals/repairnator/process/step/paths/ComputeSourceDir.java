@@ -189,6 +189,15 @@ public class ComputeSourceDir extends AbstractStep {
             this.getInspector().getJobStatus().setRepairSourceDir(null);
             return StepStatus.buildError(this, PipelineState.SOURCEDIRNOTCOMPUTED);
         } else {
+            if (sources.length == 1) {
+                this.getLogger().info("The following source dir was found:");
+            } else {
+                this.getLogger().info("The following source dirs were found:");
+            }
+            for (File file : sources) {
+                this.getLogger().info(file.getAbsolutePath());
+            }
+
             this.getInspector().getJobStatus().setRepairSourceDir(sources);
             return StepStatus.buildSuccess(this);
         }

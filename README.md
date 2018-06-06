@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/Spirals-Team/repairnator.svg?branch=master)](https://travis-ci.org/Spirals-Team/repairnator) [![Coverage Status](https://coveralls.io/repos/github/Spirals-Team/repairnator/badge.svg?branch=master)](https://coveralls.io/github/Spirals-Team/repairnator?branch=master)
 
+## :warning: Integrate your repair tool in Repairnator
+
+If you want to bring your own tool in Repairnator platform, have a look on [contribution guidelines](/doc/contribute.md) :smile:
+
 # Repairnator: a program repair bot for continuous integration
 
 Repairnator is a software development bot that automatically repairs build failures on Travis CI.

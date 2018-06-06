@@ -74,6 +74,12 @@ public abstract class CheckoutRepository extends AbstractStep {
                     metrics4Bears.getCommits().setBuggyBuild(commit);
                     break;
 
+                case CHECKOUT_BUGGY_BUILD_TEST_CODE:
+                    build = this.getInspector().getBuggyBuild();
+                    metric.setBugCommit(build.getCommit().getSha());
+                    metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    break;
+
                 case CHECKOUT_PATCHED_BUILD:
                     build = this.getInspector().getPatchedBuild();
                     metric.setPatchCommit(build.getCommit().getSha());
@@ -122,6 +128,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                     List<String> paths;
                     if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
                         paths = this.getPaths(this.getInspector().getJobStatus().getRepairSourceDir(), git);
+                    } else if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_TEST_CODE) {
+                        paths = this.getPaths(this.getInspector().getJobStatus().getTestDir(), git);
                     } else {
                         paths = null;
                     }
@@ -141,12 +149,18 @@ public abstract class CheckoutRepository extends AbstractStep {
                 commitCheckout = gitHelper.testCommitExistence(git, commitCheckout, this, build);
                 if (commitCheckout != null) {
                     this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.getInspector().getRepoSlug());
-                    if (checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
+                    if (checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE &&
+                            checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_TEST_CODE) {
                         git.checkout().setName(commitCheckout).call();
                     } else {
-                        List<String> paths = this.getPaths(this.getInspector().getJobStatus().getRepairSourceDir(), git);
+                        List<String> paths;
+                        if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
+                            paths = this.getPaths(this.getInspector().getJobStatus().getRepairSourceDir(), git);
+                        } else {
+                            paths = this.getPaths(this.getInspector().getJobStatus().getTestDir(), git);
+                        }
 
-                        git.checkout().setStartPoint(commitCheckout).addPaths(paths).call();
+                        gitHelper.gitResetPaths(commitCheckout, paths, git.getRepository().getDirectory().getParentFile());
 
                         // FIXME: commit should not be there
                         PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
