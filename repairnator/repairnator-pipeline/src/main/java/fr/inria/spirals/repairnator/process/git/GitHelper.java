@@ -459,6 +459,23 @@ public class GitHelper {
         }
     }
 
+    public static void deleteFile(File file) throws IOException {
+        if (file != null) {
+            for (File childFile : file.listFiles()) {
+                if (childFile.isDirectory()) {
+                    deleteFile(childFile);
+                } else {
+                    if (!childFile.delete()) {
+                        throw new IOException();
+                    }
+                }
+            }
+            if (!file.delete()) {
+                throw new IOException();
+            }
+        }
+    }
+
     public void removeNotificationFromTravisYML(File directory, AbstractStep step) {
         File travisFile = new File(directory, TRAVIS_FILE);
 
