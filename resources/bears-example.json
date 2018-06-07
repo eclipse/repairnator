@@ -5,7 +5,7 @@
     "name": "bowenli86/flink",
     "githubId": 122434,
     "url": "http://github.com/bowenli86/flink/",
-    "fork": true,
+    "isFork": true,
     "original": {
       "name": "another/flink",
       "githubId": 122435,
@@ -72,21 +72,21 @@
   },
   "tests": {
     "overallMetrics": {
-      "numberExecuted": 353,
-      "numberFailed": 3,
-      "numberErrored": 1,
-      "numberSkipped": 0,
-      "numberPassed": 349,
+      "numberRunning": 353,
+      "numberFailing": 3,
+      "numberErroring": 1,
+      "numberSkipping": 0,
+      "numberPassing": 349,
       "failures": [
         {
-          "className": "java.lang.AssertionError",
+          "failureName": "java.lang.AssertionError",
           "isError": false,
-          "occurences": 19
+          "occurrences": 19
         },
         {
-          "className": "java.lang.NullPointerException",
+          "failureName": "java.lang.NullPointerException",
           "isError": true,
-          "occurences": 1
+          "occurrences": 1
         }
       ]
     },
@@ -94,19 +94,19 @@
     "failingClasses": [
       {
         "testClass": "org.apache.flink.util.FileUtilsTest",
-        "numberExecuted": 202,
-        "numberFailed": 2,
-        "numberErrored": 0,
-        "numberPassed": 200,
-        "numberSkipped": 0
+        "numberRunning": 202,
+        "numberFailing": 2,
+        "numberErroring": 0,
+        "numberPassing": 200,
+        "numberSkipping": 0
       },
       {
         "testClass": "org.apache.flink.util.AnotherClass",
-        "numberExecuted": 151,
-        "numberFailed": 1,
-        "numberErrored": 1,
-        "numberPassed": 149,
-        "numberSkipped": 0
+        "numberRunning": 151,
+        "numberFailing": 1,
+        "numberErroring": 1,
+        "numberPassing": 149,
+        "numberSkipping": 0
       }
     ],
     "failureDetails": [
@@ -114,28 +114,28 @@
         "testClass": "org.apache.flink.util.FileUtilsTest",
         "testMethod": "test1",
         "failureName": "java.lang.AssertionError",
-        "details": "...",
+        "detail": "...",
         "isError": false
       },
       {
         "testClass": "org.apache.flink.util.FileUtilsTest",
         "testMethod": "test2",
         "failureName": "java.lang.AssertionError",
-        "details": "...",
+        "detail": "...",
         "isError": false
       },
       {
         "testClass": "org.apache.flink.util.AnotherClass",
         "testMethod": "test1",
         "failureName": "java.lang.AssertionError",
-        "details": "...",
+        "detail": "...",
         "isError": false
       },
       {
         "testClass": "org.apache.flink.util.AnotherClass",
         "testMethod": "test2",
         "failureName": "java.lang.NullPointerException",
-        "details": "...",
+        "detail": "...",
         "isError": true
       }
     ]
