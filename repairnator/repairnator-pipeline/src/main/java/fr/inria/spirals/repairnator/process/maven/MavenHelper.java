@@ -1,14 +1,17 @@
 package fr.inria.spirals.repairnator.process.maven;
 
+import com.mongodb.client.model.ValidationLevel;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.output.MavenErrorHandler;
 import fr.inria.spirals.repairnator.process.maven.output.MavenFilterOutputHandler;
 import fr.inria.spirals.repairnator.process.maven.output.MavenMuteOutputHandler;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.building.DefaultModelBuilder;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
+import org.apache.maven.model.building.ModelBuildingResult;
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,7 @@ import java.util.Properties;
  * Created by urli on 10/01/2017.
  */
 public class MavenHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MavenHelper.class);
     public static final int MAVEN_SUCCESS = 0;
     public static final int MAVEN_ERROR = 1;
 
@@ -127,12 +131,21 @@ public class MavenHelper {
 
     public static Model readPomXml(File pomXml, String localMavenRepository) throws ModelBuildingException {
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
-        req.setProcessPlugins(false);
+        req.setProcessPlugins(true);
         req.setPomFile(pomXml);
         req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
         req.setModelResolver(new RepositoryModelResolver(localMavenRepository));
 
-        return new DefaultModelBuilderFactory().newInstance().build(req).getEffectiveModel();
+        DefaultModelBuilder defaultModelBuilder = new DefaultModelBuilderFactory().newInstance();
+
+        try {
+            ModelBuildingResult modelBuildingResult = defaultModelBuilder.build(req);
+            return modelBuildingResult.getEffectiveModel();
+        } catch (ModelBuildingException e) {
+            LOGGER.error("Error while building complete model. The raw model will be used. Error message: "+e.getMessage());
+            return defaultModelBuilder.buildRawModel(pomXml, ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL, true).get();
+        }
+
     }
 
     public int run() throws InterruptedException {
