@@ -321,11 +321,8 @@ public abstract class AbstractStep {
         if (!this.inspector.isPipelineEnding()) {
             this.inspector.setPipelineEnding(true);
             this.recordMetrics();
-            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
-            } else {
-                this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics4Bears());
-            }
+            this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
+            this.writeBearsJsonFile();
             if (this.inspector.getFinalStep() != null) {
                 this.inspector.getFinalStep().execute();
             }
@@ -359,37 +356,30 @@ public abstract class AbstractStep {
     }
 
     protected void writeProperty(String propertyName, Object value) {
-        if (value != null) {
-
-            if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+            if (value != null) {
                 this.properties.put(propertyName, value);
+
+                String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
+                Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
+                String jsonString = gson.toJson(this.properties);
+
+                this.writeJsonFile(filePath, jsonString);
+            } else {
+                this.getLogger().warn("Trying to write property null for key: " + propertyName);
             }
-
-            String filePath;
-            File file;
-            Gson gson;
-            String jsonString;
-
-            // repairnator.json
-            filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
-            gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-            jsonString = gson.toJson(this.properties);
-            file = new File(filePath);
-            this.writeJsonFile(file, jsonString);
-
-            // bears.json
-            filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
-            gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics4Bears.class, new MetricsSerializerAdapter4Bears()).create();
-            jsonString = gson.toJson(this.getInspector().getJobStatus().getMetrics4Bears());
-            file = new File(filePath);
-            this.writeJsonFile(file, jsonString);
-        } else {
-            this.getLogger().warn("Trying to write property null for key: "+propertyName);
         }
-
     }
 
-    private void writeJsonFile(File file, String jsonString) {
+    private void writeBearsJsonFile() {
+        String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
+        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics4Bears.class, new MetricsSerializerAdapter4Bears()).create();
+        String jsonString = gson.toJson(this.getInspector().getJobStatus().getMetrics4Bears());
+        this.writeJsonFile(filePath, jsonString);
+    }
+
+    private void writeJsonFile(String filePath, String jsonString) {
+        File file = new File(filePath);
         try {
             if (!file.exists()) {
                 file.createNewFile();
