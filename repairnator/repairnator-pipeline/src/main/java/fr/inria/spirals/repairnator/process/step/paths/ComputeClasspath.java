@@ -91,6 +91,7 @@ public class ComputeClasspath extends AbstractStep {
                 File f = new File(jar);
                 this.addFileToClassPath(f);
             }
+            this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath: " + e);
         }

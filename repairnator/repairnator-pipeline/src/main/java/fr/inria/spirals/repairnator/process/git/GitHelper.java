@@ -5,7 +5,6 @@ import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff.PatchDiff;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
@@ -112,7 +111,7 @@ public class GitHelper {
                 List<String> filesToAdd = new ArrayList<>(status.getCreatedFilesToPush());
                 List<String> filesToCheckout = new ArrayList<>();
                 for (String fileName : filesChanged) {
-                    if (!fileName.contains("repairnator") && !fileName.contains("bears")) {
+                    if (!status.isCreatedFileToPush(fileName)) {
                         filesToCheckout.add(fileName);
                     } else {
                         filesToAdd.add(fileName);
@@ -262,7 +261,7 @@ public class GitHelper {
         return null;
     }
 
-    public void computePatchStats(Metrics metric, Metrics4Bears metrics4Bears, Git git, RevCommit headRev, RevCommit commit) {
+    public void computePatchStats(JobStatus jobStatus, Git git, RevCommit headRev, RevCommit commit) {
         try {
             ObjectReader reader = git.getRepository().newObjectReader();
             CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
@@ -288,7 +287,7 @@ public class GitHelper {
                 } else {
                     path = entry.getNewPath();
                 }
-                if (!path.contains("repairnator") && !path.contains("bears")) {
+                if (!jobStatus.isCreatedFileToPush(path)) {
                     if (entry.getChangeType() == DiffEntry.ChangeType.MODIFY ||
                             entry.getChangeType() == DiffEntry.ChangeType.RENAME) {
                         changedFiles.add(path);
@@ -314,8 +313,14 @@ public class GitHelper {
                                     break;
 
                                 case REPLACE:
-                                    nbLineDeleted += edit.getLengthA();
-                                    nbLineAdded += edit.getLengthB();
+                                    int diff = edit.getLengthA() - edit.getLengthB();
+                                    if (diff > 0) {
+                                        nbLineAdded += edit.getLengthA();
+                                        nbLineDeleted += edit.getLengthB();
+                                    } else {
+                                        nbLineDeleted += edit.getLengthA();
+                                        nbLineAdded += edit.getLengthB();
+                                    }
                                     break;
 
                                 case EMPTY:
@@ -326,11 +331,12 @@ public class GitHelper {
                 }
             }
 
-            metric.setPatchAddedLines(nbLineAdded);
-            metric.setPatchDeletedLines(nbLineDeleted);
-            metric.setPatchChangedFiles(changedFiles.size() + addedFiles.size() + deletedFiles.size());
+            Metrics metrics = jobStatus.getMetrics();
+            metrics.setPatchAddedLines(nbLineAdded);
+            metrics.setPatchDeletedLines(nbLineDeleted);
+            metrics.setPatchChangedFiles(changedFiles.size() + addedFiles.size() + deletedFiles.size());
 
-            PatchDiff patchDiff = metrics4Bears.getPatchDiff();
+            PatchDiff patchDiff = jobStatus.getMetrics4Bears().getPatchDiff();
             patchDiff.getFiles().setNumberAdded(addedFiles.size());
             patchDiff.getFiles().setNumberChanged(changedFiles.size());
             patchDiff.getFiles().setNumberDeleted(deletedFiles.size());
@@ -495,8 +501,8 @@ public class GitHelper {
                     }
                     fw.close();
 
-                    step.getInspector().getJobStatus().getCreatedFilesToPush().add(".travis.yml");
-                    step.getInspector().getJobStatus().getCreatedFilesToPush().add("bak.travis.yml");
+                    step.getInspector().getJobStatus().addFileToPush(".travis.yml");
+                    step.getInspector().getJobStatus().addFileToPush("bak.travis.yml");
                 }
             } catch (IOException e) {
                 getLogger().warn("Error while changing travis file", e);

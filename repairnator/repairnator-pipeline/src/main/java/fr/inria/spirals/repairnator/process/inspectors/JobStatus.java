@@ -199,6 +199,15 @@ public class JobStatus {
         return createdFilesToPush;
     }
 
+    public boolean isCreatedFileToPush(String filePath) {
+        for (String createdFileToPush : this.createdFilesToPush) {
+            if (filePath.endsWith(createdFileToPush)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setHasBeenForked(boolean hasBeenForked) {
         this.hasBeenForked = hasBeenForked;
     }

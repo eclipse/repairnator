@@ -398,6 +398,7 @@ public abstract class AbstractStep {
             outputStream.write(jsonString);
             outputStream.flush();
             outputStream.close();
+            this.getInspector().getJobStatus().addFileToPush(file.getName());
         } catch (IOException e) {
             this.getLogger().error("Cannot write property to the following file: " + file.getPath(), e);
         }
