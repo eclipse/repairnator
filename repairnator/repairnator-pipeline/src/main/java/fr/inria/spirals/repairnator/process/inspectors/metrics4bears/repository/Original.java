@@ -6,7 +6,11 @@ public class Original {
     private long githubId;
     private String url;
 
-    public Original() {}
+    public Original() {
+        this.name = "";
+        this.githubId = 0;
+        this.url = "";
+    }
 
     public String getName() {
         return name;
