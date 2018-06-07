@@ -1,7 +1,5 @@
 package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild;
 
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
