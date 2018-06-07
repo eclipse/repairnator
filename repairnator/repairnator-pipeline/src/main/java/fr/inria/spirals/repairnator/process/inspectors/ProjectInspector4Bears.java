@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildTestCode;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
@@ -39,7 +40,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
             cloneRepo.setNextStep(new CheckoutBuggyBuild(this, true, CheckoutBuggyBuild.class.getSimpleName()+"Candidate"))
-                    .setNextStep(new ComputeSourceDir(this, true, true))
+                    .setNextStep(new ComputeSourceDir(this, false, true))
                     .setNextStep(new ComputeTestDir(this, false))
                     .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidate"))
                     .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidate"))
@@ -55,13 +56,16 @@ public class ProjectInspector4Bears extends ProjectInspector {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
                 cloneRepo.setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
                         .setNextStep(new ComputeSourceDir(this, true, true))
-                        .setNextStep(new ComputeTestDir(this, false))
+                        .setNextStep(new ComputeTestDir(this, true))
                         .setNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
                         .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
                         .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
                         .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
+                        .setNextStep(new CheckoutBuggyBuildTestCode(this, true))
                         .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this, false))
+                        .setNextStep(new CheckoutBuggyBuildSourceCode(this, true))
+                        .setNextStep(new CommitChangedTests(this))
                         .setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
                         .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
                         .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"PatchedBuildCandidate"))

@@ -25,6 +25,10 @@ public class Utils {
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
     private static final String TRAVIS_URL = "http://travis-ci.org/";
     private static final String GITHUB_URL = "https://github.com/";
+
+    public static final String GITHUB_USER_NAME_PATTERN = "[a-zA-Z0-9](?:[a-zA-Z0-9]|[-](?=[a-zA-Z0-9]))*";
+    public static final String GITHUB_REPO_NAME_PATTERN = "[a-zA-Z0-9-_.]+(?<!\\.git)";
+    private static final String GITHUB_REPO_URL_PATTERN = GITHUB_URL + GITHUB_USER_NAME_PATTERN + "/" + GITHUB_REPO_NAME_PATTERN;
     public static final char COMMA = ',';
 
     public static String formatCompleteDate(Date date) {
@@ -54,6 +58,10 @@ public class Utils {
 
     public static String getGithubRepoUrl(String slug) {
         return GITHUB_URL + slug + ".git";
+    }
+
+    public static boolean matchesGithubRepoUrl(String repoUrl) {
+        return repoUrl.matches(GITHUB_REPO_URL_PATTERN);
     }
 
     public static String getDuration(Date dateBegin, Date dateEnd) {
