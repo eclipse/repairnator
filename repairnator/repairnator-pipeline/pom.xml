@@ -69,6 +69,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.github.java-json-tools</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>2.2.10</version>
+        </dependency>
     </dependencies>
 
     <properties>
