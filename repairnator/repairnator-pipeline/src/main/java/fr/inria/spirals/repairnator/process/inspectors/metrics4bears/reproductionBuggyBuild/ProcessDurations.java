@@ -61,13 +61,12 @@ public class ProcessDurations {
                 step.getInspector().getCheckoutType().equals(CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE))) {
             this.building.addStep(stepName, stepDuration);
         } else {
-            if (step.getInspector() instanceof ProjectInspector ||
-                    (step.getInspector() instanceof ProjectInspector4Bears &&
-                            step.getInspector().getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING)) {
+            if (step.getInspector().getBuildToBeInspected().getStatus() == ScannedBuildStatus.ONLY_FAIL ||
+                    step.getInspector().getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                 if (step instanceof CheckoutBuggyBuild) {
                     this.building.addStep(stepName, stepDuration);
                 }
-            } else { // ProjectInspector4Bears and PASSING_AND_PASSING_WITH_TEST_CHANGES
+            } else { // PASSING_AND_PASSING_WITH_TEST_CHANGES
                 if (step instanceof CheckoutPatchedBuild || step instanceof ComputeSourceDir ||
                         step instanceof ComputeTestDir || step instanceof CheckoutBuggyBuildSourceCode) {
                     this.building.addStep(stepName, stepDuration);

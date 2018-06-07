@@ -34,9 +34,11 @@ public class GlobalStepInfo {
     }
 
     public void addStep(String stepName, int stepDuration) {
-        this.nbSteps++;
-        this.totalDuration += stepDuration;
-        this.stepNames.add(this.stepNames.size(), stepName);
-        this.stepDurations.add(this.stepDurations.size(), stepDuration);
+        if (!this.stepNames.contains(stepName)) {
+            this.nbSteps++;
+            this.totalDuration += stepDuration;
+            this.stepNames.add(this.stepNames.size(), stepName);
+            this.stepDurations.add(this.stepDurations.size(), stepDuration);
+        }
     }
 }

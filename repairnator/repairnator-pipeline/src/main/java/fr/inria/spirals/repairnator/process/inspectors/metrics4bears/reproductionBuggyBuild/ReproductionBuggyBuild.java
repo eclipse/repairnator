@@ -28,6 +28,10 @@ public class ReproductionBuggyBuild {
         return totalDuration;
     }
 
+    public ProcessDurations getProcessDurations() {
+        return processDurations;
+    }
+
     public void addStep(AbstractStep step) {
         if (this.reproductionDateBeginning == null) { // so this is the first step
             this.reproductionDateBeginning = step.getDateBegin();
