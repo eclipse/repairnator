@@ -17,31 +17,25 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Builds;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.commits.Commits;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff.PatchDiff;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.projectMetrics.ProjectMetrics;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository.Repository;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.GlobalStepInfo;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.FailingClass;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Failure;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.FailureDetail;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Tests;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.FieldComparisonFailure;
+import org.skyscreamer.jsonassert.JSONCompare;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.JSONCompareResult;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -55,6 +49,11 @@ public class TestMetrics4BearsJsonFile {
 
     private JsonSchema jsonSchema;
     private ObjectMapper jsonMapper;
+
+    /* This list holds some properties from the json file that contain non-constant values as the date of the reproduction,
+        thus, when checking the correctness of the properties' values, these properties are ignored.
+     */
+    private List<String> propertiesToIgnore;
 
     @Before
     public void setUp() throws IOException, ProcessingException {
@@ -83,6 +82,19 @@ public class TestMetrics4BearsJsonFile {
         JsonSchemaFactory factory = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze();
 
         jsonSchema = factory.getJsonSchema(schemaObject);
+
+        propertiesToIgnore = new ArrayList<>();
+        propertiesToIgnore.add("reproductionBuggyBuild.reproductionDateBeginning");
+        propertiesToIgnore.add("reproductionBuggyBuild.reproductionDateEnd");
+        propertiesToIgnore.add("reproductionBuggyBuild.totalDuration");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.cloning.stepDurations");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.cloning.totalDuration");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.building.stepDurations");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.building.totalDuration");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.testing.stepDurations");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.testing.totalDuration");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.fixing.stepDurations");
+        propertiesToIgnore.add("reproductionBuggyBuild.processDurations.fixing.totalDuration");
     }
 
     public static boolean isMac() {
@@ -128,138 +140,31 @@ public class TestMetrics4BearsJsonFile {
 
         // check correctness of the properties
 
-        Metrics4Bears metrics4Bears = inspector.getJobStatus().getMetrics4Bears();
-        assertThat(metrics4Bears.getVersion(), notNullValue());
-        assertThat(metrics4Bears.getType(), is("passing_passing"));
+        File expectedFile = new File(TestMetrics4BearsJsonFile.class.getResource("/json-files/bears-386337343-386348522.json").getPath());
+        String expectedString = FileUtils.readFileToString(expectedFile, StandardCharsets.UTF_8);
 
-        Repository repository = metrics4Bears.getRepository();
-        assertThat(repository.getName(), is("fermadeiral/test-repairnator-bears"));
-        // FIXME: the returned github id from jTravis is different from the one I think it's correct, this should be checked
-        //assertThat(repository.getGithubId(), is(135598437));
-        assertThat(repository.getUrl(), is("https://github.com/fermadeiral/test-repairnator-bears"));
-        assertThat(repository.getIsFork(), is(false));
-        assertThat(repository.getOriginal().getName(), is(""));
-        assertThat(repository.getOriginal().getGithubId(), is(0L));
-        assertThat(repository.getOriginal().getUrl(), is(""));
-        assertThat(repository.getIsPullRequest(), is(false));
-        assertThat(repository.getPullRequestId(), is (0));
+        File actualFile = new File(inspector.getRepoToPushLocalPath() + "/bears.json");
+        String actualString = FileUtils.readFileToString(actualFile, StandardCharsets.UTF_8);
 
-        Builds builds = metrics4Bears.getBuilds();
-        assertThat(builds.getBuggyBuild().getId(), is(386337343L));
-        assertThat(builds.getBuggyBuild().getUrl(), is("http://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386337343"));
+        JSONCompareResult result = JSONCompare.compareJSON(expectedString, actualString, JSONCompareMode.STRICT);
+        assertThat(result.isMissingOnField(), is(false));
+        assertThat(result.isUnexpectedOnField(), is(false));
 
-        assertThat(builds.getFixerBuild().getId(), is(386348522L));
-        assertThat(builds.getFixerBuild().getUrl(), is("http://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386348522"));
-
-        Commits commits = metrics4Bears.getCommits();
-        assertThat(commits.getBuggyBuild().getRepoName(), is("fermadeiral/test-repairnator-bears"));
-        assertThat(commits.getBuggyBuild().getBranchName(), is("master"));
-        assertThat(commits.getBuggyBuild().getSha(), is("bfdf6af10937db8ecde7a060b55d18864663abd5"));
-        assertThat(commits.getBuggyBuild().getUrl(), is("http://github.com/fermadeiral/test-repairnator-bears/commit/bfdf6af10937db8ecde7a060b55d18864663abd5"));
-
-        assertThat(commits.getFixerBuild().getRepoName(), is("fermadeiral/test-repairnator-bears"));
-        assertThat(commits.getFixerBuild().getBranchName(), is("master"));
-        assertThat(commits.getFixerBuild().getSha(), is("5b2ed0064d4c5e0fade39125cc071bd6593df869"));
-        assertThat(commits.getFixerBuild().getUrl(), is("http://github.com/fermadeiral/test-repairnator-bears/commit/5b2ed0064d4c5e0fade39125cc071bd6593df869"));
-
-        assertThat(commits.getBuggyBuildForkRepo(), nullValue());
-        assertThat(commits.getBuggyBuildBaseRepo(), nullValue());
-        assertThat(commits.getFixerBuildForkRepo(), nullValue());
-        assertThat(commits.getFixerBuildBaseRepo(), nullValue());
-
-        Tests tests = metrics4Bears.getTests();
-        assertTrue(tests.getFailingModule().endsWith("fermadeiral/test-repairnator-bears/386337343/test-repairnator-bears-patchstats"));
-        assertThat(tests.getOverallMetrics().getNumberRunning(), is(9));
-        assertThat(tests.getOverallMetrics().getNumberPassing(), is(8));
-        assertThat(tests.getOverallMetrics().getNumberFailing(), is(1));
-        assertThat(tests.getOverallMetrics().getNumberErroring(), is(0));
-        assertThat(tests.getOverallMetrics().getNumberSkipping(), is(0));
-
-        Set<Failure> failures = tests.getOverallMetrics().getFailures();
-        assertThat(failures.size(), is(1));
-        Iterator<Failure> failureIterator = failures.iterator();
-        if (failureIterator.hasNext()) {
-            Failure failure = failureIterator.next();
-            assertThat(failure.getFailureName(), is("java.lang.AssertionError"));
-            assertThat(failure.getIsError(), is(false));
-            assertThat(failure.getOccurrences(), is(1));
+        for (FieldComparisonFailure fieldComparisonFailure : result.getFieldFailures()) {
+            String fieldComparisonFailureName = fieldComparisonFailure.getField();
+            if (fieldComparisonFailureName.equals("tests.failingModule")) {
+                String path = "fermadeiral/test-repairnator-bears/386337343";
+                String expected = (String) fieldComparisonFailure.getExpected();
+                expected = expected.substring(expected.indexOf(path), expected.length());
+                String actual = (String) fieldComparisonFailure.getActual();
+                actual = actual.substring(actual.indexOf(path), actual.length());
+                assertTrue("Property failing: " + fieldComparisonFailureName,
+                        actual.equals(expected));
+            } else {
+                assertTrue("Property failing: " + fieldComparisonFailureName,
+                        this.isPropertyToBeIgnored(fieldComparisonFailureName));
+            }
         }
-
-        Set<FailingClass> failingClasses = tests.getFailingClasses();
-        assertThat(failingClasses.size(), is(1));
-        Iterator<FailingClass> failingClassIterator = failingClasses.iterator();
-        if (failingClassIterator.hasNext()) {
-            FailingClass failingClass = failingClassIterator.next();
-            assertThat(failingClass.getTestClass(), is("PatchStatsTest"));
-            assertThat(failingClass.getNumberRunning(), is(4));
-            assertThat(failingClass.getNumberPassing(), is(3));
-            assertThat(failingClass.getNumberFailing(), is(1));
-            assertThat(failingClass.getNumberErroring(), is(0));
-            assertThat(failingClass.getNumberSkipping(), is(0));
-        }
-
-        Set<FailureDetail> failureDetails = tests.getFailureDetails();
-        assertThat(failureDetails.size(), is(1));
-        Iterator<FailureDetail> failureDetailIterator = failureDetails.iterator();
-        if (failureDetailIterator.hasNext()) {
-            FailureDetail failureDetail = failureDetailIterator.next();
-            assertThat(failureDetail.getTestClass(), is("PatchStatsTest"));
-            assertThat(failureDetail.getTestMethod(), is("testComputeFilesWithCommitThatRenameFile"));
-            assertThat(failureDetail.getFailureName(), is("java.lang.AssertionError"));
-            assertTrue(!failureDetail.getDetail().equals(""));
-            assertThat(failureDetail.getIsError(), is(false));
-        }
-
-        PatchDiff patchDiff = metrics4Bears.getPatchDiff();
-        assertThat(patchDiff.getFiles().getNumberAdded(), is(0));
-        assertThat(patchDiff.getFiles().getNumberChanged(), is(1));
-        assertThat(patchDiff.getFiles().getNumberDeleted(), is(0));
-        assertThat(patchDiff.getLines().getNumberAdded(), is(15));
-        assertThat(patchDiff.getLines().getNumberDeleted(), is(8));
-
-        // FIXME: the expected values need to be analyzed
-        //ProjectMetrics projectMetrics = metrics4Bears.getProjectMetrics();
-        //assertThat(projectMetrics.getNumberSourceFiles(), is());
-        //assertThat(projectMetrics.getNumberTestFiles(), is());
-        //assertThat(projectMetrics.getNumberLibraries(), is());
-
-        ReproductionBuggyBuild reproductionBuggyBuild = metrics4Bears.getReproductionBuggyBuild();
-        assertThat(reproductionBuggyBuild.getReproductionDateBeginning(), notNullValue());
-        assertThat(reproductionBuggyBuild.getReproductionDateEnd(), notNullValue());
-
-        GlobalStepInfo cloning = reproductionBuggyBuild.getProcessDurations().getCloning();
-        List<String> expectedCloningStepNames = new ArrayList<>(Arrays.asList("CloneRepository"));
-        List<String> cloningStepNames = cloning.getStepNames();
-        assertThat(cloning.getNbSteps(), is(expectedCloningStepNames.size()));
-        assertThat(cloning.getStepNames().size(), is(expectedCloningStepNames.size()));
-        assertThat(cloning.getStepDurations().size(), is(expectedCloningStepNames.size()));
-        assertThat(cloningStepNames.containsAll(expectedCloningStepNames), is(true));
-
-        GlobalStepInfo building = reproductionBuggyBuild.getProcessDurations().getBuilding();
-        List<String> expectedBuildingStepNames = new ArrayList<>(Arrays.asList("CheckoutPatchedBuildCandidate",
-                "ComputeSourceDir", "ComputeTestDir", "CheckoutBuggyBuildCandidateSourceCode",
-                "BuildProjectBuggyBuildCandidateSourceCode"));
-        List<String> buildingStepNames = building.getStepNames();
-        assertThat(building.getNbSteps(), is(expectedBuildingStepNames.size()));
-        assertThat(building.getStepNames().size(), is(expectedBuildingStepNames.size()));
-        assertThat(building.getStepDurations().size(), is(expectedBuildingStepNames.size()));
-        assertThat(buildingStepNames.containsAll(expectedBuildingStepNames), is(true));
-
-        GlobalStepInfo testing = reproductionBuggyBuild.getProcessDurations().getTesting();
-        List<String> expectedTestingStepNames = new ArrayList<>(Arrays.asList("TestProjectBuggyBuildCandidateSourceCode"));
-        List<String> testingStepNames = testing.getStepNames();
-        assertThat(testing.getNbSteps(), is(expectedTestingStepNames.size()));
-        assertThat(testing.getStepNames().size(), is(expectedTestingStepNames.size()));
-        assertThat(testing.getStepDurations().size(), is(expectedTestingStepNames.size()));
-        assertThat(testingStepNames.containsAll(expectedTestingStepNames), is(true));
-
-        GlobalStepInfo fixing = reproductionBuggyBuild.getProcessDurations().getFixing();
-        List<String> expectedFixingStepNames = new ArrayList<>();
-        List<String> fixingStepNames = fixing.getStepNames();
-        assertThat(fixing.getNbSteps(), is(expectedFixingStepNames.size()));
-        assertThat(fixing.getStepNames().size(), is(expectedFixingStepNames.size()));
-        assertThat(fixing.getStepDurations().size(), is(expectedFixingStepNames.size()));
-        assertThat(fixingStepNames.containsAll(expectedFixingStepNames), is(true));
     }
 
     @Test
@@ -296,131 +201,31 @@ public class TestMetrics4BearsJsonFile {
 
         // check correctness of the properties
 
-        Metrics4Bears metrics4Bears = inspector.getJobStatus().getMetrics4Bears();
-        assertThat(metrics4Bears.getVersion(), nullValue());
-        assertThat(metrics4Bears.getType(), is("only_fail"));
+        File expectedFile = new File(TestMetrics4BearsJsonFile.class.getResource("/json-files/bears-208897371.json").getPath());
+        String expectedString = FileUtils.readFileToString(expectedFile, StandardCharsets.UTF_8);
 
-        Repository repository = metrics4Bears.getRepository();
-        assertThat(repository.getName(), is("surli/failingProject"));
-        // FIXME: the returned github id from jTravis is different from the one I think it's correct, this should be checked
-        //assertThat(repository.getGithubId(), is(78415513));
-        assertThat(repository.getUrl(), is("https://github.com/surli/failingProject"));
-        assertThat(repository.getIsFork(), is(false));
-        assertThat(repository.getOriginal().getName(), is(""));
-        assertThat(repository.getOriginal().getGithubId(), is(0L));
-        assertThat(repository.getOriginal().getUrl(), is(""));
-        assertThat(repository.getIsPullRequest(), is(false));
-        assertThat(repository.getPullRequestId(), is (0));
+        File actualFile = new File(inspector.getRepoToPushLocalPath() + "/bears.json");
+        String actualString = FileUtils.readFileToString(actualFile, StandardCharsets.UTF_8);
 
-        Builds builds = metrics4Bears.getBuilds();
-        assertThat(builds.getBuggyBuild().getId(), is(208897371L));
-        assertThat(builds.getBuggyBuild().getUrl(), is("http://travis-ci.org/surli/failingProject/builds/208897371"));
+        JSONCompareResult result = JSONCompare.compareJSON(expectedString, actualString, JSONCompareMode.STRICT);
+        assertThat(result.isMissingOnField(), is(false));
+        assertThat(result.isUnexpectedOnField(), is(false));
 
-        assertThat(builds.getFixerBuild(), nullValue());
-
-        Commits commits = metrics4Bears.getCommits();
-        assertThat(commits.getBuggyBuild().getRepoName(), is("surli/failingProject"));
-        assertThat(commits.getBuggyBuild().getBranchName(), is("only-one-failing"));
-        assertThat(commits.getBuggyBuild().getSha(), is("e17771af92490121d4b1655c0bdf36b3692f1ce3"));
-        assertThat(commits.getBuggyBuild().getUrl(), is("http://github.com/surli/failingProject/commit/e17771af92490121d4b1655c0bdf36b3692f1ce3"));
-
-        assertThat(commits.getBuggyBuildForkRepo(), nullValue());
-        assertThat(commits.getBuggyBuildBaseRepo(), nullValue());
-        assertThat(commits.getFixerBuild(), nullValue());
-        assertThat(commits.getFixerBuildForkRepo(), nullValue());
-        assertThat(commits.getFixerBuildBaseRepo(), nullValue());
-
-        Tests tests = metrics4Bears.getTests();
-        assertTrue(tests.getFailingModule().endsWith("surli/failingProject/208897371"));
-        assertThat(tests.getOverallMetrics().getNumberRunning(), is(8));
-        assertThat(tests.getOverallMetrics().getNumberPassing(), is(7));
-        assertThat(tests.getOverallMetrics().getNumberFailing(), is(0));
-        assertThat(tests.getOverallMetrics().getNumberErroring(), is(1));
-        assertThat(tests.getOverallMetrics().getNumberSkipping(), is(0));
-
-        Set<Failure> failures = tests.getOverallMetrics().getFailures();
-        assertThat(failures.size(), is(1));
-        Iterator<Failure> failureIterator = failures.iterator();
-        if (failureIterator.hasNext()) {
-            Failure failure = failureIterator.next();
-            assertThat(failure.getFailureName(), is("java.lang.StringIndexOutOfBoundsException"));
-            assertThat(failure.getIsError(), is(true));
-            assertThat(failure.getOccurrences(), is(1));
+        for (FieldComparisonFailure fieldComparisonFailure : result.getFieldFailures()) {
+            String fieldComparisonFailureName = fieldComparisonFailure.getField();
+            if (fieldComparisonFailureName.equals("tests.failingModule")) {
+                String path = "surli/failingProject/208897371";
+                String expected = (String) fieldComparisonFailure.getExpected();
+                expected = expected.substring(expected.indexOf(path), expected.length());
+                String actual = (String) fieldComparisonFailure.getActual();
+                actual = actual.substring(actual.indexOf(path), actual.length());
+                assertTrue("Property failing: " + fieldComparisonFailureName,
+                        actual.equals(expected));
+            } else {
+                assertTrue("Property failing: " + fieldComparisonFailureName,
+                        this.isPropertyToBeIgnored(fieldComparisonFailureName));
+            }
         }
-
-        Set<FailingClass> failingClasses = tests.getFailingClasses();
-        assertThat(failingClasses.size(), is(1));
-        Iterator<FailingClass> failingClassIterator = failingClasses.iterator();
-        if (failingClassIterator.hasNext()) {
-            FailingClass failingClass = failingClassIterator.next();
-            assertThat(failingClass.getTestClass(), is("nopol_examples.nopol_example_1.NopolExampleTest"));
-            assertThat(failingClass.getNumberRunning(), is(8));
-            assertThat(failingClass.getNumberPassing(), is(7));
-            assertThat(failingClass.getNumberFailing(), is(0));
-            assertThat(failingClass.getNumberErroring(), is(1));
-            assertThat(failingClass.getNumberSkipping(), is(0));
-        }
-
-        Set<FailureDetail> failureDetails = tests.getFailureDetails();
-        assertThat(failureDetails.size(), is(1));
-        Iterator<FailureDetail> failureDetailIterator = failureDetails.iterator();
-        if (failureDetailIterator.hasNext()) {
-            FailureDetail failureDetail = failureDetailIterator.next();
-            assertThat(failureDetail.getTestClass(), is("nopol_examples.nopol_example_1.NopolExampleTest"));
-            assertThat(failureDetail.getTestMethod(), is("test5"));
-            assertThat(failureDetail.getFailureName(), is("java.lang.StringIndexOutOfBoundsException"));
-            assertTrue(!failureDetail.getDetail().equals(""));
-            assertThat(failureDetail.getIsError(), is(true));
-        }
-
-        PatchDiff patchDiff = metrics4Bears.getPatchDiff();
-        assertThat(patchDiff.getFiles().getNumberAdded(), is(0));
-        assertThat(patchDiff.getFiles().getNumberChanged(), is(0));
-        assertThat(patchDiff.getFiles().getNumberDeleted(), is(0));
-        assertThat(patchDiff.getLines().getNumberAdded(), is(0));
-        assertThat(patchDiff.getLines().getNumberDeleted(), is(0));
-
-        // FIXME: the expected values need to be analyzed
-        //ProjectMetrics projectMetrics = metrics4Bears.getProjectMetrics();
-        //assertThat(projectMetrics.getNumberSourceFiles(), is());
-        //assertThat(projectMetrics.getNumberTestFiles(), is());
-        //assertThat(projectMetrics.getNumberLibraries(), is());
-
-        ReproductionBuggyBuild reproductionBuggyBuild = metrics4Bears.getReproductionBuggyBuild();
-        assertThat(reproductionBuggyBuild.getReproductionDateBeginning(), notNullValue());
-        assertThat(reproductionBuggyBuild.getReproductionDateEnd(), notNullValue());
-
-        GlobalStepInfo cloning = reproductionBuggyBuild.getProcessDurations().getCloning();
-        List<String> expectedCloningStepNames = new ArrayList<>(Arrays.asList("CloneRepository"));
-        List<String> cloningStepNames = cloning.getStepNames();
-        assertThat(cloning.getNbSteps(), is(expectedCloningStepNames.size()));
-        assertThat(cloning.getStepNames().size(), is(expectedCloningStepNames.size()));
-        assertThat(cloning.getStepDurations().size(), is(expectedCloningStepNames.size()));
-        assertThat(cloningStepNames.containsAll(expectedCloningStepNames), is(true));
-
-        GlobalStepInfo building = reproductionBuggyBuild.getProcessDurations().getBuilding();
-        List<String> expectedBuildingStepNames = new ArrayList<>(Arrays.asList("CheckoutBuggyBuild", "BuildProject"));
-        List<String> buildingStepNames = building.getStepNames();
-        assertThat(building.getNbSteps(), is(expectedBuildingStepNames.size()));
-        assertThat(building.getStepNames().size(), is(expectedBuildingStepNames.size()));
-        assertThat(building.getStepDurations().size(), is(expectedBuildingStepNames.size()));
-        assertThat(buildingStepNames.containsAll(expectedBuildingStepNames), is(true));
-
-        GlobalStepInfo testing = reproductionBuggyBuild.getProcessDurations().getTesting();
-        List<String> expectedTestingStepNames = new ArrayList<>(Arrays.asList("TestProject"));
-        List<String> testingStepNames = testing.getStepNames();
-        assertThat(testing.getNbSteps(), is(expectedTestingStepNames.size()));
-        assertThat(testing.getStepNames().size(), is(expectedTestingStepNames.size()));
-        assertThat(testing.getStepDurations().size(), is(expectedTestingStepNames.size()));
-        assertThat(testingStepNames.containsAll(expectedTestingStepNames), is(true));
-
-        GlobalStepInfo fixing = reproductionBuggyBuild.getProcessDurations().getFixing();
-        List<String> expectedFixingStepNames = new ArrayList<>(Arrays.asList("Nopol"));
-        List<String> fixingStepNames = fixing.getStepNames();
-        assertThat(fixing.getNbSteps(), is(expectedFixingStepNames.size()));
-        assertThat(fixing.getStepNames().size(), is(expectedFixingStepNames.size()));
-        assertThat(fixing.getStepDurations().size(), is(expectedFixingStepNames.size()));
-        assertThat(fixingStepNames.containsAll(expectedFixingStepNames), is(true));
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
@@ -433,6 +238,20 @@ public class TestMetrics4BearsJsonFile {
         assertThat(build.isPullRequest(), is(isPR));
 
         return build;
+    }
+
+    private boolean isPropertyToBeIgnored(String propertyName) {
+        boolean isToIgnore = false;
+        int i = 0;
+        String fieldToIgnore;
+        while (i < propertiesToIgnore.size() && !isToIgnore) {
+            fieldToIgnore = propertiesToIgnore.get(i);
+            if (propertyName.startsWith(fieldToIgnore)) {
+                isToIgnore = true;
+            }
+            i++;
+        }
+        return isToIgnore;
     }
 
 }

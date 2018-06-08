@@ -1,0 +1,133 @@
+{
+  "type": "only_fail",
+  "repository": {
+    "name": "surli/failingProject",
+    "githubId": 11594784,
+    "url": "https://github.com/surli/failingProject",
+    "isFork": false,
+    "original": {
+      "name": "",
+      "githubId": 0,
+      "url": ""
+    },
+    "isPullRequest": false,
+    "pullRequestId": 0
+  },
+  "builds": {
+    "buggyBuild": {
+      "id": 208897371,
+      "url": "http://travis-ci.org/surli/failingProject/builds/208897371",
+      "date": "Mar 8, 2017 4:07:02 AM"
+    }
+  },
+  "commits": {
+    "buggyBuild": {
+      "repoName": "surli/failingProject",
+      "branchName": "only-one-failing",
+      "sha": "e17771af92490121d4b1655c0bdf36b3692f1ce3",
+      "url": "http://github.com/surli/failingProject/commit/e17771af92490121d4b1655c0bdf36b3692f1ce3",
+      "date": "Mar 8, 2017 4:05:44 AM"
+    }
+  },
+  "tests": {
+    "failingModule": "/tmp/test_bears_json_file_failing_build4879665694333003261/surli/failingProject/208897371",
+    "overallMetrics": {
+      "numberRunning": 8,
+      "numberPassing": 7,
+      "numberFailing": 0,
+      "numberErroring": 1,
+      "numberSkipping": 0,
+      "failures": [
+        {
+          "failureName": "java.lang.StringIndexOutOfBoundsException",
+          "isError": true,
+          "occurrences": 1
+        }
+      ]
+    },
+    "failingClasses": [
+      {
+        "testClass": "nopol_examples.nopol_example_1.NopolExampleTest",
+        "numberRunning": 8,
+        "numberPassing": 7,
+        "numberFailing": 0,
+        "numberErroring": 1,
+        "numberSkipping": 0
+      }
+    ],
+    "failureDetails": [
+      {
+        "testClass": "nopol_examples.nopol_example_1.NopolExampleTest",
+        "testMethod": "test5",
+        "failureName": "java.lang.StringIndexOutOfBoundsException",
+        "detail": "String index out of range: -5",
+        "isError": true
+      }
+    ]
+  },
+  "patchDiff": {
+    "files": {
+      "numberAdded": 0,
+      "numberChanged": 0,
+      "numberDeleted": 0
+    },
+    "lines": {
+      "numberAdded": 0,
+      "numberDeleted": 0
+    }
+  },
+  "projectMetrics": {
+    "numberSourceFiles": 0,
+    "numberTestFiles": 1,
+    "numberLibraries": 2
+  },
+  "reproductionBuggyBuild": {
+    "reproductionDateBeginning": "Jun 8, 2018 7:58:25 AM",
+    "reproductionDateEnd": "Jun 8, 2018 8:02:52 AM",
+    "totalDuration": 265,
+    "processDurations": {
+      "cloning": {
+        "nbSteps": 1,
+        "totalDuration": 6,
+        "stepNames": [
+          "CloneRepository"
+        ],
+        "stepDurations": [
+          6
+        ]
+      },
+      "building": {
+        "nbSteps": 2,
+        "totalDuration": 75,
+        "stepNames": [
+          "CheckoutBuggyBuild",
+          "BuildProject"
+        ],
+        "stepDurations": [
+          0,
+          75
+        ]
+      },
+      "testing": {
+        "nbSteps": 1,
+        "totalDuration": 7,
+        "stepNames": [
+          "TestProject"
+        ],
+        "stepDurations": [
+          7
+        ]
+      },
+      "fixing": {
+        "nbSteps": 1,
+        "totalDuration": 109,
+        "stepNames": [
+          "Nopol"
+        ],
+        "stepDurations": [
+          109
+        ]
+      }
+    }
+  }
+}
