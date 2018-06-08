@@ -95,6 +95,10 @@ public class TestMetrics4BearsJsonFile {
         propertiesToIgnore.add("reproductionBuggyBuild.processDurations.testing.totalDuration");
         propertiesToIgnore.add("reproductionBuggyBuild.processDurations.fixing.stepDurations");
         propertiesToIgnore.add("reproductionBuggyBuild.processDurations.fixing.totalDuration");
+        propertiesToIgnore.add("builds.buggyBuild.date");
+        propertiesToIgnore.add("builds.fixerBuild.date");
+        propertiesToIgnore.add("commits.buggyBuild.date");
+        propertiesToIgnore.add("commits.fixerBuild.date");
     }
 
     public static boolean isMac() {
