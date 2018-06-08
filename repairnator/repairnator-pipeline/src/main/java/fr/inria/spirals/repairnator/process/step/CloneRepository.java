@@ -59,7 +59,6 @@ public class CloneRepository extends AbstractStep {
 
         fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository.Repository repository = this.getInspector().getJobStatus().getMetrics4Bears().getRepository();
         repository.setName(this.getInspector().getRepoSlug());
-        repository.setGithubId(this.build.getRepository().getId());
         repository.setUrl(GITHUB_ROOT_REPO + this.getInspector().getRepoSlug());
 
         if (this.build.isPullRequest()) {
@@ -71,6 +70,7 @@ public class CloneRepository extends AbstractStep {
         try {
             gitHub = new GitHubBuilder().withOAuthToken(this.getConfig().getGithubToken()).build();
             GHRepository repo = gitHub.getRepository(this.getInspector().getRepoSlug());
+            repository.setGithubId(repo.getId());
             if (repo.isFork()) {
                 repository.setIsFork(true);
                 repository.getOriginal().setName(repo.getParent().getFullName());
