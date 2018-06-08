@@ -1,6 +1,8 @@
 # Contribute
 
 All kind of contributions are welcome to improve Repairnator! 
+You can already contribute on the issues labelled [good-first-issue](https://github.com/Spirals-Team/repairnator/labels/good-first-issue).
+
 Don't hesitate to open an issue and ask us if you're willing to bring some help in the development or in any other way. 
 Also, please reach out if you want to get immediate feedbacks on the usage of your tools :)
 
