@@ -279,7 +279,10 @@ public class TestMetrics4BearsJsonFile {
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null, null);
         inspector.run();
 
-        // check bears.json against schema: this fails since the bears schema was designed for Bears, thus...
+        // FIXME: check bears.json against schema: this fails since the bears schema was designed for Bears. Errors:
+        // - "type" does not accept "only_fail"
+        // - "builds/fixerBuild" is required
+        // - "commits/fixerBuild" is required
 
         /*JsonNode bearsJsonFile = jsonMapper.readTree(new File(inspector.getRepoToPushLocalPath() + "/bears.json"));
 
