@@ -68,7 +68,7 @@ public class CloneRepository extends AbstractStep {
 
         GitHub gitHub;
         try {
-            gitHub = new GitHubBuilder().withOAuthToken(this.getConfig().getGithubToken()).build();
+            gitHub = this.getConfig().getGithub();
             GHRepository repo = gitHub.getRepository(this.getInspector().getRepoSlug());
             repository.setGithubId(repo.getId());
             if (repo.isFork()) {
