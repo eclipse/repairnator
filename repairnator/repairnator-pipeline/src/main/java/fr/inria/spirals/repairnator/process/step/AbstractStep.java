@@ -9,7 +9,11 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -23,6 +27,7 @@ import java.util.*;
  */
 public abstract class AbstractStep {
     private static final String PROPERTY_FILENAME = "repairnator.json";
+    private static final String PROPERTY_FILENAME_BEARS = "bears.json";
 
     /**
      * The name of the step, by default it's the class name
@@ -34,8 +39,10 @@ public abstract class AbstractStep {
 
     private boolean shouldStop;
     private AbstractStep nextStep;
-    private long dateBegin;
-    private long dateEnd;
+    private Date dateBegin;
+    private Date dateEnd;
+    private long timeBegin;
+    private long timeEnd;
     private boolean pomLocationTested;
     private List<AbstractDataSerializer> serializers;
     private List<AbstractNotifier> notifiers;
@@ -282,9 +289,11 @@ public abstract class AbstractStep {
         this.getLogger().debug("STEP "+ (steps.indexOf(this) + 1)+"/"+ steps.size() +": "+this.name);
         this.getLogger().debug("----------------------------------------------------------------------");
 
-        this.dateBegin = new Date().getTime();
+        this.dateBegin = new Date();
+        this.timeBegin = dateBegin.getTime();
         this.stepStatus = this.businessExecute();
-        this.dateEnd = new Date().getTime();
+        this.dateEnd = new Date();
+        this.timeEnd = dateEnd.getTime();
 
         this.getLogger().debug("STEP STATUS: "+this.stepStatus);
         this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
@@ -292,6 +301,9 @@ public abstract class AbstractStep {
         Metrics metric = this.inspector.getJobStatus().getMetrics();
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
+
+        ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild();
+        reproductionBuggyBuild.addStep(this);
 
         this.inspector.getJobStatus().addStepStatus(this.stepStatus);
 
@@ -310,6 +322,7 @@ public abstract class AbstractStep {
             this.inspector.setPipelineEnding(true);
             this.recordMetrics();
             this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
+            this.writeBearsJsonFile();
             if (this.inspector.getFinalStep() != null) {
                 this.inspector.getFinalStep().execute();
             }
@@ -327,38 +340,58 @@ public abstract class AbstractStep {
         metric.setNbCPU(Runtime.getRuntime().availableProcessors());
     }
 
+    public Date getDateBegin() {
+        return dateBegin;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
     public int getDuration() {
-        if (dateEnd == 0 || dateBegin == 0) {
+        if (timeEnd == 0 || timeBegin == 0) {
             return 0;
         }
-        return Math.round((dateEnd - dateBegin) / 1000);
+        return Math.round((timeEnd - timeBegin) / 1000);
     }
 
     protected void writeProperty(String propertyName, Object value) {
-        if (value != null) {
-            this.properties.put(propertyName, value);
+        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+            if (value != null) {
+                this.properties.put(propertyName, value);
 
-            String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
-            File file = new File(filePath);
+                String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
+                Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
+                String jsonString = gson.toJson(this.properties);
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-            String jsonString = gson.toJson(this.properties);
-
-            try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
-                outputStream.write(jsonString);
-                outputStream.flush();
-                outputStream.close();
-            } catch (IOException e) {
-                this.getLogger().error("Cannot write property to the following file: " + filePath, e);
+                this.writeJsonFile(filePath, jsonString);
+            } else {
+                this.getLogger().warn("Trying to write property null for key: " + propertyName);
             }
-        } else {
-            this.getLogger().warn("Trying to write property null for key: "+propertyName);
         }
+    }
 
+    private void writeBearsJsonFile() {
+        String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
+        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics4Bears.class, new MetricsSerializerAdapter4Bears()).create();
+        String jsonString = gson.toJson(this.getInspector().getJobStatus().getMetrics4Bears());
+        this.writeJsonFile(filePath, jsonString);
+    }
+
+    private void writeJsonFile(String filePath, String jsonString) {
+        File file = new File(filePath);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
+            outputStream.write(jsonString);
+            outputStream.flush();
+            outputStream.close();
+            this.getInspector().getJobStatus().addFileToPush(file.getName());
+        } catch (IOException e) {
+            this.getLogger().error("Cannot write property to the following file: " + file.getPath(), e);
+        }
     }
 
     public RepairnatorConfig getConfig() {

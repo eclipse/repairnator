@@ -131,6 +131,7 @@ public class ComputeTestDir extends AbstractStep {
                 totalAppFiles += nbFile;
             }
             this.getInspector().getJobStatus().getMetrics().setNbFileTests(totalAppFiles);
+            this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberTestFiles(totalAppFiles);
         }
     }
 

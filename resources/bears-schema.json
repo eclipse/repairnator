@@ -55,8 +55,8 @@
             "http://github.com/bowenli86/flink/"
           ]
         },
-        "fork": {
-          "$id": "/properties/repository/properties/fork",
+        "isFork": {
+          "$id": "/properties/repository/properties/isFork",
           "type": "boolean",
           "title": "The Fork Schema ",
           "default": false,
@@ -125,7 +125,7 @@
         "name",
         "githubId",
         "url",
-        "fork",
+        "isFork",
         "isPullRequest"
       ]
     },
@@ -581,17 +581,17 @@
           "$id": "/properties/tests/properties/overallMetrics",
           "type": "object",
           "properties": {
-            "numberExecuted": {
-              "$id": "/properties/tests/properties/overallMetrics/properties/numberExecuted",
+            "numberRunning": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberRunning",
               "type": "integer",
-              "title": "The Numberexecuted Schema ",
+              "title": "The numberRunning Schema ",
               "default": 0,
               "examples": [
                 363
               ]
             },
-            "numberFailed": {
-              "$id": "/properties/tests/properties/overallMetrics/properties/numberFailed",
+            "numberFailing": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberFailing",
               "type": "integer",
               "title": "The Numberfailing Schema ",
               "default": 0,
@@ -599,8 +599,8 @@
                 19
               ]
             },
-            "numberErrored": {
-              "$id": "/properties/tests/properties/overallMetrics/properties/numberErrored",
+            "numberErroring": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberErroring",
               "type": "integer",
               "title": "The Numbererroring Schema ",
               "default": 0,
@@ -608,17 +608,17 @@
                 1
               ]
             },
-            "numberSkipped": {
-              "$id": "/properties/tests/properties/overallMetrics/properties/numberSkipped",
+            "numberSkipping": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberSkipping",
               "type": "integer",
-              "title": "The Numberskipped Schema ",
+              "title": "The numberSkipping Schema ",
               "default": 0,
               "examples": [
                 0
               ]
             },
-            "numberPassed": {
-              "$id": "/properties/tests/properties/overallMetrics/properties/numberPassed",
+            "numberPassing": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberPassing",
               "type": "integer",
               "title": "The Numberpassing Schema ",
               "default": 0,
@@ -633,10 +633,10 @@
                 "$id": "/properties/tests/properties/overallMetrics/properties/failures/items",
                 "type": "object",
                 "properties": {
-                  "className": {
-                    "$id": "/properties/tests/properties/overallMetrics/properties/failures/items/properties/className",
+                  "failureName": {
+                    "$id": "/properties/tests/properties/overallMetrics/properties/failures/items/properties/failureName",
                     "type": "string",
-                    "title": "The className Schema ",
+                    "title": "The failureName Schema ",
                     "default": "",
                     "examples": [
                       "java.lang.AssertionError"
@@ -651,8 +651,8 @@
                       false
                     ]
                   },
-                  "occurences": {
-                    "$id": "/properties/tests/properties/overallMetrics/properties/failures/items/properties/occurences",
+                  "occurrences": {
+                    "$id": "/properties/tests/properties/overallMetrics/properties/failures/items/properties/occurrences",
                     "type": "integer",
                     "title": "The Number Schema ",
                     "default": 0,
@@ -662,19 +662,19 @@
                   }
                 },
                 "required": [
-                  "className",
+                  "failureName",
                   "isError",
-                  "occurences"
+                  "occurrences"
                 ]
               }
             }
           },
           "required": [
-            "numberExecuted",
-            "numberFailed",
-            "numberErrored",
-            "numberSkipped",
-            "numberPassed",
+            "numberRunning",
+            "numberFailing",
+            "numberErroring",
+            "numberSkipping",
+            "numberPassing",
             "failures"
           ]
         },
@@ -703,17 +703,17 @@
                   "org.apache.flink.util.FileUtilsTest"
                 ]
               },
-              "numberExecuted": {
-                "$id": "/properties/tests/properties/failingClasses/items/properties/numberExecuted",
+              "numberRunning": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberRunning",
                 "type": "integer",
-                "title": "The Numberexecuted Schema ",
+                "title": "The numberRunning Schema ",
                 "default": 0,
                 "examples": [
                   363
                 ]
               },
-              "numberFailed": {
-                "$id": "/properties/tests/properties/failingClasses/items/properties/numberFailed",
+              "numberFailing": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberFailing",
                 "type": "integer",
                 "title": "The Numberfailing Schema ",
                 "default": 0,
@@ -721,8 +721,8 @@
                   19
                 ]
               },
-              "numberErrored": {
-                "$id": "/properties/tests/properties/failingClasses/items/properties/numberErrored",
+              "numberErroring": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberErroring",
                 "type": "integer",
                 "title": "The Numbererroring Schema ",
                 "default": 0,
@@ -730,17 +730,17 @@
                   1
                 ]
               },
-              "numberSkipped": {
-                "$id": "/properties/tests/properties/failingClasses/items/properties/numberSkipped",
+              "numberSkipping": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberSkipping",
                 "type": "integer",
-                "title": "The Numberskipped Schema ",
+                "title": "The numberSkipping Schema ",
                 "default": 0,
                 "examples": [
                   0
                 ]
               },
-              "numberPassed": {
-                "$id": "/properties/tests/properties/failingClasses/items/properties/numberPassed",
+              "numberPassing": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberPassing",
                 "type": "integer",
                 "title": "The Numberpassing Schema ",
                 "default": 0,
@@ -751,11 +751,11 @@
             },
             "required": [
               "testClass",
-              "numberExecuted",
-              "numberFailed",
-              "numberErrored",
-              "numberSkipped",
-              "numberPassed"
+              "numberRunning",
+              "numberFailing",
+              "numberErroring",
+              "numberSkipping",
+              "numberPassing"
             ]
           }
         },
@@ -793,10 +793,10 @@
                   "java.lang.AssertionError"
                 ]
               },
-              "details": {
-                "$id": "/properties/tests/properties/failureDetails/items/properties/details",
+              "detail": {
+                "$id": "/properties/tests/properties/failureDetails/items/properties/detail",
                 "type": "string",
-                "title": "The details Schema ",
+                "title": "The detail Schema ",
                 "default": "",
                 "examples": [
                   "..."
@@ -816,7 +816,7 @@
               "testClass",
               "testMethod",
               "failureName",
-              "details",
+              "detail",
               "isError"
             ]
           }

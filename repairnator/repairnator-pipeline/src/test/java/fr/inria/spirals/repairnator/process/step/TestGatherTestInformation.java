@@ -5,6 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -77,12 +78,14 @@ public class TestGatherTestInformation {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
+        when(inspector.getCheckoutType()).thenReturn(CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
@@ -141,12 +144,14 @@ public class TestGatherTestInformation {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
+        when(inspector.getCheckoutType()).thenReturn(CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
@@ -214,12 +219,14 @@ public class TestGatherTestInformation {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
+        when(inspector.getCheckoutType()).thenReturn(CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
@@ -278,12 +285,14 @@ public class TestGatherTestInformation {
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
+        when(inspector.getCheckoutType()).thenReturn(CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);
@@ -341,12 +350,14 @@ public class TestGatherTestInformation {
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
+        when(inspector.getCheckoutType()).thenReturn(CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getJobStatus()).thenReturn(jobStatus);

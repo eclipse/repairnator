@@ -51,7 +51,7 @@ public class CommitPatch extends CommitFiles {
 
                 if (stepStatus.isSuccess()) {
                     RevCommit commit = super.getCommit();
-                    this.getInspector().getGitHelper().computePatchStats(this.getInspector().getJobStatus().getMetrics(), git, headRev, commit);
+                    this.getInspector().getGitHelper().computePatchStats(this.getInspector().getJobStatus(), git, headRev, commit);
 
                     if (this.commitType == CommitType.COMMIT_HUMAN_PATCH) {
                         this.setPushState(PushState.PATCH_COMMITTED);

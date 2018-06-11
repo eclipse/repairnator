@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -66,12 +67,14 @@ public class TestComputeSourceDir {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
         when(inspector.getBuggyBuild()).thenReturn(build);
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
+        when(inspector.getCheckoutType()).thenReturn(CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
@@ -117,6 +120,7 @@ public class TestComputeSourceDir {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
@@ -167,6 +171,7 @@ public class TestComputeSourceDir {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
@@ -216,6 +221,7 @@ public class TestComputeSourceDir {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
@@ -272,6 +278,7 @@ public class TestComputeSourceDir {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
@@ -337,6 +344,7 @@ public class TestComputeSourceDir {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
@@ -385,6 +393,7 @@ public class TestComputeSourceDir {
 
 
         ProjectInspector inspector = mock(ProjectInspector.class);
+        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
         when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
         when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
         when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);

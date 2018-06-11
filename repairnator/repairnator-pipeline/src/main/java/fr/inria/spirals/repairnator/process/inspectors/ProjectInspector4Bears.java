@@ -64,7 +64,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new CheckoutBuggyBuildTestCode(this, true))
                         .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this, false))
-                        .setNextStep(new CheckoutBuggyBuildSourceCode(this, true))
+                        .setNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
                         .setNextStep(new CommitChangedTests(this))
                         .setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
                         .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
