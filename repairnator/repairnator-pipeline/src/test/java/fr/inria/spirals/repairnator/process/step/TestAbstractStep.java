@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.step;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
@@ -11,12 +10,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -118,6 +119,34 @@ public class TestAbstractStep {
 
         String obtainedPom = step1.getPom();
         assertThat(jobStatus.getPomDirPath(), is(expectedPomPath));
+    }
+
+    @Test
+    public void testGetPomOnProjectWithSubModule() throws IOException, InterruptedException {
+        String projectUrl = "https://github.com/Spirals-Team/repairnator.git";
+
+        File tmpDir = Files.createTempDirectory("test_get_pom_project_with_submodule").toFile();
+        tmpDir.deleteOnExit();
+
+        String[] gitClone = new String[]{"git", "clone", "--recurse-submodules", projectUrl};
+        ProcessBuilder processBuilder = new ProcessBuilder().command(gitClone).directory(tmpDir);
+
+        Process process = processBuilder.start();
+        process.waitFor();
+
+        ProjectInspector mockInspector = mock(ProjectInspector.class);
+
+        String localRepoPath = tmpDir.getAbsolutePath() + "/repairnator";
+        JobStatus jobStatus = new JobStatus(localRepoPath);
+        when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
+        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+
+        AbstractStep step = new AbstractStepNop(mockInspector);
+
+        String expectedPomPath = localRepoPath+"/repairnator/pom.xml";
+        String actualPomPath = step.getPom();
+
+        assertThat(actualPomPath, is(expectedPomPath));
     }
 
 }
