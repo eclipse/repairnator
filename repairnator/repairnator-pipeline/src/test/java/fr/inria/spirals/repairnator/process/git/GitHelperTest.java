@@ -27,7 +27,8 @@ public class GitHelperTest {
 
         String remoteRepo = "https://github.com/Spirals-Team/jtravis.git";
         String parentCommit = "2d65266f9a52b27f955ec9a74aa9ab4dac5537d7";
-        String commit = "f267c73200e2ebb9431d6ffe80e507222567696c"; // GH says: 14 changed files, 443 additions, 104 deletions
+        String commit = "f267c73200e2ebb9431d6ffe80e507222567696c"; // GH says: 14 changed files, 443 additions, 104 deletions,
+                                                                    // on java files is: 13 changed files, 405 additions, 104 deletions
         Path gitDir = java.nio.file.Files.createTempDirectory("jtravis");
         Git git = Git.cloneRepository().setURI(remoteRepo).setBranch("master").setDirectory(gitDir.toFile()).call();
 
@@ -40,11 +41,11 @@ public class GitHelperTest {
         Metrics metrics = jobStatus.getMetrics();
         Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
         gitHelper.computePatchStats(jobStatus, git, revCommit, revParentCommit);
-        assertEquals(14, metrics.getPatchChangedFiles());
-        assertEquals(9, metrics4Bears.getPatchDiff().getFiles().getNumberAdded());
+        assertEquals(13, metrics.getPatchChangedFiles());
+        assertEquals(8, metrics4Bears.getPatchDiff().getFiles().getNumberAdded());
         assertEquals(1, metrics4Bears.getPatchDiff().getFiles().getNumberDeleted());
         assertEquals(4, metrics4Bears.getPatchDiff().getFiles().getNumberChanged());
-        assertEquals(443, metrics.getPatchAddedLines());
+        assertEquals(405, metrics.getPatchAddedLines());
         assertEquals(104, metrics.getPatchDeletedLines());
     }
 }
