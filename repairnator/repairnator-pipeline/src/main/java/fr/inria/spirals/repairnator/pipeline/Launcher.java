@@ -355,10 +355,10 @@ public class Launcher {
 
         ProjectInspector inspector;
 
-        if (config.getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
-        } else {
+        if (config.getLauncherMode() == LauncherMode.REPAIR) {
             inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
+        } else {
+            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         }
 
         inspector.setPatchNotifier(this.patchNotifier);

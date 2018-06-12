@@ -39,7 +39,7 @@ public class PatchNotifier {
                 patches.size() + " patch(es) has been found for the following build: "+ Utils.getTravisUrl(buggyBuild.getId(), repository.getSlug())+".\n";
 
         String slug = repository.getSlug();
-        String repoURL = Utils.getGithubRepoUrl(slug);
+        String repoURL = Utils.getCompleteGithubRepoUrl(slug);
         String branchName = buggyBuild.getBranch().getName();
 
         String[] divideSlug = slug.split("/");
@@ -55,7 +55,7 @@ public class PatchNotifier {
             Optional<PullRequest> pullRequestOptional = RepairnatorConfig.getInstance().getJTravis().pullRequest().fromBuild(buggyBuild);
             if (pullRequestOptional.isPresent()) {
                 PullRequest pullRequest = pullRequestOptional.get();
-                repoURL = Utils.getGithubRepoUrl(pullRequest.getOtherRepo().getFullName());
+                repoURL = Utils.getCompleteGithubRepoUrl(pullRequest.getOtherRepo().getFullName());
                 branchName = pullRequest.getHeadRef().getRef();
             } else {
                 this.logger.error("Error while getting pull request information for notification.");

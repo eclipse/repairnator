@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -17,12 +18,10 @@ import java.net.URISyntaxException;
 
 public class PushProcessEnd extends AbstractStep {
 
-    private static final String REMOTE_REPO_EXT = ".git";
-
     public static final String REMOTE_NAME = "saveFail";
 
-    private String branchName;
     private String remoteRepoUrl;
+    private String branchName;
 
     public PushProcessEnd(ProjectInspector inspector) {
         super(inspector, false);
@@ -39,7 +38,7 @@ public class PushProcessEnd extends AbstractStep {
                 return StepStatus.buildSkipped(this, "Remote repo information was not provided.");
             }
 
-            String remoteRepo = this.remoteRepoUrl + REMOTE_REPO_EXT;
+            String remoteRepo = this.remoteRepoUrl + Utils.REMOTE_REPO_EXT;
 
             this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
 

@@ -2,12 +2,12 @@ package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.PullRequest;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff.PatchDiff;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
@@ -55,8 +55,6 @@ import java.util.Set;
  * Created by fernanda on 01/03/17.
  */
 public class GitHelper {
-
-    private static final String TRAVIS_FILE = ".travis.yml";
 
     private int nbCommits;
 
@@ -199,7 +197,7 @@ public class GitHelper {
 
     public boolean mergeTwoCommitsForPR(Git git, Build build, PullRequest prInformation, String repository, AbstractStep step, List<String> paths) {
         try {
-            String remoteBranchPath = CloneRepository.GITHUB_ROOT_REPO + prInformation.getOtherRepo().getFullName() + ".git";
+            String remoteBranchPath = Utils.getCompleteGithubRepoUrl(prInformation.getOtherRepo().getFullName());
 
             RemoteAddCommand remoteBranchCommand = git.remoteAdd();
             remoteBranchCommand.setName("PR");
@@ -477,7 +475,7 @@ public class GitHelper {
     }
 
     public void removeNotificationFromTravisYML(File directory, AbstractStep step) {
-        File travisFile = new File(directory, TRAVIS_FILE);
+        File travisFile = new File(directory, Utils.TRAVIS_FILE);
 
         if (!travisFile.exists()) {
             getLogger().warn("Travis file has not been detected. It should however exists.");
@@ -507,7 +505,7 @@ public class GitHelper {
 
                 if (changed) {
                     getLogger().info("Notification block detected. The travis file will be changed.");
-                    File bakTravis = new File(directory, "bak"+TRAVIS_FILE);
+                    File bakTravis = new File(directory, "bak"+Utils.TRAVIS_FILE);
                     Files.deleteIfExists(bakTravis.toPath());
                     Files.move(travisFile.toPath(), bakTravis.toPath());
                     FileWriter fw = new FileWriter(travisFile);
@@ -518,8 +516,8 @@ public class GitHelper {
                     }
                     fw.close();
 
-                    step.getInspector().getJobStatus().addFileToPush(".travis.yml");
-                    step.getInspector().getJobStatus().addFileToPush("bak.travis.yml");
+                    step.getInspector().getJobStatus().addFileToPush(Utils.TRAVIS_FILE);
+                    step.getInspector().getJobStatus().addFileToPush("bak"+Utils.TRAVIS_FILE);
                 }
             } catch (IOException e) {
                 getLogger().warn("Error while changing travis file", e);

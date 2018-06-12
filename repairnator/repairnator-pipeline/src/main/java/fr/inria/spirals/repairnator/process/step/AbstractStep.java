@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
@@ -210,7 +211,7 @@ public abstract class AbstractStep {
 
     private void testPomLocation() {
         this.pomLocationTested = true;
-        File defaultPomFile = new File(this.inspector.getRepoLocalPath() + File.separator + "pom.xml");
+        File defaultPomFile = new File(this.inspector.getRepoLocalPath() + File.separator + Utils.POM_FILE);
 
         if (defaultPomFile.exists()) {
             return;
@@ -229,7 +230,7 @@ public abstract class AbstractStep {
             if (dirs != null) {
                 Arrays.sort(dirs);
                 for (File dir : dirs) {
-                    File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
+                    File pomFile = new File(dir.getPath()+File.separator+Utils.POM_FILE);
 
                     if (pomFile.exists()) {
                         this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
@@ -248,7 +249,7 @@ public abstract class AbstractStep {
         if (!pomLocationTested) {
             testPomLocation();
         }
-        return this.inspector.getJobStatus().getPomDirPath() + File.separator + "pom.xml";
+        return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }
 
     protected void cleanMavenArtifacts() {
