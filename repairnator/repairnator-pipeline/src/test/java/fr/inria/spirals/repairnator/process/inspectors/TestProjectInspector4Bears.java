@@ -99,8 +99,8 @@ public class TestProjectInspector4Bears {
 
     @Test
     public void testFailingPassingProject() throws IOException, GitAPIException {
-        int buildIdPassing = 203800961;
-        int buildIdFailing = 203797975;
+        long buildIdPassing = 203800961;
+        long buildIdFailing = 203797975;
 
 
         Path tmpDirPath = Files.createTempDirectory("test_bears1");
@@ -180,8 +180,8 @@ public class TestProjectInspector4Bears {
 
     @Test
     public void testPassingPassingProject() throws IOException, GitAPIException {
-        int buildIdPassing = 201938881;
-        int buildIdPreviousPassing = 201938325;
+        long buildIdPassing = 201938881;
+        long buildIdPreviousPassing = 201938325;
 
 
         Path tmpDirPath = Files.createTempDirectory("test_bears2");
