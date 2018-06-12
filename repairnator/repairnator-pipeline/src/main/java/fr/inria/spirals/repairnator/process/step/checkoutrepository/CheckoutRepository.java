@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.PullRequest;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
@@ -38,27 +39,26 @@ public abstract class CheckoutRepository extends AbstractStep {
         super(inspector, blockingStep, stepName);
     }
 
-    private String getCommitUrl(String commitId) {
-        return "http://github.com/"+this.getInspector().getRepoSlug()+"/commit/"+commitId;
-    }
-
     @Override
     protected StepStatus businessExecute() {
 
         Metrics metric = this.getInspector().getJobStatus().getMetrics();
+        Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+        Commit commit;
+
         Git git;
         try {
-            GitHelper gitHelper = this.getInspector().getGitHelper();
+
             git = Git.open(new File(this.getInspector().getRepoLocalPath()));
+            GitHelper gitHelper = this.getInspector().getGitHelper();
             Build build;
-            Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
-            Commit commit;
+            String repoSlug = this.getInspector().getRepoSlug();
 
             switch (checkoutType) {
                 case CHECKOUT_BUGGY_BUILD:
                     build = this.getInspector().getBuggyBuild();
                     metric.setBugCommit(build.getCommit().getSha());
-                    metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    metric.setBugCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
 
                     commit = this.createCommitForMetrics(build);
                     metrics4Bears.getCommits().setBuggyBuild(commit);
@@ -67,7 +67,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                 case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
                     build = this.getInspector().getBuggyBuild();
                     metric.setBugCommit(build.getCommit().getSha());
-                    metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    metric.setBugCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
                     metric.setReconstructedBugCommit(true);
 
                     commit = this.createCommitForMetrics(build);
@@ -77,13 +77,13 @@ public abstract class CheckoutRepository extends AbstractStep {
                 case CHECKOUT_BUGGY_BUILD_TEST_CODE:
                     build = this.getInspector().getBuggyBuild();
                     metric.setBugCommit(build.getCommit().getSha());
-                    metric.setBugCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    metric.setBugCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
                     break;
 
                 case CHECKOUT_PATCHED_BUILD:
                     build = this.getInspector().getPatchedBuild();
                     metric.setPatchCommit(build.getCommit().getSha());
-                    metric.setPatchCommitUrl(this.getCommitUrl(build.getCommit().getSha()));
+                    metric.setPatchCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
 
                     commit = this.createCommitForMetrics(build);
                     metrics4Bears.getCommits().setFixerBuild(commit);
@@ -108,15 +108,15 @@ public abstract class CheckoutRepository extends AbstractStep {
                         this.writeProperty("pr-base-commit-id-url", prInformation.getBase().getHtmlUrl());
                         this.writeProperty("pr-id", build.getPullRequestNumber());
 
-                        commit = this.createCommitForMetrics(build, prInformation, false);
+                        commit = this.createCommitForMetrics(prInformation, false);
                         metrics4Bears.getCommits().setFixerBuildForkRepo(commit);
-                        commit = this.createCommitForMetrics(build, prInformation, true);
+                        commit = this.createCommitForMetrics(prInformation, true);
                         metrics4Bears.getCommits().setFixerBuildBaseRepo(commit);
                     } else if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD ||
                             checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
-                        commit = this.createCommitForMetrics(build, prInformation, false);
+                        commit = this.createCommitForMetrics(prInformation, false);
                         metrics4Bears.getCommits().setBuggyBuildForkRepo(commit);
-                        commit = this.createCommitForMetrics(build, prInformation, true);
+                        commit = this.createCommitForMetrics(prInformation, true);
                         metrics4Bears.getCommits().setBuggyBuildBaseRepo(commit);
                     }
 
@@ -201,12 +201,12 @@ public abstract class CheckoutRepository extends AbstractStep {
         commit.setRepoName(build.getRepository().getSlug());
         commit.setBranchName(build.getBranch().getName());
         commit.setSha(build.getCommit().getSha());
-        commit.setUrl(this.getCommitUrl(build.getCommit().getSha()));
+        commit.setUrl(Utils.getCommitUrl(build.getCommit().getSha(), this.getInspector().getRepoSlug()));
         commit.setDate(build.getCommit().getCommittedAt());
         return commit;
     }
 
-    private Commit createCommitForMetrics(Build build, PullRequest prInformation, boolean base) {
+    private Commit createCommitForMetrics(PullRequest prInformation, boolean base) {
         Commit commit = new Commit();
         GHCommitPointer ghCommitPointer;
         GHCommit ghCommit;
