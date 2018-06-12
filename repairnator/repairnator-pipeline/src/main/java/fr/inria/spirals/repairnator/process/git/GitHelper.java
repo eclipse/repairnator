@@ -285,7 +285,7 @@ public class GitHelper {
                 } else {
                     path = entry.getNewPath();
                 }
-                if (!jobStatus.isCreatedFileToPush(path)) {
+                if (!jobStatus.isCreatedFileToPush(path) && path.endsWith(".java")) {
                     if (entry.getChangeType() == DiffEntry.ChangeType.MODIFY ||
                             entry.getChangeType() == DiffEntry.ChangeType.RENAME) {
                         changedFiles.add(path);

@@ -216,7 +216,7 @@ public abstract class AbstractStep {
         if (defaultPomFile.exists()) {
             return;
         } else {
-            this.getLogger().info("The pom.xml file is not at the root of the repository. Try to find another one.");
+            this.getLogger().info("The pom.xml file is not at the root of the repository. Start to search it in folders...");
 
             File rootRepo = new File(this.inspector.getRepoLocalPath());
 
@@ -230,8 +230,15 @@ public abstract class AbstractStep {
             if (dirs != null) {
                 Arrays.sort(dirs);
                 for (File dir : dirs) {
-                    File pomFile = new File(dir.getPath()+File.separator+Utils.POM_FILE);
+                    File gitDir = new File(dir.getPath()+File.separator+".git");
 
+                    if (gitDir.exists()) {
+                        this.getLogger().debug("Skip folder "+dir.getPath()+": it is a git sub-module project.");
+                        continue;
+                    }
+
+                    File pomFile = new File(dir.getPath()+File.separator+Utils.POM_FILE);
+                  
                     if (pomFile.exists()) {
                         this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
                         this.inspector.getJobStatus().setPomDirPath(dir.getPath());

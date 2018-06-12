@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -32,6 +33,14 @@ public class PushProcessEnd extends AbstractStep {
     @Override
     protected StepStatus businessExecute() {
         if (this.getConfig().isPush() && this.getInspector().getJobStatus().getLastPushState() != PushState.NONE) {
+
+            if (this.getInspector() instanceof ProjectInspector4Bears &&
+                    !((ProjectInspector4Bears) this.getInspector()).isBug()) {
+                this.getLogger().error("The reproduction of the bug and/or the patch failed. Step bypassed.");
+                this.setPushState(PushState.REPO_NOT_PUSHED);
+                return StepStatus.buildSkipped(this, "The reproduction of the bug and/or the patch failed. Step bypassed.");
+            }
+
             if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
                 this.getLogger().error("Remote repo URL should be set !");
                 this.setPushState(PushState.REPO_NOT_PUSHED);
