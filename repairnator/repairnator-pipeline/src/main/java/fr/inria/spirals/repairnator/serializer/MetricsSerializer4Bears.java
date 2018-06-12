@@ -9,7 +9,6 @@ import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bea
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +25,6 @@ public class MetricsSerializer4Bears extends AbstractDataSerializer {
         JsonObject element = (JsonObject)gson.toJsonTree(inspector.getJobStatus().getMetrics4Bears());
 
         element.addProperty("runId", RepairnatorConfig.getInstance().getRunId());
-        element.addProperty("status",this.getPrettyPrintState(inspector));
-        element.addProperty("stepStatuses", StringUtils.join(inspector.getJobStatus().getStepStatuses(), " -> "));
 
         List<SerializedData> dataList = new ArrayList<>();
 
