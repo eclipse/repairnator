@@ -9,10 +9,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
-import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
-import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
-import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
+import fr.inria.spirals.repairnator.serializer.*;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -22,11 +19,6 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -343,12 +335,13 @@ public class Launcher {
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             serializers.add(new InspectorSerializer4Bears(this.engines));
+            serializers.add(new MetricsSerializer4Bears(this.engines));
         } else {
             serializers.add(new InspectorSerializer(this.engines));
+            serializers.add(new MetricsSerializer(this.engines));
         }
 
         serializers.add(new InspectorTimeSerializer(this.engines));
-        serializers.add(new MetricsSerializer(this.engines));
         serializers.add(new PipelineErrorSerializer(this.engines));
         serializers.add(new PatchesSerializer(this.engines));
         serializers.add(new ToolDiagnosticSerializer(this.engines));
