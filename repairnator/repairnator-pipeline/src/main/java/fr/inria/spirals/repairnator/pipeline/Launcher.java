@@ -341,10 +341,10 @@ public class Launcher {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            serializers.add(new InspectorSerializer(this.engines));
-        } else {
+        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             serializers.add(new InspectorSerializer4Bears(this.engines));
+        } else {
+            serializers.add(new InspectorSerializer(this.engines));
         }
 
         serializers.add(new InspectorTimeSerializer(this.engines));
@@ -355,10 +355,10 @@ public class Launcher {
 
         ProjectInspector inspector;
 
-        if (config.getLauncherMode() == LauncherMode.REPAIR) {
-            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
-        } else {
+        if (config.getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
+        } else {
+            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
         }
 
         inspector.setPatchNotifier(this.patchNotifier);
