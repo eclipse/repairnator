@@ -35,6 +35,10 @@ public class ProjectInspector4Bears extends ProjectInspector {
         this.bug = false;
     }
 
+    public String getRemoteBranchName() {
+        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + this.getPatchedBuild().getId();
+    }
+
     public void run() {
         AbstractStep cloneRepo = new CloneRepository(this);
 
