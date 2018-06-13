@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.entities.Commit;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -15,11 +14,7 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatc
 import fr.inria.spirals.repairnator.process.step.push.CommitProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
-import fr.inria.spirals.repairnator.serializer.SerializerType;
-import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
+import fr.inria.spirals.repairnator.serializer.*;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -37,27 +32,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by urli on 24/04/2017.

@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBugg
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.junit.Before;
 import org.junit.Test;

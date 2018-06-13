@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.step.push;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -28,9 +27,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
