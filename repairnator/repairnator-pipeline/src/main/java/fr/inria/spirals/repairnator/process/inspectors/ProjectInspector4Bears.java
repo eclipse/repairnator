@@ -77,8 +77,10 @@ public class ProjectInspector4Bears extends ProjectInspector {
             }
         }
 
-        super.setFinalStep(new CommitProcessEnd(this));
-        super.getFinalStep().setNextStep(new PushProcessEnd(this));
+        super.setFinalStep(new WritePropertyFile(this));
+        super.getFinalStep()
+                .setNextStep(new CommitProcessEnd(this))
+                .setNextStep(new PushProcessEnd(this));
 
         cloneRepo.setDataSerializer(this.getSerializers());
         cloneRepo.setNotifiers(this.getNotifiers());

@@ -1,22 +1,24 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by urli on 23/03/2017.
  */
 public class JobStatus {
+    private final Logger logger = LoggerFactory.getLogger(JobStatus.class);
+
     private List<PushState> pushStates;
     private List<URL> repairClassPath;
 
@@ -45,6 +47,7 @@ public class JobStatus {
     private Throwable fatalError;
 
     private Metrics metrics;
+    private Properties properties;
     private Metrics4Bears metrics4Bears;
 
     private List<String> createdFilesToPush;
@@ -59,6 +62,7 @@ public class JobStatus {
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
+        this.properties = new Properties();
         this.metrics4Bears = new Metrics4Bears();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
@@ -167,6 +171,20 @@ public class JobStatus {
 
     public Metrics getMetrics() {
         return metrics;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void writeProperty(String propertyName, Object value) {
+        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+            if (value != null) {
+                this.properties.put(propertyName, value);
+            } else {
+                this.logger.warn("Trying to write property null for key: " + propertyName);
+            }
+        }
     }
 
     public Metrics4Bears getMetrics4Bears() {
