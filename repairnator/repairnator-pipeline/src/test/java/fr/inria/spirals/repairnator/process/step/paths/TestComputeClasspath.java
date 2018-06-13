@@ -4,8 +4,8 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
@@ -85,7 +85,7 @@ public class TestComputeClasspath {
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
+                .setNextStep(new BuildProject(inspector))
                 .setNextStep(computeClasspath);
         cloneStep.execute();
 
