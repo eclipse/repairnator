@@ -1,15 +1,16 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -21,16 +22,23 @@ import static org.mockito.Mockito.when;
  */
 public class TestMavenFilterTestOutputHandler {
 
+    private File tmpDir;
+
+    @After
+    public void tearDown() throws IOException {
+        GitHelper.deleteFile(tmpDir);
+    }
+
     @Test
     public void testFilterLogWillWork() throws IOException {
         String resourcePath = "./src/test/resources/build-logs/log-test-failures.txt";
         List<String> lines = Files.readAllLines(new File(resourcePath).toPath());
 
-        Path tmp = Files.createTempDirectory("test-filter");
+        tmpDir = Files.createTempDirectory("test-filter").toFile();
 
-        JobStatus jobStatus = new JobStatus(tmp.toAbsolutePath().toString());
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath());
 
-        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmp.toAbsolutePath().toString());
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir.getAbsolutePath());
 
         MavenHelper mavenHelper = mock(MavenHelper.class);
         when(mavenHelper.getInspector()).thenReturn(inspector);
@@ -53,11 +61,11 @@ public class TestMavenFilterTestOutputHandler {
         String resourcePath = "./src/test/resources/build-logs/log-test-druidio.txt";
         List<String> lines = Files.readAllLines(new File(resourcePath).toPath());
 
-        Path tmp = Files.createTempDirectory("test-filter");
+        tmpDir = Files.createTempDirectory("test-filter").toFile();
 
-        JobStatus jobStatus = new JobStatus(tmp.toAbsolutePath().toString());
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath());
 
-        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmp.toAbsolutePath().toString());
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir.getAbsolutePath());
 
         MavenHelper mavenHelper = mock(MavenHelper.class);
         when(mavenHelper.getInspector()).thenReturn(inspector);

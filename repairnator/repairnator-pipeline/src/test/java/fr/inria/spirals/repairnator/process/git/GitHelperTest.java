@@ -8,14 +8,23 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.junit.After;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 
 public class GitHelperTest {
+
+    private File tmpDir;
+
+    @After
+    public void tearDown() throws IOException {
+        GitHelper.deleteFile(tmpDir);
+    }
+
     @Test
     public void testcomputePatchStats() throws GitAPIException, IOException {
         JobStatus jobStatus = new JobStatus("fakePomDirPath");
@@ -24,8 +33,8 @@ public class GitHelperTest {
         String parentCommit = "2d65266f9a52b27f955ec9a74aa9ab4dac5537d7";
         String commit = "f267c73200e2ebb9431d6ffe80e507222567696c"; // GH says: 14 changed files, 443 additions, 104 deletions,
                                                                     // on java files is: 13 changed files, 405 additions, 104 deletions
-        Path gitDir = java.nio.file.Files.createTempDirectory("jtravis");
-        Git git = Git.cloneRepository().setURI(remoteRepo).setBranch("master").setDirectory(gitDir.toFile()).call();
+        tmpDir = java.nio.file.Files.createTempDirectory("jtravis").toFile();
+        Git git = Git.cloneRepository().setURI(remoteRepo).setBranch("master").setDirectory(tmpDir).call();
 
         RevWalk revwalk = new RevWalk(git.getRepository());
 

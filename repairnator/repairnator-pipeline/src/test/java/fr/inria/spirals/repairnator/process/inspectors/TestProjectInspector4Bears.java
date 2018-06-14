@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
@@ -31,7 +32,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -49,6 +49,8 @@ import static org.mockito.Mockito.*;
  */
 public class TestProjectInspector4Bears {
 
+    private File tmpDir;
+
     @Before
     public void setUp() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -59,8 +61,9 @@ public class TestProjectInspector4Bears {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
+        GitHelper.deleteFile(tmpDir);
     }
 
     private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
@@ -83,9 +86,7 @@ public class TestProjectInspector4Bears {
         long buildIdFailing = 203797975;
 
 
-        Path tmpDirPath = Files.createTempDirectory("test_bears1");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_bears1").toFile();
 
         Build passingBuild = this.checkBuildAndReturn(buildIdPassing, false);
         Build failingBuild = this.checkBuildAndReturn(buildIdFailing, false);
@@ -159,9 +160,7 @@ public class TestProjectInspector4Bears {
         long buildIdPreviousPassing = 201938325;
 
 
-        Path tmpDirPath = Files.createTempDirectory("test_bears2");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_bears2").toFile();
 
         Build passingBuild = this.checkBuildAndReturn(buildIdPassing, false);
         Build previousPassingBuild = this.checkBuildAndReturn(buildIdPreviousPassing, false);

@@ -5,6 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
@@ -21,7 +22,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,14 +34,17 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestTestProject {
 
+    private File tmpDir;
+
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
+        GitHelper.deleteFile(tmpDir);
     }
 
     @Test
@@ -50,9 +53,7 @@ public class TestTestProject {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_testproject");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_testproject").toFile();
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
@@ -83,9 +84,7 @@ public class TestTestProject {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_clone");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_clone").toFile();
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
@@ -116,9 +115,7 @@ public class TestTestProject {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_clone");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_clone").toFile();
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 

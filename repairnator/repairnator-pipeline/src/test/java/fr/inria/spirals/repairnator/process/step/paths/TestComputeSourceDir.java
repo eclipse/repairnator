@@ -5,6 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
@@ -24,7 +25,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,14 +37,17 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestComputeSourceDir {
 
+    private File tmpDir;
+
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
+        GitHelper.deleteFile(tmpDir);
     }
 
     @Test
@@ -53,9 +56,7 @@ public class TestComputeSourceDir {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_computesourcedir").toFile();
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
@@ -93,9 +94,7 @@ public class TestComputeSourceDir {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_computesourcedir2").toFile();
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
@@ -132,9 +131,7 @@ public class TestComputeSourceDir {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_computesourcedir2").toFile();
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
@@ -170,9 +167,7 @@ public class TestComputeSourceDir {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_computesourcedir2").toFile();
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
@@ -210,9 +205,7 @@ public class TestComputeSourceDir {
         Build build = this.checkBuildAndReturn(buildId, false);
         Build patchedBuild = this.checkBuildAndReturn(patchedBuildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir3");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_computesourcedir3").toFile();
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, patchedBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "");
@@ -263,9 +256,7 @@ public class TestComputeSourceDir {
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_computesourcedir2").toFile();
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
@@ -301,9 +292,7 @@ public class TestComputeSourceDir {
 
         Build build = this.checkBuildAndReturn(buildId, true);
 
-        Path tmpDirPath = Files.createTempDirectory("test_computesourcedirOverflow");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_computesourcedirOverflow").toFile();
 
         File repoDir = new File(tmpDir, "repo");
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");

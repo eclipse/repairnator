@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
@@ -33,7 +34,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -50,6 +50,8 @@ import static org.mockito.Mockito.*;
  */
 public class TestProjectInspector {
 
+    private File tmpDir;
+
     @Before
     public void setUp() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -61,17 +63,16 @@ public class TestProjectInspector {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
+        GitHelper.deleteFile(tmpDir);
     }
 
     @Test
     public void testPatchFailingProject() throws IOException, GitAPIException {
         long buildId = 208897371; // surli/failingProject only-one-failing
 
-        Path tmpDirPath = Files.createTempDirectory("test_complete");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_complete").toFile();
 
         Build failingBuild = this.checkBuildAndReturn(buildId, false);
 
@@ -147,9 +148,7 @@ public class TestProjectInspector {
     public void testFailingProjectNotBuildable() throws IOException, GitAPIException {
         long buildId = 228303218; // surli/failingProject only-one-failing
 
-        Path tmpDirPath = Files.createTempDirectory("test_complete2");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_complete2").toFile();
 
         Build failingBuild = this.checkBuildAndReturn(buildId, false);
 
