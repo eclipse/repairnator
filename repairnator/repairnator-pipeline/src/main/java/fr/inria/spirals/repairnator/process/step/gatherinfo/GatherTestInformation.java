@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -105,6 +106,8 @@ public class GatherTestInformation extends AbstractStep {
             this.addStepError(e.getMessage());
         }
 
+
+        JobStatus jobStatus = this.getInspector().getJobStatus();
         for (File surefireDir : surefireDirs) {
             SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[] { surefireDir }),
                     Locale.ENGLISH, null);
@@ -122,12 +125,10 @@ public class GatherTestInformation extends AbstractStep {
                         this.failingModulePath = failingModule.getCanonicalPath();
 
                         if (!this.skipSettingStatusInformation) {
-                            this.getInspector().getJobStatus().setFailingModulePath(this.failingModulePath);
-                            this.writeProperty("failingModule", this.failingModulePath);
-                            this.getInspector().getJobStatus().getMetrics4Bears().getTests().setFailingModule(this.failingModulePath);
+                            jobStatus.setFailingModulePath(this.failingModulePath);
                             getLogger().info("Get the following failing module path: " + failingModulePath);
 
-                            Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+                            Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
                             FailingClass failingClass = metrics4Bears.getTests().addFailingClass(testSuite.getFullClassName());
                             failingClass.setNumberRunning(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped());
                             failingClass.setNumberPassing(testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped() - testSuite.getNumberOfFailures() - testSuite.getNumberOfErrors());
@@ -194,15 +195,9 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         if (!this.skipSettingStatusInformation) {
-            this.writeProperty("error-types", this.failureNames);
-            this.writeProperty("failing-test-cases", this.failureLocations);
-            this.writeProperty("totalNumberFailingTests", this.nbFailingTests);
-            this.writeProperty("totalNumberErroringTests", this.nbErroringTests);
-            this.writeProperty("totalNumberSkippingTests", this.nbSkippingTests);
-            this.writeProperty("totalNumberRunningTests", this.nbTotalTests);
-            this.getInspector().getJobStatus().setFailureLocations(this.failureLocations);
+            jobStatus.setFailureLocations(this.failureLocations);
 
-            Metrics metrics = this.getInspector().getJobStatus().getMetrics();
+            Metrics metrics = jobStatus.getMetrics();
             metrics.setFailureNames(this.failureNames);
             metrics.setNbFailingTests(this.nbFailingTests);
             metrics.setNbRunningTests(this.nbTotalTests);
@@ -210,7 +205,7 @@ public class GatherTestInformation extends AbstractStep {
             metrics.setNbErroringTests(this.nbErroringTests);
             metrics.setNbSucceedingTests(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
 
-            Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+            Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
             Tests tests = metrics4Bears.getTests();
             OverallMetrics overallMetrics = tests.getOverallMetrics();
             overallMetrics.setNumberRunning(this.nbTotalTests);

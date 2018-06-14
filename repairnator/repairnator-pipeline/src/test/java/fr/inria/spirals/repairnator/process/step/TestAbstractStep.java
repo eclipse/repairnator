@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -45,26 +44,6 @@ public class TestAbstractStep {
     @After
     public void tearDown() {
         RepairnatorConfig.deleteInstance();
-    }
-
-    @Test
-    public void testSetPropertiesWillGivePropertiesToOtherSteps() {
-        ProjectInspector mockInspector = mock(ProjectInspector.class);
-        JobStatus jobStatus = new JobStatus("");
-        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
-
-        AbstractStep step1 = new AbstractStepNop(mockInspector);
-        AbstractStep step2 = new AbstractStepNop(mockInspector);
-        AbstractStep step3 = new AbstractStepNop(mockInspector);
-
-        Properties properties = new Properties();
-        properties.setProperty("testvalue", "toto");
-        properties.setProperty("anotherone","foo");
-
-        step1.setNextStep(step2).setNextStep(step3);
-        step1.setProperties(properties);
-
-        assertThat(step3.getProperties(), is(properties));
     }
 
     @Test

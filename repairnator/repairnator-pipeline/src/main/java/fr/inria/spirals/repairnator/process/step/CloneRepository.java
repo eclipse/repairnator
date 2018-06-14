@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -48,8 +49,10 @@ public class CloneRepository extends AbstractStep {
     }
 
     private void writeProperties() {
-        this.writeProperty("hostname", Utils.getHostname());
-        this.writeProperty("repo", this.getInspector().getRepoSlug());
+        JobStatus jobStatus = this.getInspector().getJobStatus();
+
+        jobStatus.writeProperty("hostname", Utils.getHostname());
+        jobStatus.writeProperty("repo", this.getInspector().getRepoSlug());
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             this.getInspector().getJobStatus().getMetrics4Bears().setVersion("Bears 1.0");
@@ -82,17 +85,17 @@ public class CloneRepository extends AbstractStep {
 
         switch (this.getInspector().getBuildToBeInspected().getStatus()) {
             case ONLY_FAIL:
-                this.writeProperty("bugType", "only_fail");
+                jobStatus.writeProperty("bugType", "only_fail");
                 this.getInspector().getJobStatus().getMetrics4Bears().setType("only_fail");
                 break;
 
             case FAILING_AND_PASSING:
-                this.writeProperty("bugType", "failing_passing");
+                jobStatus.writeProperty("bugType", "failing_passing");
                 this.getInspector().getJobStatus().getMetrics4Bears().setType("failing_passing");
                 break;
 
             case PASSING_AND_PASSING_WITH_TEST_CHANGES:
-                this.writeProperty("bugType", "passing_passing");
+                jobStatus.writeProperty("bugType", "passing_passing");
                 this.getInspector().getJobStatus().getMetrics4Bears().setType("passing_passing");
                 break;
         }

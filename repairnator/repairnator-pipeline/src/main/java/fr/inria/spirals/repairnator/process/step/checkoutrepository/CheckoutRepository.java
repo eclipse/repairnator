@@ -5,6 +5,7 @@ import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
@@ -42,8 +43,9 @@ public abstract class CheckoutRepository extends AbstractStep {
     @Override
     protected StepStatus businessExecute() {
 
-        Metrics metric = this.getInspector().getJobStatus().getMetrics();
-        Metrics4Bears metrics4Bears = this.getInspector().getJobStatus().getMetrics4Bears();
+        JobStatus jobStatus = this.getInspector().getJobStatus();
+        Metrics metric = jobStatus.getMetrics();
+        Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
         Commit commit;
 
         Git git;
@@ -100,13 +102,13 @@ public abstract class CheckoutRepository extends AbstractStep {
                 if (obsPrInformation.isPresent()) {
                     PullRequest prInformation = obsPrInformation.get();
                     if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
-                        this.writeProperty("is-pr", "true");
-                        this.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getFullName());
-                        this.writeProperty("pr-head-commit-id", prInformation.getHead().getSHA1());
-                        this.writeProperty("pr-head-commit-id-url", prInformation.getHead().getHtmlUrl());
-                        this.writeProperty("pr-base-commit-id", prInformation.getBase().getSHA1());
-                        this.writeProperty("pr-base-commit-id-url", prInformation.getBase().getHtmlUrl());
-                        this.writeProperty("pr-id", build.getPullRequestNumber());
+                        jobStatus.writeProperty("is-pr", "true");
+                        jobStatus.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getFullName());
+                        jobStatus.writeProperty("pr-head-commit-id", prInformation.getHead().getSHA1());
+                        jobStatus.writeProperty("pr-head-commit-id-url", prInformation.getHead().getHtmlUrl());
+                        jobStatus.writeProperty("pr-base-commit-id", prInformation.getBase().getSHA1());
+                        jobStatus.writeProperty("pr-base-commit-id-url", prInformation.getBase().getHtmlUrl());
+                        jobStatus.writeProperty("pr-id", build.getPullRequestNumber());
 
                         commit = this.createCommitForMetrics(prInformation, false);
                         metrics4Bears.getCommits().setFixerBuildForkRepo(commit);
@@ -166,7 +168,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                         PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
                         git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
                     }
-                    this.writeProperty("bugCommit", this.getInspector().getBuggyBuild().getCommit().getCompareUrl());
+                    jobStatus.writeProperty("bugCommit", this.getInspector().getBuggyBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
                     return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
