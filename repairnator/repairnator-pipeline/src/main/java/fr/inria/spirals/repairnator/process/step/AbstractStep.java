@@ -1,19 +1,14 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -26,9 +21,6 @@ import java.util.*;
  * Created by urli on 03/01/2017.
  */
 public abstract class AbstractStep {
-    private static final String PROPERTY_FILENAME = "repairnator.json";
-    private static final String PROPERTY_FILENAME_BEARS = "bears.json";
-
     /**
      * The name of the step, by default it's the class name
      * We can use a custom name to distinguish two different instances.
@@ -46,7 +38,6 @@ public abstract class AbstractStep {
     private boolean pomLocationTested;
     private List<AbstractDataSerializer> serializers;
     private List<AbstractNotifier> notifiers;
-    private Properties properties;
     private RepairnatorConfig config;
 
     private StepStatus stepStatus;
@@ -67,7 +58,6 @@ public abstract class AbstractStep {
         this.shouldStop = false;
         this.pomLocationTested = false;
         this.serializers = new ArrayList<>();
-        this.properties = new Properties();
         this.config = RepairnatorConfig.getInstance();
         this.blockingStep = blockingStep;
         this.setProjectInspector(inspector);
@@ -94,17 +84,6 @@ public abstract class AbstractStep {
                 this.nextStep.setNotifiers(notifiers);
             }
         }
-    }
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-        if (this.nextStep != null) {
-            this.nextStep.setProperties(properties);
-        }
-    }
-
-    protected Properties getProperties() {
-        return properties;
     }
 
     public String getName() {
@@ -136,7 +115,6 @@ public abstract class AbstractStep {
         this.nextStep = nextStep;
         nextStep.setDataSerializer(this.serializers);
         nextStep.setNotifiers(this.notifiers);
-        nextStep.setProperties(this.properties);
         return nextStep;
     }
 
@@ -210,7 +188,7 @@ public abstract class AbstractStep {
 
     private void testPomLocation() {
         this.pomLocationTested = true;
-        File defaultPomFile = new File(this.inspector.getRepoLocalPath() + File.separator + "pom.xml");
+        File defaultPomFile = new File(this.inspector.getRepoLocalPath() + File.separator + Utils.POM_FILE);
 
         if (defaultPomFile.exists()) {
             return;
@@ -236,8 +214,8 @@ public abstract class AbstractStep {
                         continue;
                     }
 
-                    File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
-
+                    File pomFile = new File(dir.getPath()+File.separator+Utils.POM_FILE);
+                  
                     if (pomFile.exists()) {
                         this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
                         this.inspector.getJobStatus().setPomDirPath(dir.getPath());
@@ -255,7 +233,7 @@ public abstract class AbstractStep {
         if (!pomLocationTested) {
             testPomLocation();
         }
-        return this.inspector.getJobStatus().getPomDirPath() + File.separator + "pom.xml";
+        return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }
 
     protected void cleanMavenArtifacts() {
@@ -328,8 +306,6 @@ public abstract class AbstractStep {
         if (!this.inspector.isPipelineEnding()) {
             this.inspector.setPipelineEnding(true);
             this.recordMetrics();
-            this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
-            this.writeBearsJsonFile();
             if (this.inspector.getFinalStep() != null) {
                 this.inspector.getFinalStep().execute();
             }
@@ -345,6 +321,8 @@ public abstract class AbstractStep {
         metric.setFreeMemory(Runtime.getRuntime().freeMemory());
         metric.setTotalMemory(Runtime.getRuntime().totalMemory());
         metric.setNbCPU(Runtime.getRuntime().availableProcessors());
+
+        this.getInspector().getJobStatus().writeProperty("metrics", metric);
     }
 
     public Date getDateBegin() {
@@ -360,45 +338,6 @@ public abstract class AbstractStep {
             return 0;
         }
         return Math.round((timeEnd - timeBegin) / 1000);
-    }
-
-    protected void writeProperty(String propertyName, Object value) {
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            if (value != null) {
-                this.properties.put(propertyName, value);
-
-                String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
-                Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-                String jsonString = gson.toJson(this.properties);
-
-                this.writeJsonFile(filePath, jsonString);
-            } else {
-                this.getLogger().warn("Trying to write property null for key: " + propertyName);
-            }
-        }
-    }
-
-    private void writeBearsJsonFile() {
-        String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
-        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics4Bears.class, new MetricsSerializerAdapter4Bears()).create();
-        String jsonString = gson.toJson(this.getInspector().getJobStatus().getMetrics4Bears());
-        this.writeJsonFile(filePath, jsonString);
-    }
-
-    private void writeJsonFile(String filePath, String jsonString) {
-        File file = new File(filePath);
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
-            outputStream.write(jsonString);
-            outputStream.flush();
-            outputStream.close();
-            this.getInspector().getJobStatus().addFileToPush(file.getName());
-        } catch (IOException e) {
-            this.getLogger().error("Cannot write property to the following file: " + file.getPath(), e);
-        }
     }
 
     public RepairnatorConfig getConfig() {

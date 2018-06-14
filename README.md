@@ -76,7 +76,7 @@ ls $HOME_REPAIR/logs
 
 ### Launch Repairnator to analyze and repair failing builds in real-time
 
-You can launch Repairnator to analyze TravisCI builds in realtime and to repair failing ones.
+You can launch Repairnator to analyze Travis CI builds in realtime and to repair failing ones.
 
 First open your `repairnator.cfg` config file (see above) and edit the values under `Realtime scanner configuration` section:
   - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
@@ -84,7 +84,15 @@ First open your `repairnator.cfg` config file (see above) and edit the values un
   
 Then just run the script `launch_rtscanner.sh`.
 
-For more information about the usage of Repairnator check out [this page](/doc/usage.md).
+* this generates build reproduction info and patches as local files in a folder called `logs/`
+* in this default setup, no MongoDB is used, no email notification is done
+
+For more information about the configuration of a Repairnator instance:
+
+* check out [this page](/doc/usage.md).
+* the MongoDB configuration is explained in `repairnator.cfg`
+* the email configuration is explained in `repairnator.cfg`
+
 
 ## Content of the repository
 

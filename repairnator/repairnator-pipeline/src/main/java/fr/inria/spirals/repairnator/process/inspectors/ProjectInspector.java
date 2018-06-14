@@ -190,6 +190,7 @@ public class ProjectInspector {
 
 
             this.finalStep.
+                    setNextStep(new WritePropertyFile(this)).
                     setNextStep(new CommitProcessEnd(this)).
                     setNextStep(new PushProcessEnd(this));
 

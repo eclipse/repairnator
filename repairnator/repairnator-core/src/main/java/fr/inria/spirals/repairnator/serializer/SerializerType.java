@@ -8,7 +8,6 @@ public enum SerializerType {
     INSPECTOR("inspector"),
     INSPECTOR4BEARS("inspector4bears"),
     TIMES("times"),
-    TIMES4BEARS("times4bears"),
     PIPELINE_ERRORS("pipeline-errors"),
     PATCHES("patches"),
     TOOL_DIAGNOSTIC("tool-diagnostic"),
@@ -22,7 +21,8 @@ public enum SerializerType {
     SCANNER("scanner"),
     SCANNER4BEARS("scanner4bears"),
     HARDWARE_INFO("hardwareInfo"),
-    METRICS("bearmetrics"),
+    METRICS("metrics"),
+    METRICS4BEARS("metrics4bears"),
     RTSCANNER("rtscanner"),
     BLACKLISTED("blacklisted")
     ;

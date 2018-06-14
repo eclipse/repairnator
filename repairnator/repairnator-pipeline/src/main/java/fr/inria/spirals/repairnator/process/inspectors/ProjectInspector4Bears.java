@@ -35,6 +35,10 @@ public class ProjectInspector4Bears extends ProjectInspector {
         this.bug = false;
     }
 
+    public String getRemoteBranchName() {
+        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + this.getPatchedBuild().getId();
+    }
+
     public void run() {
         AbstractStep cloneRepo = new CloneRepository(this);
 
@@ -77,8 +81,10 @@ public class ProjectInspector4Bears extends ProjectInspector {
             }
         }
 
-        super.setFinalStep(new CommitProcessEnd(this));
-        super.getFinalStep().setNextStep(new PushProcessEnd(this));
+        super.setFinalStep(new WritePropertyFile(this));
+        super.getFinalStep()
+                .setNextStep(new CommitProcessEnd(this))
+                .setNextStep(new PushProcessEnd(this));
 
         cloneRepo.setDataSerializer(this.getSerializers());
         cloneRepo.setNotifiers(this.getNotifiers());

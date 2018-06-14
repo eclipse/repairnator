@@ -47,15 +47,17 @@ public class ComputeSourceDir extends AbstractStep {
         List<File> result = new ArrayList<File>();
         File defaultSourceDir = new File(incriminatedModulePath + DEFAULT_SRC_DIR);
 
+        boolean wasDefaultSourceDirFound = false;
         if (defaultSourceDir.exists()) {
+            wasDefaultSourceDirFound = true;
             result.add(defaultSourceDir);
             if (!this.allModules) {
                 return result.toArray(new File[result.size()]);
             }
+        } else {
+            this.getLogger().debug("The default source directory (" + defaultSourceDir.getPath()
+                    + ") does not exists. Try to read pom.xml to get information.");
         }
-
-        this.getLogger().debug("The default source directory (" + defaultSourceDir.getPath()
-                + ") does not exists. Try to read pom.xml to get informations.");
         File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
         if (!pomIncriminatedModule.exists()) {
@@ -72,23 +74,25 @@ public class ComputeSourceDir extends AbstractStep {
         try {
             Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.getInspector().getM2LocalPath());
 
-            Build buildSection = model.getBuild();
+            if (!wasDefaultSourceDirFound) {
+                Build buildSection = model.getBuild();
 
-            if (buildSection != null) {
-                String pathSrcDirFromPom = model.getBuild().getSourceDirectory();
+                if (buildSection != null) {
+                    String pathSrcDirFromPom = buildSection.getSourceDirectory();
 
-                File srcDirFromPom = new File(pathSrcDirFromPom);
+                    File srcDirFromPom = new File(pathSrcDirFromPom);
 
-                if (srcDirFromPom.exists()) {
-                    result.add(srcDirFromPom);
-                    return result.toArray(new File[result.size()]);
+                    if (srcDirFromPom.exists()) {
+                        result.add(srcDirFromPom);
+                        return result.toArray(new File[result.size()]);
+                    }
+
+                    this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
+                            + ") does not exists. Try to get source dir from all modules if multimodule.");
+                } else {
+                    this.getLogger().debug(
+                            "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
                 }
-
-                this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
-                        + ") does not exists. Try to get source dir from all modules if multimodule.");
-            } else {
-                this.getLogger().debug(
-                        "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
             }
 
             for (String module : model.getModules()) {

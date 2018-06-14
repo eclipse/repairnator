@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.paths;
 
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -62,7 +63,7 @@ public class ComputeClasspath extends AbstractStep {
         properties.setProperty("mdep.outputFile", CLASSPATH_FILENAME);
 
         String goal = "dependency:build-classpath";
-        String pomModule = incriminatedModule + File.separator + "pom.xml";
+        String pomModule = incriminatedModule + File.separator + Utils.POM_FILE;
 
         MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(),
                 this.getInspector(), true);

@@ -43,7 +43,8 @@ public class TestProject extends AbstractStep {
             return StepStatus.buildSuccess(this);
         } else {
             if (outputTestFilter.isFailingWithTest()) {
-                this.getLogger().debug(outputTestFilter.getFailingTests() + " tests failed, go to next step.");
+                this.getLogger().debug(outputTestFilter.getFailingTests() + " tests failed, "
+                        + outputTestFilter.getErroringTests() + " tests have error.");
                 return StepStatus.buildSuccess(this);
             } else {
                 this.addStepError("Error while testing the project.");

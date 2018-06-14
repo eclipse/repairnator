@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -17,7 +18,6 @@ import java.io.IOException;
  * Created by urli on 03/01/2017.
  */
 public class CloneRepository extends AbstractStep {
-    public static final String GITHUB_ROOT_REPO = "https://github.com/";
 
     protected Build build;
 
@@ -28,12 +28,12 @@ public class CloneRepository extends AbstractStep {
 
     @Override
     protected StepStatus businessExecute() {
-        String repository = this.build.getRepository().getSlug();
-        String repoRemotePath = GITHUB_ROOT_REPO + repository + ".git";
+        String repoSlug = this.build.getRepository().getSlug();
+        String repoRemotePath = Utils.getCompleteGithubRepoUrl(repoSlug);
         String repoLocalPath = this.getInspector().getRepoLocalPath();
 
         try {
-            this.getLogger().debug("Cloning repository " + repository + " in the following directory: " + repoLocalPath);
+            this.getLogger().debug("Cloning repository " + repoSlug + " in the following directory: " + repoLocalPath);
 
             Git.cloneRepository().setCloneSubmodules(true).setURI(repoRemotePath).setDirectory(new File(repoLocalPath)).call();
 
@@ -41,7 +41,7 @@ public class CloneRepository extends AbstractStep {
 
             return StepStatus.buildSuccess(this);
         } catch (Exception e) {
-            this.getLogger().warn("Repository " + repository + " cannot be cloned.");
+            this.getLogger().warn("Repository " + repoSlug + " cannot be cloned.");
             this.getLogger().debug(e.toString());
             this.addStepError(e.getMessage());
             return StepStatus.buildError(this, PipelineState.NOTCLONABLE);
@@ -49,8 +49,10 @@ public class CloneRepository extends AbstractStep {
     }
 
     private void writeProperties() {
-        this.writeProperty("hostname", Utils.getHostname());
-        this.writeProperty("repo", this.getInspector().getRepoSlug());
+        JobStatus jobStatus = this.getInspector().getJobStatus();
+
+        jobStatus.writeProperty("hostname", Utils.getHostname());
+        jobStatus.writeProperty("repo", this.getInspector().getRepoSlug());
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             this.getInspector().getJobStatus().getMetrics4Bears().setVersion("Bears 1.0");
@@ -58,7 +60,7 @@ public class CloneRepository extends AbstractStep {
 
         fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository.Repository repository = this.getInspector().getJobStatus().getMetrics4Bears().getRepository();
         repository.setName(this.getInspector().getRepoSlug());
-        repository.setUrl(GITHUB_ROOT_REPO + this.getInspector().getRepoSlug());
+        repository.setUrl(Utils.getSimpleGithubRepoUrl(this.getInspector().getRepoSlug()));
 
         if (this.build.isPullRequest()) {
             repository.setIsPullRequest(true);
@@ -74,7 +76,7 @@ public class CloneRepository extends AbstractStep {
                 repository.setIsFork(true);
                 repository.getOriginal().setName(repo.getParent().getFullName());
                 repository.getOriginal().setGithubId(repo.getParent().getId());
-                repository.getOriginal().setUrl(GITHUB_ROOT_REPO + repo.getParent().getFullName());
+                repository.getOriginal().setUrl(Utils.getSimpleGithubRepoUrl(repo.getParent().getFullName()));
             }
         } catch (IOException e) {
             this.getLogger().warn("It was not possible to retrieve information to check if " + this.getInspector().getRepoSlug() + " is a fork.");
@@ -83,17 +85,17 @@ public class CloneRepository extends AbstractStep {
 
         switch (this.getInspector().getBuildToBeInspected().getStatus()) {
             case ONLY_FAIL:
-                this.writeProperty("bugType", "only_fail");
+                jobStatus.writeProperty("bugType", "only_fail");
                 this.getInspector().getJobStatus().getMetrics4Bears().setType("only_fail");
                 break;
 
             case FAILING_AND_PASSING:
-                this.writeProperty("bugType", "failing_passing");
+                jobStatus.writeProperty("bugType", "failing_passing");
                 this.getInspector().getJobStatus().getMetrics4Bears().setType("failing_passing");
                 break;
 
             case PASSING_AND_PASSING_WITH_TEST_CHANGES:
-                this.writeProperty("bugType", "passing_passing");
+                jobStatus.writeProperty("bugType", "passing_passing");
                 this.getInspector().getJobStatus().getMetrics4Bears().setType("passing_passing");
                 break;
         }
