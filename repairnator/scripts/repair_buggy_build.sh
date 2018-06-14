@@ -35,6 +35,7 @@ else
     BUILD_ID=$1
 fi
 
+
 if ! [[ $BUILD_ID =~ $re ]]; then
     echo "Build id should be a number"
     usage

@@ -57,7 +57,7 @@ fi
 
 echo "Elementary args for scanner: $elementaryArgs"
 echo "Supplementary args for scanner: $supplementaryArgs"
-java -jar $REPAIRNATOR_SCANNER_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/scanner_$RUN_ID.log
+java $JAVA_OPTS -jar $REPAIRNATOR_SCANNER_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/scanner_$RUN_ID.log
 
 echo "Scanner finished."
 if [ "$DELETE_RUN_DIR" -eq 1 ]; then
