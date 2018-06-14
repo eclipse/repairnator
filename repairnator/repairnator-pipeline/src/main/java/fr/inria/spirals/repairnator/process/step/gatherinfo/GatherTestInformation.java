@@ -126,8 +126,6 @@ public class GatherTestInformation extends AbstractStep {
 
                         if (!this.skipSettingStatusInformation) {
                             jobStatus.setFailingModulePath(this.failingModulePath);
-                            jobStatus.writeProperty("failingModule", this.failingModulePath);
-                            jobStatus.getMetrics4Bears().getTests().setFailingModule(this.failingModulePath);
                             getLogger().info("Get the following failing module path: " + failingModulePath);
 
                             Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
@@ -197,12 +195,6 @@ public class GatherTestInformation extends AbstractStep {
         }
 
         if (!this.skipSettingStatusInformation) {
-            jobStatus.writeProperty("error-types", this.failureNames);
-            jobStatus.writeProperty("failing-test-cases", this.failureLocations);
-            jobStatus.writeProperty("totalNumberFailingTests", this.nbFailingTests);
-            jobStatus.writeProperty("totalNumberErroringTests", this.nbErroringTests);
-            jobStatus.writeProperty("totalNumberSkippingTests", this.nbSkippingTests);
-            jobStatus.writeProperty("totalNumberRunningTests", this.nbTotalTests);
             jobStatus.setFailureLocations(this.failureLocations);
 
             Metrics metrics = jobStatus.getMetrics();

@@ -32,17 +32,13 @@ public class WritePropertyFile extends AbstractStep {
         String filePath;
         Gson gson;
         String jsonString;
-        boolean repairnatorFileSuccessfullyWritten;
         boolean bearsFileSuccessfullyWritten;
 
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
             gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
             jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties());
-            repairnatorFileSuccessfullyWritten = this.writeJsonFile(filePath, jsonString);
-            if (!repairnatorFileSuccessfullyWritten) {
-                this.addStepError("Fail to write the property file " + PROPERTY_FILENAME);
-            }
+            this.writeJsonFile(filePath, jsonString);
         }
 
         filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
@@ -50,7 +46,6 @@ public class WritePropertyFile extends AbstractStep {
         jsonString = gson.toJson(this.getInspector().getJobStatus().getMetrics4Bears());
         bearsFileSuccessfullyWritten = this.writeJsonFile(filePath, jsonString);
         if (!bearsFileSuccessfullyWritten) {
-            this.addStepError("Fail to write the property file " + PROPERTY_FILENAME_BEARS);
             return StepStatus.buildError(this, PipelineState.PROPERTY_FILE_NOT_WRITTEN);
         }
 
@@ -71,6 +66,7 @@ public class WritePropertyFile extends AbstractStep {
             return true;
         } catch (IOException e) {
             this.getLogger().error("An exception occurred when writing the following property file: " + file.getPath(), e);
+            this.addStepError("Fail to write the property file " + file.getPath());
         }
         return false;
     }

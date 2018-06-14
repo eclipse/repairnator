@@ -131,6 +131,8 @@ public class JobStatus {
 
     public void setFailingModulePath(String failingModulePath) {
         this.failingModulePath = failingModulePath;
+        this.writeProperty("failingModule", this.failingModulePath);
+        this.metrics4Bears.getTests().setFailingModule(this.failingModulePath);
     }
 
     public Collection<FailureLocation> getFailureLocations() {
@@ -139,6 +141,7 @@ public class JobStatus {
 
     public void setFailureLocations(Collection<FailureLocation> failureLocations) {
         this.failureLocations = failureLocations;
+        this.writeProperty("failing-test-cases", this.failureLocations);
     }
 
     public String getGitBranchUrl() {
