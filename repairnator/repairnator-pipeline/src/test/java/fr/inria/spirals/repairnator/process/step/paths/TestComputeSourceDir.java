@@ -84,14 +84,13 @@ public class TestComputeSourceDir {
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
                 .setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus computeSourceDirStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
         assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
 
         for (StepStatus stepStatus : stepStatusList) {
