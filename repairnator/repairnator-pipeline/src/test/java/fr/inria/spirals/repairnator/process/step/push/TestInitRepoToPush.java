@@ -88,6 +88,7 @@ public class TestInitRepoToPush {
         assertThat(iterator.hasNext(), is(false));
     }
 
+    // FIXME: this test should be moved from here
     @Test
     public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
         long buildId = 331637757;

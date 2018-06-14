@@ -51,13 +51,31 @@ public class TestProjectInspector4Bears {
 
     private File tmpDir;
 
+    private SerializerEngine serializerEngine;
+    private List<AbstractDataSerializer> serializers;
+    private NotifierEngine notifierEngine;
+    private List<AbstractNotifier> notifiers;
+
     @Before
     public void setUp() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.BEARS);
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setPush(true);
         config.setPushRemoteRepo("");
         Utils.setLoggersLevel(Level.ERROR);
+
+        serializerEngine = mock(SerializerEngine.class);
+        List<SerializerEngine> serializerEngines = new ArrayList<>();
+        serializerEngines.add(serializerEngine);
+        serializers = new ArrayList<>();
+        serializers.add(new InspectorSerializer4Bears(serializerEngines));
+
+        notifierEngine = mock(NotifierEngine.class);
+        List<NotifierEngine> notifierEngines = new ArrayList<>();
+        notifierEngines.add(notifierEngine);
+        notifiers = new ArrayList<>();
+        notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
     }
 
     @After
@@ -66,51 +84,17 @@ public class TestProjectInspector4Bears {
         GitHelper.deleteFile(tmpDir);
     }
 
-    private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
-        for (StepStatus stepStatus : statuses) {
-            if (!expectedValues.containsKey(stepStatus.getStep().getClass())) {
-                assertThat("Step failing: "+stepStatus, stepStatus.isSuccess(), is(true));
-            } else {
-                StepStatus.StatusKind expectedStatus = expectedValues.get(stepStatus.getStep().getClass());
-                assertThat("Status was not as expected" + stepStatus, stepStatus.getStatus(), is(expectedStatus));
-                expectedValues.remove(stepStatus.getStep().getClass());
-            }
-        }
-
-        assertThat(expectedValues.isEmpty(), is(true));
-    }
-
     @Test
     public void testFailingPassingProject() throws IOException, GitAPIException {
         long buildIdPassing = 203800961;
         long buildIdFailing = 203797975;
-
 
         tmpDir = Files.createTempDirectory("test_bears1").toFile();
 
         Build passingBuild = this.checkBuildAndReturn(buildIdPassing, false);
         Build failingBuild = this.checkBuildAndReturn(buildIdFailing, false);
 
-
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, passingBuild, ScannedBuildStatus.FAILING_AND_PASSING, "test");
-
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-        List<AbstractNotifier> notifiers = new ArrayList<>();
-
-        List<SerializerEngine> serializerEngines = new ArrayList<>();
-        SerializerEngine serializerEngine = mock(SerializerEngine.class);
-        serializerEngines.add(serializerEngine);
-
-        List<NotifierEngine> notifierEngines = new ArrayList<>();
-        NotifierEngine notifierEngine = mock(NotifierEngine.class);
-        notifierEngines.add(notifierEngine);
-
-        serializers.add(new InspectorSerializer4Bears(serializerEngines));
-
-        notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
-
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.BEARS);
 
         ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
         inspector.run();
@@ -159,31 +143,12 @@ public class TestProjectInspector4Bears {
         long buildIdPassing = 201938881;
         long buildIdPreviousPassing = 201938325;
 
-
         tmpDir = Files.createTempDirectory("test_bears2").toFile();
 
         Build passingBuild = this.checkBuildAndReturn(buildIdPassing, false);
         Build previousPassingBuild = this.checkBuildAndReturn(buildIdPreviousPassing, false);
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(previousPassingBuild, passingBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "test");
-
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-        List<AbstractNotifier> notifiers = new ArrayList<>();
-
-        List<SerializerEngine> serializerEngines = new ArrayList<>();
-        SerializerEngine serializerEngine = mock(SerializerEngine.class);
-        serializerEngines.add(serializerEngine);
-
-        List<NotifierEngine> notifierEngines = new ArrayList<>();
-        NotifierEngine notifierEngine = mock(NotifierEngine.class);
-        notifierEngines.add(notifierEngine);
-
-        serializers.add(new InspectorSerializer4Bears(serializerEngines));
-
-        notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
-
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.BEARS);
 
         ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
         inspector.run();
@@ -239,5 +204,19 @@ public class TestProjectInspector4Bears {
         assertThat(build.isPullRequest(), Is.is(isPR));
 
         return build;
+    }
+
+    private void checkStepStatus(List<StepStatus> statuses, Map<Class<? extends AbstractStep>,StepStatus.StatusKind> expectedValues) {
+        for (StepStatus stepStatus : statuses) {
+            if (!expectedValues.containsKey(stepStatus.getStep().getClass())) {
+                assertThat("Step failing: "+stepStatus, stepStatus.isSuccess(), is(true));
+            } else {
+                StepStatus.StatusKind expectedStatus = expectedValues.get(stepStatus.getStep().getClass());
+                assertThat("Status was not as expected" + stepStatus, stepStatus.getStatus(), is(expectedStatus));
+                expectedValues.remove(stepStatus.getStep().getClass());
+            }
+        }
+
+        assertThat(expectedValues.isEmpty(), is(true));
     }
 }

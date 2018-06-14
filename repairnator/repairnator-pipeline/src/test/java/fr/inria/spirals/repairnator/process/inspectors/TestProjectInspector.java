@@ -55,6 +55,7 @@ public class TestProjectInspector {
     @Before
     public void setUp() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.REPAIR);
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setPush(true);
         config.setPushRemoteRepo("");
@@ -92,9 +93,6 @@ public class TestProjectInspector {
         serializers.add(new InspectorSerializer(serializerEngines));
         serializers.add(new PatchesSerializer(serializerEngines));
         serializers.add(new ToolDiagnosticSerializer(serializerEngines));
-
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.REPAIR);
 
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
         inspector.setPatchNotifier(new PatchNotifier(notifierEngines));
@@ -162,9 +160,6 @@ public class TestProjectInspector {
         serializerEngines.add(serializerEngine);
 
         serializers.add(new InspectorSerializer(serializerEngines));
-
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.REPAIR);
 
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
         inspector.run();
