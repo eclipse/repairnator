@@ -5,7 +5,6 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -56,7 +55,7 @@ public class TestCheckoutBuggyBuildSourceCode {
     }
 
     @Test
-    public void testCheckoutPreviousBuildSourceCodeNoPR() throws IOException, GitAPIException, RepairnatorConfigException {
+    public void testCheckoutPreviousBuildSourceCodeNoPR() throws IOException, GitAPIException {
         long buildId = 221992429; // INRIA/spoon
         long previousBuildId = 218213030;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
@@ -137,7 +136,7 @@ public class TestCheckoutBuggyBuildSourceCode {
     }
 
     @Test
-    public void testCheckoutPreviousBuildSourceCodeNoPR2() throws IOException, GitAPIException, RepairnatorConfigException {
+    public void testCheckoutPreviousBuildSourceCodeNoPR2() throws IOException, GitAPIException {
         long buildId = 222020421; // alibaba/fastjson
         long previousBuildId = 222016611;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
@@ -218,7 +217,7 @@ public class TestCheckoutBuggyBuildSourceCode {
     }
 
     @Test
-    public void testCheckoutPreviousBuildSourceCodeWithPR() throws IOException, GitAPIException, RepairnatorConfigException {
+    public void testCheckoutPreviousBuildSourceCodeWithPR() throws IOException, GitAPIException {
         long buildId = 223248816; // HubSpot/Singularity
         long previousBuildId = 222209171;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;

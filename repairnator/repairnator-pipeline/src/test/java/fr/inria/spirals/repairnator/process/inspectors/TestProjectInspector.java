@@ -143,7 +143,7 @@ public class TestProjectInspector {
     }
 
     @Test
-    public void testFailingProjectNotBuildable() throws IOException, GitAPIException {
+    public void testFailingProjectNotBuildable() throws IOException {
         long buildId = 228303218; // surli/failingProject only-one-failing
 
         tmpDir = Files.createTempDirectory("test_complete2").toFile();

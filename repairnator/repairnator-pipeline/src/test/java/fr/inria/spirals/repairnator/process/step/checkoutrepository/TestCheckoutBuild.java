@@ -5,7 +5,6 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -54,7 +53,7 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuggyBuild() throws IOException, GitAPIException, RepairnatorConfigException {
+    public void testCheckoutBuggyBuild() throws IOException, GitAPIException {
         long buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
@@ -109,7 +108,7 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuildFromPRWithMissingMerge() throws IOException, GitAPIException {
+    public void testCheckoutBuildFromPRWithMissingMerge() throws IOException {
         long buildId = 199527447; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, true);
@@ -147,7 +146,7 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuildFromPRWithMerge() throws IOException, GitAPIException {
+    public void testCheckoutBuildFromPRWithMerge() throws IOException {
         long buildId = 199923736; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, true);
@@ -179,7 +178,7 @@ public class TestCheckoutBuild {
     }
 
     @Test
-    public void testCheckoutBuildFromPROtherRepo() throws IOException, GitAPIException {
+    public void testCheckoutBuildFromPROtherRepo() throws IOException {
         long buildId = 196568333; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, true);

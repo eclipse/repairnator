@@ -5,7 +5,6 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -53,7 +52,7 @@ public class TestInitRepoToPush {
     }
 
     @Test
-    public void testInitRepoToPushSimpleCase() throws IOException, GitAPIException, RepairnatorConfigException {
+    public void testInitRepoToPushSimpleCase() throws IOException, GitAPIException {
         long buildId = 207924136; // surli/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
