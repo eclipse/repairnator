@@ -97,11 +97,14 @@ public class ComputeClasspath extends AbstractStep {
             this.addStepError("Problem while getting classpath: " + e);
         }
 
+        int numberLibraries = 0;
         boolean containJunit = false;
         for (URL url : classPath) {
             if (url.toString().contains("junit")) {
                 containJunit = true;
-                break;
+            }
+            if (url.toString().endsWith(".jar")) {
+                numberLibraries++;
             }
         }
 
@@ -110,8 +113,8 @@ public class ComputeClasspath extends AbstractStep {
         }
 
         this.getInspector().getJobStatus().setRepairClassPath(this.classPath);
-        this.getInspector().getJobStatus().getMetrics().setNbLibraries(this.classPath.size() - 2);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberLibraries(this.classPath.size() - 2);
+        this.getInspector().getJobStatus().getMetrics().setNbLibraries(numberLibraries);
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberLibraries(numberLibraries);
 
         return StepStatus.buildSuccess(this);
     }
