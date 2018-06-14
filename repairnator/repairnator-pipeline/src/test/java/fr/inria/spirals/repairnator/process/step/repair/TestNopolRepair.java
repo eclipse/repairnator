@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.hamcrest.core.Is;
@@ -41,21 +42,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestNopolRepair {
 
-    private static final String SOLVER_PATH_DIR = "src/test/resources/z3/";
-    private static final String SOLVER_NAME_LINUX = "z3_for_linux";
-    private static final String SOLVER_NAME_MAC = "z3_for_mac";
-
     @Before
     public void setup() {
-        String solverPath;
-        if (isMac()) {
-            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_MAC;
-        } else {
-            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_LINUX;
-        }
-
         RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setZ3solverPath(solverPath);
+        config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setRepairTools(Collections.singleton(NopolRepair.TOOL_NAME));
         Utils.setLoggersLevel(Level.ERROR);
     }
@@ -63,11 +53,6 @@ public class TestNopolRepair {
     @After
     public void tearDown() {
         RepairnatorConfig.deleteInstance();
-    }
-
-    public static boolean isMac() {
-        String OS = System.getProperty("os.name").toLowerCase();
-        return (OS.indexOf("mac") >= 0);
     }
 
     @Test

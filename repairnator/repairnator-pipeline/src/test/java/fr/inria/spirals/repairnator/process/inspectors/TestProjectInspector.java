@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatc
 import fr.inria.spirals.repairnator.process.step.push.CommitProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.*;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -49,30 +50,14 @@ import static org.mockito.Mockito.*;
  */
 public class TestProjectInspector {
 
-    private static final String SOLVER_PATH_DIR = "src/test/resources/z3/";
-    private static final String SOLVER_NAME_LINUX = "z3_for_linux";
-    private static final String SOLVER_NAME_MAC = "z3_for_mac";
-
     @Before
     public void setUp() {
-        String solverPath;
-        if (isMac()) {
-            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_MAC;
-        } else {
-            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_LINUX;
-        }
-
         RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setZ3solverPath(solverPath);
+        config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setPush(true);
         config.setPushRemoteRepo("");
         config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "Nopol")));
         Utils.setLoggersLevel(Level.ERROR);
-    }
-
-    public static boolean isMac() {
-        String OS = System.getProperty("os.name").toLowerCase();
-        return (OS.contains("mac"));
     }
 
     @After

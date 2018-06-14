@@ -17,6 +17,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
+import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.apache.commons.io.FileUtils;
@@ -41,10 +42,6 @@ import static org.junit.Assert.assertTrue;
 
 public class TestMetrics4BearsJsonFile {
 
-    private static final String SOLVER_PATH_DIR = "src/test/resources/z3/";
-    private static final String SOLVER_NAME_LINUX = "z3_for_linux";
-    private static final String SOLVER_NAME_MAC = "z3_for_mac";
-
     private File tmpDir;
 
     private JsonSchema jsonSchema;
@@ -62,14 +59,7 @@ public class TestMetrics4BearsJsonFile {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setPush(true);
         config.setPushRemoteRepo("");
-
-        String solverPath;
-        if (isMac()) {
-            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_MAC;
-        } else {
-            solverPath = SOLVER_PATH_DIR+SOLVER_NAME_LINUX;
-        }
-        config.setZ3solverPath(solverPath);
+        config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
 
         jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");
@@ -99,11 +89,6 @@ public class TestMetrics4BearsJsonFile {
         propertiesToIgnore.add("builds.fixerBuild.date");
         propertiesToIgnore.add("commits.buggyBuild.date");
         propertiesToIgnore.add("commits.fixerBuild.date");
-    }
-
-    public static boolean isMac() {
-        String OS = System.getProperty("os.name").toLowerCase();
-        return (OS.contains("mac"));
     }
 
     @After
