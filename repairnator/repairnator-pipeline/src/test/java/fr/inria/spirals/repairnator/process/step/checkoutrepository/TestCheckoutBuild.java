@@ -6,11 +6,11 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.RepairnatorConfigException;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -34,8 +34,6 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by urli on 06/03/2017.
@@ -67,16 +65,9 @@ public class TestCheckoutBuild {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
-        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
-        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuggyBuild()).thenReturn(build);
-        when(inspector.getGitHelper()).thenReturn(new GitHelper());
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);
@@ -128,16 +119,9 @@ public class TestCheckoutBuild {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
-        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
-        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuggyBuild()).thenReturn(build);
-        when(inspector.getGitHelper()).thenReturn(new GitHelper());
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);
@@ -175,16 +159,9 @@ public class TestCheckoutBuild {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
-        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
-        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuggyBuild()).thenReturn(build);
-        when(inspector.getGitHelper()).thenReturn(new GitHelper());
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);
@@ -216,16 +193,9 @@ public class TestCheckoutBuild {
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
-        when(inspector.getRepoSlug()).thenReturn(toBeInspected.getBuggyBuild().getRepository().getSlug());
-        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuggyBuild()).thenReturn(build);
-        when(inspector.getGitHelper()).thenReturn(new GitHelper());
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);

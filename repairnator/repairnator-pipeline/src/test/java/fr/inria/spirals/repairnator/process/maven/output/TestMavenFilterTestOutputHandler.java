@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.maven.output;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
 import org.junit.Test;
 
 import java.io.File;
@@ -25,12 +26,12 @@ public class TestMavenFilterTestOutputHandler {
         String resourcePath = "./src/test/resources/build-logs/log-test-failures.txt";
         List<String> lines = Files.readAllLines(new File(resourcePath).toPath());
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
         Path tmp = Files.createTempDirectory("test-filter");
-        when(inspector.getRepoLocalPath()).thenReturn(tmp.toAbsolutePath().toString());
 
         JobStatus jobStatus = new JobStatus(tmp.toAbsolutePath().toString());
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmp.toAbsolutePath().toString());
+
         MavenHelper mavenHelper = mock(MavenHelper.class);
         when(mavenHelper.getInspector()).thenReturn(inspector);
         when(mavenHelper.getName()).thenReturn("test");
@@ -52,12 +53,12 @@ public class TestMavenFilterTestOutputHandler {
         String resourcePath = "./src/test/resources/build-logs/log-test-druidio.txt";
         List<String> lines = Files.readAllLines(new File(resourcePath).toPath());
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
         Path tmp = Files.createTempDirectory("test-filter");
-        when(inspector.getRepoLocalPath()).thenReturn(tmp.toAbsolutePath().toString());
 
         JobStatus jobStatus = new JobStatus(tmp.toAbsolutePath().toString());
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmp.toAbsolutePath().toString());
+
         MavenHelper mavenHelper = mock(MavenHelper.class);
         when(mavenHelper.getInspector()).thenReturn(inspector);
         when(mavenHelper.getName()).thenReturn("test");

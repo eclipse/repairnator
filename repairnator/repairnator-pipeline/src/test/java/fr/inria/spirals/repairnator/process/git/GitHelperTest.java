@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -15,15 +14,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class GitHelperTest {
     @Test
     public void testcomputePatchStats() throws GitAPIException, IOException {
-        ProjectInspector mockInspector = mock(ProjectInspector.class);
         JobStatus jobStatus = new JobStatus("fakePomDirPath");
-        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
 
         String remoteRepo = "https://github.com/Spirals-Team/jtravis.git";
         String parentCommit = "2d65266f9a52b27f955ec9a74aa9ab4dac5537d7";
