@@ -80,7 +80,7 @@ fi
 
 echo "Elementary args for docker pool: $elementaryArgs"
 echo "Supplementary args for docker pool: $supplementaryArgs"
-java -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/dockerpool_$RUN_ID.log
+java $JAVA_OPTS -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/dockerpool_$RUN_ID.log
 
 echo "Docker pool finished."
 if [ "$DELETE_RUN_DIR" -eq 1 ]; then
