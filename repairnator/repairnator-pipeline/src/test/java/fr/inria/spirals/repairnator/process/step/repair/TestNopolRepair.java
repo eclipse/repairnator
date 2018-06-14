@@ -17,6 +17,8 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,11 +74,7 @@ public class TestNopolRepair {
     public void testNopolRepair() throws IOException {
         long buildId = 207890790; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_nopolrepair");
         File tmpDir = tmpDirPath.toFile();
@@ -117,5 +115,17 @@ public class TestNopolRepair {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(1852));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
+    }
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, IsNull.notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
     }
 }

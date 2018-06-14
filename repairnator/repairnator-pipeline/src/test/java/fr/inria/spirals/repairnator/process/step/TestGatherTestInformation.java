@@ -20,6 +20,8 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.apache.commons.lang.StringUtils;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +35,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -58,11 +59,7 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenFailing() throws IOException {
         long buildId = 207890790; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
@@ -125,11 +122,7 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationOnlyOneErroring() throws IOException {
         long buildId = 208897371; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
@@ -198,11 +191,7 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenErroring() throws IOException {
         long buildId = 208240908; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
@@ -264,11 +253,7 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenNotFailing() throws IOException {
         long buildId = 201176013; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
@@ -332,11 +317,7 @@ public class TestGatherTestInformation {
     public void testGatherTestInformationWhenNotFailingWithPassingContract() throws IOException {
         long buildId = 201176013; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_gathertest");
         File tmpDir = tmpDirPath.toFile();
@@ -385,5 +366,17 @@ public class TestGatherTestInformation {
         Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
         assertThat(failureNames.size(), is(0));
         assertThat(jobStatus.getFailureLocations().size(), is(0));
+    }
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, IsNull.notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
     }
 }

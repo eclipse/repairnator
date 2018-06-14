@@ -22,6 +22,7 @@ import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.hamcrest.core.Is;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import java.util.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyListOf;
@@ -100,13 +102,8 @@ public class TestProjectInspector4Bears {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Optional<Build> optionalBuildPassing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdPassing);
-        assertTrue(optionalBuildPassing.isPresent());
-        Build passingBuild = optionalBuildPassing.get();
-
-        Optional<Build> optionalBuildFailing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdFailing);
-        assertTrue(optionalBuildFailing.isPresent());
-        Build failingBuild = optionalBuildFailing.get();
+        Build passingBuild = this.checkBuildAndReturn(buildIdPassing, false);
+        Build failingBuild = this.checkBuildAndReturn(buildIdFailing, false);
 
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, passingBuild, ScannedBuildStatus.FAILING_AND_PASSING, "test");
@@ -181,13 +178,8 @@ public class TestProjectInspector4Bears {
         File tmpDir = tmpDirPath.toFile();
         tmpDir.deleteOnExit();
 
-        Optional<Build> optionalBuildPassing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdPassing);
-        assertTrue(optionalBuildPassing.isPresent());
-        Build passingBuild = optionalBuildPassing.get();
-
-        Optional<Build> optionalPreviousBuildPassing = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildIdPreviousPassing);
-        assertTrue(optionalPreviousBuildPassing.isPresent());
-        Build previousPassingBuild = optionalPreviousBuildPassing.get();
+        Build passingBuild = this.checkBuildAndReturn(buildIdPassing, false);
+        Build previousPassingBuild = this.checkBuildAndReturn(buildIdPreviousPassing, false);
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(previousPassingBuild, passingBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "test");
 
@@ -251,5 +243,17 @@ public class TestProjectInspector4Bears {
         assertThat(commit.getShortMessage(), containsString("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
+    }
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
     }
 }

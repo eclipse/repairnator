@@ -12,6 +12,8 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -48,11 +49,8 @@ public class TestComputeTestDir {
     @Test
     public void testComputeTestDirWithReflexiveReferences() throws IOException {
         long buildId = 345990212;
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+
+        Build build = this.checkBuildAndReturn(buildId, true);
 
         Path tmpDirPath = Files.createTempDirectory("computetestdir");
         File tmpDir = tmpDirPath.toFile();
@@ -95,5 +93,17 @@ public class TestComputeTestDir {
             }
 
         }
+    }
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, IsNull.notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
     }
 }

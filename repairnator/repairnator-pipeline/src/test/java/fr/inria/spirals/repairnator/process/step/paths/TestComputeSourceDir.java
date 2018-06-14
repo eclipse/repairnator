@@ -15,6 +15,8 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBugg
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -52,11 +53,7 @@ public class TestComputeSourceDir {
     public void testComputeSourceDir() throws IOException {
         long buildId = 207924136; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedir");
         File tmpDir = tmpDirPath.toFile();
@@ -105,11 +102,7 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject() throws IOException {
         long buildId = 225251586; // Spirals-Team/librepair build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
         File tmpDir = tmpDirPath.toFile();
@@ -156,11 +149,7 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject2() throws IOException {
         long buildId = 225251586; // Spirals-Team/librepair build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
         File tmpDir = tmpDirPath.toFile();
@@ -206,11 +195,7 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject3() throws IOException {
         long buildId = 225251586; // Spirals-Team/librepair build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
         File tmpDir = tmpDirPath.toFile();
@@ -257,17 +242,8 @@ public class TestComputeSourceDir {
         long buildId = 216674182; // pac4j/pac4j
         long patchedBuildId = 218753299;
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
-
-        Optional<Build> optionalPatchedBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(patchedBuildId);
-        assertTrue(optionalPatchedBuild.isPresent());
-        Build patchedBuild = optionalPatchedBuild.get();
-        assertThat(patchedBuild, notNullValue());
-        assertThat(patchedBuildId, is(patchedBuild.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
+        Build patchedBuild = this.checkBuildAndReturn(patchedBuildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedir3");
         File tmpDir = tmpDirPath.toFile();
@@ -329,11 +305,7 @@ public class TestComputeSourceDir {
     public void testComputeSourceDirWithMultiModuleProject5() throws IOException {
         long buildId = 218168470; // Spirals-Team/librepair build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedir2");
         File tmpDir = tmpDirPath.toFile();
@@ -378,11 +350,8 @@ public class TestComputeSourceDir {
     @Test
     public void testComputeSourceDirWithReflexiveReferences() throws IOException {
         long buildId = 345990212;
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+
+        Build build = this.checkBuildAndReturn(buildId, true);
 
         Path tmpDirPath = Files.createTempDirectory("test_computesourcedirOverflow");
         File tmpDir = tmpDirPath.toFile();
@@ -424,5 +393,17 @@ public class TestComputeSourceDir {
             }
         }
 
+    }
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, IsNull.notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
     }
 }

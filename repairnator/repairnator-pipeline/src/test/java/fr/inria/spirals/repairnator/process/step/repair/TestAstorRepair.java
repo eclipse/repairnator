@@ -20,6 +20,8 @@ import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair;
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,11 +48,7 @@ public class TestAstorRepair {
 	public void testAstorJkali() throws IOException {
 		long buildId = 376820338; // surli/failingProject astor-jkali-failure
 
-		Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-		assertTrue(optionalBuild.isPresent());
-		Build build = optionalBuild.get();
-		assertThat(build, notNullValue());
-		assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
 		AstorJKaliRepair astorJKaliRepair = new AstorJKaliRepair();
 
@@ -98,11 +96,7 @@ public class TestAstorRepair {
 	public void testAstorJMut() throws IOException {
 		long buildId = 376847154; // surli/failingProject astor-jkali-failure
 
-		Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-		assertTrue(optionalBuild.isPresent());
-		Build build = optionalBuild.get();
-		assertThat(build, notNullValue());
-		assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
 		AstorJMutRepair astorJMutRepair = new AstorJMutRepair();
 
@@ -144,4 +138,16 @@ public class TestAstorRepair {
 		List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
 		assertThat(allPatches.isEmpty(), is(false));
 	}
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, IsNull.notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
+    }
 }
