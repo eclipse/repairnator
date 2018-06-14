@@ -61,6 +61,7 @@ public class Launcher {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
+        this.initConfig(arguments); // "this.config" is only available after this call, which initializes the config
 
         if (this.config.isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
@@ -68,7 +69,6 @@ public class Launcher {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
