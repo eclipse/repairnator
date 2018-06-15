@@ -1,11 +1,12 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import ch.qos.logback.classic.Level;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,13 +49,9 @@ public class TestAbstractStep {
 
     @Test
     public void testGetPomOnSimpleProject() {
-        ProjectInspector mockInspector = mock(ProjectInspector.class);
-
         String localRepoPath = "./src/test/resources/test-abstractstep/simple-maven-project";
-        when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
-
         JobStatus jobStatus = new JobStatus(localRepoPath);
-        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+        ProjectInspector mockInspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, localRepoPath);
 
         AbstractStep step1 = new AbstractStepNop(mockInspector);
 
@@ -65,13 +62,9 @@ public class TestAbstractStep {
 
     @Test
     public void testGetPomWhenNotFoundShouldSetStopFlag() {
-        ProjectInspector mockInspector = mock(ProjectInspector.class);
-
         String localRepoPath = "./unkown-path";
-        when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
-
         JobStatus jobStatus = new JobStatus(localRepoPath);
-        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+        ProjectInspector mockInspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, localRepoPath);
 
         AbstractStep step1 = new AbstractStepNop(mockInspector);
 
@@ -84,13 +77,9 @@ public class TestAbstractStep {
 
     @Test
     public void testGetPomWithComplexMavenProjectShouldSetRepoPath() {
-        ProjectInspector mockInspector = mock(ProjectInspector.class);
-
         String localRepoPath = "./src/test/resources/test-abstractstep/complex-maven-project";
-        when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
-
         JobStatus jobStatus = new JobStatus(localRepoPath);
-        when(mockInspector.getJobStatus()).thenReturn(jobStatus);
+        ProjectInspector mockInspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, localRepoPath);
 
         AbstractStep step1 = new AbstractStepNop(mockInspector);
 
