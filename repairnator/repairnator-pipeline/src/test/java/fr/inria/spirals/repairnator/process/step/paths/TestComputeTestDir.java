@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.hamcrest.core.Is;
@@ -45,6 +46,45 @@ public class TestComputeTestDir {
     public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
         GitHelper.deleteFile(tmpDir);
+    }
+
+    @Test
+    public void testComputeTestDirWithMultiModuleProject() throws IOException {
+        long buggyBuildCandidateId = 386332218; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386332218
+
+        Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
+
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(buggyBuildCandidate, null, ScannedBuildStatus.ONLY_FAIL, "test");
+
+        tmpDir = Files.createTempDirectory("computetestdir").toFile();
+
+        File repoDir = new File(tmpDir, "repo");
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, buildToBeInspected, CheckoutType.CHECKOUT_BUGGY_BUILD);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        ComputeTestDir computeTestDir = new ComputeTestDir(inspector, true);
+
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeTestDir);
+        cloneStep.execute();
+
+        assertThat(computeTestDir.isShouldStop(), is(false));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeTestDirStatus = stepStatusList.get(2);
+        assertThat(computeTestDirStatus.getStep(), is(computeTestDir));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        assertThat(jobStatus.getTestDir(), is(new File[] {
+                new File(repoDir.getAbsolutePath()+"/test-repairnator-bears-core/src/test/java"),
+                new File(repoDir.getAbsolutePath()+"/test-repairnator-bears-patchstats/src/test/java")
+        }));
+        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberTestFiles(), is(3));
     }
 
     @Test
