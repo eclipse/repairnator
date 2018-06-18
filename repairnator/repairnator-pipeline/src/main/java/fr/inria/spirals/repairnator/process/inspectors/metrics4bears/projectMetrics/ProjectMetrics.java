@@ -4,7 +4,7 @@ public class ProjectMetrics {
 
     private int numberSourceFiles;
     private int numberTestFiles;
-    private int numberLibraries;
+    private int numberLibrariesFailingModule;
 
     public ProjectMetrics() {}
 
@@ -16,20 +16,20 @@ public class ProjectMetrics {
         this.numberSourceFiles = numberSourceFiles;
     }
 
-    public void setNumberTestFiles(int numberTestFiles) {
-        this.numberTestFiles = numberTestFiles;
-    }
-
     public int getNumberTestFiles() {
         return numberTestFiles;
     }
 
-    public int getNumberLibraries() {
-        return numberLibraries;
+    public void setNumberTestFiles(int numberTestFiles) {
+        this.numberTestFiles = numberTestFiles;
     }
 
-    public void setNumberLibraries(int numberLibraries) {
-        this.numberLibraries = numberLibraries;
+    public int getNumberLibrariesFailingModule() {
+        return numberLibrariesFailingModule;
+    }
+
+    public void setNumberLibrariesFailingModule(int numberLibrariesFailingModule) {
+        this.numberLibrariesFailingModule = numberLibrariesFailingModule;
     }
 
 }

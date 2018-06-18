@@ -909,10 +909,10 @@
       "$id": "/properties/projectMetrics",
       "type": "object",
       "properties": {
-        "numberLibraries": {
-          "$id": "/properties/projectMetrics/properties/numberLibraries",
+        "numberLibrariesFailingModule": {
+          "$id": "/properties/projectMetrics/properties/numberLibrariesFailingModule",
           "type": "integer",
-          "title": "The Numberlibraries Schema ",
+          "title": "The numberLibrariesFailingModule Schema ",
           "default": 0,
           "examples": [
             12
@@ -938,7 +938,7 @@
         }
       },
       "required": [
-        "numberLibraries",
+        "numberLibrariesFailingModule",
         "numberSourceFiles",
         "numberTestFiles"
       ]

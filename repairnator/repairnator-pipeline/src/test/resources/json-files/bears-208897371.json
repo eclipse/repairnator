@@ -79,7 +79,7 @@
   "projectMetrics": {
     "numberSourceFiles": 10,
     "numberTestFiles": 1,
-    "numberLibraries": 2
+    "numberLibrariesFailingModule": 2
   },
   "reproductionBuggyBuild": {
     "reproductionDateBeginning": "Jun 8, 2018 7:58:25 AM",

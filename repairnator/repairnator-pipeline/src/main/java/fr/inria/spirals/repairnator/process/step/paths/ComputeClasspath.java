@@ -21,6 +21,8 @@ import java.util.Properties;
  * Created by urli on 08/02/2017.
  */
 public class ComputeClasspath extends AbstractStep {
+    private static final String goal = "dependency:build-classpath";
+
     private static final String CLASSPATH_FILENAME = "classpath.info";
     private static final String DEFAULT_CLASSES_DIR = "/target/classes";
     private static final String DEFAULT_TEST_CLASSES_DIR = "/target/test-classes";
@@ -46,26 +48,17 @@ public class ComputeClasspath extends AbstractStep {
         }
     }
 
-    @Override
-    protected StepStatus businessExecute() {
-        this.getLogger().debug("Computing classpath from incriminated module...");
-
-        String incriminatedModule = this.getInspector().getJobStatus().getFailingModulePath();
-
-        File defaultClassDir = new File(incriminatedModule + File.separator + DEFAULT_CLASSES_DIR + File.separator);
+    private void addDefaultDirsToClassPath(String modulePath) {
+        File defaultClassDir = new File(modulePath + File.separator + DEFAULT_CLASSES_DIR + File.separator);
         this.addFileToClassPath(defaultClassDir);
 
         File defaultTestClassDir = new File(
-                incriminatedModule + File.separator + DEFAULT_TEST_CLASSES_DIR + File.separator);
+                modulePath + File.separator + DEFAULT_TEST_CLASSES_DIR + File.separator);
         this.addFileToClassPath(defaultTestClassDir);
+    }
 
-        Properties properties = new Properties();
-        properties.setProperty("mdep.outputFile", CLASSPATH_FILENAME);
-
-        String goal = "dependency:build-classpath";
-        String pomModule = incriminatedModule + File.separator + Utils.POM_FILE;
-
-        MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(),
+    private int runMavenGoal(String pomPath, Properties properties) {
+        MavenHelper helper = new MavenHelper(pomPath, goal, properties, this.getClass().getSimpleName(),
                 this.getInspector(), true);
 
         int result = MavenHelper.MAVEN_ERROR;
@@ -74,47 +67,67 @@ public class ComputeClasspath extends AbstractStep {
         } catch (InterruptedException e) {
             this.addStepError("Error with maven goal", e);
         }
-
         if (result != MavenHelper.MAVEN_SUCCESS) {
             this.getLogger().debug("Error while computing classpath maven");
-            return StepStatus.buildError(this, PipelineState.CLASSPATHERROR);
         }
+        return result;
+    }
 
-        String classpathPath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
-
+    private void addJarFilesToClassPath(String classpathFilePath) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(new File(classpathPath)));
+            BufferedReader reader = new BufferedReader(new FileReader(new File(classpathFilePath)));
             String classpathLine = reader.readLine();
 
             String[] allJars = classpathLine.split(":");
 
             for (String jar : allJars) {
-                File f = new File(jar);
-                this.addFileToClassPath(f);
+                File jarFile = new File(jar);
+                this.addFileToClassPath(jarFile);
             }
             this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath: " + e);
         }
+    }
 
-        int numberLibraries = 0;
+    private void checkJUnitInClasspath() {
         boolean containJunit = false;
-        for (URL url : classPath) {
+        for (URL url : this.classPath) {
             if (url.toString().contains("junit")) {
                 containJunit = true;
             }
-            if (url.toString().endsWith(".jar")) {
-                numberLibraries++;
-            }
         }
-
         if (!containJunit) {
-            this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
+            this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use JUnit for testing.");
+        }
+    }
+
+    @Override
+    protected StepStatus businessExecute() {
+        this.getLogger().debug("Computing classpath from incriminated module...");
+
+        String incriminatedModule = this.getInspector().getJobStatus().getFailingModulePath();
+
+        Properties properties = new Properties();
+        properties.setProperty("mdep.outputFile", CLASSPATH_FILENAME);
+
+        String pomModule = incriminatedModule + File.separator + Utils.POM_FILE;
+        String classpathFilePath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
+
+        if (this.runMavenGoal(pomModule, properties) != MavenHelper.MAVEN_SUCCESS) {
+            return StepStatus.buildError(this, PipelineState.CLASSPATHERROR);
         }
 
+        // Only jars will be added in the classpath here, which is the number of libraries of the failing module
+        this.addJarFilesToClassPath(classpathFilePath);
+        this.getInspector().getJobStatus().getMetrics().setNbLibraries(this.classPath.size());
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberLibrariesFailingModule(this.classPath.size());
+
+        this.checkJUnitInClasspath();
+
+        // Default "/target/classes" and "/target/test-classes" dirs are then added here
+        this.addDefaultDirsToClassPath(incriminatedModule);
         this.getInspector().getJobStatus().setRepairClassPath(this.classPath);
-        this.getInspector().getJobStatus().getMetrics().setNbLibraries(numberLibraries);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberLibraries(numberLibraries);
 
         return StepStatus.buildSuccess(this);
     }
