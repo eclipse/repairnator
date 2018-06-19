@@ -158,7 +158,7 @@ public class MavenHelper {
 
             if (now.isAfter(this.limitOutputDate)) {
                 t.interrupt();
-                throw new InterruptedException("Timeout occured because no output in the last "+TIMEOUT_WITHOUT_OUTPUT+" minutes.");
+                throw new InterruptedException("Timeout occurred: no output has been received in the last "+TIMEOUT_WITHOUT_OUTPUT+" minutes.");
             } else {
                 Thread.sleep(1000);
             }

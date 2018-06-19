@@ -92,7 +92,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                     break;
 
                 default:
-                    this.getLogger().warn("A case seems not to have been considered. Buggy build will be used.");
+                    this.getLogger().warn("A case seems not to be considered. Buggy build will be used.");
                     build = this.getInspector().getBuggyBuild();
             }
 
@@ -138,19 +138,19 @@ public abstract class CheckoutRepository extends AbstractStep {
 
                     boolean successfulMerge = gitHelper.mergeTwoCommitsForPR(git, build, prInformation, repository, this, paths);
                     if (!successfulMerge) {
-                        this.getLogger().debug("Error while merging two commits to reproduce the PR.");
+                        this.addStepError("Error while merging two commits to reproduce the PR.");
                         return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                     }
 
                 } else {
-                    this.addStepError("Error while getting the PR information...");
+                    this.addStepError("Error while getting PR information.");
                     return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                 }
             } else {
                 String commitCheckout = build.getCommit().getSha();
                 commitCheckout = gitHelper.testCommitExistence(git, commitCheckout, this, build);
                 if (commitCheckout != null) {
-                    this.getLogger().debug("Get the commit " + commitCheckout + " for repo " + this.getInspector().getRepoSlug());
+                    this.getLogger().debug("Get commit " + commitCheckout + " for repo " + this.getInspector().getRepoSlug());
                     if (checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE &&
                             checkoutType != CheckoutType.CHECKOUT_BUGGY_BUILD_TEST_CODE) {
                         git.checkout().setName(commitCheckout).call();

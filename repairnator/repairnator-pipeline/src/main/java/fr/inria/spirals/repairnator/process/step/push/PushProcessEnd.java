@@ -49,18 +49,18 @@ public class PushProcessEnd extends AbstractStep {
 
                 String remoteRepo = this.remoteRepoUrl + Utils.REMOTE_REPO_EXT;
 
-                this.getLogger().debug("Start to push failing pipelineState in the remote repository: " + remoteRepo + " branch: " + branchName);
+                this.getLogger().debug("Start to push pipeline state in the remote repository: " + remoteRepo + " - branch: " + branchName);
 
                 if (this.getConfig().getGithubToken() == null || this.getConfig().getGithubToken().equals("")) {
-                    this.getLogger().warn("You must set the GITHUB_OAUTH env property to push incriminated build.");
+                    this.getLogger().warn("You must set the GITHUB_OAUTH env property to push data.");
                     this.setPushState(PushState.REPO_NOT_PUSHED);
-                    return StepStatus.buildSkipped(this, "Github authentication information was not provided.");
+                    return StepStatus.buildSkipped(this, "GitHub authentication information was not provided.");
                 }
 
                 try {
                     Git git = Git.open(new File(this.getInspector().getRepoToPushLocalPath()));
 
-                    this.getLogger().debug("Add the remote repository to push the current pipelineState");
+                    this.getLogger().debug("Add the remote repository to push the current pipeline state...");
 
                     RemoteAddCommand remoteAdd = git.remoteAdd();
                     remoteAdd.setName(REMOTE_NAME);
@@ -69,7 +69,7 @@ public class PushProcessEnd extends AbstractStep {
 
                     CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.getConfig().getGithubToken(), "");
 
-                    this.getLogger().debug("Check if a branch already exists in the remote repository");
+                    this.getLogger().debug("Check if a branch already exists in the remote repository...");
                     ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh", "-c", "git remote show " + REMOTE_NAME + " | grep " + branchName)
                             .directory(new File(this.getInspector().getRepoLocalPath()));
 
@@ -85,12 +85,12 @@ public class PushProcessEnd extends AbstractStep {
                     }
 
                     if (!processReturn.equals("")) {
-                        this.getLogger().warn("A branch already exist in the remote repo with the following name: " + branchName);
+                        this.getLogger().warn("A branch already exists in the remote repo with the following name: " + branchName);
                         this.getLogger().debug("Here the grep return: " + processReturn);
-                        return StepStatus.buildSkipped(this, "A branch already exist in the remote repo with the following name: " + branchName);
+                        return StepStatus.buildSkipped(this, "A branch already exists in the remote repo with the following name: " + branchName);
                     }
 
-                    this.getLogger().debug("Prepare the branch and push");
+                    this.getLogger().debug("Prepare the branch and push...");
                     Ref branch = git.checkout().setCreateBranch(true).setName(branchName).call();
 
                     git.push().setRemote(REMOTE_NAME).add(branch).setCredentialsProvider(credentialsProvider).call();
@@ -101,18 +101,13 @@ public class PushProcessEnd extends AbstractStep {
                     this.setPushState(PushState.REPO_PUSHED);
                     return StepStatus.buildSuccess(this);
                 } catch (IOException e) {
-                    this.getLogger().error("Error while reading git directory at the following location: "
-                            + this.getInspector().getRepoLocalPath() + " : " + e);
-                    this.addStepError(e.getMessage());
+                    this.addStepError("Error while reading git directory at the following location: " + this.getInspector().getRepoLocalPath() + ".", e);
                 } catch (URISyntaxException e) {
-                    this.getLogger()
-                            .error("Error while setting remote repository with following URL: " + remoteRepo + " : " + e);
-                    this.addStepError(e.getMessage());
+                    this.addStepError("Error while setting remote repository with the following URL: " + remoteRepo + ".", e);
                 } catch (GitAPIException e) {
-                    this.getLogger().error("Error while executing a JGit operation: " + e);
-                    this.addStepError(e.getMessage());
+                    this.addStepError("Error while executing a JGit operation.", e);
                 } catch (InterruptedException e) {
-                    this.addStepError("Error while executing git command to check branch presence" + e.getMessage());
+                    this.addStepError("Error while executing git command to check branch existence.", e);
                 }
                 this.setPushState(PushState.REPO_NOT_PUSHED);
                 return StepStatus.buildSkipped(this, "Error while pushing.");

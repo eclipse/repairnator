@@ -79,7 +79,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"PatchedBuildCandidate"))
                         .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
             } else {
-                this.logger.debug("The pair of scanned builds is not interesting.");
+                this.logger.debug("The pair of builds " + this.getBuggyBuild().getId() + ", " +
+                        this.getPatchedBuild().getId() + " is not interesting.");
                 return;
             }
         }

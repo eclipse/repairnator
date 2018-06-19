@@ -85,7 +85,9 @@ public class GatherTestInformation extends AbstractStep {
 
     @Override
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Gathering test information...");
+        this.getLogger().debug("Gathering test information from surefire reports...");
+
+        this.getLogger().debug("Contract: " + this.contract.getClass().getSimpleName());
 
         File rootRepo = new File(this.getInspector().getJobStatus().getPomDirPath());
         final List<File> surefireDirs = new ArrayList<File>();
@@ -188,9 +190,9 @@ public class GatherTestInformation extends AbstractStep {
                     }
                 }
             } catch (MavenReportException e) {
-                this.addStepError("Error while parsing files to get test information:",e);
+                this.addStepError("Error while parsing files to get test information.", e);
             } catch (IOException e) {
-                this.addStepError("Error while getting the failing module path: ",e);
+                this.addStepError("Error while getting the failing module path.", e);
             }
         }
 
@@ -214,6 +216,14 @@ public class GatherTestInformation extends AbstractStep {
             overallMetrics.setNumberErroring(this.nbErroringTests);
             overallMetrics.setNumberSkipping(this.nbSkippingTests);
         }
+
+        this.getLogger().info("   Test results   ");
+        this.getLogger().info("Total tests: " + this.nbTotalTests);
+        this.getLogger().info("Tests run: " + this.nbRunningTests);
+        this.getLogger().info("Tests passing: " + (this.nbRunningTests - this.nbErroringTests - this.nbFailingTests));
+        this.getLogger().info("Failures: " + this.nbFailingTests);
+        this.getLogger().info("Errors: " + this.nbErroringTests);
+        this.getLogger().info("Skipped: " + this.nbSkippingTests);
 
         return contract.shouldBeStopped(this);
     }

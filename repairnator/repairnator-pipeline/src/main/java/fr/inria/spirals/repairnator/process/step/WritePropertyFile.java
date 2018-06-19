@@ -65,8 +65,7 @@ public class WritePropertyFile extends AbstractStep {
             this.getInspector().getJobStatus().addFileToPush(file.getName());
             return true;
         } catch (IOException e) {
-            this.getLogger().error("An exception occurred when writing the following property file: " + file.getPath(), e);
-            this.addStepError("Fail to write the property file " + file.getPath());
+            this.addStepError("An exception occurred when writing the following property file: " + file.getPath(), e);
         }
         return false;
     }

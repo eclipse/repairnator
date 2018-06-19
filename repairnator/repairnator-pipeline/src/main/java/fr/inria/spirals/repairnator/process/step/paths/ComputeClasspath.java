@@ -39,12 +39,11 @@ public class ComputeClasspath extends AbstractStep {
             try {
                 this.classPath.add(file.toURI().toURL());
             } catch (MalformedURLException e) {
-                this.addStepError(e.getMessage());
-                this.getLogger().error("Error while putting the following file in classpath: " + file.getAbsolutePath()
-                        + " : " + e.getMessage(), e);
+                this.addStepError("Error while adding the following file in the classpath: " +
+                        file.getAbsolutePath() + ".", e);
             }
         } else {
-            this.addStepError("The file does not exist: " + file.getAbsolutePath());
+            this.addStepError("The file does not exist: " + file.getAbsolutePath() + ".");
         }
     }
 
@@ -65,10 +64,7 @@ public class ComputeClasspath extends AbstractStep {
         try {
             result = helper.run();
         } catch (InterruptedException e) {
-            this.addStepError("Error with maven goal", e);
-        }
-        if (result != MavenHelper.MAVEN_SUCCESS) {
-            this.getLogger().debug("Error while computing classpath maven");
+            this.addStepError("Error while executing maven goal.", e);
         }
         return result;
     }
@@ -86,7 +82,7 @@ public class ComputeClasspath extends AbstractStep {
             }
             this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
         } catch (IOException e) {
-            this.addStepError("Problem while getting classpath: " + e);
+            this.addStepError("Problem while getting classpath file.", e);
         }
     }
 
@@ -115,6 +111,7 @@ public class ComputeClasspath extends AbstractStep {
         String classpathFilePath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
 
         if (this.runMavenGoal(pomModule, properties) != MavenHelper.MAVEN_SUCCESS) {
+            this.addStepError("Error while computing classpath maven.");
             return StepStatus.buildError(this, PipelineState.CLASSPATHERROR);
         }
 

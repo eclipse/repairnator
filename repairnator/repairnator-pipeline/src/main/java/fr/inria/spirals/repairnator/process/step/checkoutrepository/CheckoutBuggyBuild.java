@@ -17,7 +17,7 @@ public class CheckoutBuggyBuild extends CheckoutRepository {
     }
 
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Checking out previous build...");
+        this.getLogger().debug("Checking out buggy build candidate...");
 
         super.setCheckoutType(CheckoutType.CHECKOUT_BUGGY_BUILD);
         this.getInspector().setCheckoutType(CheckoutType.CHECKOUT_BUGGY_BUILD);

@@ -32,7 +32,7 @@ public class MetricsSerializerAdapter implements JsonSerializer<Metrics> {
                         result.add(attributeName, jsonSerializationContext.serialize(value));
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Error while serializing metrics", e);
+                    logger.error("Error while serializing metrics.", e);
                 }
             }
         }

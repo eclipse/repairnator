@@ -18,7 +18,7 @@ public class CheckoutPatchedBuild extends CheckoutRepository {
     }
 
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Checking out build...");
+        this.getLogger().debug("Checking out patched build candidate...");
 
         if (this.getInspector().getPatchedBuild() != null) {
             super.setCheckoutType(CheckoutType.CHECKOUT_PATCHED_BUILD);

@@ -21,12 +21,11 @@ public class BuildProject extends AbstractStep {
     }
 
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Building project with maven (skip tests)...");
+        this.getLogger().debug("Building project by installing artifacts with maven (skip test execution)...");
 
         Properties properties = new Properties();
         properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
 
-        this.getLogger().debug("Installing artifacts without test execution...");
         MavenHelper helper = new MavenHelper(this.getPom(), "install", properties, this.getClass().getSimpleName(), this.getInspector(), true);
 
         int result;
@@ -40,7 +39,7 @@ public class BuildProject extends AbstractStep {
         if (result == MavenHelper.MAVEN_SUCCESS) {
             return StepStatus.buildSuccess(this);
         } else {
-            this.getLogger().warn("Repository " + this.getInspector().getRepoSlug() + " cannot be built.");
+            this.addStepError("Repository " + this.getInspector().getRepoSlug() + " cannot be built.");
             return StepStatus.buildError(this, PipelineState.NOTBUILDABLE);
         }
     }

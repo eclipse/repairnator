@@ -18,10 +18,10 @@ public class CheckoutBuggyBuildSourceCode extends CheckoutRepository {
     }
 
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Checking out the source code of the previous build...");
+        this.getLogger().debug("Checking out the source code of the buggy build candidate...");
 
         if (this.getInspector().getJobStatus().getRepairSourceDir() == null) {
-            this.getLogger().error("Repair source dir is null: it is therefore impossible to continue.");
+            this.addStepError("Source code dir is null: it is therefore impossible to continue.");
             return StepStatus.buildError(this, PipelineState.SOURCEDIRNOTCOMPUTED);
         }
 
