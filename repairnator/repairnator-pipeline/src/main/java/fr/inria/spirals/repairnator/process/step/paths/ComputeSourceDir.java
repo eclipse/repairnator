@@ -77,7 +77,7 @@ public class ComputeSourceDir extends AbstractStep {
             if (!wasDefaultSourceDirFound) {
                 Build buildSection = model.getBuild();
 
-                if (buildSection != null) {
+                if (buildSection != null && buildSection.getSourceDirectory() != null) {
                     String pathSrcDirFromPom = buildSection.getSourceDirectory();
 
                     File srcDirFromPom = new File(pathSrcDirFromPom);

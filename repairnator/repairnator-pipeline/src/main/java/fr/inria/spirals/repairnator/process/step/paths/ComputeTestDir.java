@@ -62,8 +62,8 @@ public class ComputeTestDir extends AbstractStep {
 
                 Build buildSection = model.getBuild();
 
-                if (buildSection != null) {
-                    String pathTestDirFromPom = model.getBuild().getTestSourceDirectory();
+                if (buildSection != null && buildSection.getTestSourceDirectory() != null) {
+                    String pathTestDirFromPom = buildSection.getTestSourceDirectory();
 
                     File srcDirFromPom = new File(pathTestDirFromPom);
 
