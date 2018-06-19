@@ -24,6 +24,7 @@ public class JobStatus {
 
     private File[] repairSourceDir;
     private File[] testDir;
+    private File[] modules;
 
     /**
      * List of patches indexed by the name of the tool to produce them
@@ -200,6 +201,14 @@ public class JobStatus {
 
     public void setTestDir(File[] testDir) {
         this.testDir = testDir;
+    }
+
+    public File[] getModules() {
+        return modules;
+    }
+
+    public void setModules(File[] modules) {
+        this.modules = modules;
     }
 
     public Throwable getFatalError() {

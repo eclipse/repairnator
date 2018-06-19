@@ -152,6 +152,7 @@
     }
   },
   "projectMetrics": {
+    "numberModules": 1,
     "numberLibrariesFailingModule": 12,
     "numberSourceFiles": 10,
     "numberTestFiles": 8

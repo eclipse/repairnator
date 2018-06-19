@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.*;
@@ -190,6 +191,7 @@ public class ProjectInspector {
 
 
             this.finalStep.
+                    setNextStep(new ComputeModules(this, false)).
                     setNextStep(new WritePropertyFile(this)).
                     setNextStep(new CommitProcessEnd(this)).
                     setNextStep(new PushProcessEnd(this));

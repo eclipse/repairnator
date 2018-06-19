@@ -90,6 +90,7 @@
     }
   },
   "projectMetrics": {
+    "numberModules": 2,
     "numberSourceFiles": 2,
     "numberTestFiles": 3,
     "numberLibrariesFailingModule": 4

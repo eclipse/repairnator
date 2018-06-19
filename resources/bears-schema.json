@@ -909,6 +909,15 @@
       "$id": "/properties/projectMetrics",
       "type": "object",
       "properties": {
+        "numberModules": {
+          "$id": "/properties/projectMetrics/properties/numberModules",
+          "type": "integer",
+          "title": "The numberModules Schema ",
+          "default": 0,
+          "examples": [
+            1
+          ]
+        },
         "numberLibrariesFailingModule": {
           "$id": "/properties/projectMetrics/properties/numberLibrariesFailingModule",
           "type": "integer",
@@ -938,6 +947,7 @@
         }
       },
       "required": [
+        "numberModules",
         "numberLibrariesFailingModule",
         "numberSourceFiles",
         "numberTestFiles"

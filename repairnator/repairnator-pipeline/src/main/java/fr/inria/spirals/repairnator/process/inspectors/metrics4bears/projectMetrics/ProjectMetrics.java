@@ -2,11 +2,20 @@ package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.projectMet
 
 public class ProjectMetrics {
 
+    private int numberModules;
     private int numberSourceFiles;
     private int numberTestFiles;
     private int numberLibrariesFailingModule;
 
     public ProjectMetrics() {}
+
+    public int getNumberModules() {
+        return numberModules;
+    }
+
+    public void setNumberModules(int numberModules) {
+        this.numberModules = numberModules;
+    }
 
     public int getNumberSourceFiles() {
         return numberSourceFiles;
