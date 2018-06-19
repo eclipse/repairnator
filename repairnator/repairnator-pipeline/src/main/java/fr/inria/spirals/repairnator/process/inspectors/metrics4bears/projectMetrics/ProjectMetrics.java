@@ -2,9 +2,25 @@ package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.projectMet
 
 public class ProjectMetrics {
 
+    /**
+     * {@code numberModules} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeModules}.
+     */
     private int numberModules;
+    /**
+     * {@code numberSourceFiles} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir}.
+     */
     private int numberSourceFiles;
+    /**
+     * {@code numberTestFiles} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir}.
+     */
     private int numberTestFiles;
+    /**
+     * {@code numberLibrariesFailingModule} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath}.
+     */
     private int numberLibrariesFailingModule;
 
     public ProjectMetrics() {}
