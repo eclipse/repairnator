@@ -27,30 +27,13 @@ public class TestProject extends AbstractStep {
         MavenFilterTestOutputHandler outputTestFilter = new MavenFilterTestOutputHandler(helper);
         helper.setOutputHandler(outputTestFilter);
 
-        int result = MavenHelper.MAVEN_ERROR;
         try {
-            result = helper.run();
+            helper.run();
         } catch (InterruptedException e) {
-            this.addStepError("Error while executing maven goal", e);
+            this.addStepError("Error while testing the project.", e);
+            return StepStatus.buildError(this, PipelineState.NOTTESTABLE);
         }
-
-        if (result == MavenHelper.MAVEN_SUCCESS) {
-            if (outputTestFilter.getRunningTests() > 0) {
-                this.getLogger().debug(outputTestFilter.getRunningTests() + " tests has been launched but none failed.");
-            } else {
-                this.addStepError("No test recorded.");
-            }
-            return StepStatus.buildSuccess(this);
-        } else {
-            if (outputTestFilter.isFailingWithTest()) {
-                this.getLogger().debug(outputTestFilter.getFailingTests() + " tests failed, "
-                        + outputTestFilter.getErroringTests() + " tests have error.");
-                return StepStatus.buildSuccess(this);
-            } else {
-                this.addStepError("Error while testing the project.");
-                return StepStatus.buildError(this, PipelineState.NOTTESTABLE);
-            }
-        }
+        return StepStatus.buildSuccess(this);
     }
 
 }
