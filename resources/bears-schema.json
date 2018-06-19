@@ -975,6 +975,15 @@
             "Apr 5, 2018 6:12:38 AM CET"
           ]
         },
+        "projectRootPomPath": {
+          "$id": "/properties/reproductionBuggyBuild/properties/projectRootPomPath",
+          "type": "string",
+          "title": "The projectRootPomPath",
+          "default": "",
+          "examples": [
+            "..."
+          ]
+        },
         "totalDuration": {
           "$id": "/properties/reproductionBuggyBuild/properties/totalDuration",
           "type": "integer",
@@ -1216,6 +1225,7 @@
       "required": [
         "reproductionDateBeginning",
         "reproductionDateEnd",
+        "projectRootPomPath",
         "totalDuration",
         "processDurations"
       ]

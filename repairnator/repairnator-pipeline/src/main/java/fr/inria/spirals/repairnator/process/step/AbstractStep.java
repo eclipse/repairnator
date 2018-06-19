@@ -232,6 +232,8 @@ public abstract class AbstractStep {
     protected String getPom() {
         if (!pomLocationTested) {
             testPomLocation();
+            this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild()
+                    .setProjectRootPomPath(this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE);
         }
         return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }

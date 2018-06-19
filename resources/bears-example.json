@@ -214,7 +214,8 @@
           1071
         ]
       }
-    }
+    },
+    "projectRootPomPath": "flink-tests/pom.xml"
   }
 
 }

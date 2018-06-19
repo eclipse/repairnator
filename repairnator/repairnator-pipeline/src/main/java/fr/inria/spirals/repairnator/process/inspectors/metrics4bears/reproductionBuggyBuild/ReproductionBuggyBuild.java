@@ -10,6 +10,7 @@ public class ReproductionBuggyBuild {
     private Date reproductionDateEnd;
     private int totalDuration;
     private ProcessDurations processDurations;
+    private String projectRootPomPath;
 
     public ReproductionBuggyBuild() {
         this.totalDuration = 0;
@@ -40,5 +41,13 @@ public class ReproductionBuggyBuild {
         this.totalDuration += step.getDuration();
 
         this.processDurations.addGlobalStepInfo(step);
+    }
+
+    public String getProjectRootPomPath() {
+        return projectRootPomPath;
+    }
+
+    public void setProjectRootPomPath(String projectRootPomPath) {
+        this.projectRootPomPath = projectRootPomPath;
     }
 }
