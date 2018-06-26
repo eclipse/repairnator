@@ -159,7 +159,6 @@ public class Launcher {
         opt2.setDefault(repairTools);
         jsap.registerParameter(opt2);
 
-
         return jsap;
     }
 
