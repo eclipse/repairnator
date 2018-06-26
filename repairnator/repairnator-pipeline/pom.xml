@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
-            <version>072027c4611b41b0ff2c486bfb6d9be8814ea745</version>
+            <version>4b9e6945827972434782e3201f03aa74c3db26f8</version>
         </dependency>
         <dependency>
             <groupId>eu.stamp-project</groupId>

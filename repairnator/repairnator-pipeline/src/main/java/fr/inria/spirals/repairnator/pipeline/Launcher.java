@@ -158,6 +158,12 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setDefault(repairTools);
         jsap.registerParameter(opt2);
+        
+        opt2 = new Switch("skipDelete");
+        opt2.setLongFlag("skipDelete");
+        opt2.setHelp("Specify whether to delete the docker containers when done");
+        opt2.setDefault(false);
+        jsap.registerParameter(opt2);
 
         return jsap;
     }
