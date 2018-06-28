@@ -158,6 +158,11 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setDefault(repairTools);
         jsap.registerParameter(opt2);
+        
+        Switch sw1 = new Switch("skipDelete");
+        sw1.setLongFlag("skipDelete");
+        sw1.setDefault("false");
+        jsap.registerParameter(sw1);
 
         return jsap;
     }
