@@ -49,7 +49,6 @@ echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
 LOG_FILENAME="repairnator-pipeline_`date \"+%Y-%m-%d_%H%M\"`_$BUILD_ID"
-DOCKER_ARGS="-d"
 DOCKER_ARGS="--env REPAIR_MODE=repair"
 DOCKER_ARGS="$DOCKER_ARGS --env BUILD_ID=$BUILD_ID"
 DOCKER_ARGS="$DOCKER_ARGS --env GITHUB_OAUTH=$GITHUB_OAUTH"
@@ -66,7 +65,7 @@ DOCKER_ARGS="$DOCKER_ARGS `ca \"--env NOTIFY_TO\" $NOTIFY_TO`"
 DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_HOST\" $MONGODB_HOST`"
 DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_NAME\" $MONGODB_NAME`"
 
-DOCKER_COMMAND="docker run $DOCKER_ARGS -v $LOG_DIR:/var/log $DOCKER_TAG"
+DOCKER_COMMAND="docker run -d $DOCKER_ARGS -v $LOG_DIR:/var/log $DOCKER_TAG"
 echo "Launch docker container with the following command: $DOCKER_COMMAND"
 
 DOCKER_ID=`$DOCKER_COMMAND`
