@@ -92,6 +92,8 @@ public class Launcher extends AbstractPoolManager {
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
         // --ghOauth
         jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
+        // --skipDelete
+        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
 
         FlaggedOption opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
