@@ -50,7 +50,7 @@ docker pull $DOCKER_TAG
 
 LOG_FILENAME="repairnator-pipeline_`date \"+%Y-%m-%d_%H%M\"`_$BUILD_ID"
 DOCKER_ARGS=""
-if [ "$SKIP_DELETE" -eq 1 ]; then
+if [ "$SKIP_DELETE" -eq 0 ]; then
     DOCKER_ARGS="$DOCKER_ARGS -d"
 fi
 DOCKER_ARGS="--env REPAIR_MODE=repair"
