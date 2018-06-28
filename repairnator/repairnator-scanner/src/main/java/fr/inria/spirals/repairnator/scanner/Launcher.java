@@ -101,8 +101,6 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // --ghOauth
         jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
-        // --skipDelete
-        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
 
         FlaggedOption opt2 = new FlaggedOption("lookupHours");
         opt2.setShortFlag('l');
@@ -185,7 +183,6 @@ public class Launcher {
         this.config.setLookToDate(lookToDate);
         this.config.setBearsMode(BearsMode.valueOf(arguments.getString("bearsMode").toUpperCase()));
         this.config.setBearsDelimiter(arguments.getBoolean("bearsDelimiter"));
-        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
     }
 
     private void initSerializerEngines() {
