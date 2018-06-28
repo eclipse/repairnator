@@ -48,7 +48,7 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
 fi
 
 if [ "$SKIP_DELETE" -eq 1 ]; then
-    elementaryArgs="$elementaryArgs --skipDelete"
+    args="$args --skipDelete"
 fi
 
 echo "Supplementary args for realtime scanner $args"

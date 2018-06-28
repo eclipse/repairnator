@@ -59,7 +59,7 @@ if [ "$HUMAN_PATCH" -eq 1 ]; then
     args="$args --humanPatch"
 fi
 if [ "$SKIP_DELETE" -eq 1 ]; then
-    elementaryArgs="$elementaryArgs --skipDelete"
+    args="$args --skipDelete"
 fi
 
 echo "Supplementary args for docker pool checkbranches $args"
