@@ -34,6 +34,10 @@ echo "Start to scan projects for builds (dest file: $REPAIRNATOR_BUILD_LIST)..."
 
 elementaryArgs="-i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID --ghOauth $GITHUB_OAUTH"
 
+if [ "$SKIP_DELETE" -eq 1 ]; then
+    elementaryArgs="$elementaryArgs --skipDelete"
+fi
+
 supplementaryArgs="`ca --dbhost $MONGODB_HOST`"
 supplementaryArgs="$supplementaryArgs `ca --dbname $MONGODB_NAME`"
 supplementaryArgs="$supplementaryArgs `ca -l $SCANNER_NB_HOURS`"
