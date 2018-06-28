@@ -77,8 +77,6 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
         jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
-        // --skipDelete
-        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
 
         Switch sw1 = new Switch("humanPatch");
         sw1.setShortFlag('p');
