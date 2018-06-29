@@ -17,10 +17,6 @@ function ca {
 
 args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
 
-if [ "$SKIP_DELETE" -eq 1 ]; then
-    args="$args --skipDelete"
-fi
-
 if [ ! -d "$OUTPUT" ]; then
     mkdir $OUTPUT
 fi
