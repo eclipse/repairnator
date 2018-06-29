@@ -217,13 +217,13 @@ public class GatherTestInformation extends AbstractStep {
             overallMetrics.setNumberSkipping(this.nbSkippingTests);
         }
 
-        this.getLogger().info("   Test results   ");
-        this.getLogger().info("Total tests: " + this.nbTotalTests);
-        this.getLogger().info("Tests run: " + this.nbRunningTests);
-        this.getLogger().info("Tests passing: " + (this.nbRunningTests - this.nbErroringTests - this.nbFailingTests));
-        this.getLogger().info("Failures: " + this.nbFailingTests);
-        this.getLogger().info("Errors: " + this.nbErroringTests);
-        this.getLogger().info("Skipped: " + this.nbSkippingTests);
+        this.getLogger().info("---Test results---");
+        this.getLogger().info("   Total tests: " + this.nbTotalTests);
+        this.getLogger().info("   Tests run: " + this.nbRunningTests);
+        this.getLogger().info("   Tests passing: " + (this.nbRunningTests - this.nbErroringTests - this.nbFailingTests));
+        this.getLogger().info("   Failures: " + this.nbFailingTests);
+        this.getLogger().info("   Errors: " + this.nbErroringTests);
+        this.getLogger().info("   Skipped: " + this.nbSkippingTests);
 
         return contract.shouldBeStopped(this);
     }

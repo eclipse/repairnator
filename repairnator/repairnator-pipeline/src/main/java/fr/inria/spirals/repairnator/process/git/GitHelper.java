@@ -81,7 +81,6 @@ public class GitHelper {
      *         null if the retrieve failed.
      */
     public String testCommitExistence(Git git, String oldCommitSha, AbstractStep step, Build build) {
-        this.getLogger().debug("Test commit " + oldCommitSha);
         try {
             ObjectId commitObject = git.getRepository().resolve(oldCommitSha);
             git.getRepository().open(commitObject);
