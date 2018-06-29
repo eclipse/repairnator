@@ -109,8 +109,6 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
         // --ghOauth
         jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
-        // --skipDelete
-        jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -203,7 +201,6 @@ public class Launcher {
 
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.config.getRepairTools(), ", "));
-        this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
     }
 
     private void checkToolsLoaded(JSAP jsap) {
