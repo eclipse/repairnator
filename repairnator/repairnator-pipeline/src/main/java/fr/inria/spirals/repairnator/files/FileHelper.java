@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.files;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -11,6 +12,8 @@ import java.util.List;
 
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +23,8 @@ public class FileHelper {
         return LoggerFactory.getLogger(this.getClass());
     }
 	
-	    /**
+
+    /**
      * Copy the files from a directory into another.
      *
      * @param sourceDir is the directory containing the files to be copied from.
@@ -67,6 +71,7 @@ public class FileHelper {
             step.addStepError("Error while copying files to prepare the git repository folder towards to push data: the source and/or target folders are null.");
         }
     }
+
 	
 	public static void deleteFile(File file) throws IOException {
         if (file != null) {
