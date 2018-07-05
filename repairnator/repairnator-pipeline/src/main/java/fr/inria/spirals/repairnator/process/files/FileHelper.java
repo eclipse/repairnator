@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 public class FileHelper {
 
-	private Logger getLogger() {
-		return LoggerFactory.getLogger(this.getClass());
+    private Logger getLogger() {
+        return LoggerFactory.getLogger(this.getClass());
     }
 	
 

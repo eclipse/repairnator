@@ -118,7 +118,7 @@ public class ProjectInspector {
     }
     
     public FileHelper getFileHelper() {
-    	return this.fileHelper;
+        return this.fileHelper;
     }
 
     public List<AbstractDataSerializer> getSerializers() {
