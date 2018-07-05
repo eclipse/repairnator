@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.files;
+package fr.inria.spirals.repairnator.process.files;
 
 import java.io.File;
 import java.io.FileFilter;
