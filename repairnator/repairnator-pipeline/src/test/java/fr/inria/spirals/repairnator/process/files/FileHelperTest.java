@@ -30,7 +30,7 @@ public class FileHelperTest {
 	@Test
 	public void testRemoveNotificationFromTravisYML() throws IOException{
 	    File resourceFile = new File("./src/test/resources/travis-file/.travis.yml");
-	    File tmpDir = Files.createTempDirectory("test_removeNotificationFromTravisYML").toFile();
+	    tmpDir = Files.createTempDirectory("test_removeNotificationFromTravisYML").toFile();
 	    FileUtils.copyFileToDirectory(resourceFile, tmpDir);
 	
 	    JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath());

@@ -92,7 +92,8 @@ public class TestInitRepoToPush {
     *FileHelper.removeNotificationFromTravisYML FileHelperTest.testRemoveNotificationFromTravisYML. 
     *However, this should be considered in the future for a proper integration test.
     */
-    @Ignore 
+    @Ignore
+    @Test
     public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
         long buildId = 331637757;
 
