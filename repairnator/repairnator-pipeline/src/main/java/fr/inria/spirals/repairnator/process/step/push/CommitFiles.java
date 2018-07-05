@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -34,17 +35,18 @@ public class CommitFiles extends AbstractStep {
             File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
 
             GitHelper gitHelper = this.getInspector().getGitHelper();
+            FileHelper fileHelper = this.getInspector().getFileHelper();
 
             String[] excludedFileNames = {".git", ".m2"};
             if (this.commitType == CommitType.COMMIT_BUGGY_BUILD) {
-                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, true, this);
+                fileHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, true, this);
             } else {
-                gitHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, false, this);
+                fileHelper.copyDirectory(sourceDir, targetDir, excludedFileNames, false, this);
             }
 
-            gitHelper.removeNotificationFromTravisYML(targetDir, this);
+            fileHelper.removeNotificationFromTravisYML(targetDir, this);
 
-            gitHelper.removeGhOauthFromCreatedFilesToPush(targetDir, this.getInspector().getJobStatus().getCreatedFilesToPush());
+            fileHelper.removeGhOauthFromCreatedFilesToPush(targetDir, this.getInspector().getJobStatus().getCreatedFilesToPush());
 
             try {
                 Git git;
