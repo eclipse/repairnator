@@ -17,6 +17,10 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Created by Tellström on 05/07/18.
+ */
+
 public class FileHelper {
 	
 	private Logger getLogger() {
