@@ -58,6 +58,9 @@ fi
 if [ "$HUMAN_PATCH" -eq 1 ]; then
     args="$args --humanPatch"
 fi
+if [ "$SKIP_DELETE" -eq 1 ]; then
+    args="$args --skipDelete"
+fi
 
 echo "Supplementary args for docker pool checkbranches $args"
 java $JAVA_OPTS -jar $REPAIRNATOR_CHECKBRANCHES_DEST_JAR -t $NB_THREADS -n $DOCKER_CHECKBRANCHES_TAG -i $INPUT -o $OUTPUT -r $CHECK_BRANCH_REPOSITORY -g $DAY_TIMEOUT --runId $RUN_ID $args &> $LOG_DIR/checkbranches.log
