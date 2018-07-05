@@ -20,6 +20,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -87,8 +88,11 @@ public class TestInitRepoToPush {
         assertThat(iterator.hasNext(), is(false));
     }
 
-    // FIXME: this test should be moved from here
-    @Test
+   /*This test has been ignored since an unit test is already testing the method 
+    *FileHelper.removeNotificationFromTravisYML FileHelperTest.testRemoveNotificationFromTravisYML. 
+    *However, this should be considered in the future for a proper integration test.
+    */
+    @Ignore 
     public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
         long buildId = 331637757;
 
