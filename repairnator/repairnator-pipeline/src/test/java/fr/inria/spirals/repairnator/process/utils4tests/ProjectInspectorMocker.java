@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.utils4tests;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -36,6 +37,7 @@ public class ProjectInspectorMocker {
         when(inspector.getPatchedBuild()).thenReturn(buildToBeInspected.getPatchedBuild());
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
+        when(inspector.getFileHelper()).thenReturn(new FileHelper());
         return inspector;
     }
 
