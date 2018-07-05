@@ -41,13 +41,13 @@ public class FileHelper {
      * @param step is the pipeline step from where this method was called (the info from the step is only used for logging purpose).
      *
      */
-    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToPerfectlyMatch, AbstractStep step) {
-        getLogger().debug("Copying files...");
-        if (sourceDir != null && targetDir != null) {
-            getLogger().debug("Source dir: " + sourceDir.getPath());
-            getLogger().debug("Target dir: " + targetDir.getPath());
+	public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToPerfectlyMatch, AbstractStep step) {
+		getLogger().debug("Copying files...");
+		if (sourceDir != null && targetDir != null) {
+			getLogger().debug("Source dir: " + sourceDir.getPath());
+			getLogger().debug("Target dir: " + targetDir.getPath());
 
-            try {
+			try {
                 FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
                     @Override
                     public boolean accept(File file) {
@@ -95,7 +95,7 @@ public class FileHelper {
     }
 	
 	public void removeNotificationFromTravisYML(File directory, AbstractStep step) {
-		 File travisFile = new File(directory, Utils.TRAVIS_FILE);
+		File travisFile = new File(directory, Utils.TRAVIS_FILE);
 
         if (!travisFile.exists()) {
             getLogger().warn("Travis file has not been detected. It should however exists.");
@@ -145,7 +145,7 @@ public class FileHelper {
         }
 	}
 	
-	    public void removeGhOauthFromCreatedFilesToPush(File directory, List<String> fileNames) {
+	public void removeGhOauthFromCreatedFilesToPush(File directory, List<String> fileNames) {
         String ghOauthPattern = "--ghOauth\\s+[\\w]+";
         for (String fileName : fileNames) {
             File file = new File(directory, fileName);
