@@ -5,7 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
@@ -44,7 +44,7 @@ public class TestComputeTestDir {
     @After
     public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
-        GitHelper.deleteFile(tmpDir);
+        FileHelper.deleteFile(tmpDir);
     }
 
     @Test

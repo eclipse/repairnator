@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
@@ -66,7 +66,7 @@ public class TestProjectInspector {
     @After
     public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
-        GitHelper.deleteFile(tmpDir);
+        FileHelper.deleteFile(tmpDir);
     }
 
     @Test
