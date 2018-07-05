@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import static fr.inria.spirals.repairnator.process.git.GitHelper.*;
+import static fr.inria.spirals.repairnator.process.files.FileHelper.*;
 
 /**
  * Created by urli on 05/01/2017.
