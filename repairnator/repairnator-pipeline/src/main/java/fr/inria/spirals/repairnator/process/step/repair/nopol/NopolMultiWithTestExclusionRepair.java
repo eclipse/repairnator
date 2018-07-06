@@ -10,6 +10,7 @@ import java.util.*;
  * and then only test in failure and finally only test in errors
  */
 public class NopolMultiWithTestExclusionRepair extends AbstractNopolRepair {
+    protected static final String TOOL_NAME = "NopolTestExclusionStrategy";
 
     @Override
     protected StepStatus businessExecute() {
@@ -56,6 +57,6 @@ public class NopolMultiWithTestExclusionRepair extends AbstractNopolRepair {
 
     @Override
     public String getRepairToolName() {
-        return "NopolTestExclusionStrategy";
+        return TOOL_NAME;
     }
 }

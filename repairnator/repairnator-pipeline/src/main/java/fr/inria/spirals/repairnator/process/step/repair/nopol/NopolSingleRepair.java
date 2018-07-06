@@ -9,6 +9,7 @@ import java.util.Collections;
  * This launch Nopol against the whole test suite
  */
 public class NopolSingleRepair extends AbstractNopolRepair {
+    protected static final String TOOL_NAME = "Nopol";
 
     @Override
     protected StepStatus businessExecute() {
@@ -31,6 +32,6 @@ public class NopolSingleRepair extends AbstractNopolRepair {
 
     @Override
     public String getRepairToolName() {
-        return "Nopol";
+        return TOOL_NAME;
     }
 }

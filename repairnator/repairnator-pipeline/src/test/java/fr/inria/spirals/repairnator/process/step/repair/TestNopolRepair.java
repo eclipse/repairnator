@@ -49,7 +49,6 @@ public class TestNopolRepair {
     public void setup() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
-        config.setRepairTools(Collections.singleton(NopolMultiWithTestExclusionRepair.TOOL_NAME));
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -75,6 +74,7 @@ public class TestNopolRepair {
         CloneRepository cloneStep = new CloneRepository(inspector);
         NopolMultiWithTestExclusionRepair nopolRepair = new NopolMultiWithTestExclusionRepair();
         nopolRepair.setProjectInspector(inspector);
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(nopolRepair.getRepairToolName()));
         NopolMultiWithTestExclusionRepair.TOTAL_MAX_TIME = 2;
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
