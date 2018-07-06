@@ -80,15 +80,20 @@ public class ComputeSourceDir extends AbstractStep {
                 if (buildSection != null) {
                     String pathSrcDirFromPom = buildSection.getSourceDirectory();
 
-                    File srcDirFromPom = new File(pathSrcDirFromPom);
+                    if (pathSrcDirFromPom != null) {
+                        File srcDirFromPom = new File(pathSrcDirFromPom);
 
-                    if (srcDirFromPom.exists()) {
-                        result.add(srcDirFromPom);
-                        return result.toArray(new File[result.size()]);
+                        if (srcDirFromPom.exists()) {
+                            result.add(srcDirFromPom);
+                            return result.toArray(new File[result.size()]);
+                        }
+
+                        this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
+                                + ") does not exists. Try to get source dir from all modules if multimodule.");
+                    } else {
+                        this.getLogger().debug("The source directory has not been found in pom.xml. Try to get source dir from all modules.");
                     }
 
-                    this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
-                            + ") does not exists. Try to get source dir from all modules if multimodule.");
                 } else {
                     this.getLogger().debug(
                             "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
