@@ -65,15 +65,20 @@ public class ComputeTestDir extends AbstractStep {
                 if (buildSection != null) {
                     String pathTestDirFromPom = model.getBuild().getTestSourceDirectory();
 
-                    File srcDirFromPom = new File(pathTestDirFromPom);
+                    if (pathTestDirFromPom != null) {
+                        File srcDirFromPom = new File(pathTestDirFromPom);
 
-                    if (srcDirFromPom.exists()) {
-                        result.add(srcDirFromPom);
-                        return result.toArray(new File[result.size()]);
+                        if (srcDirFromPom.exists()) {
+                            result.add(srcDirFromPom);
+                            return result.toArray(new File[result.size()]);
+                        }
+
+                        this.getLogger().debug("The test directory given in pom.xml (" + pathTestDirFromPom
+                                + ") does not exists. Try to get test dir from all modules if multimodule.");
+                    } else {
+                        this.getLogger().debug("The test directory has not been found in pom.xml.");
                     }
 
-                    this.getLogger().debug("The test directory given in pom.xml (" + pathTestDirFromPom
-                            + ") does not exists. Try to get test dir from all modules if multimodule.");
                 } else {
                     this.getLogger().debug(
                             "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
