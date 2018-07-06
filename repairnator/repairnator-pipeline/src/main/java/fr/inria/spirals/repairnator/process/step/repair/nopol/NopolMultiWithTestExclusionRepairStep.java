@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.step.repair;
+package fr.inria.spirals.repairnator.process.step.repair.nopol;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
+import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import spoon.SpoonException;
@@ -30,9 +31,10 @@ import java.util.concurrent.*;
 import static fr.inria.spirals.repairnator.process.git.GitHelper.*;
 
 /**
- * Created by urli on 05/01/2017.
+ * This step is used to launch Nopol using a repair strategy by trying first all test
+ * and then only test in failure and finally only test in errors
  */
-public class NopolRepair extends AbstractRepairStep {
+public class NopolMultiWithTestExclusionRepairStep extends AbstractRepairStep {
     protected static final String TOOL_NAME = "Nopol";
     protected static final String TOOL_RESULTS_FOLDER_NAME = "repairnator.nopol.results";
     public static int TOTAL_MAX_TIME = 60 * 4; // We expect it to run 4
