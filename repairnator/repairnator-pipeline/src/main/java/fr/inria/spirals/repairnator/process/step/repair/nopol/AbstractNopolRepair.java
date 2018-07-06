@@ -26,10 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -45,19 +43,63 @@ import static fr.inria.spirals.repairnator.process.git.GitHelper.deleteFile;
  * and then only test in failure and finally only test in errors
  */
 public abstract class AbstractNopolRepair extends AbstractRepairStep {
-    protected static final String TOOL_NAME = "Nopol";
-    protected static final String TOOL_RESULTS_FOLDER_NAME = "repairnator.nopol.results";
     public static int TOTAL_MAX_TIME = 60 * 4; // We expect it to run 4
                                                       // hours top.
     private static final int MIN_TIMEOUT = 2;
+    private int passingTime;
+    private Gson gson;
+    private Metrics metric;
+    private List<URL> classPath;
+    private File[] sources;
+    private File patchDir;
+    private List<RepairPatch> repairPatches;
+    private boolean patchCreated;
+    private JsonArray toolDiag;
 
-    @Override
-    public String getRepairToolName() {
-        return TOOL_NAME;
+    public AbstractNopolRepair() {
+        this.repairPatches = new ArrayList<>();
+        this.toolDiag = new JsonArray();
+        this.gson = new Gson();
+        this.passingTime = 0;
     }
 
-    @Override
-    protected StepStatus runNopol(FailureLocation failureLocation, List<String> testsToIgnore) {
+    public void setMetric(Metrics metric) {
+        this.metric = metric;
+    }
+
+    public void setClassPath(List<URL> classPath) {
+        this.classPath = classPath;
+    }
+
+    public void setSources(File[] sources) {
+        this.sources = sources;
+    }
+
+    public String getToolResultsFolderName() {
+        return "repairnator." + this.getRepairToolName().toLowerCase() + ".results";
+    }
+
+    public void initPatchDir() {
+        this.patchDir = new File(this.getInspector().getRepoLocalPath()+"/"+this.getToolResultsFolderName());
+        this.patchDir.mkdirs();
+    }
+
+    public void initWithJobStatus() {
+        JobStatus jobStatus = this.getInspector().getJobStatus();
+        this.setMetric(jobStatus.getMetrics());
+        this.setClassPath(jobStatus.getRepairClassPath());
+        this.setSources(jobStatus.getRepairSourceDir());
+    }
+
+    public File[] getSources() {
+        return sources;
+    }
+
+    public List<URL> getClassPath() {
+        return classPath;
+    }
+
+    protected void runNopol(FailureLocation failureLocation, List<String> testsToIgnore, boolean ignoreError) {
         NopolInformation nopolInformation;
         if (testsToIgnore.isEmpty()) {
             nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.NOTHING_TO_IGNORE);
@@ -73,7 +115,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         nopolInformation.setStatus(NopolStatus.RUNNING);
 
         String testClass = failureLocation.getClassName();
-        int timeout = (TOTAL_MAX_TIME - passingTime) / 2;
+        int timeout = (TOTAL_MAX_TIME - this.passingTime) / 2;
         if (timeout < MIN_TIMEOUT) {
             timeout = MIN_TIMEOUT;
         }
@@ -179,95 +221,39 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         int localPassingTime = Math.round((afterNopol - beforeNopol) / 60000);
         nopolInformation.setPassingTime(localPassingTime);
 
-        toolDiag.add(gson.toJsonTree(nopolInformation));
+        this.toolDiag.add(gson.toJsonTree(nopolInformation));
 
         passingTime += localPassingTime;
     }
 
-    protected StepStatus process() {
-        this.getLogger().debug("Start to use nopol to repair...");
-
-        JobStatus jobStatus = this.getInspector().getJobStatus();
-
-        File patchDir = new File(this.getInspector().getRepoLocalPath()+"/"+TOOL_RESULTS_FOLDER_NAME);
-        patchDir.mkdir();
-
-        JsonArray toolDiag = new JsonArray();
-        List<RepairPatch> repairPatches = new ArrayList<>();
-        Gson gson = new Gson();
-        Metrics metric = jobStatus.getMetrics();
-        List<URL> classPath = jobStatus.getRepairClassPath();
-        File[] sources = jobStatus.getRepairSourceDir();
-
-        if (classPath != null && sources != null) {
-            String[] sourcesStr = new String[sources.length];
-
-            int i = 0;
-            for (File f : sources) {
-                sourcesStr[i++] = f.getAbsolutePath();
-            }
-
-            List<FailureLocation> failureLocationList = new ArrayList<>(jobStatus.getFailureLocations());
-            Collections.sort(failureLocationList, new ComparatorFailureLocation());
-
-            boolean patchCreated = false;
-            int passingTime = 0;
-
-            for (FailureLocation failureLocation : failureLocationList) {
-                Set<String> erroringTests = failureLocation.getErroringMethods();
-                Set<String> failingTests = failureLocation.getFailingMethods();
-
-                // this one is used to loop on Nopol over tests to ignore. It can be a list containing an empty list.
-                List<List<String>> listOfTestToIgnore = new ArrayList<>();
-
-                boolean ignoreError = false;
-                // in that case: no tests to ignore
-                if (erroringTests.isEmpty() || failingTests.isEmpty()) {
-                    listOfTestToIgnore.add(new ArrayList<>());
-                // then we will first try to ignore erroring tests, then to ignore failing tests
-                } else {
-                    listOfTestToIgnore.add(new ArrayList<>(erroringTests));
-                    listOfTestToIgnore.add(new ArrayList<>(failingTests));
-
-                    ignoreError = true;
-                }
-
-                for (List<String> testsToIgnore : listOfTestToIgnore) {
-
-                }
-            }
-
-            File nopolLog = new File(System.getProperty("user.dir"), "debug.log");
-            if (nopolLog.exists()) {
-                String nopolDestName = "repairnator.nopol.log";
-                File nopolDest = new File(this.getInspector().getRepoLocalPath(), nopolDestName);
-                try {
-                    Files.move(nopolLog.toPath(), nopolDest.toPath());
-                    jobStatus.addFileToPush(nopolDestName);
-                } catch (IOException e) {
-                    getLogger().error("Error while renaming nopol log", e);
-                }
-            }
-
-            this.recordPatches(repairPatches);
-            this.recordToolDiagnostic(toolDiag);
-
+    protected StepStatus recordResults() {
+        File nopolLog = new File(System.getProperty("user.dir"), "debug.log");
+        if (nopolLog.exists()) {
+            String nopolDestName = "repairnator.nopol.log";
+            File nopolDest = new File(this.getInspector().getRepoLocalPath(), nopolDestName);
             try {
-                deleteFile(patchDir);
+                Files.move(nopolLog.toPath(), nopolDest.toPath());
+                this.getInspector().getJobStatus().addFileToPush(nopolDestName);
             } catch (IOException e) {
-                getLogger().error("Error while removing the temp folder containing Nopol output", e);
+                getLogger().error("Error while renaming nopol log", e);
             }
-
-            if (!patchCreated) {
-                this.addStepError("No patch has been generated by Nopol. Look at the trace to get more information.");
-                return StepStatus.buildSkipped(this,"No patch has been found.");
-            }
-
-            return StepStatus.buildSuccess(this);
-        } else {
-            this.addStepError("No classpath or sources directory has been given. Nopol can't be launched.");
-            return StepStatus.buildSkipped(this,"No classpath or source directory given.");
         }
+
+        this.recordPatches(repairPatches);
+        this.recordToolDiagnostic(toolDiag);
+
+        try {
+            deleteFile(patchDir);
+        } catch (IOException e) {
+            getLogger().error("Error while removing the temp folder containing Nopol output", e);
+        }
+
+        if (!patchCreated) {
+            this.addStepError("No patch has been generated by Nopol. Look at the trace to get more information.");
+            return StepStatus.buildSkipped(this,"No patch has been found.");
+        }
+
+        return StepStatus.buildSuccess(this);
     }
 
 }

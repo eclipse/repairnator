@@ -16,7 +16,7 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepairStep;
+import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -49,7 +49,7 @@ public class TestNopolRepair {
     public void setup() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
-        config.setRepairTools(Collections.singleton(NopolMultiWithTestExclusionRepairStep.TOOL_NAME));
+        config.setRepairTools(Collections.singleton(NopolMultiWithTestExclusionRepair.TOOL_NAME));
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -73,9 +73,9 @@ public class TestNopolRepair {
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        NopolMultiWithTestExclusionRepairStep nopolRepair = new NopolMultiWithTestExclusionRepairStep();
+        NopolMultiWithTestExclusionRepair nopolRepair = new NopolMultiWithTestExclusionRepair();
         nopolRepair.setProjectInspector(inspector);
-        NopolMultiWithTestExclusionRepairStep.TOTAL_MAX_TIME = 2;
+        NopolMultiWithTestExclusionRepair.TOTAL_MAX_TIME = 2;
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
                 .setNextStep(new TestProject(inspector))
