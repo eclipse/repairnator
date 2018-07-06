@@ -38,8 +38,8 @@ public class ComputeSourceDir extends AbstractStep {
         this.allModules = allModules;
     }
 
-    public ComputeSourceDir(ProjectInspector inspector, String name, boolean blockingStep, boolean allModules) {
-        super(inspector, name, blockingStep);
+    public ComputeSourceDir(ProjectInspector inspector, boolean blockingStep, String name, boolean allModules) {
+        super(inspector, blockingStep, name);
         this.allModules = allModules;
     }
 
@@ -47,15 +47,17 @@ public class ComputeSourceDir extends AbstractStep {
         List<File> result = new ArrayList<File>();
         File defaultSourceDir = new File(incriminatedModulePath + DEFAULT_SRC_DIR);
 
+        boolean wasDefaultSourceDirFound = false;
         if (defaultSourceDir.exists()) {
+            wasDefaultSourceDirFound = true;
             result.add(defaultSourceDir);
             if (!this.allModules) {
                 return result.toArray(new File[result.size()]);
             }
+        } else {
+            this.getLogger().debug("The default source directory (" + defaultSourceDir.getPath()
+                    + ") does not exists. Try to read pom.xml to get information.");
         }
-
-        this.getLogger().debug("The default source directory (" + defaultSourceDir.getPath()
-                + ") does not exists. Try to read pom.xml to get informations.");
         File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
         if (!pomIncriminatedModule.exists()) {
@@ -72,23 +74,25 @@ public class ComputeSourceDir extends AbstractStep {
         try {
             Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.getInspector().getM2LocalPath());
 
-            Build buildSection = model.getBuild();
+            if (!wasDefaultSourceDirFound) {
+                Build buildSection = model.getBuild();
 
-            if (buildSection != null) {
-                String pathSrcDirFromPom = model.getBuild().getSourceDirectory();
+                if (buildSection != null) {
+                    String pathSrcDirFromPom = buildSection.getSourceDirectory();
 
-                File srcDirFromPom = new File(pathSrcDirFromPom);
+                    File srcDirFromPom = new File(pathSrcDirFromPom);
 
-                if (srcDirFromPom.exists()) {
-                    result.add(srcDirFromPom);
-                    return result.toArray(new File[result.size()]);
+                    if (srcDirFromPom.exists()) {
+                        result.add(srcDirFromPom);
+                        return result.toArray(new File[result.size()]);
+                    }
+
+                    this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
+                            + ") does not exists. Try to get source dir from all modules if multimodule.");
+                } else {
+                    this.getLogger().debug(
+                            "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
                 }
-
-                this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
-                        + ") does not exists. Try to get source dir from all modules if multimodule.");
-            } else {
-                this.getLogger().debug(
-                        "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
             }
 
             for (String module : model.getModules()) {
@@ -142,6 +146,7 @@ public class ComputeSourceDir extends AbstractStep {
                 totalAppFiles += nbFile;
             }
             this.getInspector().getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
+            this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberSourceFiles(totalAppFiles);
         }
     }
 
@@ -188,6 +193,15 @@ public class ComputeSourceDir extends AbstractStep {
             this.getInspector().getJobStatus().setRepairSourceDir(null);
             return StepStatus.buildError(this, PipelineState.SOURCEDIRNOTCOMPUTED);
         } else {
+            if (sources.length == 1) {
+                this.getLogger().info("The following source dir was found:");
+            } else {
+                this.getLogger().info("The following source dirs were found:");
+            }
+            for (File file : sources) {
+                this.getLogger().info(file.getAbsolutePath());
+            }
+
             this.getInspector().getJobStatus().setRepairSourceDir(sources);
             return StepStatus.buildSuccess(this);
         }

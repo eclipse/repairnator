@@ -9,24 +9,16 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.serializer.MetricsSerializer;
-import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
-import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
-import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
+import fr.inria.spirals.repairnator.serializer.*;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.FixerBuildNotifier;
+import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -81,7 +73,7 @@ public class Launcher {
             LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
         }
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+        if (this.config.isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -173,6 +165,9 @@ public class Launcher {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setClean(true);
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
@@ -260,7 +255,7 @@ public class Launcher {
         ErrorNotifier.getInstance(notifierEngines);
 
         this.notifiers = new ArrayList<>();
-        this.notifiers.add(new FixerBuildNotifier(notifierEngines));
+        this.notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
         this.patchNotifier = new PatchNotifier(notifierEngines);
     }
@@ -338,14 +333,15 @@ public class Launcher {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            serializers.add(new InspectorSerializer(this.engines));
-        } else {
+        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             serializers.add(new InspectorSerializer4Bears(this.engines));
+            serializers.add(new MetricsSerializer4Bears(this.engines));
+        } else {
+            serializers.add(new InspectorSerializer(this.engines));
+            serializers.add(new MetricsSerializer(this.engines));
         }
 
         serializers.add(new InspectorTimeSerializer(this.engines));
-        serializers.add(new MetricsSerializer(this.engines));
         serializers.add(new PipelineErrorSerializer(this.engines));
         serializers.add(new PatchesSerializer(this.engines));
         serializers.add(new ToolDiagnosticSerializer(this.engines));

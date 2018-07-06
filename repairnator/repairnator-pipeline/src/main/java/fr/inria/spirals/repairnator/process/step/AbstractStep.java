@@ -1,43 +1,26 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.step.push.PushIncriminatedBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.*;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by urli on 03/01/2017.
  */
 public abstract class AbstractStep {
-    private static final String PROPERTY_FILENAME = "repairnator.json";
-
     /**
      * The name of the step, by default it's the class name
      * We can use a custom name to distinguish two different instances.
@@ -48,14 +31,16 @@ public abstract class AbstractStep {
 
     private boolean shouldStop;
     private AbstractStep nextStep;
-    private long dateBegin;
-    private long dateEnd;
+    private Date dateBegin;
+    private Date dateEnd;
+    private long timeBegin;
+    private long timeEnd;
     private boolean pomLocationTested;
     private List<AbstractDataSerializer> serializers;
     private List<AbstractNotifier> notifiers;
-    private Properties properties;
     private RepairnatorConfig config;
 
+    private StepStatus stepStatus;
     private PushState pushState;
 
     /**
@@ -64,20 +49,18 @@ public abstract class AbstractStep {
     private boolean blockingStep;
 
     public AbstractStep(ProjectInspector inspector, boolean blockingStep) {
-        this(inspector, "", blockingStep);
+        this(inspector, blockingStep, "");
         this.name = this.getClass().getSimpleName();
     }
 
-    public AbstractStep(ProjectInspector inspector, String name, boolean blockingStep) {
+    public AbstractStep(ProjectInspector inspector, boolean blockingStep, String name) {
         this.name = name;
-        this.inspector = inspector;
         this.shouldStop = false;
         this.pomLocationTested = false;
         this.serializers = new ArrayList<>();
-        this.properties = new Properties();
         this.config = RepairnatorConfig.getInstance();
         this.blockingStep = blockingStep;
-        this.initStates();
+        this.setProjectInspector(inspector);
     }
 
     public void setBlockingStep(boolean blockingStep) {
@@ -103,23 +86,16 @@ public abstract class AbstractStep {
         }
     }
 
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-        if (this.nextStep != null) {
-            this.nextStep.setProperties(properties);
-        }
-    }
-
-    protected Properties getProperties() {
-        return properties;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public StepStatus getStepStatus() {
+        return stepStatus;
     }
 
     public void setDataSerializer(List<AbstractDataSerializer> serializers) {
@@ -139,14 +115,13 @@ public abstract class AbstractStep {
         this.nextStep = nextStep;
         nextStep.setDataSerializer(this.serializers);
         nextStep.setNotifiers(this.notifiers);
-        nextStep.setProperties(this.properties);
         return nextStep;
     }
 
     protected void setPushState(PushState pushState) {
         if (pushState != null) {
             this.pushState = pushState;
-            this.inspector.getJobStatus().setPushState(this.pushState);
+            this.inspector.getJobStatus().addPushState(this.pushState);
             if (this.nextStep != null) {
                 this.nextStep.setPushState(pushState);
             }
@@ -213,12 +188,12 @@ public abstract class AbstractStep {
 
     private void testPomLocation() {
         this.pomLocationTested = true;
-        File defaultPomFile = new File(this.inspector.getRepoLocalPath() + File.separator + "pom.xml");
+        File defaultPomFile = new File(this.inspector.getRepoLocalPath() + File.separator + Utils.POM_FILE);
 
         if (defaultPomFile.exists()) {
             return;
         } else {
-            this.getLogger().info("The pom.xml file is not at the root of the repository. Try to find another one.");
+            this.getLogger().info("The pom.xml file is not at the root of the repository. Start to search it in folders...");
 
             File rootRepo = new File(this.inspector.getRepoLocalPath());
 
@@ -232,8 +207,15 @@ public abstract class AbstractStep {
             if (dirs != null) {
                 Arrays.sort(dirs);
                 for (File dir : dirs) {
-                    File pomFile = new File(dir.getPath()+File.separator+"pom.xml");
+                    File gitDir = new File(dir.getPath()+File.separator+".git");
 
+                    if (gitDir.exists()) {
+                        this.getLogger().debug("Skip folder "+dir.getPath()+": it is a git sub-module project.");
+                        continue;
+                    }
+
+                    File pomFile = new File(dir.getPath()+File.separator+Utils.POM_FILE);
+                  
                     if (pomFile.exists()) {
                         this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
                         this.inspector.getJobStatus().setPomDirPath(dir.getPath());
@@ -251,7 +233,7 @@ public abstract class AbstractStep {
         if (!pomLocationTested) {
             testPomLocation();
         }
-        return this.inspector.getJobStatus().getPomDirPath() + File.separator + "pom.xml";
+        return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }
 
     protected void cleanMavenArtifacts() {
@@ -275,8 +257,11 @@ public abstract class AbstractStep {
     }
 
     public void setProjectInspector(ProjectInspector inspector) {
-        this.inspector = inspector;
-        this.initStates();
+        if (inspector != null) {
+            this.inspector = inspector;
+            this.inspector.registerStep(this);
+            this.initStates();
+        }
     }
 
     public boolean isShouldStop() {
@@ -284,30 +269,50 @@ public abstract class AbstractStep {
     }
 
     public void execute() {
-        this.dateBegin = new Date().getTime();
-        StepStatus stepStatus = this.businessExecute();
-        this.dateEnd = new Date().getTime();
+        List<AbstractStep> steps = this.inspector.getSteps();
+        this.getLogger().debug("----------------------------------------------------------------------");
+        this.getLogger().debug("STEP "+ (steps.indexOf(this) + 1)+"/"+ steps.size() +": "+this.name);
+        this.getLogger().debug("----------------------------------------------------------------------");
+
+        this.dateBegin = new Date();
+        this.timeBegin = dateBegin.getTime();
+        this.stepStatus = this.businessExecute();
+        this.dateEnd = new Date();
+        this.timeEnd = dateEnd.getTime();
+
+        this.getLogger().debug("STEP STATUS: "+this.stepStatus);
+        this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
 
         Metrics metric = this.inspector.getJobStatus().getMetrics();
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
-        this.inspector.getJobStatus().addStepStatus(stepStatus);
+        ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild();
+        reproductionBuggyBuild.addStep(this);
 
-        this.shouldStop = this.shouldStop || (this.isBlockingStep() && !stepStatus.isSuccess());
+        this.inspector.getJobStatus().addStepStatus(this.stepStatus);
+
+        this.shouldStop = this.shouldStop || (this.isBlockingStep() && !this.stepStatus.isSuccess());
         if (!this.shouldStop) {
+            this.getLogger().debug("EXECUTE NEXT STEP");
             this.executeNextStep();
         } else {
+            this.getLogger().debug("TERMINATE PIPELINE");
             this.terminatePipeline();
         }
     }
 
     private void terminatePipeline() {
-        this.recordMetrics();
-        this.writeProperty("metrics", this.inspector.getJobStatus().getMetrics());
-        this.lastPush();
-        this.serializeData();
-        this.cleanMavenArtifacts();
+        if (!this.inspector.isPipelineEnding()) {
+            this.inspector.setPipelineEnding(true);
+            this.recordMetrics();
+            if (this.inspector.getFinalStep() != null) {
+                this.inspector.getFinalStep().execute();
+            }
+            this.serializeData();
+            this.cleanMavenArtifacts();
+            this.inspector.printPipelineEnd();
+        }
     }
 
     private void recordMetrics() {
@@ -316,87 +321,23 @@ public abstract class AbstractStep {
         metric.setFreeMemory(Runtime.getRuntime().freeMemory());
         metric.setTotalMemory(Runtime.getRuntime().totalMemory());
         metric.setNbCPU(Runtime.getRuntime().availableProcessors());
+
+        this.getInspector().getJobStatus().writeProperty("metrics", metric);
     }
 
-    private int getDuration() {
-        if (dateEnd == 0 || dateBegin == 0) {
+    public Date getDateBegin() {
+        return dateBegin;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public int getDuration() {
+        if (timeEnd == 0 || timeBegin == 0) {
             return 0;
         }
-        return Math.round((dateEnd - dateBegin) / 1000);
-    }
-
-    // FIXME: this method should not be placed here
-    private void lastPush() {
-        if (RepairnatorConfig.getInstance().isPush() && this.getInspector().getJobStatus().getPushState() != PushState.NONE) {
-            File sourceDir = new File(this.getInspector().getRepoLocalPath());
-            File targetDir = new File(this.getInspector().getRepoToPushLocalPath());
-
-            try {
-                Git git = Git.open(targetDir);
-
-                org.apache.commons.io.FileUtils.copyDirectory(sourceDir, targetDir, new FileFilter() {
-                    @Override
-                    public boolean accept(File pathname) {
-                        return !pathname.toString().contains(".git") && !pathname.toString().contains(".m2") && !pathname.toString().contains(".travis.yml");
-                    }
-                });
-
-                git.add().addFilepattern(".").call();
-
-                for (String fileToPush : this.getInspector().getJobStatus().getCreatedFilesToPush()) {
-                    // add force is not supported by JGit...
-                    ProcessBuilder processBuilder = new ProcessBuilder("git", "add", "-f",fileToPush)
-                            .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
-
-                    try {
-                        Process p = processBuilder.start();
-                        p.waitFor();
-                    } catch (InterruptedException|IOException e) {
-                        this.getLogger().error("Error while executing git command to add files: " + e);
-                    }
-                }
-
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("End of the repairnator process")
-                        .setAuthor(personIdent).setCommitter(personIdent).call();
-
-                if (this.getInspector().getJobStatus().isHasBeenPushed()) {
-                    CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(this.config.getGithubToken(), "");
-                    git.push().setRemote(PushIncriminatedBuild.REMOTE_NAME).setCredentialsProvider(credentialsProvider).call();
-                }
-            } catch (GitAPIException | IOException e) {
-                this.getLogger().error("Error while trying to commit last information for repairnator", e);
-            }
-        }
-
-
-    }
-
-    protected void writeProperty(String propertyName, Object value) {
-        if (value != null) {
-            this.properties.put(propertyName, value);
-
-            String filePath = this.inspector.getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
-            File file = new File(filePath);
-
-            Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-            String jsonString = gson.toJson(this.properties);
-
-            try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(file));
-                outputStream.write(jsonString);
-                outputStream.flush();
-                outputStream.close();
-            } catch (IOException e) {
-                this.getLogger().error("Cannot write property to the following file: " + filePath, e);
-            }
-        } else {
-            this.getLogger().warn("Trying to write property null for key: "+propertyName);
-        }
-
+        return Math.round((timeEnd - timeBegin) / 1000);
     }
 
     public RepairnatorConfig getConfig() {

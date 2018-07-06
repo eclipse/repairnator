@@ -13,6 +13,10 @@ public class CheckoutBuggyBuildSourceCode extends CheckoutRepository {
         super(inspector, blockingStep);
     }
 
+    public CheckoutBuggyBuildSourceCode(ProjectInspector inspector, boolean blockingStep, String stepName) {
+        super(inspector, blockingStep, stepName);
+    }
+
     protected StepStatus businessExecute() {
         this.getLogger().debug("Checking out the source code of the previous build...");
 

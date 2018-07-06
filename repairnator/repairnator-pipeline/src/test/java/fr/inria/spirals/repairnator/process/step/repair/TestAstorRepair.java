@@ -5,6 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
@@ -20,13 +21,15 @@ import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair;
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,27 +40,29 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class TestAstorRepair {
-	@Before
+
+    private File tmpDir;
+
+    @Before
 	public void setup() {
 		Utils.setLoggersLevel(Level.ERROR);
 	}
+
+    @After
+    public void tearDown() throws IOException {
+        GitHelper.deleteFile(tmpDir);
+    }
 
 	@Test
 	public void testAstorJkali() throws IOException {
 		long buildId = 376820338; // surli/failingProject astor-jkali-failure
 
-		Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-		assertTrue(optionalBuild.isPresent());
-		Build build = optionalBuild.get();
-		assertThat(build, notNullValue());
-		assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
 		AstorJKaliRepair astorJKaliRepair = new AstorJKaliRepair();
 
 		RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(astorJKaliRepair.getRepairToolName()));
-		Path tmpDirPath = Files.createTempDirectory("test_astorjkali");
-		File tmpDir = tmpDirPath.toFile();
-		tmpDir.deleteOnExit();
+		tmpDir = Files.createTempDirectory("test_astorjkali").toFile();
 
 		BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
@@ -98,18 +103,12 @@ public class TestAstorRepair {
 	public void testAstorJMut() throws IOException {
 		long buildId = 376847154; // surli/failingProject astor-jkali-failure
 
-		Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-		assertTrue(optionalBuild.isPresent());
-		Build build = optionalBuild.get();
-		assertThat(build, notNullValue());
-		assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
 		AstorJMutRepair astorJMutRepair = new AstorJMutRepair();
 
 		RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(astorJMutRepair.getRepairToolName()));
-		Path tmpDirPath = Files.createTempDirectory("test_astorjkali");
-		File tmpDir = tmpDirPath.toFile();
-		tmpDir.deleteOnExit();
+		tmpDir = Files.createTempDirectory("test_astorjkali").toFile();
 
 		BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
@@ -144,4 +143,16 @@ public class TestAstorRepair {
 		List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
 		assertThat(allPatches.isEmpty(), is(false));
 	}
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, IsNull.notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
+    }
 }

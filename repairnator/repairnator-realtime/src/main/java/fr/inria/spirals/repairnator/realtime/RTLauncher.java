@@ -132,6 +132,9 @@ public class RTLauncher {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setLauncherMode(this.launcherMode);
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());

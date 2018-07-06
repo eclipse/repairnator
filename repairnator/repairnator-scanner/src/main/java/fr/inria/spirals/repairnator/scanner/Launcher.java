@@ -61,14 +61,14 @@ public class Launcher {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
+        this.initConfig(arguments); // "this.config" is only available after this call, which initializes the config
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+        if (this.config.isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
 
-        this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
     }
@@ -146,6 +146,9 @@ public class Launcher {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
 

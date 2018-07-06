@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.paths;
 
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -62,7 +63,7 @@ public class ComputeClasspath extends AbstractStep {
         properties.setProperty("mdep.outputFile", CLASSPATH_FILENAME);
 
         String goal = "dependency:build-classpath";
-        String pomModule = incriminatedModule + File.separator + "pom.xml";
+        String pomModule = incriminatedModule + File.separator + Utils.POM_FILE;
 
         MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(),
                 this.getInspector(), true);
@@ -91,15 +92,19 @@ public class ComputeClasspath extends AbstractStep {
                 File f = new File(jar);
                 this.addFileToClassPath(f);
             }
+            this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath: " + e);
         }
 
+        int numberLibraries = 0;
         boolean containJunit = false;
         for (URL url : classPath) {
             if (url.toString().contains("junit")) {
                 containJunit = true;
-                break;
+            }
+            if (url.toString().endsWith(".jar")) {
+                numberLibraries++;
             }
         }
 
@@ -108,7 +113,9 @@ public class ComputeClasspath extends AbstractStep {
         }
 
         this.getInspector().getJobStatus().setRepairClassPath(this.classPath);
-        this.getInspector().getJobStatus().getMetrics().setNbLibraries(this.classPath.size()-2);
+        this.getInspector().getJobStatus().getMetrics().setNbLibraries(numberLibraries);
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberLibraries(numberLibraries);
+
         return StepStatus.buildSuccess(this);
     }
 }

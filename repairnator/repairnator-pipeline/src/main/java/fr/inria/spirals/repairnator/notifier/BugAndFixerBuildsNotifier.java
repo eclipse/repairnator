@@ -14,10 +14,10 @@ import java.util.Optional;
 /**
  * Created by urli on 30/03/2017.
  */
-public class FixerBuildNotifier extends AbstractNotifier {
+public class BugAndFixerBuildsNotifier extends AbstractNotifier {
     private boolean alreadyNotified;
 
-    public FixerBuildNotifier(List<NotifierEngine> engines) {
+    public BugAndFixerBuildsNotifier(List<NotifierEngine> engines) {
         super(engines);
         this.alreadyNotified = false;
     }
@@ -27,9 +27,9 @@ public class FixerBuildNotifier extends AbstractNotifier {
         if (inspector instanceof ProjectInspector4Bears) {
             ProjectInspector4Bears inspector4Bears = (ProjectInspector4Bears) inspector;
 
-            if (!alreadyNotified && (inspector4Bears.isFixerBuildCase1() || inspector4Bears.isFixerBuildCase2())) {
+            if (!alreadyNotified && inspector4Bears.isBug()) {
                 String slug = inspector.getRepoSlug();
-                String fixerBuildType = (inspector4Bears.isFixerBuildCase1()) ? "FixerBuildCase1" : "FixerBuildCase2";
+                String fixerBuildType = inspector4Bears.getBugType();
                 String subject = "Fixer build found: "+inspector.getPatchedBuild().getId()+" - "+slug;
 
                 Build patchedBuild = inspector.getPatchedBuild();

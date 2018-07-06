@@ -6,7 +6,7 @@ if [ "$#" -ne 2 ]; then
     exit 2
 fi
 
-# Use to create args in the command line for optionnal arguments
+# Use to create args in the command line for optional arguments
 function ca {
   if [ -z "$2" ];
   then
@@ -39,18 +39,10 @@ touch $OUTPUT
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-echo "Set environment variables"
 . $SCRIPT_DIR/utils/init_script.sh
 
-echo "Create log directory: $LOG_DIR"
-mkdir $LOG_DIR
-
-RUN_ID=`date "+%Y-%m-%d_%H%M%S"`
-
 echo "Copy jar and prepare docker image"
-mkdir $REPAIRNATOR_RUN_DIR
-
-cp $REPAIRNATOR_CHECKBRANCHES_JAR $REPAIRNATOR_CHECKBRANCHES_DEST_JAR
+mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-checkbranches:$CHECKBRANCHES_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_CHECKBRANCHES_DEST_JAR
 
 echo "Pull the docker machine (name: $DOCKER_CHECKBRANCHES_TAG)..."
 docker pull $DOCKER_CHECKBRANCHES_TAG
@@ -66,9 +58,12 @@ fi
 if [ "$HUMAN_PATCH" -eq 1 ]; then
     args="$args --humanPatch"
 fi
+if [ "$SKIP_DELETE" -eq 1 ]; then
+    args="$args --skipDelete"
+fi
 
 echo "Supplementary args for docker pool checkbranches $args"
-java -jar $REPAIRNATOR_CHECKBRANCHES_DEST_JAR -t $NB_THREADS -n $DOCKER_CHECKBRANCHES_TAG -i $INPUT -o $OUTPUT -r $CHECK_BRANCH_REPOSITORY -g $DAY_TIMEOUT --runId $RUN_ID $args &> $LOG_DIR/checkbranches.log
+java $JAVA_OPTS -jar $REPAIRNATOR_CHECKBRANCHES_DEST_JAR -t $NB_THREADS -n $DOCKER_CHECKBRANCHES_TAG -i $INPUT -o $OUTPUT -r $CHECK_BRANCH_REPOSITORY -g $DAY_TIMEOUT --runId $RUN_ID $args &> $LOG_DIR/checkbranches.log
 
 echo "Docker pool checkbranches finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR

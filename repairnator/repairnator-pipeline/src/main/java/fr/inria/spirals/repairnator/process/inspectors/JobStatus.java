@@ -1,22 +1,25 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by urli on 23/03/2017.
  */
 public class JobStatus {
-    private PushState pushState;
+    private final Logger logger = LoggerFactory.getLogger(JobStatus.class);
+
+    private List<PushState> pushStates;
     private List<URL> repairClassPath;
 
     private File[] repairSourceDir;
@@ -44,6 +47,8 @@ public class JobStatus {
     private Throwable fatalError;
 
     private Metrics metrics;
+    private Properties properties;
+    private Metrics4Bears metrics4Bears;
 
     private List<String> createdFilesToPush;
     private boolean hasBeenForked;
@@ -57,8 +62,11 @@ public class JobStatus {
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
+        this.properties = new Properties();
+        this.metrics4Bears = new Metrics4Bears();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
+        this.pushStates = new ArrayList<>();
         this.listOfPatches = new HashMap<>();
         this.toolDiagnostic = new HashMap<>();
     }
@@ -123,6 +131,8 @@ public class JobStatus {
 
     public void setFailingModulePath(String failingModulePath) {
         this.failingModulePath = failingModulePath;
+        this.writeProperty("failingModule", this.failingModulePath);
+        this.metrics4Bears.getTests().setFailingModule(this.failingModulePath);
     }
 
     public Collection<FailureLocation> getFailureLocations() {
@@ -131,6 +141,7 @@ public class JobStatus {
 
     public void setFailureLocations(Collection<FailureLocation> failureLocations) {
         this.failureLocations = failureLocations;
+        this.writeProperty("failing-test-cases", this.failureLocations);
     }
 
     public String getGitBranchUrl() {
@@ -149,16 +160,38 @@ public class JobStatus {
         this.hasBeenPatched = hasBeenPatched;
     }
 
-    public PushState getPushState() {
-        return pushState;
+    public List<PushState> getPushStates() {
+        return pushStates;
     }
 
-    public void setPushState(PushState pushState) {
-        this.pushState = pushState;
+    public PushState getLastPushState() {
+        return pushStates.get(pushStates.size() - 1);
+    }
+
+    public void addPushState(PushState pushState) {
+        this.pushStates.add(pushState);
     }
 
     public Metrics getMetrics() {
         return metrics;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void writeProperty(String propertyName, Object value) {
+        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+            if (value != null) {
+                this.properties.put(propertyName, value);
+            } else {
+                this.logger.warn("Trying to write property null for key: " + propertyName);
+            }
+        }
+    }
+
+    public Metrics4Bears getMetrics4Bears() {
+        return metrics4Bears;
     }
 
     public File[] getTestDir() {
@@ -185,6 +218,15 @@ public class JobStatus {
 
     public List<String> getCreatedFilesToPush() {
         return createdFilesToPush;
+    }
+
+    public boolean isCreatedFileToPush(String filePath) {
+        for (String createdFileToPush : this.createdFilesToPush) {
+            if (filePath.endsWith(createdFileToPush)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setHasBeenForked(boolean hasBeenForked) {

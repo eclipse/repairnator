@@ -21,4 +21,5 @@ mkdir $REPAIR_OUTPUT_PATH
 echo "Create log directory: $LOG_DIR"
 mkdir $LOG_DIR
 
+echo "Create run directory: $REPAIRNATOR_RUN_DIR"
 mkdir $REPAIRNATOR_RUN_DIR

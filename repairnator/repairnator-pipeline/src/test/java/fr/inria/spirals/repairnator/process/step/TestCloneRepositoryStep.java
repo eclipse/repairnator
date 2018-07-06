@@ -2,19 +2,19 @@ package fr.inria.spirals.repairnator.process.step;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.states.PipelineState;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,21 +22,20 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by urli on 21/02/2017.
  */
 public class TestCloneRepositoryStep {
+
+    private File tmpDir;
 
     @Before
     public void setup() {
@@ -44,35 +43,24 @@ public class TestCloneRepositoryStep {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
+        GitHelper.deleteFile(tmpDir);
     }
 
     @Test
     public void testCloneMasterBuild() throws IOException {
         long buildId = 207924136; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, false);
 
-        Path tmpDirPath = Files.createTempDirectory("test_clone");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_clone").toFile();
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
-        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuggyBuild()).thenReturn(build);
-        when(inspector.getGitHelper()).thenReturn(new GitHelper());
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.execute();
@@ -99,27 +87,15 @@ public class TestCloneRepositoryStep {
     public void testCloneBuildWithSubmodule() throws IOException {
         long buildId = 355839305; // surli/failingProject build
 
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-        Build build = optionalBuild.get();
-        assertThat(build, notNullValue());
-        assertThat(buildId, is(build.getId()));
+        Build build = this.checkBuildAndReturn(buildId, true);
 
-        Path tmpDirPath = Files.createTempDirectory("test_clone");
-        File tmpDir = tmpDirPath.toFile();
-        tmpDir.deleteOnExit();
+        tmpDir = Files.createTempDirectory("test_clone").toFile();
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        ProjectInspector inspector = mock(ProjectInspector.class);
-        when(inspector.getWorkspace()).thenReturn(tmpDir.getAbsolutePath());
-        when(inspector.getRepoLocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getBuildToBeInspected()).thenReturn(toBeInspected);
-        when(inspector.getBuggyBuild()).thenReturn(build);
-        when(inspector.getGitHelper()).thenReturn(new GitHelper());
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        when(inspector.getJobStatus()).thenReturn(jobStatus);
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         cloneStep.execute();
@@ -130,7 +106,19 @@ public class TestCloneRepositoryStep {
         assertThat(cloneStatus.getStep(), is(cloneStep));
         assertThat(cloneStatus.isSuccess(), is(true));
 
-        File licenceInSubmodule = new File(tmpDirPath.toFile(), "repo/grakn-spec/LICENSE");
+        File licenceInSubmodule = new File(tmpDir, "repo/grakn-spec/LICENSE");
         assertThat("Submodule are not supported", licenceInSubmodule.exists(), is(true));
+    }
+
+    private Build checkBuildAndReturn(long buildId, boolean isPR) {
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        Build build = optionalBuild.get();
+        assertThat(build, IsNull.notNullValue());
+        assertThat(buildId, Is.is(build.getId()));
+        assertThat(build.isPullRequest(), Is.is(isPR));
+
+        return build;
     }
 }

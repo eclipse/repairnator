@@ -16,8 +16,8 @@ public class BuildProject extends AbstractStep {
         super(inspector, true);
     }
 
-    public BuildProject(ProjectInspector inspector, String stepName, boolean blockingStep) {
-        super(inspector, stepName, blockingStep);
+    public BuildProject(ProjectInspector inspector, boolean blockingStep, String stepName) {
+        super(inspector, blockingStep, stepName);
     }
 
     protected StepStatus businessExecute() {

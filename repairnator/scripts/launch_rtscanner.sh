@@ -18,13 +18,7 @@ function ca {
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-echo "Set environment variables"
 . $SCRIPT_DIR/utils/init_script.sh
-
-echo "This will be run with the following RUN_ID: $RUN_ID"
-
-source $SCRIPT_DIR/utils/create_structure.sh
-
 
 if [ ! -f "$WHITELIST_PATH" ]; then
     touch $WHITELIST_PATH
@@ -53,5 +47,9 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
     args="$args --createOutputDir"
 fi
 
+if [ "$SKIP_DELETE" -eq 1 ]; then
+    args="$args --skipDelete"
+fi
+
 echo "Supplementary args for realtime scanner $args"
-java -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID --ghOauth $GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args 2> $LOG_DIR/errors_$RUN_ID.log 1> /dev/null
+java $JAVA_OPTS -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID --ghOauth $GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args 2> $LOG_DIR/errors_$RUN_ID.log 1> /dev/null

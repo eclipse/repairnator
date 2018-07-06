@@ -35,6 +35,7 @@ else
     BUILD_ID=$1
 fi
 
+
 if ! [[ $BUILD_ID =~ $re ]]; then
     echo "Build id should be a number"
     usage
@@ -42,29 +43,20 @@ fi
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-echo "Set environment variables"
 . $SCRIPT_DIR/utils/init_script.sh
-
-echo "This will be run with the following RUN_ID: $RUN_ID"
-
-source $SCRIPT_DIR/utils/create_structure.sh
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
 docker pull $DOCKER_TAG
 
 LOG_FILENAME="repairnator-pipeline_`date \"+%Y-%m-%d_%H%M\"`_$BUILD_ID"
-DOCKER_ARGS="--env BUILD_ID=$BUILD_ID"
+
+DOCKER_ARGS="--env REPAIR_MODE=repair"
+DOCKER_ARGS="$DOCKER_ARGS --env BUILD_ID=$BUILD_ID"
 DOCKER_ARGS="$DOCKER_ARGS --env GITHUB_OAUTH=$GITHUB_OAUTH"
 DOCKER_ARGS="$DOCKER_ARGS --env LOG_FILENAME=$LOG_FILENAME"
 DOCKER_ARGS="$DOCKER_ARGS --env RUN_ID=$RUN_ID"
 DOCKER_ARGS="$DOCKER_ARGS --env OUTPUT=/var/log"
 DOCKER_ARGS="$DOCKER_ARGS --env REPAIR_TOOLS=$REPAIR_TOOLS"
-
-if [ "$BEARS_MODE" -eq 1 ]; then
-    DOCKER_ARGS="$DOCKER_ARGS --env REPAIR_MODE=bears"
-else
-    DOCKER_ARGS="$DOCKER_ARGS --env REPAIR_MODE=repair"
-fi
 
 DOCKER_ARGS="$DOCKER_ARGS `ca \"--env PUSH_URL\" $PUSH_URL`"
 DOCKER_ARGS="$DOCKER_ARGS `ca \"--env SMTP_SERVER\" $SMTP_SERVER`"

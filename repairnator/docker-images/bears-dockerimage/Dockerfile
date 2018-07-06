@@ -9,6 +9,7 @@ COPY logback.xml /root/
 COPY configure_git.sh /root/
 COPY build_repairnator4Bears.sh /root/
 COPY pipeline_launcher4Bears.sh /root/
+COPY version.ini /root/
 
 RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone 
@@ -23,6 +24,7 @@ ENV REPAIR_MODE=
 ENV BUILD_ID=
 ENV NEXT_BUILD_ID=
 ENV LOG_FILENAME=
+ENV LOG_LEVEL=
 ENV RUN_ID=
 ENV MONGODB_HOST=
 ENV MONGODB_NAME=

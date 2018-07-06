@@ -47,13 +47,14 @@ public abstract class AbstractRepairStep extends AbstractStep {
         File toolDirectory = new File(parentDirectory, this.getRepairToolName());
         toolDirectory.mkdirs();
 
-        int i = 0;
+        int i = 1;
+        String dirPath = DEFAULT_DIR_PATCHES + "/" + this.getRepairToolName() + "/";
         for (RepairPatch repairPatch : patchList) {
-            File patchFile = new File(toolDirectory, "patch_" + i + ".patch");
+            File patchFile = new File(toolDirectory, "patch_" + (i++) + ".patch");
             BufferedWriter bufferedWriter = Files.newBufferedWriter(patchFile.toPath());
             bufferedWriter.write(repairPatch.getDiff());
             bufferedWriter.close();
-            this.getInspector().getJobStatus().addFileToPush(patchFile.getAbsolutePath());
+            this.getInspector().getJobStatus().addFileToPush(dirPath + patchFile.getName());
         }
     }
 

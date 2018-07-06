@@ -16,16 +16,16 @@ function ca {
   fi
 }
 
-SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+DELETE_RUN_DIR=0
+if [ -z "$REPAIRNATOR_INITIALIZED" ]; then
+    SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-echo "Set environment variables"
-. $SCRIPT_DIR/utils/init_script.sh
+    . $SCRIPT_DIR/utils/init_script.sh
 
-echo "This will be run with the following RUN_ID: $RUN_ID"
+    DELETE_RUN_DIR=1
+fi
 
-source $SCRIPT_DIR/utils/create_structure.sh
-
-echo "Copy jars"
+echo "Copy jar into $REPAIRNATOR_SCANNER_DEST_JAR"
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:$SCANNER_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots -Ddest=$REPAIRNATOR_SCANNER_DEST_JAR
 
 REPAIRNATOR_BUILD_LIST=$REPAIR_OUTPUT_PATH/list_build_`date "+%Y-%m-%d_%H%M"`_$RUN_ID.txt
@@ -57,7 +57,10 @@ fi
 
 echo "Elementary args for scanner: $elementaryArgs"
 echo "Supplementary args for scanner: $supplementaryArgs"
-java -jar $REPAIRNATOR_SCANNER_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/scanner_$RUN_ID.log
+java $JAVA_OPTS -jar $REPAIRNATOR_SCANNER_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/scanner_$RUN_ID.log
 
-echo "Scanner finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
-rm -rf $REPAIRNATOR_RUN_DIR
+echo "Scanner finished."
+if [ "$DELETE_RUN_DIR" -eq 1 ]; then
+    echo "Delete the run directory ($REPAIRNATOR_RUN_DIR)."
+    rm -rf $REPAIRNATOR_RUN_DIR
+fi

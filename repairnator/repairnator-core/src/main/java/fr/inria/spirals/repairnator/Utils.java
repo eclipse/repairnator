@@ -23,8 +23,18 @@ public class Utils {
     private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
     private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
+
     private static final String TRAVIS_URL = "http://travis-ci.org/";
-    private static final String GITHUB_URL = "https://github.com/";
+    public static final String TRAVIS_FILE = ".travis.yml";
+
+    public static final String GITHUB_URL = "https://github.com/";
+    public static final String REMOTE_REPO_EXT = ".git";
+    public static final String GITHUB_USER_NAME_PATTERN = "[a-zA-Z0-9](?:[a-zA-Z0-9]|[-](?=[a-zA-Z0-9]))*";
+    public static final String GITHUB_REPO_NAME_PATTERN = "[a-zA-Z0-9-_.]+(?<!\\.git)";
+    private static final String GITHUB_REPO_URL_PATTERN = GITHUB_URL + GITHUB_USER_NAME_PATTERN + "/" + GITHUB_REPO_NAME_PATTERN;
+
+    public static final String POM_FILE = "pom.xml";
+
     public static final char COMMA = ',';
 
     public static String formatCompleteDate(Date date) {
@@ -52,8 +62,20 @@ public class Utils {
         return TRAVIS_URL + slug + "/builds/" + String.valueOf(buildId);
     }
 
-    public static String getGithubRepoUrl(String slug) {
-        return GITHUB_URL + slug + ".git";
+    public static String getSimpleGithubRepoUrl(String slug) {
+        return GITHUB_URL + slug;
+    }
+
+    public static String getCompleteGithubRepoUrl(String slug) {
+        return GITHUB_URL + slug + REMOTE_REPO_EXT;
+    }
+
+    public static String getCommitUrl(String commitId, String repoSlug) {
+        return "http://github.com/"+repoSlug+"/commit/"+commitId;
+    }
+
+    public static boolean matchesGithubRepoUrl(String repoUrl) {
+        return repoUrl.matches(GITHUB_REPO_URL_PATTERN);
     }
 
     public static String getDuration(Date dateBegin, Date dateEnd) {

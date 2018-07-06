@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>All builds piechart</title>
+
+    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+
+    $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/reproducedBuilds/', function (dataInspector) {
+      var currentYear = moment().year();
+      var currentWeek = moment().isoWeek();
+      var currentWeekYear = currentWeek+1000*currentYear;
+      var htmlElement = $('#charts');
+      var reducedDataInspector = dataInspector.reduce(function (accumulator, currentValue) {
+        var currentValueWeek = moment(currentValue._id, 'YYYY-MM-DD').isoWeek();
+        var currentValueYear = moment(currentValue._id, 'YYYY-MM-DD').year();
+        var currentValueWeekYear = currentValueWeek+1000*currentValueYear;
+
+        if (accumulator.length == 0) {
+          if (currentValueWeekYear === currentWeekYear) {
+            return [];
+          } else {
+            currentValue._id = moment().year(currentValueYear).isoWeek(currentValueWeek).format('YYYY-MM-DD');
+            return [ currentValue ];
+          }
+        } else {
+          var previousValue = accumulator[accumulator.length - 1];
+          if (currentValueWeekYear === currentWeekYear) {
+            return accumulator;
+          }
+          var previousValueWeek = moment(previousValue._id, 'YYYY-MM-DD').isoWeek();
+          var previousValueYear = moment(previousValue._id, 'YYYY-MM-DD').year();
+          var previousValueWeekYear = previousValueWeek+1000*previousValueYear;
+
+          if (previousValueWeekYear === currentValueWeekYear) {
+            previousValue.counted += currentValue.counted;
+          } else {
+            currentValue._id = moment().year(currentValueYear).isoWeek(currentValueWeek).format('YYYY-MM-DD');
+            accumulator.push(currentValue);
+          }
+
+          return accumulator;
+        }
+      }, []);
+      Highcharts.chart({
+        chart: {
+          type: 'spline',
+          renderTo: htmlElement[0],
+          width: 1000,
+          height: 768
+        },
+        title: {
+          text: 'Number of reproduced builds by week'
+        },
+        xAxis: {
+          type: 'datetime',
+          dateTimeLabelFormats: {
+            day: '%e. %b',
+            week: '%e. %b',
+            month: '%b \'%y',
+            year: '%Y'
+          },
+          title: {
+            text: 'Date'
+          },
+          tickInterval: 30*24*3600*1000
+        },
+        yAxis: {
+          title: {
+            text: 'Number of builds'
+          },
+          min: 0
+        },
+        tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x:%A, %b %e}: {point.y} builds'
+        },
+
+        plotOptions: {
+          spline: {
+            marker: {
+              enabled: true
+            },
+            dataLabels: {
+              enabled: true
+            },
+          },
+        },
+
+        series: [
+          {
+            name: 'Reproduced builds by week',
+            data: reducedDataInspector.map( function (d) {
+              return [
+                moment(d._id, 'YYYY-MM-DD').valueOf(),
+                d.counted
+              ]
+            })
+          }
+        ]
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <div id="charts"></div>
+  </body>
+</html>

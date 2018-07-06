@@ -1,0 +1,148 @@
+{
+  "version": "Bears 1.0",
+  "type": "passing_passing",
+  "repository": {
+    "name": "fermadeiral/test-repairnator-bears",
+    "githubId": 135598437,
+    "url": "https://github.com/fermadeiral/test-repairnator-bears",
+    "isFork": false,
+    "original": {
+      "name": "",
+      "githubId": 0,
+      "url": ""
+    },
+    "isPullRequest": false,
+    "pullRequestId": 0
+  },
+  "builds": {
+    "buggyBuild": {
+      "id": 386337343,
+      "url": "http://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386337343",
+      "date": "May 31, 2018 4:33:25 PM"
+    },
+    "fixerBuild": {
+      "id": 386348522,
+      "url": "http://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386348522",
+      "date": "May 31, 2018 5:01:06 PM"
+    }
+  },
+  "commits": {
+    "buggyBuild": {
+      "repoName": "fermadeiral/test-repairnator-bears",
+      "branchName": "master",
+      "sha": "bfdf6af10937db8ecde7a060b55d18864663abd5",
+      "url": "http://github.com/fermadeiral/test-repairnator-bears/commit/bfdf6af10937db8ecde7a060b55d18864663abd5",
+      "date": "May 31, 2018 4:32:11 PM"
+    },
+    "fixerBuild": {
+      "repoName": "fermadeiral/test-repairnator-bears",
+      "branchName": "master",
+      "sha": "5b2ed0064d4c5e0fade39125cc071bd6593df869",
+      "url": "http://github.com/fermadeiral/test-repairnator-bears/commit/5b2ed0064d4c5e0fade39125cc071bd6593df869",
+      "date": "May 31, 2018 4:59:52 PM"
+    }
+  },
+  "tests": {
+    "failingModule": "/tmp/test_bears_json_file_passing_passing_builds4300363164793498124/fermadeiral/test-repairnator-bears/386337343/test-repairnator-bears-patchstats",
+    "overallMetrics": {
+      "numberRunning": 9,
+      "numberPassing": 8,
+      "numberFailing": 1,
+      "numberErroring": 0,
+      "numberSkipping": 0,
+      "failures": [
+        {
+          "failureName": "java.lang.AssertionError",
+          "isError": false,
+          "occurrences": 1
+        }
+      ]
+    },
+    "failingClasses": [
+      {
+        "testClass": "PatchStatsTest",
+        "numberRunning": 4,
+        "numberPassing": 3,
+        "numberFailing": 1,
+        "numberErroring": 0,
+        "numberSkipping": 0
+      }
+    ],
+    "failureDetails": [
+      {
+        "testClass": "PatchStatsTest",
+        "testMethod": "testComputeFilesWithCommitThatRenameFile",
+        "failureName": "java.lang.AssertionError",
+        "detail": "expected:\u003c10\u003e but was:\u003c9\u003e",
+        "isError": false
+      }
+    ]
+  },
+  "patchDiff": {
+    "files": {
+      "numberAdded": 0,
+      "numberChanged": 1,
+      "numberDeleted": 0
+    },
+    "lines": {
+      "numberAdded": 15,
+      "numberDeleted": 8
+    }
+  },
+  "projectMetrics": {
+    "numberSourceFiles": 2,
+    "numberTestFiles": 3,
+    "numberLibraries": 4
+  },
+  "reproductionBuggyBuild": {
+    "reproductionDateBeginning": "Jun 8, 2018 8:50:43 AM",
+    "reproductionDateEnd": "Jun 8, 2018 8:58:24 AM",
+    "totalDuration": 459,
+    "processDurations": {
+      "cloning": {
+        "nbSteps": 1,
+        "totalDuration": 2,
+        "stepNames": [
+          "CloneRepository"
+        ],
+        "stepDurations": [
+          2
+        ]
+      },
+      "building": {
+        "nbSteps": 5,
+        "totalDuration": 148,
+        "stepNames": [
+          "CheckoutPatchedBuildCandidate",
+          "ComputeSourceDir",
+          "ComputeTestDir",
+          "CheckoutBuggyBuildCandidateSourceCode",
+          "BuildProjectBuggyBuildCandidateSourceCode"
+        ],
+        "stepDurations": [
+          0,
+          0,
+          0,
+          0,
+          148
+        ]
+      },
+      "testing": {
+        "nbSteps": 1,
+        "totalDuration": 158,
+        "stepNames": [
+          "TestProjectBuggyBuildCandidateSourceCode"
+        ],
+        "stepDurations": [
+          158
+        ]
+      },
+      "fixing": {
+        "nbSteps": 0,
+        "totalDuration": 0,
+        "stepNames": [],
+        "stepDurations": []
+      }
+    }
+  }
+}

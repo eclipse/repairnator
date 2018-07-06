@@ -107,6 +107,9 @@ public class Launcher extends AbstractPoolManager {
     private void initConfig(JSAPResult arguments) {
         this.config = RepairnatorConfig.getInstance();
 
+        if (LauncherUtils.getArgDebug(arguments)) {
+            this.config.setDebug(true);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
@@ -163,17 +166,19 @@ public class Launcher extends AbstractPoolManager {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
             while (reader.ready()) {
                 String line = reader.readLine().trim();
-                String[] buildIds = line.split(Utils.COMMA+"");
-                if (buildIds.length > 0) {
-                    int buggyBuildId = Integer.parseInt(buildIds[0]);
-                    if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                        result.add(new InputBuildId(buggyBuildId));
-                    } else {
-                        if (buildIds.length > 1) {
-                            int patchedBuildId = Integer.parseInt(buildIds[1]);
-                            result.add(new InputBuildId(buggyBuildId, patchedBuildId));
+                if (!line.isEmpty()) {
+                    String[] buildIds = line.split(Utils.COMMA+"");
+                    if (buildIds.length > 0) {
+                        long buggyBuildId = Long.parseLong(buildIds[0]);
+                        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+                            result.add(new InputBuildId(buggyBuildId));
                         } else {
-                            LOGGER.error("The build "+buggyBuildId+" will not be processed because there is no next build for it in the input file.");
+                            if (buildIds.length > 1) {
+                                long patchedBuildId = Long.parseLong(buildIds[1]);
+                                result.add(new InputBuildId(buggyBuildId, patchedBuildId));
+                            } else {
+                                LOGGER.error("The build "+buggyBuildId+" will not be processed because there is no next build for it in the input file.");
+                            }
                         }
                     }
                 }
