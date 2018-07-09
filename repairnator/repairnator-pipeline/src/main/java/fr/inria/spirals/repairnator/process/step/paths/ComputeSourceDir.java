@@ -73,7 +73,10 @@ public class ComputeSourceDir extends AbstractStep {
 
         try {
             Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.getInspector().getM2LocalPath());
-
+            if (model == null) {
+                this.addStepError("Error while building model: no model has been retrieved.");
+                return null;
+            }
             if (!wasDefaultSourceDirFound) {
                 Build buildSection = model.getBuild();
 
