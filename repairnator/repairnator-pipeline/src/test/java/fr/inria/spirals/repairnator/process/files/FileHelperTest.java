@@ -36,9 +36,8 @@ public class FileHelperTest {
 	    JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath());
 	    ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir.getAbsolutePath());
 	    CloneRepository cloneStep = new CloneRepository(inspector);
-	
-	    FileHelper fileHelper = new FileHelper();
-	    fileHelper.removeNotificationFromTravisYML(tmpDir, cloneStep);
+
+	    FileHelper.removeNotificationFromTravisYML(tmpDir, cloneStep);
 	
 	    File bak = new File(tmpDir.getAbsolutePath()+"/bak.travis.yml");
 	    File travis = new File(tmpDir.getAbsolutePath()+"/.travis.yml");

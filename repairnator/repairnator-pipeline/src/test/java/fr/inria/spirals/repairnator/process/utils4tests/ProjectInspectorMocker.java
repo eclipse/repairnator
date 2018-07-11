@@ -37,7 +37,6 @@ public class ProjectInspectorMocker {
         when(inspector.getPatchedBuild()).thenReturn(buildToBeInspected.getPatchedBuild());
         when(inspector.getM2LocalPath()).thenReturn(tmpDir.getAbsolutePath()+"/.m2");
         when(inspector.getGitHelper()).thenReturn(new GitHelper());
-        when(inspector.getFileHelper()).thenReturn(new FileHelper());
         return inspector;
     }
 

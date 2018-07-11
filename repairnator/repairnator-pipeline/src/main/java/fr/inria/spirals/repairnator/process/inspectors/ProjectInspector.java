@@ -15,7 +15,6 @@ import fr.inria.spirals.repairnator.process.step.push.*;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -39,7 +38,6 @@ public class ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
 
     private GitHelper gitHelper;
-    private FileHelper fileHelper;
     private BuildToBeInspected buildToBeInspected;
     private String repoLocalPath;
     private String repoToPushLocalPath;
@@ -66,7 +64,6 @@ public class ProjectInspector {
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
         this.gitHelper = new GitHelper();
-        this.fileHelper = new FileHelper();
         this.jobStatus = new JobStatus(repoLocalPath);
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
@@ -115,10 +112,6 @@ public class ProjectInspector {
 
     public GitHelper getGitHelper() {
         return this.gitHelper;
-    }
-    
-    public FileHelper getFileHelper() {
-        return this.fileHelper;
     }
 
     public List<AbstractDataSerializer> getSerializers() {

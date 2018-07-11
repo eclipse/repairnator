@@ -8,6 +8,7 @@ import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.RepairType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
@@ -26,8 +27,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.*;
-
-import static fr.inria.spirals.repairnator.process.files.FileHelper.*;
 
 /**
  * Created by urli on 05/01/2017.
@@ -237,7 +236,7 @@ public class NopolRepair extends AbstractRepairStep {
             this.recordToolDiagnostic(toolDiag);
 
             try {
-                deleteFile(patchDir);
+                FileHelper.deleteFile(patchDir);
             } catch (IOException e) {
                 getLogger().error("Error while removing the temp folder containing Nopol output", e);
             }
