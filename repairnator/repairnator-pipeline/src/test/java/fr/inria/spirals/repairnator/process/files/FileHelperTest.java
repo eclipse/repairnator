@@ -17,45 +17,44 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
 
-
 public class FileHelperTest {
-	
-	private File tmpDir;
-	
-	@After
-	public void tearDown() throws IOException {
-	    FileHelper.deleteFile(tmpDir);
-	}
-	
-	@Test
-	public void testRemoveNotificationFromTravisYML() throws IOException{
-	    File resourceFile = new File("./src/test/resources/travis-file/.travis.yml");
-	    tmpDir = Files.createTempDirectory("test_removeNotificationFromTravisYML").toFile();
-	    FileUtils.copyFileToDirectory(resourceFile, tmpDir);
-	
-	    JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath());
-	    ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir.getAbsolutePath());
-	    CloneRepository cloneStep = new CloneRepository(inspector);
 
-	    FileHelper.removeNotificationFromTravisYML(tmpDir, cloneStep);
-	
-	    File bak = new File(tmpDir.getAbsolutePath()+"/bak.travis.yml");
-	    File travis = new File(tmpDir.getAbsolutePath()+"/.travis.yml");
-	
-	    assertTrue(bak.exists());
-	    assertTrue(travis.exists());
-	
-	    boolean detected = false;
-	    List<String> lines = Files.readAllLines(travis.toPath());
-	    for(String l: lines){
-		if(l.contains("notification")){
-		    assertTrue(l.trim().startsWith("#"));
-		    detected = true;
-		}
-		if(l.contains("script")){
-		    assertFalse(l.trim().startsWith("#"));
-		}
-	    }
-	    assertTrue(detected);
-	} 
+    private File tmpDir;
+
+    @After
+    public void tearDown() throws IOException {
+        FileHelper.deleteFile(tmpDir);
+    }
+
+    @Test
+    public void testRemoveNotificationFromTravisYML() throws IOException {
+        File resourceFile = new File("./src/test/resources/travis-file/.travis.yml");
+        tmpDir = Files.createTempDirectory("test_removeNotificationFromTravisYML").toFile();
+        FileUtils.copyFileToDirectory(resourceFile, tmpDir);
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath());
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir.getAbsolutePath());
+        CloneRepository cloneStep = new CloneRepository(inspector);
+
+        FileHelper.removeNotificationFromTravisYML(tmpDir, cloneStep);
+
+        File bak = new File(tmpDir.getAbsolutePath() + "/bak.travis.yml");
+        File travis = new File(tmpDir.getAbsolutePath() + "/.travis.yml");
+
+        assertTrue(bak.exists());
+        assertTrue(travis.exists());
+
+        boolean detected = false;
+        List<String> lines = Files.readAllLines(travis.toPath());
+        for (String l : lines) {
+            if (l.contains("notification")) {
+                assertTrue(l.trim().startsWith("#"));
+                detected = true;
+            }
+            if (l.contains("script")) {
+                assertFalse(l.trim().startsWith("#"));
+            }
+        }
+        assertTrue(detected);
+    }
 }
