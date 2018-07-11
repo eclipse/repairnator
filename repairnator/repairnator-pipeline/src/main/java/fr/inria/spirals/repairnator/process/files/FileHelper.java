@@ -54,8 +54,8 @@ public class FileHelper {
      *            from the step is only used for logging purpose).
      *
      */
-    public static void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToPerfectlyMatch,
-            AbstractStep step) {
+    public static void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames,
+            boolean isToPerfectlyMatch, AbstractStep step) {
         getLogger().debug("Copying files...");
         if (sourceDir != null && targetDir != null) {
             getLogger().debug("Source dir: " + sourceDir.getPath());
