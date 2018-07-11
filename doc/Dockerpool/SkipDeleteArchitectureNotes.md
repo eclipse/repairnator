@@ -1,4 +1,4 @@
-#Raw and rough version
+# Raw and rough version
 
 All scripts that are using the pipeline are using a docker-container
 created from a docker image of repairnator-pipeline. This implies that
@@ -18,7 +18,7 @@ downloads a jar from Maven based on a version placed in
 Thus, for testing one can not rely on this docker-image, since it will
 not be up to date. Instead, one has to generate their own image.
 
-##Process of creating your own docker-image
+## Process of creating your own docker-image
 
 In ```/repairnator/repairnator/repairnator-pipeline``` run ```mvn
 package```. This should create a file

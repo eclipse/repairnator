@@ -1,8 +1,5 @@
-
-#Beginning of docs taken from skipDelete issue.
-
-##Scripts
-###launch_repairnator.sh
+# Scripts
+## launch_repairnator.sh
 The launch repairnator has two options:
 ```
 ./launch_repairnator.sh
@@ -22,19 +19,19 @@ no arguments, this will instead attemt a repair on each of the builds
 specified in ```list_of_buildIDs.txt``` in the same way as above.
 
 
-###repair_buggy_build.sh
+## repair_buggy_build.sh
 ```
 ./repair_buggy_build.sh BUILDID
 ```
 starts a single instance of repairnator-pipeline which attempts to
 repair the build specified by the BUILDID.
 
-###launch_rtscanner.sh
+## launch_rtscanner.sh
 ```
-./launc_rtscanner.sh
+./launch_rtscanner.sh
 ```
 starts a scanner which in realtime finds builds with failing tests
 which it then attempts to repair. Is run for as long as specified by
 the DURATION option in the config file.
 
-##launch
+## launch
