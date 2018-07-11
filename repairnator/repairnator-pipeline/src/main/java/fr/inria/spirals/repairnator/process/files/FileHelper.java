@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 public class FileHelper {
 
-    private Logger getLogger() {
-        return LoggerFactory.getLogger(this.getClass());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(FileHelper.class);
     }
 
     /**
@@ -54,7 +54,7 @@ public class FileHelper {
      *            from the step is only used for logging purpose).
      *
      */
-    public void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToPerfectlyMatch,
+    public static void copyDirectory(File sourceDir, File targetDir, String[] excludedFileNames, boolean isToPerfectlyMatch,
             AbstractStep step) {
         getLogger().debug("Copying files...");
         if (sourceDir != null && targetDir != null) {
@@ -109,7 +109,7 @@ public class FileHelper {
         }
     }
 
-    public void removeNotificationFromTravisYML(File directory, AbstractStep step) {
+    public static void removeNotificationFromTravisYML(File directory, AbstractStep step) {
         File travisFile = new File(directory, Utils.TRAVIS_FILE);
 
         if (!travisFile.exists()) {
@@ -160,7 +160,7 @@ public class FileHelper {
         }
     }
 
-    public void removeGhOauthFromCreatedFilesToPush(File directory, List<String> fileNames) {
+    public static void removeGhOauthFromCreatedFilesToPush(File directory, List<String> fileNames) {
         String ghOauthPattern = "--ghOauth\\s+[\\w]+";
         for (String fileName : fileNames) {
             File file = new File(directory, fileName);
