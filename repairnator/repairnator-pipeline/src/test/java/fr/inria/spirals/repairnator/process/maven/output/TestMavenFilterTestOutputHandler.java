@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
-import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
@@ -26,7 +26,7 @@ public class TestMavenFilterTestOutputHandler {
 
     @After
     public void tearDown() throws IOException {
-        GitHelper.deleteFile(tmpDir);
+        FileHelper.deleteFile(tmpDir);
     }
 
     @Test

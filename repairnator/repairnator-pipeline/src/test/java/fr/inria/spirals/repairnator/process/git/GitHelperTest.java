@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.git;
 
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
@@ -22,7 +23,7 @@ public class GitHelperTest {
 
     @After
     public void tearDown() throws IOException {
-        GitHelper.deleteFile(tmpDir);
+        FileHelper.deleteFile(tmpDir);
     }
 
     @Test

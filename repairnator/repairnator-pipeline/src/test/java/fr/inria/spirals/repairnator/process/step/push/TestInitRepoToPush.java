@@ -5,7 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
@@ -20,6 +20,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -48,7 +49,7 @@ public class TestInitRepoToPush {
     @After
     public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
-        GitHelper.deleteFile(tmpDir);
+        FileHelper.deleteFile(tmpDir);
     }
 
     @Test
@@ -87,7 +88,11 @@ public class TestInitRepoToPush {
         assertThat(iterator.hasNext(), is(false));
     }
 
-    // FIXME: this test should be moved from here
+   /*This test has been ignored since an unit test is already testing the method 
+    *FileHelper.removeNotificationFromTravisYML FileHelperTest.testRemoveNotificationFromTravisYML. 
+    *However, this should be considered in the future for a proper integration test.
+    */
+    @Ignore
     @Test
     public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
         long buildId = 331637757;
