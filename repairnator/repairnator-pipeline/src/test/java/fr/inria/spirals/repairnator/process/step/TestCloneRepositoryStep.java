@@ -83,6 +83,7 @@ public class TestCloneRepositoryStep {
         assertThat(ref.getObjectId().getName(), not(build.getCommit().getSha())); // no check out yet
     }
 
+    @Ignore
     @Test
     public void testCloneBuildWithSubmodule() throws IOException {
         long buildId = 355839305; // surli/failingProject build
