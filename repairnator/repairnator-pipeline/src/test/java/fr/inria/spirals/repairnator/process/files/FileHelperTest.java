@@ -44,7 +44,6 @@ public class FileHelperTest {
         assertTrue(bak.exists());
         assertTrue(travis.exists());
 
-        boolean detected = false;
         List<String> lines = Files.readAllLines(travis.toPath());
         int i;
         for (i = 0; i < lines.size(); i++) {
