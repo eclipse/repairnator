@@ -46,15 +46,47 @@ public class FileHelperTest {
 
         boolean detected = false;
         List<String> lines = Files.readAllLines(travis.toPath());
-        for (String l : lines) {
-            if (l.contains("notification")) {
-                assertTrue(l.trim().startsWith("#"));
-                detected = true;
-            }
-            if (l.contains("script")) {
-                assertFalse(l.trim().startsWith("#"));
+        int i;
+        for (i = 0; i < lines.size(); i++) {
+            if (lines.get(i).contains("notification"))
+                break;
+        }
+        assertTrue(nextLevelIsLowestLevel(lines, getIndexOfFirstLineAfterConsecutiveHashes(lines, i)));
+    }
+
+    public static boolean lineBeginsWithHash(List<String> lines, int index) {
+        String line = lines.get(index);
+        if (line.trim().startsWith("#")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static int getIndexOfFirstLineAfterConsecutiveHashes(List<String> lines, int index) {
+        int returnIndex = index;
+        while (lineBeginsWithHash(lines, returnIndex)) {
+            returnIndex++;
+        }
+        return returnIndex;
+    }
+
+    public static boolean nextLevelIsLowestLevel(List<String> lines, int index) {
+        String line = lines.get(index);
+        while ((line.length() == 0) && (index < lines.size())) {
+            index++;
+            line = lines.get(index);
+        }
+        if (index < lines.size()) {
+            if (line.charAt(0) == ' ') {
+                return false;
+            } else {
+                return true;
             }
         }
-        assertTrue(detected);
+        else{
+            return true;
+        }
     }
+
 }
