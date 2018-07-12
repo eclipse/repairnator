@@ -1,4 +1,7 @@
 # Scripts
+Logs from running all of these scripts can be found in the
+`HOME_REPAIR` directory as specified in the `repairnator.cfg` file.
+
 ## launch_repairnator.sh
 The launch repairnator script can be used via the command:
 ```
@@ -12,7 +15,7 @@ dockerpool and launching a docker container with an instance of
 repairnator-pipeline for each of the specified buildIDs.
 
 Without the optional argument, the script will instead search for the
-file `project_list.txt` placed in the HOME_REPAIR directory as
+file `project_list.txt` placed in the `HOME_REPAIR` directory as
 specified in the local repairnator.cfg file. Each project should be of
 the form `surli/failingProject`, that is everything following
 `github.com/` when looking at a specific project.
