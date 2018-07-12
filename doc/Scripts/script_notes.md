@@ -1,23 +1,30 @@
 # Scripts
 ## launch_repairnator.sh
-The launch repairnator has two options:
+The launch repairnator script can be used via the command:
 ```
-./launch_repairnator.sh
+./launch_repairnator.sh [list_ofBuildIDs.txt]
 ```
-starts an instance of repairnator that takes the projects listed in ```~repairnator/project_list.txt``` //Not necessarily true, specify as in .cfg
-and scans for builds made in the timespan specified in the config
-file. If it finds builds it will start a dockerpool and attempt to
-repair each build by starting a docker-pool which in turn starts a
-repairnator pipeline on each build, which attempts to repair the
-build.
+If the script is ran with the optional argument, it will start an
+instance of repairnator-pipeline for each build specified in the
+`list_of_buildIDs.txt`
+and attempt to repair them by starting a
+dockerpool and launching a docker container with an instance of
+repairnator-pipeline for each of the specified buildIDs.
 
-```
-./launch_repairnator.sh list_of_buildIDs.txt
-```
-Instead of scanning the builds in ```project_list.txt``` as done with
-no arguments, this will instead attemt a repair on each of the builds
-specified in ```list_of_buildIDs.txt``` in the same way as above.
+Without the optional argument, the script will instead search for the
+file `project_list.txt` placed in the HOME_REPAIR directory as
+specified in the local repairnator.cfg file. Each project should be of
+the form `surli/failingProject`, that is everything following
+`github.com/` when looking at a specific project.
 
+Once this list has been read, repairnator will run a scanner to find
+builds to repair. The timespan in which the scanner will look is
+specified by either `SCANNER_NB_HOURS` in the local
+repairnator.cfg, or by the two options `LOOK_FROM_DATE` and
+`LOOK_TO_DATE` together. Once it has found builds to repair, it
+will attempt to repair each of them by starting a dockerpool with a
+docker container running an instance of repairnator-pipeline for each
+of the found builds.
 
 ## repair_buggy_build.sh
 ```
@@ -30,8 +37,7 @@ repair the build specified by the BUILDID.
 ```
 ./launch_rtscanner.sh
 ```
-starts a scanner which in realtime finds builds with failing tests
-which it then attempts to repair. Is run for as long as specified by
-the DURATION option in the config file.
-
-## launch
+Starts a scanner which looks for failing builds in realtime. For each
+it finds it will start a docker container with an instance of
+repairnator-pipeline that tries to repair the build. It will run for
+as long as specified by the DURATION option in the repairnator.cfg file.
