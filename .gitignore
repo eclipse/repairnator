@@ -33,3 +33,5 @@ dockerImage/repairnator-pipeline.jar
 repairnator/docker-images/pipeline-dockerimage/version.ini
 repairnator/repairnator-pipeline/spooned*
 repairnator/repairnator-pipeline/output_astor
+/bin/
+*.java-version

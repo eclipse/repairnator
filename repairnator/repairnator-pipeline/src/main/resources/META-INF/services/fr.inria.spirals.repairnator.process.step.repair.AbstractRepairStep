@@ -2,5 +2,6 @@ fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair
 fr.inria.spirals.repairnator.process.step.repair.astor.AstorJGenProgRepair
 fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair
 fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair
-fr.inria.spirals.repairnator.process.step.repair.NopolRepair
+fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair
+fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleRepair
 fr.inria.spirals.repairnator.process.step.repair.NPERepair

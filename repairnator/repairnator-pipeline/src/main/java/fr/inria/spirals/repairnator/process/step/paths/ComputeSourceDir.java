@@ -73,22 +73,30 @@ public class ComputeSourceDir extends AbstractStep {
 
         try {
             Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.getInspector().getM2LocalPath());
-
+            if (model == null) {
+                this.addStepError("Error while building model: no model has been retrieved.");
+                return null;
+            }
             if (!wasDefaultSourceDirFound) {
                 Build buildSection = model.getBuild();
 
                 if (buildSection != null && buildSection.getSourceDirectory() != null) {
                     String pathSrcDirFromPom = buildSection.getSourceDirectory();
 
-                    File srcDirFromPom = new File(pathSrcDirFromPom);
+                    if (pathSrcDirFromPom != null) {
+                        File srcDirFromPom = new File(pathSrcDirFromPom);
 
-                    if (srcDirFromPom.exists()) {
-                        result.add(srcDirFromPom);
-                        return result.toArray(new File[result.size()]);
+                        if (srcDirFromPom.exists()) {
+                            result.add(srcDirFromPom);
+                            return result.toArray(new File[result.size()]);
+                        }
+
+                        this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
+                                + ") does not exists. Try to get source dir from all modules if multimodule.");
+                    } else {
+                        this.getLogger().debug("The source directory has not been found in pom.xml. Try to get source dir from all modules.");
                     }
 
-                    this.getLogger().debug("The source directory given in pom.xml (" + pathSrcDirFromPom
-                            + ") does not exist. Try to get source dir from all modules if multimodule.");
                 } else {
                     this.getLogger().debug(
                             "Build section does not exist in this pom.xml. Try to get source dir from all modules.");
