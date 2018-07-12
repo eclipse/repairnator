@@ -26,6 +26,14 @@ public class ComputeModules extends AbstractStep {
         File pomFile = new File(pomPath);
         try {
             Model model = MavenHelper.readPomXml(pomFile, this.getInspector().getM2LocalPath());
+            if (model == null) {
+                this.addStepError("Error while building model: no model has been retrieved.");
+                return null;
+            }
+            if (model.getModules() == null) {
+                this.addStepError("Error while obtaining modules from pom.xml: module section has not been found.");
+                return null;
+            }
 
             for (String moduleName : model.getModules()) {
                 File module = new File(pomFile.getParent() + File.separator + moduleName);
