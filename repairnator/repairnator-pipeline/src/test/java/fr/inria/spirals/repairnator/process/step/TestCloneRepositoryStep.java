@@ -5,7 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
@@ -17,6 +17,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class TestCloneRepositoryStep {
     @After
     public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
-        GitHelper.deleteFile(tmpDir);
+        FileHelper.deleteFile(tmpDir);
     }
 
     @Test
@@ -83,6 +84,7 @@ public class TestCloneRepositoryStep {
         assertThat(ref.getObjectId().getName(), not(build.getCommit().getSha())); // no check out yet
     }
 
+    @Ignore
     @Test
     public void testCloneBuildWithSubmodule() throws IOException {
         long buildId = 355839305; // surli/failingProject build

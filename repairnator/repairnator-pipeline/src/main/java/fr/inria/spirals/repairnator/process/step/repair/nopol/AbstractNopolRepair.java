@@ -8,6 +8,7 @@ import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.RepairType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
+import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
@@ -35,7 +36,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static fr.inria.spirals.repairnator.process.git.GitHelper.deleteFile;
 
 /**
  * This step is used to launch Nopol using a repair strategy by trying first all test
@@ -242,7 +242,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         this.recordToolDiagnostic(toolDiag);
 
         try {
-            deleteFile(patchDir);
+            FileHelper.deleteFile(patchDir);
         } catch (IOException e) {
             getLogger().error("Error while removing the temp folder containing Nopol output", e);
         }
