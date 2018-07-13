@@ -93,7 +93,7 @@ public class GitHelper {
         try {
             Status gitStatus = git.status().call();
             if (!gitStatus.isClean()) {
-                this.getLogger().debug("Commit the logs and properties files");
+                this.getLogger().debug("Commit repairnator files...");
 
                 List<String> filesChanged = new ArrayList<>();
                 filesChanged.addAll(gitStatus.getUncommittedChanges());
@@ -111,9 +111,10 @@ public class GitHelper {
                 }
 
                 if (filesToAdd.isEmpty()) {
-                    this.getLogger().info("No repairnator properties or log file to commit.");
+                    this.getLogger().info("There is no repairnator file to commit.");
                     return false;
                 }
+                this.getLogger().info(filesToAdd.size()+" repairnator files to commit.");
 
                 if (!filesToCheckout.isEmpty()) {
                     this.getLogger().debug("Checkout "+filesToCheckout.size()+" files.");
@@ -134,12 +135,10 @@ public class GitHelper {
                     //git.checkout().addPaths(filesToCheckout).call();
                 }
 
-                this.getLogger().info(filesToAdd.size()+" repairnators logs and/or properties file to commit.");
-
                 this.gitAdd(filesToAdd, git);
 
                 PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("repairnator: add log and properties \n"+commitMsg).setCommitter(personIdent)
+                git.commit().setMessage("repairnator: add files created to push \n"+commitMsg).setCommitter(personIdent)
                         .setAuthor(personIdent).call();
 
                 this.nbCommits++;
@@ -149,7 +148,7 @@ public class GitHelper {
                 return false;
             }
         } catch (GitAPIException e) {
-            this.getLogger().error("Error while committing repairnator properties/log files ",e);
+            this.getLogger().error("Error while committing files created by Repairnator.", e);
             return false;
         }
     }
@@ -185,8 +184,8 @@ public class GitHelper {
     private void showGitHubRateInformation(GitHub gh, AbstractStep step) throws IOException {
         GHRateLimit rateLimit = gh.getRateLimit();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        this.getLogger().info("Step " + step.getName() + " - GitHub ratelimit: Limit: " + rateLimit.limit + " Remaining: " + rateLimit.remaining
-                + " Reset hour: " + dateFormat.format(rateLimit.reset));
+        this.getLogger().info("Step " + step.getName() + " - GitHub rate limit: Limit: " + rateLimit.limit +
+                " - Remaining: " + rateLimit.remaining + " - Reset hour: " + dateFormat.format(rateLimit.reset));
     }
 
     public boolean mergeTwoCommitsForPR(Git git, Build build, PullRequest prInformation, String repository, AbstractStep step, List<String> paths) {
@@ -204,16 +203,14 @@ public class GitHelper {
             String commitBaseSha = this.testCommitExistence(git, prInformation.getBase().getSHA1(), step, build);
 
             if (commitHeadSha == null) {
-                step.addStepError("Commit head ref cannot be retrieved in the repository: "
+                step.addStepError("Commit head ref cannot be retrieved from the repository: "
                         + prInformation.getHead().getSHA1() + ". Operation aborted.");
-                this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getHead().toString());
                 return false;
             }
 
             if (commitBaseSha == null) {
-                step.addStepError("Commit base ref cannot be retrieved in the repository: "
+                step.addStepError("Commit base ref cannot be retrieved from the repository: "
                         + prInformation.getBase().getSHA1() + ". Operation aborted.");
-                this.getLogger().debug("Step " + step.getName() + " - " + prInformation.getBase().toString());
                 return false;
             }
 
@@ -335,7 +332,7 @@ public class GitHelper {
             patchDiff.getLines().setNumberAdded(nbLineAdded);
             patchDiff.getLines().setNumberDeleted(nbLineDeleted);
         } catch (IOException e) {
-            this.getLogger().error("Error while computing stat on the patch", e);
+            this.getLogger().error("Error while computing stat on the patch.", e);
         }
     }
 
@@ -402,5 +399,4 @@ public class GitHelper {
         }
         return newPaths;
     }
-
 }

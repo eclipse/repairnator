@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -153,7 +154,12 @@ public abstract class AbstractStep {
 
     private void serializeData() {
         if (serializers != null) {
-            this.getLogger().info("Serialize all data for build: "+this.getInspector().getBuggyBuild().getId());
+            if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+                this.getLogger().info("Serialize all data for the pair of builds " +
+                        this.getInspector().getBuggyBuild().getId() + ", " + this.getInspector().getPatchedBuild().getId());
+            } else {
+                this.getLogger().info("Serialize all data for build: " + this.getInspector().getBuggyBuild().getId());
+            }
             for (AbstractDataSerializer serializer : this.serializers) {
                 serializer.serializeData(this.inspector);
             }
@@ -217,7 +223,7 @@ public abstract class AbstractStep {
                     File pomFile = new File(dir.getPath()+File.separator+Utils.POM_FILE);
                   
                     if (pomFile.exists()) {
-                        this.getLogger().info("Found a pom.xml in the following directory: "+dir.getPath());
+                        this.getLogger().info("A pom.xml was found in the following directory: "+dir.getPath());
                         this.inspector.getJobStatus().setPomDirPath(dir.getPath());
                         return;
                     }
@@ -232,6 +238,8 @@ public abstract class AbstractStep {
     protected String getPom() {
         if (!pomLocationTested) {
             testPomLocation();
+            this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild()
+                    .setProjectRootPomPath(this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE);
         }
         return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }

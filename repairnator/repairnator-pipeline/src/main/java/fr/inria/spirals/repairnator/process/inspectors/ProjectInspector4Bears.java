@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuildTestCode;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.*;
@@ -51,6 +52,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
                     .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"BuggyBuildCandidate"))
                     .setNextStep(new InitRepoToPush(this))
                     .setNextStep(new ComputeClasspath(this, false))
+                    .setNextStep(new ComputeModules(this, false))
                     .setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
                     .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
                     .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"PatchedBuildCandidate"))
@@ -68,6 +70,7 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new CheckoutBuggyBuildTestCode(this, true))
                         .setNextStep(new InitRepoToPush(this))
                         .setNextStep(new ComputeClasspath(this, false))
+                        .setNextStep(new ComputeModules(this, false))
                         .setNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
                         .setNextStep(new CommitChangedTests(this))
                         .setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
@@ -76,7 +79,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
                         .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"PatchedBuildCandidate"))
                         .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
             } else {
-                this.logger.debug("The pair of scanned builds is not interesting.");
+                this.logger.debug("The pair of builds " + this.getBuggyBuild().getId() + ", " +
+                        this.getPatchedBuild().getId() + " is not interesting.");
                 return;
             }
         }

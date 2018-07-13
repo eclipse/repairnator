@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.*;
@@ -102,7 +103,7 @@ public class ProjectInspector {
                 metrics4Bears.getBuilds().setFixerBuild(patchedBuild);
             }
         } catch (Exception e) {
-            this.logger.error("Error while initializing metrics value", e);
+            this.logger.error("Error while initializing metrics.", e);
         }
     }
 
@@ -175,7 +176,7 @@ public class ProjectInspector {
                     repairStep.setProjectInspector(this);
                     lastStep = lastStep.setNextStep(repairStep);
                 } else {
-                    logger.error("Error while getting step class for following name: " + repairToolName);
+                    logger.error("Error while getting repair step class for following name: " + repairToolName);
                 }
             }
 
@@ -190,6 +191,7 @@ public class ProjectInspector {
 
 
             this.finalStep.
+                    setNextStep(new ComputeModules(this, false)).
                     setNextStep(new WritePropertyFile(this)).
                     setNextStep(new CommitProcessEnd(this)).
                     setNextStep(new PushProcessEnd(this));
@@ -216,7 +218,7 @@ public class ProjectInspector {
                 }
             }
         } else {
-            this.logger.debug("Scanned build is not a failing build.");
+            this.logger.debug("Build " + this.getBuggyBuild().getId() + " is not a failing build.");
         }
     }
 

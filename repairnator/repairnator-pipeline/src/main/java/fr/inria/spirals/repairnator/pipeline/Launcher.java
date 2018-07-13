@@ -52,7 +52,7 @@ public class Launcher {
             try {
                 properties.load(propertyStream);
             } catch (IOException e) {
-                LOGGER.error("Error while loading property file", e);
+                LOGGER.error("Error while loading property file.", e);
             }
             LOGGER.info("PIPELINE VERSION: "+properties.getProperty("PIPELINE_VERSION"));
         } else {
@@ -67,7 +67,7 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded(jsap);
             this.checkNopolSolverPath(jsap);
-            LOGGER.info("The pipeline will try to repair the following buildid: "+this.config.getBuildId());
+            LOGGER.info("The pipeline will try to repair the following build id: "+this.config.getBuildId());
         } else {
             this.checkNextBuildId(jsap);
             LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
@@ -200,7 +200,9 @@ public class Launcher {
         }
 
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
-        LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.config.getRepairTools(), ", "));
+        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+            LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.config.getRepairTools(), ", "));
+        }
     }
 
     private void checkToolsLoaded(JSAP jsap) {
@@ -210,7 +212,7 @@ public class Launcher {
             loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
-            System.err.println("Tools.jar must be loaded, here the classpath given for your app: "+System.getProperty("java.class.path"));
+            System.err.println("Tools.jar must be loaded. The classpath given for your app is: "+System.getProperty("java.class.path"));
             LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
@@ -279,7 +281,7 @@ public class Launcher {
         JTravis jTravis = this.config.getJTravis();
         Optional<Build> optionalBuild = jTravis.build().fromId(this.config.getBuildId());
         if (!optionalBuild.isPresent()) {
-            LOGGER.error("Error while retrieving the buggy build.");
+            LOGGER.error("Error while retrieving the buggy build. The process will exit now.");
             System.exit(-1);
         }
 
@@ -293,7 +295,7 @@ public class Launcher {
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             Optional<Build> optionalBuildPatch = jTravis.build().fromId(this.config.getNextBuildId());
             if (!optionalBuildPatch.isPresent()) {
-                LOGGER.error("Error while getting patched build: obtained null value. The process will exit now.");
+                LOGGER.error("Error while getting patched build: null value was obtained. The process will exit now.");
                 System.exit(-1);
             }
 
@@ -357,7 +359,7 @@ public class Launcher {
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
-        LOGGER.info("Inspector is finished. The process will now exit.");
+        LOGGER.info("Inspector is finished. The process will exit now.");
         System.exit(0);
     }
 

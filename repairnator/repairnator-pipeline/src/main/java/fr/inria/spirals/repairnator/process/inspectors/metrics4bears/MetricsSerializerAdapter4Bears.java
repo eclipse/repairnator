@@ -30,7 +30,7 @@ public class MetricsSerializerAdapter4Bears implements JsonSerializer<Metrics4Be
                         result.add(attributeName, jsonSerializationContext.serialize(value));
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Error while serializing metrics", e);
+                    logger.error("Error while serializing metrics.", e);
                 }
             }
         }

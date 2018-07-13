@@ -40,7 +40,7 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
         try {
             this.fileWriter = new FileWriter(filePath);
         } catch (IOException e) {
-            this.getLogger().error("Cannot create filewriter", e);
+            this.getLogger().error("Cannot create file writer for file " + filePath + ".", e);
         }
     }
 
@@ -50,7 +50,7 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
                 this.fileWriter.write(s);
                 this.fileWriter.flush();
             } catch (IOException e) {
-                this.getLogger().error("Error while writing to maven log", e);
+                this.getLogger().error("Error while writing to repairnator.maven log.", e);
             }
         }
     }

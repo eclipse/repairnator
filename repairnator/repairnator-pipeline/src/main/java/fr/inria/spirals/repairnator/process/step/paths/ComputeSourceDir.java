@@ -56,7 +56,7 @@ public class ComputeSourceDir extends AbstractStep {
             }
         } else {
             this.getLogger().debug("The default source directory (" + defaultSourceDir.getPath()
-                    + ") does not exists. Try to read pom.xml to get information.");
+                    + ") does not exist. Try to read pom.xml to get information.");
         }
         File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
@@ -80,7 +80,7 @@ public class ComputeSourceDir extends AbstractStep {
             if (!wasDefaultSourceDirFound) {
                 Build buildSection = model.getBuild();
 
-                if (buildSection != null) {
+                if (buildSection != null && buildSection.getSourceDirectory() != null) {
                     String pathSrcDirFromPom = buildSection.getSourceDirectory();
 
                     if (pathSrcDirFromPom != null) {
@@ -99,7 +99,7 @@ public class ComputeSourceDir extends AbstractStep {
 
                 } else {
                     this.getLogger().debug(
-                            "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
+                            "Build section does not exist in this pom.xml. Try to get source dir from all modules.");
                 }
             }
 
@@ -202,9 +202,9 @@ public class ComputeSourceDir extends AbstractStep {
             return StepStatus.buildError(this, PipelineState.SOURCEDIRNOTCOMPUTED);
         } else {
             if (sources.length == 1) {
-                this.getLogger().info("The following source dir was found:");
+                this.getLogger().info(sources.length+" one source dir was found:");
             } else {
-                this.getLogger().info("The following source dirs were found:");
+                this.getLogger().info(sources.length+" source dirs were found:");
             }
             for (File file : sources) {
                 this.getLogger().info(file.getAbsolutePath());

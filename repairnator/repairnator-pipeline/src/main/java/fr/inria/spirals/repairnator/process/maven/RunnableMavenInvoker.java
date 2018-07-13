@@ -42,7 +42,8 @@ public class RunnableMavenInvoker implements Runnable {
             InvocationResult result = invoker.execute(request);
             this.exitCode = result.getExitCode();
         } catch (MavenInvocationException e) {
-            this.logger.error("Error while executing goal :" + this.mavenHelper.getGoal() + " on the following pom file: " + this.mavenHelper.getPomFile()
+            this.logger.error("Error while executing goal " + this.mavenHelper.getGoal()
+                    + " on the following pom file: " + this.mavenHelper.getPomFile()
                     + ". Properties: " + this.mavenHelper.getProperties());
             this.logger.debug(e.getMessage());
             this.mavenHelper.getInspector().getJobStatus().addStepError(this.mavenHelper.getName(), e.getMessage());

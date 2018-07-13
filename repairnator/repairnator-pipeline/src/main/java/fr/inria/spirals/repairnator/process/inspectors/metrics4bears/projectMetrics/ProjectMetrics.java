@@ -2,11 +2,36 @@ package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.projectMet
 
 public class ProjectMetrics {
 
+    /**
+     * {@code numberModules} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeModules}.
+     */
+    private int numberModules;
+    /**
+     * {@code numberSourceFiles} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir}.
+     */
     private int numberSourceFiles;
+    /**
+     * {@code numberTestFiles} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir}.
+     */
     private int numberTestFiles;
-    private int numberLibraries;
+    /**
+     * {@code numberLibrariesFailingModule} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath}.
+     */
+    private int numberLibrariesFailingModule;
 
     public ProjectMetrics() {}
+
+    public int getNumberModules() {
+        return numberModules;
+    }
+
+    public void setNumberModules(int numberModules) {
+        this.numberModules = numberModules;
+    }
 
     public int getNumberSourceFiles() {
         return numberSourceFiles;
@@ -16,20 +41,20 @@ public class ProjectMetrics {
         this.numberSourceFiles = numberSourceFiles;
     }
 
-    public void setNumberTestFiles(int numberTestFiles) {
-        this.numberTestFiles = numberTestFiles;
-    }
-
     public int getNumberTestFiles() {
         return numberTestFiles;
     }
 
-    public int getNumberLibraries() {
-        return numberLibraries;
+    public void setNumberTestFiles(int numberTestFiles) {
+        this.numberTestFiles = numberTestFiles;
     }
 
-    public void setNumberLibraries(int numberLibraries) {
-        this.numberLibraries = numberLibraries;
+    public int getNumberLibrariesFailingModule() {
+        return numberLibrariesFailingModule;
+    }
+
+    public void setNumberLibrariesFailingModule(int numberLibrariesFailingModule) {
+        this.numberLibrariesFailingModule = numberLibrariesFailingModule;
     }
 
 }

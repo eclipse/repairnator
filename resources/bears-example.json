@@ -152,7 +152,8 @@
     }
   },
   "projectMetrics": {
-    "numberLibraries": 12,
+    "numberModules": 1,
+    "numberLibrariesFailingModule": 12,
     "numberSourceFiles": 10,
     "numberTestFiles": 8
   },
@@ -213,7 +214,8 @@
           1071
         ]
       }
-    }
+    },
+    "projectRootPomPath": "flink-tests/pom.xml"
   }
 
 }

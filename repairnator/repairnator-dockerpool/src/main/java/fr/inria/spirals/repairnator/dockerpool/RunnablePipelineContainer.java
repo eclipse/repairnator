@@ -103,7 +103,7 @@ public class RunnablePipelineContainer implements Runnable {
                     .labels(labels)
                     .build();
 
-            LOGGER.info("Create the container: "+this.containerName);
+            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Create the container: "+this.containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
             this.volumes = containerConfig.volumeNames();
@@ -111,15 +111,15 @@ public class RunnablePipelineContainer implements Runnable {
             this.containerId = container.id();
             treatedBuildTracking.setContainerId(this.containerId);
 
-            LOGGER.info("Start the container: "+this.containerName);
+            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Start the container: "+this.containerName);
             docker.startContainer(container.id());
 
             ContainerExit exitStatus = docker.waitContainer(this.containerId);
 
-            LOGGER.info("The container has finished with status code: "+exitStatus.statusCode());
+            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+exitStatus.statusCode());
 
             if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
-                LOGGER.info("Container will be removed.");
+                LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Container will be removed.");
                 docker.removeContainer(this.containerId);
                 this.removeVolumes(docker);
             }

@@ -11,10 +11,10 @@ public class CheckoutBuggyBuildTestCode extends CheckoutRepository {
     }
 
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Checking out the test code of the previous build...");
+        this.getLogger().debug("Checking out the test code of the buggy build candidate...");
 
         if (this.getInspector().getJobStatus().getTestDir() == null) {
-            this.getLogger().error("Test source dir is null: it is therefore impossible to continue.");
+            this.addStepError("Test code dir is null: it is therefore impossible to continue.");
             return StepStatus.buildError(this, PipelineState.TESTDIRNOTCOMPUTED);
         }
 

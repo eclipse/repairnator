@@ -141,7 +141,8 @@ public class TestMetrics4BearsJsonFile {
 
         for (FieldComparisonFailure fieldComparisonFailure : result.getFieldFailures()) {
             String fieldComparisonFailureName = fieldComparisonFailure.getField();
-            if (fieldComparisonFailureName.equals("tests.failingModule")) {
+            if (fieldComparisonFailureName.equals("tests.failingModule") ||
+                    fieldComparisonFailureName.equals("reproductionBuggyBuild.projectRootPomPath")) {
                 String path = "fermadeiral/test-repairnator-bears/386337343";
                 String expected = (String) fieldComparisonFailure.getExpected();
                 expected = expected.substring(expected.indexOf(path), expected.length());
@@ -202,7 +203,8 @@ public class TestMetrics4BearsJsonFile {
 
         for (FieldComparisonFailure fieldComparisonFailure : result.getFieldFailures()) {
             String fieldComparisonFailureName = fieldComparisonFailure.getField();
-            if (fieldComparisonFailureName.equals("tests.failingModule")) {
+            if (fieldComparisonFailureName.equals("tests.failingModule") ||
+                    fieldComparisonFailureName.equals("reproductionBuggyBuild.projectRootPomPath")) {
                 String path = "surli/failingProject/208897371";
                 String expected = (String) fieldComparisonFailure.getExpected();
                 expected = expected.substring(expected.indexOf(path), expected.length());

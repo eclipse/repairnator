@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PushState;
 
@@ -13,18 +14,29 @@ public class CommitProcessEnd extends CommitFiles {
     @Override
     protected StepStatus businessExecute() {
         if (this.getConfig().isPush()) {
-            this.getLogger().info("Commit process end...");
+            if (this.getInspector().getJobStatus().getLastPushState() != PushState.NONE) {
+                if (this.getInspector() instanceof ProjectInspector4Bears &&
+                        !((ProjectInspector4Bears) this.getInspector()).isBug()) {
+                    this.getLogger().error("The reproduction of the bug and/or the patch failed. Step bypassed.");
+                    return StepStatus.buildSkipped(this, "The reproduction of the bug and/or the patch failed. Step bypassed.");
+                }
 
-            super.setCommitType(CommitType.COMMIT_PROCESS_END);
+                this.getLogger().info("Commit process end...");
 
-            StepStatus stepStatus = super.businessExecute();
+                super.setCommitType(CommitType.COMMIT_PROCESS_END);
 
-            if (stepStatus.isSuccess()) {
-                this.setPushState(PushState.PROCESS_END_COMMITTED);
+                StepStatus stepStatus = super.businessExecute();
+
+                if (stepStatus.isSuccess()) {
+                    this.setPushState(PushState.PROCESS_END_COMMITTED);
+                } else {
+                    this.setPushState(PushState.PROCESS_END_NOT_COMMITTED);
+                }
+                return stepStatus;
             } else {
-                this.setPushState(PushState.PROCESS_END_NOT_COMMITTED);
+                this.getLogger().info("No commit has been done, so the end of the process will NOT be committed. Step bypassed.");
+                return StepStatus.buildSkipped(this);
             }
-            return stepStatus;
         } else {
             this.getLogger().info("Repairnator is configured NOT to push. Step bypassed.");
             return StepStatus.buildSkipped(this);

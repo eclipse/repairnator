@@ -43,7 +43,7 @@ public class ComputeTestDir extends AbstractStep {
         } else {
 
             this.getLogger().debug("The default test directory (" + defaultTestDir.getPath()
-                    + ") does not exists. Try to read pom.xml to get informations.");
+                    + ") does not exist. Try to read pom.xml to get information.");
             File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
 
             if (!pomIncriminatedModule.exists()) {
@@ -66,8 +66,8 @@ public class ComputeTestDir extends AbstractStep {
 
                 Build buildSection = model.getBuild();
 
-                if (buildSection != null) {
-                    String pathTestDirFromPom = model.getBuild().getTestSourceDirectory();
+                if (buildSection != null && buildSection.getTestSourceDirectory() != null) {
+                    String pathTestDirFromPom = buildSection.getTestSourceDirectory();
 
                     if (pathTestDirFromPom != null) {
                         File srcDirFromPom = new File(pathTestDirFromPom);
@@ -85,7 +85,7 @@ public class ComputeTestDir extends AbstractStep {
 
                 } else {
                     this.getLogger().debug(
-                            "Build section does not exists in this pom.xml. Try to get source dir from all modules.");
+                            "Build section does not exist in this pom.xml. Try to get source dir from all modules.");
                 }
 
                 for (String module : model.getModules()) {
@@ -154,9 +154,9 @@ public class ComputeTestDir extends AbstractStep {
             return StepStatus.buildError(this, PipelineState.TESTDIRNOTCOMPUTED);
         } else {
             if (sources.length == 1) {
-                this.getLogger().info("The following test dir was found:");
+                this.getLogger().info(sources.length+" one test dir was found:");
             } else {
-                this.getLogger().info("The following test dirs were found:");
+                this.getLogger().info(sources.length+" test dirs were found:");
             }
             for (File file : sources) {
                 this.getLogger().info(file.getAbsolutePath());

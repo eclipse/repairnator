@@ -90,9 +90,10 @@
     }
   },
   "projectMetrics": {
+    "numberModules": 2,
     "numberSourceFiles": 2,
     "numberTestFiles": 3,
-    "numberLibraries": 4
+    "numberLibrariesFailingModule": 4
   },
   "reproductionBuggyBuild": {
     "reproductionDateBeginning": "Jun 8, 2018 8:50:43 AM",
@@ -143,6 +144,7 @@
         "stepNames": [],
         "stepDurations": []
       }
-    }
+    },
+    "projectRootPomPath": "/tmp/test_bears_json_file_passing_passing_builds4300363164793498124/fermadeiral/test-repairnator-bears/386337343/pom.xml"
   }
 }

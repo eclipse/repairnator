@@ -41,9 +41,7 @@ public class CloneRepository extends AbstractStep {
 
             return StepStatus.buildSuccess(this);
         } catch (Exception e) {
-            this.getLogger().warn("Repository " + repoSlug + " cannot be cloned.");
-            this.getLogger().debug(e.toString());
-            this.addStepError(e.getMessage());
+            this.addStepError("Repository " + repoSlug + " cannot be cloned.", e);
             return StepStatus.buildError(this, PipelineState.NOTCLONABLE);
         }
     }

@@ -30,10 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by urli on 07/03/2017.
- */
-public class TestComputeTestDir {
+public class TestComputeModules {
 
     private File tmpDir;
 
@@ -49,81 +46,71 @@ public class TestComputeTestDir {
     }
 
     @Test
-    public void testComputeTestDirWithMultiModuleProject() throws IOException {
-        long buggyBuildCandidateId = 386332218; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386332218
+    public void testComputeModulesWithSingleModuleProject() throws IOException {
+        long buggyBuildCandidateId = 203797975; // http://travis-ci.org/fermadeiral/TestingProject/builds/203797975
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(buggyBuildCandidate, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
-        tmpDir = Files.createTempDirectory("computetestdir").toFile();
+        tmpDir = Files.createTempDirectory("test_compute_modules_with_single_module_project").toFile();
 
         File repoDir = new File(tmpDir, "repo");
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
 
         ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, buildToBeInspected, CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeTestDir computeTestDir = new ComputeTestDir(inspector, true);
+        ComputeModules computeModules = new ComputeModules(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeTestDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeModules);
         cloneStep.execute();
 
-        assertThat(computeTestDir.isShouldStop(), is(false));
+        assertThat(computeModules.isShouldStop(), is(false));
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
         assertThat(stepStatusList.size(), is(3));
-        StepStatus computeTestDirStatus = stepStatusList.get(2);
-        assertThat(computeTestDirStatus.getStep(), is(computeTestDir));
-
+        StepStatus classpathStatus = stepStatusList.get(2);
+        assertThat(classpathStatus.getStep(), is(computeModules));
         for (StepStatus stepStatus : stepStatusList) {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getTestDir(), is(new File[] {
-                new File(repoDir.getAbsolutePath()+"/test-repairnator-bears-core/src/test/java"),
-                new File(repoDir.getAbsolutePath()+"/test-repairnator-bears-patchstats/src/test/java")
-        }));
-        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberTestFiles(), is(3));
+        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberModules(), is(1));
     }
 
     @Test
-    public void testComputeTestDirWithReflexiveReferences() throws IOException {
-        long buildId = 345990212;
+    public void testComputeModulesWithMultiModuleProject() throws IOException {
+        long buggyBuildCandidateId = 380717778; // https://travis-ci.org/Spirals-Team/repairnator/builds/380717778
 
-        Build build = this.checkBuildAndReturn(buildId, true);
+        Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
-        tmpDir = Files.createTempDirectory("computetestdir").toFile();
+        BuildToBeInspected buildToBeInspected = new BuildToBeInspected(buggyBuildCandidate, null, ScannedBuildStatus.ONLY_FAIL, "test");
+
+        tmpDir = Files.createTempDirectory("test_compute_modules_with_multi_module_project").toFile();
 
         File repoDir = new File(tmpDir, "repo");
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
-
-
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
         jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
 
-        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, buildToBeInspected, CheckoutType.CHECKOUT_BUGGY_BUILD);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeTestDir computeTestDir = new ComputeTestDir(inspector, true);
+        ComputeModules computeModules = new ComputeModules(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeTestDir);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeModules);
         cloneStep.execute();
 
-        assertThat(computeTestDir.isShouldStop(), is(true));
+        assertThat(computeModules.isShouldStop(), is(false));
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
         assertThat(stepStatusList.size(), is(3));
-        StepStatus computeTestDirStatus = stepStatusList.get(2);
-        assertThat(computeTestDirStatus.getStep(), is(computeTestDir));
-
+        StepStatus classpathStatus = stepStatusList.get(2);
+        assertThat(classpathStatus.getStep(), is(computeModules));
         for (StepStatus stepStatus : stepStatusList) {
-            if (stepStatus.getStep() != computeTestDir) {
-                assertThat(stepStatus.isSuccess(), is(true));
-            } else {
-                assertThat(stepStatus.isSuccess(), is(false));
-            }
-
+            assertThat(stepStatus.isSuccess(), is(true));
         }
+
+        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberModules(), is(6));
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
@@ -137,4 +124,5 @@ public class TestComputeTestDir {
 
         return build;
     }
+
 }

@@ -52,7 +52,7 @@ public class TestComputeClasspath {
     }
 
     @Test
-    public void testComputeClasspath() throws IOException {
+    public void testComputeClasspathWithSingleModuleProject() throws IOException {
         long buildId = 201176013; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -87,17 +87,65 @@ public class TestComputeClasspath {
 
         List<URL> expectedClasspath = new ArrayList<URL>();
 
-        URL classDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/classes/");
-        URL testDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/test-classes/");
         URL junit = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.11/junit-4.11.jar");
         URL hamcrest = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar");
+        URL classDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/classes/");
+        URL testDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/test-classes/");
 
-        expectedClasspath.add(classDir);
-        expectedClasspath.add(testDir);
         expectedClasspath.add(junit);
         expectedClasspath.add(hamcrest);
+        expectedClasspath.add(classDir);
+        expectedClasspath.add(testDir);
 
         assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
+        assertThat(jobStatus.getMetrics().getNbLibraries(), is(2));
+        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
+    }
+
+    @Test
+    public void testComputeClasspathWithMultiModuleProject() throws IOException {
+        long buggyBuildCandidateId = 386269112; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386269112
+
+        Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
+
+        tmpDir = Files.createTempDirectory("test_computecp").toFile();
+
+        File repoDir = new File(tmpDir, "repo");
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(buggyBuildCandidate, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.setFailingModulePath(repoDir.getAbsolutePath() + File.separator + "test-repairnator-bears-core");
+
+        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected, CheckoutType.CHECKOUT_BUGGY_BUILD);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
+
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+                .setNextStep(new TestProject(inspector))
+                .setNextStep(computeClasspath);
+        cloneStep.execute();
+
+        assertThat(computeClasspath.isShouldStop(), is(false));
+        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
+        assertThat(stepStatusList.size(), is(4));
+        StepStatus classpathStatus = stepStatusList.get(3);
+        assertThat(classpathStatus.getStep(), is(computeClasspath));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        List<URL> expectedClasspath = new ArrayList<URL>();
+
+        expectedClasspath.add(new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.12/junit-4.12.jar"));
+        expectedClasspath.add(new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"));
+        expectedClasspath.add(new URL("file:"+jobStatus.getFailingModulePath()+"/target/classes/"));
+        expectedClasspath.add(new URL("file:"+jobStatus.getFailingModulePath()+"/target/test-classes/"));
+
+        assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
+        assertThat(jobStatus.getMetrics().getNbLibraries(), is(2));
+        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

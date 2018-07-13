@@ -21,6 +21,8 @@ import java.util.Properties;
  * Created by urli on 08/02/2017.
  */
 public class ComputeClasspath extends AbstractStep {
+    private static final String goal = "dependency:build-classpath";
+
     private static final String CLASSPATH_FILENAME = "classpath.info";
     private static final String DEFAULT_CLASSES_DIR = "/target/classes";
     private static final String DEFAULT_TEST_CLASSES_DIR = "/target/test-classes";
@@ -37,12 +39,62 @@ public class ComputeClasspath extends AbstractStep {
             try {
                 this.classPath.add(file.toURI().toURL());
             } catch (MalformedURLException e) {
-                this.addStepError(e.getMessage());
-                this.getLogger().error("Error while putting the following file in classpath: " + file.getAbsolutePath()
-                        + " : " + e.getMessage(), e);
+                this.addStepError("Error while adding the following file in the classpath: " +
+                        file.getAbsolutePath() + ".", e);
             }
         } else {
-            this.addStepError("The file does not exist: " + file.getAbsolutePath());
+            this.addStepError("The file does not exist: " + file.getAbsolutePath() + ".");
+        }
+    }
+
+    private void addDefaultDirsToClassPath(String modulePath) {
+        File defaultClassDir = new File(modulePath + File.separator + DEFAULT_CLASSES_DIR + File.separator);
+        this.addFileToClassPath(defaultClassDir);
+
+        File defaultTestClassDir = new File(
+                modulePath + File.separator + DEFAULT_TEST_CLASSES_DIR + File.separator);
+        this.addFileToClassPath(defaultTestClassDir);
+    }
+
+    private int runMavenGoal(String pomPath, Properties properties) {
+        MavenHelper helper = new MavenHelper(pomPath, goal, properties, this.getClass().getSimpleName(),
+                this.getInspector(), true);
+
+        int result = MavenHelper.MAVEN_ERROR;
+        try {
+            result = helper.run();
+        } catch (InterruptedException e) {
+            this.addStepError("Error while executing maven goal.", e);
+        }
+        return result;
+    }
+
+    private void addJarFilesToClassPath(String classpathFilePath) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(new File(classpathFilePath)));
+            String classpathLine = reader.readLine();
+
+            String[] allJars = classpathLine.split(":");
+
+            for (String jar : allJars) {
+                File jarFile = new File(jar);
+                this.addFileToClassPath(jarFile);
+            }
+            this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
+        } catch (IOException e) {
+            this.addStepError("Problem while getting classpath file.", e);
+        }
+    }
+
+    private void checkJUnitInClasspath() {
+        boolean containJunit = false;
+        for (URL url : this.classPath) {
+            if (url.toString().contains("junit")) {
+                containJunit = true;
+            }
+        }
+        if (!containJunit) {
+            this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use JUnit for testing.");
         }
     }
 
@@ -52,69 +104,27 @@ public class ComputeClasspath extends AbstractStep {
 
         String incriminatedModule = this.getInspector().getJobStatus().getFailingModulePath();
 
-        File defaultClassDir = new File(incriminatedModule + File.separator + DEFAULT_CLASSES_DIR + File.separator);
-        this.addFileToClassPath(defaultClassDir);
-
-        File defaultTestClassDir = new File(
-                incriminatedModule + File.separator + DEFAULT_TEST_CLASSES_DIR + File.separator);
-        this.addFileToClassPath(defaultTestClassDir);
-
         Properties properties = new Properties();
         properties.setProperty("mdep.outputFile", CLASSPATH_FILENAME);
 
-        String goal = "dependency:build-classpath";
         String pomModule = incriminatedModule + File.separator + Utils.POM_FILE;
+        String classpathFilePath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
 
-        MavenHelper helper = new MavenHelper(pomModule, goal, properties, this.getClass().getSimpleName(),
-                this.getInspector(), true);
-
-        int result = MavenHelper.MAVEN_ERROR;
-        try {
-            result = helper.run();
-        } catch (InterruptedException e) {
-            this.addStepError("Error with maven goal", e);
-        }
-
-        if (result != MavenHelper.MAVEN_SUCCESS) {
-            this.getLogger().debug("Error while computing classpath maven");
+        if (this.runMavenGoal(pomModule, properties) != MavenHelper.MAVEN_SUCCESS) {
+            this.addStepError("Error while computing classpath maven.");
             return StepStatus.buildError(this, PipelineState.CLASSPATHERROR);
         }
 
-        String classpathPath = incriminatedModule + File.separator + CLASSPATH_FILENAME;
+        // Only jars will be added in the classpath here, which is the number of libraries of the failing module
+        this.addJarFilesToClassPath(classpathFilePath);
+        this.getInspector().getJobStatus().getMetrics().setNbLibraries(this.classPath.size());
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberLibrariesFailingModule(this.classPath.size());
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(new File(classpathPath)));
-            String classpathLine = reader.readLine();
+        this.checkJUnitInClasspath();
 
-            String[] allJars = classpathLine.split(":");
-
-            for (String jar : allJars) {
-                File f = new File(jar);
-                this.addFileToClassPath(f);
-            }
-            this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
-        } catch (IOException e) {
-            this.addStepError("Problem while getting classpath: " + e);
-        }
-
-        int numberLibraries = 0;
-        boolean containJunit = false;
-        for (URL url : classPath) {
-            if (url.toString().contains("junit")) {
-                containJunit = true;
-            }
-            if (url.toString().endsWith(".jar")) {
-                numberLibraries++;
-            }
-        }
-
-        if (!containJunit) {
-            this.addStepError("The classpath seems not to contain JUnit, maybe this project does not use junit for testing.");
-        }
-
+        // Default "/target/classes" and "/target/test-classes" dirs are then added here
+        this.addDefaultDirsToClassPath(incriminatedModule);
         this.getInspector().getJobStatus().setRepairClassPath(this.classPath);
-        this.getInspector().getJobStatus().getMetrics().setNbLibraries(numberLibraries);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberLibraries(numberLibraries);
 
         return StepStatus.buildSuccess(this);
     }

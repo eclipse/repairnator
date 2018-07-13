@@ -909,10 +909,19 @@
       "$id": "/properties/projectMetrics",
       "type": "object",
       "properties": {
-        "numberLibraries": {
-          "$id": "/properties/projectMetrics/properties/numberLibraries",
+        "numberModules": {
+          "$id": "/properties/projectMetrics/properties/numberModules",
           "type": "integer",
-          "title": "The Numberlibraries Schema ",
+          "title": "The numberModules Schema ",
+          "default": 0,
+          "examples": [
+            1
+          ]
+        },
+        "numberLibrariesFailingModule": {
+          "$id": "/properties/projectMetrics/properties/numberLibrariesFailingModule",
+          "type": "integer",
+          "title": "The numberLibrariesFailingModule Schema ",
           "default": 0,
           "examples": [
             12
@@ -938,7 +947,8 @@
         }
       },
       "required": [
-        "numberLibraries",
+        "numberModules",
+        "numberLibrariesFailingModule",
         "numberSourceFiles",
         "numberTestFiles"
       ]
@@ -963,6 +973,15 @@
           "default": "",
           "examples": [
             "Apr 5, 2018 6:12:38 AM CET"
+          ]
+        },
+        "projectRootPomPath": {
+          "$id": "/properties/reproductionBuggyBuild/properties/projectRootPomPath",
+          "type": "string",
+          "title": "The projectRootPomPath",
+          "default": "",
+          "examples": [
+            "..."
           ]
         },
         "totalDuration": {
@@ -1206,6 +1225,7 @@
       "required": [
         "reproductionDateBeginning",
         "reproductionDateEnd",
+        "projectRootPomPath",
         "totalDuration",
         "processDurations"
       ]
