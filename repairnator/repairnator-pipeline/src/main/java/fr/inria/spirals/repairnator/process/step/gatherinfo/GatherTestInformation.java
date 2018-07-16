@@ -32,6 +32,7 @@ public class GatherTestInformation extends AbstractStep {
 
     private int nbTotalTests;
     private int nbRunningTests;
+    private int nbPassingTests;
     private int nbFailingTests;
     private int nbErroringTests;
     private int nbSkippingTests;
@@ -117,7 +118,9 @@ public class GatherTestInformation extends AbstractStep {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
                     this.nbTotalTests += testSuite.getNumberOfTests();
-                    this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
+                    int runningTests = testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
+                    this.nbRunningTests += runningTests;
+                    this.nbPassingTests += runningTests - testSuite.getNumberOfFailures() - testSuite.getNumberOfErrors();
                     this.nbFailingTests += testSuite.getNumberOfFailures();
                     this.nbErroringTests += testSuite.getNumberOfErrors();
                     this.nbSkippingTests += testSuite.getNumberOfSkipped();
@@ -202,7 +205,7 @@ public class GatherTestInformation extends AbstractStep {
             Metrics metrics = jobStatus.getMetrics();
             metrics.setFailureNames(this.failureNames);
             metrics.setNbRunningTests(this.nbRunningTests);
-            metrics.setNbSucceedingTests(this.nbRunningTests - this.nbErroringTests - this.nbFailingTests);
+            metrics.setNbSucceedingTests(this.nbPassingTests);
             metrics.setNbFailingTests(this.nbFailingTests);
             metrics.setNbErroringTests(this.nbErroringTests);
             metrics.setNbSkippingTests(this.nbSkippingTests);
@@ -211,7 +214,7 @@ public class GatherTestInformation extends AbstractStep {
             Tests tests = metrics4Bears.getTests();
             OverallMetrics overallMetrics = tests.getOverallMetrics();
             overallMetrics.setNumberRunning(this.nbRunningTests);
-            overallMetrics.setNumberPassing(this.nbRunningTests - this.nbErroringTests - this.nbFailingTests);
+            overallMetrics.setNumberPassing(this.nbPassingTests);
             overallMetrics.setNumberFailing(this.nbFailingTests);
             overallMetrics.setNumberErroring(this.nbErroringTests);
             overallMetrics.setNumberSkipping(this.nbSkippingTests);
@@ -220,7 +223,7 @@ public class GatherTestInformation extends AbstractStep {
         this.getLogger().info("---Test results---");
         this.getLogger().info("   Total tests: " + this.nbTotalTests);
         this.getLogger().info("   Tests run: " + this.nbRunningTests);
-        this.getLogger().info("   Tests passing: " + (this.nbRunningTests - this.nbErroringTests - this.nbFailingTests));
+        this.getLogger().info("   Tests passing: " + this.nbPassingTests);
         this.getLogger().info("   Failures: " + this.nbFailingTests);
         this.getLogger().info("   Errors: " + this.nbErroringTests);
         this.getLogger().info("   Skipped: " + this.nbSkippingTests);
