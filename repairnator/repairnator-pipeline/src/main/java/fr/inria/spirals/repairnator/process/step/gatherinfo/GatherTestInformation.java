@@ -31,10 +31,10 @@ public class GatherTestInformation extends AbstractStep {
     private static final String SUREFIREREPORT_PATH = "/target/surefire-reports";
 
     private int nbTotalTests;
-    private int nbSkippingTests;
+    private int nbRunningTests;
     private int nbFailingTests;
     private int nbErroringTests;
-    private int nbRunningTests;
+    private int nbSkippingTests;
 
     private Set<FailureLocation> failureLocations;
     private Set<String> failureNames;
@@ -117,10 +117,10 @@ public class GatherTestInformation extends AbstractStep {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
                     this.nbTotalTests += testSuite.getNumberOfTests();
-                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
                     this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
-                    this.nbErroringTests += testSuite.getNumberOfErrors();
                     this.nbFailingTests += testSuite.getNumberOfFailures();
+                    this.nbErroringTests += testSuite.getNumberOfErrors();
+                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
 
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
@@ -201,11 +201,11 @@ public class GatherTestInformation extends AbstractStep {
 
             Metrics metrics = jobStatus.getMetrics();
             metrics.setFailureNames(this.failureNames);
-            metrics.setNbFailingTests(this.nbFailingTests);
             metrics.setNbRunningTests(this.nbRunningTests);
-            metrics.setNbSkippingTests(this.nbSkippingTests);
-            metrics.setNbErroringTests(this.nbErroringTests);
             metrics.setNbSucceedingTests(this.nbRunningTests - this.nbErroringTests - this.nbFailingTests);
+            metrics.setNbFailingTests(this.nbFailingTests);
+            metrics.setNbErroringTests(this.nbErroringTests);
+            metrics.setNbSkippingTests(this.nbSkippingTests);
 
             Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
             Tests tests = metrics4Bears.getTests();
