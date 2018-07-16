@@ -202,16 +202,16 @@ public class GatherTestInformation extends AbstractStep {
             Metrics metrics = jobStatus.getMetrics();
             metrics.setFailureNames(this.failureNames);
             metrics.setNbFailingTests(this.nbFailingTests);
-            metrics.setNbRunningTests(this.nbTotalTests);
+            metrics.setNbRunningTests(this.nbRunningTests);
             metrics.setNbSkippingTests(this.nbSkippingTests);
             metrics.setNbErroringTests(this.nbErroringTests);
-            metrics.setNbSucceedingTests(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            metrics.setNbSucceedingTests(this.nbRunningTests - this.nbErroringTests - this.nbFailingTests);
 
             Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
             Tests tests = metrics4Bears.getTests();
             OverallMetrics overallMetrics = tests.getOverallMetrics();
-            overallMetrics.setNumberRunning(this.nbTotalTests);
-            overallMetrics.setNumberPassing(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            overallMetrics.setNumberRunning(this.nbRunningTests);
+            overallMetrics.setNumberPassing(this.nbRunningTests - this.nbErroringTests - this.nbFailingTests);
             overallMetrics.setNumberFailing(this.nbFailingTests);
             overallMetrics.setNumberErroring(this.nbErroringTests);
             overallMetrics.setNumberSkipping(this.nbSkippingTests);
