@@ -10,7 +10,6 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
@@ -70,15 +69,17 @@ public class TestComputeClasspath {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(computeClasspath);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneStep.execute();
+
+        createTargetDir(new File(jobStatus.getFailingModulePath()));
+
+        computeClasspath.execute();
 
         assertThat(computeClasspath.isShouldStop(), is(false));
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus classpathStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus classpathStatus = stepStatusList.get(2);
         assertThat(classpathStatus.getStep(), is(computeClasspath));
 
         for (StepStatus stepStatus : stepStatusList) {
@@ -86,16 +87,10 @@ public class TestComputeClasspath {
         }
 
         List<URL> expectedClasspath = new ArrayList<URL>();
-
-        URL junit = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.11/junit-4.11.jar");
-        URL hamcrest = new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar");
-        URL classDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/classes/");
-        URL testDir = new URL("file:"+repoDir.getAbsolutePath()+"/target/test-classes/");
-
-        expectedClasspath.add(junit);
-        expectedClasspath.add(hamcrest);
-        expectedClasspath.add(classDir);
-        expectedClasspath.add(testDir);
+        expectedClasspath.add(new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.11/junit-4.11.jar"));
+        expectedClasspath.add(new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"));
+        expectedClasspath.add(new URL("file:"+jobStatus.getFailingModulePath()+"/target/classes/"));
+        expectedClasspath.add(new URL("file:"+jobStatus.getFailingModulePath()+"/target/test-classes/"));
 
         assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
         assertThat(jobStatus.getMetrics().getNbLibraries(), is(2));
@@ -121,15 +116,17 @@ public class TestComputeClasspath {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(computeClasspath);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneStep.execute();
+
+        createTargetDir(new File(jobStatus.getFailingModulePath()));
+
+        computeClasspath.execute();
 
         assertThat(computeClasspath.isShouldStop(), is(false));
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus classpathStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus classpathStatus = stepStatusList.get(2);
         assertThat(classpathStatus.getStep(), is(computeClasspath));
 
         for (StepStatus stepStatus : stepStatusList) {
@@ -137,7 +134,6 @@ public class TestComputeClasspath {
         }
 
         List<URL> expectedClasspath = new ArrayList<URL>();
-
         expectedClasspath.add(new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/junit/junit/4.12/junit-4.12.jar"));
         expectedClasspath.add(new URL("file:"+tmpDir.getAbsolutePath()+"/.m2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"));
         expectedClasspath.add(new URL("file:"+jobStatus.getFailingModulePath()+"/target/classes/"));
@@ -158,5 +154,16 @@ public class TestComputeClasspath {
         assertThat(build.isPullRequest(), Is.is(isPR));
 
         return build;
+    }
+
+    private void createTargetDir(File repoDir) {
+        File targetDir = new File(repoDir.getAbsolutePath(), "target");
+        targetDir.mkdir();
+
+        File classDir = new File(targetDir.getAbsolutePath(), "classes");
+        classDir.mkdir();
+
+        File testDir = new File(targetDir.getAbsolutePath(), "test-classes");
+        testDir.mkdir();
     }
 }
