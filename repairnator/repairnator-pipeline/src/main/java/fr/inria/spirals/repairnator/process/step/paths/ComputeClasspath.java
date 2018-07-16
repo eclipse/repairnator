@@ -74,13 +74,17 @@ public class ComputeClasspath extends AbstractStep {
             BufferedReader reader = new BufferedReader(new FileReader(new File(classpathFilePath)));
             String classpathLine = reader.readLine();
 
-            String[] allJars = classpathLine.split(":");
+            if (classpathLine != null && !classpathLine.isEmpty()) {
+                String[] allJars = classpathLine.split(":");
 
-            for (String jar : allJars) {
-                File jarFile = new File(jar);
-                this.addFileToClassPath(jarFile);
+                for (String jar : allJars) {
+                    File jarFile = new File(jar);
+                    this.addFileToClassPath(jarFile);
+                }
+                this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
+            } else {
+                this.addStepError("The classpath file is empty.");
             }
-            this.getInspector().getJobStatus().addFileToPush(CLASSPATH_FILENAME);
         } catch (IOException e) {
             this.addStepError("Problem while getting classpath file.", e);
         }
