@@ -10,7 +10,6 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
@@ -71,14 +70,13 @@ public class TestComputeSourceDir {
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
         cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
                 .setNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus computeSourceDirStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(3));
+        StepStatus computeSourceDirStatus = stepStatusList.get(2);
         assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
 
         for (StepStatus stepStatus : stepStatusList) {

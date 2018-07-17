@@ -1158,12 +1158,67 @@
                 "stepNames",
                 "stepDurations"
               ]
+            },
+            "fixing": {
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for fixing",
+                  "default": 0,
+                  "exemples": [
+                    2
+                  ]
+                },
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/totalDuration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exemples": [
+                    120
+                  ]
+                },
+                "stepNames": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "nbSteps",
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
+              ]
             }
           },
           "required": [
             "cloning",
             "building",
-            "testing"
+            "testing",
+            "fixing"
           ]
         }
       },
