@@ -59,7 +59,7 @@ public class TestProjectInspector {
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setPush(true);
         config.setPushRemoteRepo("");
-        config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "Nopol")));
+        config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "NopolSingleTest")));
         Utils.setLoggersLevel(Level.ERROR);
     }
 

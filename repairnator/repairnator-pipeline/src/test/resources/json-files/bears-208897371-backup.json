@@ -118,6 +118,16 @@
         "stepDurations": [
           7
         ]
+      },
+      "fixing": {
+        "nbSteps": 1,
+        "totalDuration": 109,
+        "stepNames": [
+          "Nopol"
+        ],
+        "stepDurations": [
+          109
+        ]
       }
     },
     "projectRootPomPath": "/tmp/test_bears_json_file_failing_build4879665694333003261/surli/failingProject/208897371/pom.xml"

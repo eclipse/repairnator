@@ -137,12 +137,6 @@
         "stepDurations": [
           158
         ]
-      },
-      "fixing": {
-        "nbSteps": 0,
-        "totalDuration": 0,
-        "stepNames": [],
-        "stepDurations": []
       }
     },
     "projectRootPomPath": "/tmp/test_bears_json_file_passing_passing_builds4300363164793498124/fermadeiral/test-repairnator-bears/386337343/pom.xml"
