@@ -98,7 +98,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         return classPath;
     }
 
-    protected void runNopol(FailureLocation failureLocation, List<String> testsToIgnore, boolean ignoreError) {
+    protected void runNopol(List<FailureLocation> failureLocation, List<String> testsToIgnore, boolean ignoreError) {
         NopolInformation nopolInformation;
         if (testsToIgnore.isEmpty()) {
             nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.NOTHING_TO_IGNORE);
@@ -113,7 +113,12 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
 
         nopolInformation.setStatus(NopolStatus.RUNNING);
 
-        String testClass = failureLocation.getClassName();
+        List<String> testClass = new ArrayList<>();
+
+        for (FailureLocation location : failureLocation) {
+            testClass.add(location.getClassName());
+        }
+
         int timeout = (TOTAL_MAX_TIME - this.passingTime) / 2;
         if (timeout < MIN_TIMEOUT) {
             timeout = MIN_TIMEOUT;

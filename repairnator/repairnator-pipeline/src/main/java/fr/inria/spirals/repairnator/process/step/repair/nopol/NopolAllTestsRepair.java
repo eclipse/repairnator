@@ -6,10 +6,10 @@ import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import java.util.Collections;
 
 /**
- * This launch Nopol against the whole test suite
+ * This launch Nopol against all classes of failing test at once
  */
-public class NopolSingleRepair extends AbstractNopolRepair {
-    protected static final String TOOL_NAME = "Nopol";
+public class NopolAllTestsRepair extends AbstractNopolRepair {
+    protected static final String TOOL_NAME = "NopolSingleTest";
 
     @Override
     protected StepStatus businessExecute() {
