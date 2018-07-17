@@ -315,7 +315,21 @@ public abstract class AbstractStep {
             this.inspector.setPipelineEnding(true);
             this.recordMetrics();
             if (this.inspector.getFinalStep() != null) {
-                this.inspector.getFinalStep().execute();
+                if ((!(this.getInspector() instanceof ProjectInspector4Bears) && // Repairnator
+                        this.getInspector().getJobStatus().isReproducedAsFail()) // A bug was reproduced
+                        ||
+                        (this.getInspector() instanceof ProjectInspector4Bears && // Bears
+                        ((ProjectInspector4Bears) this.getInspector()).isBug())) { // A bug and its patch were reproduced
+                    this.inspector.getFinalStep().execute();
+                } else {
+                    if (this.getInspector() instanceof ProjectInspector4Bears) {
+                        this.getLogger().debug("FINAL STEPS SKIPPED: The reproduction of the bug and/or the patch failed.");
+                    } else {
+                        this.getLogger().debug("FINAL STEPS SKIPPED: The reproduction of the bug failed.");
+                    }
+                    // So the final push state is repo not pushed
+                    this.setPushState(PushState.REPO_NOT_PUSHED);
+                }
             }
             this.serializeData();
             this.cleanMavenArtifacts();
