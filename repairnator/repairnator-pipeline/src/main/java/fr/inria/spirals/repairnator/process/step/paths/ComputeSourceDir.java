@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,16 +26,10 @@ public class ComputeSourceDir extends ComputeDir {
         this.allModules = allModules;
     }
 
-    private void computeMetricsOnSources(File[] sources) {
-        int totalAppFiles = 0;
-        if (sources != null && sources.length > 0) {
-            for (File f : sources) {
-                int nbFile = FileUtils.listFiles(f, new String[] {"java"}, true).size();
-                totalAppFiles += nbFile;
-            }
-            this.getInspector().getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
-            this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberSourceFiles(totalAppFiles);
-        }
+    private void computeMetricsOnSourceDirs(File[] sources) {
+        int totalAppFiles = super.computeMetricsOnDirs(sources);
+        this.getInspector().getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberSourceFiles(totalAppFiles);
     }
 
     private void computeMetricsOnCompleteRepo() {
@@ -80,8 +73,8 @@ public class ComputeSourceDir extends ComputeDir {
             File[] sources = super.getResultDirs();
 
             if (allModules) {
+                this.computeMetricsOnSourceDirs(sources);
                 this.computeMetricsOnCompleteRepo();
-                this.computeMetricsOnSources(sources);
             }
 
             this.getInspector().getJobStatus().setRepairSourceDir(sources);

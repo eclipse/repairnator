@@ -3,7 +3,6 @@ package fr.inria.spirals.repairnator.process.step.paths;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 
@@ -16,16 +15,10 @@ public class ComputeTestDir extends ComputeDir {
         super(inspector, blockingStep);
     }
 
-    private void computeMetricsOnTest(File[] sources) {
-        int totalAppFiles = 0;
-        if (sources != null && sources.length > 0) {
-            for (File f : sources) {
-                int nbFile = FileUtils.listFiles(f, new String[] {"java"}, true).size();
-                totalAppFiles += nbFile;
-            }
-            this.getInspector().getJobStatus().getMetrics().setNbFileTests(totalAppFiles);
-            this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberTestFiles(totalAppFiles);
-        }
+    private void computeMetricsOnTestDirs(File[] sources) {
+        int totalAppFiles = super.computeMetricsOnDirs(sources);
+        this.getInspector().getJobStatus().getMetrics().setNbFileTests(totalAppFiles);
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberTestFiles(totalAppFiles);
     }
 
     @Override
@@ -40,7 +33,7 @@ public class ComputeTestDir extends ComputeDir {
         if (superStepStatus.isSuccess()) {
             File[] sources = super.getResultDirs();
 
-            this.computeMetricsOnTest(sources);
+            this.computeMetricsOnTestDirs(sources);
 
             this.getInspector().getJobStatus().setTestDir(sources);
             return StepStatus.buildSuccess(this);

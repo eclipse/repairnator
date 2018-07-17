@@ -4,6 +4,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingException;
@@ -139,6 +140,17 @@ public class ComputeDir extends AbstractStep {
         this.addStepError(
                 "The " + dirTypeName + " directory is not at default location or specified in build section and no parent can be found.");
         return null;
+    }
+
+    protected int computeMetricsOnDirs(File[] sources) {
+        int totalAppFiles = 0;
+        if (sources != null && sources.length > 0) {
+            for (File f : sources) {
+                int nbFile = FileUtils.listFiles(f, new String[] {"java"}, true).size();
+                totalAppFiles += nbFile;
+            }
+        }
+        return totalAppFiles;
     }
 
     @Override
