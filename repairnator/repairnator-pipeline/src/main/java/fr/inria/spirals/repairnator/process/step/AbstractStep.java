@@ -315,7 +315,13 @@ public abstract class AbstractStep {
             this.inspector.setPipelineEnding(true);
             this.recordMetrics();
             if (this.inspector.getFinalStep() != null) {
-                this.inspector.getFinalStep().execute();
+                if ((!(this.getInspector() instanceof ProjectInspector4Bears) && // Repairnator
+                        this.getInspector().getJobStatus().isReproducedAsFail()) // A bug was reproduced
+                        ||
+                        (this.getInspector() instanceof ProjectInspector4Bears && // Bears
+                        ((ProjectInspector4Bears) this.getInspector()).isBug())) { // A bug and its patch was reproduced
+                    this.inspector.getFinalStep().execute();
+                }
             }
             this.serializeData();
             this.cleanMavenArtifacts();
