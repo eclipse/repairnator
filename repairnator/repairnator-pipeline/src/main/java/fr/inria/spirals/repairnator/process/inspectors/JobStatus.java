@@ -70,6 +70,7 @@ public class JobStatus {
         this.pushStates = new ArrayList<>();
         this.listOfPatches = new HashMap<>();
         this.toolDiagnostic = new HashMap<>();
+        this.repairClassPath = new ArrayList<>();
     }
 
     public List<URL> getRepairClassPath() {
