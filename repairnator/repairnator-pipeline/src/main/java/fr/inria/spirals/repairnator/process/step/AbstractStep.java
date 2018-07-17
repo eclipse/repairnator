@@ -321,6 +321,12 @@ public abstract class AbstractStep {
                         (this.getInspector() instanceof ProjectInspector4Bears && // Bears
                         ((ProjectInspector4Bears) this.getInspector()).isBug())) { // A bug and its patch were reproduced
                     this.inspector.getFinalStep().execute();
+                } else {
+                    if (this.getInspector() instanceof ProjectInspector4Bears) {
+                        this.getLogger().debug("FINAL STEPS SKIPPED: The reproduction of the bug and/or the patch failed.");
+                    } else {
+                        this.getLogger().debug("FINAL STEPS SKIPPED: The reproduction of the bug failed.");
+                    }
                 }
             }
             this.serializeData();
