@@ -4,4 +4,5 @@ fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair
 fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair
 fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair
 fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair
+fr.inria.spirals.repairnator.process.step.repair.nopol.NopolAllTestsRepair
 fr.inria.spirals.repairnator.process.step.repair.NPERepair

@@ -9,7 +9,7 @@ import java.util.Collections;
  * This launch Nopol against each class of failing tests
  */
 public class NopolSingleTestRepair extends AbstractNopolRepair {
-    protected static final String TOOL_NAME = "Nopol";
+    protected static final String TOOL_NAME = "NopolSingleTest";
 
     @Override
     protected StepStatus businessExecute() {
@@ -20,7 +20,7 @@ public class NopolSingleTestRepair extends AbstractNopolRepair {
 
         if (this.getClassPath() != null && this.getSources() != null) {
             for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
-                this.runNopol(failureLocation, Collections.EMPTY_LIST, true);
+                this.runNopol(Collections.singletonList(failureLocation), Collections.EMPTY_LIST, true);
             }
 
             return this.recordResults();

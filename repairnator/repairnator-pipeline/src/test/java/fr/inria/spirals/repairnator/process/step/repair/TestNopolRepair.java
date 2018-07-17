@@ -16,6 +16,7 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolAllTestsRepair;
 import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -24,6 +25,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -59,7 +61,8 @@ public class TestNopolRepair {
     }
 
     @Test
-    public void testNopolRepair() throws IOException {
+    @Ignore
+    public void testNopolRepairWithExclusion() throws IOException {
         long buildId = 207890790; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -73,6 +76,52 @@ public class TestNopolRepair {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
         NopolMultiWithTestExclusionRepair nopolRepair = new NopolMultiWithTestExclusionRepair();
+        nopolRepair.setProjectInspector(inspector);
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(nopolRepair.getRepairToolName()));
+        NopolMultiWithTestExclusionRepair.TOTAL_MAX_TIME = 2;
+
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
+                .setNextStep(new TestProject(inspector))
+                .setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .setNextStep(new ComputeClasspath(inspector, true))
+                .setNextStep(new ComputeSourceDir(inspector, true, false))
+                .setNextStep(nopolRepair);
+        cloneStep.execute();
+
+        assertThat(nopolRepair.isShouldStop(), is(false));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+        assertThat(stepStatusList.size(), is(7));
+        StepStatus nopolStatus = stepStatusList.get(6);
+        assertThat(nopolStatus.getStep(), is(nopolRepair));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
+
+        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+        assertThat(allPatches.size(), is(1852));
+        assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
+    }
+
+    @Test
+    public void testNopolRepairAllTests() throws IOException {
+        long buildId = 207890790; // surli/failingProject build
+
+        Build build = this.checkBuildAndReturn(buildId, false);
+
+        tmpDir = Files.createTempDirectory("test_nopolrepair").toFile();
+        System.out.println("Dirpath : "+tmpDir.toPath());
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        NopolAllTestsRepair nopolRepair = new NopolAllTestsRepair();
         nopolRepair.setProjectInspector(inspector);
         RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(nopolRepair.getRepairToolName()));
         NopolMultiWithTestExclusionRepair.TOTAL_MAX_TIME = 2;

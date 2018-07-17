@@ -129,7 +129,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
                 + " (should timeout in " + timeout + " minutes)");
 
-        NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[] { testClass }, testsToIgnore);
+        NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), testClass.toArray(new String[0]), testsToIgnore);
         nopolContext.setComplianceLevel(8);
         nopolContext.setTimeoutTestExecution(300);
         nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
@@ -175,9 +175,13 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
                 nopolInformation.setNbStatements(result.getNbStatements());
                 nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
 
-                String failureLocationWithoutDots = failureLocation.getClassName().replace('.','/');
+                StringBuilder failureLocationWithoutDots = new StringBuilder();
+                for (FailureLocation location : failureLocation) {
+                    failureLocationWithoutDots.append(location.getClassName().replace('.', '/'));
+                    failureLocationWithoutDots.append(':');
+                }
 
-                metric.addAngelicValueByTest(failureLocationWithoutDots, result.getNbAngelicValues());
+                metric.addAngelicValueByTest(failureLocationWithoutDots.toString(), result.getNbAngelicValues());
 
                 List<Patch> patches = result.getPatches();
                 if (patches != null && !patches.isEmpty()) {
