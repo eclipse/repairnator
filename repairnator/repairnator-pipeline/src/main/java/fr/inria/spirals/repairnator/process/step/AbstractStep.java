@@ -319,7 +319,7 @@ public abstract class AbstractStep {
                         this.getInspector().getJobStatus().isReproducedAsFail()) // A bug was reproduced
                         ||
                         (this.getInspector() instanceof ProjectInspector4Bears && // Bears
-                        ((ProjectInspector4Bears) this.getInspector()).isBug())) { // A bug and its patch was reproduced
+                        ((ProjectInspector4Bears) this.getInspector()).isBug())) { // A bug and its patch were reproduced
                     this.inspector.getFinalStep().execute();
                 }
             }
