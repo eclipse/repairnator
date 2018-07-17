@@ -31,10 +31,11 @@ public class GatherTestInformation extends AbstractStep {
     private static final String SUREFIREREPORT_PATH = "/target/surefire-reports";
 
     private int nbTotalTests;
-    private int nbSkippingTests;
+    private int nbRunningTests;
+    private int nbPassingTests;
     private int nbFailingTests;
     private int nbErroringTests;
-    private int nbRunningTests;
+    private int nbSkippingTests;
 
     private Set<FailureLocation> failureLocations;
     private Set<String> failureNames;
@@ -117,10 +118,12 @@ public class GatherTestInformation extends AbstractStep {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
                     this.nbTotalTests += testSuite.getNumberOfTests();
-                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
-                    this.nbRunningTests += testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
-                    this.nbErroringTests += testSuite.getNumberOfErrors();
+                    int runningTests = testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
+                    this.nbRunningTests += runningTests;
+                    this.nbPassingTests += runningTests - testSuite.getNumberOfFailures() - testSuite.getNumberOfErrors();
                     this.nbFailingTests += testSuite.getNumberOfFailures();
+                    this.nbErroringTests += testSuite.getNumberOfErrors();
+                    this.nbSkippingTests += testSuite.getNumberOfSkipped();
 
                     if (testSuite.getNumberOfFailures() > 0 || testSuite.getNumberOfErrors() > 0) {
                         File failingModule = surefireDir.getParentFile().getParentFile();
@@ -201,17 +204,17 @@ public class GatherTestInformation extends AbstractStep {
 
             Metrics metrics = jobStatus.getMetrics();
             metrics.setFailureNames(this.failureNames);
+            metrics.setNbRunningTests(this.nbRunningTests);
+            metrics.setNbSucceedingTests(this.nbPassingTests);
             metrics.setNbFailingTests(this.nbFailingTests);
-            metrics.setNbRunningTests(this.nbTotalTests);
-            metrics.setNbSkippingTests(this.nbSkippingTests);
             metrics.setNbErroringTests(this.nbErroringTests);
-            metrics.setNbSucceedingTests(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            metrics.setNbSkippingTests(this.nbSkippingTests);
 
             Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
             Tests tests = metrics4Bears.getTests();
             OverallMetrics overallMetrics = tests.getOverallMetrics();
-            overallMetrics.setNumberRunning(this.nbTotalTests);
-            overallMetrics.setNumberPassing(this.nbTotalTests - this.nbErroringTests - this.nbFailingTests);
+            overallMetrics.setNumberRunning(this.nbRunningTests);
+            overallMetrics.setNumberPassing(this.nbPassingTests);
             overallMetrics.setNumberFailing(this.nbFailingTests);
             overallMetrics.setNumberErroring(this.nbErroringTests);
             overallMetrics.setNumberSkipping(this.nbSkippingTests);
@@ -220,7 +223,7 @@ public class GatherTestInformation extends AbstractStep {
         this.getLogger().info("---Test results---");
         this.getLogger().info("   Total tests: " + this.nbTotalTests);
         this.getLogger().info("   Tests run: " + this.nbRunningTests);
-        this.getLogger().info("   Tests passing: " + (this.nbRunningTests - this.nbErroringTests - this.nbFailingTests));
+        this.getLogger().info("   Tests passing: " + this.nbPassingTests);
         this.getLogger().info("   Failures: " + this.nbFailingTests);
         this.getLogger().info("   Errors: " + this.nbErroringTests);
         this.getLogger().info("   Skipped: " + this.nbSkippingTests);
