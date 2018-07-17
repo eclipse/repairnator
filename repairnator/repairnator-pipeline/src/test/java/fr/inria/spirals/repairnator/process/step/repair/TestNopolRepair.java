@@ -16,6 +16,7 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolAllTestsRepair;
 import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -24,6 +25,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -59,7 +61,7 @@ public class TestNopolRepair {
     }
 
     @Test
-    public void testNopolRepair() throws IOException {
+    public void testNopolRepairWithExclusion() throws IOException {
         long buildId = 207890790; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);

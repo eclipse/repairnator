@@ -3,11 +3,13 @@ package fr.inria.spirals.repairnator.process.nopol;
 import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
+import java.util.Set;
+
 /**
  * Created by urli on 16/02/2017.
  */
 public class NopolInformation {
-    private FailureLocation location;
+    private Set<FailureLocation> location;
     private NopolStatus status;
     private int allocatedTime;
     private int passingTime;
@@ -17,7 +19,7 @@ public class NopolInformation {
     private int nbAngelicValues;
     private IgnoreStatus ignoreStatus;
 
-    public NopolInformation(FailureLocation location, IgnoreStatus ignoreStatus) {
+    public NopolInformation(Set<FailureLocation> location, IgnoreStatus ignoreStatus) {
         this.status = NopolStatus.NOTLAUNCHED;
         this.location = location;
         this.ignoreStatus = ignoreStatus;
@@ -60,7 +62,7 @@ public class NopolInformation {
     }
 
 
-    public FailureLocation getLocation() {
+    public Set<FailureLocation> getLocation() {
         return location;
     }
 
