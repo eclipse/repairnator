@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.repair.nopol;
 
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.util.Collections;
 

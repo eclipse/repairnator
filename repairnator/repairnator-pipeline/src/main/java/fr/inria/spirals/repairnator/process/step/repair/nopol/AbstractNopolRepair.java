@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -98,7 +99,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         return classPath;
     }
 
-    protected void runNopol(List<FailureLocation> failureLocation, List<String> testsToIgnore, boolean ignoreError) {
+    protected void runNopol(Set<FailureLocation> failureLocation, List<String> testsToIgnore, boolean ignoreError) {
         NopolInformation nopolInformation;
         if (testsToIgnore.isEmpty()) {
             nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.NOTHING_TO_IGNORE);

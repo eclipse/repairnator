@@ -40,7 +40,7 @@ public class JobStatus {
     private String pomDirPath;
     private boolean hasBeenPushed;
 
-    private List<FailureLocation> failureLocations;
+    private Set<FailureLocation> failureLocations;
     private String failingModulePath;
     private Map<String, List<String>> stepErrors;
     private String gitBranchUrl;
@@ -136,11 +136,11 @@ public class JobStatus {
         this.metrics4Bears.getTests().setFailingModule(this.failingModulePath);
     }
 
-    public List<FailureLocation> getFailureLocations() {
+    public Set<FailureLocation> getFailureLocations() {
         return failureLocations;
     }
 
-    public void setFailureLocations(List<FailureLocation> failureLocations) {
+    public void setFailureLocations(Set<FailureLocation> failureLocations) {
         this.failureLocations = failureLocations;
         this.writeProperty("failing-test-cases", this.failureLocations);
     }

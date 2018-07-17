@@ -44,7 +44,7 @@ public class NopolMultiWithTestExclusionRepair extends AbstractNopolRepair {
                 }
 
                 for (List<String> testsToIgnore : listOfTestToIgnore) {
-                    this.runNopol(Collections.singletonList(failureLocation), testsToIgnore, ignoreError);
+                    this.runNopol(Collections.singleton(failureLocation), testsToIgnore, ignoreError);
                 }
             }
 
