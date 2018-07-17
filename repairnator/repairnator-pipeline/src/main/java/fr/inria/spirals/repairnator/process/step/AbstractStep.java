@@ -327,6 +327,8 @@ public abstract class AbstractStep {
                     } else {
                         this.getLogger().debug("FINAL STEPS SKIPPED: The reproduction of the bug failed.");
                     }
+                    // So the final push state is repo not pushed
+                    this.setPushState(PushState.REPO_NOT_PUSHED);
                 }
             }
             this.serializeData();
