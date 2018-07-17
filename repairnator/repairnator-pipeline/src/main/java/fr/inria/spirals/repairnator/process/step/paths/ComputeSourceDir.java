@@ -26,10 +26,10 @@ public class ComputeSourceDir extends ComputeDir {
         this.allModules = allModules;
     }
 
-    private void computeMetricsOnSourceDirs(File[] sources) {
-        int totalAppFiles = super.computeMetricsOnDirs(sources);
-        this.getInspector().getJobStatus().getMetrics().setNbFileApp(totalAppFiles);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberSourceFiles(totalAppFiles);
+    private void computeMetricsOnSourceDirs(File[] dirs) {
+        int numberSourceFiles = super.computeMetricsOnDirs(dirs);
+        this.getInspector().getJobStatus().getMetrics().setNbFileApp(numberSourceFiles);
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberSourceFiles(numberSourceFiles);
     }
 
     private void computeMetricsOnCompleteRepo() {
@@ -61,23 +61,23 @@ public class ComputeSourceDir extends ComputeDir {
     @Override
     protected StepStatus businessExecute() {
         this.getLogger().debug("Computing the source directory ...");
-        String incriminatedModule = (this.allModules) ? this.getInspector().getRepoLocalPath() : this.getInspector().getJobStatus().getFailingModulePath();
+        String dirPath = (this.allModules) ? this.getInspector().getRepoLocalPath() : this.getInspector().getJobStatus().getFailingModulePath();
 
         super.setComputeDirType(ComputeDirType.COMPUTE_SOURCE_DIR);
-        super.setDirPath(incriminatedModule);
+        super.setRootDirPath(dirPath);
         super.setAllModules(this.allModules);
 
         StepStatus superStepStatus = super.businessExecute();
 
         if (superStepStatus.isSuccess()) {
-            File[] sources = super.getResultDirs();
+            File[] sourceDirs = super.getResultDirs();
 
             if (allModules) {
-                this.computeMetricsOnSourceDirs(sources);
+                this.computeMetricsOnSourceDirs(sourceDirs);
                 this.computeMetricsOnCompleteRepo();
             }
 
-            this.getInspector().getJobStatus().setRepairSourceDir(sources);
+            this.getInspector().getJobStatus().setRepairSourceDir(sourceDirs);
             return StepStatus.buildSuccess(this);
         } else {
             this.getInspector().getJobStatus().setRepairSourceDir(null);

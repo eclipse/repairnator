@@ -20,7 +20,7 @@ public class ComputeDir extends AbstractStep {
     private ComputeDirType computeDirType;
     private String dirTypeName;
     private String defaultDir;
-    private String dirPath;
+    private String rootDirPath;
     private boolean allModules;
 
     private Set<File> visitedFiles = new HashSet<>();
@@ -31,41 +31,41 @@ public class ComputeDir extends AbstractStep {
         this.allModules = true;
     }
 
-    private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
+    private File[] searchForDirs(String dirPath, boolean rootCall) {
         List<File> result = new ArrayList<File>();
-        File defaultSourceDir = new File(incriminatedModulePath + this.defaultDir);
+        File defaultDir = new File(dirPath + this.defaultDir);
 
-        boolean wasDefaultSourceDirFound = false;
-        if (defaultSourceDir.exists()) {
-            wasDefaultSourceDirFound = true;
-            result.add(defaultSourceDir);
+        boolean wasDefaultDirFound = false;
+        if (defaultDir.exists()) {
+            wasDefaultDirFound = true;
+            result.add(defaultDir);
             if (!this.allModules) {
                 return result.toArray(new File[result.size()]);
             }
         } else {
-            this.getLogger().debug("The default " + dirTypeName + " directory (" + defaultSourceDir.getPath()
+            this.getLogger().debug("The default " + dirTypeName + " directory (" + defaultDir.getPath()
                     + ") does not exist. Try to read pom.xml to get information.");
         }
-        File pomIncriminatedModule = new File(incriminatedModulePath + "/pom.xml");
+        File pomOfCurrentDirPath = new File(dirPath + "/pom.xml");
 
-        if (!pomIncriminatedModule.exists()) {
-            pomIncriminatedModule = new File(this.getPom());
+        if (!pomOfCurrentDirPath.exists()) {
+            pomOfCurrentDirPath = new File(this.getPom());
         }
 
-        if (this.visitedFiles.contains(pomIncriminatedModule)) {
-            this.getLogger().info("It seems we are entering in a loop while searching the " + dirTypeName + " dir. The following file has already been visited: "+pomIncriminatedModule.getAbsolutePath());
+        if (this.visitedFiles.contains(pomOfCurrentDirPath)) {
+            this.getLogger().info("It seems we are entering in a loop while searching the " + dirTypeName + " dir. The following file has already been visited: "+pomOfCurrentDirPath.getAbsolutePath());
             return result.toArray(new File[0]);
         } else {
-            this.visitedFiles.add(pomIncriminatedModule);
+            this.visitedFiles.add(pomOfCurrentDirPath);
         }
 
         try {
-            Model model = MavenHelper.readPomXml(pomIncriminatedModule, this.getInspector().getM2LocalPath());
+            Model model = MavenHelper.readPomXml(pomOfCurrentDirPath, this.getInspector().getM2LocalPath());
             if (model == null) {
                 this.addStepError("Error while building model: no model has been retrieved.");
                 return null;
             }
-            if (!wasDefaultSourceDirFound) {
+            if (!wasDefaultDirFound) {
                 Build buildSection = model.getBuild();
 
                 if (buildSection != null) {
@@ -73,18 +73,18 @@ public class ComputeDir extends AbstractStep {
                             buildSection.getSourceDirectory() != null) ||
                             this.computeDirType == ComputeDirType.COMPUTE_TEST_DIR &&
                             buildSection.getTestSourceDirectory() != null) {
-                        String pathSrcDirFromPom = this.computeDirType == ComputeDirType.COMPUTE_SOURCE_DIR ?
+                        String pathDirFromPom = this.computeDirType == ComputeDirType.COMPUTE_SOURCE_DIR ?
                                 buildSection.getSourceDirectory() : buildSection.getTestSourceDirectory();
 
-                        if (pathSrcDirFromPom != null) {
-                            File srcDirFromPom = new File(pathSrcDirFromPom);
+                        if (pathDirFromPom != null) {
+                            File dirFromPom = new File(pathDirFromPom);
 
-                            if (srcDirFromPom.exists()) {
-                                result.add(srcDirFromPom);
+                            if (dirFromPom.exists()) {
+                                result.add(dirFromPom);
                                 return result.toArray(new File[result.size()]);
                             }
 
-                            this.getLogger().debug("The " + dirTypeName + " directory given in pom.xml (" + pathSrcDirFromPom
+                            this.getLogger().debug("The " + dirTypeName + " directory given in pom.xml (" + pathDirFromPom
                                     + ") does not exists. Try to get " + dirTypeName + " dir from all modules if multimodule.");
                         } else {
                             this.getLogger().debug("The " + dirTypeName + " directory has not been found in pom.xml. Try to get " + dirTypeName + " dir from all modules.");
@@ -100,10 +100,10 @@ public class ComputeDir extends AbstractStep {
             }
 
             for (String module : model.getModules()) {
-                File[] srcDir = this.searchForSourcesDirectory(pomIncriminatedModule.getParent() + File.separator + module,
+                File[] dirs = this.searchForDirs(pomOfCurrentDirPath.getParent() + File.separator + module,
                         false);
-                if (srcDir != null) {
-                    result.addAll(Arrays.asList(srcDir));
+                if (dirs != null) {
+                    result.addAll(Arrays.asList(dirs));
                 }
             }
 
@@ -118,12 +118,12 @@ public class ComputeDir extends AbstractStep {
                     relativePath = model.getParent().getRelativePath();
                 }
 
-                File parentPomXml = new File(incriminatedModulePath + File.separator + relativePath);
+                File parentPomXml = new File(dirPath + File.separator + relativePath);
 
                 if (parentPomXml.exists()) {
-                    File[] srcDir = this.searchForSourcesDirectory(parentPomXml.getParent(),false);
-                    if (srcDir != null) {
-                        result.addAll(Arrays.asList(srcDir));
+                    File[] dirs = this.searchForDirs(parentPomXml.getParent(),false);
+                    if (dirs != null) {
+                        result.addAll(Arrays.asList(dirs));
                     }
 
                     if (result.size() > 0) {
@@ -142,20 +142,20 @@ public class ComputeDir extends AbstractStep {
         return null;
     }
 
-    protected int computeMetricsOnDirs(File[] sources) {
-        int totalAppFiles = 0;
-        if (sources != null && sources.length > 0) {
-            for (File f : sources) {
+    protected int computeMetricsOnDirs(File[] dirs) {
+        int numberFiles = 0;
+        if (dirs != null && dirs.length > 0) {
+            for (File f : dirs) {
                 int nbFile = FileUtils.listFiles(f, new String[] {"java"}, true).size();
-                totalAppFiles += nbFile;
+                numberFiles += nbFile;
             }
         }
-        return totalAppFiles;
+        return numberFiles;
     }
 
     @Override
     protected StepStatus businessExecute() {
-        this.resultDirs = this.searchForSourcesDirectory(this.dirPath, true);
+        this.resultDirs = this.searchForDirs(this.rootDirPath, true);
 
         if (this.resultDirs == null || this.resultDirs.length == 0) {
             this.addStepError("Fail to find " + dirTypeName + " directories.");
@@ -184,8 +184,8 @@ public class ComputeDir extends AbstractStep {
         }
     }
 
-    public void setDirPath(String dirPath) {
-        this.dirPath = dirPath;
+    public void setRootDirPath(String rootDirPath) {
+        this.rootDirPath = rootDirPath;
     }
 
     public void setAllModules(boolean allModules) {

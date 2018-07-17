@@ -15,10 +15,10 @@ public class ComputeTestDir extends ComputeDir {
         super(inspector, blockingStep);
     }
 
-    private void computeMetricsOnTestDirs(File[] sources) {
-        int totalAppFiles = super.computeMetricsOnDirs(sources);
-        this.getInspector().getJobStatus().getMetrics().setNbFileTests(totalAppFiles);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberTestFiles(totalAppFiles);
+    private void computeMetricsOnTestDirs(File[] dirs) {
+        int numberTestFiles = super.computeMetricsOnDirs(dirs);
+        this.getInspector().getJobStatus().getMetrics().setNbFileTests(numberTestFiles);
+        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberTestFiles(numberTestFiles);
     }
 
     @Override
@@ -26,16 +26,16 @@ public class ComputeTestDir extends ComputeDir {
         this.getLogger().debug("Computing the test directory ...");
 
         super.setComputeDirType(ComputeDirType.COMPUTE_TEST_DIR);
-        super.setDirPath(this.getInspector().getRepoLocalPath());
+        super.setRootDirPath(this.getInspector().getRepoLocalPath());
 
         StepStatus superStepStatus = super.businessExecute();
 
         if (superStepStatus.isSuccess()) {
-            File[] sources = super.getResultDirs();
+            File[] testDirs = super.getResultDirs();
 
-            this.computeMetricsOnTestDirs(sources);
+            this.computeMetricsOnTestDirs(testDirs);
 
-            this.getInspector().getJobStatus().setTestDir(sources);
+            this.getInspector().getJobStatus().setTestDir(testDirs);
             return StepStatus.buildSuccess(this);
         } else {
             return StepStatus.buildError(this, PipelineState.TESTDIRNOTCOMPUTED);
