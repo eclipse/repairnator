@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * Created by urli on 08/02/2017.
  */
-public class ComputeSourceDir extends AbstractStep {
+public class ComputeSourceDir extends ComputeDir {
     private static final String DEFAULT_SRC_DIR = "/src/main/java";
     private static final String COMPUTE_TOTAL_CLOC = "cloc --json --vcs=git .";
 
@@ -35,11 +35,6 @@ public class ComputeSourceDir extends AbstractStep {
 
     public ComputeSourceDir(ProjectInspector inspector, boolean blockingStep, boolean allModules) {
         super(inspector, blockingStep);
-        this.allModules = allModules;
-    }
-
-    public ComputeSourceDir(ProjectInspector inspector, boolean blockingStep, String name, boolean allModules) {
-        super(inspector, blockingStep, name);
         this.allModules = allModules;
     }
 

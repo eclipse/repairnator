@@ -20,17 +20,13 @@ import java.util.Set;
 /**
  * Created by urli on 08/02/2017.
  */
-public class ComputeTestDir extends AbstractStep {
+public class ComputeTestDir extends ComputeDir {
     private static final String DEFAULT_TEST_DIR = "/src/test/java";
     private static final String COMPUTE_TOTAL_CLOC = "cloc --json --vcs=git .";
     private Set<File> visitedFiles = new HashSet<>();
 
     public ComputeTestDir(ProjectInspector inspector, boolean blockingStep) {
         super(inspector, blockingStep);
-    }
-
-    public ComputeTestDir(ProjectInspector inspector, boolean blockingStep, String name) {
-        super(inspector, blockingStep, name);
     }
 
     private File[] searchForSourcesDirectory(String incriminatedModulePath, boolean rootCall) {
