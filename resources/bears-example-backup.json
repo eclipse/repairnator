@@ -197,6 +197,22 @@
           1,
           1
         ]
+      },
+      "fixing": {
+        "nbSteps": 4,
+        "totalDuration": 3676,
+        "stepNames": [
+          "NopolRepair",
+          "AstorRepair",
+          "NPEFixRepair",
+          "AssertFixerRepair"
+        ],
+        "stepDurations": [
+          1204,
+          1395,
+          6,
+          1071
+        ]
       }
     },
     "projectRootPomPath": "flink-tests/pom.xml"

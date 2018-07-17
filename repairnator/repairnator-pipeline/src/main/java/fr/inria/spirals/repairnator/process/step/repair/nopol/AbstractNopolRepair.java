@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -98,7 +99,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         return classPath;
     }
 
-    protected void runNopol(FailureLocation failureLocation, List<String> testsToIgnore, boolean ignoreError) {
+    protected void runNopol(Set<FailureLocation> failureLocation, List<String> testsToIgnore, boolean ignoreError) {
         NopolInformation nopolInformation;
         if (testsToIgnore.isEmpty()) {
             nopolInformation = new NopolInformation(failureLocation, IgnoreStatus.NOTHING_TO_IGNORE);
@@ -113,7 +114,12 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
 
         nopolInformation.setStatus(NopolStatus.RUNNING);
 
-        String testClass = failureLocation.getClassName();
+        List<String> testClass = new ArrayList<>();
+
+        for (FailureLocation location : failureLocation) {
+            testClass.add(location.getClassName());
+        }
+
         int timeout = (TOTAL_MAX_TIME - this.passingTime) / 2;
         if (timeout < MIN_TIMEOUT) {
             timeout = MIN_TIMEOUT;
@@ -124,7 +130,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
                 + " (should timeout in " + timeout + " minutes)");
 
-        NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), new String[] { testClass }, testsToIgnore);
+        NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), testClass.toArray(new String[0]), testsToIgnore);
         nopolContext.setComplianceLevel(8);
         nopolContext.setTimeoutTestExecution(300);
         nopolContext.setMaxTimeEachTypeOfFixInMinutes(15);
@@ -170,9 +176,13 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
                 nopolInformation.setNbStatements(result.getNbStatements());
                 nopolInformation.setNbAngelicValues(result.getNbAngelicValues());
 
-                String failureLocationWithoutDots = failureLocation.getClassName().replace('.','/');
+                StringBuilder failureLocationWithoutDots = new StringBuilder();
+                for (FailureLocation location : failureLocation) {
+                    failureLocationWithoutDots.append(location.getClassName().replace('.', '/'));
+                    failureLocationWithoutDots.append(':');
+                }
 
-                metric.addAngelicValueByTest(failureLocationWithoutDots, result.getNbAngelicValues());
+                metric.addAngelicValueByTest(failureLocationWithoutDots.toString(), result.getNbAngelicValues());
 
                 List<Patch> patches = result.getPatches();
                 if (patches != null && !patches.isEmpty()) {
