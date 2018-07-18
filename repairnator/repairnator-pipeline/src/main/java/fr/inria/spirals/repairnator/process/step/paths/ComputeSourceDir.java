@@ -61,7 +61,9 @@ public class ComputeSourceDir extends ComputeDir {
     @Override
     protected StepStatus businessExecute() {
         this.getLogger().debug("Computing the source directory ...");
-        String dirPath = (this.allModules) ? this.getInspector().getRepoLocalPath() : this.getInspector().getJobStatus().getFailingModulePath();
+
+        String dirPath = (this.allModules) ?
+                this.getInspector().getRepoLocalPath() : this.getInspector().getJobStatus().getFailingModulePath();
 
         super.setComputeDirType(ComputeDirType.COMPUTE_SOURCE_DIR);
         super.setRootDirPath(dirPath);
