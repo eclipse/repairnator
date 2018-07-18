@@ -108,11 +108,15 @@ public class ComputeDir extends AbstractStep {
             }
         }
 
-        for (String module : model.getModules()) {
-            File[] dirs = this.searchForDirs(pomOfCurrentDirPath.getParent() + File.separator + module, false);
-            if (dirs != null) {
-                result.addAll(Arrays.asList(dirs));
+        if (model.getModules() != null) {
+            for (String module : model.getModules()) {
+                File[] dirs = this.searchForDirs(pomOfCurrentDirPath.getParent() + File.separator + module, false);
+                if (dirs != null) {
+                    result.addAll(Arrays.asList(dirs));
+                }
             }
+        } else {
+            this.getLogger().debug("No module has been found in the following pom.xml: " + pomOfCurrentDirPath + ".");
         }
 
         if (result.size() > 0) {
