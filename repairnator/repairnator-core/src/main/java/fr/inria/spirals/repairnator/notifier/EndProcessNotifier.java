@@ -22,7 +22,9 @@ public class EndProcessNotifier {
 
     public void notifyEnd() {
         String subject = "Process "+processName+" on "+Utils.getHostname()+" finished";
-        String message = "The following process: "+processName+" launched on "+ Utils.getHostname()+" the "+this.launchDate.toString()+" has just finished the "+new Date().toString()+".";
+        Date endDate = new Date();
+        String message = "The following process: "+ processName +" launched on "+ Utils.getHostname()+ " the "+ this.launchDate.toString()+" and finished "+endDate.toString()+". "
+                + "It ran for a total time of "+Utils.getDuration(this.launchDate, endDate);
 
         for (NotifierEngine engine : this.engines) {
             engine.notify(subject, message);
