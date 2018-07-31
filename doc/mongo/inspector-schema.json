@@ -1,0 +1,153 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/inspector",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b5fab6212ce7600123dadcb"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "integer",
+      "description": "Travis ID of the build being repaired",
+      "default": 0,
+      "examples": [
+        410105917
+      ]
+    },
+    "repositoryName": {
+      "$id": "/properties/repositoryName",
+      "type": "string",
+      "description": "Repository slug (i.e. user/name) of the repository where the build comes from",
+      "default": "",
+      "examples": [
+        "vavr-io/vavr-gwt"
+      ]
+    },
+    "status": {
+      "$id": "/properties/status",
+      "type": "string",
+      "description": "Status computed at the end of the process. ",
+      "default": "",
+      "examples": [
+        "test failure",
+        "NOTFAILING",
+        "PATCHED",
+        "NOTCLONABLE"
+      ]
+    },
+    "prNumber": {
+      "$id": "/properties/prNumber",
+      "type": "integer",
+      "description": "If the build has been triggered because of a PR, this number identifies the PR on Github. Zero means it's not from a PR.",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "buildFinishedDateStr": {
+      "$id": "/properties/buildFinishedDateStr",
+      "type": "string",
+      "description": "Date of the end of the build on Travis CI, as a string",
+      "default": "",
+      "examples": [
+        "31/07/18 02:13"
+      ]
+    },
+    "buildFinishedDate": {
+      "$id": "/properties/buildFinishedDate",
+      "type": "string",
+      "description": "Date of the end of the build on Travis CI, as an ISODate",
+      "default": "",
+      "examples": [
+        "2018-07-31T02:13:18.000+0000"
+      ]
+    },
+    "buildFinishedDay": {
+      "$id": "/properties/buildFinishedDay",
+      "type": "string",
+      "description": "Day of the end of the build on Travis CI",
+      "default": "",
+      "examples": [
+        "31/07/2018"
+      ]
+    },
+    "realStatus": {
+      "$id": "/properties/realStatus",
+      "type": "string",
+      "description": "Status computed by each steps of the pipeline",
+      "default": "",
+      "examples": [
+        "[ CloneRepository : SUCCESS ] -> [ CheckoutBuggyBuild : SUCCESS ] -> [ BuildProject : SUCCESS ] -> [ TestProject : SUCCESS ] -> [ GatherTestInformation : SUCCESS ] -> [ InitRepoToPush : SUCCESS ] -> [ ComputeClasspath : SUCCESS ] -> [ ComputeSourceDir : FAILURE ( SOURCEDIRNOTCOMPUTED ) ] -> [ ComputeTestDir : SUCCESS ] -> [ NopolAllTests : SKIPPED ( No classpath or source directory given. ) ] -> [ NPEFix : SKIPPED ( No NPE found. ) ] -> [ AstorJMut : SKIPPED ( Classpath or sources not computed. ) ] -> [ CommitPatch : SUCCESS ] -> [ CheckoutPatchedBuild : FAILURE ( BUILDNOTCHECKEDOUT ) ] -> [ ComputeSourceDir : FAILURE ( SOURCEDIRNOTCOMPUTED ) ] -> [ ComputeModules : SUCCESS ] -> [ WritePropertyFile : SUCCESS ] -> [ CommitProcessEnd : SUCCESS ] -> [ PushProcessEnd : SUCCESS ]"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host where the build has been computed",
+      "default": "",
+      "examples": [
+        "spirals-repairnator"
+      ]
+    },
+    "buildReproductionDateStr": {
+      "$id": "/properties/buildReproductionDateStr",
+      "type": "string",
+      "description": "Precise date of the reproduction of build, as a string",
+      "default": "",
+      "examples": [
+        "31/07/18 02:20"
+      ]
+    },
+    "buildReproductionDate": {
+      "$id": "/properties/buildReproductionDate",
+      "type": "string",
+      "description": "ISODate for the date of the reproduction of the build",
+      "default": "",
+      "examples": [
+        "2018-07-31T02:20:50.532+0000"
+      ]
+    },
+    "travisURL": {
+      "$id": "/properties/travisURL",
+      "type": "string",
+      "description": "URL of the build on Travis CI",
+      "default": "",
+      "examples": [
+        "http://travis-ci.org/vavr-io/vavr-gwt/builds/410105917"
+      ]
+    },
+    "typeOfFailures": {
+      "$id": "/properties/typeOfFailures",
+      "type": "string",
+      "description": "Type of failures encountered when executing the tests, on the form of Java Exception names",
+      "default": "",
+      "examples": [
+        "com.google.gwt.core.ext.UnableToCompleteException"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "1c297388-dc79-499a-bc97-e0204c6f83fb"
+      ]
+    },
+    "branchURL": {
+      "$id": "/properties/branchURL",
+      "type": "string",
+      "description": "URL to retrieve produced data, if the bug has been reproduced and data has been pushed",
+      "default": "",
+      "examples": [
+        "https://github.com/Spirals-Team/librepair-experiments/tree/vavr-io-vavr-gwt-410105917-20180731-021318"
+      ]
+    }
+  }
+}
