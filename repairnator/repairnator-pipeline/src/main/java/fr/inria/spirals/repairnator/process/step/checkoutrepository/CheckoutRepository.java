@@ -174,6 +174,8 @@ public abstract class CheckoutRepository extends AbstractStep {
                     return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
                 }
             }
+
+            gitHelper.initAllSubmodules(git);
         } catch (IOException | GitAPIException e) {
             this.addStepError("Exception while getting the commit to checkout from the repo.", e);
             return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);
