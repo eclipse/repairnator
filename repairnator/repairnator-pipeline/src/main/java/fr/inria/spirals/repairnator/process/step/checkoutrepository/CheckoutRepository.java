@@ -13,7 +13,6 @@ import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.commits.Com
 import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
