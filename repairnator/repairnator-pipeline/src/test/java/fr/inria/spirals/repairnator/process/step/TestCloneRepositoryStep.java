@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.eclipse.jgit.api.Git;
@@ -84,12 +85,11 @@ public class TestCloneRepositoryStep {
         assertThat(ref.getObjectId().getName(), not(build.getCommit().getSha())); // no check out yet
     }
 
-    @Ignore
     @Test
     public void testCloneBuildWithSubmodule() throws IOException {
-        long buildId = 355839305; // surli/failingProject build
+        long buildId = 410212137; // surli/failingProject build
 
-        Build build = this.checkBuildAndReturn(buildId, true);
+        Build build = this.checkBuildAndReturn(buildId, false);
 
         tmpDir = Files.createTempDirectory("test_clone").toFile();
 
@@ -100,16 +100,18 @@ public class TestCloneRepositoryStep {
         ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
+        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
+
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(1));
+        assertThat(stepStatusList.size(), is(2));
         StepStatus cloneStatus = stepStatusList.get(0);
         assertThat(cloneStatus.getStep(), is(cloneStep));
         assertThat(cloneStatus.isSuccess(), is(true));
 
-        File licenceInSubmodule = new File(tmpDir, "repo/grakn-spec/LICENSE");
-        assertThat("Submodule are not supported", licenceInSubmodule.exists(), is(true));
+        File readmeInSubmodule = new File(tmpDir, "repo/test-repairnator-bears/README.md");
+        assertThat("Submodule are not supported", readmeInSubmodule.exists(), is(true));
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

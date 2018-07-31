@@ -153,6 +153,20 @@ public class GitHelper {
         }
     }
 
+    public void initAllSubmodules(Git git) {
+        this.getLogger().info("Init git submodules.");
+        ProcessBuilder processBuilder = new ProcessBuilder("git", "submodule", "update", "--init", "--recursive")
+                .directory(git.getRepository().getDirectory().getParentFile()).inheritIO();
+
+        try {
+            Process p = processBuilder.start();
+            p.waitFor();
+
+        } catch (InterruptedException|IOException e) {
+            this.getLogger().error("Error while executing git command to get git submodules: " + e);
+        }
+    }
+
     private String getLastKnowParent(GitHub gh, GHRepository ghRepo, Git git, String oldCommitSha, AbstractStep step) throws IOException {
         showGitHubRateInformation(gh, step);
         GHCommit commit = ghRepo.getCommit(oldCommitSha); // get the deleted
