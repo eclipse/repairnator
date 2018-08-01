@@ -1,0 +1,568 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/metrics",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b5fd2a82b027e000c2d4c95"
+      ]
+    },
+    "StepsDurationsInSeconds": {
+      "$id": "/properties/StepsDurationsInSeconds",
+      "type": "object",
+      "properties": {
+        "CheckoutBuggyBuild": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/CheckoutBuggyBuild",
+          "type": "integer",
+          "description": "Each record here correspond to a step in the pipeline, and the associated time recorded in seconds",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "ComputeClasspath": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/ComputeClasspath",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            10
+          ]
+        },
+        "CommitProcessEnd": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/CommitProcessEnd",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            2
+          ]
+        },
+        "ComputeTestDir": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/ComputeTestDir",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "PushProcessEnd": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/PushProcessEnd",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            10
+          ]
+        },
+        "BuildProject": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/BuildProject",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            33
+          ]
+        },
+        "InitRepoToPush": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/InitRepoToPush",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "ComputeSourceDir": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/ComputeSourceDir",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "ComputeModules": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/ComputeModules",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "AstorJMut": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/AstorJMut",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            49
+          ]
+        },
+        "WritePropertyFile": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/WritePropertyFile",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "CloneRepository": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/CloneRepository",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            3
+          ]
+        },
+        "CheckoutPatchedBuild": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/CheckoutPatchedBuild",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "NopolAllTests": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/NopolAllTests",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            7202
+          ]
+        },
+        "NPEFix": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/NPEFix",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "TestProject": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/TestProject",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            192
+          ]
+        },
+        "GatherTestInformation": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/GatherTestInformation",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "CommitPatch": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/CommitPatch",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            7
+          ]
+        }
+      }
+    },
+    "FailureNames": {
+      "$id": "/properties/FailureNames",
+      "type": "array",
+      "items": {
+        "$id": "/properties/FailureNames/items",
+        "type": "string",
+        "description": "The value recorded here are the Java Exception names encountered when executing the tests",
+        "default": "",
+        "examples": [
+          "java.lang.IllegalStateException"
+        ]
+      }
+    },
+    "NbFailingTests": {
+      "$id": "/properties/NbFailingTests",
+      "type": "integer",
+      "description": "Number of failing tests (i.e. with an AssertionError) recorded",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "NbErroringTests": {
+      "$id": "/properties/NbErroringTests",
+      "type": "integer",
+      "description": "Number of erroring tests (i.e. with another Exception than AssertionError)",
+      "default": 0,
+      "examples": [
+        65
+      ]
+    },
+    "NbSkippingTests": {
+      "$id": "/properties/NbSkippingTests",
+      "type": "integer",
+      "description": "Number of skipping tests",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "NbRunningTests": {
+      "$id": "/properties/NbRunningTests",
+      "type": "integer",
+      "description": "Total number of running tests",
+      "default": 0,
+      "examples": [
+        116
+      ]
+    },
+    "BugCommitUrl": {
+      "$id": "/properties/BugCommitUrl",
+      "type": "string",
+      "description": "URL of the buggy commit as retrieved from Travis CI",
+      "default": "",
+      "examples": [
+        "http://github.com/wellingWilliam/spring-structure/commit/4f9825adf045b1ec2f4edd3e347eada738bb9785"
+      ]
+    },
+    "ReproductionDate": {
+      "$id": "/properties/ReproductionDate",
+      "type": "string",
+      "description": "Precise reproduction date of the build, as a string",
+      "default": "",
+      "examples": [
+        "Jul 30, 2018 9:03:05 PM"
+      ]
+    },
+    "BuggyBuildId": {
+      "$id": "/properties/BuggyBuildId",
+      "type": "integer",
+      "description": "Travis ID of the build to repair",
+      "default": 0,
+      "examples": [
+        410116869
+      ]
+    },
+    "PatchedBuilId": {
+      "$id": "/properties/PatchedBuilId",
+      "type": "integer",
+      "description": "If a patched build has been found, Travis ID of that build",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "BuggyBuildURL": {
+      "$id": "/properties/BuggyBuildURL",
+      "type": "string",
+      "description": "URL of the buggy build on Travis CI",
+      "default": "",
+      "examples": [
+        "http://travis-ci.org/wellingWilliam/spring-structure/builds/410116869"
+      ]
+    },
+    "BuggyBuildDate": {
+      "$id": "/properties/BuggyBuildDate",
+      "type": "string",
+      "description": "Date of the failure on Travis CI",
+      "default": "",
+      "examples": [
+        "Jul 30, 2018 9:02:56 PM"
+      ]
+    },
+    "BugCommit": {
+      "$id": "/properties/BugCommit",
+      "type": "string",
+      "description": "SHA of the buggy commit",
+      "default": "",
+      "examples": [
+        "4f9825adf045b1ec2f4edd3e347eada738bb9785"
+      ]
+    },
+    "PatchChangedFiles": {
+      "$id": "/properties/PatchChangedFiles",
+      "type": "integer",
+      "description": "Number of files changed by the patch, if provided",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "PatchAddedLines": {
+      "$id": "/properties/PatchAddedLines",
+      "type": "integer",
+      "description": "Number of the lines changed by the patch, if provided",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "PatchDeletedLines": {
+      "$id": "/properties/PatchDeletedLines",
+      "type": "integer",
+      "description": "Number of lines deleted by the patch, if provided",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "NbLibraries": {
+      "$id": "/properties/NbLibraries",
+      "type": "integer",
+      "description": "Number of libraries retrieved by Maven for building the project",
+      "default": 0,
+      "examples": [
+        123
+      ]
+    },
+    "NbFileApp": {
+      "$id": "/properties/NbFileApp",
+      "type": "integer",
+      "description": "Number of source files contained in the project (only the failing module in case of multi-module project) ",
+      "default": 0,
+      "examples": [
+        47
+      ]
+    },
+    "NbFileTests": {
+      "$id": "/properties/NbFileTests",
+      "type": "integer",
+      "description": "Number of test files contained in the project (only the failing module in case of multi-module project) ",
+      "default": 0,
+      "examples": [
+        27
+      ]
+    },
+    "NbCPU": {
+      "$id": "/properties/NbCPU",
+      "type": "integer",
+      "description": " Number of CPU allocated for repairing this build",
+      "default": 0,
+      "examples": [
+        4
+      ]
+    },
+    "FreeMemory": {
+      "$id": "/properties/FreeMemory",
+      "type": "integer",
+      "description": "Free memory available in Kb at the beginning of the repair",
+      "default": 0,
+      "examples": [
+        949400152
+      ]
+    },
+    "TotalMemory": {
+      "$id": "/properties/TotalMemory",
+      "type": "integer",
+      "description": "Total memory available in Kb at the beginning of the repair",
+      "default": 0,
+      "examples": [
+        1578631168
+      ]
+    },
+    "AngelicValuesByTest": {
+      "$id": "/properties/AngelicValuesByTest",
+      "type": "object"
+    },
+    "FreeMemoryByStep": {
+      "$id": "/properties/FreeMemoryByStep",
+      "type": "object",
+      "properties": {
+        "CheckoutBuggyBuild": {
+          "$id": "/properties/FreeMemoryByStep/properties/CheckoutBuggyBuild",
+          "type": "integer",
+          "description": "Record the memory available at the end of each step of the pipeline",
+          "default": 0,
+          "examples": [
+            155360832
+          ]
+        },
+        "ComputeClasspath": {
+          "$id": "/properties/FreeMemoryByStep/properties/ComputeClasspath",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            110884032
+          ]
+        },
+        "CommitProcessEnd": {
+          "$id": "/properties/FreeMemoryByStep/properties/CommitProcessEnd",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            557382640
+          ]
+        },
+        "ComputeTestDir": {
+          "$id": "/properties/FreeMemoryByStep/properties/ComputeTestDir",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            159758904
+          ]
+        },
+        "PushProcessEnd": {
+          "$id": "/properties/FreeMemoryByStep/properties/PushProcessEnd",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            1010987056
+          ]
+        },
+        "BuildProject": {
+          "$id": "/properties/FreeMemoryByStep/properties/BuildProject",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            149067888
+          ]
+        },
+        "InitRepoToPush": {
+          "$id": "/properties/FreeMemoryByStep/properties/InitRepoToPush",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            113159560
+          ]
+        },
+        "ComputeSourceDir": {
+          "$id": "/properties/FreeMemoryByStep/properties/ComputeSourceDir",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            703827344
+          ]
+        },
+        "ComputeModules": {
+          "$id": "/properties/FreeMemoryByStep/properties/ComputeModules",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            678629240
+          ]
+        },
+        "AstorJMut": {
+          "$id": "/properties/FreeMemoryByStep/properties/AstorJMut",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            233323184
+          ]
+        },
+        "WritePropertyFile": {
+          "$id": "/properties/FreeMemoryByStep/properties/WritePropertyFile",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            659263120
+          ]
+        },
+        "CloneRepository": {
+          "$id": "/properties/FreeMemoryByStep/properties/CloneRepository",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            157757696
+          ]
+        },
+        "CheckoutPatchedBuild": {
+          "$id": "/properties/FreeMemoryByStep/properties/CheckoutPatchedBuild",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            949400152
+          ]
+        },
+        "NopolAllTests": {
+          "$id": "/properties/FreeMemoryByStep/properties/NopolAllTests",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            379706112
+          ]
+        },
+        "NPEFix": {
+          "$id": "/properties/FreeMemoryByStep/properties/NPEFix",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            379706112
+          ]
+        },
+        "TestProject": {
+          "$id": "/properties/FreeMemoryByStep/properties/TestProject",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            156479600
+          ]
+        },
+        "GatherTestInformation": {
+          "$id": "/properties/FreeMemoryByStep/properties/GatherTestInformation",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            141955384
+          ]
+        },
+        "CommitPatch": {
+          "$id": "/properties/FreeMemoryByStep/properties/CommitPatch",
+          "type": "integer",
+          "default": 0,
+          "examples": [
+            949400152
+          ]
+        }
+      }
+    },
+    "NbSucceedingTests": {
+      "$id": "/properties/NbSucceedingTests",
+      "type": "integer",
+      "description": "Total number of tests in success",
+      "default": 0,
+      "examples": [
+        51
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "1c297388-dc79-499a-bc97-e0204c6f83fb"
+      ]
+    },
+    "reproductionDate": {
+      "$id": "/properties/reproductionDate",
+      "type": "string",
+      "description": "ISODate of the reproduction of the build",
+      "default": "",
+      "examples": [
+        "2018-07-31T05:08:24.681+0000"
+      ]
+    },
+    "buggyBuildId": {
+      "$id": "/properties/buggyBuildId",
+      "type": "integer",
+      "description": "Travis ID of the buggy build",
+      "default": 0,
+      "examples": [
+        410116869
+      ]
+    },
+    "buildStatus": {
+      "$id": "/properties/buildStatus",
+      "type": "string",
+      "description": "Status of the build: can be ONLY_FAIL or FAILING_PASSING if a human patch is found",
+      "default": "",
+      "examples": [
+        "ONLY_FAIL"
+      ]
+    },
+    "status": {
+      "$id": "/properties/status",
+      "type": "string",
+      "description": "Status of the build as retrieved by the inspector",
+      "default": "",
+      "examples": [
+        "test failure"
+      ]
+    }
+  }
+}

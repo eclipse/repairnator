@@ -1,0 +1,159 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/scanner",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5a5f2ea6addee75da1c25332"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host where the scanner is running",
+      "default": "",
+      "examples": [
+        "spirals-librepair"
+      ]
+    },
+    "dateBeginStr": {
+      "$id": "/properties/dateBeginStr",
+      "type": "string",
+      "description": "Begin date of the scanner process, as a string",
+      "default": "",
+      "examples": [
+        "17/01/18 12:01"
+      ]
+    },
+    "dateBegin": {
+      "$id": "/properties/dateBegin",
+      "type": "string",
+      "description": "ISODate for the beginning of the scanner process",
+      "default": "",
+      "examples": [
+        "2018-01-17T12:01:29.830+0000"
+      ]
+    },
+    "dateLimitStr": {
+      "$id": "/properties/dateLimitStr",
+      "type": "string",
+      "description": "Limit date for the scanner to retrieve data, as a string",
+      "default": "",
+      "examples": [
+        "17/01/18 11:01"
+      ]
+    },
+    "dateLimit": {
+      "$id": "/properties/dateLimit",
+      "type": "string",
+      "description": "ISODate for the limit date to retrieve data",
+      "default": "",
+      "examples": [
+        "2018-01-17T11:01:29.829+0000"
+      ]
+    },
+    "dayLimit": {
+      "$id": "/properties/dayLimit",
+      "type": "string",
+      "description": "Day limit to retrieve data",
+      "default": "",
+      "examples": [
+        "17/01/2018"
+      ]
+    },
+    "totalRepoNumber": {
+      "$id": "/properties/totalRepoNumber",
+      "type": "integer",
+      "description": "Total number of inspected repositories in the time range",
+      "default": 0,
+      "examples": [
+        281
+      ]
+    },
+    "totalRepoUsingTravis": {
+      "$id": "/properties/totalRepoUsingTravis",
+      "type": "integer",
+      "description": "Total number of repositories from the list that are using Travis CI",
+      "default": 0,
+      "examples": [
+        276
+      ]
+    },
+    "totalScannedBuilds": {
+      "$id": "/properties/totalScannedBuilds",
+      "type": "integer",
+      "description": "Total number of scanned builds on Travis CI",
+      "default": 0,
+      "examples": [
+        70
+      ]
+    },
+    "totalJavaBuilds": {
+      "$id": "/properties/totalJavaBuilds",
+      "type": "integer",
+      "title": "Total number of identified java builds on Travis CI",
+      "default": 0,
+      "examples": [
+        62
+      ]
+    },
+    "totalJavaPassingBuilds": {
+      "$id": "/properties/totalJavaPassingBuilds",
+      "type": "integer",
+      "description": "Total number of java builds that are also passing builds on Travis CI",
+      "default": 0,
+      "examples": [
+        24
+      ]
+    },
+    "totalJavaFailingBuilds": {
+      "$id": "/properties/totalJavaFailingBuilds",
+      "type": "integer",
+      "description": "Total number of Java builds that are also failing builds on Travis CI",
+      "default": 0,
+      "examples": [
+        24
+      ]
+    },
+    "totalJavaFailingBuildsWithFailingTests": {
+      "$id": "/properties/totalJavaFailingBuildsWithFailingTests",
+      "type": "integer",
+      "description": "Total number of java failing builds with identified failing tests on Travis CI",
+      "default": 0,
+      "examples": [
+        3
+      ]
+    },
+    "totalPRBuilds": {
+      "$id": "/properties/totalPRBuilds",
+      "type": "integer",
+      "description": "Total number of PR builds on Travis CI",
+      "default": 0,
+      "examples": [
+        28
+      ]
+    },
+    "duration": {
+      "$id": "/properties/duration",
+      "type": "string",
+      "description": "Duration of the process on the format h:m:ss",
+      "default": "",
+      "examples": [
+        "0:6:52"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "bb8f300f-fa61-48a1-a8a8-70f8cf44e6e5"
+      ]
+    }
+  }
+}
