@@ -44,6 +44,8 @@ public class TestInitRepoToPush {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.INFO);
+        RepairnatorConfig.getInstance().setGithubUserEmail("noreply@github.com");
+        RepairnatorConfig.getInstance().setGithubUserName("repairnator");
     }
 
     @After

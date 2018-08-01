@@ -46,6 +46,8 @@ public class TestCheckoutBuggyBuildSourceCode {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig.getInstance().setGithubUserEmail("noreply@github.com");
+        RepairnatorConfig.getInstance().setGithubUserName("repairnator");
     }
 
     @After
