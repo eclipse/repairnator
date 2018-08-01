@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
@@ -54,6 +55,7 @@ public class TestProjectInspector {
 
     @Before
     public void setUp() {
+        RepairToolsManager.getInstance().discoverRepairTools();  // we want to refresh repair tools in order to avoid getting the same steps between several tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.REPAIR);
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());

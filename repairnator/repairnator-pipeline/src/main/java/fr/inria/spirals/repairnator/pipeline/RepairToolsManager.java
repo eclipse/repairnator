@@ -17,7 +17,7 @@ public class RepairToolsManager {
         this.discoverRepairTools();
     }
 
-    private static RepairToolsManager getInstance() {
+    public static RepairToolsManager getInstance() {
         if (instance == null) {
             instance = new RepairToolsManager();
         }
