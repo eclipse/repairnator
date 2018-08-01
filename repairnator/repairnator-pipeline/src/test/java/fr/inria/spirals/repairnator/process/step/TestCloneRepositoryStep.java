@@ -99,8 +99,7 @@ public class TestCloneRepositoryStep {
 
         ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
-        CloneRepository cloneStep = new CloneRepository(inspector);
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
+        AbstractStep cloneStep = new CloneRepository(inspector).setNextStep(new CheckoutBuggyBuild(inspector, true));
 
         cloneStep.execute();
 

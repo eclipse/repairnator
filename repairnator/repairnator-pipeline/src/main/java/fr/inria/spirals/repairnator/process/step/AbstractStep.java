@@ -113,10 +113,14 @@ public abstract class AbstractStep {
     }
 
     public AbstractStep setNextStep(AbstractStep nextStep) {
-        this.nextStep = nextStep;
-        nextStep.setDataSerializer(this.serializers);
-        nextStep.setNotifiers(this.notifiers);
-        return nextStep;
+        if (this.nextStep != null) {
+            this.nextStep.setNextStep(nextStep);
+        } else {
+            this.nextStep = nextStep;
+            nextStep.setDataSerializer(this.serializers);
+            nextStep.setNotifiers(this.notifiers);
+        }
+        return this;
     }
 
     protected void setPushState(PushState pushState) {
