@@ -160,7 +160,7 @@ public class ProjectInspector {
     public void run() {
         if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
-            AbstractStep lastStep = cloneRepo
+            cloneRepo
                     .setNextStep(new CheckoutBuggyBuild(this, true))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
@@ -174,13 +174,13 @@ public class ProjectInspector {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
                 if (repairStep != null) {
                     repairStep.setProjectInspector(this);
-                    lastStep = lastStep.setNextStep(repairStep);
+                    cloneRepo.setNextStep(repairStep);
                 } else {
                     logger.error("Error while getting repair step class for following name: " + repairToolName);
                 }
             }
 
-            lastStep.setNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
+            cloneRepo.setNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
                     .setNextStep(new CheckoutPatchedBuild(this, true))
                     .setNextStep(new BuildProject(this))
                     .setNextStep(new TestProject(this))
