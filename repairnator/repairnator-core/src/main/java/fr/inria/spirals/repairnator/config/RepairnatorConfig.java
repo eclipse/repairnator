@@ -48,6 +48,8 @@ public class RepairnatorConfig {
     private String githubToken;
     private String projectsToIgnoreFilePath;
     private Set<String> repairTools;
+    private String githubUserName;
+    private String githubUserEmail;
 
     // Dockerpool
     private String dockerImageName;
@@ -426,6 +428,22 @@ public class RepairnatorConfig {
         this.bearsDelimiter = bearsDelimiter;
     }
 
+    public String getGithubUserName() {
+        return githubUserName;
+    }
+
+    public void setGithubUserName(String githubUserName) {
+        this.githubUserName = githubUserName;
+    }
+
+    public String getGithubUserEmail() {
+        return githubUserEmail;
+    }
+
+    public void setGithubUserEmail(String githubUserEmail) {
+        this.githubUserEmail = githubUserEmail;
+    }
+
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
@@ -478,6 +496,8 @@ public class RepairnatorConfig {
                 ", bearsMode=" + bearsMode.name() +
                 ", bearsDelimiter = " + bearsDelimiter +
                 ", repairTools=" + StringUtils.join(this.repairTools, ",") +
+                ", githubUserName= " + githubUserName +
+                ", githubUserEmail=" + githubUserEmail +
                 '}';
     }
 }

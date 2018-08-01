@@ -165,8 +165,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                         gitHelper.gitResetPaths(commitCheckout, paths, git.getRepository().getDirectory().getParentFile());
 
                         // FIXME: commit should not be there
-                        PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                        git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
+                        git.commit().setMessage("Undo changes on source code").setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).call();
                     }
                     jobStatus.writeProperty("bugCommit", this.getInspector().getBuggyBuild().getCommit().getCompareUrl());
                 } else {

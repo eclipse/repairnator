@@ -38,6 +38,7 @@ args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_
 args="$args`ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --jobsleeptime $JOB_SLEEP_TIME`"
 args="$args`ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH`"
 args="$args`ca --blacklist $BLACKLIST_PATH``ca --duration $DURATION`"
+args="$args`ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
 
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"

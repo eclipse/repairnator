@@ -92,6 +92,10 @@ public class Launcher extends AbstractPoolManager {
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
         // --ghOauth
         jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
+        // --githubUserName
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserName());
+        // --githubUserEmail
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
 
         FlaggedOption opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
@@ -130,6 +134,8 @@ public class Launcher extends AbstractPoolManager {
         this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(arguments));
         this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
         this.config.setGlobalTimeout(LauncherUtils.getArgGlobalTimeout(arguments));
+        this.config.setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
+        this.config.setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
         if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));

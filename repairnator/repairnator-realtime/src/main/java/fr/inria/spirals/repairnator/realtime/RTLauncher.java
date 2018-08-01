@@ -77,6 +77,10 @@ public class RTLauncher {
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
         // --ghOauth
         jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
+        // --githubUserName
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserName());
+        // --githubUserEmail
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
 
         FlaggedOption opt2 = new FlaggedOption("whitelist");
         opt2.setShortFlag('w');
@@ -149,6 +153,8 @@ public class RTLauncher {
         this.config.setLogDirectory(LauncherUtils.getArgLogDirectory(arguments));
         this.config.setNbThreads(LauncherUtils.getArgNbThreads(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
+        this.config.setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
+        this.config.setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
         if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));

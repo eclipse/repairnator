@@ -60,11 +60,9 @@ public class CommitFiles extends AbstractStep {
 
                 gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);
 
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-
                 String commitMsg = this.createCommitMsg();
 
-                this.commit = git.commit().setMessage(commitMsg).setAuthor(personIdent).setCommitter(personIdent).call();
+                this.commit = git.commit().setMessage(commitMsg).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).call();
 
                 return StepStatus.buildSuccess(this);
             } catch (GitAPIException e) {
