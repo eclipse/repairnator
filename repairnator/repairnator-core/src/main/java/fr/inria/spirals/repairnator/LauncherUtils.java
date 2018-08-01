@@ -280,6 +280,32 @@ public class LauncherUtils {
         return arguments.getString("ghOauth");
     }
 
+    public static FlaggedOption defineArgGithubUserName() {
+        FlaggedOption opt = new FlaggedOption("githubUserName");
+        opt.setLongFlag("githubUserName");
+        opt.setDefault("repairnator");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify the name of the user who commits");
+        return opt;
+    }
+
+    public static String getArgGithubUserName(JSAPResult arguments) {
+        return arguments.getString("githubUserName");
+    }
+
+    public static FlaggedOption defineArgGithubUserEmail() {
+        FlaggedOption opt = new FlaggedOption("githubUserEmail");
+        opt.setLongFlag("githubUserEmail");
+        opt.setDefault("noreply@github.com");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify the email of the user who commits");
+        return opt;
+    }
+
+    public static String getArgGithubUserEmail(JSAPResult arguments) {
+        return arguments.getString("githubUserEmail");
+    }
+
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems

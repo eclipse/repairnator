@@ -109,6 +109,10 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgPushUrl());
         // --ghOauth
         jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
+        // --githubUserName
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserName());
+        // --githubUserEmail
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -194,6 +198,8 @@ public class Launcher {
         }
         this.config.setZ3solverPath(arguments.getFile("z3").getPath());
         this.config.setWorkspacePath(arguments.getString("workspace"));
+        this.config.setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
+        this.config.setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
 
         if (arguments.getFile("projectsToIgnore") != null) {
             this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());

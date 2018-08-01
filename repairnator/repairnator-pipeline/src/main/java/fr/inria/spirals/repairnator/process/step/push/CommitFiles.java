@@ -8,7 +8,6 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
@@ -60,11 +59,9 @@ public class CommitFiles extends AbstractStep {
 
                 gitHelper.gitAdd(this.getInspector().getJobStatus().getCreatedFilesToPush(), git);
 
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-
                 String commitMsg = this.createCommitMsg();
 
-                this.commit = git.commit().setMessage(commitMsg).setAuthor(personIdent).setCommitter(personIdent).call();
+                this.commit = git.commit().setMessage(commitMsg).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).call();
 
                 return StepStatus.buildSuccess(this);
             } catch (GitAPIException e) {

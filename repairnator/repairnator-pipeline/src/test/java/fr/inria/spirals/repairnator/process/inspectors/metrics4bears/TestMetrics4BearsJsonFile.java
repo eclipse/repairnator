@@ -60,6 +60,8 @@ public class TestMetrics4BearsJsonFile {
         config.setPush(true);
         config.setPushRemoteRepo("");
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
+        config.setGithubUserEmail("noreply@github.com");
+        config.setGithubUserName("repairnator");
 
         jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");

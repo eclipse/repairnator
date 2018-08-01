@@ -52,6 +52,8 @@ public class GitHelper {
 
     private int nbCommits;
 
+    private static PersonIdent committerIdent;
+
     public GitHelper() {
         this.nbCommits = 0;
     }
@@ -83,6 +85,14 @@ public class GitHelper {
             step.addStepError("Error while testing commit: " + e);
         }
         return null;
+    }
+
+    public static PersonIdent getCommitterIdent() {
+        if (committerIdent == null) {
+            committerIdent =  new PersonIdent(RepairnatorConfig.getInstance().getGithubUserName(), RepairnatorConfig.getInstance().getGithubUserEmail());
+        }
+
+        return committerIdent;
     }
 
     public boolean addAndCommitRepairnatorLogAndProperties(JobStatus status, Git git, String commitMsg) {
@@ -136,10 +146,10 @@ public class GitHelper {
                 }
 
                 this.gitAdd(filesToAdd, git);
-
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("repairnator: add files created to push \n"+commitMsg).setCommitter(personIdent)
-                        .setAuthor(personIdent).call();
+                git.commit()
+                        .setMessage("repairnator: add files created to push \n"+commitMsg)
+                        .setCommitter(this.getCommitterIdent())
+                        .setAuthor(this.getCommitterIdent()).call();
 
                 this.nbCommits++;
 
@@ -232,8 +242,7 @@ public class GitHelper {
 
             if (paths != null) {
                 this.gitResetPaths(commitHeadSha, paths, git.getRepository().getDirectory().getParentFile());
-                PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
+                git.commit().setMessage("Undo changes on source code").setAuthor(this.getCommitterIdent()).setCommitter(this.getCommitterIdent()).call();
             } else {
                 git.checkout().setName(commitHeadSha).call();
             }

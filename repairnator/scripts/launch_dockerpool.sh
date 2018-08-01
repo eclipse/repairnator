@@ -69,6 +69,7 @@ if [ "$SKIP_DELETE" -eq 1 ]; then
 fi
 
 supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+supplementaryArgs="$supplementaryArgs`ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
 
 if [ "$BEARS_MODE" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --bears"

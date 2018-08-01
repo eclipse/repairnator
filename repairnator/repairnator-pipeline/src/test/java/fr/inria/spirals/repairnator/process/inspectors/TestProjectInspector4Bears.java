@@ -63,6 +63,8 @@ public class TestProjectInspector4Bears {
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setPush(true);
         config.setPushRemoteRepo("");
+        config.setGithubUserEmail("noreply@github.com");
+        config.setGithubUserName("repairnator");
         Utils.setLoggersLevel(Level.ERROR);
 
         serializerEngine = mock(SerializerEngine.class);

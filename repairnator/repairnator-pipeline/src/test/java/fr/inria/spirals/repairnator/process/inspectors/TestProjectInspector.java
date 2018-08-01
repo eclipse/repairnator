@@ -62,6 +62,8 @@ public class TestProjectInspector {
         config.setPush(true);
         config.setPushRemoteRepo("");
         config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "NopolSingleTest")));
+        config.setGithubUserEmail("noreply@github.com");
+        config.setGithubUserName("repairnator");
         Utils.setLoggersLevel(Level.ERROR);
     }
 

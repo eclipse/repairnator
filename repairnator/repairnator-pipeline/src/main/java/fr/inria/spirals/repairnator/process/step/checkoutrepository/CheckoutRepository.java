@@ -15,7 +15,6 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.PersonIdent;
 import org.kohsuke.github.*;
 
 import java.io.File;
@@ -165,8 +164,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                         gitHelper.gitResetPaths(commitCheckout, paths, git.getRepository().getDirectory().getParentFile());
 
                         // FIXME: commit should not be there
-                        PersonIdent personIdent = new PersonIdent("Luc Esape", "luc.esape@gmail.com");
-                        git.commit().setMessage("Undo changes on source code").setAuthor(personIdent).setCommitter(personIdent).call();
+                        git.commit().setMessage("Undo changes on source code").setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).call();
                     }
                     jobStatus.writeProperty("bugCommit", this.getInspector().getBuggyBuild().getCommit().getCompareUrl());
                 } else {
