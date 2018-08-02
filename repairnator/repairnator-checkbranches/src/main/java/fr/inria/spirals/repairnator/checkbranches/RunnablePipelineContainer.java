@@ -9,10 +9,13 @@ import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,17 +44,13 @@ public class RunnablePipelineContainer implements Runnable {
 
             String containerName = "checkbranch_"+ branchName;
 
-            String humanPatchStr = "";
-
-            if (this.repairnatorConfig.isHumanPatch()) {
-                humanPatchStr = "--human-patch";
+            List<String> envValues = new ArrayList<>();
+            envValues.add("BRANCH_NAME="+this.branchName);
+            envValues.add("REPOSITORY="+this.repairnatorConfig.getRepository());
+            if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR) {
+                String humanPatchStr = this.repairnatorConfig.isHumanPatch() ? "--human-patch" : "";
+                envValues.add("HUMAN_PATCH="+humanPatchStr);
             }
-
-            String[] envValues = new String[] {
-                "BRANCH_NAME="+this.branchName,
-                "REPOSITORY="+this.repairnatorConfig.getRepository(),
-                "HUMAN_PATCH="+humanPatchStr
-            };
 
             Map<String,String> labels = new HashMap<>();
             labels.put("name",containerName);
