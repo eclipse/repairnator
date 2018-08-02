@@ -75,8 +75,8 @@ public class TestComputeDir {
 
         assertNotNull(files);
         assertEquals(2, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
-        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
     }
 
     @Test
@@ -106,8 +106,8 @@ public class TestComputeDir {
 
         assertNotNull(files);
         assertEquals(2, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
-        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
     }
 
     @Test
@@ -197,8 +197,8 @@ public class TestComputeDir {
 
         assertNotNull(files);
         assertEquals(2, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
-        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
     }
 
     @Test
@@ -314,8 +314,8 @@ public class TestComputeDir {
 
         assertNotNull(files);
         assertEquals(2, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
-        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
     }
 
     @Test

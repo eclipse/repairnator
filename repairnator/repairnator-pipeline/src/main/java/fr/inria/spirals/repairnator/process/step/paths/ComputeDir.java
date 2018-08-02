@@ -53,7 +53,7 @@ public class ComputeDir extends AbstractStep {
             wasDefaultDirFound = true;
             result.add(defaultDir);
             if (!this.allModules) {
-                return result.toArray(new File[result.size()]);
+                return this.returnResult(result);
             }
         } else {
             this.getLogger().debug("The default " + dirTypeName + " directory (" + defaultDir.getPath()
@@ -101,7 +101,7 @@ public class ComputeDir extends AbstractStep {
 
                         if (dirFromPom.exists()) {
                             result.add(dirFromPom);
-                            return result.toArray(new File[result.size()]);
+                            return this.returnResult(result);
                         }
 
                         this.getLogger().debug("The " + dirTypeName + " directory given in pom.xml (" + pathDirFromPom
@@ -153,18 +153,24 @@ public class ComputeDir extends AbstractStep {
                 }
 
                 if (result.size() > 0) {
-                    return result.toArray(new File[result.size()]);
+                    return this.returnResult(result);
                 }
             }
         }
 
         if (result.size() > 0) {
-            return result.toArray(new File[result.size()]);
+            return this.returnResult(result);
         }
 
         this.addStepError("The " + dirTypeName +
                 " directory is not at default location or specified in build section from pom.xml, and no parent can be found.");
         return null;
+    }
+
+    private File[] returnResult(Set<File> result) {
+        List<File> sortedFiles = new ArrayList<>(result);
+        Collections.sort(sortedFiles);
+        return sortedFiles.toArray(new File[sortedFiles.size()]);
     }
 
     protected int computeMetricsOnDirs(File[] dirs) {
