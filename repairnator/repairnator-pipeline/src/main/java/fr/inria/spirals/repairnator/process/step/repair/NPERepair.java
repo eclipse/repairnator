@@ -10,10 +10,12 @@ import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -107,6 +109,11 @@ public class NPERepair extends AbstractRepairStep {
                             }
 
                             this.recordPatches(repairPatches);
+                            try {
+                                this.createPullRequest(repairPatches, 1);
+                            } catch (GitAPIException|URISyntaxException e) {
+                                this.getLogger().error("Error while creating the PR", e);
+                            }
                         }
                     } catch (IOException e) {
                         this.addStepError("Error while parsing JSON patch files");

@@ -63,8 +63,8 @@ public class GitHelper {
         return nbCommits;
     }
 
-    private Logger getLogger() {
-        return LoggerFactory.getLogger(this.getClass());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(GitHelper.class);
     }
 
     /**
@@ -357,6 +357,20 @@ public class GitHelper {
         } catch (IOException e) {
             this.getLogger().error("Error while computing stat on the patch.", e);
         }
+    }
+
+    public static int gitCreateNewBranchAndCheckoutIt(String path, String branchName) {
+        ProcessBuilder processBuilder = new ProcessBuilder("git", "checkout", "-b", branchName)
+                .directory(new File(path)).inheritIO();
+
+        try {
+            Process p = processBuilder.start();
+            return p.waitFor();
+        } catch (InterruptedException|IOException e) {
+            getLogger().error("Error while executing git command to create new branch and checkout it: " + e);
+        }
+
+        return -1;
     }
 
     public void gitAdd(List<String> files, Git git) {
