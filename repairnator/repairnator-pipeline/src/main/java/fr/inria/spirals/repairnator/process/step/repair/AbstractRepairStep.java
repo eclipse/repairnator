@@ -59,6 +59,8 @@ public abstract class AbstractRepairStep extends AbstractStep {
     }
 
     private void notify(List<RepairPatch> patches) {
+        this.forkRepository();
+
         PatchNotifier patchNotifier = this.getInspector().getPatchNotifier();
         if (patchNotifier != null) {
             patchNotifier.notify(this.getInspector(), this.getRepairToolName(), patches);
