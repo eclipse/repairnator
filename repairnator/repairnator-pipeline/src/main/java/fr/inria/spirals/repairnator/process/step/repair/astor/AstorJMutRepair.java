@@ -8,7 +8,7 @@ public class AstorJMutRepair extends AstorRepair {
 
     @Override
     public String getAstorMode() {
-        return "MutRepair";
+        return "jmutrepair";
     }
 
     @Override
