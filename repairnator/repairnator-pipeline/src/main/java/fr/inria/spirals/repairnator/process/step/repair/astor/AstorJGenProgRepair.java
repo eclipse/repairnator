@@ -11,7 +11,7 @@ public class AstorJGenProgRepair extends AstorRepair {
 
     @Override
     public String getAstorMode() {
-        return "jgenprog";
+        return "jGenProg";
     }
 
     @Override
