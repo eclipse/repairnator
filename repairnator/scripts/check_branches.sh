@@ -44,6 +44,10 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 echo "Copy jar and prepare docker image"
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-checkbranches:$CHECKBRANCHES_VERSION:jar:jar-with-dependencies -Ddest=$REPAIRNATOR_CHECKBRANCHES_DEST_JAR
 
+if [ "$BEARS_MODE" -eq 1 ]; then
+    DOCKER_CHECKBRANCHES_TAG=$DOCKER_CHECKBRANCHES_TAG_BEARS
+fi
+
 echo "Pull the docker machine (name: $DOCKER_CHECKBRANCHES_TAG)..."
 docker pull $DOCKER_CHECKBRANCHES_TAG
 
