@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgDebug());
         // --runId
         jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // --bears
+        jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // -i or --input
         jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
         // -o or --output
@@ -102,6 +105,11 @@ public class Launcher {
             this.config.setDebug(true);
         }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
+        if (LauncherUtils.gerArgBearsMode(arguments)) {
+            this.config.setLauncherMode(LauncherMode.BEARS);
+        } else {
+            this.config.setLauncherMode(LauncherMode.REPAIR);
+        }
         this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
         this.config.setSerializeJson(true);
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
