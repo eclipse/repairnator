@@ -31,7 +31,11 @@ public class ComputeDir extends AbstractStep {
         this.allModules = true;
     }
 
-    private File[] searchForDirs(String dirPath, boolean rootCall) {
+    protected File[] searchForDirs(String dirPath, boolean rootCall) {
+        if (dirTypeName == null || defaultDir == null) {
+            throw new IllegalStateException("dirTypeName and defaultDir are null. setComputeDirType() should be called first.");
+        }
+
         List<File> result = new ArrayList<File>();
 
         boolean wasDefaultDirFound = false;
