@@ -83,7 +83,7 @@ public class TestComputeSourceDir {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/src/main/java")}));
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/src/main/java").getCanonicalFile()}));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class TestComputeSourceDir {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java").getCanonicalFile()}));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class TestComputeSourceDir {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder")}));
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder").getCanonicalFile()}));
     }
 
     @Test
@@ -192,7 +192,7 @@ public class TestComputeSourceDir {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder"), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder").getCanonicalFile(), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java").getCanonicalFile()}));
     }
 
     @Test
@@ -231,20 +231,20 @@ public class TestComputeSourceDir {
         }
 
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {
-                new File(repoDir.getAbsolutePath()+"/pac4j-core/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-config/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-oauth/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-cas/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-openid/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-http/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-saml/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-gae/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-oidc/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-jwt/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-ldap/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-sql/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-mongo/src/main/java"),
-                new File(repoDir.getAbsolutePath()+"/pac4j-stormpath/src/main/java")
+                new File(repoDir.getAbsolutePath()+"/pac4j-cas/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-config/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-core/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-gae/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-http/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-jwt/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-ldap/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-mongo/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-oauth/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-oidc/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-openid/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-saml/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-sql/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/pac4j-stormpath/src/main/java").getCanonicalFile()
         }));
     }
 
