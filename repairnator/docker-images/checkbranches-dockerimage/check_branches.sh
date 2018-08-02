@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$#" -ne 2 ]; then
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
     echo "Usage: ./check_branches.sh <github repository> <branch name> [--human-patch]"
     exit 2
 fi
@@ -9,7 +9,10 @@ fi
 DOCKER_DEST=/tmp/result.txt
 REPO=$1
 BRANCH_NAME=$2
-HUMAN_PATCH=$3
+HUMAN_PATCH=0
+if [ "$#" -eq 3 ] && [ $3 == "--human-patch" ]; then
+    HUMAN_PATCH=1
+fi
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -44,7 +47,7 @@ elif [ "$status" -eq 124 ]; then
     exit 2
 fi
 
-if [ $HUMAN_PATCH = "--human-patch" ]; then
+if [ $HUMAN_PATCH -eq 1 ]; then
     echo "Checking out the patch commit: $patchCommitId"
     git log --format=%B -n 1 $patchCommitId
 
