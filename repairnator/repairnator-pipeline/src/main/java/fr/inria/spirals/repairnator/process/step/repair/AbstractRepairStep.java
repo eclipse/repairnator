@@ -1,7 +1,9 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.gson.JsonElement;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
@@ -59,6 +61,8 @@ public abstract class AbstractRepairStep extends AbstractStep {
     }
 
     private void notify(List<RepairPatch> patches) {
+        this.forkRepository();
+
         PatchNotifier patchNotifier = this.getInspector().getPatchNotifier();
         if (patchNotifier != null) {
             patchNotifier.notify(this.getInspector(), this.getRepairToolName(), patches);
