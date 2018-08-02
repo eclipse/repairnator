@@ -170,10 +170,11 @@ public abstract class AbstractStep {
         }
     }
 
-    private void observeAndNotify() {
+    protected void forkRepository() {
         ProjectInspector inspector = this.getInspector();
         JobStatus jobStatus = inspector.getJobStatus();
-        if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked() && this.config.isPush() && this.config.isFork()) {
+
+        if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked() && RepairnatorConfig.getInstance().isPush() && RepairnatorConfig.getInstance().isFork()) {
             String repositoryName = getInspector().getRepoSlug();
             getLogger().info("Fork the repository: "+repositoryName);
             try {
@@ -182,13 +183,19 @@ public abstract class AbstractStep {
                     jobStatus.setForkURL(forkedRepoUrl);
                     jobStatus.setHasBeenForked(true);
                     getLogger().info("Obtain the following fork URL: "+forkedRepoUrl);
+                } else {
+                    getLogger().error("Error while forking the repository");
                 }
             } catch (IOException e) {
                 getLogger().error("Error while forking the repository "+repositoryName, e);
             }
-
+        } else {
+            getLogger().info("The repository won't be forked.");
         }
+    }
 
+
+    private void observeAndNotify() {
         if (this.notifiers != null) {
             for (AbstractNotifier notifier : this.notifiers) {
                 notifier.observe(this.inspector);
