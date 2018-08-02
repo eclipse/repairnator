@@ -10,6 +10,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class ComputeDir extends AbstractStep {
@@ -31,16 +32,23 @@ public class ComputeDir extends AbstractStep {
         this.allModules = true;
     }
 
-    protected File[] searchForDirs(String dirPath, boolean rootCall) {
+    protected File[] searchForDirs(String dirPathStr, boolean rootCall) {
         if (dirTypeName == null || defaultDir == null) {
             throw new IllegalStateException("dirTypeName and defaultDir are null. setComputeDirType() should be called first.");
         }
 
-        List<File> result = new ArrayList<File>();
+        Set<File> result = new HashSet<File>();
 
         boolean wasDefaultDirFound = false;
 
-        File defaultDir = new File(dirPath + this.defaultDir);
+        File dirPath = new File(dirPathStr);
+        try {
+            dirPath = dirPath.getCanonicalFile();
+        } catch (IOException e) {
+            getLogger().error("Error while getting canonical path for rootDirectory");
+        }
+
+        File defaultDir = new File(dirPath, this.defaultDir);
         if (defaultDir.exists()) {
             wasDefaultDirFound = true;
             result.add(defaultDir);
@@ -123,10 +131,6 @@ public class ComputeDir extends AbstractStep {
             this.getLogger().debug("No module has been found in the following pom.xml: " + pomOfCurrentDirPath + ".");
         }
 
-        if (result.size() > 0) {
-            return result.toArray(new File[result.size()]);
-        }
-
         if (model.getParent() != null && rootCall) {
             String relativePath = "../pom.xml";
 
@@ -135,6 +139,12 @@ public class ComputeDir extends AbstractStep {
             }
 
             File parentPomXml = new File(dirPath + File.separator + relativePath);
+
+            try {
+                parentPomXml = parentPomXml.getCanonicalFile();
+            } catch (IOException e) {
+                getLogger().error("Error while getting canonical path for parentPomXml");
+            }
 
             if (parentPomXml.exists()) {
                 File[] dirs = this.searchForDirs(parentPomXml.getParent(),false);
@@ -146,6 +156,10 @@ public class ComputeDir extends AbstractStep {
                     return result.toArray(new File[result.size()]);
                 }
             }
+        }
+
+        if (result.size() > 0) {
+            return result.toArray(new File[result.size()]);
         }
 
         this.addStepError("The " + dirTypeName +

@@ -20,7 +20,7 @@ public class TestComputeDir {
         computeDir.searchForDirs("/tmp", true);
     }
 
-    private ComputeDir initComputeDir(String resourcePomDir, boolean isComputeSource) {
+    private ComputeDir initComputeDir(String resourcePomDir, boolean isComputeSource, boolean allModules) {
         // the mock needs a JobStatus to work properly (see AbstractStep)
         JobStatus jobStatus = new JobStatus(resourcePomDir);
 
@@ -43,6 +43,7 @@ public class TestComputeDir {
             computeDir.setComputeDirType(ComputeDirType.COMPUTE_TEST_DIR);
         }
 
+        computeDir.setAllModules(allModules);
 
         return computeDir;
     }
@@ -52,14 +53,61 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, false);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, false); // it's a parent pom: true or false does not change anything
 
         assertNotNull(files);
         assertEquals(1, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
+    }
+
+    @Test
+    public void testComputeSourceDirWithJrubyRootCallAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, true);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, false); // it's a parent pom: true or false does not change anything
+
+        assertNotNull(files);
+        assertEquals(2, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+    }
+
+    @Test
+    public void testComputeSourceDirWithJrubyRootCallRecursive() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, false);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, true); // it's a parent pom: true or false does not change anything
+
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
+    }
+
+    @Test
+    public void testComputeSourceDirWithJrubyRootCallRecursiveAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, true);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, true); // it's a parent pom: true or false does not change anything
+
+        assertNotNull(files);
+        assertEquals(2, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
     }
 
     @Test
@@ -67,7 +115,7 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, false);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, false); // it's a parent pom: true or false does not change anything
@@ -78,18 +126,18 @@ public class TestComputeDir {
     }
 
     @Test
-    public void testComputeSourceDirWithJrubyRootCallRecursive() {
+    public void testComputeTestDirWithJrubyRootAllModules() {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, true);
 
         // the method to test
-        File[] files = computeDir.searchForDirs(resourcePomDir, true); // it's a parent pom: true or false does not change anything
+        File[] files = computeDir.searchForDirs(resourcePomDir, false); // it's a parent pom: true or false does not change anything
 
         assertNotNull(files);
         assertEquals(1, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/lib/src/test/java"));
     }
 
     @Test
@@ -97,7 +145,22 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, false);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, true); // it's a parent pom: true or false does not change anything
+
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/lib/src/test/java"));
+    }
+
+    @Test
+    public void testComputeTestDirWithJrubyRootCallRecursiveAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, true);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, true); // it's a parent pom: true or false does not change anything
@@ -112,14 +175,30 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/lib";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, false);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, true); // only work in true mode: it must take the parent to get the children from the other module
 
         assertNotNull(files);
         assertEquals(1, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/lib/../core/src/main/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
+    }
+
+    @Test
+    public void testComputeSourceDirWithJrubyLibCallRecursiveAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/lib";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, true);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, true); // only work in true mode: it must take the parent to get the children from the other module
+
+        assertNotNull(files);
+        assertEquals(2, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
     }
 
     @Test
@@ -127,10 +206,23 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/lib";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, false);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, false); // won't work here
+
+        assertNull(files);
+    }
+
+    @Test
+    public void testComputeSourceDirWithJrubyLibCallAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/lib";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, true);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, false); // won't work here, even in all modules as it does not get the parent
 
         assertNull(files);
     }
@@ -140,7 +232,22 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/lib";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, false);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, true); // works both ways here as the dir is in this module
+
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/lib/src/test/java"));
+    }
+
+    @Test
+    public void testComputeTestDirWithJrubyLibCallRecursiveAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/lib";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, true);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, true); // works both ways here as the dir is in this module
@@ -155,7 +262,22 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/lib";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, false);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, false); // works both ways here as the dir is in this module
+
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/lib/src/test/java"));
+    }
+
+    @Test
+    public void testComputeTestDirWithJrubyLibCallAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/lib";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, true);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, false); // works both ways here as the dir is in this module
@@ -170,7 +292,7 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/core";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, false);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, true); // works both ways here as the dir is in this module
@@ -181,14 +303,45 @@ public class TestComputeDir {
     }
 
     @Test
+    public void testComputeSourceDirWithJrubyCoreRecursiveAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/core";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, true);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, true); // works both ways here as the dir is in this module
+
+        assertNotNull(files);
+        assertEquals(2, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/src/main/java"));
+        assertTrue(files[1].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+    }
+
+    @Test
     public void testComputeSourceDirWithJrubyCore() {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/core";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, false);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, false); // works both ways here as the dir is in this module
+
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/src/main/java"));
+    }
+
+    @Test
+    public void testComputeSourceDirWithJrubyCoreAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/core";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, true, true);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, false); // works both ways here as the dir is in this module, but don't get the one from the parent
 
         assertNotNull(files);
         assertEquals(1, files.length);
@@ -200,14 +353,29 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/core";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, false);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, true); // works only when getting the parent here
 
         assertNotNull(files);
         assertEquals(1, files.length);
-        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/core/../lib/src/test/java"));
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/lib/src/test/java"));
+    }
+
+    @Test
+    public void testComputeTestDirWithJrubyCoreRecursiveAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/core";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, true);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, true); // works only when getting the parent here
+
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        assertTrue(files[0].getAbsolutePath().endsWith("src/test/resources/jruby/lib/src/test/java"));
     }
 
     @Test
@@ -215,7 +383,20 @@ public class TestComputeDir {
         // root resource
         String resourcePomDir = "src/test/resources/jruby/core";
 
-        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false);
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, false);
+
+        // the method to test
+        File[] files = computeDir.searchForDirs(resourcePomDir, false); // won't work
+
+        assertNull(files);
+    }
+
+    @Test
+    public void testComputeTestDirWithJrubyCoreAllModules() {
+        // root resource
+        String resourcePomDir = "src/test/resources/jruby/core";
+
+        ComputeDir computeDir = this.initComputeDir(resourcePomDir, false, true);
 
         // the method to test
         File[] files = computeDir.searchForDirs(resourcePomDir, false); // won't work
