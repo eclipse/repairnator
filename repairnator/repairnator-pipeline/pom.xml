@@ -46,7 +46,7 @@
         <dependency>
             <groupId>fr.inria.gforge.spirals</groupId>
             <artifactId>nopol</artifactId>
-            <version>57043332ea5b37025924f46eb13944b0283eae8e</version>
+            <version>a1bb7f773a213284c9875954d0fbfd546b06e02d</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
-            <version>4b9e6945827972434782e3201f03aa74c3db26f8</version>
+            <version>94158d8ae217ef4bfc19c178aa16601bcf67435d</version>
         </dependency>
         <dependency>
             <groupId>eu.stamp-project</groupId>
