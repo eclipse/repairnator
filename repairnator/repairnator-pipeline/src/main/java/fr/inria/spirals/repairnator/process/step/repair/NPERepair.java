@@ -109,11 +109,6 @@ public class NPERepair extends AbstractRepairStep {
                             }
 
                             this.recordPatches(repairPatches);
-                            try {
-                                this.createPullRequest(repairPatches, 1);
-                            } catch (GitAPIException|URISyntaxException e) {
-                                this.getLogger().error("Error while creating the PR", e);
-                            }
                         }
                     } catch (IOException e) {
                         this.addStepError("Error while parsing JSON patch files");

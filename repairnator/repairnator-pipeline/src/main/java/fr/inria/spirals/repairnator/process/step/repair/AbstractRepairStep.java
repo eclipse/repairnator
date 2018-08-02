@@ -12,6 +12,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractRepairStep extends AbstractStep {
@@ -47,7 +49,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
         }
     }
 
-    private void serializePatches(List<RepairPatch> patchList) throws IOException {
+    private List<File> serializePatches(List<RepairPatch> patchList) throws IOException {
         File parentDirectory = new File(this.getInspector().getRepoToPushLocalPath(), DEFAULT_DIR_PATCHES);
 
         if (!parentDirectory.exists()) {
@@ -57,6 +59,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
         File toolDirectory = new File(parentDirectory, this.getRepairToolName());
         toolDirectory.mkdirs();
 
+        List<File> serializedPatches = new ArrayList<>();
         int i = 1;
         String dirPath = DEFAULT_DIR_PATCHES + "/" + this.getRepairToolName() + "/";
         for (RepairPatch repairPatch : patchList) {
@@ -65,7 +68,10 @@ public abstract class AbstractRepairStep extends AbstractStep {
             bufferedWriter.write(repairPatch.getDiff());
             bufferedWriter.close();
             this.getInspector().getJobStatus().addFileToPush(dirPath + patchFile.getName());
+            serializedPatches.add(patchFile);
         }
+
+        return serializedPatches;
     }
 
     private void notify(List<RepairPatch> patches) {
@@ -82,22 +88,42 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
         if (!patchList.isEmpty()) {
             this.getInspector().getJobStatus().setHasBeenPatched(true);
+            List<File> serializedPatches = null;
             try {
-                this.serializePatches(patchList);
+                serializedPatches = this.serializePatches(patchList);
             } catch (IOException e) {
                 this.addStepError("Error while serializing patches", e);
             }
+
+            if (serializedPatches != null) {
+                try {
+                    this.createPullRequest(serializedPatches, 1);
+                } catch (IOException|GitAPIException|URISyntaxException e) {
+                    this.addStepError("Error while creating the PR", e);
+                }
+            } else {
+                this.addStepError("No file has been serialized, so no PR will be created");
+            }
+
+
             this.notify(patchList);
         }
     }
 
-    protected void createPullRequest(List<RepairPatch> patchList, int nbPatch) throws IOException, GitAPIException, URISyntaxException {
+    protected void createPullRequest(List<File> patchList, int nbPatch) throws IOException, GitAPIException, URISyntaxException {
         if (patchList.isEmpty()) {
             return;
         }
 
         if (this.getInspector().getBuggyBuild().isPullRequest()) {
             this.getLogger().warn("Skipping creating a PR if it's already a PR, for now. Much more complicated stuff to do there.");
+            return;
+        }
+
+        this.forkRepository();
+
+        if (!this.getInspector().getJobStatus().isHasBeenForked()) {
+            this.getLogger().info("The project has not been forked. The PR won't be created.");
             return;
         }
 
@@ -108,18 +134,20 @@ public abstract class AbstractRepairStep extends AbstractStep {
         Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
 
         for (int i = 0; i < nbPatch && i < patchList.size(); i++) {
-            RepairPatch patch = patchList.get(i);
+            File patch = patchList.get(i);
 
-            int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), "patch-" + nbPatch);
+            String branchName = "patch-" + i;
+            int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
             if (status == 0) {
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", "<", patch.getDiff())
+                // this one should be checked
+                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", patch.getAbsolutePath())
                         .directory(new File(this.getInspector().getRepoLocalPath())).inheritIO();
 
                 try {
                     Process p = processBuilder.start();
                     p.waitFor();
                 } catch (InterruptedException|IOException e) {
-                    this.getLogger().error("Error while executing git command to apply patch: " + e);
+                    this.addStepError("Error while executing git command to apply patch", e);
                 }
 
                 git.add().setUpdate(true).call();
@@ -131,17 +159,20 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 remoteAddCommand.setName("fork-patch");
                 remoteAddCommand.call();
 
+                git.push().add(branchName).setRemote("fork-patch").setCredentialsProvider(new UsernamePasswordCredentialsProvider(RepairnatorConfig.getInstance().getGithubToken(), "")).call();
+
                 GitHub github = RepairnatorConfig.getInstance().getGithub();
+
                 GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
                 GHRepository ghForkedRepo = originalRepository.fork();
 
 
                 String base = this.getInspector().getBuggyBuild().getBranch().getName();
-                String head = ghForkedRepo.getOwnerName() + ":fork-patch";
+                String head = ghForkedRepo.getOwnerName() + ":" + branchName;
                 GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", base, head, "This PR intends to provide a patch for the following failing build: " + this.getInspector().getBuggyBuild().getUri());
                 this.getLogger().info("Pull request created on: " + pullRequest.getUrl());
             } else {
-                this.getLogger().error("Error while creating a dedicated branch for the patch.");
+                this.addStepError("Error while creating a dedicated branch for the patch.");
             }
         }
     }

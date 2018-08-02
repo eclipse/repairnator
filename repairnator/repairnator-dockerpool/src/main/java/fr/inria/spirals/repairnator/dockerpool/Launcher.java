@@ -139,8 +139,14 @@ public class Launcher extends AbstractPoolManager {
         if (LauncherUtils.getArgPushUrl(arguments) != null) {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
+        }
+        this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
+
+        // we fork if we need to create a PR or if we need to notify
+        if (this.config.isCreatePR() || (this.config.getSmtpServer() != null && !this.config.getSmtpServer().isEmpty() && this.config.getNotifyTo() != null && this.config.getNotifyTo().length > 0)) {
             this.config.setFork(true);
         }
+
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
     }
 

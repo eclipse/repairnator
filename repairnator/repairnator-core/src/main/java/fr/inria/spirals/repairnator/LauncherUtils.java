@@ -60,6 +60,18 @@ public class LauncherUtils {
         return arguments.getBoolean("notifyEndProcess");
     }
 
+    public static Switch defineArgCreatePR() {
+        Switch sw = new Switch("createPR");
+        sw.setLongFlag("createPR");
+        sw.setDefault("false");
+        sw.setHelp("Activate the creation of a Pull Request in case of patch.");
+        return sw;
+    }
+
+    public static boolean getArgCreatePR(JSAPResult arguments) {
+        return arguments.getBoolean("createPR");
+    }
+
     public static Switch defineArgBearsMode() {
         Switch sw = new Switch("bears");
         sw.setLongFlag("bears");
