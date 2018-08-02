@@ -29,9 +29,9 @@ public class TestComputeDir {
 
         // enrich the mock:
         // we need a path to the repository (here it points to the resource)
-        // and a link to the local m2 repository (here we got the default one: be careful, it might not work on custom config)
+        // and a link to the local m2 repository (here we got a stub value)
         when(mockInspector.getRepoLocalPath()).thenReturn(resourcePomDir);
-        when(mockInspector.getM2LocalPath()).thenReturn("~/.m2/repository"); // only works on UNIX systems
+        when(mockInspector.getM2LocalPath()).thenReturn("/tmp");
 
         // we create the proper instance of the object to test
         ComputeDir computeDir = new ComputeDir(mockInspector, true);
@@ -48,7 +48,7 @@ public class TestComputeDir {
     }
 
     @Test
-    public void testComputeSourceDirWithJrubyRootCallRecursive() {
+    public void testComputeSourceDirWithJrubyRootCall() {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
@@ -63,7 +63,7 @@ public class TestComputeDir {
     }
 
     @Test
-    public void testComputeTestDirWithJrubyRootCallRecursive() {
+    public void testComputeTestDirWithJrubyRoot() {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
@@ -78,7 +78,7 @@ public class TestComputeDir {
     }
 
     @Test
-    public void testComputeSourceDirWithJrubyRootCall() {
+    public void testComputeSourceDirWithJrubyRootCallRecursive() {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
@@ -93,7 +93,7 @@ public class TestComputeDir {
     }
 
     @Test
-    public void testComputeTestDirWithJrubyRootCall() {
+    public void testComputeTestDirWithJrubyRootCallRecursive() {
         // root resource
         String resourcePomDir = "src/test/resources/jruby";
 
