@@ -188,8 +188,14 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
                 if (patches != null && !patches.isEmpty()) {
                     for (Patch patch : patches) {
                         String diff = patch.toDiff(spoonFactory, nopolContext);
+                        int i = 0;
+                        File patchFile;
+                        do {
+                            File sourceFolder = getSources()[i];
+                            patchFile = patch.getFile(sourceFolder);
+                        } while (i < getSources().length && (patchFile == null || !patchFile.exists()));
 
-                        RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", diff);
+                        RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), patchFile.getPath(), diff);
                         repairPatches.add(repairPatch);
                     }
                     nopolInformation.setStatus(NopolStatus.PATCH);
