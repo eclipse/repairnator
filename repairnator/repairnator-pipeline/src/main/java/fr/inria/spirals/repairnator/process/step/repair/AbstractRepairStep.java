@@ -130,8 +130,14 @@ public abstract class AbstractRepairStep extends AbstractStep {
         // fork repo
         String forkedRepo = this.getInspector().getJobStatus().getForkURL();
 
+        if (forkedRepo.startsWith("https://api.github.com/repos")) {
+            forkedRepo = forkedRepo.replace("https://api.github.com/repos", "https://github.com");
+        }
+
         // we will work directly in the
         Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
+
+        int nbSegments = new File(this.getInspector().getRepoLocalPath()).getAbsolutePath().split("/").length -1;
 
         for (int i = 0; i < nbPatch && i < patchList.size(); i++) {
             File patch = patchList.get(i);
@@ -139,19 +145,17 @@ public abstract class AbstractRepairStep extends AbstractStep {
             String branchName = "patch-" + i;
             int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
             if (status == 0) {
-                // this one should be checked
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", patch.getAbsolutePath())
+                // the -pX arguments allow to remove the segments coming from the absolute path.
+                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", "-p"+nbSegments, patch.getAbsolutePath())
                         .directory(new File(this.getInspector().getRepoLocalPath())).inheritIO();
 
                 try {
                     Process p = processBuilder.start();
                     p.waitFor();
                 } catch (InterruptedException|IOException e) {
-                    this.addStepError("Error while executing git command to apply patch", e);
+                    this.addStepError("Error while executing git command to apply patch " + patch.getPath(), e);
                 }
-
-                git.add().setUpdate(true).call();
-                git.commit().setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for a patch").call();
+                git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for a patch").call();
 
 
                 RemoteAddCommand remoteAddCommand = git.remoteAdd();
@@ -169,8 +173,8 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
                 String base = this.getInspector().getBuggyBuild().getBranch().getName();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
-                GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", base, head, "This PR intends to provide a patch for the following failing build: " + this.getInspector().getBuggyBuild().getUri());
-                this.getLogger().info("Pull request created on: " + pullRequest.getUrl());
+                GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", head, base, "This PR intends to provide a patch for the following failing build: " + this.getInspector().getBuggyBuild().getUri());
+                this.getLogger().info("Pull request created on: https://github.com/" + this.getInspector().getRepoSlug() + "/pulls/" + pullRequest.getNumber());
             } else {
                 this.addStepError("Error while creating a dedicated branch for the patch.");
             }

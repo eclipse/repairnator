@@ -10,12 +10,10 @@ import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.List;
  */
 public class NPERepair extends AbstractRepairStep {
     protected static final String TOOL_NAME = "NPEFix";
-    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.4:npefix";
+    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.5-SNAPSHOT:npefix";
 
     public NPERepair() {}
 
