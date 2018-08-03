@@ -18,6 +18,16 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+command -v ajv >/dev/null 2>&1 || { echo >&2 "I require ajv (https://github.com/jessedc/ajv-cli) but it's not installed.  Aborting."; exit 1; }
+
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+JSON_SCHEMA="$SCRIPT_DIR/repairnator-schema.json"
+echo "$JSON_SCHEMA"
+if [ ! -f $JSON_SCHEMA ]; then
+    echo "The json schema ($JSON_SCHEMA) cannot be found."
+    exit -1
+fi
+
 MAVEN_TEST_ARGS="-Denforcer.skip=true -Dcheckstyle.skip=true -Dcobertura.skip=true -DskipITs=true -Drat.skip=true -Dlicense.skip=true -Dfindbugs.skip=true -Dgpg.skip=true -Dskip.npm=true -Dskip.gulp=true -Dskip.bower=true"
 
 echo "Treating branch $BRANCH_NAME"
@@ -25,6 +35,20 @@ mkdir repo && cd repo && git init
 git remote add origin $REPO
 git fetch origin $BRANCH_NAME
 git checkout $BRANCH_NAME
+
+if [ -e "repairnator.json" ]; then
+    if ajv test -s ../$JSON_SCHEMA -d repairnator.json --valid ; then
+        echo "repairnator.json is valid in $BRANCH_NAME"
+    else
+        >&2 echo -e "$RED repairnator.json in branch $BRANCH_NAME is not valid"
+        echo "$BRANCH_NAME [FAILURE] (repairnator.json is not valid)" >> $DOCKER_DEST
+        exit 2
+    fi
+else
+    >&2 echo -e "$RED repairnator.json does not exist in branch $BRANCH_NAME"
+    echo "$BRANCH_NAME [FAILURE] (repairnator.json does not exist)" >> $DOCKER_DEST
+    exit 2
+fi
 
 bugCommitId=`git log --format=format:%H --grep="Bug commit"`
 patchCommitId=`git log --format=format:%H --grep="Human patch"`
