@@ -5,13 +5,10 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.exceptions.DockerCertificateException;
-import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -150,36 +147,13 @@ public class Launcher {
         return result;
     }
 
-    private String findDockerImage() {
-        try {
-            docker = DefaultDockerClient.fromEnv().build();
-
-            List<Image> allImages = docker.listImages(DockerClient.ListImagesParam.allImages());
-
-            String imageId = null;
-            for (Image image : allImages) {
-                if (image.repoTags() != null && image.repoTags().contains(this.config.getDockerImageName())) {
-                    imageId = image.id();
-                    break;
-                }
-            }
-
-            if (imageId == null) {
-                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+this.config.getDockerImageName()+"\": no image has been found.");
-            }
-            return imageId;
-        } catch (DockerCertificateException|InterruptedException|DockerException e) {
-            throw new RuntimeException("Error while looking for the docker image",e);
-        }
-    }
-
     private void runPool() throws IOException {
         String runId = this.config.getRunId();
 
         List<String> branchNames = this.readListOfBranches();
         LOGGER.info("Find "+branchNames.size()+" branches to run.");
 
-        String imageId = this.findDockerImage();
+        String imageId = DockerHelper.findDockerImage(this.config.getDockerImageName(), DockerHelper.initDockerClient());
         LOGGER.info("Found the following docker image id: "+imageId);
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());

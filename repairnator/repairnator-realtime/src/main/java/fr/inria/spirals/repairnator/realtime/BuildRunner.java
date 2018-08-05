@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.realtime;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.dockerpool.AbstractPoolManager;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class BuildRunner extends AbstractPoolManager {
     }
 
     private void refreshDockerImage() {
-        this.dockerImageId = this.findDockerImage(this.dockerImageName);
+        this.dockerImageId = DockerHelper.findDockerImage(this.dockerImageName, this.getDockerClient());
         this.limitDateNextRetrieveDockerImage = new Date(new Date().toInstant().plus(DELAY_BETWEEN_DOCKER_IMAGE_REFRESH, ChronoUnit.MINUTES).toEpochMilli());
         LOGGER.debug("Find the following docker image: "+this.dockerImageId);
     }

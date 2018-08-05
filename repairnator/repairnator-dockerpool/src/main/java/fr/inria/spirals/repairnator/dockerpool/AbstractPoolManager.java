@@ -1,11 +1,8 @@
 package fr.inria.spirals.repairnator.dockerpool;
 
-import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.exceptions.DockerCertificateException;
-import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.Image;
 import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
@@ -29,41 +26,10 @@ public class AbstractPoolManager {
     private String dockerOutputDir = DEFAULT_OUTPUT_DIR;
     private List<SerializerEngine> engines = new ArrayList<>();
 
-    public void initDockerClient() {
-        try {
-            this.docker = DefaultDockerClient.fromEnv().build();
-        } catch (DockerCertificateException e) {
-            throw new RuntimeException("Error while initializing docker client.");
-        }
-    }
-
-    public String findDockerImage(String imageName) {
-        try {
-            this.initDockerClient();
-            List<Image> allImages = this.docker.listImages(DockerClient.ListImagesParam.allImages());
-
-            String imageId = null;
-            for (Image image : allImages) {
-                if (image.repoTags() != null && image.repoTags().contains(imageName)) {
-                    imageId = image.id();
-                    break;
-                }
-            }
-
-            if (imageId == null) {
-                throw new RuntimeException("There was a problem when looking for the docker image with argument \""+imageName+"\": no image has been found.");
-            }
-            return imageId;
-        } catch (InterruptedException|DockerException e) {
-            throw new RuntimeException("Error while looking for the docker image",e);
-        }
-    }
-
     public DockerClient getDockerClient() {
         if (this.docker == null) {
-            throw new RuntimeException("Docker client not initialized! Call initDockerClient() first.");
+            this.docker = DockerHelper.initDockerClient();
         }
-
         return this.docker;
     }
 
