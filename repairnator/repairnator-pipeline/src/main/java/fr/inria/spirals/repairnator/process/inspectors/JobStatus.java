@@ -178,6 +178,10 @@ public class JobStatus {
         return metrics;
     }
 
+    public java.util.Properties getProperties4Repairnator() {
+        return properties;
+    }
+
     public void writeProperty(String propertyName, Object value) {
         if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
             if (value != null) {
