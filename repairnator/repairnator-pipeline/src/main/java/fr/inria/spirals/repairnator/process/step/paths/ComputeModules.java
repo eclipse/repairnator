@@ -68,7 +68,7 @@ public class ComputeModules extends AbstractStep {
             return StepStatus.buildError(this, PipelineState.MODULESNOTCOMPUTED);
         }
         this.getInspector().getJobStatus().setModules(modules);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberModules(modules.length);
+        this.getInspector().getJobStatus().getProperties().getProjectMetrics().setNumberModules(modules.length);
         return StepStatus.buildSuccess(this);
     }
 }

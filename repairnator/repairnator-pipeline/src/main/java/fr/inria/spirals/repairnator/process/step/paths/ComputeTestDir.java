@@ -18,7 +18,7 @@ public class ComputeTestDir extends ComputeDir {
     private void computeMetricsOnTestDirs(File[] dirs) {
         int numberTestFiles = super.computeMetricsOnDirs(dirs);
         this.getInspector().getJobStatus().getMetrics().setNbFileTests(numberTestFiles);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberTestFiles(numberTestFiles);
+        this.getInspector().getJobStatus().getProperties().getProjectMetrics().setNumberTestFiles(numberTestFiles);
     }
 
     @Override

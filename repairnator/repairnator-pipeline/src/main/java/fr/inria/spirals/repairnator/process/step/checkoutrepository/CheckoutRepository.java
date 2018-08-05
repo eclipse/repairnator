@@ -9,8 +9,8 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.commits.Commit;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.commits.Commit;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
@@ -44,7 +44,7 @@ public abstract class CheckoutRepository extends AbstractStep {
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
         Metrics metric = jobStatus.getMetrics();
-        Metrics4Bears metrics4Bears = jobStatus.getMetrics4Bears();
+        Properties properties = jobStatus.getProperties();
         Commit commit;
 
         Git git;
@@ -62,7 +62,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                     metric.setBugCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
 
                     commit = this.createCommitForMetrics(build);
-                    metrics4Bears.getCommits().setBuggyBuild(commit);
+                    properties.getCommits().setBuggyBuild(commit);
                     break;
 
                 case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
@@ -72,7 +72,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                     metric.setReconstructedBugCommit(true);
 
                     commit = this.createCommitForMetrics(build);
-                    metrics4Bears.getCommits().setBuggyBuild(commit);
+                    properties.getCommits().setBuggyBuild(commit);
                     break;
 
                 case CHECKOUT_BUGGY_BUILD_TEST_CODE:
@@ -87,7 +87,7 @@ public abstract class CheckoutRepository extends AbstractStep {
                     metric.setPatchCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
 
                     commit = this.createCommitForMetrics(build);
-                    metrics4Bears.getCommits().setFixerBuild(commit);
+                    properties.getCommits().setFixerBuild(commit);
                     break;
 
                 default:
@@ -110,15 +110,15 @@ public abstract class CheckoutRepository extends AbstractStep {
                         jobStatus.writeProperty("pr-id", build.getPullRequestNumber());
 
                         commit = this.createCommitForMetrics(prInformation, false);
-                        metrics4Bears.getCommits().setFixerBuildForkRepo(commit);
+                        properties.getCommits().setFixerBuildForkRepo(commit);
                         commit = this.createCommitForMetrics(prInformation, true);
-                        metrics4Bears.getCommits().setFixerBuildBaseRepo(commit);
+                        properties.getCommits().setFixerBuildBaseRepo(commit);
                     } else if (checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD ||
                             checkoutType == CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE) {
                         commit = this.createCommitForMetrics(prInformation, false);
-                        metrics4Bears.getCommits().setBuggyBuildForkRepo(commit);
+                        properties.getCommits().setBuggyBuildForkRepo(commit);
                         commit = this.createCommitForMetrics(prInformation, true);
-                        metrics4Bears.getCommits().setBuggyBuildBaseRepo(commit);
+                        properties.getCommits().setBuggyBuildBaseRepo(commit);
                     }
 
                     gitHelper.addAndCommitRepairnatorLogAndProperties(this.getInspector().getJobStatus(), git, "After getting PR information");

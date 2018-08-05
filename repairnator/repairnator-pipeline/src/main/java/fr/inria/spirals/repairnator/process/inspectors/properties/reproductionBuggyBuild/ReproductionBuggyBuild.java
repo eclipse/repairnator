@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild;
+package fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild;
 
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 

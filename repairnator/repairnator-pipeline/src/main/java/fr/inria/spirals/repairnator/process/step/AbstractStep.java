@@ -7,7 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
+import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -249,7 +249,7 @@ public abstract class AbstractStep {
     protected String getPom() {
         if (!pomLocationTested) {
             testPomLocation();
-            this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild()
+            this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild()
                     .setProjectRootPomPath(this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE);
         }
         return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
@@ -306,7 +306,7 @@ public abstract class AbstractStep {
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
-        ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild();
+        ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild();
         reproductionBuggyBuild.addStep(this);
 
         this.inspector.getJobStatus().addStepStatus(this.stepStatus);
