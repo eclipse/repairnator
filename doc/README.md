@@ -33,7 +33,7 @@ We provided some documentation [about backups](chore/managedb.md) and [about Mon
 The following is the list of program repair tools currently supported in Repairnator:
   - Nopol
   - NPEFix
-  - Astor (JGenProg)
-  - Astor (JKali)
-  - Astor (JMut)
+  - Astor
   - AssertFixer
+  
+For more information about the program repair tools and their strategies implemented in Repairnator, [have a look on this page](usage/repair-tools.md).
