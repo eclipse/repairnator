@@ -1,16 +1,27 @@
-language: java
-
 sudo: true
 
-jdk: openjdk8
+matrix:
+  include:
+  - language: java
 
-services:
- - docker
+    jdk: openjdk8
 
-script: "./.travis/travis-run.sh"
+    services:
+     - docker
 
-after_success:
-  - "./.travis/travis-deploy.sh"
+    script: "./.travis/travis-run.sh"
+
+    after_success:
+      - "./.travis/travis-deploy.sh"
+
+  - language: bash
+
+    before_script:
+        - sudo apt-get install shunit2
+
+    script:
+        - bash repairnator/docker-images/checkbranches-dockerimage/check_branches_test.sh
+        - bash repairnator/docker-images/bears-checkbranches-dockerimage/check_branches_test.sh
 
 branches:
   only:
