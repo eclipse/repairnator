@@ -1,30 +1,24 @@
 sudo: true
 
-matrix:
-  include:
-  - language: java
+language: java
 
-    jdk: openjdk8
+jdk: openjdk8
 
-    services:
-     - docker
+services:
+ - docker
 
-    script: "./.travis/travis-run.sh"
+before_script:
+  - sudo apt-get update
+  - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  - sudo apt-get install -y nodejs
+  - sudo npm install -g ajv-cli
+  - sudo apt-get install shunit2
 
-    after_success:
-      - "./.travis/travis-deploy.sh"
+script:
+  - "./.travis/travis-run.sh"
 
-  - language: bash
-
-    before_script:
-        - sudo apt-get update
-        - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-        - sudo apt-get install -y nodejs
-        - sudo npm install -g ajv-cli
-        - sudo apt-get install shunit2
-
-    script:
-        - bash repairnator/docker-images/bears-checkbranches-dockerimage/check_branches_test.sh
+after_success:
+  - "./.travis/travis-deploy.sh"
 
 branches:
   only:
