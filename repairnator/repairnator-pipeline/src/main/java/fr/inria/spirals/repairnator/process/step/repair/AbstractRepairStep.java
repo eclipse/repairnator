@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.gson.JsonElement;
+import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
@@ -23,11 +24,15 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
+    public static final String TEXT_PR = "This PR has been created automatically by [repairnator](https://github.com/Spirals-Team/repairnator).\n" +
+                                        "It aims at fixing the following Travis failing build: %s \n\n" +
+                                        "If you don't want to receive those PR on the future, [open an issue on Repairnator Github repository](https://github.com/Spirals-Team/repairnator/issues/new?title=[BLACKLIST]%%20%s) with the following subject: `[BLACKLIST] %s`.";
 
     public AbstractRepairStep() {
         super(null, false);
@@ -137,16 +142,14 @@ public abstract class AbstractRepairStep extends AbstractStep {
         // we will work directly in the
         Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
 
-        int nbSegments = new File(this.getInspector().getRepoLocalPath()).getAbsolutePath().split("/").length -1;
 
         for (int i = 0; i < nbPatch && i < patchList.size(); i++) {
             File patch = patchList.get(i);
 
-            String branchName = "patch-" + i;
+            String branchName = "repairnator-patch-" + Utils.formatFilenameDate(new Date()) + "-" + i;
             int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
             if (status == 0) {
-                // the -pX arguments allow to remove the segments coming from the absolute path.
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", "-p"+nbSegments, patch.getAbsolutePath())
+                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", patch.getAbsolutePath())
                         .directory(new File(this.getInspector().getRepoLocalPath())).inheritIO();
 
                 try {
@@ -173,8 +176,13 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
                 String base = this.getInspector().getBuggyBuild().getBranch().getName();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
-                GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", head, base, "This PR intends to provide a patch for the following failing build: " + this.getInspector().getBuggyBuild().getUri());
-                this.getLogger().info("Pull request created on: https://github.com/" + this.getInspector().getRepoSlug() + "/pulls/" + pullRequest.getNumber());
+
+                String travisURL = Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
+
+                String prText = String.format(TEXT_PR, travisURL, this.getInspector().getRepoSlug(), this.getInspector().getRepoSlug());
+
+                GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", head, base, prText);
+                this.getLogger().info("Pull request created on: https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber());
             } else {
                 this.addStepError("Error while creating a dedicated branch for the patch.");
             }
