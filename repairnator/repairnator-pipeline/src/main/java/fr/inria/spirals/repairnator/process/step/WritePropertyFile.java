@@ -6,8 +6,8 @@ import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
+import fr.inria.spirals.repairnator.process.inspectors.properties.PropertySerializerAdapter;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 
@@ -37,13 +37,13 @@ public class WritePropertyFile extends AbstractStep {
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
             gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-            jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties());
+            jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties4Repairnator());
             this.writeJsonFile(filePath, jsonString);
         }
 
         filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
-        gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics4Bears.class, new MetricsSerializerAdapter4Bears()).create();
-        jsonString = gson.toJson(this.getInspector().getJobStatus().getMetrics4Bears());
+        gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Properties.class, new PropertySerializerAdapter()).create();
+        jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties());
         bearsFileSuccessfullyWritten = this.writeJsonFile(filePath, jsonString);
         if (!bearsFileSuccessfullyWritten) {
             return StepStatus.buildError(this, PipelineState.PROPERTY_FILE_NOT_WRITTEN);

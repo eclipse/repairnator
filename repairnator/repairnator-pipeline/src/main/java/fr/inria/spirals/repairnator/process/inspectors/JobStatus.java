@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -48,8 +48,8 @@ public class JobStatus {
     private Throwable fatalError;
 
     private Metrics metrics;
-    private Properties properties;
-    private Metrics4Bears metrics4Bears;
+    private java.util.Properties properties;
+    private Properties properties4JsonFile;
 
     private List<String> createdFilesToPush;
     private boolean hasBeenForked;
@@ -63,8 +63,8 @@ public class JobStatus {
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
-        this.properties = new Properties();
-        this.metrics4Bears = new Metrics4Bears();
+        this.properties = new java.util.Properties();
+        this.properties4JsonFile = new Properties();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
         this.pushStates = new ArrayList<>();
@@ -134,7 +134,7 @@ public class JobStatus {
     public void setFailingModulePath(String failingModulePath) {
         this.failingModulePath = failingModulePath;
         this.writeProperty("failingModule", this.failingModulePath);
-        this.metrics4Bears.getTests().setFailingModule(this.failingModulePath);
+        this.properties4JsonFile.getTests().setFailingModule(this.failingModulePath);
     }
 
     public Set<FailureLocation> getFailureLocations() {
@@ -178,7 +178,7 @@ public class JobStatus {
         return metrics;
     }
 
-    public Properties getProperties() {
+    public java.util.Properties getProperties4Repairnator() {
         return properties;
     }
 
@@ -192,8 +192,8 @@ public class JobStatus {
         }
     }
 
-    public Metrics4Bears getMetrics4Bears() {
-        return metrics4Bears;
+    public Properties getProperties() {
+        return properties4JsonFile;
     }
 
     public File[] getTestDir() {

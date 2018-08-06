@@ -6,7 +6,7 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff.PatchDiff;
+import fr.inria.spirals.repairnator.process.inspectors.properties.patchDiff.PatchDiff;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
@@ -348,7 +348,7 @@ public class GitHelper {
             metrics.setPatchDeletedLines(nbLineDeleted);
             metrics.setPatchChangedFiles(changedFiles.size() + addedFiles.size() + deletedFiles.size());
 
-            PatchDiff patchDiff = jobStatus.getMetrics4Bears().getPatchDiff();
+            PatchDiff patchDiff = jobStatus.getProperties().getPatchDiff();
             patchDiff.getFiles().setNumberAdded(addedFiles.size());
             patchDiff.getFiles().setNumberChanged(changedFiles.size());
             patchDiff.getFiles().setNumberDeleted(deletedFiles.size());

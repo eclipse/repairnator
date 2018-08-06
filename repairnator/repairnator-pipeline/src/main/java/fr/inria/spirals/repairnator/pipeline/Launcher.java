@@ -343,7 +343,7 @@ public class Launcher {
 
         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
             serializers.add(new InspectorSerializer4Bears(this.engines));
-            serializers.add(new MetricsSerializer4Bears(this.engines));
+            serializers.add(new PropertySerializer4Bears(this.engines));
         } else {
             serializers.add(new InspectorSerializer(this.engines));
             serializers.add(new MetricsSerializer(this.engines));
