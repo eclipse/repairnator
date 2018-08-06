@@ -6,7 +6,8 @@ To run the tests, two steps are required:
 1. Install shUnit2:
 
 ```bash
-$ sudo apt-get install shunit2
+$ sudo apt-get install shunit2 # for debian/ubuntu linux
+$ brew install shunit2 # for macos
 ```
 
 2. Run `check_branches_test.sh`:
