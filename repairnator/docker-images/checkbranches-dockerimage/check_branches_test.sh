@@ -17,10 +17,12 @@ testWithBranchOk()
 
     RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)
 
+    echo "$RESULT"
+
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
-    assertEquals 0 $RETURN_CODE
+    assertEquals "The expected result is [OK]" 0 $RETURN_CODE
 }
 
 testWithBranchWhereJsonFileDoesNotExist()
@@ -30,10 +32,12 @@ testWithBranchWhereJsonFileDoesNotExist()
 
     RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)
 
+    echo "$RESULT"
+
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
-    assertEquals 0 $RETURN_CODE
+    assertEquals "The expected result is [FAILURE] (repairnator.json does not exist)" 0 $RETURN_CODE
 }
 
 testWithBranchWhereJsonFileIsNotValid()
@@ -43,10 +47,12 @@ testWithBranchWhereJsonFileIsNotValid()
 
     RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)
 
+    echo "$RESULT"
+
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
-    assertEquals 0 $RETURN_CODE
+    assertEquals "The expected result is [FAILURE] (repairnator.json is invalid)" 0 $RETURN_CODE
 }
 
 . shunit2

@@ -1,6 +1,6 @@
-sudo: true
-
 language: java
+
+sudo: true
 
 jdk: openjdk8
 

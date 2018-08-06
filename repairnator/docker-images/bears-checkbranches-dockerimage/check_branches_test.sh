@@ -22,7 +22,7 @@ testWithBranchOk()
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
-    assertEquals 0 $RETURN_CODE
+    assertEquals "The expected result is [OK]" 0 $RETURN_CODE
 }
 
 testWithBranchWhereJsonFileDoesNotExist()
@@ -37,7 +37,7 @@ testWithBranchWhereJsonFileDoesNotExist()
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
-    assertEquals 0 $RETURN_CODE
+    assertEquals "The expected result is [FAILURE] (bears.json does not exist)" 0 $RETURN_CODE
 }
 
 testWithBranchWhereJsonFileIsNotValid()
@@ -52,7 +52,7 @@ testWithBranchWhereJsonFileIsNotValid()
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
-    assertEquals 0 $RETURN_CODE
+    assertEquals "The expected result is [FAILURE] (bears.json is invalid)" 0 $RETURN_CODE
 }
 
 . shunit2
