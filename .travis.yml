@@ -7,7 +7,15 @@ jdk: openjdk8
 services:
  - docker
 
-script: "./.travis/travis-run.sh"
+before_script:
+  - sudo apt-get update
+  - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  - sudo apt-get install -y nodejs
+  - sudo npm install -g ajv-cli
+  - sudo apt-get install shunit2
+
+script:
+  - "./.travis/travis-run.sh"
 
 after_success:
   - "./.travis/travis-deploy.sh"
