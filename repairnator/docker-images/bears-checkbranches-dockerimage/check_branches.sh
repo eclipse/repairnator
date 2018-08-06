@@ -46,8 +46,21 @@ else
     exit 2
 fi
 
+numberOfCommits=`git rev-list --count HEAD`
+
+if [ "$numberOfCommits" -ne 3 ] && [ "$numberOfCommits" -ne 4 ]; then
+    RESULT="$BRANCH_NAME [FAILURE] (the number of commits is different than 3 and 4)"
+    >&2 echo -e "$RED $RESULT"
+    echo "$RESULT" >> $DOCKER_DEST
+    exit 2
+fi
+
 bugCommitId=`git log --format=format:%H --grep="Bug commit"`
 patchCommitId=`git log --format=format:%H --grep="Human patch"`
+
+if [ "$numberOfCommits" -eq 4 ]; then
+    bugCommitId=`git log --format=format:%H --grep="Changes in the tests"`
+fi
 
 echo "Checking out the bug commit: $bugCommitId"
 git log --format=%B -n 1 $bugCommitId
