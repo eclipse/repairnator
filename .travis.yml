@@ -20,7 +20,6 @@ matrix:
         - sudo apt-get install shunit2
 
     script:
-        - bash repairnator/docker-images/checkbranches-dockerimage/check_branches_test.sh
         - bash repairnator/docker-images/bears-checkbranches-dockerimage/check_branches_test.sh
 
 branches:
