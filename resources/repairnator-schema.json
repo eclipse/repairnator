@@ -31,42 +31,6 @@
         "failing_passing"
       ]
     },
-    "totalNumberRunningTests": {
-      "$id": "/properties/totalNumberRunningTests",
-      "type": "integer",
-      "description": "Total number of running tests",
-      "default": 0,
-      "examples": [
-        361
-      ]
-    },
-    "totalNumberSkippingTests": {
-      "$id": "/properties/totalNumberSkippingTests",
-      "type": "integer",
-      "description": "Total number of skipped tests",
-      "default": 0,
-      "examples": [
-        6
-      ]
-    },
-    "totalNumberFailingTests": {
-      "$id": "/properties/totalNumberFailingTests",
-      "type": "integer",
-      "description": "Total number of failing tests",
-      "default": 0,
-      "examples": [
-        4
-      ]
-    },
-    "totalNumberErroringTests": {
-      "$id": "/properties/totalNumberErroringTests",
-      "type": "integer",
-      "description": "Total number of tests failing with something else than assertion error.",
-      "default": 0,
-      "examples": [
-        0
-      ]
-    },
     "failing-test-cases": {
       "$id": "/properties/failing-test-cases",
       "type": "array",
@@ -794,10 +758,6 @@
     }
   },
   "required": [
-    "totalNumberSkippingTests",
-    "totalNumberFailingTests",
-    "totalNumberErroringTests",
-    "totalNumberRunningTests",
     "repo",
     "metrics"
   ]
