@@ -1,6 +1,12 @@
 # Scripts
-Logs from running all of these scripts can be found in the
-`HOME_REPAIR` directory as specified in the `repairnator.cfg` file.
+We detail here all the scripts that are available in `repairnator/scripts` and their usage.
+
+## About repairnator.cfg
+
+All the scripts are using configuration given in `repairnator.cfg`.
+This file is by default in `repairnator/scripts/config` but all values contained in the `$USER_HOME/repairnator.cfg` will override the default values.
+
+For more details about the configuration, [read this documentation](repairnator-config.md).
 
 ## launch_repairnator.sh
 The launch repairnator script can be used via the command:
