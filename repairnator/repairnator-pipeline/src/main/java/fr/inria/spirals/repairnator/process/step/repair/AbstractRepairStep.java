@@ -34,6 +34,8 @@ public abstract class AbstractRepairStep extends AbstractStep {
                                         "It aims at fixing the following Travis failing build: %s \n\n" +
                                         "If you don't want to receive those PR on the future, [open an issue on Repairnator Github repository](https://github.com/Spirals-Team/repairnator/issues/new?title=[BLACKLIST]%%20%s) with the following subject: `[BLACKLIST] %s`.";
 
+    public static final int MAX_PATCH_PER_TOOL = 1;
+
     public AbstractRepairStep() {
         super(null, false);
     }
@@ -102,7 +104,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
             if (serializedPatches != null) {
                 try {
-                    this.createPullRequest(serializedPatches, 1);
+                    this.createPullRequest(serializedPatches, MAX_PATCH_PER_TOOL);
                 } catch (IOException|GitAPIException|URISyntaxException e) {
                     this.addStepError("Error while creating the PR", e);
                 }
@@ -160,7 +162,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 }
                 git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for a patch").call();
 
-
                 RemoteAddCommand remoteAddCommand = git.remoteAdd();
                 remoteAddCommand.setUri(new URIish(forkedRepo));
                 remoteAddCommand.setName("fork-patch");
@@ -173,7 +174,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
                 GHRepository ghForkedRepo = originalRepository.fork();
 
-
                 String base = this.getInspector().getBuggyBuild().getBranch().getName();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
 
@@ -182,7 +182,9 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 String prText = String.format(TEXT_PR, travisURL, this.getInspector().getRepoSlug(), this.getInspector().getRepoSlug());
 
                 GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", head, base, prText);
-                this.getLogger().info("Pull request created on: https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber());
+                String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
+                this.getLogger().info("Pull request created on: " + prURL);
+                this.getInspector().getJobStatus().addPRCreated(prURL);
             } else {
                 this.addStepError("Error while creating a dedicated branch for the patch.");
             }
