@@ -17,6 +17,8 @@ testWithBranchOk()
 
     RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)
 
+    echo "$RESULT"
+
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
@@ -30,6 +32,8 @@ testWithBranchWhereJsonFileDoesNotExist()
 
     RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)
 
+    echo "$RESULT"
+
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
 
@@ -42,6 +46,8 @@ testWithBranchWhereJsonFileIsNotValid()
     EXPECTED_RESULT="$BRANCH_NAME [FAILURE] (bears.json is invalid)"
 
     RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)
+
+    echo "$RESULT"
 
     echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
     RETURN_CODE=$?
