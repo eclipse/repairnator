@@ -12,11 +12,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.spotify</groupId>
-            <artifactId>docker-client</artifactId>
-            <version>8.11.1</version>
-        </dependency>
-        <dependency>
             <groupId>fr.inria.repairnator</groupId>
             <artifactId>repairnator-core</artifactId>
             <version>2.3-SNAPSHOT</version>

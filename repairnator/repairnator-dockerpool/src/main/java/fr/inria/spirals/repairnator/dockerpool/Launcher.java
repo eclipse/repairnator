@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -215,7 +216,7 @@ public class Launcher extends AbstractPoolManager {
 
         endProcessSerializer.setNbBuilds(buildIds.size());
 
-        String imageId = this.findDockerImage(this.config.getDockerImageName());
+        String imageId = DockerHelper.findDockerImage(this.config.getDockerImageName(), this.getDockerClient());
         LOGGER.info("Found the following docker image id: "+imageId);
 
         this.setDockerOutputDir(this.config.getLogDirectory());

@@ -10,6 +10,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class ComputeDir extends AbstractStep {
@@ -31,17 +32,28 @@ public class ComputeDir extends AbstractStep {
         this.allModules = true;
     }
 
-    private File[] searchForDirs(String dirPath, boolean rootCall) {
-        List<File> result = new ArrayList<File>();
+    protected File[] searchForDirs(String dirPathStr, boolean rootCall) {
+        if (dirTypeName == null || defaultDir == null) {
+            throw new IllegalStateException("dirTypeName and defaultDir are null. setComputeDirType() should be called first.");
+        }
+
+        Set<File> result = new HashSet<File>();
 
         boolean wasDefaultDirFound = false;
 
-        File defaultDir = new File(dirPath + this.defaultDir);
+        File dirPath = new File(dirPathStr);
+        try {
+            dirPath = dirPath.getCanonicalFile();
+        } catch (IOException e) {
+            getLogger().error("Error while getting canonical path for rootDirectory");
+        }
+
+        File defaultDir = new File(dirPath, this.defaultDir);
         if (defaultDir.exists()) {
             wasDefaultDirFound = true;
             result.add(defaultDir);
             if (!this.allModules) {
-                return result.toArray(new File[result.size()]);
+                return this.returnResult(result);
             }
         } else {
             this.getLogger().debug("The default " + dirTypeName + " directory (" + defaultDir.getPath()
@@ -89,7 +101,7 @@ public class ComputeDir extends AbstractStep {
 
                         if (dirFromPom.exists()) {
                             result.add(dirFromPom);
-                            return result.toArray(new File[result.size()]);
+                            return this.returnResult(result);
                         }
 
                         this.getLogger().debug("The " + dirTypeName + " directory given in pom.xml (" + pathDirFromPom
@@ -119,10 +131,6 @@ public class ComputeDir extends AbstractStep {
             this.getLogger().debug("No module has been found in the following pom.xml: " + pomOfCurrentDirPath + ".");
         }
 
-        if (result.size() > 0) {
-            return result.toArray(new File[result.size()]);
-        }
-
         if (model.getParent() != null && rootCall) {
             String relativePath = "../pom.xml";
 
@@ -132,6 +140,12 @@ public class ComputeDir extends AbstractStep {
 
             File parentPomXml = new File(dirPath + File.separator + relativePath);
 
+            try {
+                parentPomXml = parentPomXml.getCanonicalFile();
+            } catch (IOException e) {
+                getLogger().error("Error while getting canonical path for parentPomXml");
+            }
+
             if (parentPomXml.exists()) {
                 File[] dirs = this.searchForDirs(parentPomXml.getParent(),false);
                 if (dirs != null) {
@@ -139,14 +153,24 @@ public class ComputeDir extends AbstractStep {
                 }
 
                 if (result.size() > 0) {
-                    return result.toArray(new File[result.size()]);
+                    return this.returnResult(result);
                 }
             }
+        }
+
+        if (result.size() > 0) {
+            return this.returnResult(result);
         }
 
         this.addStepError("The " + dirTypeName +
                 " directory is not at default location or specified in build section from pom.xml, and no parent can be found.");
         return null;
+    }
+
+    private File[] returnResult(Set<File> result) {
+        List<File> sortedFiles = new ArrayList<>(result);
+        Collections.sort(sortedFiles);
+        return sortedFiles.toArray(new File[sortedFiles.size()]);
     }
 
     protected int computeMetricsOnDirs(File[] dirs) {

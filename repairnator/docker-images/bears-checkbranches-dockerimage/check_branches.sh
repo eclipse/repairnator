@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
-    echo "Usage: ./check_branches.sh <github repository> <branch name> [--human-patch]"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: ./check_branches.sh <github repository> <branch name>"
     exit 2
 fi
 
@@ -9,10 +9,6 @@ fi
 DOCKER_DEST=/tmp/result.txt
 REPO=$1
 BRANCH_NAME=$2
-HUMAN_PATCH=0
-if [ "$#" -eq 3 ] && [ $3 == "--human-patch" ]; then
-    HUMAN_PATCH=1
-fi
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -21,7 +17,7 @@ NC='\033[0m' # No Color
 command -v ajv >/dev/null 2>&1 || { echo >&2 "I require ajv (https://github.com/jessedc/ajv-cli) but it's not installed.  Aborting."; exit 1; }
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
-JSON_SCHEMA="$SCRIPT_DIR/repairnator-schema.json"
+JSON_SCHEMA="$SCRIPT_DIR/bears-schema.json"
 echo "$JSON_SCHEMA"
 if [ ! -f $JSON_SCHEMA ]; then
     echo "The json schema ($JSON_SCHEMA) cannot be found."
@@ -36,17 +32,17 @@ git remote add origin $REPO
 git fetch origin $BRANCH_NAME
 git checkout $BRANCH_NAME
 
-if [ -e "repairnator.json" ]; then
-    if ajv test -s ../$JSON_SCHEMA -d repairnator.json --valid ; then
-        echo "repairnator.json is valid in $BRANCH_NAME"
+if [ -e "bears.json" ]; then
+    if ajv test -s ../$JSON_SCHEMA -d bears.json --valid ; then
+        echo "bears.json is valid in $BRANCH_NAME"
     else
-        >&2 echo -e "$RED repairnator.json in branch $BRANCH_NAME is not valid"
-        echo "$BRANCH_NAME [FAILURE] (repairnator.json is not valid)" >> $DOCKER_DEST
+        >&2 echo -e "$RED bears.json in branch $BRANCH_NAME is not valid"
+        echo "$BRANCH_NAME [FAILURE] (bears.json is not valid)" >> $DOCKER_DEST
         exit 2
     fi
 else
-    >&2 echo -e "$RED repairnator.json does not exist in branch $BRANCH_NAME"
-    echo "$BRANCH_NAME [FAILURE] (repairnator.json does not exist)" >> $DOCKER_DEST
+    >&2 echo -e "$RED bears.json does not exist in branch $BRANCH_NAME"
+    echo "$BRANCH_NAME [FAILURE] (bears.json does not exist)" >> $DOCKER_DEST
     exit 2
 fi
 
@@ -71,24 +67,22 @@ elif [ "$status" -eq 124 ]; then
     exit 2
 fi
 
-if [ $HUMAN_PATCH -eq 1 ]; then
-    echo "Checking out the patch commit: $patchCommitId"
-    git log --format=%B -n 1 $patchCommitId
+echo "Checking out the patch commit: $patchCommitId"
+git log --format=%B -n 1 $patchCommitId
 
-    git checkout -q $patchCommitId
+git checkout -q $patchCommitId
 
-    timeout 1800s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
+timeout 1800s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
 
-    status=$?
-    if [ "$status" -eq 124 ]; then
-        >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC"
-        echo "$BRANCH_NAME [FAILURE] (patch reproduction timeout)" >> $DOCKER_DEST
-        exit 2
-    elif [ "$status" -ne 0 ]; then
-        >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC (status = $status)"
-        echo "$BRANCH_NAME [FAILURE] (patch reproduction - status = $status)" >> $DOCKER_DEST
-        exit 2
-    fi
+status=$?
+if [ "$status" -eq 124 ]; then
+    >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC"
+    echo "$BRANCH_NAME [FAILURE] (patch reproduction timeout)" >> $DOCKER_DEST
+    exit 2
+elif [ "$status" -ne 0 ]; then
+    >&2 echo -e "$RED Error while reproducing the passing build for branch $BRANCH_NAME $NC (status = $status)"
+    echo "$BRANCH_NAME [FAILURE] (patch reproduction - status = $status)" >> $DOCKER_DEST
+    exit 2
 fi
 
 echo -e "$GREEN Branch $BRANCH_NAME OK $NC"
