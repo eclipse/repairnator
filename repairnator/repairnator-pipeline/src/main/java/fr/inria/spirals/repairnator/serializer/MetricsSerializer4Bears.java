@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.MetricsSerializerAdapter4Bears;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 

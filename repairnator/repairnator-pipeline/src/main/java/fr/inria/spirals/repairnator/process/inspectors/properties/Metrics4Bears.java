@@ -1,12 +1,12 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears;
+package fr.inria.spirals.repairnator.process.inspectors.properties;
 
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Builds;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.commits.Commits;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff.PatchDiff;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.projectMetrics.ProjectMetrics;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository.Repository;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests.Tests;
+import fr.inria.spirals.repairnator.process.inspectors.properties.builds.Builds;
+import fr.inria.spirals.repairnator.process.inspectors.properties.commits.Commits;
+import fr.inria.spirals.repairnator.process.inspectors.properties.patchDiff.PatchDiff;
+import fr.inria.spirals.repairnator.process.inspectors.properties.projectMetrics.ProjectMetrics;
+import fr.inria.spirals.repairnator.process.inspectors.properties.repository.Repository;
+import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
+import fr.inria.spirals.repairnator.process.inspectors.properties.tests.Tests;
 
 public class Metrics4Bears {
 

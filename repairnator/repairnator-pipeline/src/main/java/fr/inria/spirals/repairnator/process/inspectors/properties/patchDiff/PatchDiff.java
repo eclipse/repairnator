@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.patchDiff;
+package fr.inria.spirals.repairnator.process.inspectors.properties.patchDiff;
 
 public class PatchDiff {
 

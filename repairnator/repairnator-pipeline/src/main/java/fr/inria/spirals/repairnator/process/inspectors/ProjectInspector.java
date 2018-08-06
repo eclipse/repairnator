@@ -7,7 +7,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
@@ -91,7 +91,7 @@ public class ProjectInspector {
             long id = build.getId();
             String url = Utils.getTravisUrl(build.getId(), this.getRepoSlug());
             Date date = build.getFinishedAt();
-            fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build buggyBuild = new fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build(id, url, date);
+            fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build buggyBuild = new fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build(id, url, date);
             metrics4Bears.getBuilds().setBuggyBuild(buggyBuild);
 
             build = this.getPatchedBuild();
@@ -99,7 +99,7 @@ public class ProjectInspector {
                 id = build.getId();
                 url = Utils.getTravisUrl(build.getId(), this.getRepoSlug());
                 date = build.getFinishedAt();
-                fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build patchedBuild = new fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds.Build(id, url, date);
+                fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build patchedBuild = new fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build(id, url, date);
                 metrics4Bears.getBuilds().setFixerBuild(patchedBuild);
             }
         } catch (Exception e) {

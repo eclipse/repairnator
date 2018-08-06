@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears;
+package fr.inria.spirals.repairnator.process.inspectors.properties;
 
 import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.databind.JsonNode;

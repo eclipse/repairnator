@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.process.git;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Metrics4Bears;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;

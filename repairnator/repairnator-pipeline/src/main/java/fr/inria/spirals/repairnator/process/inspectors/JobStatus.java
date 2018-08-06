@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Metrics4Bears;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;

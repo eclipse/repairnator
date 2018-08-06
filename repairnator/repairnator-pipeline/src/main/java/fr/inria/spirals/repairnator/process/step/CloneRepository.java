@@ -56,7 +56,7 @@ public class CloneRepository extends AbstractStep {
             this.getInspector().getJobStatus().getMetrics4Bears().setVersion("Bears 1.0");
         }
 
-        fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository.Repository repository = this.getInspector().getJobStatus().getMetrics4Bears().getRepository();
+        fr.inria.spirals.repairnator.process.inspectors.properties.repository.Repository repository = this.getInspector().getJobStatus().getMetrics4Bears().getRepository();
         repository.setName(this.getInspector().getRepoSlug());
         repository.setUrl(Utils.getSimpleGithubRepoUrl(this.getInspector().getRepoSlug()));
 

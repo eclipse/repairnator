@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests;
+package fr.inria.spirals.repairnator.process.inspectors.properties.tests;
 
 public class Failure {
 

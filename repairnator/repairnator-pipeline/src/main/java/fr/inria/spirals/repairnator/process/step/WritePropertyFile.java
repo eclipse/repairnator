@@ -6,8 +6,8 @@ import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.MetricsSerializerAdapter4Bears;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 

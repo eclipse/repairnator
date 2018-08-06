@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.repository;
+package fr.inria.spirals.repairnator.process.inspectors.properties.repository;
 
 public class Original {
 

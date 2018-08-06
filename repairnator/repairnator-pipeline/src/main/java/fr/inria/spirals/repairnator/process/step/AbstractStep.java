@@ -7,7 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
+import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;

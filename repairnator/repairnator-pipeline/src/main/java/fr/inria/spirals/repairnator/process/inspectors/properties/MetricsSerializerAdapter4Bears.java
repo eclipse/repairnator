@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears;
+package fr.inria.spirals.repairnator.process.inspectors.properties;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 public class MetricsSerializerAdapter4Bears implements JsonSerializer<Metrics4Bears> {
-    private final Logger logger = LoggerFactory.getLogger(fr.inria.spirals.repairnator.process.inspectors.metrics4bears.MetricsSerializerAdapter4Bears.class);
+    private final Logger logger = LoggerFactory.getLogger(fr.inria.spirals.repairnator.process.inspectors.properties.MetricsSerializerAdapter4Bears.class);
 
     @Override
     public JsonElement serialize(Metrics4Bears metrics, Type type, JsonSerializationContext jsonSerializationContext) {

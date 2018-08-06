@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild;
+package fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild;
 
 import java.util.ArrayList;
 import java.util.List;
