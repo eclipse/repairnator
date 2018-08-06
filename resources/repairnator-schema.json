@@ -758,10 +758,6 @@
     }
   },
   "required": [
-    "totalNumberSkippingTests",
-    "totalNumberFailingTests",
-    "totalNumberErroringTests",
-    "totalNumberRunningTests",
     "repo",
     "metrics"
   ]
