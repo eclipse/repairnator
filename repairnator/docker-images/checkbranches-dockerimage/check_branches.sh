@@ -40,13 +40,15 @@ if [ -e "repairnator.json" ]; then
     if ajv test -s ../$JSON_SCHEMA -d repairnator.json --valid ; then
         echo "repairnator.json is valid in $BRANCH_NAME"
     else
-        >&2 echo -e "$RED repairnator.json in branch $BRANCH_NAME is not valid"
-        echo "$BRANCH_NAME [FAILURE] (repairnator.json is not valid)" >> $DOCKER_DEST
+        RESULT="$BRANCH_NAME [FAILURE] (repairnator.json is invalid)"
+        >&2 echo -e "$RED $RESULT"
+        echo "$RESULT" >> $DOCKER_DEST
         exit 2
     fi
 else
-    >&2 echo -e "$RED repairnator.json does not exist in branch $BRANCH_NAME"
-    echo "$BRANCH_NAME [FAILURE] (repairnator.json does not exist)" >> $DOCKER_DEST
+    RESULT="$BRANCH_NAME [FAILURE] (repairnator.json does not exist)"
+    >&2 echo -e "$RED $RESULT"
+    echo "$RESULT" >> $DOCKER_DEST
     exit 2
 fi
 
@@ -91,5 +93,6 @@ if [ $HUMAN_PATCH -eq 1 ]; then
     fi
 fi
 
-echo -e "$GREEN Branch $BRANCH_NAME OK $NC"
-echo "$BRANCH_NAME [OK]" >> $DOCKER_DEST
+RESULT="$BRANCH_NAME [OK]"
+echo -e "$GREEN $RESULT $NC"
+echo "$RESULT" >> $DOCKER_DEST

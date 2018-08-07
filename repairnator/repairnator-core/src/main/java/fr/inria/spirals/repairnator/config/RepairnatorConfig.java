@@ -32,6 +32,7 @@ public class RepairnatorConfig {
     private boolean push;
     private String pushRemoteRepo;
     private boolean fork;
+    private boolean createPR;
     private boolean debug;
 
     // Scanner
@@ -442,6 +443,14 @@ public class RepairnatorConfig {
 
     public void setGithubUserEmail(String githubUserEmail) {
         this.githubUserEmail = githubUserEmail;
+    }
+
+    public boolean isCreatePR() {
+        return createPR;
+    }
+
+    public void setCreatePR(boolean createPR) {
+        this.createPR = createPR;
     }
 
     @Override

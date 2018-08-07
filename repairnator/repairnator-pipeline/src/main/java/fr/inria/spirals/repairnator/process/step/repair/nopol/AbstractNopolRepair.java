@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.repair.nopol;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
 import fr.inria.lille.repair.common.config.NopolContext;
@@ -8,6 +9,7 @@ import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.RepairType;
 import fr.inria.lille.repair.nopol.NoPol;
 import fr.inria.lille.repair.nopol.NopolResult;
+import fr.inria.spirals.repairnator.GsonPathTypeAdapter;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
@@ -25,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +62,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
     public AbstractNopolRepair() {
         this.repairPatches = new ArrayList<>();
         this.toolDiag = new JsonArray();
-        this.gson = new Gson();
+        this.gson = new GsonBuilder().registerTypeAdapter(Path.class, new GsonPathTypeAdapter()).create();
         this.passingTime = 0;
     }
 
@@ -141,6 +144,13 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         nopolContext.setType(RepairType.COND_THEN_PRE);
         nopolContext.setOnlyOneSynthesisResult(false);
         nopolContext.setOutputFolder(patchDir.getAbsolutePath());
+
+        String repoLocalPath = this.getInspector().getRepoLocalPath();
+        if (repoLocalPath.startsWith("./")) {
+            repoLocalPath = repoLocalPath.substring(2);
+        }
+
+        nopolContext.setRootProject(new File(repoLocalPath).toPath());
 
         nopolInformation.setNopolContext(nopolContext);
 

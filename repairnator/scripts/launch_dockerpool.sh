@@ -83,6 +83,10 @@ if [ "$CREATE_OUTPUT_DIR" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --createOutputDir"
 fi
 
+if [ "$CREATE_PR" -eq 1 ]; then
+    args="$args --createPR"
+fi
+
 echo "Elementary args for docker pool: $elementaryArgs"
 echo "Supplementary args for docker pool: $supplementaryArgs"
 java $JAVA_OPTS -jar $REPAIRNATOR_DOCKERPOOL_DEST_JAR -d $elementaryArgs $supplementaryArgs &> $LOG_DIR/dockerpool_$RUN_ID.log
