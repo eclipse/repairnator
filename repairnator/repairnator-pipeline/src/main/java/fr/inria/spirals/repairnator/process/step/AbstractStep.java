@@ -267,7 +267,8 @@ public abstract class AbstractStep {
             }
         }
 
-        File repoDir = new File(this.inspector.getRepoLocalPath() + File.separator + Utils.REMOTE_REPO_EXT);
+
+        File repoDir = new File(this.inspector.getRepoLocalPath(), Utils.REMOTE_REPO_EXT);
         if (repoDir.exists() && this.config.isClean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
