@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.process.inspectors.properties.repository.Rep
 import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.process.inspectors.properties.tests.Tests;
 
-public class Metrics4Bears {
+public class Properties {
 
     private String version;
     private String type;
@@ -21,7 +21,7 @@ public class Metrics4Bears {
     private ProjectMetrics projectMetrics;
     private ReproductionBuggyBuild reproductionBuggyBuild;
 
-    public Metrics4Bears() {
+    public Properties() {
         this.repository = new Repository();
         this.builds = new Builds();
         this.commits = new Commits();

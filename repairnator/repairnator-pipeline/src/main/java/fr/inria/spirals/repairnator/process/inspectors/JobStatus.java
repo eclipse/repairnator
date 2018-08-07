@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.inspectors.properties.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -49,7 +49,7 @@ public class JobStatus {
 
     private Metrics metrics;
     private java.util.Properties properties4repairnator;
-    private Metrics4Bears metrics4Bears;
+    private Properties properties;
 
     private List<String> createdFilesToPush;
     private boolean hasBeenForked;
@@ -64,7 +64,7 @@ public class JobStatus {
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
         this.properties4repairnator = new java.util.Properties();
-        this.metrics4Bears = new Metrics4Bears();
+        this.properties = new Properties();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
         this.pushStates = new ArrayList<>();
@@ -134,7 +134,7 @@ public class JobStatus {
     public void setFailingModulePath(String failingModulePath) {
         this.failingModulePath = failingModulePath;
         this.writeProperty("failingModule", this.failingModulePath);
-        this.metrics4Bears.getTests().setFailingModule(this.failingModulePath);
+        this.properties.getTests().setFailingModule(this.failingModulePath);
     }
 
     public Set<FailureLocation> getFailureLocations() {
@@ -192,8 +192,8 @@ public class JobStatus {
         }
     }
 
-    public Metrics4Bears getMetrics4Bears() {
-        return metrics4Bears;
+    public Properties getProperties() {
+        return properties;
     }
 
     public File[] getTestDir() {

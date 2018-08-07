@@ -53,10 +53,10 @@ public class CloneRepository extends AbstractStep {
         jobStatus.writeProperty("repo", this.getInspector().getRepoSlug());
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            this.getInspector().getJobStatus().getMetrics4Bears().setVersion("Bears 1.0");
+            this.getInspector().getJobStatus().getProperties().setVersion("Bears 1.0");
         }
 
-        fr.inria.spirals.repairnator.process.inspectors.properties.repository.Repository repository = this.getInspector().getJobStatus().getMetrics4Bears().getRepository();
+        fr.inria.spirals.repairnator.process.inspectors.properties.repository.Repository repository = this.getInspector().getJobStatus().getProperties().getRepository();
         repository.setName(this.getInspector().getRepoSlug());
         repository.setUrl(Utils.getSimpleGithubRepoUrl(this.getInspector().getRepoSlug()));
 
@@ -84,17 +84,17 @@ public class CloneRepository extends AbstractStep {
         switch (this.getInspector().getBuildToBeInspected().getStatus()) {
             case ONLY_FAIL:
                 jobStatus.writeProperty("bugType", "only_fail");
-                this.getInspector().getJobStatus().getMetrics4Bears().setType("only_fail");
+                this.getInspector().getJobStatus().getProperties().setType("only_fail");
                 break;
 
             case FAILING_AND_PASSING:
                 jobStatus.writeProperty("bugType", "failing_passing");
-                this.getInspector().getJobStatus().getMetrics4Bears().setType("failing_passing");
+                this.getInspector().getJobStatus().getProperties().setType("failing_passing");
                 break;
 
             case PASSING_AND_PASSING_WITH_TEST_CHANGES:
                 jobStatus.writeProperty("bugType", "passing_passing");
-                this.getInspector().getJobStatus().getMetrics4Bears().setType("passing_passing");
+                this.getInspector().getJobStatus().getProperties().setType("passing_passing");
                 break;
         }
     }

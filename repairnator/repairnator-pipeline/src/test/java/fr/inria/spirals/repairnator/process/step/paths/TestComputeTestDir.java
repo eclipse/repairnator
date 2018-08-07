@@ -84,7 +84,7 @@ public class TestComputeTestDir {
                 new File(repoDir.getAbsolutePath()+"/test-repairnator-bears-core/src/test/java").getCanonicalFile(),
                 new File(repoDir.getAbsolutePath()+"/test-repairnator-bears-patchstats/src/test/java").getCanonicalFile()
         }));
-        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberTestFiles(), is(3));
+        assertThat(jobStatus.getProperties().getProjectMetrics().getNumberTestFiles(), is(3));
     }
 
     @Test

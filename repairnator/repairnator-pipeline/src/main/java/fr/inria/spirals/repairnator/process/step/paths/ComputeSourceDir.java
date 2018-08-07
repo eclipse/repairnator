@@ -29,7 +29,7 @@ public class ComputeSourceDir extends ComputeDir {
     private void computeMetricsOnSourceDirs(File[] dirs) {
         int numberSourceFiles = super.computeMetricsOnDirs(dirs);
         this.getInspector().getJobStatus().getMetrics().setNbFileApp(numberSourceFiles);
-        this.getInspector().getJobStatus().getMetrics4Bears().getProjectMetrics().setNumberSourceFiles(numberSourceFiles);
+        this.getInspector().getJobStatus().getProperties().getProjectMetrics().setNumberSourceFiles(numberSourceFiles);
     }
 
     private void computeMetricsOnCompleteRepo() {
