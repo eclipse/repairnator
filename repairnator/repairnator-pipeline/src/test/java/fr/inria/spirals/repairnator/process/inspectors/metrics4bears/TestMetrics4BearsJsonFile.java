@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.properties;
+package fr.inria.spirals.repairnator.process.inspectors.metrics4bears;
 
 import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,7 +40,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class TestProperties {
+public class TestMetrics4BearsJsonFile {
 
     private File tmpDir;
 
@@ -131,7 +131,7 @@ public class TestProperties {
 
         // check correctness of the properties
 
-        File expectedFile = new File(TestProperties.class.getResource("/json-files/bears-386337343-386348522.json").getPath());
+        File expectedFile = new File(TestMetrics4BearsJsonFile.class.getResource("/json-files/bears-386337343-386348522.json").getPath());
         String expectedString = FileUtils.readFileToString(expectedFile, StandardCharsets.UTF_8);
 
         File actualFile = new File(inspector.getRepoToPushLocalPath() + "/bears.json");
@@ -193,7 +193,7 @@ public class TestProperties {
 
         // check correctness of the properties
 
-        File expectedFile = new File(TestProperties.class.getResource("/json-files/bears-208897371.json").getPath());
+        File expectedFile = new File(TestMetrics4BearsJsonFile.class.getResource("/json-files/bears-208897371.json").getPath());
         String expectedString = FileUtils.readFileToString(expectedFile, StandardCharsets.UTF_8);
 
         File actualFile = new File(inspector.getRepoToPushLocalPath() + "/bears.json");
