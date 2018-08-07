@@ -17,6 +17,10 @@ function ca {
 
 args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
 
+if [ "$CREATE_PR" -eq 1 ]; then
+  args="$args --createPR"
+fi
+
 if [ ! -d "$OUTPUT" ]; then
     mkdir $OUTPUT
 fi

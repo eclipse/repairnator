@@ -71,6 +71,10 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("GITHUB_USEREMAIL="+this.repairnatorConfig.getGithubUserEmail());
         this.envValues.add("NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','));
         this.envValues.add("OUTPUT="+output);
+        if (this.repairnatorConfig.isCreatePR()) {
+            this.envValues.add("CREATE_PR=1");
+        }
+
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR) {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
         }

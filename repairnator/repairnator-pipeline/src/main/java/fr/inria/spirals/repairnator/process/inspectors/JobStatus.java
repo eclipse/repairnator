@@ -57,6 +57,8 @@ public class JobStatus {
 
     private List<StepStatus> stepStatuses;
 
+    private List<String> PRCreated;
+
     public JobStatus(String pomDirPath) {
         this.stepErrors = new HashMap<>();
         this.pomDirPath = pomDirPath;
@@ -71,6 +73,7 @@ public class JobStatus {
         this.listOfPatches = new HashMap<>();
         this.toolDiagnostic = new HashMap<>();
         this.repairClassPath = new ArrayList<>();
+        this.PRCreated = new ArrayList<>();
     }
 
     public List<URL> getRepairClassPath() {
@@ -285,5 +288,13 @@ public class JobStatus {
 
     public Map<String, JsonElement> getToolDiagnostic() {
         return toolDiagnostic;
+    }
+
+    public List<String> getPRCreated() {
+        return PRCreated;
+    }
+
+    public void addPRCreated(String prURL) {
+        this.PRCreated.add(prURL);
     }
 }

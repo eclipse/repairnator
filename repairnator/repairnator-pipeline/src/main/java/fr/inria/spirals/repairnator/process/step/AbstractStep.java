@@ -174,7 +174,9 @@ public abstract class AbstractStep {
         ProjectInspector inspector = this.getInspector();
         JobStatus jobStatus = inspector.getJobStatus();
 
-        if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked() && RepairnatorConfig.getInstance().isPush() && RepairnatorConfig.getInstance().isFork()) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+
+        if (jobStatus.isHasBeenPatched() && !jobStatus.isHasBeenForked() && config.isFork()) {
             String repositoryName = getInspector().getRepoSlug();
             getLogger().info("Fork the repository: "+repositoryName);
             try {

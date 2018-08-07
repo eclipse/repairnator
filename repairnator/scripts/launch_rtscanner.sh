@@ -52,5 +52,9 @@ if [ "$SKIP_DELETE" -eq 1 ]; then
     args="$args --skipDelete"
 fi
 
+if [ "$CREATE_PR" -eq 1 ]; then
+    args="$args --createPR"
+fi
+
 echo "Supplementary args for realtime scanner $args"
 java $JAVA_OPTS -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID --ghOauth $GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args 2> $LOG_DIR/errors_$RUN_ID.log 1> /dev/null
