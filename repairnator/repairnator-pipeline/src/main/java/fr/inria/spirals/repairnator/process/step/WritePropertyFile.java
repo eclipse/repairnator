@@ -7,7 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
-import fr.inria.spirals.repairnator.process.inspectors.properties.MetricsSerializerAdapter4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.PropertiesSerializerAdapter;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 
@@ -42,7 +42,7 @@ public class WritePropertyFile extends AbstractStep {
         }
 
         filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
-        gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Properties.class, new MetricsSerializerAdapter4Bears()).create();
+        gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Properties.class, new PropertiesSerializerAdapter()).create();
         jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties());
         bearsFileSuccessfullyWritten = this.writeJsonFile(filePath, jsonString);
         if (!bearsFileSuccessfullyWritten) {

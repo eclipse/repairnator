@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
-import fr.inria.spirals.repairnator.process.inspectors.properties.MetricsSerializerAdapter4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.PropertiesSerializerAdapter;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
@@ -21,7 +21,7 @@ public class MetricsSerializer4Bears extends AbstractDataSerializer {
 
     @Override
     public void serializeData(ProjectInspector inspector) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Properties.class, new MetricsSerializerAdapter4Bears()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Properties.class, new PropertiesSerializerAdapter()).create();
         JsonObject element = (JsonObject)gson.toJsonTree(inspector.getJobStatus().getProperties());
 
         element.addProperty("runId", RepairnatorConfig.getInstance().getRunId());

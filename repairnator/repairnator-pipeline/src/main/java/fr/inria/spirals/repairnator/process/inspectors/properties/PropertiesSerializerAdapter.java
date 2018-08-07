@@ -11,8 +11,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-public class MetricsSerializerAdapter4Bears implements JsonSerializer<Properties> {
-    private final Logger logger = LoggerFactory.getLogger(fr.inria.spirals.repairnator.process.inspectors.properties.MetricsSerializerAdapter4Bears.class);
+public class PropertiesSerializerAdapter implements JsonSerializer<Properties> {
+    private final Logger logger = LoggerFactory.getLogger(PropertiesSerializerAdapter.class);
 
     @Override
     public JsonElement serialize(Properties properties, Type type, JsonSerializationContext jsonSerializationContext) {
