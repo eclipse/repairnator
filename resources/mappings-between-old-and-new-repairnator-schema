@@ -18,3 +18,13 @@ metrics.NbSucceedingTests -> tests.overallMetrics.numberPassing
 metrics.NbFailingTests -> tests.overallMetrics.numberFailing
 metrics.NbErroringTests -> tests.overallMetrics.numberErroring
 metrics.NbSkippingTests -> tests.overallMetrics.numberSkipping
+failing-test-cases*.className -> tests.failingClasses*.testClass
+failing-test-cases*.nbFailures -> tests.failingClasses*.numberFailing
+failing-test-cases*.nbErrors -> tests.failingClasses*.numberErroring
+failing-test-cases*.failingMethods* -> tests.failureDetails*.testMethod
+failing-test-cases*.failures*.failureName -> tests.failureDetails*.failureName
+failing-test-cases*.failures*.failureDetail -> tests.failureDetails*.detail
+failing-test-cases*.failures*.isError -> tests.failureDetails*.isError
+
+
+PS: elements with "*" are elements that contain an array of elements
