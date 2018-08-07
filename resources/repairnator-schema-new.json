@@ -20,8 +20,8 @@
         "failingPassing"
       ],
       "enum": [
-        "failing_passing",
-        "passing_passing"
+        "only_fail",
+        "failing_passing"
       ]
     },
     "repository": {
@@ -211,8 +211,7 @@
         }
       },
       "required": [
-        "buggyBuild",
-        "fixerBuild"
+        "buggyBuild"
       ]
     },
     "commits": {
@@ -569,8 +568,7 @@
         }
       },
       "required": [
-        "buggyBuild",
-        "fixerBuild"
+        "buggyBuild"
       ]
     },
     "tests": {
