@@ -267,7 +267,7 @@ public abstract class AbstractStep {
             }
         }
 
-        if (this.config.isClean()) {
+        if (this.inspector.getRepoLocalPath() != null && this.config.isClean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
             } catch (IOException e) {

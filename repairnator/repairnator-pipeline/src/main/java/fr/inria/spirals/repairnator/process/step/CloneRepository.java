@@ -99,10 +99,4 @@ public class CloneRepository extends AbstractStep {
         }
     }
 
-    @Override
-    protected void cleanMavenArtifacts() {
-        // There is nothing to be clean
-        // FIXME: we should not have to override it like that
-    }
-
 }
