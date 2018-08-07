@@ -2,9 +2,13 @@
 
 This directory contains the information about using Repairnator.
 
+## Architecture
+
+In order to understand properly Repairnator, have a first a look on [its internal architecture](architecture.md).
+
 ## Scripts
 
-The easiest entry point to use Repairnator is through its scripts. Newcomers should start here.
+The easiest entry point to use Repairnator is through its scripts.
 The documentation about the scripts is [available here](scripts.md).
 It can be useful to also read more details about the [repairnator configuration file](repairnator-config.md).
 
