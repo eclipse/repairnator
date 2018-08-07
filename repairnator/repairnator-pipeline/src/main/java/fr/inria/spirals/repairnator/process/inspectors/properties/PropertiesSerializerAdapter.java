@@ -30,7 +30,7 @@ public class PropertiesSerializerAdapter implements JsonSerializer<Properties> {
                         result.add(attributeName, jsonSerializationContext.serialize(value));
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Error while serializing metrics.", e);
+                    logger.error("Error while serializing properties.", e);
                 }
             }
         }
