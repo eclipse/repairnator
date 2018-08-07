@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+/**
+ * This class defines a java ServiceLoader to automatically discover the available
+ * repair steps from the manifest (see the resources).
+ */
 public class RepairToolsManager {
     private static RepairToolsManager instance;
     private Map<String, AbstractRepairStep> repairTools;
@@ -24,6 +28,10 @@ public class RepairToolsManager {
         return instance;
     }
 
+    /**
+     * This method allows to refresh the list of repair tools
+     * It is mainly used for test purpose.
+     */
     public void discoverRepairTools() {
         this.repairTools.clear();
         this.repairToolLoader.reload();

@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Created by urli on 23/03/2017.
+ * This class contains all information about the status of the pipeline
  */
 public class JobStatus {
     private final Logger logger = LoggerFactory.getLogger(JobStatus.class);
