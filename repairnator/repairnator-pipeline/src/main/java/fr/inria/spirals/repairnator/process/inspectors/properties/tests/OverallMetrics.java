@@ -1,20 +1,19 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.tests;
+package fr.inria.spirals.repairnator.process.inspectors.properties.tests;
 
-public class FailingClass {
+import java.util.HashSet;
+import java.util.Set;
 
-    private String testClass;
+public class OverallMetrics {
+
     private int numberRunning;
     private int numberPassing;
     private int numberFailing;
     private int numberErroring;
     private int numberSkipping;
+    private Set<Failure> failures;
 
-    public FailingClass(String testClass) {
-        this.testClass = testClass;
-    }
-
-    public String getTestClass() {
-        return testClass;
+    public OverallMetrics() {
+        this.failures = new HashSet<>();
     }
 
     public int getNumberRunning() {
@@ -56,4 +55,22 @@ public class FailingClass {
     public void setNumberSkipping(int numberSkipping) {
         this.numberSkipping = numberSkipping;
     }
+
+    public Set<Failure> getFailures() {
+        return failures;
+    }
+
+    public void addFailure(String failureName, boolean isError) {
+        for (Failure failure : this.failures) {
+            if (failure.getFailureName().equals(failureName) &&
+                    failure.getIsError() == isError) {
+                failure.setOccurrences(failure.getOccurrences() + 1);
+                return;
+            }
+        }
+        Failure failure = new Failure(failureName, isError);
+        failure.setOccurrences(1);
+        this.failures.add(failure);
+    }
+
 }

@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.projectMetrics;
+package fr.inria.spirals.repairnator.process.inspectors.properties.projectMetrics;
 
 public class ProjectMetrics {
 

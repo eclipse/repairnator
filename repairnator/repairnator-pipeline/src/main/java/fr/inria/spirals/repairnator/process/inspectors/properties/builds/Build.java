@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.builds;
+package fr.inria.spirals.repairnator.process.inspectors.properties.builds;
 
 import java.util.Date;
 
