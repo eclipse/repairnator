@@ -48,7 +48,7 @@ public class JobStatus {
     private Throwable fatalError;
 
     private Metrics metrics;
-    private Properties properties;
+    private java.util.Properties properties4repairnator;
     private Metrics4Bears metrics4Bears;
 
     private List<String> createdFilesToPush;
@@ -63,7 +63,7 @@ public class JobStatus {
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
-        this.properties = new Properties();
+        this.properties4repairnator = new java.util.Properties();
         this.metrics4Bears = new Metrics4Bears();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
@@ -178,14 +178,14 @@ public class JobStatus {
         return metrics;
     }
 
-    public Properties getProperties() {
-        return properties;
+    public java.util.Properties getProperties4Repairnator() {
+        return properties4repairnator;
     }
 
     public void writeProperty(String propertyName, Object value) {
         if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
             if (value != null) {
-                this.properties.put(propertyName, value);
+                this.properties4repairnator.put(propertyName, value);
             } else {
                 this.logger.warn("Trying to write null value for property: " + propertyName);
             }

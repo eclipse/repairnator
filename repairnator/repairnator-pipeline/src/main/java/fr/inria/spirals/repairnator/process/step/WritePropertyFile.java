@@ -37,7 +37,7 @@ public class WritePropertyFile extends AbstractStep {
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
             gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-            jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties());
+            jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties4Repairnator());
             this.writeJsonFile(filePath, jsonString);
         }
 
