@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;
@@ -51,6 +52,9 @@ public class CloneRepository extends AbstractStep {
 
         jobStatus.writeProperty("hostname", Utils.getHostname());
         jobStatus.writeProperty("repo", this.getInspector().getRepoSlug());
+
+        MachineInfo machineInfo = jobStatus.getProperties().getReproductionBuggyBuild().getMachineInfo();
+        machineInfo.setHostName(Utils.getHostname());
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             this.getInspector().getJobStatus().getProperties().setVersion("Bears 1.0");

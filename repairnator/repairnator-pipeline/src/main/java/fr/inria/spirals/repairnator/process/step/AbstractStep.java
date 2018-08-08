@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
+import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
 import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -358,6 +359,11 @@ public abstract class AbstractStep {
         metric.setNbCPU(Runtime.getRuntime().availableProcessors());
 
         this.getInspector().getJobStatus().writeProperty("metrics", metric);
+
+        MachineInfo machineInfo = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild().getMachineInfo();
+        machineInfo.setNumberCPU(Runtime.getRuntime().availableProcessors());
+        machineInfo.setFreeMemory(Runtime.getRuntime().freeMemory());
+        machineInfo.setTotalMemory(Runtime.getRuntime().totalMemory());
     }
 
     public Date getDateBegin() {

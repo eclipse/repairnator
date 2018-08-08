@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild;
 
+import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 
 import java.util.*;
@@ -8,11 +9,13 @@ public class ReproductionBuggyBuild {
 
     private Date reproductionDateBeginning;
     private Date reproductionDateEnd;
+    private MachineInfo machineInfo;
     private int totalDuration;
     private ProcessDurations processDurations;
     private String projectRootPomPath;
 
     public ReproductionBuggyBuild() {
+        this.machineInfo = new MachineInfo();
         this.totalDuration = 0;
         this.processDurations = new ProcessDurations();
     }
@@ -23,6 +26,10 @@ public class ReproductionBuggyBuild {
 
     public Date getReproductionDateEnd() {
         return reproductionDateEnd;
+    }
+
+    public MachineInfo getMachineInfo() {
+        return machineInfo;
     }
 
     public int getTotalDuration() {
