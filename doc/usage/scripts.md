@@ -8,45 +8,126 @@ This file is by default in `repairnator/scripts/config` but all values contained
 
 For more details about the configuration, [read this documentation](repairnator-config.md).
 
-## launch_repairnator.sh
-The launch repairnator script can be used via the command:
-```
-./launch_repairnator.sh [list_ofBuildIDs.txt]
-```
-If the script is ran with the optional argument, it will start an
-instance of repairnator-pipeline for each build specified in the
-`list_of_buildIDs.txt`
-and attempt to repair them by starting a
-dockerpool and launching a docker container with an instance of
-repairnator-pipeline for each of the specified buildIDs.
-
-Without the optional argument, the script will instead search for the
-file `project_list.txt` placed in the `HOME_REPAIR` directory as
-specified in the local repairnator.cfg file. Each project should be of
-the form `surli/failingProject`, that is everything following
-`github.com/` when looking at a specific project.
-
-Once this list has been read, repairnator will run a scanner to find
-builds to repair. The timespan in which the scanner will look is
-specified by either `SCANNER_NB_HOURS` in the local
-repairnator.cfg, or by the two options `LOOK_FROM_DATE` and
-`LOOK_TO_DATE` together. Once it has found builds to repair, it
-will attempt to repair each of them by starting a dockerpool with a
-docker container running an instance of repairnator-pipeline for each
-of the found builds.
-
 ## repair_buggy_build.sh
+
+### Usage and argument
 ```
-./repair_buggy_build.sh BUILDID
+./repair_buggy_build.sh <BUILDID>
 ```
-starts a single instance of repairnator-pipeline which attempts to
-repair the build specified by the BUILDID.
+
+`BUILDID` is a mandatory argument. It specifies the Travis CI build ID that is failing and that we want to repair. 
+
+### Description
+
+This script is used to repair a single buggy build.
+
+### How it works
+
+It will start a single instance of repairnator-pipeline in a docker container which attempts to
+repair the build specified in argument.
 
 ## launch_rtscanner.sh
+
+### Usage and argument
 ```
 ./launch_rtscanner.sh
 ```
-Starts a scanner which looks for failing builds in realtime. For each
-it finds it will start a docker container with an instance of
+
+### Description
+
+This script is used to launch Repairnator to repair every failing builds coming from Travis CI in live.
+
+### How it works
+
+Starts a scanner which looks for java failing builds on Travis CI in realtime. 
+For each it finds it will start a docker container with an instance of
 repairnator-pipeline that tries to repair the build. It will run for
-as long as specified by the DURATION option in the repairnator.cfg file.
+as long as specified by the [DURATION option](repairnator-config.md#DURATION).
+
+## launch_scanner.sh
+
+### Usage and argument
+
+```
+./launch_scanner.sh
+```
+
+### Description
+
+This script is used to retrieve failing builds from Travis CI in the past. 
+
+### How it works
+
+It will use the [REPAIR_PROJECT_LIST_PATH](repairnator-config.md#REPAIR_PROJECT_LIST_PATH) option
+to get a list of projects to scan.
+
+Once this list has been read, repairnator will run a scanner to find
+failing builds. 
+
+The timespan in which the scanner will look is specified by either [SCANNER_NB_HOURS](repairnator-config.md#SCANNER_NB_HOURS) option, 
+or by the two options [LOOK_FROM_DATE](repairnator-config.md#LOOK_FROM_DATE) and
+[LOOK_TO_DATE](repairnator-config.md#LOOK_TO_DATE) together.
+
+## launch_dockerpool.sh
+
+### Usage and argument
+
+```
+./launch_dockerpool.sh <list_of_builds>
+```
+
+`list_of_builds` is a mandatory argument. 
+It's the path to an existing document which should contain a list of Travis Build IDs, one per line.
+
+### Description
+
+This script is used to repair a list of buggy builds by running them in docker containers.
+
+### How it works
+
+It will start a dockerpool and fill it with the list of build IDs read from the given argument.
+Then it will use the [NB_THREADS](repairnator-config.md#NB_THREADS) options to launch as many docker containers as possible in parallel to repair the builds.
+
+## launch_repairnator.sh
+
+### Usage and argument
+```
+./launch_repairnator.sh [list_of_BuildIDs]
+```
+
+`list_of_BuildIDs` is an optional argument. 
+It must be the path to an existing document. 
+This document must contain a list of Travis Build IDs to repair, one per line.
+
+### Description
+
+This script is used to repair failing builds from the past. 
+
+### How it works
+
+With an argument, this script does exactly the same job as `launch_dockerpool.sh`.
+Without an argument, it's a combination of `launch_scanner.sh` and `launch_dockerpool.sh`.
+
+## launch_checkbranches.sh
+
+### Usage and argument
+
+```
+./launch_checkbranches.sh <input branch names> <output result>
+```
+
+`input branch names` is a mandatory argument. It's the path to an existing file containing names of Git branches from the repository specified in [CHECK_BRANCH_REPOSITORY](repairnator-config.md#CHECK_BRANCH_REPOSITORY).
+
+`output result` is a mandatory argument. It's the path, not necessarily existing, of a file that will contain the result of the check.
+
+### Description
+
+This script will check the given branches to verify they are correct given the following criteria:
+  - they contain the right number of commits,
+  - the buggy commit is a failing test,
+  - the fixing commit makes a successful build,
+  - the json files respects the schema
+  
+### How it works
+
+It launches a docker container for each branch provided in argument, using a pool of container and the [NB_THREADS](repairnator-config.md#NB_THREADS) option.
