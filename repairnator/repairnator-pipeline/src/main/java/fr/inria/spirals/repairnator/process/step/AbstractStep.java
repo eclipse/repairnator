@@ -7,7 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.reproductionBuggyBuild.ReproductionBuggyBuild;
+import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -286,13 +286,13 @@ public abstract class AbstractStep {
     protected String getPom() {
         if (!pomLocationTested) {
             testPomLocation();
-            this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild()
+            this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild()
                     .setProjectRootPomPath(this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE);
         }
         return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }
 
-    protected void cleanMavenArtifacts() {
+    protected void cleanMavenArtifactsAndLocalRepo() {
         if (this.inspector.getM2LocalPath() != null) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
@@ -302,7 +302,8 @@ public abstract class AbstractStep {
             }
         }
 
-        if (RepairnatorConfig.getInstance().isClean()) {
+        File repoDir = new File(this.inspector.getRepoLocalPath(), Utils.REMOTE_REPO_EXT);
+        if (repoDir.exists() && this.getConfig().isClean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
             } catch (IOException e) {
@@ -341,7 +342,7 @@ public abstract class AbstractStep {
         metric.addStepDuration(this.name, getDuration());
         metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
-        ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getMetrics4Bears().getReproductionBuggyBuild();
+        ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild();
         reproductionBuggyBuild.addStep(this);
 
         this.inspector.getJobStatus().addStepStatus(this.stepStatus);
@@ -378,7 +379,7 @@ public abstract class AbstractStep {
                 }
             }
             this.serializeData();
-            this.cleanMavenArtifacts();
+            this.cleanMavenArtifactsAndLocalRepo();
             this.inspector.printPipelineEnd();
         }
     }
@@ -402,11 +403,13 @@ public abstract class AbstractStep {
     }
 
     public int getDuration() {
+        if (getDateBegin() == null || getDateEnd() == null) {
+            return -1;
+        }
+
         long timeBegin = getDateBegin().getTime();
         long timeEnd = getDateEnd().getTime();
-        if (timeEnd == 0 || timeBegin == 0) {
-            return 0;
-        }
+        
         return Math.round((timeEnd - timeBegin) / 1000);
     }
 

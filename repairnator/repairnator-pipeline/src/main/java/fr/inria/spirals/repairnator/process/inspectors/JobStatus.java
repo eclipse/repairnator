@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.inspectors.metrics4bears.Metrics4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -48,8 +48,8 @@ public class JobStatus {
     private Throwable fatalError;
 
     private Metrics metrics;
+    private java.util.Properties properties4repairnator;
     private Properties properties;
-    private Metrics4Bears metrics4Bears;
 
     private List<String> createdFilesToPush;
     private boolean hasBeenForked;
@@ -65,8 +65,8 @@ public class JobStatus {
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
         this.metrics = new Metrics();
+        this.properties4repairnator = new java.util.Properties();
         this.properties = new Properties();
-        this.metrics4Bears = new Metrics4Bears();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
         this.pushStates = new ArrayList<>();
@@ -137,7 +137,7 @@ public class JobStatus {
     public void setFailingModulePath(String failingModulePath) {
         this.failingModulePath = failingModulePath;
         this.writeProperty("failingModule", this.failingModulePath);
-        this.metrics4Bears.getTests().setFailingModule(this.failingModulePath);
+        this.properties.getTests().setFailingModule(this.failingModulePath);
     }
 
     public Set<FailureLocation> getFailureLocations() {
@@ -181,22 +181,22 @@ public class JobStatus {
         return metrics;
     }
 
-    public Properties getProperties() {
-        return properties;
+    public java.util.Properties getProperties4Repairnator() {
+        return properties4repairnator;
     }
 
     public void writeProperty(String propertyName, Object value) {
         if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
             if (value != null) {
-                this.properties.put(propertyName, value);
+                this.properties4repairnator.put(propertyName, value);
             } else {
                 this.logger.warn("Trying to write null value for property: " + propertyName);
             }
         }
     }
 
-    public Metrics4Bears getMetrics4Bears() {
-        return metrics4Bears;
+    public Properties getProperties() {
+        return properties;
     }
 
     public File[] getTestDir() {

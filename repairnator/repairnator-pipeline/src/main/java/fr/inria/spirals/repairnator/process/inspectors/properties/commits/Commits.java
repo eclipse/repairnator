@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.inspectors.metrics4bears.commits;
+package fr.inria.spirals.repairnator.process.inspectors.properties.commits;
 
 public class Commits {
 

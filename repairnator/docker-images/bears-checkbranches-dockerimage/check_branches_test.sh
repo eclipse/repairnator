@@ -10,9 +10,24 @@ tearDown()
     rm -rf repo
 }
 
-testWithBranchOk()
+testWithBranchFailingPassingOk()
 {
     BRANCH_NAME="fermadeiral-test-repairnator-bears-386269112-386271668"
+    EXPECTED_RESULT="$BRANCH_NAME [OK]"
+
+    RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)
+
+    echo "$RESULT"
+
+    echo "$RESULT" | grep -qF "$EXPECTED_RESULT"
+    RETURN_CODE=$?
+
+    assertEquals "The expected result is [OK]" 0 $RETURN_CODE
+}
+
+testWithBranchPassingPassingOk()
+{
+    BRANCH_NAME="fermadeiral-test-repairnator-bears-386337343-386348522"
     EXPECTED_RESULT="$BRANCH_NAME [OK]"
 
     RESULT=$(2>&1 $(dirname "${BASH_SOURCE[0]}")/check_branches.sh $REPOSITORY $BRANCH_NAME)

@@ -94,7 +94,7 @@ public class TestComputeClasspath {
 
         assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
         assertThat(jobStatus.getMetrics().getNbLibraries(), is(2));
-        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
+        assertThat(jobStatus.getProperties().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
     }
 
     @Test
@@ -141,7 +141,7 @@ public class TestComputeClasspath {
 
         assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
         assertThat(jobStatus.getMetrics().getNbLibraries(), is(2));
-        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
+        assertThat(jobStatus.getProperties().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

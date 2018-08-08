@@ -76,7 +76,7 @@ public class TestComputeModules {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberModules(), is(1));
+        assertThat(jobStatus.getProperties().getProjectMetrics().getNumberModules(), is(1));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class TestComputeModules {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getMetrics4Bears().getProjectMetrics().getNumberModules(), is(6));
+        assertThat(jobStatus.getProperties().getProjectMetrics().getNumberModules(), is(6));
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
