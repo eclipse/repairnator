@@ -13,6 +13,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by urli on 28/04/2017.
@@ -37,6 +38,11 @@ public class MetricsSerializer extends AbstractDataSerializer {
         }
 
         element.addProperty("status",this.getPrettyPrintState(inspector));
+
+        Map<String, Long> freeMemoryByStep = inspector.getJobStatus().getFreeMemoryByStep();
+        for (Map.Entry<String, Long> stepFreeMemory : freeMemoryByStep.entrySet()) {
+            element.addProperty(stepFreeMemory.getKey(), stepFreeMemory.getValue());
+        }
 
         List<SerializedData> dataList = new ArrayList<>();
 

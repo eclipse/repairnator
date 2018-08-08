@@ -305,6 +305,7 @@ public abstract class AbstractStep {
         this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
 
         this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
+        this.inspector.getJobStatus().addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
         ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild();
         reproductionBuggyBuild.addStep(this);

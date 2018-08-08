@@ -54,6 +54,7 @@ public class JobStatus {
 
     private List<StepStatus> stepStatuses;
     private Map<String, Integer> stepsDurationsInSeconds;
+    private Map<String, Long> freeMemoryByStep;
 
     private List<String> PRCreated;
 
@@ -66,6 +67,7 @@ public class JobStatus {
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
         this.stepsDurationsInSeconds = new HashMap<>();
+        this.freeMemoryByStep = new HashMap<>();
         this.pushStates = new ArrayList<>();
         this.listOfPatches = new HashMap<>();
         this.toolDiagnostic = new HashMap<>();
@@ -281,6 +283,14 @@ public class JobStatus {
 
     public void addStepDuration(String step, int duration) {
         this.stepsDurationsInSeconds.put(step, duration);
+    }
+
+    public Map<String, Long> getFreeMemoryByStep() {
+        return freeMemoryByStep;
+    }
+
+    public void addFreeMemoryByStep(String step, long value) {
+        this.freeMemoryByStep.put(step, value);
     }
 
     public List<String> getFailureNames() {
