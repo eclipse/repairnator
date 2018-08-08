@@ -1,16 +1,7 @@
 {
-  "$id": "http://repairnator.lille.inria.fr/bears-schema.json",
+  "$id": "http://repairnator.lille.inria.fr/repairnator-schema.json",
   "type": "object",
   "properties": {
-    "version": {
-      "$id": "/properties/version",
-      "type": "string",
-      "title": "version of bears",
-      "default": "",
-      "examples": [
-        "Bears 2.2 build 22/05/2018 15:18:04"
-      ]
-    },
     "type": {
       "$id": "/properties/type",
       "type": "string",
