@@ -264,6 +264,9 @@ Options:
         where W, X, Y, Z respectively represents number of Days, Hours, Minutes
         and Seconds. T is mandatory before the number of hours and P is always
         mandatory.
+        
+  [--createPR]
+          Activate the creation of a Pull Request in case of patch.
 ```
 
 ### Scanner

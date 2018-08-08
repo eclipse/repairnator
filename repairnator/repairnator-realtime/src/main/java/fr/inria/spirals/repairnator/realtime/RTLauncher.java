@@ -23,6 +23,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * This is the launcher class for Repairnator realtime.
+ */
 public class RTLauncher {
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
     private final LauncherMode launcherMode;
@@ -81,6 +84,8 @@ public class RTLauncher {
         jsap.registerParameter(LauncherUtils.defineArgGithubUserName());
         // --githubUserEmail
         jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
+        // --createPR
+        jsap.registerParameter(LauncherUtils.defineArgCreatePR());
 
         FlaggedOption opt2 = new FlaggedOption("whitelist");
         opt2.setShortFlag('w');
@@ -171,7 +176,7 @@ public class RTLauncher {
         if (arguments.getObject("duration") != null) {
             this.config.setDuration((Duration) arguments.getObject("duration"));
         }
-
+        this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
     }
 

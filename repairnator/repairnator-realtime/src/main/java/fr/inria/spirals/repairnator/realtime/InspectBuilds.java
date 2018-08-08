@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+/**
+ * This class is used to refresh regularly the build information.
+ * It should be launched in a dedicated thread.
+ */
 public class InspectBuilds implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectBuilds.class);
 
@@ -34,10 +38,16 @@ public class InspectBuilds implements Runnable {
         this.watchedBuildSerializer = new WatchedBuildSerializer(this.rtScanner.getEngines(), this.rtScanner);
     }
 
+    /**
+     * This is used to stop the thread.
+     */
     public void switchOff() {
         this.shouldStop = true;
     }
 
+    /**
+     * @return true if the number of build to inspect reach the limit
+     */
     public boolean maxSubmittedBuildsReached() {
         return (this.nbSubmittedBuilds >= this.maxSubmittedBuilds);
     }

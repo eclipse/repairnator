@@ -25,15 +25,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * This class is the backbone for the realtime scanner.
+ */
 public class RTScanner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
 
-    private RepairnatorConfig config;
+    // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
     private final List<Long> whiteListedRepository;
     private final Map<Long,Date> tempBlackList;
+
+
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final BuildRunner buildRunner;
@@ -46,7 +51,6 @@ public class RTScanner {
     private EndProcessNotifier endProcessNotifier;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
-        this.config = RepairnatorConfig.getInstance();
         this.engines = engines;
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
@@ -70,16 +74,8 @@ public class RTScanner {
         return runId;
     }
 
-    public BuildRunner getBuildRunner() {
-        return buildRunner;
-    }
-
     public InspectBuilds getInspectBuilds() {
         return inspectBuilds;
-    }
-
-    public InspectJobs getInspectJobs() {
-        return inspectJobs;
     }
 
     public void initWhiteListedRepository(File whiteListFile) {
@@ -116,6 +112,14 @@ public class RTScanner {
         LOGGER.info("Blacklist initialized with: "+this.blackListedRepository.size()+" entries");
     }
 
+    /**
+     * This method can only be called once.
+     * It starts two or three new thread:
+     *   - one thread for build inspection
+     *   - one thread for job inspection
+     *
+     * If a duration has been given it also starts a thread for respecting the duration.
+     */
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
@@ -124,7 +128,7 @@ public class RTScanner {
             new Thread(this.inspectJobs).start();
             this.running = true;
 
-            if (this.config.getDuration() != null) {
+            if (RepairnatorConfig.getInstance().getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
                     inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
@@ -161,7 +165,7 @@ public class RTScanner {
 
         if (this.whitelistWriter != null) {
             try {
-                this.whitelistWriter.append(repository.getId()+"");
+                this.whitelistWriter.append(String.valueOf(repository.getId()));
                 this.whitelistWriter.append("\n");
                 this.whitelistWriter.flush();
             } catch (IOException e) {
@@ -179,14 +183,24 @@ public class RTScanner {
         this.tempBlackList.put(repository.getId(), expirationDate);
     }
 
+    /**
+     * Main method for specifying if a repositoryId is interesting or not.
+     * It checks on the whitelist and blacklists first, and then apply the following criteria:
+     *   - check if the repo already has a successful build, (tempblacklist if not the case)
+     *   - check if the successful build was in java (perm blacklist if not the case)
+     *   - check if the build tool used was Maven (perm blacklist if not the case)
+     *   - check if unit tests were found (temp blacklist if not the case)
+     *
+     * If those critera are respected, then the repo is whitelisted.
+     *
+     * @return true if the repository is whitelisted.
+     */
     public boolean isRepositoryInteresting(long repositoryId) {
         if (this.blackListedRepository.contains(repositoryId)) {
-            //LOGGER.debug("Repo already blacklisted (id: "+repositoryId+")");
             return false;
         }
 
         if (this.whiteListedRepository.contains(repositoryId)) {
-            //LOGGER.debug("Repo already whitelisted (id: "+repositoryId+")");
             return true;
         }
 
@@ -198,7 +212,7 @@ public class RTScanner {
             }
         }
 
-        JTravis jTravis = this.config.getJTravis();
+        JTravis jTravis = RepairnatorConfig.getInstance().getJTravis();
         Optional<Repository> repositoryOptional = jTravis.repository().fromId(repositoryId);
         if (repositoryOptional.isPresent()) {
             Repository repository = repositoryOptional.get();
@@ -258,6 +272,9 @@ public class RTScanner {
         return false;
     }
 
+    /**
+     * This method submits a build to the build runner if and only if the build contained failing tests.
+     */
     public void submitBuildToExecution(Build build) {
         boolean failing = false;
         List<Job> jobs = build.getJobs();
@@ -282,8 +299,11 @@ public class RTScanner {
         }
     }
 
+    /**
+     * Use this method to submit a build to the thread which refresh their status.
+     */
     public void submitWaitingBuild(int buildId) {
-        Optional<Build> optionalBuild = this.config.getJTravis().build().fromId(buildId);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
         if (optionalBuild.isPresent()) {
             this.inspectBuilds.submitNewBuild(optionalBuild.get());
         }
