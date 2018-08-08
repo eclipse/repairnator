@@ -53,6 +53,16 @@ public class ComputeSourceDir extends ComputeDir {
             JsonObject json = gson.fromJson(processReturn, JsonObject.class);
 
             this.getInspector().getJobStatus().getMetrics().setSizeProjectLOC(json);
+
+            int numberLines = 0;
+            if (json != null && json.getAsJsonObject("Java") != null) {
+                JsonObject java = json.getAsJsonObject("Java");
+                if (java.getAsJsonPrimitive("code") != null) {
+                    numberLines = java.getAsJsonPrimitive("code").getAsInt();
+                }
+            }
+
+            this.getInspector().getJobStatus().getProperties().getProjectMetrics().setNumberLines(numberLines);
         } catch (IOException | InterruptedException e) {
             this.getLogger().error("Error while computing metrics on source code of the whole repo.", e);
         }
