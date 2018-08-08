@@ -1280,6 +1280,7 @@
       "required": [
         "reproductionDateBeginning",
         "reproductionDateEnd",
+        "machineInfo",
         "projectRootPomPath",
         "totalDuration",
         "processDurations"
