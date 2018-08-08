@@ -99,7 +99,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getNbErroringTests(), is(5));
         assertThat(gatherTestInformation.getNbSkippingTests(), is(0));
 
-        Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
+        List<String> failureNames = jobStatus.getFailureNames();
 
         assertThat(failureNames.contains("java.lang.StringIndexOutOfBoundsException"), is(true));
         assertThat(failureNames.size(), is(5));
@@ -147,7 +147,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getNbErroringTests(), is(1));
         assertThat(gatherTestInformation.getNbSkippingTests(), is(0));
 
-        Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
+        List<String> failureNames = jobStatus.getFailureNames();
 
         assertThat("failure names"+ StringUtils.join(failureNames.toArray()), failureNames.contains("java.lang.StringIndexOutOfBoundsException"), is(true));
         assertThat(failureNames.size(), is(1));
@@ -206,7 +206,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getNbErroringTests(), is(5));
         assertThat(gatherTestInformation.getNbSkippingTests(), is(0));
 
-        Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
+        List<String> failureNames = jobStatus.getFailureNames();
 
         assertThat("Got the following errors: "+StringUtils.join(failureNames, ","), failureNames.contains("java.lang.NullPointerException"), is(true));
         assertThat(failureNames.size(), is(3));
@@ -262,8 +262,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getNbErroringTests(), is(0));
         assertThat(gatherTestInformation.getNbSkippingTests(), is(0));
 
-        Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
-        assertThat(failureNames.size(), is(0));
+        assertThat(jobStatus.getFailureNames().size(), is(0));
         assertThat(jobStatus.getFailureLocations().size(), is(0));
     }
 
@@ -306,8 +305,7 @@ public class TestGatherTestInformation {
         assertThat(gatherTestInformation.getNbErroringTests(), is(0));
         assertThat(gatherTestInformation.getNbSkippingTests(), is(0));
 
-        Set<String> failureNames = jobStatus.getMetrics().getFailureNames();
-        assertThat(failureNames.size(), is(0));
+        assertThat(jobStatus.getFailureNames().size(), is(0));
         assertThat(jobStatus.getFailureLocations().size(), is(0));
     }
 
