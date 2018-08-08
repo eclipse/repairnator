@@ -3,6 +3,10 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 
+/**
+ * This class defines how an AbstractStep has been executed.
+ * It gives a status between success, failure or skipped, but also some more information in a diagnostic.
+ */
 public class StepStatus {
     public enum StatusKind {
         SUCCESS,
@@ -48,6 +52,9 @@ public class StepStatus {
         return status;
     }
 
+    /**
+     * @return true only if the status kind is a success
+     */
     public boolean isSuccess() {
         return this.getStatus() == StatusKind.SUCCESS;
     }

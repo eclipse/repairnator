@@ -30,21 +30,50 @@ public abstract class AbstractStep {
      */
     private String name;
 
+    /**
+     * The inspector that created this pipeline
+     */
     private ProjectInspector inspector;
 
-    private boolean shouldStop;
+    /**
+     * The next step to be executed
+     */
     private AbstractStep nextStep;
-    private Date dateBegin;
-    private Date dateEnd;
-    private long timeBegin;
-    private long timeEnd;
-    private boolean pomLocationTested;
-    private List<AbstractDataSerializer> serializers;
-    private List<AbstractNotifier> notifiers;
-    private RepairnatorConfig config;
 
+    /**
+     * This flag force the pipeline to stop if it's set to true
+     */
+    private boolean shouldStop;
+
+    /**
+     * Date of the beginning of the step execution
+     */
+    private Date dateBegin;
+
+    /**
+     * Date of the end of the step execution
+     */
+    private Date dateEnd;
+
+    /**
+     * If set to true, the pom location has been already tested
+     */
+    private boolean pomLocationTested;
+
+    /**
+     * The list of serializers used
+     */
+    private List<AbstractDataSerializer> serializers;
+
+    /**
+     * The list of notifiers used
+     */
+    private List<AbstractNotifier> notifiers;
+
+    /**
+     * The step status is given by the execution of the step
+     */
     private StepStatus stepStatus;
-    private PushState pushState;
 
     /**
      * If set to true, the failure of the step means a stop of the entire pipeline.
@@ -61,7 +90,6 @@ public abstract class AbstractStep {
         this.shouldStop = false;
         this.pomLocationTested = false;
         this.serializers = new ArrayList<>();
-        this.config = RepairnatorConfig.getInstance();
         this.blockingStep = blockingStep;
         this.setProjectInspector(inspector);
     }
@@ -127,8 +155,7 @@ public abstract class AbstractStep {
 
     protected void setPushState(PushState pushState) {
         if (pushState != null) {
-            this.pushState = pushState;
-            this.inspector.getJobStatus().addPushState(this.pushState);
+            this.inspector.getJobStatus().addPushState(pushState);
             if (this.nextStep != null) {
                 this.nextStep.setPushState(pushState);
             }
@@ -160,7 +187,7 @@ public abstract class AbstractStep {
 
     private void serializeData() {
         if (serializers != null) {
-            if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                 this.getLogger().info("Serialize all data for the pair of builds " +
                         this.getInspector().getBuggyBuild().getId() + ", " + this.getInspector().getPatchedBuild().getId());
             } else {
@@ -269,7 +296,7 @@ public abstract class AbstractStep {
             }
         }
 
-        if (this.config.isClean()) {
+        if (RepairnatorConfig.getInstance().isClean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
             } catch (IOException e) {
@@ -298,10 +325,8 @@ public abstract class AbstractStep {
         this.getLogger().debug("----------------------------------------------------------------------");
 
         this.dateBegin = new Date();
-        this.timeBegin = dateBegin.getTime();
         this.stepStatus = this.businessExecute();
         this.dateEnd = new Date();
-        this.timeEnd = dateEnd.getTime();
 
         this.getLogger().debug("STEP STATUS: "+this.stepStatus);
         this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
@@ -371,6 +396,8 @@ public abstract class AbstractStep {
     }
 
     public int getDuration() {
+        long timeBegin = getDateBegin().getTime();
+        long timeEnd = getDateEnd().getTime();
         if (timeEnd == 0 || timeBegin == 0) {
             return 0;
         }
@@ -378,7 +405,7 @@ public abstract class AbstractStep {
     }
 
     public RepairnatorConfig getConfig() {
-        return config;
+        return RepairnatorConfig.getInstance();
     }
 
     protected abstract StepStatus businessExecute();

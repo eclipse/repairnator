@@ -33,7 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by urli on 26/12/2016.
+ * This class initialize the pipelines by creating the steps:
+ * it's the backbone of the pipeline.
  */
 public class ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
