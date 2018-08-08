@@ -30,6 +30,8 @@ See [How to Design a Program Repair Bot? Insights from the Repairnator Project](
 
 ## Quickstart
 
+The following is just a quickstart. For more advanced usage, go [read the usage section of our documentation](doc/usage).
+
 ### Requirements
 
 In order to run Repairnator with the provided scripts, you'll need: 
@@ -43,6 +45,7 @@ In order to run Repairnator with the provided scripts, you'll need:
 All Repairnator scripts are located in the directory `repairnator/scripts`. 
 The scripts use the global configuration set in `repairnator/scripts/config/repairnator.cfg`.
 You can define your own configuration in a file `repairnator.cfg` located in your home.
+For more information about `repairnator.cfg` read [our complete documentation](doc/usage/repairnator-config.md).
 
 ```bash
 git clone https://github.com/Spirals-Team/repairnator/
@@ -86,13 +89,6 @@ Then just run the script `launch_rtscanner.sh`.
 
 * this generates build reproduction info and patches as local files in a folder called `logs/`
 * in this default setup, no MongoDB is used, no email notification is done
-
-For more information about the configuration of a Repairnator instance:
-
-* check out [this page](/doc/usage.md).
-* the MongoDB configuration is explained in `repairnator.cfg`
-* the email configuration is explained in `repairnator.cfg`
-
 
 ## Content of the repository
 

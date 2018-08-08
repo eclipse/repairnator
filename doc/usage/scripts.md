@@ -42,7 +42,7 @@ This script is used to launch Repairnator to repair every failing builds coming 
 Starts a scanner which looks for java failing builds on Travis CI in realtime. 
 For each it finds it will start a docker container with an instance of
 repairnator-pipeline that tries to repair the build. It will run for
-as long as specified by the [DURATION option](repairnator-config.md#DURATION).
+as long as specified by the [DURATION option](repairnator-config.md#duration).
 
 ## launch_scanner.sh
 
@@ -58,15 +58,15 @@ This script is used to retrieve failing builds from Travis CI in the past.
 
 ### How it works
 
-It will use the [REPAIR_PROJECT_LIST_PATH](repairnator-config.md#REPAIR_PROJECT_LIST_PATH) option
+It will use the [REPAIR_PROJECT_LIST_PATH](repairnator-config.md#repair_project_list_path) option
 to get a list of projects to scan.
 
 Once this list has been read, repairnator will run a scanner to find
 failing builds. 
 
-The timespan in which the scanner will look is specified by either [SCANNER_NB_HOURS](repairnator-config.md#SCANNER_NB_HOURS) option, 
-or by the two options [LOOK_FROM_DATE](repairnator-config.md#LOOK_FROM_DATE) and
-[LOOK_TO_DATE](repairnator-config.md#LOOK_TO_DATE) together.
+The timespan in which the scanner will look is specified by either [SCANNER_NB_HOURS](repairnator-config.md#scanner_nb_hours) option, 
+or by the two options [LOOK_FROM_DATE](repairnator-config.md#look_from_date) and
+[LOOK_TO_DATE](repairnator-config.md#look_to_date) together.
 
 ## launch_dockerpool.sh
 
@@ -86,7 +86,7 @@ This script is used to repair a list of buggy builds by running them in docker c
 ### How it works
 
 It will start a dockerpool and fill it with the list of build IDs read from the given argument.
-Then it will use the [NB_THREADS](repairnator-config.md#NB_THREADS) options to launch as many docker containers as possible in parallel to repair the builds.
+Then it will use the [NB_THREADS](repairnator-config.md#nb_threads) options to launch as many docker containers as possible in parallel to repair the builds.
 
 ## launch_repairnator.sh
 
@@ -116,7 +116,7 @@ Without an argument, it's a combination of `launch_scanner.sh` and `launch_docke
 ./launch_checkbranches.sh <input branch names> <output result>
 ```
 
-`input branch names` is a mandatory argument. It's the path to an existing file containing names of Git branches from the repository specified in [CHECK_BRANCH_REPOSITORY](repairnator-config.md#CHECK_BRANCH_REPOSITORY).
+`input branch names` is a mandatory argument. It's the path to an existing file containing names of Git branches from the repository specified in [CHECK_BRANCH_REPOSITORY](repairnator-config.md#check_branch_repository).
 
 `output result` is a mandatory argument. It's the path, not necessarily existing, of a file that will contain the result of the check.
 
@@ -130,4 +130,4 @@ This script will check the given branches to verify they are correct given the f
   
 ### How it works
 
-It launches a docker container for each branch provided in argument, using a pool of container and the [NB_THREADS](repairnator-config.md#NB_THREADS) option.
+It launches a docker container for each branch provided in argument, using a pool of container and the [NB_THREADS](repairnator-config.md#nb_threads) option.

@@ -1,26 +1,18 @@
-# Usages
+# Jars usage
 
-This page describes the usage of each tool developped as part of Repairnator. 
-If you want to quickly start to use it, we advise you to first have a look on the [quickstart](/README.md#quickstart).
+This page describe the usage of all modules of Repairnator. All modules are located under [repairnator directory](/repairnator).
 
-## Scripts
+## Pipeline
 
-This section describe the usage of all scripts located in [repairnator/scripts](/repairnator/scripts) directory.
+### Requirements
 
-TODO
+The following command line tools must be installed on your machine:
+  - Oracle Java: some dependencies need tools.jar in the classpath
+  - cloc: we compute some metrics with cloc
+  - git: to apply some git commands
+  - z3: a constraint solver. The executables are available in [pipeline test resources](/repairnator/repairnator-pipeline/src/test/resources/z3)
 
-## Jars usage
-
-This sections describe the usage of all modules of Repairnator. All modules are located under [repairnator directory](/repairnator).
-
-### Core
-
-This module located at [repairnator-core](/repairnator/repairnator-core) contains all information for other Repairnator modules. 
-
-### Pipeline
-
-This module located at [repairnator-pipeline](/repairnator/repairnator-pipeline) takes a failing build id as input and try to fix it by using a pipeline of tools.
-The pipeline can also be used through a docker-container. TODO
+### Usage
 
 ```bash
 Usage: java <repairnator-pipeline name> [option(s)]
