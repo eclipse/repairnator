@@ -19,7 +19,9 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Created by urli on 03/01/2017.
+ * This class defines a step of the pipeline.
+ * Steps are chained and when a step has finished its execution, the next step execution is called,
+ * unless the it is a blocking step and the execution status stops the whole pipeline.
  */
 public abstract class AbstractStep {
     /**
