@@ -199,7 +199,7 @@ public class TestMetrics4BearsJsonFile {
 
         // check correctness of the properties
 
-        File expectedFile = new File(TestMetrics4BearsJsonFile.class.getResource("/json-files/bears-208897371.json").getPath());
+        File expectedFile = new File(TestMetrics4BearsJsonFile.class.getResource("/json-files/repairnator-208897371.json").getPath());
         String expectedString = FileUtils.readFileToString(expectedFile, StandardCharsets.UTF_8);
 
         File actualFile = new File(inspector.getRepoToPushLocalPath() + "/repairnator.json");
