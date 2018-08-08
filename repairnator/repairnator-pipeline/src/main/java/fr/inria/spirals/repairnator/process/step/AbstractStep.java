@@ -257,7 +257,7 @@ public abstract class AbstractStep {
         return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }
 
-    protected void cleanMavenArtifacts() {
+    protected void cleanMavenArtifactsAndLocalRepo() {
         if (this.inspector.getM2LocalPath() != null) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
@@ -347,7 +347,7 @@ public abstract class AbstractStep {
                 }
             }
             this.serializeData();
-            this.cleanMavenArtifacts();
+            this.cleanMavenArtifactsAndLocalRepo();
             this.inspector.printPipelineEnd();
         }
     }
