@@ -12,7 +12,6 @@ import fr.inria.lille.repair.nopol.NopolResult;
 import fr.inria.spirals.repairnator.GsonPathTypeAdapter;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
@@ -51,7 +50,6 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
     private static final int MIN_TIMEOUT = 2;
     private int passingTime;
     private Gson gson;
-    private Metrics metric;
     private List<URL> classPath;
     private File[] sources;
     private File patchDir;
@@ -64,10 +62,6 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         this.toolDiag = new JsonArray();
         this.gson = new GsonBuilder().registerTypeAdapter(Path.class, new GsonPathTypeAdapter()).create();
         this.passingTime = 0;
-    }
-
-    public void setMetric(Metrics metric) {
-        this.metric = metric;
     }
 
     public void setClassPath(List<URL> classPath) {
@@ -89,7 +83,6 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
 
     public void initWithJobStatus() {
         JobStatus jobStatus = this.getInspector().getJobStatus();
-        this.setMetric(jobStatus.getMetrics());
         this.setClassPath(jobStatus.getRepairClassPath());
         this.setSources(jobStatus.getRepairSourceDir());
     }
@@ -191,8 +184,6 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
                     failureLocationWithoutDots.append(location.getClassName().replace('.', '/'));
                     failureLocationWithoutDots.append(':');
                 }
-
-                metric.addAngelicValueByTest(failureLocationWithoutDots.toString(), result.getNbAngelicValues());
 
                 List<Patch> patches = result.getPatches();
                 if (patches != null && !patches.isEmpty()) {

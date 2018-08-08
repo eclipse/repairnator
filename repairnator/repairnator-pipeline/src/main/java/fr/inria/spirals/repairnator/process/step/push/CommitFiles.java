@@ -2,9 +2,9 @@ package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.inspectors.properties.commits.Commits;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -79,20 +79,18 @@ public class CommitFiles extends AbstractStep {
     public String createCommitMsg() {
         String commitMsg = "";
 
-        Metrics metrics;
+        Commits commits = this.getInspector().getJobStatus().getProperties().getCommits();
         switch (this.commitType) {
             case COMMIT_BUGGY_BUILD:
                 commitMsg = "Bug commit from the following repository " + this.getInspector().getRepoSlug() + "\n";
 
-                metrics = this.getInspector().getJobStatus().getMetrics();
-                commitMsg += "This bug commit is a reflect of source code from: " + metrics.getBugCommitUrl() + ".";
+                commitMsg += "This bug commit is a reflect of source code from: " + commits.getBuggyBuild().getUrl() + ".";
                 break;
 
             case COMMIT_HUMAN_PATCH:
                 commitMsg = "Human patch from the following repository "+this.getInspector().getRepoSlug()+"\n";
 
-                metrics = this.getInspector().getJobStatus().getMetrics();
-                commitMsg += "This commit is a reflect of the following : "+metrics.getPatchCommitUrl()+".";
+                commitMsg += "This commit is a reflect of the following : "+ commits.getFixerBuild().getUrl() +".";
                 break;
 
             case COMMIT_REPAIR_INFO:

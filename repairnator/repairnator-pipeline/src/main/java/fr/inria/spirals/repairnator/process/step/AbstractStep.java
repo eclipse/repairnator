@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -305,9 +304,7 @@ public abstract class AbstractStep {
         this.getLogger().debug("STEP STATUS: "+this.stepStatus);
         this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
 
-        Metrics metric = this.inspector.getJobStatus().getMetrics();
-        metric.addStepDuration(this.name, getDuration());
-        metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
+        this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
 
         ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild();
         reproductionBuggyBuild.addStep(this);
@@ -352,14 +349,6 @@ public abstract class AbstractStep {
     }
 
     private void recordMetrics() {
-        Metrics metric = this.inspector.getJobStatus().getMetrics();
-
-        metric.setFreeMemory(Runtime.getRuntime().freeMemory());
-        metric.setTotalMemory(Runtime.getRuntime().totalMemory());
-        metric.setNbCPU(Runtime.getRuntime().availableProcessors());
-
-        this.getInspector().getJobStatus().writeProperty("metrics", metric);
-
         MachineInfo machineInfo = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild().getMachineInfo();
         machineInfo.setNumberCPU(Runtime.getRuntime().availableProcessors());
         machineInfo.setFreeMemory(Runtime.getRuntime().freeMemory());

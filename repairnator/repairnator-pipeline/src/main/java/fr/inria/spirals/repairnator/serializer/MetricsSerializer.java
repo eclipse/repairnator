@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
+import fr.inria.spirals.repairnator.process.inspectors.properties.PropertiesSerializerAdapter;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
@@ -25,8 +25,8 @@ public class MetricsSerializer extends AbstractDataSerializer {
 
     @Override
     public void serializeData(ProjectInspector inspector) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-        JsonObject element = (JsonObject)gson.toJsonTree(inspector.getJobStatus().getMetrics());
+        Gson gson = new GsonBuilder().registerTypeAdapter(Properties.class, new PropertiesSerializerAdapter()).create();
+        JsonObject element = (JsonObject)gson.toJsonTree(inspector.getJobStatus().getProperties());
 
         element.addProperty("runId", RepairnatorConfig.getInstance().getRunId());
         this.addDate(element, "reproductionDate", new Date());

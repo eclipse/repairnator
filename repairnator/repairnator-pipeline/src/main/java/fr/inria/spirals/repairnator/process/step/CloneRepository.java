@@ -50,9 +50,6 @@ public class CloneRepository extends AbstractStep {
     private void writeProperties() {
         JobStatus jobStatus = this.getInspector().getJobStatus();
 
-        jobStatus.writeProperty("hostname", Utils.getHostname());
-        jobStatus.writeProperty("repo", this.getInspector().getRepoSlug());
-
         MachineInfo machineInfo = jobStatus.getProperties().getReproductionBuggyBuild().getMachineInfo();
         machineInfo.setHostName(Utils.getHostname());
 
@@ -87,17 +84,14 @@ public class CloneRepository extends AbstractStep {
 
         switch (this.getInspector().getBuildToBeInspected().getStatus()) {
             case ONLY_FAIL:
-                jobStatus.writeProperty("bugType", "only_fail");
                 this.getInspector().getJobStatus().getProperties().setType("only_fail");
                 break;
 
             case FAILING_AND_PASSING:
-                jobStatus.writeProperty("bugType", "failing_passing");
                 this.getInspector().getJobStatus().getProperties().setType("failing_passing");
                 break;
 
             case PASSING_AND_PASSING_WITH_TEST_CHANGES:
-                jobStatus.writeProperty("bugType", "passing_passing");
                 this.getInspector().getJobStatus().getProperties().setType("passing_passing");
                 break;
         }

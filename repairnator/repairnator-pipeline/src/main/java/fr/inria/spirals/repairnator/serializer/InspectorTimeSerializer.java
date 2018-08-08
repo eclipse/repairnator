@@ -25,7 +25,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
     }
 
     private List<Object> serializeAsList(ProjectInspector inspector) {
-        Map<String, Integer> durations = inspector.getJobStatus().getMetrics().getStepsDurationsInSeconds();
+        Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         Build build = inspector.getBuggyBuild();
 
@@ -46,7 +46,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
     }
 
     private JsonElement serializeAsJson(ProjectInspector inspector) {
-        Map<String, Integer> durations = inspector.getJobStatus().getMetrics().getStepsDurationsInSeconds();
+        Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
 
         Build build = inspector.getBuggyBuild();
 

@@ -5,7 +5,6 @@ import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.properties.patchDiff.PatchDiff;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.apache.commons.lang.StringUtils;
@@ -342,11 +341,6 @@ public class GitHelper {
                     }
                 }
             }
-
-            Metrics metrics = jobStatus.getMetrics();
-            metrics.setPatchAddedLines(nbLineAdded);
-            metrics.setPatchDeletedLines(nbLineDeleted);
-            metrics.setPatchChangedFiles(changedFiles.size() + addedFiles.size() + deletedFiles.size());
 
             PatchDiff patchDiff = jobStatus.getProperties().getPatchDiff();
             patchDiff.getFiles().setNumberAdded(addedFiles.size());

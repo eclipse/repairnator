@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors.properties.tests;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Tests {
