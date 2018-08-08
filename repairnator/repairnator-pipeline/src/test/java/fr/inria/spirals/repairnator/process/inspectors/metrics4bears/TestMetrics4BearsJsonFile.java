@@ -44,9 +44,6 @@ public class TestMetrics4BearsJsonFile {
 
     private File tmpDir;
 
-    private JsonSchema jsonSchema;
-    private ObjectMapper jsonMapper;
-
     /* This list holds some properties from the json file that contain non-constant values as the date of the reproduction,
         thus, when checking the correctness of the properties' values, these properties are ignored.
      */
@@ -62,18 +59,6 @@ public class TestMetrics4BearsJsonFile {
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setGithubUserEmail("noreply@github.com");
         config.setGithubUserName("repairnator");
-
-        jsonMapper = new ObjectMapper();
-        String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/"));
-        String jsonSchemaFilePath = workingDir + "resources/bears-schema.json";
-        File jsonSchemaFile = new File(jsonSchemaFilePath);
-        JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
-
-        LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder().dereferencing(Dereferencing.INLINE).freeze();
-        JsonSchemaFactory factory = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze();
-
-        jsonSchema = factory.getJsonSchema(schemaObject);
 
         propertiesToIgnore = new ArrayList<>();
         propertiesToIgnore.add("reproductionBuggyBuild.reproductionDateBeginning");
@@ -118,6 +103,18 @@ public class TestMetrics4BearsJsonFile {
         inspector.run();
 
         // check bears.json against schema
+
+        ObjectMapper jsonMapper = new ObjectMapper();
+        String workingDir = System.getProperty("user.dir");
+        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/"));
+        String jsonSchemaFilePath = workingDir + "resources/bears-schema.json";
+        File jsonSchemaFile = new File(jsonSchemaFilePath);
+        JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
+
+        LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder().dereferencing(Dereferencing.INLINE).freeze();
+        JsonSchemaFactory factory = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze();
+
+        JsonSchema jsonSchema = factory.getJsonSchema(schemaObject);
 
         JsonNode bearsJsonFile = jsonMapper.readTree(new File(inspector.getRepoToPushLocalPath() + "/bears.json"));
 
@@ -176,12 +173,21 @@ public class TestMetrics4BearsJsonFile {
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null, null);
         inspector.run();
 
-        // FIXME: check bears.json against schema: this fails since the bears schema was designed for Bears. Errors:
-        // - "type" does not accept "only_fail"
-        // - "builds/fixerBuild" is required
-        // - "commits/fixerBuild" is required
+        // check repairnator.json against schema
 
-        /*JsonNode bearsJsonFile = jsonMapper.readTree(new File(inspector.getRepoToPushLocalPath() + "/bears.json"));
+        ObjectMapper jsonMapper = new ObjectMapper();
+        String workingDir = System.getProperty("user.dir");
+        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/"));
+        String jsonSchemaFilePath = workingDir + "resources/repairnator-schema.json";
+        File jsonSchemaFile = new File(jsonSchemaFilePath);
+        JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
+
+        LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder().dereferencing(Dereferencing.INLINE).freeze();
+        JsonSchemaFactory factory = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze();
+
+        JsonSchema jsonSchema = factory.getJsonSchema(schemaObject);
+
+        JsonNode bearsJsonFile = jsonMapper.readTree(new File(inspector.getRepoToPushLocalPath() + "/repairnator.json"));
 
         ProcessingReport report = jsonSchema.validate(bearsJsonFile);
 
@@ -189,14 +195,14 @@ public class TestMetrics4BearsJsonFile {
         for (ProcessingMessage processingMessage : report) {
             message += processingMessage.toString()+"\n";
         }
-        assertTrue(message, report.isSuccess());*/
+        assertTrue(message, report.isSuccess());
 
         // check correctness of the properties
 
         File expectedFile = new File(TestMetrics4BearsJsonFile.class.getResource("/json-files/bears-208897371.json").getPath());
         String expectedString = FileUtils.readFileToString(expectedFile, StandardCharsets.UTF_8);
 
-        File actualFile = new File(inspector.getRepoToPushLocalPath() + "/bears.json");
+        File actualFile = new File(inspector.getRepoToPushLocalPath() + "/repairnator.json");
         String actualString = FileUtils.readFileToString(actualFile, StandardCharsets.UTF_8);
 
         JSONCompareResult result = JSONCompare.compareJSON(expectedString, actualString, JSONCompareMode.STRICT);
