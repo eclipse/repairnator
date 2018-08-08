@@ -69,7 +69,7 @@ public class TestComputeClasspath {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneStep.execute();
 
         createTargetDir(new File(jobStatus.getFailingModulePath()));
@@ -116,7 +116,7 @@ public class TestComputeClasspath {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneStep.execute();
 
         createTargetDir(new File(jobStatus.getFailingModulePath()));

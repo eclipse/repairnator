@@ -69,8 +69,8 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(computeSourceDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
@@ -106,8 +106,8 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(computeSourceDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
@@ -143,7 +143,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
@@ -179,7 +179,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
@@ -217,7 +217,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutPatchedBuild(inspector, true)).setNextStep(computeSourceDir);
+        cloneStep.addNextStep(new CheckoutPatchedBuild(inspector, true)).addNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
@@ -268,7 +268,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(false));
@@ -304,7 +304,7 @@ public class TestComputeSourceDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeSourceDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeSourceDir);
         cloneStep.execute();
 
         assertThat(computeSourceDir.isShouldStop(), is(true));

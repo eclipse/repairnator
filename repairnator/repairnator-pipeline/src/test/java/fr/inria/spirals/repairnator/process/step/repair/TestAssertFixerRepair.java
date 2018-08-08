@@ -68,13 +68,13 @@ public class TestAssertFixerRepair {
         AssertFixerRepair assertFixerRepair = new AssertFixerRepair();
         assertFixerRepair.setProjectInspector(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-                .setNextStep(new ComputeClasspath(inspector, true))
-                .setNextStep(new ComputeSourceDir(inspector, true, false))
-                .setNextStep(new ComputeTestDir(inspector, true))
-                .setNextStep(assertFixerRepair);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .addNextStep(new ComputeClasspath(inspector, true))
+                .addNextStep(new ComputeSourceDir(inspector, true, false))
+                .addNextStep(new ComputeTestDir(inspector, true))
+                .addNextStep(assertFixerRepair);
         cloneStep.execute();
 
         assertThat(assertFixerRepair.isShouldStop(), is(false));

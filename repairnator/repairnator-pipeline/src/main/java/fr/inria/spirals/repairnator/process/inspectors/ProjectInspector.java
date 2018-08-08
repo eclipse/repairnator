@@ -162,40 +162,40 @@ public class ProjectInspector {
         if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo
-                    .setNextStep(new CheckoutBuggyBuild(this, true))
-                    .setNextStep(new BuildProject(this))
-                    .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
-                    .setNextStep(new InitRepoToPush(this))
-                    .setNextStep(new ComputeClasspath(this, false))
-                    .setNextStep(new ComputeSourceDir(this, false, false))
-                    .setNextStep(new ComputeTestDir(this, false));
+                    .addNextStep(new CheckoutBuggyBuild(this, true))
+                    .addNextStep(new BuildProject(this))
+                    .addNextStep(new TestProject(this))
+                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
+                    .addNextStep(new InitRepoToPush(this))
+                    .addNextStep(new ComputeClasspath(this, false))
+                    .addNextStep(new ComputeSourceDir(this, false, false))
+                    .addNextStep(new ComputeTestDir(this, false));
 
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
                 if (repairStep != null) {
                     repairStep.setProjectInspector(this);
-                    cloneRepo.setNextStep(repairStep);
+                    cloneRepo.addNextStep(repairStep);
                 } else {
                     logger.error("Error while getting repair step class for following name: " + repairToolName);
                 }
             }
 
-            cloneRepo.setNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
-                    .setNextStep(new CheckoutPatchedBuild(this, true))
-                    .setNextStep(new BuildProject(this))
-                    .setNextStep(new TestProject(this))
-                    .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
-                    .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
+            cloneRepo.addNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
+                    .addNextStep(new CheckoutPatchedBuild(this, true))
+                    .addNextStep(new BuildProject(this))
+                    .addNextStep(new TestProject(this))
+                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
+                    .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
 
             this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
 
 
             this.finalStep.
-                    setNextStep(new ComputeModules(this, false)).
-                    setNextStep(new WritePropertyFile(this)).
-                    setNextStep(new CommitProcessEnd(this)).
-                    setNextStep(new PushProcessEnd(this));
+                    addNextStep(new ComputeModules(this, false)).
+                    addNextStep(new WritePropertyFile(this)).
+                    addNextStep(new CommitProcessEnd(this)).
+                    addNextStep(new PushProcessEnd(this));
 
             cloneRepo.setDataSerializer(this.serializers);
             cloneRepo.setNotifiers(this.notifiers);

@@ -67,7 +67,7 @@ public class TestComputeTestDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeTestDir computeTestDir = new ComputeTestDir(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeTestDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeTestDir);
         cloneStep.execute();
 
         assertThat(computeTestDir.isShouldStop(), is(false));
@@ -107,7 +107,7 @@ public class TestComputeTestDir {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeTestDir computeTestDir = new ComputeTestDir(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeTestDir);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeTestDir);
         cloneStep.execute();
 
         assertThat(computeTestDir.isShouldStop(), is(true));

@@ -64,7 +64,7 @@ public class TestComputeModules {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeModules computeModules = new ComputeModules(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeModules);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeModules);
         cloneStep.execute();
 
         assertThat(computeModules.isShouldStop(), is(false));
@@ -98,7 +98,7 @@ public class TestComputeModules {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeModules computeModules = new ComputeModules(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeModules);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeModules);
         cloneStep.execute();
 
         assertThat(computeModules.isShouldStop(), is(false));

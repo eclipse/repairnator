@@ -74,7 +74,7 @@ public class TestInitRepoToPush {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector));
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
 
         assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));
@@ -115,7 +115,7 @@ public class TestInitRepoToPush {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector));
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
 
         assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));

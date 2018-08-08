@@ -142,9 +142,15 @@ public abstract class AbstractStep {
         return inspector;
     }
 
-    public AbstractStep setNextStep(AbstractStep nextStep) {
+    /**
+     * Set the next step to the entire pipeline:
+     * this method won't replace the nextStep of the actual step but will
+     * add it to the last step of the current chain of steps.
+     * It also initialize the serializers and notifiers for the whole chain of steps.
+     */
+    public AbstractStep addNextStep(AbstractStep nextStep) {
         if (this.nextStep != null) {
-            this.nextStep.setNextStep(nextStep);
+            this.nextStep.addNextStep(nextStep);
         } else {
             this.nextStep = nextStep;
             nextStep.setDataSerializer(this.serializers);

@@ -68,10 +68,10 @@ public class TestNPERepair {
         NPERepair npeRepair = new NPERepair();
         npeRepair.setProjectInspector(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-                .setNextStep(npeRepair);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .addNextStep(npeRepair);
         cloneStep.execute();
 
         assertThat(npeRepair.isShouldStop(), is(false));

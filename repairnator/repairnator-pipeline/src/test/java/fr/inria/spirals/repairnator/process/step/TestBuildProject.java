@@ -65,7 +65,7 @@ public class TestBuildProject {
         CloneRepository cloneStep = new CloneRepository(inspector);
         BuildProject buildStep = new BuildProject(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(buildStep);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(buildStep);
         cloneStep.execute();
 
         assertThat(buildStep.isShouldStop(), is(false));
@@ -95,7 +95,7 @@ public class TestBuildProject {
         CloneRepository cloneStep = new CloneRepository(inspector);
         BuildProject buildStep = new BuildProject(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(buildStep);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(buildStep);
         cloneStep.execute();
 
         assertThat(buildStep.isShouldStop(), is(false));

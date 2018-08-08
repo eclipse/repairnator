@@ -18,7 +18,6 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -99,7 +98,7 @@ public class TestCloneRepositoryStep {
 
         ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
-        AbstractStep cloneStep = new CloneRepository(inspector).setNextStep(new CheckoutBuggyBuild(inspector, true));
+        AbstractStep cloneStep = new CloneRepository(inspector).addNextStep(new CheckoutBuggyBuild(inspector, true));
 
         cloneStep.execute();
 

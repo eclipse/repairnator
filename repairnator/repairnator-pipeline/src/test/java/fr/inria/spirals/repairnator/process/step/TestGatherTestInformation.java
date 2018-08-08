@@ -76,9 +76,9 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -126,7 +126,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -185,7 +185,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -236,7 +236,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -286,9 +286,9 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldPass(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();

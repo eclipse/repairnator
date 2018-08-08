@@ -76,7 +76,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.addNextStep(checkoutBuild);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -157,7 +157,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.addNextStep(checkoutBuild);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -238,7 +238,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuildSourceCode checkoutBuild = new CheckoutBuggyBuildSourceCode(inspector, true);
 
-        cloneStep.setNextStep(checkoutBuild);
+        cloneStep.addNextStep(checkoutBuild);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();

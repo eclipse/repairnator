@@ -65,7 +65,7 @@ public class TestTestProject {
         TestProject testProject = new TestProject(inspector);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(testProject);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(testProject);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -96,7 +96,7 @@ public class TestTestProject {
         TestProject testProject = new TestProject(inspector);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(testProject);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(testProject);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -127,7 +127,7 @@ public class TestTestProject {
         TestProject testProject = new TestProject(inspector);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(testProject);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(testProject);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();

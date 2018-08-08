@@ -72,7 +72,7 @@ public class TestCheckoutBuild {
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);
 
-        cloneStep.setNextStep(checkoutBuggyBuild);
+        cloneStep.addNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -124,7 +124,7 @@ public class TestCheckoutBuild {
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);
 
-        cloneStep.setNextStep(checkoutBuggyBuild);
+        cloneStep.addNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
         assertThat(checkoutBuggyBuild.isShouldStop(), is(true));
@@ -162,7 +162,7 @@ public class TestCheckoutBuild {
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);
 
-        cloneStep.setNextStep(checkoutBuggyBuild);
+        cloneStep.addNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -194,7 +194,7 @@ public class TestCheckoutBuild {
         CloneRepository cloneStep = new CloneRepository(inspector);
         CheckoutBuggyBuild checkoutBuggyBuild = new CheckoutBuggyBuild(inspector, true);
 
-        cloneStep.setNextStep(checkoutBuggyBuild);
+        cloneStep.addNextStep(checkoutBuggyBuild);
         cloneStep.execute();
 
         // cannot get the PR information so it stop now
