@@ -257,7 +257,7 @@ public abstract class AbstractStep {
         return this.inspector.getJobStatus().getPomDirPath() + File.separator + Utils.POM_FILE;
     }
 
-    protected void cleanMavenArtifacts() {
+    protected void cleanMavenArtifactsAndLocalRepo() {
         if (this.inspector.getM2LocalPath() != null) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getM2LocalPath());
@@ -267,7 +267,9 @@ public abstract class AbstractStep {
             }
         }
 
-        if (this.config.isClean()) {
+
+        File repoDir = new File(this.inspector.getRepoLocalPath(), Utils.REMOTE_REPO_EXT);
+        if (repoDir.exists() && this.config.isClean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
             } catch (IOException e) {
@@ -344,7 +346,7 @@ public abstract class AbstractStep {
                 }
             }
             this.serializeData();
-            this.cleanMavenArtifacts();
+            this.cleanMavenArtifactsAndLocalRepo();
             this.inspector.printPipelineEnd();
         }
     }

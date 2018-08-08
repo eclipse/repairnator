@@ -1,0 +1,34 @@
+bugType -> type
+repo -> repository.name
+metrics.ReproductionDate -> reproductionBuggyBuild.reproductionDateBeginning
+metrics.BuggyBuildId -> builds.buggyBuild.id
+metrics.PatchedBuilId -> builds.fixerBuild.id (but this is always recorded in the old, but not in the new when there is no fixer build)
+metrics.BuggyBuildURL -> builds.buggyBuild.url
+metrics.BuggyBuildDate -> builds.buggyBuild.date
+metrics.BugCommit -> commits.buggyBuild.sha
+metrics.BugCommitUrl -> commits.buggyBuild.url
+metrics.PatchChangedFiles -> patchDiff.files.numberChanged
+metrics.PatchAddedLines -> patchDiff.lines.numberAdded
+metrics.PatchDeletedLines -> patchDiff.lines.numberDeleted
+metrics.NbLibraries -> projectMetrics.numberLibrariesFailingModule
+metrics.NbFileApp -> projectMetrics.numberSourceFiles
+metrics.NbFileTests -> projectMetrics.numberTestFiles
+metrics.NbRunningTests -> tests.overallMetrics.numberRunning
+metrics.NbSucceedingTests -> tests.overallMetrics.numberPassing
+metrics.NbFailingTests -> tests.overallMetrics.numberFailing
+metrics.NbErroringTests -> tests.overallMetrics.numberErroring
+metrics.NbSkippingTests -> tests.overallMetrics.numberSkipping
+failing-test-cases*.className -> tests.failingClasses*.testClass
+failing-test-cases*.nbFailures -> tests.failingClasses*.numberFailing
+failing-test-cases*.nbErrors -> tests.failingClasses*.numberErroring
+failing-test-cases*.failingMethods* -> tests.failureDetails*.testMethod
+failing-test-cases*.failures*.failureName -> tests.failureDetails*.failureName
+failing-test-cases*.failures*.failureDetail -> tests.failureDetails*.detail
+failing-test-cases*.failures*.isError -> tests.failureDetails*.isError
+hostname -> reproductionBuggyBuild.machineInfo.hostName
+metrics.NbCPU -> reproductionBuggyBuild.machineInfo.numberCPU
+metrics.FreeMemory -> reproductionBuggyBuild.machineInfo.freeMemory
+metrics.TotalMemory -> reproductionBuggyBuild.machineInfo.totalMemory
+
+
+PS: elements with "*" are elements that contain an array of elements
