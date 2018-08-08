@@ -25,6 +25,10 @@ failing-test-cases*.failingMethods* -> tests.failureDetails*.testMethod
 failing-test-cases*.failures*.failureName -> tests.failureDetails*.failureName
 failing-test-cases*.failures*.failureDetail -> tests.failureDetails*.detail
 failing-test-cases*.failures*.isError -> tests.failureDetails*.isError
+hostname -> reproductionBuggyBuild.machineInfo.hostName
+metrics.NbCPU -> reproductionBuggyBuild.machineInfo.numberCPU
+metrics.FreeMemory -> reproductionBuggyBuild.machineInfo.freeMemory
+metrics.TotalMemory -> reproductionBuggyBuild.machineInfo.totalMemory
 
 
 PS: elements with "*" are elements that contain an array of elements

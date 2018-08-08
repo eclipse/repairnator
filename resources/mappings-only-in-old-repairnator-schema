@@ -1,6 +1,2 @@
-hostname -> ?
-metrics.NbCPU -> ?
-metrics.FreeMemory -> ?
-metrics.TotalMemory -> ?
 metrics.AngelicValuesByTest -> ?
 metrics.FreeMemoryByStep -> ?

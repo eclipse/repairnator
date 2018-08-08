@@ -973,6 +973,54 @@
             "Apr 5, 2018 6:12:38 AM CET"
           ]
         },
+        "machineInfo": {
+          "$id": "/properties/reproductionBuggyBuild/properties/machineInfo",
+          "type": "object",
+          "properties": {
+            "hostName": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/hostName",
+              "type": "string",
+              "description": "Name of the host used to reproduce the bug",
+              "default": "",
+              "examples": [
+                "spirals-librepair"
+              ]
+            },
+            "numberCPU": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/numberCPU",
+              "type": "integer",
+              "description": "Number of CPU of the running host",
+              "default": 0,
+              "examples": [
+                8
+              ]
+            },
+            "freeMemory": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/freeMemory",
+              "type": "integer",
+              "description": "Free memory on the running host JVM (in bytes)",
+              "default": 0,
+              "examples": [
+                311502904
+              ]
+            },
+            "totalMemory": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/totalMemory",
+              "type": "integer",
+              "description": "Total memory on the running host JVM (in bytes)",
+              "default": 0,
+              "examples": [
+                338690048
+              ]
+            }
+          },
+          "required": [
+            "hostName",
+            "numberCPU",
+            "freeMemory",
+            "totalMemory"
+          ]
+        },
         "projectRootPomPath": {
           "$id": "/properties/reproductionBuggyBuild/properties/projectRootPomPath",
           "type": "string",
