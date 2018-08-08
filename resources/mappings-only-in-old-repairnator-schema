@@ -1,0 +1,2 @@
+metrics.AngelicValuesByTest -> ?
+metrics.FreeMemoryByStep -> ? [it was decided to not include this one in the new schema]

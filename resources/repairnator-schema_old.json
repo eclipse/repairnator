@@ -1,0 +1,764 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/schema.json",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "properties": {
+    "repo": {
+      "$id": "/properties/repo",
+      "type": "string",
+      "description": "The name of the repository where the bug comes from on the form username/reponame",
+      "default": "",
+      "examples": [
+        "square/kotlinpoet"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host used to reproduce the bug",
+      "default": "",
+      "examples": [
+        "spirals-librepair"
+      ]
+    },
+    "bugType": {
+      "$id": "/properties/bugType",
+      "type": "string",
+      "description": "Not required. Used to distinguish different kind of experiments (failing_passing vs passing_passing)",
+      "default": "",
+      "examples": [
+        "failing_passing"
+      ]
+    },
+    "failing-test-cases": {
+      "$id": "/properties/failing-test-cases",
+      "type": "array",
+      "items": {
+        "$id": "/properties/failing-test-cases/items",
+        "type": "object",
+        "properties": {
+          "className": {
+            "$id": "/properties/failing-test-cases/items/properties/className",
+            "type": "string",
+            "description": "Name of the test class",
+            "default": "",
+            "examples": [
+              "com.squareup.kotlinpoet.TypeSpecTest"
+            ]
+          },
+          "failingMethods": {
+            "$id": "/properties/failing-test-cases/items/properties/failingMethods",
+            "type": "array",
+            "items": {
+              "$id": "/properties/failing-test-cases/items/properties/failingMethods/items",
+              "type": "string",
+              "description": "Name of the failing methods",
+              "default": "",
+              "examples": [
+                "com.squareup.kotlinpoet.TypeSpecTest#anonymousClassToString"
+              ]
+            }
+          },
+          "erroringMethods": {
+            "$id": "/properties/failing-test-cases/items/properties/erroringMethods",
+            "type": "array",
+            "items": {
+              "$id": "/properties/failing-test-cases/items/properties/erroringMethods/items",
+              "type": "string",
+              "description": "Name of the errorring methods",
+              "default": "",
+              "examples": [
+                "com.squareup.kotlinpoet.TypeSpecTest#anonymousClassToString"
+              ]
+            }
+          },
+          "failures": {
+            "$id": "/properties/failing-test-cases/items/properties/failures",
+            "type": "array",
+            "items": {
+              "$id": "/properties/failing-test-cases/items/properties/failures/items",
+              "type": "object",
+              "properties": {
+                "failureName": {
+                  "$id": "/properties/failing-test-cases/items/properties/failures/items/properties/failureName",
+                  "type": "string",
+                  "description": "Name of the obtained failure (e.g. AssertionError, NullPointerException...)",
+                  "default": "",
+                  "examples": [
+                    "org.junit.ComparisonFailure"
+                  ]
+                },
+                "failureDetail": {
+                  "$id": "/properties/failing-test-cases/items/properties/failures/items/properties/failureDetail",
+                  "type": "string",
+                  "description": "Message obtained for the failure",
+                  "default": "",
+                  "examples": [
+                    "expected:<object : []java.lang.Runnable {...> but was:<object : [ ]java.lang.Runnable {...>"
+                  ]
+                },
+                "isError": {
+                  "$id": "/properties/failing-test-cases/items/properties/failures/items/properties/isError",
+                  "type": "boolean",
+                  "description": "Is the failure considered as an error or not",
+                  "default": false,
+                  "examples": [
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          "nbFailures": {
+            "$id": "/properties/failing-test-cases/items/properties/nbFailures",
+            "type": "integer",
+            "description": "Number of detected failures",
+            "default": 0,
+            "examples": [
+              4
+            ]
+          },
+          "nbErrors": {
+            "$id": "/properties/failing-test-cases/items/properties/nbErrors",
+            "type": "integer",
+            "description": "Number of detected errors",
+            "default": 0,
+            "examples": [
+              0
+            ]
+          }
+        },
+        "required": [
+          "className",
+          "failures",
+          "nbFailures",
+          "nbErrors"
+        ]
+      }
+    },
+    "metrics": {
+      "$id": "/properties/metrics",
+      "type": "object",
+      "properties": {
+        "StepsDurationsInSeconds": {
+          "$id": "/properties/metrics/properties/StepsDurationsInSeconds",
+          "type": "object",
+          "description": "The properties give the time spent to execute a specific step of the bug reproduction / repairing in seconds. Those steps could change from one build to another.",
+          "properties": {
+            "CheckoutBuggyBuild": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CheckoutBuggyBuild",
+              "type": "integer",
+              "description": "Time spent to checkout the commit corresponding to the build (in seconds)",
+              "default": 0,
+              "examples": [
+                4
+              ]
+            },
+            "ComputeClasspath": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ComputeClasspath",
+              "type": "integer",
+              "description": "Time spent to compute the classpath of the buggy project (in seconds)",
+              "default": 0,
+              "examples": [
+                3
+              ]
+            },
+            "ComputeTestDir": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ComputeTestDir",
+              "type": "integer",
+              "description": "Time spent to compute the path of the test directory (in seconds)",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            },
+            "ResolveDependency": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ResolveDependency",
+              "type": "integer",
+              "description": "Time spent to resolve the dependency of the project (in seconds)",
+              "default": 0,
+              "examples": [
+                34
+              ]
+            },
+            "BuildProject": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/BuildProject",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                63
+              ]
+            },
+            "NPERepair": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/NPERepair",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            },
+            "ComputeSourceDir": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ComputeSourceDir",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            },
+            "InitRepoToPush": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/InitRepoToPush",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                1
+              ]
+            },
+            "CloneRepository": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CloneRepository",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                3
+              ]
+            },
+            "NopolRepair": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/NopolRepair",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            },
+            "CheckoutPatchedBuild": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CheckoutPatchedBuild",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                1
+              ]
+            },
+            "TestProject": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/TestProject",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                46
+              ]
+            },
+            "GatherTestInformation": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/GatherTestInformation",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            },
+            "PushIncriminatedBuild": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/PushIncriminatedBuild",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                4
+              ]
+            },
+            "AstorRepair": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/AstorRepair",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                9
+              ]
+            },
+            "CommitPatch": {
+              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CommitPatch",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                3
+              ]
+            }
+          }
+        },
+        "FailureNames": {
+          "$id": "/properties/metrics/properties/FailureNames",
+          "type": "array",
+          "items": {
+            "$id": "/properties/metrics/properties/FailureNames/items",
+            "type": "string",
+            "description": "Name of the failures encountered",
+            "default": "",
+            "examples": [
+              "org.junit.ComparisonFailure"
+            ]
+          }
+        },
+        "NbFailingTests": {
+          "$id": "/properties/metrics/properties/NbFailingTests",
+          "type": "integer",
+          "description": "Total number of failing tests",
+          "default": 0,
+          "examples": [
+            4
+          ]
+        },
+        "ReproductionDate": {
+          "$id": "/properties/metrics/properties/ReproductionDate",
+          "type": "string",
+          "description": "String date of the reproduction of the bug",
+          "default": "",
+          "examples": [
+            "Jan 24, 2018 4:24:10 AM"
+          ]
+        },
+        "BuggyBuildId": {
+          "$id": "/properties/metrics/properties/BuggyBuildId",
+          "type": "integer",
+          "description": "ID of a buggy build from TravisCI",
+          "default": 0,
+          "examples": [
+            332613503
+          ]
+        },
+        "BuggyBuildURL": {
+          "$id": "/properties/metrics/properties/BuggyBuildURL",
+          "type": "string",
+          "description": "URL of the buggy build",
+          "default": "",
+          "examples": [
+            "http://travis-ci.org/square/kotlinpoet/builds/332613503"
+          ]
+        },
+        "BuggyBuildDate": {
+          "$id": "/properties/metrics/properties/BuggyBuildDate",
+          "type": "string",
+          "description": "Date of the end of the buggy build",
+          "default": "",
+          "examples": [
+            "Jan 24, 2018 4:20:53 AM"
+          ]
+        },
+        "BugCommit": {
+          "$id": "/properties/metrics/properties/BugCommit",
+          "type": "string",
+          "description": "Commit hash corresponding to the buggy build",
+          "default": "",
+          "examples": [
+            "2742337e8dc6a898ace3b8164262e33d3080ed91"
+          ]
+        },
+        "BugCommitUrl": {
+          "$id": "/properties/metrics/properties/BugCommitUrl",
+          "type": "string",
+          "description": "URL of the buggy commit. Pay attention that the commit might be not available anymore if it has been deleted.",
+          "default": "",
+          "examples": [
+            "http://github.com/square/kotlinpoet/commit/2742337e8dc6a898ace3b8164262e33d3080ed91"
+          ]
+        },
+        "PatchedBuilId": {
+          "$id": "/properties/metrics/properties/PatchedBuilId",
+          "type": "integer",
+          "description": "If a patched build has been found, ID of the patched build from TravisCI",
+          "default": 0,
+          "examples": [
+            332613714
+          ]
+        },
+        "PatchedBuildURL": {
+          "$id": "/properties/metrics/properties/PatchedBuildURL",
+          "type": "string",
+          "description": "If the patched build has been found, URL of the TravisCI patched build",
+          "default": "",
+          "examples": [
+            "http://travis-ci.org/square/kotlinpoet/builds/332613714"
+          ]
+        },
+        "PatchedBuildDate": {
+          "$id": "/properties/metrics/properties/PatchedBuildDate",
+          "type": "string",
+          "description": "If the patched build has been found, date of the end of the patched build",
+          "default": "",
+          "examples": [
+            "Jan 24, 2018 4:23:06 AM"
+          ]
+        },
+        "PatchCommit": {
+          "$id": "/properties/metrics/properties/PatchCommit",
+          "type": "string",
+          "description": "If the patch build has been found, hash of the commit that triggered the build.",
+          "default": "",
+          "examples": [
+            "2f440d34e3cef28de867690ae9719c554a33e38f"
+          ]
+        },
+        "PatchCommitUrl": {
+          "$id": "/properties/metrics/properties/PatchCommitUrl",
+          "type": "string",
+          "description": "If the patched build has been found, URL of the commit corresponding to the patched build. This commit might be not available anymore if it has been deleted.",
+          "default": "",
+          "examples": [
+            "http://github.com/square/kotlinpoet/commit/2f440d34e3cef28de867690ae9719c554a33e38f"
+          ]
+        },
+        "PatchChangedFiles": {
+          "$id": "/properties/metrics/properties/PatchChangedFiles",
+          "type": "integer",
+          "description": "Number of patched files (only if human patch has been found)",
+          "default": 0,
+          "examples": [
+            1
+          ]
+        },
+        "PatchAddedLines": {
+          "$id": "/properties/metrics/properties/PatchAddedLines",
+          "type": "integer",
+          "description": "Number of added lines (only if human patch has been found)",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "PatchDeletedLines": {
+          "$id": "/properties/metrics/properties/PatchDeletedLines",
+          "type": "integer",
+          "description": "Number of deleted lines ((only if human patch has been found)",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "NbRunningTests": {
+          "$id": "/properties/metrics/properties/NbRunningTests",
+          "type": "integer",
+          "description": "Total number of tests run",
+          "default": 0,
+          "examples": [
+            361
+          ]
+        },
+        "NbLibraries": {
+          "$id": "/properties/metrics/properties/NbLibraries",
+          "type": "integer",
+          "description": "Number of required libraries (based on the classpath)",
+          "default": 0,
+          "examples": [
+            24
+          ]
+        },
+        "NbFileApp": {
+          "$id": "/properties/metrics/properties/NbFileApp",
+          "type": "integer",
+          "description": "Number of source files (only of the failing module if it concerns a multi module application)",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "NbFileTests": {
+          "$id": "/properties/metrics/properties/NbFileTests",
+          "type": "integer",
+          "description": "Number of test files (only of the failing module if it concerns a multi module application)",
+          "default": 0,
+          "examples": [
+            2
+          ]
+        },
+        "NbCPU": {
+          "$id": "/properties/metrics/properties/NbCPU",
+          "type": "integer",
+          "description": "Number of CPU of the running host",
+          "default": 0,
+          "examples": [
+            8
+          ]
+        },
+        "FreeMemory": {
+          "$id": "/properties/metrics/properties/FreeMemory",
+          "type": "integer",
+          "description": "Free memory on the running host JVM (in bytes)",
+          "default": 0,
+          "examples": [
+            311502904
+          ]
+        },
+        "TotalMemory": {
+          "$id": "/properties/metrics/properties/TotalMemory",
+          "type": "integer",
+          "description": "Total memory on the running host JVM (in bytes)",
+          "default": 0,
+          "examples": [
+            338690048
+          ]
+        },
+        "AngelicValuesByTest": {
+          "$id": "/properties/metrics/properties/AngelicValuesByTest",
+          "type": "object",
+          "description": "An object taking as key a test class name and as value the number of retrieved angelic values"
+        },
+        "FreeMemoryByStep": {
+          "$id": "/properties/metrics/properties/FreeMemoryByStep",
+          "type": "object",
+          "description": "Free memory on the running host JVM (in bytes) for each step",
+          "properties": {
+            "CheckoutBuggyBuild": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CheckoutBuggyBuild",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                292014240
+              ]
+            },
+            "ComputeClasspath": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ComputeClasspath",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                281962520
+              ]
+            },
+            "ComputeTestDir": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ComputeTestDir",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                282142088
+              ]
+            },
+            "ResolveDependency": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ResolveDependency",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                271811416
+              ]
+            },
+            "BuildProject": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/BuildProject",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                232131784
+              ]
+            },
+            "NPERepair": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/NPERepair",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                286648368
+              ]
+            },
+            "ComputeSourceDir": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ComputeSourceDir",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                281962520
+              ]
+            },
+            "InitRepoToPush": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/InitRepoToPush",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                212722824
+              ]
+            },
+            "CloneRepository": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CloneRepository",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                446484664
+              ]
+            },
+            "NopolRepair": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/NopolRepair",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                315329424
+              ]
+            },
+            "CheckoutPatchedBuild": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CheckoutPatchedBuild",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                240095112
+              ]
+            },
+            "TestProject": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/TestProject",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                227997832
+              ]
+            },
+            "GatherTestInformation": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/GatherTestInformation",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                222327776
+              ]
+            },
+            "PushIncriminatedBuild": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/PushIncriminatedBuild",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                286648368
+              ]
+            },
+            "AstorRepair": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/AstorRepair",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                276137200
+              ]
+            },
+            "CommitPatch": {
+              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CommitPatch",
+              "type": "integer",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0,
+              "examples": [
+                311502904
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "NbFailingTests",
+        "FailureNames",
+        "BugCommitUrl",
+        "BuggyBuildURL",
+        "BuggyBuildDate",
+        "BugCommit",
+        "NbRunningTests",
+        "BuggyBuildId"
+      ]
+    },
+    "error-types": {
+      "$id": "/properties/error-types",
+      "type": "array",
+      "items": {
+        "$id": "/properties/error-types/items",
+        "type": "string",
+        "description": "Name of the failures detected",
+        "default": "",
+        "examples": [
+          "org.junit.ComparisonFailure"
+        ]
+      }
+    },
+    "failingModule": {
+      "$id": "/properties/failingModule",
+      "type": "string",
+      "description": "In case of a multi module project, path to the failing module",
+      "default": "",
+      "examples": [
+        "/root/workspace/square/kotlinpoet/332613503"
+      ]
+    },
+    "is-pr": {
+      "$id": "/properties/is-pr",
+      "type": "string",
+      "description": "In case the buggy builds comes from a PR this field exists and contains 'true'",
+      "default": "",
+      "examples": [
+        "true"
+      ]
+    },
+    "pr-base-commit-id": {
+      "$id": "/properties/pr-base-commit-id",
+      "type": "string",
+      "description": "In case the buggy build comes from a PR, this field contains the commit hash of the PR base",
+      "default": "",
+      "examples": [
+        "87f4f1b0cb34c628b4f16c29bb26a5ccdb3aef32"
+      ]
+    },
+    "pr-head-commit-id": {
+      "$id": "/properties/pr-head-commit-id",
+      "type": "string",
+      "description": "In case the buggy build comes from a PR, this field contains the commit hash of the PR head",
+      "default": "",
+      "examples": [
+        "44be6017107ea7d8603954d3aa1cfc971d42a651"
+      ]
+    },
+    "pr-id": {
+      "$id": "/properties/pr-id",
+      "type": "integer",
+      "description": "ID of the PR on the github",
+      "default": 0,
+      "examples": [
+        316
+      ]
+    },
+    "pr-base-commit-id-url": {
+      "$id": "/properties/pr-base-commit-id-url",
+      "type": "string",
+      "description": "In case the buggy build comes from a PR, this field contains the commit URL of the PR base",
+      "default": "",
+      "examples": [
+        "https://github.com/square/kotlinpoet/commit/87f4f1b0cb34c628b4f16c29bb26a5ccdb3aef32"
+      ]
+    },
+    "pr-head-commit-id-url": {
+      "$id": "/properties/pr-head-commit-id-url",
+      "type": "string",
+      "description": "In case the buggy build comes from a PR, this field contains the commit URL of the PR head",
+      "default": "",
+      "examples": [
+        "https://github.com/square/kotlinpoet/commit/44be6017107ea7d8603954d3aa1cfc971d42a651"
+      ]
+    },
+    "pr-remote-repo": {
+      "$id": "/properties/pr-remote-repo",
+      "type": "string",
+      "description": "In the case the buggy build comes from a PR, this field contains the name of the forked repository",
+      "default": "",
+      "examples": [
+        "kiiadi/kotlinpoet"
+      ]
+    }
+  },
+  "required": [
+    "repo",
+    "metrics"
+  ]
+}
