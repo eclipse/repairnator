@@ -942,6 +942,15 @@
           "examples": [
             8
           ]
+        },
+        "numberLines": {
+          "$id": "/properties/projectMetrics/properties/numberLines",
+          "type": "integer",
+          "title": "The numberLines Schema ",
+          "default": 0,
+          "examples": [
+            8
+          ]
         }
       },
       "required": [
