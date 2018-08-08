@@ -1,764 +1,1299 @@
 {
-  "$id": "http://repairnator.lille.inria.fr/schema.json",
+  "$id": "http://repairnator.lille.inria.fr/bears-schema.json",
   "type": "object",
-  "definitions": {},
-  "$schema": "http://json-schema.org/draft-06/schema#",
   "properties": {
-    "repo": {
-      "$id": "/properties/repo",
+    "version": {
+      "$id": "/properties/version",
       "type": "string",
-      "description": "The name of the repository where the bug comes from on the form username/reponame",
+      "title": "version of bears",
       "default": "",
       "examples": [
-        "square/kotlinpoet"
+        "Bears 2.2 build 22/05/2018 15:18:04"
       ]
     },
-    "hostname": {
-      "$id": "/properties/hostname",
+    "type": {
+      "$id": "/properties/type",
       "type": "string",
-      "description": "Name of the host used to reproduce the bug",
+      "title": "The Type Schema ",
       "default": "",
       "examples": [
-        "spirals-librepair"
-      ]
-    },
-    "bugType": {
-      "$id": "/properties/bugType",
-      "type": "string",
-      "description": "Not required. Used to distinguish different kind of experiments (failing_passing vs passing_passing)",
-      "default": "",
-      "examples": [
+        "failingPassing"
+      ],
+      "enum": [
+        "only_fail",
         "failing_passing"
       ]
     },
-    "failing-test-cases": {
-      "$id": "/properties/failing-test-cases",
-      "type": "array",
-      "items": {
-        "$id": "/properties/failing-test-cases/items",
-        "type": "object",
-        "properties": {
-          "className": {
-            "$id": "/properties/failing-test-cases/items/properties/className",
-            "type": "string",
-            "description": "Name of the test class",
-            "default": "",
-            "examples": [
-              "com.squareup.kotlinpoet.TypeSpecTest"
-            ]
-          },
-          "failingMethods": {
-            "$id": "/properties/failing-test-cases/items/properties/failingMethods",
-            "type": "array",
-            "items": {
-              "$id": "/properties/failing-test-cases/items/properties/failingMethods/items",
+    "repository": {
+      "$id": "/properties/repository",
+      "type": "object",
+      "properties": {
+        "name": {
+          "$id": "/properties/repository/properties/name",
+          "type": "string",
+          "title": "The Name Schema ",
+          "default": "",
+          "examples": [
+            "bowenli86/flink"
+          ]
+        },
+        "githubId": {
+          "$id": "/properties/repository/properties/githubId",
+          "type": "integer",
+          "title": "The Githubid Schema ",
+          "default": 0,
+          "examples": [
+            122434
+          ]
+        },
+        "url": {
+          "$id": "/properties/repository/properties/url",
+          "type": "string",
+          "title": "The Url Schema ",
+          "default": "",
+          "examples": [
+            "http://github.com/bowenli86/flink/"
+          ]
+        },
+        "isFork": {
+          "$id": "/properties/repository/properties/isFork",
+          "type": "boolean",
+          "title": "The Fork Schema ",
+          "default": false,
+          "examples": [
+            true
+          ]
+        },
+        "isPullRequest": {
+          "$id": "/properties/repository/properties/isPullRequest",
+          "type": "boolean",
+          "title": "The isPullRequest Schema ",
+          "default": false,
+          "examples": [
+            true
+          ]
+        },
+        "pullRequestId": {
+          "$id": "/properties/repository/properties/pullRequestId",
+          "type": "integer",
+          "title": "The PullRequestId Schema ",
+          "default": 0,
+          "examples": [
+            12
+          ]
+        },
+        "original": {
+          "$id": "/properties/repository/properties/original",
+          "type": "object",
+          "properties": {
+            "name": {
+              "$id": "/properties/repository/properties/original/properties/name",
               "type": "string",
-              "description": "Name of the failing methods",
+              "title": "The Name Schema ",
               "default": "",
               "examples": [
-                "com.squareup.kotlinpoet.TypeSpecTest#anonymousClassToString"
+                "another/flink"
+              ]
+            },
+            "githubId": {
+              "$id": "/properties/repository/properties/original/properties/githubId",
+              "type": "integer",
+              "title": "The Githubid Schema ",
+              "default": 0,
+              "examples": [
+                122435
+              ]
+            },
+            "url": {
+              "$id": "/properties/repository/properties/original/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://github.com/another/flink/"
               ]
             }
           },
-          "erroringMethods": {
-            "$id": "/properties/failing-test-cases/items/properties/erroringMethods",
-            "type": "array",
-            "items": {
-              "$id": "/properties/failing-test-cases/items/properties/erroringMethods/items",
+          "required": [
+            "name",
+            "githubId",
+            "url"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "githubId",
+        "url",
+        "isFork",
+        "isPullRequest"
+      ]
+    },
+    "builds": {
+      "$id": "/properties/builds",
+      "type": "object",
+      "properties": {
+        "buggyBuild": {
+          "$id": "/properties/builds/properties/buggyBuild",
+          "type": "object",
+          "properties": {
+            "id": {
+              "$id": "/properties/builds/properties/buggyBuild/properties/id",
+              "type": "integer",
+              "title": "The Id Schema ",
+              "default": 0,
+              "examples": [
+                122232233
+              ]
+            },
+            "url": {
+              "$id": "/properties/builds/properties/buggyBuild/properties/url",
               "type": "string",
-              "description": "Name of the errorring methods",
+              "title": "The Url Schema ",
               "default": "",
               "examples": [
-                "com.squareup.kotlinpoet.TypeSpecTest#anonymousClassToString"
+                "http://travis-ci.org/bowenli86/flink/builds/362501329"
+              ]
+            },
+            "date": {
+              "$id": "/properties/builds/properties/buggyBuild/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:24 AM"
               ]
             }
           },
-          "failures": {
-            "$id": "/properties/failing-test-cases/items/properties/failures",
-            "type": "array",
-            "items": {
-              "$id": "/properties/failing-test-cases/items/properties/failures/items",
-              "type": "object",
-              "properties": {
-                "failureName": {
-                  "$id": "/properties/failing-test-cases/items/properties/failures/items/properties/failureName",
-                  "type": "string",
-                  "description": "Name of the obtained failure (e.g. AssertionError, NullPointerException...)",
-                  "default": "",
-                  "examples": [
-                    "org.junit.ComparisonFailure"
-                  ]
+          "required": [
+            "id",
+            "url",
+            "date"
+          ]
+        },
+        "fixerBuild": {
+          "$id": "/properties/builds/properties/fixerBuild",
+          "type": "object",
+          "properties": {
+            "id": {
+              "$id": "/properties/builds/properties/fixerBuild/properties/id",
+              "type": "integer",
+              "title": "The Id Schema ",
+              "default": 0,
+              "examples": [
+                122232233
+              ]
+            },
+            "url": {
+              "$id": "/properties/builds/properties/fixerBuild/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://travis-ci.org/bowenli86/flink/builds/362501329"
+              ]
+            },
+            "date": {
+              "$id": "/properties/builds/properties/fixerBuild/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:24 AM"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "url",
+            "date"
+          ]
+        }
+      },
+      "required": [
+        "buggyBuild"
+      ]
+    },
+    "commits": {
+      "$id": "/properties/commits",
+      "type": "object",
+      "properties": {
+        "buggyBuild": {
+          "$id": "/properties/commits/properties/buggyBuild",
+          "type": "object",
+          "properties": {
+            "repoName": {
+              "$id": "/properties/commits/properties/buggyBuild/properties/repoName",
+              "type": "string",
+              "title": "The Reponame Schema ",
+              "default": "",
+              "examples": [
+                "bowenli86/flink"
+              ]
+            },
+            "branchName": {
+              "$id": "/properties/commits/properties/buggyBuild/properties/branchName",
+              "type": "string",
+              "title": "The Branchname Schema ",
+              "default": "",
+              "examples": [
+                "master"
+              ]
+            },
+            "sha": {
+              "$id": "/properties/commits/properties/buggyBuild/properties/sha",
+              "type": "string",
+              "title": "The Sha Schema ",
+              "default": "",
+              "examples": [
+                "f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "url": {
+              "$id": "/properties/commits/properties/buggyBuild/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://github.com/bowenli86/flink/commit/f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "date": {
+              "$id": "/properties/commits/properties/buggyBuild/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:36 AM"
+              ]
+            }
+          },
+          "required": [
+            "repoName",
+            "branchName",
+            "sha",
+            "url",
+            "date"
+          ]
+        },
+        "fixerBuild": {
+          "$id": "/properties/commits/properties/fixerBuild",
+          "type": "object",
+          "properties": {
+            "repoName": {
+              "$id": "/properties/commits/properties/fixerBuild/properties/repoName",
+              "type": "string",
+              "title": "The Reponame Schema ",
+              "default": "",
+              "examples": [
+                "bowenli86/flink"
+              ]
+            },
+            "branchName": {
+              "$id": "/properties/commits/properties/fixerBuild/properties/branchName",
+              "type": "string",
+              "title": "The Branchname Schema ",
+              "default": "",
+              "examples": [
+                "master"
+              ]
+            },
+            "sha": {
+              "$id": "/properties/commits/properties/fixerBuild/properties/sha",
+              "type": "string",
+              "title": "The Sha Schema ",
+              "default": "",
+              "examples": [
+                "f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "url": {
+              "$id": "/properties/commits/properties/fixerBuild/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://github.com/bowenli86/flink/commit/f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "date": {
+              "$id": "/properties/commits/properties/fixerBuild/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:36 AM"
+              ]
+            }
+          },
+          "required": [
+            "repoName",
+            "branchName",
+            "sha",
+            "url",
+            "date"
+          ]
+        },
+        "buggyBuildForkRepo": {
+          "$id": "/properties/commits/properties/buggyBuildForkRepo",
+          "type": "object",
+          "properties": {
+            "repoName": {
+              "$id": "/properties/commits/properties/buggyBuildForkRepo/properties/repoName",
+              "type": "string",
+              "title": "The Reponame Schema ",
+              "default": "",
+              "examples": [
+                "another/flink"
+              ]
+            },
+            "branchName": {
+              "$id": "/properties/commits/properties/buggyBuildForkRepo/properties/branchName",
+              "type": "string",
+              "title": "The Branchname Schema ",
+              "default": "",
+              "examples": [
+                "myPR"
+              ]
+            },
+            "sha": {
+              "$id": "/properties/commits/properties/buggyBuildForkRepo/properties/sha",
+              "type": "string",
+              "title": "The Sha Schema ",
+              "default": "",
+              "examples": [
+                "f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "url": {
+              "$id": "/properties/commits/properties/buggyBuildForkRepo/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://github.com/bowenli86/flink/commit/f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "date": {
+              "$id": "/properties/commits/properties/buggyBuildForkRepo/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:36 AM"
+              ]
+            }
+          },
+          "required": [
+            "repoName",
+            "branchName",
+            "sha",
+            "url",
+            "date"
+          ]
+        },
+        "buggyBuildBaseRepo": {
+          "$id": "/properties/commits/properties/buggyBuildBaseRepo",
+          "type": "object",
+          "properties": {
+            "repoName": {
+              "$id": "/properties/commits/properties/buggyBuildBaseRepo/properties/repoName",
+              "type": "string",
+              "title": "The Reponame Schema ",
+              "default": "",
+              "examples": [
+                "bowenli86/flink"
+              ]
+            },
+            "branchName": {
+              "$id": "/properties/commits/properties/buggyBuildBaseRepo/properties/branchName",
+              "type": "string",
+              "title": "The Branchname Schema ",
+              "default": "",
+              "examples": [
+                "master"
+              ]
+            },
+            "sha": {
+              "$id": "/properties/commits/properties/buggyBuildBaseRepo/properties/sha",
+              "type": "string",
+              "title": "The Sha Schema ",
+              "default": "",
+              "examples": [
+                "f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "url": {
+              "$id": "/properties/commits/properties/buggyBuildBaseRepo/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://github.com/bowenli86/flink/commit/f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "date": {
+              "$id": "/properties/commits/properties/buggyBuildBaseRepo/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:36 AM"
+              ]
+            }
+          },
+          "required": [
+            "repoName",
+            "branchName",
+            "sha",
+            "url",
+            "date"
+          ]
+        },
+        "fixerBuildForkRepo": {
+          "$id": "/properties/commits/properties/fixerBuildForkRepo",
+          "type": "object",
+          "properties": {
+            "repoName": {
+              "$id": "/properties/commits/properties/fixerBuildForkRepo/properties/repoName",
+              "type": "string",
+              "title": "The Reponame Schema ",
+              "default": "",
+              "examples": [
+                "another/flink"
+              ]
+            },
+            "branchName": {
+              "$id": "/properties/commits/properties/fixerBuildForkRepo/properties/branchName",
+              "type": "string",
+              "title": "The Branchname Schema ",
+              "default": "",
+              "examples": [
+                "myPR"
+              ]
+            },
+            "sha": {
+              "$id": "/properties/commits/properties/fixerBuildForkRepo/properties/sha",
+              "type": "string",
+              "title": "The Sha Schema ",
+              "default": "",
+              "examples": [
+                "f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "url": {
+              "$id": "/properties/commits/properties/fixerBuildForkRepo/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://github.com/bowenli86/flink/commit/f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "date": {
+              "$id": "/properties/commits/properties/fixerBuildForkRepo/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:36 AM"
+              ]
+            }
+          },
+          "required": [
+            "repoName",
+            "branchName",
+            "sha",
+            "url",
+            "date"
+          ]
+        },
+        "fixerBuildBaseRepo": {
+          "$id": "/properties/commits/properties/fixerBuildBaseRepo",
+          "type": "object",
+          "properties": {
+            "repoName": {
+              "$id": "/properties/commits/properties/fixerBuildBaseRepo/properties/repoName",
+              "type": "string",
+              "title": "The Reponame Schema ",
+              "default": "",
+              "examples": [
+                "bowenli86/flink"
+              ]
+            },
+            "branchName": {
+              "$id": "/properties/commits/properties/fixerBuildBaseRepo/properties/branchName",
+              "type": "string",
+              "title": "The Branchname Schema ",
+              "default": "",
+              "examples": [
+                "master"
+              ]
+            },
+            "sha": {
+              "$id": "/properties/commits/properties/fixerBuildBaseRepo/properties/sha",
+              "type": "string",
+              "title": "The Sha Schema ",
+              "default": "",
+              "examples": [
+                "f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "url": {
+              "$id": "/properties/commits/properties/fixerBuildBaseRepo/properties/url",
+              "type": "string",
+              "title": "The Url Schema ",
+              "default": "",
+              "examples": [
+                "http://github.com/bowenli86/flink/commit/f6940a0bf0fd5ff487a63ffad29e4dc9cd7a970c"
+              ]
+            },
+            "date": {
+              "$id": "/properties/commits/properties/fixerBuildBaseRepo/properties/date",
+              "type": "string",
+              "title": "The Date Schema ",
+              "default": "",
+              "examples": [
+                "Apr 5, 2018 6:12:36 AM"
+              ]
+            }
+          },
+          "required": [
+            "repoName",
+            "branchName",
+            "sha",
+            "url",
+            "date"
+          ]
+        }
+      },
+      "required": [
+        "buggyBuild"
+      ]
+    },
+    "tests": {
+      "$id": "/properties/tests",
+      "type": "object",
+      "properties": {
+        "overallMetrics": {
+          "$id": "/properties/tests/properties/overallMetrics",
+          "type": "object",
+          "properties": {
+            "numberRunning": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberRunning",
+              "type": "integer",
+              "title": "The numberRunning Schema ",
+              "default": 0,
+              "examples": [
+                363
+              ]
+            },
+            "numberFailing": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberFailing",
+              "type": "integer",
+              "title": "The Numberfailing Schema ",
+              "default": 0,
+              "examples": [
+                19
+              ]
+            },
+            "numberErroring": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberErroring",
+              "type": "integer",
+              "title": "The Numbererroring Schema ",
+              "default": 0,
+              "examples": [
+                1
+              ]
+            },
+            "numberSkipping": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberSkipping",
+              "type": "integer",
+              "title": "The numberSkipping Schema ",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            },
+            "numberPassing": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/numberPassing",
+              "type": "integer",
+              "title": "The Numberpassing Schema ",
+              "default": 0,
+              "examples": [
+                343
+              ]
+            },
+            "failures": {
+              "$id": "/properties/tests/properties/overallMetrics/properties/failures",
+              "type": "array",
+              "items": {
+                "$id": "/properties/tests/properties/overallMetrics/properties/failures/items",
+                "type": "object",
+                "properties": {
+                  "failureName": {
+                    "$id": "/properties/tests/properties/overallMetrics/properties/failures/items/properties/failureName",
+                    "type": "string",
+                    "title": "The failureName Schema ",
+                    "default": "",
+                    "examples": [
+                      "java.lang.AssertionError"
+                    ]
+                  },
+                  "isError": {
+                    "$id": "/properties/tests/properties/overallMetrics/properties/failures/items/properties/isError",
+                    "type": "boolean",
+                    "title": "The Iserror Schema ",
+                    "default": false,
+                    "examples": [
+                      false
+                    ]
+                  },
+                  "occurrences": {
+                    "$id": "/properties/tests/properties/overallMetrics/properties/failures/items/properties/occurrences",
+                    "type": "integer",
+                    "title": "The Number Schema ",
+                    "default": 0,
+                    "examples": [
+                      12
+                    ]
+                  }
                 },
-                "failureDetail": {
-                  "$id": "/properties/failing-test-cases/items/properties/failures/items/properties/failureDetail",
-                  "type": "string",
-                  "description": "Message obtained for the failure",
-                  "default": "",
-                  "examples": [
-                    "expected:<object : []java.lang.Runnable {...> but was:<object : [ ]java.lang.Runnable {...>"
-                  ]
-                },
-                "isError": {
-                  "$id": "/properties/failing-test-cases/items/properties/failures/items/properties/isError",
-                  "type": "boolean",
-                  "description": "Is the failure considered as an error or not",
-                  "default": false,
-                  "examples": [
-                    false
-                  ]
-                }
+                "required": [
+                  "failureName",
+                  "isError",
+                  "occurrences"
+                ]
               }
             }
           },
-          "nbFailures": {
-            "$id": "/properties/failing-test-cases/items/properties/nbFailures",
-            "type": "integer",
-            "description": "Number of detected failures",
-            "default": 0,
-            "examples": [
-              4
-            ]
-          },
-          "nbErrors": {
-            "$id": "/properties/failing-test-cases/items/properties/nbErrors",
-            "type": "integer",
-            "description": "Number of detected errors",
-            "default": 0,
-            "examples": [
-              0
-            ]
-          }
+          "required": [
+            "numberRunning",
+            "numberFailing",
+            "numberErroring",
+            "numberSkipping",
+            "numberPassing",
+            "failures"
+          ]
         },
-        "required": [
-          "className",
-          "failures",
-          "nbFailures",
-          "nbErrors"
-        ]
-      }
-    },
-    "metrics": {
-      "$id": "/properties/metrics",
-      "type": "object",
-      "properties": {
-        "StepsDurationsInSeconds": {
-          "$id": "/properties/metrics/properties/StepsDurationsInSeconds",
-          "type": "object",
-          "description": "The properties give the time spent to execute a specific step of the bug reproduction / repairing in seconds. Those steps could change from one build to another.",
-          "properties": {
-            "CheckoutBuggyBuild": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CheckoutBuggyBuild",
-              "type": "integer",
-              "description": "Time spent to checkout the commit corresponding to the build (in seconds)",
-              "default": 0,
-              "examples": [
-                4
-              ]
-            },
-            "ComputeClasspath": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ComputeClasspath",
-              "type": "integer",
-              "description": "Time spent to compute the classpath of the buggy project (in seconds)",
-              "default": 0,
-              "examples": [
-                3
-              ]
-            },
-            "ComputeTestDir": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ComputeTestDir",
-              "type": "integer",
-              "description": "Time spent to compute the path of the test directory (in seconds)",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            },
-            "ResolveDependency": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ResolveDependency",
-              "type": "integer",
-              "description": "Time spent to resolve the dependency of the project (in seconds)",
-              "default": 0,
-              "examples": [
-                34
-              ]
-            },
-            "BuildProject": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/BuildProject",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                63
-              ]
-            },
-            "NPERepair": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/NPERepair",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            },
-            "ComputeSourceDir": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/ComputeSourceDir",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            },
-            "InitRepoToPush": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/InitRepoToPush",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                1
-              ]
-            },
-            "CloneRepository": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CloneRepository",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                3
-              ]
-            },
-            "NopolRepair": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/NopolRepair",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            },
-            "CheckoutPatchedBuild": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CheckoutPatchedBuild",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                1
-              ]
-            },
-            "TestProject": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/TestProject",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                46
-              ]
-            },
-            "GatherTestInformation": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/GatherTestInformation",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            },
-            "PushIncriminatedBuild": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/PushIncriminatedBuild",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                4
-              ]
-            },
-            "AstorRepair": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/AstorRepair",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                9
-              ]
-            },
-            "CommitPatch": {
-              "$id": "/properties/metrics/properties/StepsDurationsInSeconds/properties/CommitPatch",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                3
-              ]
-            }
-          }
+        "failingModule": {
+          "$id": "/properties/tests/properties/failingModule",
+          "type": "string",
+          "title": "The Failingmodule Schema ",
+          "default": "",
+          "examples": [
+            "flink-tests"
+          ]
         },
-        "FailureNames": {
-          "$id": "/properties/metrics/properties/FailureNames",
+        "failingClasses": {
+          "$id": "/properties/tests/properties/failingClasses",
           "type": "array",
           "items": {
-            "$id": "/properties/metrics/properties/FailureNames/items",
-            "type": "string",
-            "description": "Name of the failures encountered",
-            "default": "",
-            "examples": [
-              "org.junit.ComparisonFailure"
+            "$id": "/properties/tests/properties/failingClasses/items",
+            "type": "object",
+            "properties": {
+              "testClass": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/testClass",
+                "type": "string",
+                "title": "The Testclass Schema ",
+                "default": "",
+                "examples": [
+                  "org.apache.flink.util.FileUtilsTest"
+                ]
+              },
+              "numberRunning": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberRunning",
+                "type": "integer",
+                "title": "The numberRunning Schema ",
+                "default": 0,
+                "examples": [
+                  363
+                ]
+              },
+              "numberFailing": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberFailing",
+                "type": "integer",
+                "title": "The Numberfailing Schema ",
+                "default": 0,
+                "examples": [
+                  19
+                ]
+              },
+              "numberErroring": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberErroring",
+                "type": "integer",
+                "title": "The Numbererroring Schema ",
+                "default": 0,
+                "examples": [
+                  1
+                ]
+              },
+              "numberSkipping": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberSkipping",
+                "type": "integer",
+                "title": "The numberSkipping Schema ",
+                "default": 0,
+                "examples": [
+                  0
+                ]
+              },
+              "numberPassing": {
+                "$id": "/properties/tests/properties/failingClasses/items/properties/numberPassing",
+                "type": "integer",
+                "title": "The Numberpassing Schema ",
+                "default": 0,
+                "examples": [
+                  343
+                ]
+              }
+            },
+            "required": [
+              "testClass",
+              "numberRunning",
+              "numberFailing",
+              "numberErroring",
+              "numberSkipping",
+              "numberPassing"
             ]
           }
         },
-        "NbFailingTests": {
-          "$id": "/properties/metrics/properties/NbFailingTests",
+        "failureDetails": {
+          "$id": "/properties/tests/properties/failureDetails",
+          "type": "array",
+          "items": {
+            "$id": "/properties/tests/properties/failureDetails/items",
+            "type": "object",
+            "properties": {
+              "testClass": {
+                "$id": "/properties/tests/properties/failureDetails/items/properties/testClass",
+                "type": "string",
+                "title": "The testClass Schema ",
+                "default": "",
+                "examples": [
+                  "org.apache.flink.util.FileUtilsTest"
+                ]
+              },
+              "testMethod": {
+                "$id": "/properties/tests/properties/failureDetails/items/properties/testMethod",
+                "type": "string",
+                "title": "The testMethod Schema ",
+                "default": "",
+                "examples": [
+                  "test1"
+                ]
+              },
+              "failureName": {
+                "$id": "/properties/tests/properties/failureDetails/items/properties/failureName",
+                "type": "string",
+                "title": "The failureName Schema ",
+                "default": "",
+                "examples": [
+                  "java.lang.AssertionError"
+                ]
+              },
+              "detail": {
+                "$id": "/properties/tests/properties/failureDetails/items/properties/detail",
+                "type": "string",
+                "title": "The detail Schema ",
+                "default": "",
+                "examples": [
+                  "..."
+                ]
+              },
+              "isError": {
+                "$id": "/properties/tests/properties/failureDetails/items/properties/isError",
+                "type": "boolean",
+                "title": "The Iserror Schema ",
+                "default": false,
+                "examples": [
+                  false
+                ]
+              }
+            },
+            "required": [
+              "testClass",
+              "testMethod",
+              "failureName",
+              "detail",
+              "isError"
+            ]
+          }
+        }
+      },
+      "required": [
+        "overallMetrics",
+        "failingModule",
+        "failingClasses",
+        "failureDetails"
+      ]
+    },
+    "patchDiff": {
+      "$id": "/properties/patchDiff",
+      "type": "object",
+      "properties": {
+        "files": {
+          "$id": "/properties/patchDiff/properties/files",
+          "type": "object",
+          "properties": {
+            "numberAdded": {
+              "$id": "/properties/patchDiff/properties/files/properties/numberAdded",
+              "type": "integer",
+              "title": "The Numberadded Schema ",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            },
+            "numberChanged": {
+              "$id": "/properties/patchDiff/properties/files/properties/numberChanged",
+              "type": "integer",
+              "title": "The Numberchanged Schema ",
+              "default": 0,
+              "examples": [
+                1
+              ]
+            },
+            "numberDeleted": {
+              "$id": "/properties/patchDiff/properties/files/properties/numberDeleted",
+              "type": "integer",
+              "title": "The Numberdeleted Schema ",
+              "default": 0,
+              "examples": [
+                0
+              ]
+            }
+          },
+          "required": [
+            "numberAdded",
+            "numberChanged",
+            "numberDeleted"
+          ]
+        },
+        "lines": {
+          "$id": "/properties/patchDiff/properties/lines",
+          "type": "object",
+          "properties": {
+            "numberAdded": {
+              "$id": "/properties/patchDiff/properties/lines/properties/numberAdded",
+              "type": "integer",
+              "title": "The Numberadded Schema ",
+              "default": 0,
+              "examples": [
+                12
+              ]
+            },
+            "numberDeleted": {
+              "$id": "/properties/patchDiff/properties/lines/properties/numberDeleted",
+              "type": "integer",
+              "title": "The Numberdeleted Schema ",
+              "default": 0,
+              "examples": [
+                1
+              ]
+            }
+          },
+          "required": [
+            "numberAdded",
+            "numberDeleted"
+          ]
+        }
+      },
+      "required": [
+        "files",
+        "lines"
+      ]
+    },
+    "projectMetrics": {
+      "$id": "/properties/projectMetrics",
+      "type": "object",
+      "properties": {
+        "numberModules": {
+          "$id": "/properties/projectMetrics/properties/numberModules",
           "type": "integer",
-          "description": "Total number of failing tests",
-          "default": 0,
-          "examples": [
-            4
-          ]
-        },
-        "ReproductionDate": {
-          "$id": "/properties/metrics/properties/ReproductionDate",
-          "type": "string",
-          "description": "String date of the reproduction of the bug",
-          "default": "",
-          "examples": [
-            "Jan 24, 2018 4:24:10 AM"
-          ]
-        },
-        "BuggyBuildId": {
-          "$id": "/properties/metrics/properties/BuggyBuildId",
-          "type": "integer",
-          "description": "ID of a buggy build from TravisCI",
-          "default": 0,
-          "examples": [
-            332613503
-          ]
-        },
-        "BuggyBuildURL": {
-          "$id": "/properties/metrics/properties/BuggyBuildURL",
-          "type": "string",
-          "description": "URL of the buggy build",
-          "default": "",
-          "examples": [
-            "http://travis-ci.org/square/kotlinpoet/builds/332613503"
-          ]
-        },
-        "BuggyBuildDate": {
-          "$id": "/properties/metrics/properties/BuggyBuildDate",
-          "type": "string",
-          "description": "Date of the end of the buggy build",
-          "default": "",
-          "examples": [
-            "Jan 24, 2018 4:20:53 AM"
-          ]
-        },
-        "BugCommit": {
-          "$id": "/properties/metrics/properties/BugCommit",
-          "type": "string",
-          "description": "Commit hash corresponding to the buggy build",
-          "default": "",
-          "examples": [
-            "2742337e8dc6a898ace3b8164262e33d3080ed91"
-          ]
-        },
-        "BugCommitUrl": {
-          "$id": "/properties/metrics/properties/BugCommitUrl",
-          "type": "string",
-          "description": "URL of the buggy commit. Pay attention that the commit might be not available anymore if it has been deleted.",
-          "default": "",
-          "examples": [
-            "http://github.com/square/kotlinpoet/commit/2742337e8dc6a898ace3b8164262e33d3080ed91"
-          ]
-        },
-        "PatchedBuilId": {
-          "$id": "/properties/metrics/properties/PatchedBuilId",
-          "type": "integer",
-          "description": "If a patched build has been found, ID of the patched build from TravisCI",
-          "default": 0,
-          "examples": [
-            332613714
-          ]
-        },
-        "PatchedBuildURL": {
-          "$id": "/properties/metrics/properties/PatchedBuildURL",
-          "type": "string",
-          "description": "If the patched build has been found, URL of the TravisCI patched build",
-          "default": "",
-          "examples": [
-            "http://travis-ci.org/square/kotlinpoet/builds/332613714"
-          ]
-        },
-        "PatchedBuildDate": {
-          "$id": "/properties/metrics/properties/PatchedBuildDate",
-          "type": "string",
-          "description": "If the patched build has been found, date of the end of the patched build",
-          "default": "",
-          "examples": [
-            "Jan 24, 2018 4:23:06 AM"
-          ]
-        },
-        "PatchCommit": {
-          "$id": "/properties/metrics/properties/PatchCommit",
-          "type": "string",
-          "description": "If the patch build has been found, hash of the commit that triggered the build.",
-          "default": "",
-          "examples": [
-            "2f440d34e3cef28de867690ae9719c554a33e38f"
-          ]
-        },
-        "PatchCommitUrl": {
-          "$id": "/properties/metrics/properties/PatchCommitUrl",
-          "type": "string",
-          "description": "If the patched build has been found, URL of the commit corresponding to the patched build. This commit might be not available anymore if it has been deleted.",
-          "default": "",
-          "examples": [
-            "http://github.com/square/kotlinpoet/commit/2f440d34e3cef28de867690ae9719c554a33e38f"
-          ]
-        },
-        "PatchChangedFiles": {
-          "$id": "/properties/metrics/properties/PatchChangedFiles",
-          "type": "integer",
-          "description": "Number of patched files (only if human patch has been found)",
+          "title": "The numberModules Schema ",
           "default": 0,
           "examples": [
             1
           ]
         },
-        "PatchAddedLines": {
-          "$id": "/properties/metrics/properties/PatchAddedLines",
+        "numberLibrariesFailingModule": {
+          "$id": "/properties/projectMetrics/properties/numberLibrariesFailingModule",
           "type": "integer",
-          "description": "Number of added lines (only if human patch has been found)",
+          "title": "The numberLibrariesFailingModule Schema ",
           "default": 0,
           "examples": [
-            0
+            12
           ]
         },
-        "PatchDeletedLines": {
-          "$id": "/properties/metrics/properties/PatchDeletedLines",
+        "numberSourceFiles": {
+          "$id": "/properties/projectMetrics/properties/numberSourceFiles",
           "type": "integer",
-          "description": "Number of deleted lines ((only if human patch has been found)",
+          "title": "The Numbersourcefiles Schema ",
           "default": 0,
           "examples": [
-            0
+            10
           ]
         },
-        "NbRunningTests": {
-          "$id": "/properties/metrics/properties/NbRunningTests",
+        "numberTestFiles": {
+          "$id": "/properties/projectMetrics/properties/numberTestFiles",
           "type": "integer",
-          "description": "Total number of tests run",
-          "default": 0,
-          "examples": [
-            361
-          ]
-        },
-        "NbLibraries": {
-          "$id": "/properties/metrics/properties/NbLibraries",
-          "type": "integer",
-          "description": "Number of required libraries (based on the classpath)",
-          "default": 0,
-          "examples": [
-            24
-          ]
-        },
-        "NbFileApp": {
-          "$id": "/properties/metrics/properties/NbFileApp",
-          "type": "integer",
-          "description": "Number of source files (only of the failing module if it concerns a multi module application)",
-          "default": 0,
-          "examples": [
-            0
-          ]
-        },
-        "NbFileTests": {
-          "$id": "/properties/metrics/properties/NbFileTests",
-          "type": "integer",
-          "description": "Number of test files (only of the failing module if it concerns a multi module application)",
-          "default": 0,
-          "examples": [
-            2
-          ]
-        },
-        "NbCPU": {
-          "$id": "/properties/metrics/properties/NbCPU",
-          "type": "integer",
-          "description": "Number of CPU of the running host",
+          "title": "The Numbertestfiles Schema ",
           "default": 0,
           "examples": [
             8
           ]
         },
-        "FreeMemory": {
-          "$id": "/properties/metrics/properties/FreeMemory",
+        "numberLines": {
+          "$id": "/properties/projectMetrics/properties/numberLines",
           "type": "integer",
-          "description": "Free memory on the running host JVM (in bytes)",
+          "title": "The numberLines Schema ",
           "default": 0,
           "examples": [
-            311502904
+            8
           ]
-        },
-        "TotalMemory": {
-          "$id": "/properties/metrics/properties/TotalMemory",
-          "type": "integer",
-          "description": "Total memory on the running host JVM (in bytes)",
-          "default": 0,
+        }
+      },
+      "required": [
+        "numberModules",
+        "numberLibrariesFailingModule",
+        "numberSourceFiles",
+        "numberTestFiles"
+      ]
+    },
+    "reproductionBuggyBuild": {
+      "$id": "/properties/reproductionBuggyBuild",
+      "type": "object",
+      "properties": {
+        "reproductionDateBegin": {
+          "$id": "/properties/reproductionBuggyBuild/properties/reproductionDateBegin",
+          "type": "string",
+          "title": "Date of the beginning of the process as a string",
+          "default": "",
           "examples": [
-            338690048
+            "Apr 5, 2018 6:12:24 AM CET"
           ]
         },
-        "AngelicValuesByTest": {
-          "$id": "/properties/metrics/properties/AngelicValuesByTest",
-          "type": "object",
-          "description": "An object taking as key a test class name and as value the number of retrieved angelic values"
+        "reproductionDateEnd": {
+          "$id": "/properties/reproductionBuggyBuild/properties/reproductionDateEnd",
+          "type": "string",
+          "title": "Date of the end of the process as a string",
+          "default": "",
+          "examples": [
+            "Apr 5, 2018 6:12:38 AM CET"
+          ]
         },
-        "FreeMemoryByStep": {
-          "$id": "/properties/metrics/properties/FreeMemoryByStep",
+        "machineInfo": {
+          "$id": "/properties/reproductionBuggyBuild/properties/machineInfo",
           "type": "object",
-          "description": "Free memory on the running host JVM (in bytes) for each step",
           "properties": {
-            "CheckoutBuggyBuild": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CheckoutBuggyBuild",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
+            "hostName": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/hostName",
+              "type": "string",
+              "description": "Name of the host used to reproduce the bug",
+              "default": "",
               "examples": [
-                292014240
+                "spirals-librepair"
               ]
             },
-            "ComputeClasspath": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ComputeClasspath",
+            "numberCPU": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/numberCPU",
               "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "Number of CPU of the running host",
               "default": 0,
               "examples": [
-                281962520
+                8
               ]
             },
-            "ComputeTestDir": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ComputeTestDir",
+            "freeMemory": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/freeMemory",
               "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                282142088
-              ]
-            },
-            "ResolveDependency": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ResolveDependency",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                271811416
-              ]
-            },
-            "BuildProject": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/BuildProject",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                232131784
-              ]
-            },
-            "NPERepair": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/NPERepair",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                286648368
-              ]
-            },
-            "ComputeSourceDir": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/ComputeSourceDir",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                281962520
-              ]
-            },
-            "InitRepoToPush": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/InitRepoToPush",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                212722824
-              ]
-            },
-            "CloneRepository": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CloneRepository",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                446484664
-              ]
-            },
-            "NopolRepair": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/NopolRepair",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                315329424
-              ]
-            },
-            "CheckoutPatchedBuild": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CheckoutPatchedBuild",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                240095112
-              ]
-            },
-            "TestProject": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/TestProject",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                227997832
-              ]
-            },
-            "GatherTestInformation": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/GatherTestInformation",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                222327776
-              ]
-            },
-            "PushIncriminatedBuild": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/PushIncriminatedBuild",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                286648368
-              ]
-            },
-            "AstorRepair": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/AstorRepair",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
-              "default": 0,
-              "examples": [
-                276137200
-              ]
-            },
-            "CommitPatch": {
-              "$id": "/properties/metrics/properties/FreeMemoryByStep/properties/CommitPatch",
-              "type": "integer",
-              "description": "An explanation about the purpose of this instance.",
+              "description": "Free memory on the running host JVM (in bytes)",
               "default": 0,
               "examples": [
                 311502904
               ]
+            },
+            "totalMemory": {
+              "$id": "/properties/reproductionBuggyBuild/properties/machineInfo/properties/totalMemory",
+              "type": "integer",
+              "description": "Total memory on the running host JVM (in bytes)",
+              "default": 0,
+              "examples": [
+                338690048
+              ]
             }
-          }
+          },
+          "required": [
+            "hostName",
+            "numberCPU",
+            "freeMemory",
+            "totalMemory"
+          ]
+        },
+        "projectRootPomPath": {
+          "$id": "/properties/reproductionBuggyBuild/properties/projectRootPomPath",
+          "type": "string",
+          "title": "The projectRootPomPath",
+          "default": "",
+          "examples": [
+            "..."
+          ]
+        },
+        "totalDuration": {
+          "$id": "/properties/reproductionBuggyBuild/properties/totalDuration",
+          "type": "integer",
+          "title": "Total duration of the reproduction in seconds",
+          "default": "",
+          "examples": [
+            472
+          ]
+        },
+        "processDurations": {
+          "$id": "/properties/reproductionBuggyBuild/properties/processDurations",
+          "type": "object",
+          "properties": {
+            "cloning": {
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for cloning",
+                  "default": 0,
+                  "exemples": [
+                    2
+                  ]
+                },
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/totalDuration",
+                  "type": "integer",
+                  "title": "Total duration of the cloning in seconds",
+                  "default": 0,
+                  "exemples": [
+                    120
+                  ]
+                },
+                "stepNames": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps (same order as in stepDurations)",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/cloning/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "nbSteps",
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
+              ]
+            },
+            "building": {
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for building",
+                  "default": 0,
+                  "exemples": [
+                    2
+                  ]
+                },
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/totalDuration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exemples": [
+                    120
+                  ]
+                },
+                "stepNames": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/building/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "nbSteps",
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
+              ]
+            },
+            "testing": {
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for testing",
+                  "default": 0,
+                  "exemples": [
+                    2
+                  ]
+                },
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/totalDuration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exemples": [
+                    120
+                  ]
+                },
+                "stepNames": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/testing/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "nbSteps",
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
+              ]
+            },
+            "fixing": {
+              "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing",
+              "type": "object",
+              "properties": {
+                "nbSteps": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/nbSteps",
+                  "type": "integer",
+                  "title": "Number of steps for fixing",
+                  "default": 0,
+                  "exemples": [
+                    2
+                  ]
+                },
+                "totalDuration": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/totalDuration",
+                  "type": "integer",
+                  "title": "Total duration of the global step in seconds",
+                  "default": 0,
+                  "exemples": [
+                    120
+                  ]
+                },
+                "stepNames": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepNames",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepNames/items",
+                    "type": "string",
+                    "title": "Name of the steps",
+                    "exemples": [
+                      "CheckoutRepository"
+                    ]
+                  }
+                },
+                "stepDurations": {
+                  "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepDurations",
+                  "type": "array",
+                  "items": {
+                    "$id": "/properties/reproductionBuggyBuild/properties/processDurations/properties/fixing/properties/stepDurations/items",
+                    "type": "integer",
+                    "title": "Duration of the steps (same order as in stepNames)",
+                    "exemples": [
+                      119
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "nbSteps",
+                "totalDuration",
+                "stepNames",
+                "stepDurations"
+              ]
+            }
+          },
+          "required": [
+            "cloning",
+            "building",
+            "testing",
+            "fixing"
+          ]
         }
       },
       "required": [
-        "NbFailingTests",
-        "FailureNames",
-        "BugCommitUrl",
-        "BuggyBuildURL",
-        "BuggyBuildDate",
-        "BugCommit",
-        "NbRunningTests",
-        "BuggyBuildId"
-      ]
-    },
-    "error-types": {
-      "$id": "/properties/error-types",
-      "type": "array",
-      "items": {
-        "$id": "/properties/error-types/items",
-        "type": "string",
-        "description": "Name of the failures detected",
-        "default": "",
-        "examples": [
-          "org.junit.ComparisonFailure"
-        ]
-      }
-    },
-    "failingModule": {
-      "$id": "/properties/failingModule",
-      "type": "string",
-      "description": "In case of a multi module project, path to the failing module",
-      "default": "",
-      "examples": [
-        "/root/workspace/square/kotlinpoet/332613503"
-      ]
-    },
-    "is-pr": {
-      "$id": "/properties/is-pr",
-      "type": "string",
-      "description": "In case the buggy builds comes from a PR this field exists and contains 'true'",
-      "default": "",
-      "examples": [
-        "true"
-      ]
-    },
-    "pr-base-commit-id": {
-      "$id": "/properties/pr-base-commit-id",
-      "type": "string",
-      "description": "In case the buggy build comes from a PR, this field contains the commit hash of the PR base",
-      "default": "",
-      "examples": [
-        "87f4f1b0cb34c628b4f16c29bb26a5ccdb3aef32"
-      ]
-    },
-    "pr-head-commit-id": {
-      "$id": "/properties/pr-head-commit-id",
-      "type": "string",
-      "description": "In case the buggy build comes from a PR, this field contains the commit hash of the PR head",
-      "default": "",
-      "examples": [
-        "44be6017107ea7d8603954d3aa1cfc971d42a651"
-      ]
-    },
-    "pr-id": {
-      "$id": "/properties/pr-id",
-      "type": "integer",
-      "description": "ID of the PR on the github",
-      "default": 0,
-      "examples": [
-        316
-      ]
-    },
-    "pr-base-commit-id-url": {
-      "$id": "/properties/pr-base-commit-id-url",
-      "type": "string",
-      "description": "In case the buggy build comes from a PR, this field contains the commit URL of the PR base",
-      "default": "",
-      "examples": [
-        "https://github.com/square/kotlinpoet/commit/87f4f1b0cb34c628b4f16c29bb26a5ccdb3aef32"
-      ]
-    },
-    "pr-head-commit-id-url": {
-      "$id": "/properties/pr-head-commit-id-url",
-      "type": "string",
-      "description": "In case the buggy build comes from a PR, this field contains the commit URL of the PR head",
-      "default": "",
-      "examples": [
-        "https://github.com/square/kotlinpoet/commit/44be6017107ea7d8603954d3aa1cfc971d42a651"
-      ]
-    },
-    "pr-remote-repo": {
-      "$id": "/properties/pr-remote-repo",
-      "type": "string",
-      "description": "In the case the buggy build comes from a PR, this field contains the name of the forked repository",
-      "default": "",
-      "examples": [
-        "kiiadi/kotlinpoet"
+        "reproductionDateBeginning",
+        "reproductionDateEnd",
+        "machineInfo",
+        "projectRootPomPath",
+        "totalDuration",
+        "processDurations"
       ]
     }
   },
   "required": [
-    "repo",
-    "metrics"
+    "type",
+    "repository",
+    "builds",
+    "commits",
+    "tests",
+    "patchDiff",
+    "projectMetrics"
   ]
 }
