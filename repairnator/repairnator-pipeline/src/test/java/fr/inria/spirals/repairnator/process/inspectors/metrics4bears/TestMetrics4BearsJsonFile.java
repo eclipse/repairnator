@@ -171,6 +171,7 @@ public class TestMetrics4BearsJsonFile {
         }
     }
 
+    @Ignore
     @Test
     public void testRepairnatorJsonFileWithFailingBuild() throws IOException, ProcessingException {
         long buggyBuildCandidateId = 208897371; // https://travis-ci.org/surli/failingProject/builds/208897371
