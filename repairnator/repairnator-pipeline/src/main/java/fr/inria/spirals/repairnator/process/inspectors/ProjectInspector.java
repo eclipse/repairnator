@@ -8,13 +8,14 @@ import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
+import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.*;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
@@ -25,12 +26,17 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static fr.inria.spirals.repairnator.states.ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
 /**
  * Created by urli on 26/12/2016.
@@ -91,6 +97,52 @@ public class ProjectInspector {
                 fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build patchedBuild = new fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build(id, url, date);
                 properties.getBuilds().setFixerBuild(patchedBuild);
             }
+
+            MachineInfo machineInfo = properties.getReproductionBuggyBuild().getMachineInfo();
+            machineInfo.setHostName(Utils.getHostname());
+
+            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
+                properties.setVersion("Bears 1.0");
+            }
+
+            fr.inria.spirals.repairnator.process.inspectors.properties.repository.Repository repository = properties.getRepository();
+            repository.setName(this.getRepoSlug());
+            repository.setUrl(Utils.getSimpleGithubRepoUrl(this.getRepoSlug()));
+
+            if (this.getBuggyBuild().isPullRequest()) {
+                repository.setIsPullRequest(true);
+                repository.setPullRequestId(this.getBuggyBuild().getPullRequestNumber());
+            }
+
+            GitHub gitHub;
+            try {
+                gitHub = RepairnatorConfig.getInstance().getGithub();
+                GHRepository repo = gitHub.getRepository(this.getRepoSlug());
+                repository.setGithubId(repo.getId());
+                if (repo.isFork()) {
+                    repository.setIsFork(true);
+                    repository.getOriginal().setName(repo.getParent().getFullName());
+                    repository.getOriginal().setGithubId(repo.getParent().getId());
+                    repository.getOriginal().setUrl(Utils.getSimpleGithubRepoUrl(repo.getParent().getFullName()));
+                }
+            } catch (IOException e) {
+                this.logger.warn("It was not possible to retrieve information to check if " + this.getRepoSlug() + " is a fork.");
+                this.logger.debug(e.toString());
+            }
+
+            switch (this.getBuildToBeInspected().getStatus()) {
+                case ONLY_FAIL:
+                    properties.setType("only_fail");
+                    break;
+
+                case FAILING_AND_PASSING:
+                    properties.setType("failing_passing");
+                    break;
+
+                case PASSING_AND_PASSING_WITH_TEST_CHANGES:
+                    properties.setType("passing_passing");
+                    break;
+            }
         } catch (Exception e) {
             this.logger.error("Error while initializing metrics.", e);
         }
@@ -147,7 +199,7 @@ public class ProjectInspector {
     }
 
     public void run() {
-        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
+        if (this.buildToBeInspected.getStatus() != PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo
                     .setNextStep(new CheckoutBuggyBuild(this, true))
