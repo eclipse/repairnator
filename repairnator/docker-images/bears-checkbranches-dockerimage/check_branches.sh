@@ -37,13 +37,13 @@ if [ -e "bears.json" ]; then
         echo "bears.json is valid in $BRANCH_NAME"
     else
         RESULT="$BRANCH_NAME [FAILURE] (bears.json is invalid)"
-        >&2 echo -e "$RED $RESULT"
+        >&2 echo -e "$RED $RESULT $NC"
         echo "$RESULT" >> $DOCKER_DEST
         exit 2
     fi
 else
     RESULT="$BRANCH_NAME [FAILURE] (bears.json does not exist)"
-    >&2 echo -e "$RED $RESULT"
+    >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 2
 fi
@@ -52,7 +52,7 @@ numberOfCommits=`git rev-list --count HEAD`
 
 if [ "$numberOfCommits" -ne 3 ] && [ "$numberOfCommits" -ne 4 ]; then
     RESULT="$BRANCH_NAME [FAILURE] (the number of commits is different than 3 and 4)"
-    >&2 echo -e "$RED $RESULT"
+    >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 2
 fi
