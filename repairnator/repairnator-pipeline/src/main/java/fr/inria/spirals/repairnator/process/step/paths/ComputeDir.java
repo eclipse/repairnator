@@ -1,13 +1,12 @@
 package fr.inria.spirals.repairnator.process.step.paths;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.building.ModelBuildingException;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,14 +73,9 @@ public class ComputeDir extends AbstractStep {
         }
 
         Model model;
-        try {
-            model = MavenHelper.readPomXml(pomOfCurrentDirPath, this.getInspector().getM2LocalPath());
-            if (model == null) {
-                this.addStepError("Error while building pom.xml model: no model has been retrieved.");
-                return null;
-            }
-        } catch (ModelBuildingException e) {
-            this.addStepError("Error while building pom.xml model: " + e);
+        model = MavenHelper.readPomXml(pomOfCurrentDirPath, this.getInspector().getM2LocalPath());
+        if (model == null) {
+            this.addStepError("Error while building pom.xml model: no model has been retrieved.");
             return null;
         }
 

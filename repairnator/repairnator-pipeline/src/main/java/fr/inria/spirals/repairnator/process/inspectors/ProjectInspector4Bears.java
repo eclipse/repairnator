@@ -49,40 +49,40 @@ public class ProjectInspector4Bears extends ProjectInspector {
         AbstractStep cloneRepo = new CloneRepository(this);
 
         if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
-            cloneRepo.setNextStep(new CheckoutBuggyBuild(this, true, CheckoutBuggyBuild.class.getSimpleName()+"Candidate"))
-                    .setNextStep(new ComputeSourceDir(this, false, true))
-                    .setNextStep(new ComputeTestDir(this, false))
-                    .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidate"))
-                    .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidate"))
-                    .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"BuggyBuildCandidate"))
-                    .setNextStep(new InitRepoToPush(this))
-                    .setNextStep(new ComputeClasspath(this, false))
-                    .setNextStep(new ComputeModules(this, false))
-                    .setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
-                    .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
-                    .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"PatchedBuildCandidate"))
-                    .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"PatchedBuildCandidate"))
-                    .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
+            cloneRepo.addNextStep(new CheckoutBuggyBuild(this, true, CheckoutBuggyBuild.class.getSimpleName()+"Candidate"))
+                    .addNextStep(new ComputeSourceDir(this, false, true))
+                    .addNextStep(new ComputeTestDir(this, false))
+                    .addNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidate"))
+                    .addNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidate"))
+                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"BuggyBuildCandidate"))
+                    .addNextStep(new InitRepoToPush(this))
+                    .addNextStep(new ComputeClasspath(this, false))
+                    .addNextStep(new ComputeModules(this, false))
+                    .addNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
+                    .addNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
+                    .addNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"PatchedBuildCandidate"))
+                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"PatchedBuildCandidate"))
+                    .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
         } else {
             if (this.getBuildToBeInspected().getStatus() == ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-                cloneRepo.setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
-                        .setNextStep(new ComputeSourceDir(this, true, true))
-                        .setNextStep(new ComputeTestDir(this, true))
-                        .setNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
-                        .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
-                        .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
-                        .setNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
-                        .setNextStep(new CheckoutBuggyBuildTestCode(this, true))
-                        .setNextStep(new InitRepoToPush(this))
-                        .setNextStep(new ComputeClasspath(this, false))
-                        .setNextStep(new ComputeModules(this, false))
-                        .setNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
-                        .setNextStep(new CommitChangedTests(this))
-                        .setNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
-                        .setNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
-                        .setNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"PatchedBuildCandidate"))
-                        .setNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"PatchedBuildCandidate"))
-                        .setNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
+                cloneRepo.addNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
+                        .addNextStep(new ComputeSourceDir(this, true, true))
+                        .addNextStep(new ComputeTestDir(this, true))
+                        .addNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
+                        .addNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
+                        .addNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
+                        .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false, GatherTestInformation.class.getSimpleName()+"BuggyBuildCandidateSourceCode"))
+                        .addNextStep(new CheckoutBuggyBuildTestCode(this, true))
+                        .addNextStep(new InitRepoToPush(this))
+                        .addNextStep(new ComputeClasspath(this, false))
+                        .addNextStep(new ComputeModules(this, false))
+                        .addNextStep(new CheckoutBuggyBuildSourceCode(this, true, "CheckoutBuggyBuildCandidateSourceCode"))
+                        .addNextStep(new CommitChangedTests(this))
+                        .addNextStep(new CheckoutPatchedBuild(this, true, CheckoutPatchedBuild.class.getSimpleName()+"Candidate"))
+                        .addNextStep(new BuildProject(this, true, BuildProject.class.getSimpleName()+"PatchedBuildCandidate"))
+                        .addNextStep(new TestProject(this, true, TestProject.class.getSimpleName()+"PatchedBuildCandidate"))
+                        .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true, GatherTestInformation.class.getSimpleName()+"PatchedBuildCandidate"))
+                        .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
             } else {
                 this.logger.debug("The pair of builds " + this.getBuggyBuild().getId() + ", " +
                         this.getPatchedBuild().getId() + " is not interesting.");
@@ -92,8 +92,8 @@ public class ProjectInspector4Bears extends ProjectInspector {
 
         super.setFinalStep(new WritePropertyFile(this));
         super.getFinalStep()
-                .setNextStep(new CommitProcessEnd(this))
-                .setNextStep(new PushProcessEnd(this));
+                .addNextStep(new CommitProcessEnd(this))
+                .addNextStep(new PushProcessEnd(this));
 
         cloneRepo.setDataSerializer(this.getSerializers());
         cloneRepo.setNotifiers(this.getNotifiers());

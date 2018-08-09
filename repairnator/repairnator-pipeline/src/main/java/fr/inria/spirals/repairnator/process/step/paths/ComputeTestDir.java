@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.paths;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
 
 import java.io.File;

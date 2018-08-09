@@ -71,6 +71,11 @@ public class TestRepairnatorConfig {
         System.setProperty("user.dir", CURRENT_USERDIR);
     }
 
+    /**
+     * This test is not needed anymore: all github OAuth token are given directly in the command line.
+     * @throws IOException
+     */
+    @Ignore
     @Test
     public void testGithubOauth() throws IOException {
         RepairnatorConfig config = RepairnatorConfig.getInstance();

@@ -1,0 +1,87 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/patches",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b32c264cff47e000d4777c9"
+      ]
+    },
+    "date": {
+      "$id": "/properties/date",
+      "type": "string",
+      "description": "Date of the record of the patch as a string",
+      "default": "",
+      "examples": [
+        "27/06/18 00:47"
+      ]
+    },
+    "dateStr": {
+      "$id": "/properties/dateStr",
+      "type": "string",
+      "description": "Date of the record of the patch as an ISODate",
+      "default": "",
+      "examples": [
+        "2018-06-27T00:47:00.982+0000"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "75d12b04-24c0-4cad-9ac3-31a74d8ca02f"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "integer",
+      "description": "Travis ID of the build for whom the patch has been created",
+      "default": 0,
+      "examples": [
+        397078792
+      ]
+    },
+    "toolname": {
+      "$id": "/properties/toolname",
+      "type": "string",
+      "description": "Name of the tool which produces the patch",
+      "default": "",
+      "examples": [
+        "Nopol"
+      ]
+    },
+    "diff": {
+      "$id": "/properties/diff",
+      "type": "string",
+      "description": "Value of the patch as a diff",
+      "default": "",
+      "examples": [
+        "--- /root/workspace/matsim-org/matsim/397078792/matsim/src/main/java/org/matsim/core/controler/NewControlerModule.java\n+++ /root/workspace/matsim-org/matsim/397078792/matsim/src/main/java/org/matsim/core/controler/NewControlerModule.java\n@@ -7,3 +7,5 @@\n \tpublic void install() {\n-\t\tbind(ControlerI.class).to(NewControler.class).asEagerSingleton();\n+\t\tif (false) {\n+\t\t\tbind(ControlerI.class).to(NewControler.class).asEagerSingleton();\n+\t\t}\n \t\tbind(ControlerListenerManagerImpl.class).asEagerSingleton();\n"
+      ]
+    },
+    "filepath": {
+      "$id": "/properties/filepath",
+      "type": "string",
+      "description": "Name of the file to be changed",
+      "default": "",
+      "examples": [
+        ""
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host where the patch has been computed",
+      "default": "",
+      "examples": [
+        "spirals-vortex.lille.inria.fr"
+      ]
+    }
+  }
+}

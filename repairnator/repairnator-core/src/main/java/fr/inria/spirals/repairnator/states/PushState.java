@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.states;
 
 /**
- * Created by urli on 27/04/2017.
+ * This enum is used to define if information has been pushed during execution of the pipeline
  */
 public enum PushState {
     NONE,

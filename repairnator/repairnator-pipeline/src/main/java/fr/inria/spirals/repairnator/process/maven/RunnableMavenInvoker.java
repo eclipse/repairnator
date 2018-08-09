@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.Arrays;
 
+/**
+ * This class allows us to run a Maven goal in a dedicated thread that we can interrupt for timeout
+ */
 public class RunnableMavenInvoker implements Runnable {
     private final Logger logger = LoggerFactory.getLogger(RunnableMavenInvoker.class);
 

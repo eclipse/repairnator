@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class is launched in a dedicated thread to interrogate regularly the /job endpoint of Travis CI
+ */
 public class InspectJobs implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectJobs.class);
 
@@ -21,6 +24,9 @@ public class InspectJobs implements Runnable {
         this.sleepTime = RepairnatorConfig.getInstance().getJobSleepTime();
     }
 
+    /**
+     * This is used to stop the thread execution.
+     */
     public void switchOff() {
         this.shouldStop = true;
     }

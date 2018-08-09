@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
@@ -64,7 +64,7 @@ public class TestComputeModules {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeModules computeModules = new ComputeModules(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeModules);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeModules);
         cloneStep.execute();
 
         assertThat(computeModules.isShouldStop(), is(false));
@@ -98,7 +98,7 @@ public class TestComputeModules {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeModules computeModules = new ComputeModules(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(computeModules);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeModules);
         cloneStep.execute();
 
         assertThat(computeModules.isShouldStop(), is(false));

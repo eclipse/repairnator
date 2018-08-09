@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.Utils;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.eclipse.jgit.api.Git;

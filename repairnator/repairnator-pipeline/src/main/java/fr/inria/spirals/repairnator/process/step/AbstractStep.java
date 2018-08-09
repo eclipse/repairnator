@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
@@ -19,7 +19,9 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Created by urli on 03/01/2017.
+ * This class defines a step of the pipeline.
+ * Steps are chained and when a step has finished its execution, the next step execution is called,
+ * unless the it is a blocking step and the execution status stops the whole pipeline.
  */
 public abstract class AbstractStep {
     /**
@@ -28,21 +30,50 @@ public abstract class AbstractStep {
      */
     private String name;
 
+    /**
+     * The inspector that created this pipeline
+     */
     private ProjectInspector inspector;
 
-    private boolean shouldStop;
+    /**
+     * The next step to be executed
+     */
     private AbstractStep nextStep;
-    private Date dateBegin;
-    private Date dateEnd;
-    private long timeBegin;
-    private long timeEnd;
-    private boolean pomLocationTested;
-    private List<AbstractDataSerializer> serializers;
-    private List<AbstractNotifier> notifiers;
-    private RepairnatorConfig config;
 
+    /**
+     * This flag force the pipeline to stop if it's set to true
+     */
+    private boolean shouldStop;
+
+    /**
+     * Date of the beginning of the step execution
+     */
+    private Date dateBegin;
+
+    /**
+     * Date of the end of the step execution
+     */
+    private Date dateEnd;
+
+    /**
+     * If set to true, the pom location has been already tested
+     */
+    private boolean pomLocationTested;
+
+    /**
+     * The list of serializers used
+     */
+    private List<AbstractDataSerializer> serializers;
+
+    /**
+     * The list of notifiers used
+     */
+    private List<AbstractNotifier> notifiers;
+
+    /**
+     * The step status is given by the execution of the step
+     */
     private StepStatus stepStatus;
-    private PushState pushState;
 
     /**
      * If set to true, the failure of the step means a stop of the entire pipeline.
@@ -59,7 +90,6 @@ public abstract class AbstractStep {
         this.shouldStop = false;
         this.pomLocationTested = false;
         this.serializers = new ArrayList<>();
-        this.config = RepairnatorConfig.getInstance();
         this.blockingStep = blockingStep;
         this.setProjectInspector(inspector);
     }
@@ -112,9 +142,15 @@ public abstract class AbstractStep {
         return inspector;
     }
 
-    public AbstractStep setNextStep(AbstractStep nextStep) {
+    /**
+     * Set the next step to the entire pipeline:
+     * this method won't replace the nextStep of the actual step but will
+     * add it to the last step of the current chain of steps.
+     * It also initialize the serializers and notifiers for the whole chain of steps.
+     */
+    public AbstractStep addNextStep(AbstractStep nextStep) {
         if (this.nextStep != null) {
-            this.nextStep.setNextStep(nextStep);
+            this.nextStep.addNextStep(nextStep);
         } else {
             this.nextStep = nextStep;
             nextStep.setDataSerializer(this.serializers);
@@ -125,8 +161,7 @@ public abstract class AbstractStep {
 
     protected void setPushState(PushState pushState) {
         if (pushState != null) {
-            this.pushState = pushState;
-            this.inspector.getJobStatus().addPushState(this.pushState);
+            this.inspector.getJobStatus().addPushState(pushState);
             if (this.nextStep != null) {
                 this.nextStep.setPushState(pushState);
             }
@@ -158,7 +193,7 @@ public abstract class AbstractStep {
 
     private void serializeData() {
         if (serializers != null) {
-            if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
                 this.getLogger().info("Serialize all data for the pair of builds " +
                         this.getInspector().getBuggyBuild().getId() + ", " + this.getInspector().getPatchedBuild().getId());
             } else {
@@ -267,9 +302,8 @@ public abstract class AbstractStep {
             }
         }
 
-
         File repoDir = new File(this.inspector.getRepoLocalPath(), Utils.REMOTE_REPO_EXT);
-        if (repoDir.exists() && this.config.isClean()) {
+        if (repoDir.exists() && this.getConfig().isClean()) {
             try {
                 FileUtils.deleteDirectory(this.inspector.getRepoLocalPath());
             } catch (IOException e) {
@@ -298,10 +332,8 @@ public abstract class AbstractStep {
         this.getLogger().debug("----------------------------------------------------------------------");
 
         this.dateBegin = new Date();
-        this.timeBegin = dateBegin.getTime();
         this.stepStatus = this.businessExecute();
         this.dateEnd = new Date();
-        this.timeEnd = dateEnd.getTime();
 
         this.getLogger().debug("STEP STATUS: "+this.stepStatus);
         this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
@@ -367,14 +399,18 @@ public abstract class AbstractStep {
     }
 
     public int getDuration() {
-        if (timeEnd == 0 || timeBegin == 0) {
-            return 0;
+        if (getDateBegin() == null || getDateEnd() == null) {
+            return -1;
         }
+
+        long timeBegin = getDateBegin().getTime();
+        long timeEnd = getDateEnd().getTime();
+        
         return Math.round((timeEnd - timeBegin) / 1000);
     }
 
     public RepairnatorConfig getConfig() {
-        return config;
+        return RepairnatorConfig.getInstance();
     }
 
     protected abstract StepStatus businessExecute();

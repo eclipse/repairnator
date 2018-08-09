@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class TestMavenHelper {
 	@Test
-	public void testGetMavenModel() throws ModelBuildingException {
+	public void testGetMavenModel() {
 		File javaParserPom = new File("./src/test/resources/pom-examples/javaparser-pom.xml");
 		File tempM2 = Files.createTempDir();
 

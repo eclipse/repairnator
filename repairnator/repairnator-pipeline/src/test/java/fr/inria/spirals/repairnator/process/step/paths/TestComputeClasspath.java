@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
@@ -69,7 +69,7 @@ public class TestComputeClasspath {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneStep.execute();
 
         createTargetDir(new File(jobStatus.getFailingModulePath()));
@@ -115,7 +115,7 @@ public class TestComputeClasspath {
         CloneRepository cloneStep = new CloneRepository(inspector);
         ComputeClasspath computeClasspath = new ComputeClasspath(inspector, true);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true));
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneStep.execute();
 
         createTargetDir(new File(jobStatus.getFailingModulePath()));

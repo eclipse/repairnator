@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -68,10 +68,10 @@ public class TestNPERepair {
         NPERepair npeRepair = new NPERepair();
         npeRepair.setProjectInspector(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-                .setNextStep(npeRepair);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .addNextStep(npeRepair);
         cloneStep.execute();
 
         assertThat(npeRepair.isShouldStop(), is(false));

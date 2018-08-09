@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/**
+ * This class can be used in gson to properly serialize Path object.
+ */
 public class GsonPathTypeAdapter extends TypeAdapter<Path> {
     @Override
     public void write(JsonWriter jsonWriter, Path path) throws IOException {

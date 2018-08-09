@@ -1,0 +1,75 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/tool-diagnostic",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b5ee557129477000c3d0553"
+      ]
+    },
+    "date": {
+      "$id": "/properties/date",
+      "type": "string",
+      "description": "Date of the record as a string",
+      "default": "",
+      "examples": [
+        "30/07/18 12:15"
+      ]
+    },
+    "dateStr": {
+      "$id": "/properties/dateStr",
+      "type": "string",
+      "description": "Date of the record as an ISODate",
+      "default": "",
+      "examples": [
+        "2018-07-30T12:15:51.219+0000"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "1c297388-dc79-499a-bc97-e0204c6f83fb"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "integer",
+      "description": "Travis ID of the build to repair",
+      "default": 0,
+      "examples": [
+        409734910
+      ]
+    },
+    "toolname": {
+      "$id": "/properties/toolname",
+      "type": "string",
+      "description": "Name of the tool used to repair",
+      "default": "",
+      "examples": [
+        "AstorJMut"
+      ]
+    },
+    "diagnostic": {
+      "$id": "/properties/diagnostic",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "$id": "/properties/diagnostic/properties/properties",
+          "type": "string",
+          "description": "All tools will provide different properties for their own diagnostic",
+          "default": "",
+          "examples": [
+            "some values"
+          ]
+        }
+      }
+    }
+  }
+}

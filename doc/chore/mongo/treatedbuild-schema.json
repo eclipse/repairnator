@@ -1,0 +1,88 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/treatedbuild",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b6013f010df0327d86d2c32"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "1c297388-dc79-499a-bc97-e0204c6f83fb"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "integer",
+      "description": "Travis ID of the build to repair",
+      "default": 0,
+      "examples": [
+        410186362
+      ]
+    },
+    "containerId": {
+      "$id": "/properties/containerId",
+      "type": "string",
+      "description": "Docker ID of the container running the build repair",
+      "default": "",
+      "examples": [
+        "2cb826c9cd1335e64aec7403a215dc354296e25b88c695a71960aaafcce2e321"
+      ]
+    },
+    "dateReproducedBuildStr": {
+      "$id": "/properties/dateReproducedBuildStr",
+      "type": "string",
+      "description": "Date of the reproduction of the build, as a string",
+      "default": "",
+      "examples": [
+        "31/07/18 09:46"
+      ]
+    },
+    "dateReproducedBuild": {
+      "$id": "/properties/dateReproducedBuild",
+      "type": "string",
+      "description": "ISODate of the reproduction of the build",
+      "default": "",
+      "examples": [
+        "2018-07-31T09:46:56.568+0000"
+      ]
+    },
+    "dayReproducedBuild": {
+      "$id": "/properties/dayReproducedBuild",
+      "type": "string",
+      "description": "Day of the reproduction of the build",
+      "default": "",
+      "examples": [
+        "31/07/2018"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host where the build is reproduced",
+      "default": "",
+      "examples": [
+        "spirals-repairnator"
+      ]
+    },
+    "status": {
+      "$id": "/properties/status",
+      "type": "string",
+      "description": "Status to know if the build is treated or not",
+      "default": "",
+      "examples": [
+        "TREATED",
+        "DETECTED"
+      ]
+    }
+  }
+}

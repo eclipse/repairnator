@@ -9,7 +9,7 @@ import eu.stamp.project.assertfixer.Configuration;
 import eu.stamp.project.assertfixer.Main;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.io.File;

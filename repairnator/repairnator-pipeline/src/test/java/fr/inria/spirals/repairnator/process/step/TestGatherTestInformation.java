@@ -8,7 +8,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
@@ -76,9 +75,9 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -126,7 +125,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -185,7 +184,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -236,7 +235,7 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new TestProject(inspector)).setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
@@ -285,9 +284,9 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldPass(), false);
 
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-                .setNextStep(new TestProject(inspector))
-                .setNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();

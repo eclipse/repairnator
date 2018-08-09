@@ -73,7 +73,7 @@ public class TestCommitPatch {
 
         CloneRepository cloneStep = new CloneRepository(inspector);
 
-        cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true)).setNextStep(new InitRepoToPush(inspector)).setNextStep(new CommitPatch(inspector, CommitType.COMMIT_REPAIR_INFO));
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new InitRepoToPush(inspector)).addNextStep(new CommitPatch(inspector, CommitType.COMMIT_REPAIR_INFO));
         cloneStep.execute();
 
         assertThat(jobStatus.getPushStates().contains(PushState.REPAIR_INFO_COMMITTED), is(true));
