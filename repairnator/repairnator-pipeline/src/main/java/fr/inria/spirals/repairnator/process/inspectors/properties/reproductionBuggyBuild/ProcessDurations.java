@@ -18,14 +18,13 @@ public class ProcessDurations {
     private GlobalStepInfo cloning;
     private GlobalStepInfo building;
     private GlobalStepInfo testing;
-    // TO BE USED for repairnator.json
-    //private GlobalStepInfo fixing;
+    private GlobalStepInfo fixing;
 
     ProcessDurations() {
         this.cloning = new GlobalStepInfo();
         this.building = new GlobalStepInfo();
         this.testing = new GlobalStepInfo();
-        //this.fixing = new GlobalStepInfo();
+        this.fixing = new GlobalStepInfo();
     }
 
     public GlobalStepInfo getCloning() {
@@ -40,9 +39,9 @@ public class ProcessDurations {
         return testing;
     }
 
-    /*public GlobalStepInfo getFixing() {
+    public GlobalStepInfo getFixing() {
         return fixing;
-    }*/
+    }
 
     public void addGlobalStepInfo(AbstractStep step) {
         String stepName = step.getName();
@@ -50,7 +49,7 @@ public class ProcessDurations {
         if (step instanceof CloneRepository) {
             this.cloning.addStep(stepName, stepDuration);
         } else if (step instanceof AbstractRepairStep) {
-            //this.fixing.addStep(stepName, stepDuration);
+            this.fixing.addStep(stepName, stepDuration);
         } else if (step instanceof TestProject &&
                 (step.getInspector().getCheckoutType().equals(CheckoutType.CHECKOUT_BUGGY_BUILD) ||
                 step.getInspector().getCheckoutType().equals(CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE))) {
