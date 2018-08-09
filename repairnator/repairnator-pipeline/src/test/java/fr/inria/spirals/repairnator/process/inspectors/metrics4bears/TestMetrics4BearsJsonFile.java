@@ -50,7 +50,7 @@ public class TestMetrics4BearsJsonFile {
     private List<String> propertiesToIgnore;
 
     @Before
-    public void setUp() throws IOException, ProcessingException {
+    public void setUp() {
         Utils.setLoggersLevel(Level.ERROR);
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
