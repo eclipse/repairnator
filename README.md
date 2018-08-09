@@ -7,7 +7,7 @@ If you want to bring your own tool in Repairnator platform, have a look on [cont
 # Repairnator: a program repair bot for continuous integration
 
 Repairnator is a software development bot that automatically repairs build failures on Travis CI.
-It scans failing Travis builds, tries to locally reproduce the failing build die to test failures and tries to repair it with a program repair tool (eg Nopol or Astor). 
+It scans failing Travis builds, tries to locally reproduce the failing build due to test failures and tries to repair it with program repair tools (e.g. Nopol and Astor).
 
 See [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). In Proceedings of 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018.
 
@@ -30,7 +30,7 @@ See [How to Design a Program Repair Bot? Insights from the Repairnator Project](
 
 ## Quickstart
 
-The following is just a quickstart. For more advanced usage, go [read the usage section of our documentation](doc/usage).
+The following is just a quickstart. For more advanced usage, go to [read the usage section of our documentation](doc/usage).
 
 ### Requirements
 
@@ -51,7 +51,7 @@ For more information about `repairnator.cfg` read [our complete documentation](d
 git clone https://github.com/Spirals-Team/repairnator/
 cd repairnator
 
-# edit the file to specify the mandatory elements (you must add the Github Personal Access Token here)
+# edit the file to specify the mandatory elements (you must add the GitHub Personal Access Token here)
 cp repairnator/scripts/config/repairnator.cfg ~
 vi ~/repairnator.cfg
 ```
@@ -61,7 +61,7 @@ vi ~/repairnator.cfg
 From a Travis URL like this one: https://travis-ci.org/surli/test-repairnator/builds/352395977 you can retrieve a Build ID by taking the last part of the URL.
 Here it is: `352395977`.
 
-All you have to do, to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
+All you have to do to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
 ```bash
 # set $HOME_REPAIR and $GITHUB_OAUTH in repairnator/scripts/config/repairnator.cfg
@@ -87,15 +87,15 @@ First open your `repairnator.cfg` config file (see above) and edit the values un
   
 Then just run the script `launch_rtscanner.sh`.
 
-* this generates build reproduction info and patches as local files in a folder called `logs/`
+* this generates build reproduction info and patches as local files in a folder named `logs/`
 * in this default setup, no MongoDB is used, no email notification is done
 
 ## Content of the repository
 
-This repository is organized as following:
+This repository is organized as follows:
 
   * [doc](/doc) contains some documentation about Repairnator and its usage
-  * [Repairnator](/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
+  * [repairnator](/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
   * [bears-usage](/bears-usage) is a side project dedicated to gather data from repairnator.json files
   * [resources](/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
   * [website](/website) contains all data to produce repairnator website
