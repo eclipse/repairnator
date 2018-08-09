@@ -35,7 +35,7 @@ Then, Yyou create a new Java class in package `fr.inria.spirals.repairnator.proc
 
 When you inherit from the `AbstractRepairStep` class, you first need to implement the abstract method `getRepairToolName()`: this method should only returns a String with the name of the tool you are bringing.
 
-Then you need to override and implement the method `businessExecute()`. This method is automatically called to execute the repair step: it's always called after the failing builds has been reproduced, and thus you can get access to information about the test failures and about some pathes of the project.
+Then you need to override and implement the method `businessExecute()`. This method is automatically called to execute the repair step: it's always called after the failing builds has been reproduced, and thus you can get access to information about the test failures and about some paths of the project.
 
 #### Accessing the context information with JobStatus
 

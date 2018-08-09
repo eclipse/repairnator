@@ -383,7 +383,7 @@ It defines the name of the docker image to use for Repairnator BEARS checkbranch
 
 Its default value is `spirals/checkbranches:latest`.
 
-### Root pathes
+### Root paths
 
 This section defines the different main paths used in the scripts. 
 All paths must end with a `/`.
@@ -415,7 +415,7 @@ The directory does not need to exist: it will be created if it does not.
 
 Its default value is `$HOME_REPAIR/bin/` (see the beginning of this page for more info about `HOME_REPAIR`).
 
-### Binary pathes
+### Binary paths
 
 This section defines the complete path of each binaries which might be used by the Repairnator scripts.
 
@@ -460,7 +460,7 @@ It defines the absolute path of the jar used for Repairnator RTScanner.
 
 Its default value is `$REPAIRNATOR_RUN_DIR/repairnator-realtime.jar`.
 
-### Other pathes
+### Other paths
 
 This section defines the other paths used by Repairnator.
 
