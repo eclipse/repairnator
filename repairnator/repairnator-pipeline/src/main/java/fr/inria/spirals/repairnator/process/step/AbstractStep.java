@@ -327,7 +327,7 @@ public abstract class AbstractStep {
     private void terminatePipeline() {
         if (!this.inspector.isPipelineEnding()) {
             this.inspector.setPipelineEnding(true);
-            this.recordMetrics();
+            this.recordMachineInfo();
             if (this.inspector.getFinalStep() != null) {
                 if ((!(this.getInspector() instanceof ProjectInspector4Bears) && // Repairnator
                         this.getInspector().getJobStatus().isReproducedAsFail()) // A bug was reproduced
@@ -351,7 +351,7 @@ public abstract class AbstractStep {
         }
     }
 
-    private void recordMetrics() {
+    private void recordMachineInfo() {
         MachineInfo machineInfo = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild().getMachineInfo();
         machineInfo.setNumberCPU(Runtime.getRuntime().availableProcessors());
         machineInfo.setFreeMemory(Runtime.getRuntime().freeMemory());
