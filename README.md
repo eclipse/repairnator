@@ -7,7 +7,7 @@ If you want to bring your own tool in Repairnator platform, have a look on [cont
 # Repairnator: a program repair bot for continuous integration
 
 Repairnator is a software development bot that automatically repairs build failures on Travis CI.
-It scans failing Travis builds, tries to locally reproduce the failing build die to test failures and tries to repair it with a program repair tool (eg Nopol or Astor). 
+It scans failing Travis builds, tries to locally reproduce the failing build due to test failures and tries to repair it with program repair tools (e.g. Nopol and Astor).
 
 See [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). In Proceedings of 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018.
 
@@ -30,7 +30,7 @@ See [How to Design a Program Repair Bot? Insights from the Repairnator Project](
 
 ## Quickstart
 
-The following is just a quickstart. For more advanced usage, go [read the usage section of our documentation](doc/usage).
+The following is just a quickstart. For more advanced usage, go to [read the usage section of our documentation](doc/usage).
 
 ### Requirements
 
