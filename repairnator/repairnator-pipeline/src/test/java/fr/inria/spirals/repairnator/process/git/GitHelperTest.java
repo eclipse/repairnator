@@ -2,8 +2,8 @@ package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
+import fr.inria.spirals.repairnator.process.inspectors.properties.patchDiff.PatchDiff;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -43,14 +43,14 @@ public class GitHelperTest {
         RevCommit revCommit = revwalk.parseCommit(ObjectId.fromString(commit));
 
         GitHelper gitHelper = new GitHelper();
-        Metrics metrics = jobStatus.getMetrics();
-        Properties properties = jobStatus.getProperties();
         gitHelper.computePatchStats(jobStatus, git, revCommit, revParentCommit);
-        assertEquals(13, metrics.getPatchChangedFiles());
-        assertEquals(8, properties.getPatchDiff().getFiles().getNumberAdded());
-        assertEquals(1, properties.getPatchDiff().getFiles().getNumberDeleted());
-        assertEquals(4, properties.getPatchDiff().getFiles().getNumberChanged());
-        assertEquals(405, metrics.getPatchAddedLines());
-        assertEquals(104, metrics.getPatchDeletedLines());
+
+        PatchDiff patchDiff = jobStatus.getProperties().getPatchDiff();
+
+        assertEquals(8, patchDiff.getFiles().getNumberAdded());
+        assertEquals(1, patchDiff.getFiles().getNumberDeleted());
+        assertEquals(4, patchDiff.getFiles().getNumberChanged());
+        assertEquals(405, patchDiff.getLines().getNumberAdded());
+        assertEquals(104, patchDiff.getLines().getNumberDeleted());
     }
 }

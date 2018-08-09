@@ -6,7 +6,6 @@ import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.properties.commits.Commit;
@@ -43,7 +42,6 @@ public abstract class CheckoutRepository extends AbstractStep {
     protected StepStatus businessExecute() {
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
-        Metrics metric = jobStatus.getMetrics();
         Properties properties = jobStatus.getProperties();
         Commit commit;
 
@@ -53,38 +51,19 @@ public abstract class CheckoutRepository extends AbstractStep {
             git = Git.open(new File(this.getInspector().getRepoLocalPath()));
             GitHelper gitHelper = this.getInspector().getGitHelper();
             Build build;
-            String repoSlug = this.getInspector().getRepoSlug();
 
             switch (checkoutType) {
                 case CHECKOUT_BUGGY_BUILD:
-                    build = this.getInspector().getBuggyBuild();
-                    metric.setBugCommit(build.getCommit().getSha());
-                    metric.setBugCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
-
-                    commit = this.createCommitForMetrics(build);
-                    properties.getCommits().setBuggyBuild(commit);
-                    break;
-
                 case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
-                    build = this.getInspector().getBuggyBuild();
-                    metric.setBugCommit(build.getCommit().getSha());
-                    metric.setBugCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
-                    metric.setReconstructedBugCommit(true);
-
-                    commit = this.createCommitForMetrics(build);
-                    properties.getCommits().setBuggyBuild(commit);
-                    break;
-
                 case CHECKOUT_BUGGY_BUILD_TEST_CODE:
                     build = this.getInspector().getBuggyBuild();
-                    metric.setBugCommit(build.getCommit().getSha());
-                    metric.setBugCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
+
+                    commit = this.createCommitForMetrics(build);
+                    properties.getCommits().setBuggyBuild(commit);
                     break;
 
                 case CHECKOUT_PATCHED_BUILD:
                     build = this.getInspector().getPatchedBuild();
-                    metric.setPatchCommit(build.getCommit().getSha());
-                    metric.setPatchCommitUrl(Utils.getCommitUrl(build.getCommit().getSha(), repoSlug));
 
                     commit = this.createCommitForMetrics(build);
                     properties.getCommits().setFixerBuild(commit);
@@ -101,14 +80,6 @@ public abstract class CheckoutRepository extends AbstractStep {
                 if (obsPrInformation.isPresent()) {
                     PullRequest prInformation = obsPrInformation.get();
                     if (checkoutType == CheckoutType.CHECKOUT_PATCHED_BUILD) {
-                        jobStatus.writeProperty("is-pr", "true");
-                        jobStatus.writeProperty("pr-remote-repo", prInformation.getOtherRepo().getFullName());
-                        jobStatus.writeProperty("pr-head-commit-id", prInformation.getHead().getSHA1());
-                        jobStatus.writeProperty("pr-head-commit-id-url", prInformation.getHead().getHtmlUrl());
-                        jobStatus.writeProperty("pr-base-commit-id", prInformation.getBase().getSHA1());
-                        jobStatus.writeProperty("pr-base-commit-id-url", prInformation.getBase().getHtmlUrl());
-                        jobStatus.writeProperty("pr-id", build.getPullRequestNumber());
-
                         commit = this.createCommitForMetrics(prInformation, false);
                         properties.getCommits().setFixerBuildForkRepo(commit);
                         commit = this.createCommitForMetrics(prInformation, true);
@@ -166,7 +137,6 @@ public abstract class CheckoutRepository extends AbstractStep {
                         // FIXME: commit should not be there
                         git.commit().setMessage("Undo changes on source code").setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).call();
                     }
-                    jobStatus.writeProperty("bugCommit", this.getInspector().getBuggyBuild().getCommit().getCompareUrl());
                 } else {
                     this.addStepError("Error while getting the commit to checkout from the repo.");
                     return StepStatus.buildError(this, PipelineState.BUILDNOTCHECKEDOUT);

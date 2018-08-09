@@ -93,11 +93,18 @@
     "numberModules": 2,
     "numberSourceFiles": 2,
     "numberTestFiles": 3,
-    "numberLibrariesFailingModule": 4
+    "numberLibrariesFailingModule": 4,
+    "numberLines": 283
   },
   "reproductionBuggyBuild": {
     "reproductionDateBeginning": "Jun 8, 2018 8:50:43 AM",
     "reproductionDateEnd": "Jun 8, 2018 8:58:24 AM",
+    "machineInfo": {
+      "hostName": "spirals-librepair",
+      "numberCPU": 8,
+      "freeMemory": 311502904,
+      "totalMemory": 338690048
+    },
     "totalDuration": 459,
     "processDurations": {
       "cloning": {

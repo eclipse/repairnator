@@ -1,11 +1,10 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
+import fr.inria.spirals.repairnator.process.inspectors.properties.tests.FailureDetail;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +47,6 @@ public class JobStatus {
     private boolean hasBeenPatched;
     private Throwable fatalError;
 
-    private Metrics metrics;
-    private java.util.Properties properties4repairnator;
     private Properties properties;
 
     private List<String> createdFilesToPush;
@@ -57,6 +54,8 @@ public class JobStatus {
     private String forkURL;
 
     private List<StepStatus> stepStatuses;
+    private Map<String, Integer> stepsDurationsInSeconds;
+    private Map<String, Long> freeMemoryByStep;
 
     private List<String> PRCreated;
 
@@ -65,11 +64,11 @@ public class JobStatus {
         this.pomDirPath = pomDirPath;
         this.repairSourceDir = new File[]{new File("src/main/java")};
         this.failingModulePath = pomDirPath;
-        this.metrics = new Metrics();
-        this.properties4repairnator = new java.util.Properties();
         this.properties = new Properties();
         this.createdFilesToPush = new ArrayList<>();
         this.stepStatuses = new ArrayList<>();
+        this.stepsDurationsInSeconds = new HashMap<>();
+        this.freeMemoryByStep = new HashMap<>();
         this.pushStates = new ArrayList<>();
         this.listOfPatches = new HashMap<>();
         this.toolDiagnostic = new HashMap<>();
@@ -137,7 +136,6 @@ public class JobStatus {
 
     public void setFailingModulePath(String failingModulePath) {
         this.failingModulePath = failingModulePath;
-        this.writeProperty("failingModule", this.failingModulePath);
         this.properties.getTests().setFailingModule(this.failingModulePath);
     }
 
@@ -147,7 +145,6 @@ public class JobStatus {
 
     public void setFailureLocations(Set<FailureLocation> failureLocations) {
         this.failureLocations = failureLocations;
-        this.writeProperty("failing-test-cases", this.failureLocations);
     }
 
     public String getGitBranchUrl() {
@@ -176,24 +173,6 @@ public class JobStatus {
 
     public void addPushState(PushState pushState) {
         this.pushStates.add(pushState);
-    }
-
-    public Metrics getMetrics() {
-        return metrics;
-    }
-
-    public java.util.Properties getProperties4Repairnator() {
-        return properties4repairnator;
-    }
-
-    public void writeProperty(String propertyName, Object value) {
-        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
-            if (value != null) {
-                this.properties4repairnator.put(propertyName, value);
-            } else {
-                this.logger.warn("Trying to write null value for property: " + propertyName);
-            }
-        }
     }
 
     public Properties getProperties() {
@@ -297,5 +276,31 @@ public class JobStatus {
 
     public void addPRCreated(String prURL) {
         this.PRCreated.add(prURL);
+    }
+
+    public Map<String, Integer> getStepsDurationsInSeconds() {
+        return stepsDurationsInSeconds;
+    }
+
+    public void addStepDuration(String step, int duration) {
+        this.stepsDurationsInSeconds.put(step, duration);
+    }
+
+    public Map<String, Long> getFreeMemoryByStep() {
+        return freeMemoryByStep;
+    }
+
+    public void addFreeMemoryByStep(String step, long value) {
+        this.freeMemoryByStep.put(step, value);
+    }
+
+    public List<String> getFailureNames() {
+        List<String> failureNames = new ArrayList<>();
+        for (FailureDetail failureDetail : this.properties.getTests().getFailureDetails()) {
+            if (!failureNames.contains(failureDetail.getFailureName())) {
+                failureNames.add(failureDetail.getFailureName());
+            }
+        }
+        return failureNames;
     }
 }

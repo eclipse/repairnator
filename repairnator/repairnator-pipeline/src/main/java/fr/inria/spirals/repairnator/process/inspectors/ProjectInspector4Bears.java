@@ -36,6 +36,11 @@ public class ProjectInspector4Bears extends ProjectInspector {
         this.bug = false;
     }
 
+    protected void initProperties() {
+        this.getJobStatus().getProperties().setVersion("Bears 1.0");
+        super.initProperties();
+    }
+
     public String getRemoteBranchName() {
         return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + this.getPatchedBuild().getId();
     }

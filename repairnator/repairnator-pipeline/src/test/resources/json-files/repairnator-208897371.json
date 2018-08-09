@@ -80,11 +80,18 @@
     "numberModules": 1,
     "numberSourceFiles": 10,
     "numberTestFiles": 1,
-    "numberLibrariesFailingModule": 2
+    "numberLibrariesFailingModule": 2,
+    "numberLines": 228
   },
   "reproductionBuggyBuild": {
     "reproductionDateBeginning": "Jun 8, 2018 7:58:25 AM",
     "reproductionDateEnd": "Jun 8, 2018 8:02:52 AM",
+    "machineInfo": {
+      "hostName": "spirals-librepair",
+      "numberCPU": 8,
+      "freeMemory": 311502904,
+      "totalMemory": 338690048
+    },
     "totalDuration": 265,
     "processDurations": {
       "cloning": {
@@ -123,7 +130,7 @@
         "nbSteps": 1,
         "totalDuration": 109,
         "stepNames": [
-          "Nopol"
+          "NopolSingleTest"
         ],
         "stepDurations": [
           109

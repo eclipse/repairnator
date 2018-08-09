@@ -121,7 +121,6 @@ public class ComputeClasspath extends AbstractStep {
 
         // Only jars will be added in the classpath here, which is the number of libraries of the failing module
         this.addJarFilesToClassPath(classpathFilePath);
-        this.getInspector().getJobStatus().getMetrics().setNbLibraries(this.classPath.size());
         this.getInspector().getJobStatus().getProperties().getProjectMetrics().setNumberLibrariesFailingModule(this.classPath.size());
 
         this.checkJUnitInClasspath();

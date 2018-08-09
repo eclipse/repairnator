@@ -115,7 +115,7 @@ public class TestProjectInspector {
 
         assertThat(jobStatus.getPushStates().contains(PushState.REPAIR_INFO_COMMITTED), is(true));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+        assertThat(jobStatus.getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));

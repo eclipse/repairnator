@@ -21,8 +21,7 @@ public enum SerializerType {
     SCANNER("scanner"),
     SCANNER4BEARS("scanner4bears"),
     HARDWARE_INFO("hardwareInfo"),
-    METRICS("metrics"),
-    METRICS4BEARS("metrics4bears"),
+    PROPERTIES("properties"),
     RTSCANNER("rtscanner"),
     BLACKLISTED("blacklisted")
     ;

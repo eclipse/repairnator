@@ -38,7 +38,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
 
         String realState = StringUtils.join(jobStatus.getStepStatuses(), " -> ");
 
-        String typeOfFailures = StringUtils.join(jobStatus.getMetrics().getFailureNames(), ",")+"";
+        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",")+"";
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
         String committerEmail = "nobody@github.com";
@@ -80,7 +80,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
 
         String realState = StringUtils.join(jobStatus.getStepStatuses(), " -> ");
 
-        String typeOfFailures = StringUtils.join(jobStatus.getMetrics().getFailureNames(), ",");
+        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");
         String previousBuildSlug = (previousBuild != null) ? previousBuild.getRepository().getSlug() : "";
 
         String committerEmail = "nobody@github.com";

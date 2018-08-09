@@ -23,6 +23,8 @@ public class ProjectMetrics {
      */
     private int numberLibrariesFailingModule;
 
+    private int numberLines;
+
     public ProjectMetrics() {}
 
     public int getNumberModules() {
@@ -57,4 +59,11 @@ public class ProjectMetrics {
         this.numberLibrariesFailingModule = numberLibrariesFailingModule;
     }
 
+    public int getNumberLines() {
+        return numberLines;
+    }
+
+    public void setNumberLines(int numberLines) {
+        this.numberLines = numberLines;
+    }
 }

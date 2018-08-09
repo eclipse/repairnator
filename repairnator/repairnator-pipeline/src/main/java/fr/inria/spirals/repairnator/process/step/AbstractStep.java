@@ -2,10 +2,10 @@ package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.*;
+import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
 import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -337,9 +337,8 @@ public abstract class AbstractStep {
         this.getLogger().debug("STEP STATUS: "+this.stepStatus);
         this.getLogger().debug("STEP DURATION: "+getDuration()+"s");
 
-        Metrics metric = this.inspector.getJobStatus().getMetrics();
-        metric.addStepDuration(this.name, getDuration());
-        metric.addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
+        this.inspector.getJobStatus().addStepDuration(this.name, getDuration());
+        this.inspector.getJobStatus().addFreeMemoryByStep(this.name, Runtime.getRuntime().freeMemory());
 
         ReproductionBuggyBuild reproductionBuggyBuild = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild();
         reproductionBuggyBuild.addStep(this);
@@ -359,7 +358,7 @@ public abstract class AbstractStep {
     private void terminatePipeline() {
         if (!this.inspector.isPipelineEnding()) {
             this.inspector.setPipelineEnding(true);
-            this.recordMetrics();
+            this.recordMachineInfo();
             if (this.inspector.getFinalStep() != null) {
                 if ((!(this.getInspector() instanceof ProjectInspector4Bears) && // Repairnator
                         this.getInspector().getJobStatus().isReproducedAsFail()) // A bug was reproduced
@@ -383,14 +382,11 @@ public abstract class AbstractStep {
         }
     }
 
-    private void recordMetrics() {
-        Metrics metric = this.inspector.getJobStatus().getMetrics();
-
-        metric.setFreeMemory(Runtime.getRuntime().freeMemory());
-        metric.setTotalMemory(Runtime.getRuntime().totalMemory());
-        metric.setNbCPU(Runtime.getRuntime().availableProcessors());
-
-        this.getInspector().getJobStatus().writeProperty("metrics", metric);
+    private void recordMachineInfo() {
+        MachineInfo machineInfo = this.inspector.getJobStatus().getProperties().getReproductionBuggyBuild().getMachineInfo();
+        machineInfo.setNumberCPU(Runtime.getRuntime().availableProcessors());
+        machineInfo.setFreeMemory(Runtime.getRuntime().freeMemory());
+        machineInfo.setTotalMemory(Runtime.getRuntime().totalMemory());
     }
 
     public Date getDateBegin() {

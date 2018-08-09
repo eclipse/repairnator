@@ -93,7 +93,6 @@ public class TestComputeClasspath {
         expectedClasspath.add(new URL("file:"+jobStatus.getFailingModulePath()+"/target/test-classes/"));
 
         assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
-        assertThat(jobStatus.getMetrics().getNbLibraries(), is(2));
         assertThat(jobStatus.getProperties().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
     }
 
@@ -140,7 +139,6 @@ public class TestComputeClasspath {
         expectedClasspath.add(new URL("file:"+jobStatus.getFailingModulePath()+"/target/test-classes/"));
 
         assertThat(jobStatus.getRepairClassPath(), is(expectedClasspath));
-        assertThat(jobStatus.getMetrics().getNbLibraries(), is(2));
         assertThat(jobStatus.getProperties().getProjectMetrics().getNumberLibrariesFailingModule(), is(2));
     }
 

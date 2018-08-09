@@ -115,7 +115,7 @@ public class TestProjectInspector4Bears {
         assertThat(inspector.isBug(), is(true));
         assertThat(inspector.getBugType(), is("BUG_FAILING_PASSING"));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+        assertThat(jobStatus.getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is(PipelineState.BUG_FAILING_PASSING.name()));
@@ -168,7 +168,7 @@ public class TestProjectInspector4Bears {
         assertThat(inspector.isBug(), is(true));
         assertThat(inspector.getBugType(), is("BUG_PASSING_PASSING"));
         assertThat(jobStatus.getFailureLocations().size(), is(1));
-        assertThat(jobStatus.getMetrics().getFailureNames().size(), is(1));
+        assertThat(jobStatus.getFailureNames().size(), is(1));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is(PipelineState.BUG_PASSING_PASSING.name()));

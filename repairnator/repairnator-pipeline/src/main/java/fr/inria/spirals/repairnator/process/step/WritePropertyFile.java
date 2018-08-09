@@ -2,8 +2,6 @@ package fr.inria.spirals.repairnator.process.step;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
-import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.inspectors.properties.PropertiesSerializerAdapter;
@@ -29,29 +27,15 @@ public class WritePropertyFile extends AbstractStep {
         this.getLogger().debug("Writing file with properties...");
 
         String filePath;
-        Gson gson;
-        String jsonString;
-        boolean bearsFileSuccessfullyWritten;
-
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
-            gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Metrics.class, new MetricsSerializerAdapter()).create();
-            jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties4Repairnator());
-            this.writeJsonFile(filePath, jsonString);
+        } else {
+            filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
         }
 
-        filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
-        gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Properties.class, new PropertiesSerializerAdapter()).create();
-        jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties());
-        bearsFileSuccessfullyWritten = this.writeJsonFile(filePath, jsonString);
-        if (!bearsFileSuccessfullyWritten) {
-            return StepStatus.buildError(this, PipelineState.PROPERTY_FILE_NOT_WRITTEN);
-        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Properties.class, new PropertiesSerializerAdapter()).create();
+        String jsonString = gson.toJson(this.getInspector().getJobStatus().getProperties());
 
-        return StepStatus.buildSuccess(this);
-    }
-
-    private boolean writeJsonFile(String filePath, String jsonString) {
         File file = new File(filePath);
         try {
             if (!file.exists()) {
@@ -62,10 +46,12 @@ public class WritePropertyFile extends AbstractStep {
             outputStream.flush();
             outputStream.close();
             this.getInspector().getJobStatus().addFileToPush(file.getName());
-            return true;
+
+            return StepStatus.buildSuccess(this);
         } catch (IOException e) {
             this.addStepError("An exception occurred when writing the following property file: " + file.getPath(), e);
         }
-        return false;
+        return StepStatus.buildError(this, PipelineState.PROPERTY_FILE_NOT_WRITTEN);
     }
+
 }

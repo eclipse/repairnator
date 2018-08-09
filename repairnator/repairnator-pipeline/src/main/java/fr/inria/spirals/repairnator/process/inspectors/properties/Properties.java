@@ -10,7 +10,7 @@ import fr.inria.spirals.repairnator.process.inspectors.properties.tests.Tests;
 
 public class Properties {
 
-    private String version;
+    private String version; // this property is specific for bears.json
     private String type;
 
     private Repository repository;

@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
-import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.properties.tests.*;
@@ -201,14 +200,6 @@ public class GatherTestInformation extends AbstractStep {
 
         if (!this.skipSettingStatusInformation) {
             jobStatus.setFailureLocations(this.failureLocations);
-
-            Metrics metrics = jobStatus.getMetrics();
-            metrics.setFailureNames(this.failureNames);
-            metrics.setNbRunningTests(this.nbRunningTests);
-            metrics.setNbSucceedingTests(this.nbPassingTests);
-            metrics.setNbFailingTests(this.nbFailingTests);
-            metrics.setNbErroringTests(this.nbErroringTests);
-            metrics.setNbSkippingTests(this.nbSkippingTests);
 
             Properties properties = jobStatus.getProperties();
             Tests tests = properties.getTests();
