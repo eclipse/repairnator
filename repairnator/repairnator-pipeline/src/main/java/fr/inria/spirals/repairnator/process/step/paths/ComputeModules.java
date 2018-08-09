@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.building.ModelBuildingException;
 
 import java.io.File;
 import java.util.ArrayList;
