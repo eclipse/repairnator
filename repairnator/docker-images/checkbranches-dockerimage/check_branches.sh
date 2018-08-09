@@ -41,13 +41,13 @@ if [ -e "repairnator.json" ]; then
         echo "repairnator.json is valid in $BRANCH_NAME"
     else
         RESULT="$BRANCH_NAME [FAILURE] (repairnator.json is invalid)"
-        >&2 echo -e "$RED $RESULT"
+        >&2 echo -e "$RED $RESULT $NC"
         echo "$RESULT" >> $DOCKER_DEST
         exit 2
     fi
 else
     RESULT="$BRANCH_NAME [FAILURE] (repairnator.json does not exist)"
-    >&2 echo -e "$RED $RESULT"
+    >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 2
 fi
