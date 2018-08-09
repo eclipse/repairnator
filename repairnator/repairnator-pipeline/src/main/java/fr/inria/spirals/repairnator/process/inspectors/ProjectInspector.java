@@ -69,10 +69,10 @@ public class ProjectInspector {
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
-        this.initMetricsValue();
+        this.initProperties();
     }
 
-    private void initMetricsValue() {
+    private void initProperties() {
         try {
             Properties properties = this.jobStatus.getProperties();
 
