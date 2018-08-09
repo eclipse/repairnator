@@ -16,23 +16,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
+/**
+ * This class is in charge with launching the docker containers
+ */
 public class BuildRunner extends AbstractPoolManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private int nbThreads;
     private Deque<Build> waitingBuilds;
-    private RTScanner rtScanner;
     private ExecutorService executorService;
     private String dockerImageId;
     private String dockerImageName;
     private Date limitDateNextRetrieveDockerImage;
 
     public BuildRunner(RTScanner rtScanner) {
-        this.rtScanner = rtScanner;
         LOGGER.info("Init build runner");
         super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
         super.setRunId(RepairnatorConfig.getInstance().getRunId());
-        super.setEngines(this.rtScanner.getEngines());
+        super.setEngines(rtScanner.getEngines());
     }
 
     public void initRunner() {
@@ -45,6 +46,9 @@ public class BuildRunner extends AbstractPoolManager {
         this.refreshDockerImage();
     }
 
+    /**
+     * This allows us to automatically refresh docker images every 60 minutes
+     */
     private void refreshDockerImage() {
         this.dockerImageId = DockerHelper.findDockerImage(this.dockerImageName, this.getDockerClient());
         this.limitDateNextRetrieveDockerImage = new Date(new Date().toInstant().plus(DELAY_BETWEEN_DOCKER_IMAGE_REFRESH, ChronoUnit.MINUTES).toEpochMilli());
@@ -54,6 +58,9 @@ public class BuildRunner extends AbstractPoolManager {
     public void initExecutorService(int nbThreads) {
         this.nbThreads = nbThreads;
         this.executorService = Executors.newFixedThreadPool(nbThreads);
+
+        // we init a list of waiting builds, when the pool is already full
+        // its size it 4 times the size of the pool
         this.waitingBuilds = new LinkedBlockingDeque<>(this.nbThreads*4);
         LOGGER.debug("Executor service initialized for "+nbThreads+" threads.");
     }
@@ -70,7 +77,7 @@ public class BuildRunner extends AbstractPoolManager {
             LOGGER.info("Build (id: "+build.getId()+") immediately submitted for running.");
             this.executorService.submit(this.submitBuild(this.dockerImageId, new InputBuildId(build.getId())));
         } else {
-            LOGGER.info("All threads currently running (Limit: "+this.nbThreads+"). Add build (id: "+build.getId()+") to list");
+            LOGGER.info("All threads currently running (Limit: "+this.nbThreads+"). Add build (id: "+build.getId()+") to wait list");
             if (this.waitingBuilds.size() == this.nbThreads) {
                 Build b = this.waitingBuilds.removeLast();
                 LOGGER.debug("Remove oldest build (id: "+b.getId()+")");

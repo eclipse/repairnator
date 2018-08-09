@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import java.util.List;
 
 /**
- * Created by urli on 27/03/2017.
+ * In Repairnator, a data can be serialized in JSON or in lists for format such as CSV
  */
 public class SerializedData {
 

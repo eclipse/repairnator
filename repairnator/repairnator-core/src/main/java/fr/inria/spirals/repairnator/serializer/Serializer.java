@@ -9,7 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by urli on 09/03/2017.
+ * This abstract class is used to define a Serializer
+ * which will be used to store data.
  */
 public abstract class Serializer {
 
@@ -20,7 +21,7 @@ public abstract class Serializer {
 
     public Serializer(List<SerializerEngine> engines, SerializerType type) {
         if (engines == null) {
-            this.engines = Collections.EMPTY_LIST;
+            this.engines = Collections.emptyList();
         } else {
             this.engines = engines;
         }
