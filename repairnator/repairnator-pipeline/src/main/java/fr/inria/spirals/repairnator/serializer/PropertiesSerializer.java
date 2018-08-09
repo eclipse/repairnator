@@ -30,13 +30,14 @@ public class PropertiesSerializer extends AbstractDataSerializer {
         JsonObject element = (JsonObject)gson.toJsonTree(inspector.getJobStatus().getProperties());
 
         element.addProperty("runId", RepairnatorConfig.getInstance().getRunId());
-        this.addDate(element, "reproductionDate", new Date());
-        element.addProperty("buggyBuildId", inspector.getBuggyBuild().getId());
+        Date reproductionDateBeginning = inspector.getJobStatus().getProperties().getReproductionBuggyBuild().getReproductionDateBeginning();
+        reproductionDateBeginning = reproductionDateBeginning == null ? new Date() : reproductionDateBeginning;
+        this.addDate(element, "reproductionDate", reproductionDateBeginning);
         element.addProperty("buildStatus", inspector.getBuildToBeInspected().getStatus().name());
+        element.addProperty("buggyBuildId", inspector.getBuggyBuild().getId());
         if (inspector.getPatchedBuild() != null) {
             element.addProperty("patchedBuildId", inspector.getPatchedBuild().getId());
         }
-
         element.addProperty("status",this.getPrettyPrintState(inspector));
 
         Map<String, Long> freeMemoryByStep = inspector.getJobStatus().getFreeMemoryByStep();
