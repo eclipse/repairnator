@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +70,7 @@ public class TestInitRepoToPush {
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.getProperties().getBuilds().setBuggyBuild(new fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build(buildId, "", new Date()));
 
         ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
@@ -110,6 +112,7 @@ public class TestInitRepoToPush {
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
         JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
+        jobStatus.getProperties().getBuilds().setBuggyBuild(new fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build(buildId, "", new Date()));
 
         ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
 
