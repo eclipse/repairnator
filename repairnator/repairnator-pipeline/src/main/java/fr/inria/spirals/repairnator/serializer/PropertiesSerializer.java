@@ -18,10 +18,10 @@ import java.util.Map;
 /**
  * Created by urli on 28/04/2017.
  */
-public class MetricsSerializer extends AbstractDataSerializer {
+public class PropertiesSerializer extends AbstractDataSerializer {
 
-    public MetricsSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.METRICS);
+    public PropertiesSerializer(List<SerializerEngine> engines) {
+        super(engines, SerializerType.PROPERTIES);
     }
 
     @Override

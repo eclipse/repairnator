@@ -358,7 +358,7 @@ public class Launcher {
             serializers.add(new InspectorSerializer(this.engines));
         }
 
-        serializers.add(new MetricsSerializer(this.engines));
+        serializers.add(new PropertiesSerializer(this.engines));
         serializers.add(new InspectorTimeSerializer(this.engines));
         serializers.add(new PipelineErrorSerializer(this.engines));
         serializers.add(new PatchesSerializer(this.engines));
