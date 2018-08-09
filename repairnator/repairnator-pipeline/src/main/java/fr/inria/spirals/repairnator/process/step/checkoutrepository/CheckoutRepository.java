@@ -51,22 +51,15 @@ public abstract class CheckoutRepository extends AbstractStep {
             git = Git.open(new File(this.getInspector().getRepoLocalPath()));
             GitHelper gitHelper = this.getInspector().getGitHelper();
             Build build;
-            String repoSlug = this.getInspector().getRepoSlug();
 
             switch (checkoutType) {
                 case CHECKOUT_BUGGY_BUILD:
+                case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
+                case CHECKOUT_BUGGY_BUILD_TEST_CODE:
                     build = this.getInspector().getBuggyBuild();
 
                     commit = this.createCommitForMetrics(build);
                     properties.getCommits().setBuggyBuild(commit);
-                    break;
-
-                case CHECKOUT_BUGGY_BUILD_SOURCE_CODE:
-                    build = this.getInspector().getBuggyBuild();
-                    break;
-
-                case CHECKOUT_BUGGY_BUILD_TEST_CODE:
-                    build = this.getInspector().getBuggyBuild();
                     break;
 
                 case CHECKOUT_PATCHED_BUILD:
