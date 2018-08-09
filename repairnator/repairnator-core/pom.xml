@@ -3,7 +3,7 @@
     <parent>
         <artifactId>repairnator-root</artifactId>
         <groupId>fr.inria.repairnator</groupId>
-        <version>2.3-SNAPSHOT</version>
+        <version>3.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
