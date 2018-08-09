@@ -7,7 +7,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;

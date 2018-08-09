@@ -1,6 +1,5 @@
-package fr.inria.spirals.repairnator.process.inspectors;
+package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.states.PipelineState;
 
 /**

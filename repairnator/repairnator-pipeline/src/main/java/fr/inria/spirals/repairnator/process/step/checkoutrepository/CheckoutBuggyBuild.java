@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.checkoutrepository;
 
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /**

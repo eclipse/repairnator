@@ -9,7 +9,7 @@ import fr.inria.main.AstorOutputStatus;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;

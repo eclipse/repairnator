@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;

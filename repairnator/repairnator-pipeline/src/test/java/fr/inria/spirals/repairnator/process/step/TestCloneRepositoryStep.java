@@ -8,7 +8,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.utils4tests.ProjectInspectorMocker;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
