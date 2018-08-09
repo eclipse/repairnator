@@ -8,7 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -72,13 +72,13 @@ public class TestAstorRepair {
 
 		astorJKaliRepair.setProjectInspector(inspector);
 
-		cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-				.setNextStep(new TestProject(inspector))
-				.setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-				.setNextStep(new ComputeClasspath(inspector, true))
-				.setNextStep(new ComputeSourceDir(inspector, true, false))
-				.setNextStep(new ComputeTestDir(inspector, true))
-				.setNextStep(astorJKaliRepair);
+		cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+				.addNextStep(new TestProject(inspector))
+				.addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+				.addNextStep(new ComputeClasspath(inspector, true))
+				.addNextStep(new ComputeSourceDir(inspector, true, false))
+				.addNextStep(new ComputeTestDir(inspector, true))
+				.addNextStep(astorJKaliRepair);
 		cloneStep.execute();
 
 		assertThat(astorJKaliRepair.isShouldStop(), is(false));
@@ -118,13 +118,13 @@ public class TestAstorRepair {
 
 		astorJMutRepair.setProjectInspector(inspector);
 
-		cloneStep.setNextStep(new CheckoutBuggyBuild(inspector, true))
-				.setNextStep(new TestProject(inspector))
-				.setNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-				.setNextStep(new ComputeClasspath(inspector, true))
-				.setNextStep(new ComputeSourceDir(inspector, true, false))
-				.setNextStep(new ComputeTestDir(inspector, true))
-				.setNextStep(astorJMutRepair);
+		cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+				.addNextStep(new TestProject(inspector))
+				.addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+				.addNextStep(new ComputeClasspath(inspector, true))
+				.addNextStep(new ComputeSourceDir(inspector, true, false))
+				.addNextStep(new ComputeTestDir(inspector, true))
+				.addNextStep(astorJMutRepair);
 		cloneStep.execute();
 
 		assertThat(astorJMutRepair.isShouldStop(), is(false));

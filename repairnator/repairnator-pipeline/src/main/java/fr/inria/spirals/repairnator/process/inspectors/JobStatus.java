@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
@@ -14,7 +15,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Created by urli on 23/03/2017.
+ * This class contains all information about the status of the pipeline
  */
 public class JobStatus {
     private final Logger logger = LoggerFactory.getLogger(JobStatus.class);

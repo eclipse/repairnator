@@ -1,0 +1,69 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/hardwareInfo",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b5fa9788fc7f5000ebbab2a"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "runID of the process which recorded the data",
+      "default": "",
+      "examples": [
+        "1c297388-dc79-499a-bc97-e0204c6f83fb"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "string",
+      "description": "Travis ID of the build being repaired",
+      "default": "",
+      "examples": [
+        "410104895"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host doing the repair",
+      "default": "",
+      "examples": [
+        "spirals-repairnator"
+      ]
+    },
+    "nbProcessors": {
+      "$id": "/properties/nbProcessors",
+      "type": "integer",
+      "description": "Number of processors of the host",
+      "default": 0,
+      "examples": [
+        "spirals-repairnator"
+      ]
+    },
+    "freeMemory": {
+      "$id": "/properties/freeMemory",
+      "type": "integer",
+      "description": "Available free memory in Kb on the hosts",
+      "default": 0,
+      "examples": [
+        187178216
+      ]
+    },
+    "totalMemory": {
+      "$id": "/properties/totalMemory",
+      "type": "integer",
+      "description": "Total memory on the hosts in Kb",
+      "default": 0,
+      "examples": [
+        253231104
+      ]
+    }
+  }
+}

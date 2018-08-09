@@ -1,0 +1,96 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/rtscanner",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b606f79463c95458bc6908b"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host where the RTScanner is running",
+      "default": "",
+      "examples": [
+        "spirals-repairnator"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "e055fdc7-53ee-4b68-a4c4-6acc38ecf825"
+      ]
+    },
+    "dateWatched": {
+      "$id": "/properties/dateWatched",
+      "type": "string",
+      "description": "ISODate when the build has been watched",
+      "default": "",
+      "examples": [
+        "2018-07-31T16:17:29.130+0000"
+      ]
+    },
+    "dateWatchedStr": {
+      "$id": "/properties/dateWatchedStr",
+      "type": "string",
+      "description": "Date when the build has been watched as a string",
+      "default": "",
+      "examples": [
+        "31/07/18 16:17"
+      ]
+    },
+    "dateBuildEnd": {
+      "$id": "/properties/dateBuildEnd",
+      "type": "string",
+      "description": "ISODate when the build has been finished on Travis CI",
+      "default": "",
+      "examples": [
+        "2018-07-31T16:17:18.000+0000"
+      ]
+    },
+    "dateBuildEndStr": {
+      "$id": "/properties/dateBuildEndStr",
+      "type": "string",
+      "description": "Date when the build has been finished on Travis CI, as a string",
+      "default": "",
+      "examples": [
+        "31/07/18 16:17"
+      ]
+    },
+    "repository": {
+      "$id": "/properties/repository",
+      "type": "string",
+      "description": "Slug name (i.e. user/repo) of the repository corresponding to the build",
+      "default": "",
+      "examples": [
+        "dmn-tck/tck"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "integer",
+      "description": "Travis ID of the build inspected",
+      "default": 0,
+      "examples": [
+        410347556
+      ]
+    },
+    "status": {
+      "$id": "/properties/status",
+      "type": "string",
+      "description": "Status of the inspected build (this value is directly coming from Travis CI API)",
+      "default": "",
+      "examples": [
+        "CANCELED"
+      ]
+    }
+  }
+}

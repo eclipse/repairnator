@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import fr.inria.spirals.repairnator.process.inspectors.Metrics;
 import fr.inria.spirals.repairnator.process.inspectors.MetricsSerializerAdapter;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.inspectors.properties.PropertiesSerializerAdapter;
 import fr.inria.spirals.repairnator.states.LauncherMode;

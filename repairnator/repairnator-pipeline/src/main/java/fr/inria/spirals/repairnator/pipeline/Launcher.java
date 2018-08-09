@@ -35,16 +35,20 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * Created by urli on 09/03/2017.
+ * This class is the main entry point for the repairnator pipeline.
  */
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    private RepairnatorConfig config;
+    
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
     private PatchNotifier patchNotifier;
 
+    private RepairnatorConfig getConfig() {
+        return RepairnatorConfig.getInstance();
+    }
+    
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
         Properties properties = new Properties();
@@ -64,16 +68,16 @@ public class Launcher {
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
         this.initConfig(arguments);
 
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
+        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             this.checkToolsLoaded(jsap);
             this.checkNopolSolverPath(jsap);
-            LOGGER.info("The pipeline will try to repair the following build id: "+this.config.getBuildId());
+            LOGGER.info("The pipeline will try to repair the following build id: "+this.getConfig().getBuildId());
         } else {
             this.checkNextBuildId(jsap);
-            LOGGER.info("The pipeline will try to reproduce a bug from build "+this.config.getBuildId()+" and its corresponding patch from build "+this.config.getNextBuildId());
+            LOGGER.info("The pipeline will try to reproduce a bug from build "+this.getConfig().getBuildId()+" and its corresponding patch from build "+this.getConfig().getNextBuildId());
         }
 
-        if (this.config.isDebug()) {
+        if (this.getConfig().isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
@@ -169,54 +173,52 @@ public class Launcher {
     }
 
     private void initConfig(JSAPResult arguments) {
-        this.config = RepairnatorConfig.getInstance();
-
         if (LauncherUtils.getArgDebug(arguments)) {
-            this.config.setDebug(true);
+            this.getConfig().setDebug(true);
         }
-        this.config.setClean(true);
-        this.config.setRunId(LauncherUtils.getArgRunId(arguments));
-        this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
+        this.getConfig().setClean(true);
+        this.getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
+        this.getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
-            this.config.setLauncherMode(LauncherMode.BEARS);
+            this.getConfig().setLauncherMode(LauncherMode.BEARS);
         } else {
-            this.config.setLauncherMode(LauncherMode.REPAIR);
+            this.getConfig().setLauncherMode(LauncherMode.REPAIR);
         }
         if (LauncherUtils.getArgOutput(arguments) != null) {
-            this.config.setSerializeJson(true);
-            this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
+            this.getConfig().setSerializeJson(true);
+            this.getConfig().setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         }
-        this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
-        this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
-        this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
-        this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+        this.getConfig().setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        this.getConfig().setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        this.getConfig().setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.getConfig().setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
 
         if (LauncherUtils.getArgPushUrl(arguments) != null) {
-            this.config.setPush(true);
-            this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
+            this.getConfig().setPush(true);
+            this.getConfig().setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
         }
-        this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
+        this.getConfig().setCreatePR(LauncherUtils.getArgCreatePR(arguments));
 
         // we fork if we need to create a PR or if we need to notify
-        if (this.config.isCreatePR() || (this.config.getSmtpServer() != null && !this.config.getSmtpServer().isEmpty() && this.config.getNotifyTo() != null && this.config.getNotifyTo().length > 0)) {
-            this.config.setFork(true);
+        if (this.getConfig().isCreatePR() || (this.getConfig().getSmtpServer() != null && !this.getConfig().getSmtpServer().isEmpty() && this.getConfig().getNotifyTo() != null && this.getConfig().getNotifyTo().length > 0)) {
+            this.getConfig().setFork(true);
         }
-        this.config.setBuildId(arguments.getInt("build"));
-        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
-            this.config.setNextBuildId(arguments.getInt("nextBuild"));
+        this.getConfig().setBuildId(arguments.getInt("build"));
+        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+            this.getConfig().setNextBuildId(arguments.getInt("nextBuild"));
         }
-        this.config.setZ3solverPath(arguments.getFile("z3").getPath());
-        this.config.setWorkspacePath(arguments.getString("workspace"));
-        this.config.setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
-        this.config.setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
+        this.getConfig().setZ3solverPath(arguments.getFile("z3").getPath());
+        this.getConfig().setWorkspacePath(arguments.getString("workspace"));
+        this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
+        this.getConfig().setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
 
         if (arguments.getFile("projectsToIgnore") != null) {
-            this.config.setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
+            this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
 
-        this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
-        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-            LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.config.getRepairTools(), ", "));
+        this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
+            LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
         }
     }
 
@@ -233,7 +235,7 @@ public class Launcher {
     }
 
     private void checkNopolSolverPath(JSAP jsap) {
-        String solverPath = this.config.getZ3solverPath();
+        String solverPath = this.getConfig().getZ3solverPath();
 
         if (solverPath != null) {
             File file = new File(solverPath);
@@ -249,7 +251,7 @@ public class Launcher {
     }
 
     private void checkNextBuildId(JSAP jsap) {
-        if (this.config.getNextBuildId() == InputBuildId.NO_PATCH) {
+        if (this.getConfig().getNextBuildId() == InputBuildId.NO_PATCH) {
             System.err.println("A pair of builds needs to be provided in BEARS mode.");
             LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
@@ -279,22 +281,22 @@ public class Launcher {
 
     private List<String> getListOfProjectsToIgnore() {
         List<String> result = new ArrayList<>();
-        if (this.config.getProjectsToIgnoreFilePath() != null) {
+        if (this.getConfig().getProjectsToIgnoreFilePath() != null) {
             try {
-                List<String> lines = Files.readAllLines(new File(this.config.getProjectsToIgnoreFilePath()).toPath());
+                List<String> lines = Files.readAllLines(new File(this.getConfig().getProjectsToIgnoreFilePath()).toPath());
                 for (String line : lines) {
                     result.add(line.trim().toLowerCase());
                 }
             } catch (IOException e) {
-                LOGGER.error("Error while reading projects to be ignored from file "+this.config.getProjectsToIgnoreFilePath(), e);
+                LOGGER.error("Error while reading projects to be ignored from file "+this.getConfig().getProjectsToIgnoreFilePath(), e);
             }
         }
         return result;
     }
 
     private void getBuildToBeInspected() {
-        JTravis jTravis = this.config.getJTravis();
-        Optional<Build> optionalBuild = jTravis.build().fromId(this.config.getBuildId());
+        JTravis jTravis = this.getConfig().getJTravis();
+        Optional<Build> optionalBuild = jTravis.build().fromId(this.getConfig().getBuildId());
         if (!optionalBuild.isPresent()) {
             LOGGER.error("Error while retrieving the buggy build. The process will exit now.");
             System.exit(-1);
@@ -305,10 +307,10 @@ public class Launcher {
             LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
             System.exit(-1);
         }
-        String runId = this.config.getRunId();
+        String runId = this.getConfig().getRunId();
 
-        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
-            Optional<Build> optionalBuildPatch = jTravis.build().fromId(this.config.getNextBuildId());
+        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+            Optional<Build> optionalBuildPatch = jTravis.build().fromId(this.getConfig().getNextBuildId());
             if (!optionalBuildPatch.isPresent()) {
                 LOGGER.error("Error while getting patched build: null value was obtained. The process will exit now.");
                 System.exit(-1);
@@ -334,25 +336,25 @@ public class Launcher {
             // and switch off serialization
             String project = buggyBuild.getRepository().getSlug().toLowerCase();
             if (this.getListOfProjectsToIgnore().contains(project)) {
-                this.config.setPush(false);
-                this.config.setFork(false);
-                this.config.setCreatePR(false);
+                this.getConfig().setPush(false);
+                this.getConfig().setFork(false);
+                this.getConfig().setCreatePR(false);
                 this.engines.clear();
-                LOGGER.info("The build "+this.config.getBuildId()+" is from a project to be ignored ("+project+"), thus the pipeline deactivated serialization for that build.");
+                LOGGER.info("The build "+this.getConfig().getBuildId()+" is from a project to be ignored ("+project+"), thus the pipeline deactivated serialization for that build.");
             }
         }
     }
 
     private void mainProcess() {
-        LOGGER.info("Start by getting the build (buildId: "+this.config.getBuildId()+") with the following config: "+this.config);
+        LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
         this.getBuildToBeInspected();
 
-        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.config.getRunId(), this.config.getBuildId()+"");
+        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.getConfig().getRunId(), this.getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
+        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             serializers.add(new InspectorSerializer4Bears(this.engines));
             serializers.add(new MetricsSerializer4Bears(this.engines));
         } else {
@@ -367,10 +369,10 @@ public class Launcher {
 
         ProjectInspector inspector;
 
-        if (config.getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
+        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+            inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else {
-            inspector = new ProjectInspector(buildToBeInspected, this.config.getWorkspacePath(), serializers, this.notifiers);
+            inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }
 
         inspector.setPatchNotifier(this.patchNotifier);

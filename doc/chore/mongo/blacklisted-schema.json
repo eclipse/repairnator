@@ -1,0 +1,88 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/blacklisted",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5a5f1a5a463c955c546d0189"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host where the RTScanner is running",
+      "default": "",
+      "examples": [
+        "spirals-repairnator"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "runID of the RTScanner which recorded those data",
+      "default": "",
+      "examples": [
+        "d0339570-a000-421f-93cb-5a1ada02418b_rtscanner"
+      ]
+    },
+    "dateBlacklist": {
+      "$id": "/properties/dateBlacklist",
+      "type": "string",
+      "description": "ISODate when the data was recorded",
+      "default": "",
+      "examples": [
+        "2018-01-17T10:41:46.234+0000"
+      ]
+    },
+    "dateBlacklistStr": {
+      "$id": "/properties/dateBlacklistStr",
+      "type": "string",
+      "description": "Same date but as string for displaying purpose",
+      "default": "",
+      "examples": [
+        "17/01/18 10:41"
+      ]
+    },
+    "repoId": {
+      "$id": "/properties/repoId",
+      "type": "integer",
+      "description": "Travis ID of the repository",
+      "default": 0,
+      "examples": [
+        8464997
+      ]
+    },
+    "repoName": {
+      "$id": "/properties/repoName",
+      "type": "string",
+      "description": "Slug name (i.e. user/repo) of the repository when it was recorded (can be changed later)",
+      "default": "",
+      "examples": [
+        "royger/xen"
+      ]
+    },
+    "reason": {
+      "$id": "/properties/reason",
+      "type": "string",
+      "description": "Standard reason why the repository has been blacklisted",
+      "default": "",
+      "examples": [
+        "OTHER_LANGUAGE",
+        "USE_GRADLE"
+      ]
+    },
+    "comment": {
+      "$id": "/properties/comment",
+      "type": "string",
+      "description": "Usually contains the language of the repository when reason is OTHER_LANGUAGE",
+      "default": "",
+      "examples": [
+        "c"
+      ]
+    }
+  }
+}

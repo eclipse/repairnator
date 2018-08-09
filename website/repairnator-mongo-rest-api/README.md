@@ -4,6 +4,27 @@ This repository will contain codes for librepair mongoDB data API.
 
 The code is directly forked from: https://github.com/KunalKapadia/express-mongoose-es6-rest-api, thanks for the great works done there!
 
+## Deployment
+
+```
+# create the proper env file (needed for the MongoDB credentials)
+1. cp .env.example .env
+
+# compile to ES5
+2. yarn build
+
+# upload dist/ to your server
+3. scp -rp dist/ user@dest:/path
+
+# install production dependencies only
+4. yarn --production
+
+# Use any process manager to start your services
+5. pm2 start dist/index.js
+```
+
+More info on the original repository.
+
 ## Endpoints
 
 The default API path is `repairnator-mongo-api`.

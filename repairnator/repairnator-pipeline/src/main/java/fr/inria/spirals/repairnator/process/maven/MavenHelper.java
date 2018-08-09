@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by urli on 10/01/2017.
+ * This class intends to help the usage of maven goals in Repairnator
  */
 public class MavenHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(MavenHelper.class);
@@ -32,6 +32,9 @@ public class MavenHelper {
     public static final int MAVEN_ERROR = 1;
 
     public static final String SKIP_TEST_PROPERTY = "maven.test.skip.exec";
+
+    // all the goals we want to skip
+    // fixme: make that list available in a config
     private static final List<String> SKIP_LIST = Arrays.asList(
             "enforcer.skip",
             "checkstyle.skip",
@@ -82,6 +85,7 @@ public class MavenHelper {
             this.properties = new Properties();
         }
 
+        // we want to use a dedicated Maven repository
         this.properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
         for (String skip : SKIP_LIST) {
             this.properties.setProperty(skip, "true");
@@ -128,7 +132,7 @@ public class MavenHelper {
         this.outputHandler = outputHandler;
     }
 
-    public static Model readPomXml(File pomXml, String localMavenRepository) throws ModelBuildingException {
+    public static Model readPomXml(File pomXml, String localMavenRepository) {
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
         req.setProcessPlugins(true);
         req.setPomFile(pomXml);
@@ -137,6 +141,7 @@ public class MavenHelper {
 
         DefaultModelBuilder defaultModelBuilder = new DefaultModelBuilderFactory().newInstance();
 
+        // we try to build the model, and if we fail, we try to get the raw model
         try {
             ModelBuildingResult modelBuildingResult = defaultModelBuilder.build(req);
             return modelBuildingResult.getEffectiveModel();
@@ -147,6 +152,7 @@ public class MavenHelper {
 
     }
 
+    // we manage our own timeout
     public int run() throws InterruptedException {
         RunnableMavenInvoker runnableMavenInvoker = new RunnableMavenInvoker(this);
         Thread t = new Thread(runnableMavenInvoker);

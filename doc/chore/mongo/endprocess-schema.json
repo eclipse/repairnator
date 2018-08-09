@@ -1,0 +1,106 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/endprocess",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5a5c99ccde9df13914bd50f7"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "runID of the process which recorded the data",
+      "default": "",
+      "examples": [
+        "de5e4461-36ae-49ff-9c23-dd72924668b0"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host were the process has been finished",
+      "default": "",
+      "examples": [
+        "spirals-librepair"
+      ]
+    },
+    "beginDay": {
+      "$id": "/properties/beginDay",
+      "type": "string",
+      "description": "Date of the day when the process began, as a string.",
+      "default": "",
+      "examples": [
+        "15/01/2018"
+      ]
+    },
+    "beginDateStr": {
+      "$id": "/properties/beginDateStr",
+      "type": "string",
+      "description": "Precise begin date of the process, as a string.",
+      "default": "",
+      "examples": [
+        "15/01/18 13:07"
+      ]
+    },
+    "beginDate": {
+      "$id": "/properties/beginDate",
+      "type": "string",
+      "description": "ISODate of the beginning of the process",
+      "default": "",
+      "examples": [
+        "2018-01-15T13:07:51.848+0000"
+      ]
+    },
+    "endDateStr": {
+      "$id": "/properties/endDateStr",
+      "type": "string",
+      "description": "Precise end date of the process, as a string",
+      "default": "",
+      "examples": [
+        "15/01/18 13:08"
+      ]
+    },
+    "endDate": {
+      "$id": "/properties/endDate",
+      "type": "string",
+      "description": "ISODate for the end of the process",
+      "default": "",
+      "examples": [
+        "2018-01-15T13:08:44.789+0000"
+      ]
+    },
+    "duration": {
+      "$id": "/properties/duration",
+      "type": "string",
+      "description": "Duration of the process on the format hh:mm",
+      "default": "",
+      "examples": [
+        "00:00"
+      ]
+    },
+    "endStatus": {
+      "$id": "/properties/endStatus",
+      "type": "string",
+      "description": "Status for the end of the process",
+      "default": "",
+      "examples": [
+        "ok",
+        "timeout"
+      ]
+    },
+    "nbBuilds": {
+      "$id": "/properties/nbBuilds",
+      "type": "integer",
+      "description": "Number of builds involved in the process",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/times",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b5ff162617790000d2c564a"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "integer",
+      "description": "Travis ID of the build to repair",
+      "default": 0,
+      "examples": [
+        410134129
+      ]
+    },
+    "repositoryName": {
+      "$id": "/properties/repositoryName",
+      "type": "string",
+      "description": "Slug name (i.e. user/repo) of the repository where the build belongs to",
+      "default": "",
+      "examples": [
+        "dannil/scb-java-client"
+      ]
+    },
+    "buildReproductionDateStr": {
+      "$id": "/properties/buildReproductionDateStr",
+      "type": "string",
+      "description": "Date of the reproduction of the build, as a string",
+      "default": "",
+      "examples": [
+        "31/07/18 07:19"
+      ]
+    },
+    "buildReproductionDate": {
+      "$id": "/properties/buildReproductionDate",
+      "type": "string",
+      "description": "ISODate for the reproduction of the build",
+      "default": "",
+      "examples": [
+        "2018-07-31T07:19:30.303+0000"
+      ]
+    },
+    "hostname": {
+      "$id": "/properties/hostname",
+      "type": "string",
+      "description": "Name of the host where the build is reproduced",
+      "default": "",
+      "examples": [
+        "spirals-repairnator"
+      ]
+    },
+    "runId": {
+      "$id": "/properties/runId",
+      "type": "string",
+      "description": "ID of the running process",
+      "default": "",
+      "examples": [
+        "1c297388-dc79-499a-bc97-e0204c6f83fb"
+      ]
+    },
+    "CheckoutBuggyBuild": {
+      "$id": "/properties/CheckoutBuggyBuild",
+      "type": "integer",
+      "description": "The name of the property is here the name of a step, and its value is its duration in second",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "ComputeClasspath": {
+      "$id": "/properties/ComputeClasspath",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        9
+      ]
+    },
+    "CommitProcessEnd": {
+      "$id": "/properties/CommitProcessEnd",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        2
+      ]
+    },
+    "ComputeTestDir": {
+      "$id": "/properties/ComputeTestDir",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "PushProcessEnd": {
+      "$id": "/properties/PushProcessEnd",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        7
+      ]
+    },
+    "BuildProject": {
+      "$id": "/properties/BuildProject",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        54
+      ]
+    },
+    "InitRepoToPush": {
+      "$id": "/properties/InitRepoToPush",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        3
+      ]
+    },
+    "ComputeSourceDir": {
+      "$id": "/properties/ComputeSourceDir",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "ComputeModules": {
+      "$id": "/properties/ComputeModules",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "AstorJMut": {
+      "$id": "/properties/AstorJMut",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        3
+      ]
+    },
+    "WritePropertyFile": {
+      "$id": "/properties/WritePropertyFile",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "CloneRepository": {
+      "$id": "/properties/CloneRepository",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        11
+      ]
+    },
+    "CheckoutPatchedBuild": {
+      "$id": "/properties/CheckoutPatchedBuild",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "NopolAllTests": {
+      "$id": "/properties/NopolAllTests",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        11
+      ]
+    },
+    "NPEFix": {
+      "$id": "/properties/NPEFix",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "TestProject": {
+      "$id": "/properties/TestProject",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        30
+      ]
+    },
+    "GatherTestInformation": {
+      "$id": "/properties/GatherTestInformation",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "CommitPatch": {
+      "$id": "/properties/CommitPatch",
+      "type": "integer",
+      "default": 0,
+      "examples": [
+        2
+      ]
+    },
+    "totalDuration": {
+      "$id": "/properties/totalDuration",
+      "type": "integer",
+      "description": "Total duration of the build ",
+      "default": 0,
+      "examples": [
+        132
+      ]
+    }
+  }
+}
