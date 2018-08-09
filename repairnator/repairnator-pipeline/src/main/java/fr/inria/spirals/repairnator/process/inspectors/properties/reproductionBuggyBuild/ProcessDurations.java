@@ -18,7 +18,7 @@ public class ProcessDurations {
     private GlobalStepInfo cloning;
     private GlobalStepInfo building;
     private GlobalStepInfo testing;
-    private GlobalStepInfo fixing;
+    private GlobalStepInfo fixing; // this property is specific for repairnator.json
 
     ProcessDurations() {
         this.cloning = new GlobalStepInfo();

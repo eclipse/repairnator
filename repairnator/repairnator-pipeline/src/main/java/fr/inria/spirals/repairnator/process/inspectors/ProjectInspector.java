@@ -25,6 +25,7 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
@@ -34,8 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static fr.inria.spirals.repairnator.states.ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
 /**
  * Created by urli on 26/12/2016.
@@ -194,7 +193,7 @@ public class ProjectInspector {
     }
 
     public void run() {
-        if (this.buildToBeInspected.getStatus() != PASSING_AND_PASSING_WITH_TEST_CHANGES) {
+        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo
                     .setNextStep(new CheckoutBuggyBuild(this, true))
