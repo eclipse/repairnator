@@ -21,7 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by urli on 19/01/2017. Inspired by code from:
+ * This class allows to resolve Maven artifact in order to build a Maven model
+ * Inspired by code from:
  * https://github.com/rickardoberg/neomvn/
  */
 

@@ -6,7 +6,8 @@ import fr.inria.spirals.repairnator.process.maven.output.MavenFilterOutputHandle
 import fr.inria.spirals.repairnator.states.PipelineState;
 
 /**
- * Created by urli on 03/01/2017.
+ * This step only launch mvn test. IT DOES NOT PROCESS THE RESULTS OF THE TEST.
+ * See {@link fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation} for the process of the tests.
  */
 public class TestProject extends AbstractStep {
 
@@ -26,6 +27,9 @@ public class TestProject extends AbstractStep {
         MavenFilterOutputHandler outputFilter = new MavenFilterOutputHandler(helper);
         helper.setOutputHandler(outputFilter);
 
+        // we cannot rely on the bash result of the command here: it is erroring (!= 0) if the mvn test fail
+        // but it might mean a success for us
+        // so we consider this step is always successful unless it has been interrupted.
         try {
             helper.run();
         } catch (InterruptedException e) {
