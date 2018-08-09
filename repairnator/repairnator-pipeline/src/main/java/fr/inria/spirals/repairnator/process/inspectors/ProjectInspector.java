@@ -15,7 +15,6 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.*;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.step.*;
@@ -78,7 +77,7 @@ public class ProjectInspector {
         this.initProperties();
     }
 
-    private void initProperties() {
+    protected void initProperties() {
         try {
             Properties properties = this.jobStatus.getProperties();
 
@@ -100,10 +99,6 @@ public class ProjectInspector {
 
             MachineInfo machineInfo = properties.getReproductionBuggyBuild().getMachineInfo();
             machineInfo.setHostName(Utils.getHostname());
-
-            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.BEARS) {
-                properties.setVersion("Bears 1.0");
-            }
 
             fr.inria.spirals.repairnator.process.inspectors.properties.repository.Repository repository = properties.getRepository();
             repository.setName(this.getRepoSlug());
