@@ -168,10 +168,10 @@ public class TestMetrics4BearsJsonFile {
     }
 
     @Test
-    public void testBearsJsonFileWithFailingBuild() throws IOException, ProcessingException {
+    public void testRepairnatorJsonFileWithFailingBuild() throws IOException, ProcessingException {
         long buggyBuildCandidateId = 208897371; // https://travis-ci.org/surli/failingProject/builds/208897371
 
-        tmpDir = Files.createTempDirectory("test_bears_json_file_failing_build").toFile();
+        tmpDir = Files.createTempDirectory("test_repairnator_json_file_failing_build").toFile();
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
@@ -198,9 +198,9 @@ public class TestMetrics4BearsJsonFile {
 
         JsonSchema jsonSchema = factory.getJsonSchema(schemaObject);
 
-        JsonNode bearsJsonFile = jsonMapper.readTree(new File(inspector.getRepoToPushLocalPath() + "/repairnator.json"));
+        JsonNode repairnatorJsonFile = jsonMapper.readTree(new File(inspector.getRepoToPushLocalPath() + "/repairnator.json"));
 
-        ProcessingReport report = jsonSchema.validate(bearsJsonFile);
+        ProcessingReport report = jsonSchema.validate(repairnatorJsonFile);
 
         String message = "";
         for (ProcessingMessage processingMessage : report) {
