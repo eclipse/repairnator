@@ -296,7 +296,9 @@ public class JobStatus {
     public List<String> getFailureNames() {
         List<String> failureNames = new ArrayList<>();
         for (FailureDetail failureDetail : this.properties.getTests().getFailureDetails()) {
-            failureNames.add(failureDetail.getFailureName());
+            if (!failureNames.contains(failureDetail.getFailureName())) {
+                failureNames.add(failureDetail.getFailureName());
+            }
         }
         return failureNames;
     }
