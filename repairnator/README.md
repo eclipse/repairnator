@@ -2,7 +2,7 @@
 
 ## Usage
 
-The usage of Repairnator is described in the main page of the [Repairnator repository](https://github.com/Spirals-Team/repairnator).
+The usage of Repairnator is described in [the dedicated documentation](/doc/usage).
 
 ## Content of the directory
 
