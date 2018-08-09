@@ -40,10 +40,12 @@ public class PropertiesSerializer extends AbstractDataSerializer {
         }
         element.addProperty("status",this.getPrettyPrintState(inspector));
 
+        JsonObject elementFreeMemory = new JsonObject();
         Map<String, Long> freeMemoryByStep = inspector.getJobStatus().getFreeMemoryByStep();
         for (Map.Entry<String, Long> stepFreeMemory : freeMemoryByStep.entrySet()) {
-            element.addProperty(stepFreeMemory.getKey(), stepFreeMemory.getValue());
+            elementFreeMemory.addProperty(stepFreeMemory.getKey(), stepFreeMemory.getValue());
         }
+        element.add("freeMemoryByStep", elementFreeMemory);
 
         List<SerializedData> dataList = new ArrayList<>();
 
