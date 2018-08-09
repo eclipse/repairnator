@@ -3,9 +3,11 @@ package fr.inria.spirals.repairnator.process.step.push;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.properties.builds.Builds;
 import fr.inria.spirals.repairnator.process.inspectors.properties.commits.Commits;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -80,17 +82,20 @@ public class CommitFiles extends AbstractStep {
         String commitMsg = "";
 
         Commits commits = this.getInspector().getJobStatus().getProperties().getCommits();
+        Builds builds = this.getInspector().getJobStatus().getProperties().getBuilds();
         switch (this.commitType) {
             case COMMIT_BUGGY_BUILD:
-                commitMsg = "Bug commit from the following repository " + this.getInspector().getRepoSlug() + "\n";
+                commitMsg = "Bug commit from " + this.getInspector().getRepoSlug() + "\n";
 
-                commitMsg += "This bug commit is a reflect of source code from: " + commits.getBuggyBuild().getUrl() + ".";
+                commitMsg += "This commit is based on the source code from the following commit: " + commits.getBuggyBuild().getUrl() + "\n";
+                commitMsg += "The mentioned commit triggered the following Travis build: " + builds.getBuggyBuild().getUrl() + ".";
                 break;
 
             case COMMIT_HUMAN_PATCH:
-                commitMsg = "Human patch from the following repository "+this.getInspector().getRepoSlug()+"\n";
+                commitMsg = "Human patch from " + this.getInspector().getRepoSlug() + "\n";
 
-                commitMsg += "This commit is a reflect of the following : "+ commits.getFixerBuild().getUrl() +".";
+                commitMsg += "This commit is based on the source code from the following commit: " + commits.getFixerBuild().getUrl() + "\n";
+                commitMsg += "The mentioned commit triggered the following Travis build: " + builds.getFixerBuild().getUrl() + ".";
                 break;
 
             case COMMIT_REPAIR_INFO:
@@ -98,11 +103,18 @@ public class CommitFiles extends AbstractStep {
                 break;
 
             case COMMIT_PROCESS_END:
-                commitMsg = "End of the repairnator process";
+                if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+                    commitMsg = "End of the bug and patch reproduction process";
+                } else {
+                    commitMsg = "End of the Repairnator process";
+                }
                 break;
 
             case COMMIT_CHANGED_TESTS:
-                commitMsg = "Changes in the tests";
+                commitMsg = "Changes in the tests\n";
+
+                commitMsg += "This commit is based on the source code from the following commit: " + commits.getFixerBuild().getUrl() + "\n";
+                commitMsg += "The mentioned commit triggered the following Travis build: " + builds.getFixerBuild().getUrl() + ".";
                 break;
         }
 
