@@ -24,7 +24,6 @@ public class ProcessDurations {
         this.cloning = new GlobalStepInfo();
         this.building = new GlobalStepInfo();
         this.testing = new GlobalStepInfo();
-        this.fixing = new GlobalStepInfo();
     }
 
     public GlobalStepInfo getCloning() {
@@ -49,6 +48,9 @@ public class ProcessDurations {
         if (step instanceof CloneRepository) {
             this.cloning.addStep(stepName, stepDuration);
         } else if (step instanceof AbstractRepairStep) {
+            if (this.fixing == null) {
+                this.fixing = new GlobalStepInfo();
+            }
             this.fixing.addStep(stepName, stepDuration);
         } else if (step instanceof TestProject &&
                 (step.getInspector().getCheckoutType().equals(CheckoutType.CHECKOUT_BUGGY_BUILD) ||
