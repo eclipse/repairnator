@@ -63,6 +63,10 @@ public class TestMetrics4BearsJsonFile {
         propertiesToIgnore = new ArrayList<>();
         propertiesToIgnore.add("reproductionBuggyBuild.reproductionDateBeginning");
         propertiesToIgnore.add("reproductionBuggyBuild.reproductionDateEnd");
+        propertiesToIgnore.add("reproductionBuggyBuild.machineInfo.hostName");
+        propertiesToIgnore.add("reproductionBuggyBuild.machineInfo.numberCPU");
+        propertiesToIgnore.add("reproductionBuggyBuild.machineInfo.freeMemory");
+        propertiesToIgnore.add("reproductionBuggyBuild.machineInfo.totalMemory");
         propertiesToIgnore.add("reproductionBuggyBuild.totalDuration");
         propertiesToIgnore.add("reproductionBuggyBuild.processDurations.cloning.stepDurations");
         propertiesToIgnore.add("reproductionBuggyBuild.processDurations.cloning.totalDuration");
@@ -150,7 +154,9 @@ public class TestMetrics4BearsJsonFile {
                 assertTrue("Property failing: " + fieldComparisonFailureName,
                         actual.equals(expected));
             } else {
-                assertTrue("Property failing: " + fieldComparisonFailureName,
+                assertTrue("Property failing: " + fieldComparisonFailureName +
+                                "\nexpected: " + fieldComparisonFailure.getExpected() +
+                                "\nactual: " + fieldComparisonFailure.getActual(),
                         this.isPropertyToBeIgnored(fieldComparisonFailureName));
             }
         }
@@ -221,7 +227,9 @@ public class TestMetrics4BearsJsonFile {
                 assertTrue("Property failing: " + fieldComparisonFailureName,
                         actual.equals(expected));
             } else {
-                assertTrue("Property failing: " + fieldComparisonFailureName,
+                assertTrue("Property failing: " + fieldComparisonFailureName +
+                                "\nexpected: " + fieldComparisonFailure.getExpected() +
+                                "\nactual: " + fieldComparisonFailure.getActual(),
                         this.isPropertyToBeIgnored(fieldComparisonFailureName));
             }
         }
