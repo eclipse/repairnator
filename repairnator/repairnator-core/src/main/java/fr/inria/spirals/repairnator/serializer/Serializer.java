@@ -36,6 +36,10 @@ public abstract class Serializer {
         return type;
     }
 
+    /**
+     * This utility method should be used to create proper date to be used in MongoDB.
+     * It create the right propertyName and put it in the result JSON object.
+     */
     public void addDate(JsonObject result, String propertyName, Date value) {
         JsonObject intermediateObject = new JsonObject();
         intermediateObject.addProperty("$date", MONGO_DATE_FORMAT.format(value));

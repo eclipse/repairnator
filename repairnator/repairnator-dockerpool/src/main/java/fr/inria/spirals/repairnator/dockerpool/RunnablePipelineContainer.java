@@ -20,7 +20,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
- * Created by urli on 14/03/2017.
+ * This class allows the creation of a docker container and run it.
  */
 public class RunnablePipelineContainer implements Runnable {
 
@@ -38,6 +38,15 @@ public class RunnablePipelineContainer implements Runnable {
     private List<String> envValues;
     private Set<String> volumes;
 
+    /**
+     * The constructor will init all the environment values for the container.
+     *
+     * @param poolManager the manager of the pool of running containers
+     * @param imageId the name of the docker image to use for creating the container
+     * @param inputBuildId the input build to use for specifying the arguments
+     * @param logDirectory the path of the produced logs
+     * @param treatedBuildTracking a serializer for recording the docker containers statuses
+     */
     public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
         this.poolManager = poolManager;
         this.imageId = imageId;
@@ -50,6 +59,9 @@ public class RunnablePipelineContainer implements Runnable {
         String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
         this.envValues = new ArrayList<>();
+
+        // depending on the mode (BEARS or repairnator)
+        // we give different arguments
         this.envValues.add("BUILD_ID="+this.inputBuildId.getBuggyBuildId());
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.BEARS) {
             this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
@@ -96,11 +108,15 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("Start to build and run container for build id "+this.inputBuildId.getBuggyBuildId());
             LOGGER.info("At most this docker run will be killed at: "+this.limitDateBeforeKilling);
 
-
-
+            // fixme: this does not work anymore to put a name that is displayed in docker ps
             Map<String,String> labels = new HashMap<>();
             labels.put("name",this.containerName);
+
+            // inside the docker containers the log will be produced in /var/log
+            // so we need to bind the directory with the local directory for logs
             HostConfig hostConfig = HostConfig.builder().appendBinds(this.logDirectory+":/var/log").build();
+
+            // we soecify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
                     .env(envValues)
@@ -109,21 +125,27 @@ public class RunnablePipelineContainer implements Runnable {
                     .labels(labels)
                     .build();
 
+            // and we create it
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Create the container: "+this.containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
+            // fixme: replace it with volumes() ?
+            // at the end we want to remove both the container and the volume to save space
             this.volumes = containerConfig.volumeNames();
 
             this.containerId = container.id();
             treatedBuildTracking.setContainerId(this.containerId);
 
+            // now the container is created: let's start it
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Start the container: "+this.containerName);
             docker.startContainer(container.id());
 
+            // and now we wait until it's finished
             ContainerExit exitStatus = docker.waitContainer(this.containerId);
 
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+exitStatus.statusCode());
 
+            // standard bash: if it's 0 everything's fine.
             if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
                 LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Container will be removed.");
                 docker.removeContainer(this.containerId);
@@ -148,6 +170,10 @@ public class RunnablePipelineContainer implements Runnable {
 
     }
 
+    /**
+     * In case of timeout, we kill the container.
+     * @param remove if true, it will remove both the container and the volumes
+     */
     public void killDockerContainer(DockerClient docker, boolean remove) {
         if (this.containerId == null) {
             LOGGER.error("Error while trying to kill docker container: the container id is not available. Maybe the container is not started yet.");

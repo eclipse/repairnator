@@ -1,7 +1,8 @@
 package fr.inria.spirals.repairnator;
 
 /**
- * Created by fermadeiral
+ * This class represents a Build input for both Repairnator and BEARS
+ * For repairnator it's only a buggy build id, but for BEARS it's a pair of buggy build id and patched build id.
  */
 public class InputBuildId {
 
