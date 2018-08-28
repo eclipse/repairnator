@@ -82,6 +82,9 @@ public class GitHelper {
             return oldCommitSha;
         } catch (IOException e) {
             step.addStepError("Error while testing commit: " + e);
+            if (!build.getBranch().isExistsOnGithub()) {
+                step.addStepError("The commit can't be resolved because the branch where such commit was done does not exist in GitHub anymore: " + Utils.getBranchUrl(build.getBranch().getName(), build.getRepository().getSlug()));
+            }
         }
         return null;
     }

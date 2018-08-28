@@ -74,6 +74,10 @@ public class Utils {
         return "http://github.com/"+repoSlug+"/commit/"+commitId;
     }
 
+    public static String getBranchUrl(String branchName, String repoSlug) {
+        return "http://github.com/"+repoSlug+"/tree/"+branchName;
+    }
+
     public static boolean matchesGithubRepoUrl(String repoUrl) {
         return repoUrl.matches(GITHUB_REPO_URL_PATTERN);
     }
