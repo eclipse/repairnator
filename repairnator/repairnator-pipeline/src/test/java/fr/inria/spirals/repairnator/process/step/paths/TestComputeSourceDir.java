@@ -249,42 +249,6 @@ public class TestComputeSourceDir {
         }));
     }
 
-    @Test
-    public void testComputeSourceDirWithMultiModuleProject5() throws IOException {
-        long buildId = 218168470; // Spirals-Team/librepair build
-
-        Build build = this.checkBuildAndReturn(buildId, false);
-
-        tmpDir = Files.createTempDirectory("test_computesourcedir2").toFile();
-
-        File repoDir = new File(tmpDir, "repo");
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
-
-
-        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
-
-        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
-
-        CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
-
-        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeSourceDir);
-        cloneStep.execute();
-
-        assertThat(computeSourceDir.isShouldStop(), is(false));
-        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(3));
-        StepStatus computeSourceDirStatus = stepStatusList.get(2);
-        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
-
-        for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
-        }
-
-        //assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder"), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java")}));
-    }
-
     // fixme: the test is not passing anymore when executing the whole test suite
     @Ignore
     @Test
