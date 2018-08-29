@@ -102,6 +102,12 @@ This repository is organized as follows:
   
 Each directory contains its own Readme explaining its own internal organization.
 
+## Releases
+
+* Github releases: https://github.com/Spirals-Team/repairnator/releases
+* Maven releases: https://search.maven.org/search?q=repairnator
+* DockerHub releases: https://hub.docker.com/r/spirals/repairnator/
+
 ## License
 
 This project has been funded by InriaHub. The content of this repository is licensed under the MIT terms. 
