@@ -816,7 +816,6 @@
               "testClass",
               "testMethod",
               "failureName",
-              "detail",
               "isError"
             ]
           }
