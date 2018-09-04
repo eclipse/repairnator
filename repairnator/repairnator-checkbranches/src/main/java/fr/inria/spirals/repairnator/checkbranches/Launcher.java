@@ -153,7 +153,8 @@ public class Launcher {
         List<String> branchNames = this.readListOfBranches();
         LOGGER.info("Find "+branchNames.size()+" branches to run.");
 
-        String imageId = DockerHelper.findDockerImage(this.config.getDockerImageName(), DockerHelper.initDockerClient());
+        this.docker = DockerHelper.initDockerClient();
+        String imageId = DockerHelper.findDockerImage(this.config.getDockerImageName(), this.docker);
         LOGGER.info("Found the following docker image id: "+imageId);
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
@@ -177,7 +178,7 @@ public class Launcher {
             executorService.shutdownNow();
         }
 
-        docker.close();
+        this.docker.close();
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
         }
