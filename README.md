@@ -1,28 +1,23 @@
 [![Build Status](https://travis-ci.org/Spirals-Team/repairnator.svg?branch=master)](https://travis-ci.org/Spirals-Team/repairnator) [![Coverage Status](https://coveralls.io/repos/github/Spirals-Team/repairnator/badge.svg?branch=master)](https://coveralls.io/github/Spirals-Team/repairnator?branch=master)
 
-## :warning: Integrate your repair tool in Repairnator
-
-If you want to bring your own tool in Repairnator platform, have a look on [contribution guidelines](/doc/contribute.md) :smile:
-
 # Repairnator: a program repair bot for continuous integration
 
 Repairnator is a software development bot that automatically repairs build failures on Travis CI.
 It scans failing Travis builds, tries to locally reproduce the failing build due to test failures and tries to repair it with program repair tools (e.g. Nopol and Astor).
 
-See [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). In Proceedings of 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018.
+## About Repairnator
 
-```
-@inproceedings{repairnator,
-  TITLE = {{How to Design a Program Repair Bot? Insights from the Repairnator Project}},
-  AUTHOR = {Urli, Simon and Yu, Zhongxing and Seinturier, Lionel and Monperrus, Martin},
-  BOOKTITLE = {{ICSE 2018 - 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP)}},
-  PAGES = {1-10},
-  YEAR = {2018},
-  DOI = {10.1145/nnnnnnn.nnnnnnn},
-}
-```
+### Academic papers
+
+* [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). In Proceedings of 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018. [(bibtex)](https://www.monperrus.net/martin/bibtexbrowser.php?key=urli%3Ahal-01691496&bib=monperrus.bib)
+
+### Press releases
+
+* [Repairnator, un robot autonome pour réparer les bugs informatiques (Sophie Timsit, inria.fr, Sep 4 2018)](https://www.inria.fr/centre/lille/actualites/repairnator-un-robot-autonome-pour-reparer-les-bugs-informatiques)
+
 ## Talks about Repairnator
 
+* ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Software Technology Exchange Workshop, STEW, 2018, Malmö, Oct 17 2018](https://www.swedsoft.se/event/stew-2018/)
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Simon Urli), International Conference on Software Engineering, Gothenburg, June 1st 2018](https://www.icse2018.org/program/program-icse-2018)
 * "How to Design a Program Repair Bot for Travis CI?", (Simon Urli, Martin Monperrus) Webinar at Travis CI, May 15 2018
 * ["The Future of Automated Program Repair" (Martin Monperrus), 13th Annual Symposium on Future Trends in Service-Oriented Computing, Hasso Plattner Institute, Postdam, April 19 2018](https://hpi.de/veranstaltungen/wissenschaftliche-konferenzen/research-school/2018/symposium-on-future-trends-in-service-oriented-computing.html)
@@ -89,6 +84,10 @@ Then just run the script `launch_rtscanner.sh`.
 
 * this generates build reproduction info and patches as local files in a folder named `logs/`
 * in this default setup, no MongoDB is used, no email notification is done
+
+### Integration
+
+If you want to bring your own tool in Repairnator, have a look on [contribution guidelines](/doc/contribute.md) :smile:
 
 ## Content of the repository
 
