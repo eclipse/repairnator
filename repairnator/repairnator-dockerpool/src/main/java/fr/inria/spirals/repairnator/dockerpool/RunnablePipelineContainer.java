@@ -152,7 +152,11 @@ public class RunnablePipelineContainer implements Runnable {
                 this.removeVolumes(docker);
             }
 
-            serialize("TREATED");
+            if (exitStatus.statusCode() == 0) {
+                serialize("TREATED");
+            } else {
+                serialize("ERROR:CODE" + exitStatus.statusCode());
+            }
         } catch (InterruptedException e) {
             LOGGER.error("Error while running the container for build id "+this.inputBuildId.getBuggyBuildId(), e);
             killDockerContainer(docker, false);
