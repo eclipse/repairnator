@@ -61,12 +61,6 @@ else
 fi
 
 numberOfCommits=`git rev-list --count HEAD`
-if [ "$numberOfCommits" -lt 4 ] ; then
-    RESULT="$BRANCH_NAME [FAILURE] (the number of commits is less than 4)"
-    >&2 echo -e "$RED $RESULT $NC"
-    echo "$RESULT" >> $DOCKER_DEST
-    exit 1
-fi
 
 bugCommitId=""
 
@@ -74,6 +68,13 @@ case=$(cat bears.json | sed 's/.*"type": "\(.*\)".*/\1/;t;d')
 echo "Branch from case $case"
 if [ "$case" == "failing_passing" ]; then
     echo "3 commits must exist."
+
+    if [ "$numberOfCommits" -ne 3 ] ; then
+        RESULT="$BRANCH_NAME [FAILURE] (the number of commits is different than 3)"
+        >&2 echo -e "$RED $RESULT $NC"
+        echo "$RESULT" >> $DOCKER_DEST
+        exit 1
+    fi
 
     echo "Checking commits..."
 
@@ -89,6 +90,13 @@ if [ "$case" == "failing_passing" ]; then
     bugCommitId=`git log --format=format:%H --grep="Bug commit"`
 else
     echo "4 commits must exist."
+
+    if [ "$numberOfCommits" -ne 4 ] ; then
+        RESULT="$BRANCH_NAME [FAILURE] (the number of commits is different than 4)"
+        >&2 echo -e "$RED $RESULT $NC"
+        echo "$RESULT" >> $DOCKER_DEST
+        exit 1
+    fi
 
     echo "Checking commits..."
 
