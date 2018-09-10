@@ -130,7 +130,7 @@ if [ "$status" -eq 124 ]; then
     >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 1
-elif [ "$status" -ne 0 ]; then
+elif [ "$status" -eq 0 ]; then
     RESULT="$BRANCH_NAME [FAILURE] (bug reproduction - status = $status)"
     >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
