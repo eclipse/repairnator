@@ -125,13 +125,13 @@ git checkout -q $bugCommitId
 timeout 3000s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
 
 status=$?
-if [ "$status" -eq 0 ]; then
-    RESULT="$BRANCH_NAME [FAILURE] (bug reproduction - status = $status)"
+if [ "$status" -eq 124 ]; then
+    RESULT="$BRANCH_NAME [FAILURE] (bug reproduction timeout)"
     >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 1
-elif [ "$status" -eq 124 ]; then
-    RESULT="$BRANCH_NAME [FAILURE] (bug reproduction timeout)"
+elif [ "$status" -ne 0 ]; then
+    RESULT="$BRANCH_NAME [FAILURE] (bug reproduction - status = $status)"
     >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 1
@@ -145,13 +145,13 @@ git checkout -q $patchCommitId
 timeout 3000s mvn -q -B test -Dsurefire.printSummary=false $MAVEN_TEST_ARGS
 
 status=$?
-if [ "$status" -eq 0 ]; then
-    RESULT="$BRANCH_NAME [FAILURE] (patch reproduction - status = $status)"
+if [ "$status" -eq 124 ]; then
+    RESULT="$BRANCH_NAME [FAILURE] (patch reproduction timeout)"
     >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 1
-elif [ "$status" -eq 124 ]; then
-    RESULT="$BRANCH_NAME [FAILURE] (patch reproduction timeout)"
+elif [ "$status" -ne 0 ]; then
+    RESULT="$BRANCH_NAME [FAILURE] (patch reproduction - status = $status)"
     >&2 echo -e "$RED $RESULT $NC"
     echo "$RESULT" >> $DOCKER_DEST
     exit 1
