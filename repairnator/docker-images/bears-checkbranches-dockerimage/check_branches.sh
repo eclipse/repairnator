@@ -45,6 +45,9 @@ git fetch origin $BRANCH_NAME
 git checkout $BRANCH_NAME
 
 if [ -e "bears.json" ]; then
+    if [ $(pwd) == "/home/travis" ]; then
+        JSON_SCHEMA="../$JSON_SCHEMA"
+    fi
     if ajv test -s $JSON_SCHEMA -d bears.json --valid ; then
         echo "bears.json is valid in $BRANCH_NAME"
     else
