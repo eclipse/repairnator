@@ -51,7 +51,7 @@ fi
 echo "Pull the docker machine (name: $DOCKER_CHECKBRANCHES_TAG)..."
 docker pull $DOCKER_CHECKBRANCHES_TAG
 
-echo "Analyze started: `date "+%Y-%m-%d_%H%M%S"`" > $OUTPUT
+echo "Analysis started: `date "+%Y-%m-%d_%H%M%S"`" > $OUTPUT
 echo "Considered repository: $CHECK_BRANCH_REPOSITORY" >> $OUTPUT
 
 echo "Launch docker pool checkbranches ..."
@@ -75,4 +75,4 @@ java $JAVA_OPTS -jar $REPAIRNATOR_CHECKBRANCHES_DEST_JAR -t $NB_THREADS -n $DOCK
 echo "Docker pool checkbranches finished, delete the run directory ($REPAIRNATOR_RUN_DIR)"
 rm -rf $REPAIRNATOR_RUN_DIR
 
-echo "Analyze finished: `date "+%Y-%m-%d_%H%M%S"`" >> $OUTPUT
+echo "Analysis finished: `date "+%Y-%m-%d_%H%M%S"`" >> $OUTPUT
