@@ -172,6 +172,30 @@ public class LauncherUtils {
     public static String getArgSmtpServer(JSAPResult arguments) {
         return arguments.getString("smtpServer");
     }
+    
+    public static FlaggedOption defineArgSmtpUsername() {
+        FlaggedOption opt = new FlaggedOption("smtpUsername");
+        opt.setLongFlag("smtpUsername");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Username for authorized server");
+        return opt;
+    }
+    
+    public static String getArgSmtpUsername(JSAPResult arguments) {
+        return argument.getString("smtpUsername");
+    }
+    
+    public static FlaggedOption defineArgSmtpPassword() {
+        FlaggedOption opt = new FlaggedOption("smtpPassword");
+        opt.setLongFlag("smtpPassword");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Password for authorized server");
+        return opt;
+    }
+    
+    public static String getArgSmtpPassword(JSAPResult arguments) {
+        return argument.getString("smtpPassword");
+    }
 
     public static FlaggedOption defineArgNotifyto() {
         FlaggedOption opt = new FlaggedOption("notifyto");
