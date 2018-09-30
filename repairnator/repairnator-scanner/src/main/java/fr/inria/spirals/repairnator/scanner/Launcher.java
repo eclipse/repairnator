@@ -97,6 +97,10 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
         jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --smtpUsername
+        jsap.registerParameter(LauncherUtils.defineArgSmtpUsername());
+        // --smtpPassword
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPassword());
         // --notifyto
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // --ghOauth
@@ -166,6 +170,8 @@ public class Launcher {
         this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
         this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setSmtpUsername(LauncherUtils.getArgSmtpUsername(arguments));
+        this.config.setSmtpPassword(LauncherUtils.getArgSmtpPassword(arguments));
         this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
         Date lookFromDate = arguments.getDate("lookFromDate");
         Date lookToDate = arguments.getDate("lookToDate");
