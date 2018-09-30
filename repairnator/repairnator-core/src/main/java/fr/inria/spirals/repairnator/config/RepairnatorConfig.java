@@ -27,6 +27,8 @@ public class RepairnatorConfig {
     private String mongodbHost;
     private String mongodbName;
     private String smtpServer;
+    private String smtpUsername;
+    private String smtpPassword;
     private String[] notifyTo;
     private boolean notifyEndProcess;
     private boolean push;
@@ -159,6 +161,22 @@ public class RepairnatorConfig {
 
     public void setSmtpServer(String smtpServer) {
         this.smtpServer = smtpServer;
+    }
+    
+    public String getSmtpUsername() {
+        return smtpUsername;
+    }
+    
+    public void setSmtpUsername(String smtpUsername) {
+        this.smtpUsername = smtpUsername;
+    }
+    
+    public String getSmtpPassword() {
+        return smtpPassword;
+    }
+    
+    public void setSmtpPassword(String smtpPassword) {
+        this.smtpPassword = smtpPassword;
     }
 
     public String[] getNotifyTo() {
