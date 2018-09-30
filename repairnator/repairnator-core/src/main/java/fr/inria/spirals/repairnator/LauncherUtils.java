@@ -182,7 +182,7 @@ public class LauncherUtils {
     }
     
     public static String getArgSmtpUsername(JSAPResult arguments) {
-        return argument.getString("smtpUsername");
+        return arguments.getString("smtpUsername");
     }
     
     public static FlaggedOption defineArgSmtpPassword() {
@@ -194,7 +194,7 @@ public class LauncherUtils {
     }
     
     public static String getArgSmtpPassword(JSAPResult arguments) {
-        return argument.getString("smtpPassword");
+        return arguments.getString("smtpPassword");
     }
 
     public static FlaggedOption defineArgNotifyto() {
