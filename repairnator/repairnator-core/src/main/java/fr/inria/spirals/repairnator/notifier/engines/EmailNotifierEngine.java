@@ -34,7 +34,7 @@ public class EmailNotifierEngine implements NotifierEngine {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(smtpUsername, smtpPassword);
                     }
-        });
+            });
 
         try {
             this.from = new InternetAddress(smtpUsername);
