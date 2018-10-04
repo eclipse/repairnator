@@ -271,35 +271,14 @@ public class ProjectScanner {
             if (build.getState() == StateType.FAILED) {
                 this.totalBuildInJavaFailing++;
 
-                for (Job job : build.getJobs()) {
-                    RepairnatorConfig.getInstance().getJTravis().refresh(job);
-                    if (job.getState() == StateType.FAILED) {
-                        Optional<Log> optionalLog = job.getLog();
-
-                        if (optionalLog.isPresent()) {
-                            Log jobLog = optionalLog.get();
-                            if (jobLog.getBuildTool() == BuildTool.MAVEN) {
-                                TestsInformation testInfo = jobLog.getTestsInformation();
-
-                                // testInfo can be null if the build tool is unknown
-                                if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
-                                    this.totalBuildInJavaFailingWithFailingTests++;
-                                    if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
-                                        this.slugs.add(repo.getSlug());
-                                        this.repositories.add(repo);
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                } else {
-                                    logger.debug("No failing or erroring test found in build " + build.getId());
-                                }
-                            } else {
-                                logger.debug("Maven is not used in the build " + build.getId());
-                            }
-                        } else {
-                            logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
-                        }
+                if (isFailedBuildFailingByTestFailure(build)) {
+                    this.totalBuildInJavaFailingWithFailingTests++;
+                    if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+                        this.slugs.add(repo.getSlug());
+                        this.repositories.add(repo);
+                        return true;
+                    } else {
+                        return false;
                     }
                 }
             } else if (build.getState() == StateType.PASSED) {
