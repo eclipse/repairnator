@@ -230,6 +230,8 @@ public class ProjectScanner {
                 Optional<Build> optionalBeforeBuild = this.jTravis.build().getBefore(build, true);
                 if (optionalBeforeBuild.isPresent()) {
                     Build previousBuild = optionalBeforeBuild.get();
+                    // FIXME: the next line can be removed once the issue https://github.com/Spirals-Team/jtravis/issues/21 is fixed in jtravis.
+                    previousBuild = jTravis.build().getEntityFromUri(Build.class, previousBuild.getUri()).get();
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     BearsMode mode = RepairnatorConfig.getInstance().getBearsMode();

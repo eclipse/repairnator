@@ -129,7 +129,8 @@ public class ProjectScannerTest {
 
         BuildToBeInspected expectedBuildToBeInspected = new BuildToBeInspected(buildFailing, buildNextPassing, ScannedBuildStatus.FAILING_AND_PASSING, "test");
         BuildToBeInspected obtainedBTB = projectScanner.getBuildToBeInspected(buildNextPassing);
-        assertEquals(expectedBuildToBeInspected, obtainedBTB);
+        assertEquals(expectedBuildToBeInspected.getBuggyBuild().getId(), obtainedBTB.getBuggyBuild().getId());
+        assertEquals(expectedBuildToBeInspected.getPatchedBuild().getId(), obtainedBTB.getPatchedBuild().getId());
     }
 
     @Test
