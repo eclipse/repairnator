@@ -157,4 +157,60 @@ public class ProjectScannerTest {
         BuildToBeInspected obtainedBTB = projectScanner.getBuildToBeInspected(buildNextPassing);
         assertEquals(expectedBuildToBeInspected, obtainedBTB);
     }
+
+    /*
+        The pair of builds is failing and passing.
+        This pair should not be selected by the scanner, i.e. a BuildToBeInspected should not be created,
+        because the failing build did not fail in Travis due to test failure.
+     */
+    @Test
+    public void testGetBuildToBeInspectedWithPassingBuildWithPreviousFailingBuildBears() {
+        long buildIdFailing = 325003763; // inria/spoon
+        long buildIdNextPassing = 325005624;
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.BEARS);
+
+        Optional<Build> buildOptional = config.getJTravis().build().fromId(buildIdFailing);
+        assertTrue(buildOptional.isPresent());
+        Build buildFailing = buildOptional.get();
+        assertEquals(StateType.FAILED, buildFailing.getState());
+
+        buildOptional = config.getJTravis().build().fromId(buildIdNextPassing);
+        assertTrue(buildOptional.isPresent());
+        Build buildNextPassing = buildOptional.get();
+        assertEquals(StateType.PASSED, buildNextPassing.getState());
+
+        ProjectScanner projectScanner = new ProjectScanner(new Date(), new Date(), "test");
+
+        BuildToBeInspected obtainedBTB = projectScanner.getBuildToBeInspected(buildNextPassing);
+        assertEquals(null, obtainedBTB);
+    }
+
+    /*
+        The pair of builds is passing and passing.
+        This pair should not be selected by the scanner, i.e. a BuildToBeInspected should not be created,
+        because there is no java file changed between the two builds (there is only test file).
+     */
+    @Test
+    public void testGetBuildToBeInspectedWithPassingBuildWithPreviousPassingBuildBears() {
+        long buildIdPassing = 323802157; // inria/spoon
+        long buildIdNextPassing = 323823511;
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.BEARS);
+
+        Optional<Build> buildOptional = config.getJTravis().build().fromId(buildIdPassing);
+        assertTrue(buildOptional.isPresent());
+        Build buildPassing = buildOptional.get();
+        assertEquals(StateType.PASSED, buildPassing.getState());
+
+        buildOptional = config.getJTravis().build().fromId(buildIdNextPassing);
+        assertTrue(buildOptional.isPresent());
+        Build buildNextPassing = buildOptional.get();
+        assertEquals(StateType.PASSED, buildNextPassing.getState());
+
+        ProjectScanner projectScanner = new ProjectScanner(new Date(), new Date(), "test");
+
+        BuildToBeInspected obtainedBTB = projectScanner.getBuildToBeInspected(buildNextPassing);
+        assertEquals(null, obtainedBTB);
+    }
 }
