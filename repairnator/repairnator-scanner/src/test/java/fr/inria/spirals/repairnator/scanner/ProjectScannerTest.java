@@ -165,8 +165,8 @@ public class ProjectScannerTest {
      */
     @Test
     public void testGetBuildToBeInspectedWithPassingBuildWithPreviousFailingBuildBears() {
-        long buildIdFailing = 325003763; // inria/spoon
-        long buildIdNextPassing = 325005624;
+        long buildIdFailing = 230022061; // inria/spoon
+        long buildIdNextPassing = 230049446;
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
 
