@@ -37,7 +37,7 @@ public class MavenHelper {
     // fixme: make that list available in a config
     private static final List<String> SKIP_LIST = Arrays.asList(
             "enforcer.skip",
-            "checkstyle.skip",
+            // "checkstyle.skip", 
             "cobertura.skip",
             "skipITs",
             "rat.skip",
@@ -70,13 +70,14 @@ public class MavenHelper {
         this.name = name;
         this.inspector = inspector;
 
-        if (enableHandlers) {
+        if ( enableHandlers) 
+        {
             this.errorHandler = new MavenErrorHandler(this);
             this.outputHandler = new MavenFilterOutputHandler(this);
         } else {
             this.outputHandler = new MavenMuteOutputHandler(this);
         }
-
+        
         this.updateProperties();
     }
 

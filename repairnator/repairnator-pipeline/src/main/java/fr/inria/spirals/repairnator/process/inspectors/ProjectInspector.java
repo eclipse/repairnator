@@ -198,6 +198,7 @@ public class ProjectInspector {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo
                     .addNextStep(new CheckoutBuggyBuild(this, true))
+                    .addNextStep(new Checkstyle(this))
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
@@ -304,7 +305,7 @@ public class ProjectInspector {
 
     public void printPipeline() {
         this.logger.info("----------------------------------------------------------------------");
-        this.logger.info("PIPELINE STEPS");
+        this.logger.info("PIPELINE STEPS (w/ cs)");
         this.logger.info("----------------------------------------------------------------------");
         for (int i = 0; i < this.steps.size(); i++) {
             this.logger.info(this.steps.get(i).getName());

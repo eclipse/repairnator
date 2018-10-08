@@ -46,7 +46,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 . $SCRIPT_DIR/utils/init_script.sh
 
 echo "Pull the docker machine (name: $DOCKER_TAG)..."
-docker pull $DOCKER_TAG
+# docker pull $DOCKER_TAG
 
 LOG_FILENAME="repairnator-pipeline_`date \"+%Y-%m-%d_%H%M\"`_$BUILD_ID"
 
