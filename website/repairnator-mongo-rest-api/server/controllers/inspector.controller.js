@@ -103,4 +103,20 @@ function countSuccessFullyReproducedBuild(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, list, getByStatus, count, hostnameStats, statusStats, nbUniqueBuilds, statusStatsPeriod, reproducedBuilds, reproducedBuildsAll, getPatches, getNbFailuresByProject, getNbReproducedByProject, countSuccessFullyReproducedBuild };
+export default {
+  load,
+  get,
+  list,
+  getByStatus,
+  count,
+  hostnameStats,
+  statusStats,
+  nbUniqueBuilds,
+  statusStatsPeriod,
+  reproducedBuilds,
+  reproducedBuildsAll,
+  getPatches,
+  getNbFailuresByProject,
+  getNbReproducedByProject,
+  countSuccessFullyReproducedBuild
+};

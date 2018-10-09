@@ -7,7 +7,7 @@ import config from '../../config/config';
 
 chai.config.includeStack = true;
 
-describe('## Auth APIs', () => {
+describe.skip('## Auth APIs', () => {
   const validUserCredentials = {
     username: 'react',
     password: 'express'
