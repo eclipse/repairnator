@@ -23,7 +23,7 @@ services:
 
     # Overwrite any env var defined in .env file (if required)
     environment:
-      - MONGO_HOST=mongodb://mongo/express-mongoose-es6-rest-api-test
+      # - MONGO_HOST=mongodb://mongo:27017/test
       - DEBUG=express-mongoose-es6-rest-api:*
 
     # Link to containers in another service.
