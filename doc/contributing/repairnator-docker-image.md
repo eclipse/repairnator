@@ -19,12 +19,13 @@ process described below.
 
 In `/repairnator/repairnator/repairnator-pipeline` run ```mvn
 package```. This should create a file
-`repairnator-pipeline-[...]-with-dependencies.jar`. Then move and
+`./target/repairnator-pipeline-[...]-with-dependencies.jar`. Then move and
 rename it by running
+
 ```
-mv repairnator-pipeline-[...]-with-dependencies.jar
+mv ./target/repairnator-pipeline-[...]-with-dependencies.jar
 ../docker-images/pipeline-dockerimage-dev/repairnator-pipeline.jar
-mv ../docker-images/pipeline-dockerimage-dev
+cd ../docker-images/pipeline-dockerimage-dev
 docker build .
 ```
 
@@ -36,3 +37,5 @@ be used.
 If not changed in configuration file, repairnator will use the default
 docker image, `spirals/repairnator:latest`. So any changes that have
 been made locally will not be used.
+
+If you do not upload  your image to docker hub you should also remove the ` docker pull $DOCKER_TAG` from the scripts. 
