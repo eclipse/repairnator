@@ -6,7 +6,7 @@ import app from '../../index';
 chai.config.includeStack = true;
 
 describe('## Piperline-Erros', () => {
-  describe('# GET /repairnator-mongo-api/pipeline-errrors', () => {
+  describe('# GET /repairnator-mongo-api/pipeline-errrors/', () => {
     it('should return OK', (done) => {
       request(app)
         .get('/repairnator-mongo-api/pipeline-errrors')
