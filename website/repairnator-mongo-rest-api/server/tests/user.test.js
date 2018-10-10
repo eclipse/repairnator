@@ -17,7 +17,7 @@ after((done) => {
   done();
 });
 
-describe('## User APIs', () => {
+describe.skip('## User APIs', () => {
   let user = {
     username: 'KK123',
     mobileNumber: '1234567890'
