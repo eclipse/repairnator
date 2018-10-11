@@ -28,20 +28,20 @@ public class Checkstyle extends AbstractStep {
         Properties properties = new Properties();
         properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
 
-        MavenHelper helper = new MavenHelper(this.getPom(), "checkstyle:checkstyle", properties, this.getClass().getSimpleName(), this.getInspector(), true);
+        MavenHelper helper = new MavenHelper(this.getPom(), "checkstyle:checkstyle", properties, this.getClass().getSimpleName(), this.getInspector(), true, false);
 
         int result;
         try {
             result = helper.run();
         } catch (InterruptedException e) {
-            this.addStepError("Error while building", e);
+            this.addStepError("Error while running checkstyle", e);
             result = MavenHelper.MAVEN_ERROR;
         }
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
             return StepStatus.buildSuccess(this);
         } else {
-            this.addStepError("Repository " + this.getInspector().getRepoSlug() + " has checkstyle errors.");
+            this.addStepError("Repository " + this.getInspector().getRepoSlug() + " has (maybe ?) checkstyle errors.");
             return StepStatus.buildError(this, PipelineState.CHECKSTYLE_ERRORS);
         }
     }

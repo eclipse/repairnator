@@ -59,16 +59,23 @@ public class MavenHelper {
     private String name;
     private ProjectInspector inspector;
     private Instant limitOutputDate;
+    
+    private boolean skipCheckstyle;
 
     private InvocationOutputHandler errorHandler;
     private InvocationOutputHandler outputHandler;
 
     public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers) {
+    	this(pomFile, goal, properties, name, inspector, enableHandlers, true);
+    }
+    
+    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers, boolean skipCheckstyle) {
         this.goal = goal;
         this.pomFile = pomFile;
         this.properties = properties;
         this.name = name;
         this.inspector = inspector;
+        this.skipCheckstyle = skipCheckstyle;
 
         if ( enableHandlers) 
         {
@@ -90,6 +97,9 @@ public class MavenHelper {
         this.properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
         for (String skip : SKIP_LIST) {
             this.properties.setProperty(skip, "true");
+        }
+        if (this.skipCheckstyle) {
+        	this.properties.setProperty("checkstyle.skip", "true");
         }
     }
 

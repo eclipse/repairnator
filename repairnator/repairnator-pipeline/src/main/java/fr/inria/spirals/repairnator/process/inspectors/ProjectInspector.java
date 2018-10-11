@@ -198,8 +198,8 @@ public class ProjectInspector {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo
                     .addNextStep(new CheckoutBuggyBuild(this, true))
-                    .addNextStep(new Checkstyle(this))
                     .addNextStep(new BuildProject(this))
+                    .addNextStep(new Checkstyle(this))
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
                     .addNextStep(new InitRepoToPush(this))
