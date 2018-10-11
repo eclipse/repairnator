@@ -36,18 +36,18 @@ public class MavenHelper {
     // all the goals we want to skip
     // fixme: make that list available in a config
     private static final List<String> SKIP_LIST = Arrays.asList(
-            "enforcer.skip",
-            // "checkstyle.skip", 
-            "cobertura.skip",
-            "skipITs",
-            "rat.skip",
-            "license.skip",
-            "findbugs.skip",
-            "gpg.skip",
-            "skip.npm",
-            "skip.gulp",
-            "skip.bower",
-            "dependency-check.skip"
+        "enforcer.skip",
+        // "checkstyle.skip",
+        "cobertura.skip",
+        "skipITs",
+        "rat.skip",
+        "license.skip",
+        "findbugs.skip",
+        "gpg.skip",
+        "skip.npm",
+        "skip.gulp",
+        "skip.bower",
+        "dependency-check.skip"
     );
     private static final int TIMEOUT_WITHOUT_OUTPUT = 10; // in minutes
 
@@ -59,16 +59,16 @@ public class MavenHelper {
     private String name;
     private ProjectInspector inspector;
     private Instant limitOutputDate;
-    
+
     private boolean skipCheckstyle;
 
     private InvocationOutputHandler errorHandler;
     private InvocationOutputHandler outputHandler;
 
     public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers) {
-    	this(pomFile, goal, properties, name, inspector, enableHandlers, true);
+        this(pomFile, goal, properties, name, inspector, enableHandlers, true);
     }
-    
+
     public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers, boolean skipCheckstyle) {
         this.goal = goal;
         this.pomFile = pomFile;
@@ -77,14 +77,13 @@ public class MavenHelper {
         this.inspector = inspector;
         this.skipCheckstyle = skipCheckstyle;
 
-        if ( enableHandlers) 
-        {
+        if (enableHandlers) {
             this.errorHandler = new MavenErrorHandler(this);
             this.outputHandler = new MavenFilterOutputHandler(this);
         } else {
             this.outputHandler = new MavenMuteOutputHandler(this);
         }
-        
+
         this.updateProperties();
     }
 
@@ -99,7 +98,7 @@ public class MavenHelper {
             this.properties.setProperty(skip, "true");
         }
         if (this.skipCheckstyle) {
-        	this.properties.setProperty("checkstyle.skip", "true");
+            this.properties.setProperty("checkstyle.skip", "true");
         }
     }
 
@@ -157,7 +156,7 @@ public class MavenHelper {
             ModelBuildingResult modelBuildingResult = defaultModelBuilder.build(req);
             return modelBuildingResult.getEffectiveModel();
         } catch (ModelBuildingException e) {
-            LOGGER.error("Error while building complete model. The raw model will be used. Error message: "+e.getMessage());
+            LOGGER.error("Error while building complete model. The raw model will be used. Error message: " + e.getMessage());
             return defaultModelBuilder.buildRawModel(pomXml, ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL, true).get();
         }
 
@@ -175,7 +174,7 @@ public class MavenHelper {
 
             if (now.isAfter(this.limitOutputDate)) {
                 t.interrupt();
-                throw new InterruptedException("Timeout occurred: no output has been received in the last "+TIMEOUT_WITHOUT_OUTPUT+" minutes.");
+                throw new InterruptedException("Timeout occurred: no output has been received in the last " + TIMEOUT_WITHOUT_OUTPUT + " minutes.");
             } else {
                 Thread.sleep(1000);
             }

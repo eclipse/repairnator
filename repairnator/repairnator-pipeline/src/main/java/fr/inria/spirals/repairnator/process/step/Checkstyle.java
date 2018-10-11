@@ -21,7 +21,7 @@ public class Checkstyle extends AbstractStep {
         super(inspector, blockingStep, stepName);
     }
 
-    
+
     protected StepStatus businessExecute() {
         this.getLogger().debug("Run checkstyle on the project");
 
