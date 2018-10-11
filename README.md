@@ -13,10 +13,11 @@ It scans failing Travis builds, tries to locally reproduce the failing build due
 
 ### Press releases
 
-* [Repairnator, un robot autonome pour réparer les bugs informatiques (Sophie Timsit, inria.fr, Sep 4 2018)](https://www.inria.fr/centre/lille/actualites/repairnator-un-robot-autonome-pour-reparer-les-bugs-informatiques)
+* [Repairnator, an autonomous robot to repair computer bugs (Sophie Timsit) inria.fr, Sep 4 2018](https://www.inria.fr/en/centre/lille/news/repairnator-an-autonomous-robot-to-repair-computer-bugs)
 
 ## Talks about Repairnator
 
+* "How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Talk at SAAB, Järfälla, Sep 21 2018
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Software Technology Exchange Workshop, STEW, 2018, Malmö, Oct 17 2018](https://www.swedsoft.se/event/stew-2018/)
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Simon Urli), International Conference on Software Engineering, Gothenburg, June 1st 2018](https://www.icse2018.org/program/program-icse-2018)
 * "How to Design a Program Repair Bot for Travis CI?", (Simon Urli, Martin Monperrus) Webinar at Travis CI, May 15 2018
