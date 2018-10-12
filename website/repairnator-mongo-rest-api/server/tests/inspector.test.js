@@ -18,21 +18,4 @@ describe('## Inspector', () => {
         .catch(done);
     });
   });
-  describe('# GET /repairnator-mongo-api/inspectors/status/:status', () => {
-    it('should return OK', (done) => {
-      const status = 'NOTBUILDABLE';
-      request(app)
-        .get(`/repairnator-mongo-api/inspectors/status/${status}`)
-        .expect(httpStatus.OK)
-        .then((res) => {
-          expect(res.body).to.be.an('array');
-          const allEqualToStatus = res.body.reduce((acc, elem) =>
-            elem.status === status && acc
-          , true);
-          expect(allEqualToStatus).to.equal(true);
-          done();
-        })
-        .catch(done);
-    });
-  });
 });

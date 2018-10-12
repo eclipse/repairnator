@@ -107,7 +107,6 @@ export default {
   load,
   get,
   list,
-  getByStatus,
   count,
   hostnameStats,
   statusStats,

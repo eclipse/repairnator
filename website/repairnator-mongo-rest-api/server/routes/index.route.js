@@ -13,6 +13,6 @@ router.get('/health-check', (req, res) =>
 // mount user routes at /users
 router.use('/inspectors', inspectorRoutes);
 router.use('/scanners', scannerRoutes);
-router.use('/pipeline-errrors', pipelineErrorRoutes);
+router.use('/pipeline-errors', pipelineErrorRoutes);
 
 export default router;

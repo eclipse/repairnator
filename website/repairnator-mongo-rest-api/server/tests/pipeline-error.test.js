@@ -9,7 +9,7 @@ describe('## Piperline-Erros', () => {
   describe('# GET /repairnator-mongo-api/pipeline-errrors/', () => {
     it('should return OK', (done) => {
       request(app)
-        .get('/repairnator-mongo-api/pipeline-errrors')
+        .get('/repairnator-mongo-api/pipeline-errors')
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body).to.be.an('array');
