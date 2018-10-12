@@ -73,14 +73,6 @@ InspectorSchema.statics = {
       .exec();
   },
 
-  getByStatus(status, { skip = 0, limit = 50 } = {}) {
-    return this.find({ status })
-      .sort({ buildFinishedDate: -1 })
-      .skip(+skip)
-      .limit(+limit)
-      .exec();
-  },
-
   hostnameStats() {
     return this.aggregate([
       {
