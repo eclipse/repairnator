@@ -69,7 +69,12 @@ if [ "$SKIP_DELETE" -eq 1 ]; then
 fi
 
 supplementaryArgs="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+supplementaryArgs="$supplementaryArgs`ca --smtpPort $SMTP_PORT``ca --smtpUsername $SMTP_USERNAME``ca --smtpPassword $SMTP_PASSWORD`"
 supplementaryArgs="$supplementaryArgs`ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
+
+if [ "$SMTP_TLS" -eq 1 ]; then
+    args="$supplementaryArgs --smtpTLS"
+fi
 
 if [ "$BEARS_MODE" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --bears"
