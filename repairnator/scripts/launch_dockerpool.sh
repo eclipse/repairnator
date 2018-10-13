@@ -73,7 +73,7 @@ supplementaryArgs="$supplementaryArgs`ca --smtpPort $SMTP_PORT``ca --smtpUsernam
 supplementaryArgs="$supplementaryArgs`ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
 
 if [ "$SMTP_TLS" -eq 1 ]; then
-    args="$supplementaryArgs --smtpTLS"
+    supplementaryArgs="$supplementaryArgs --smtpTLS"
 fi
 
 if [ "$BEARS_MODE" -eq 1 ]; then
