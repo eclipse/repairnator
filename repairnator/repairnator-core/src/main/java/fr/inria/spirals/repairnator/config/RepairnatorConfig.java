@@ -27,6 +27,8 @@ public class RepairnatorConfig {
     private String mongodbHost;
     private String mongodbName;
     private String smtpServer;
+    private int smtpPort;
+    private boolean smtpTLS;
     private String smtpUsername;
     private String smtpPassword;
     private String[] notifyTo;
@@ -162,6 +164,22 @@ public class RepairnatorConfig {
     public void setSmtpServer(String smtpServer) {
         this.smtpServer = smtpServer;
     }
+    
+    public int getSmtpPort() {
+        return smtpPort;
+    }
+
+    public void setSmtpPort(int smtpPort) {
+        this.smtpPort = smtpPort;
+    }    
+    
+    public boolean getSmtpTLS() {
+        return smtpTLS;
+    }
+
+    public void setSmtpTLS(boolean smtpTLS) {
+        this.smtpTLS = smtpTLS;
+    }    
     
     public String getSmtpUsername() {
         return smtpUsername;
@@ -484,6 +502,9 @@ public class RepairnatorConfig {
                 mongoDbInfo = "mongodb://[hidden]" + mongoDbInfo.substring(indexOfArobase);
             }
         }
+        // In case we have a password, print out stars, if there is no password print nothing
+        String smtpPass = "";
+        if(smtpPassword != null) smtpPass = "*****";
 
         return "RepairnatorConfig{" +
                 "runId='" + runId + '\'' +
@@ -494,6 +515,10 @@ public class RepairnatorConfig {
                 ", mongodbHost='" + mongoDbInfo + '\'' +
                 ", mongodbName='" + mongodbName + '\'' +
                 ", smtpServer='" + smtpServer + '\'' +
+                ", smtpPort='" + smtpPort + '\'' +
+                ", smtpTLS='" + smtpTLS + '\'' +
+                ", smtpUsername='" + smtpUsername + '\'' +
+                ", smtpPassword='" + smtpPass + '\'' +
                 ", notifyTo=" + Arrays.toString(notifyTo) +
                 ", notifyEndProcess=" + notifyEndProcess +
                 ", push=" + push +

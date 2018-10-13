@@ -26,15 +26,26 @@ public class EmailNotifierEngine implements NotifierEngine {
     private Address from;
     private List<Address> to;
 
-    public EmailNotifierEngine(String[] receivers, String smtpServer, String smtpUsername, String smtpPassword) {
+    public EmailNotifierEngine(String[] receivers, String smtpServer, int smtpPort, boolean smtpTLS, String smtpUsername, String smtpPassword) {
         this.properties = new Properties();
         this.properties.put("mail.smtp.host", smtpServer);
-        this.session = Session.getDefaultInstance(this.properties, 
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(smtpUsername, smtpPassword);
+        this.properties.put("mail.smtp.port", smtpPort);
+        // In the case where a secure connection is wished for
+        if(smtpTLS) {
+            this.properties.put("mail.smtp.starttls.enable", smtpTLS);
+        }
+        if(smtpPassword.length() > 1) {
+            this.session = Session.getDefaultInstance(this.properties, 
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(smtpUsername, smtpPassword);
+                        }
                     }
-            });
+            );
+        }
+        else {
+            this.session = Session.getDefaultInstance(this.properties, null);
+        }
 
         try {
             this.from = new InternetAddress(smtpUsername);

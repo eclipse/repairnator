@@ -173,6 +173,31 @@ public class LauncherUtils {
         return arguments.getString("smtpServer");
     }
     
+    public static FlaggedOption defineArgSmtpPort() {
+        FlaggedOption opt = new FlaggedOption("smtpPort");
+        opt.setLongFlag("smtpPort");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("25");
+        opt.setHelp("The port on which to contact the SMTP server. Default 25");
+        return opt;
+    }
+    
+    public static int getArgSmtpPort(JSAPResult arguments) {
+        return arguments.getInt("smtpPort");
+    }
+    
+    public static Switch defineArgSmtpTLS() {
+        Switch sw = new Switch("smtpTLS");
+        sw.setLongFlag("smtpTLS");
+        sw.setDefault("false");
+        sw.setHelp("Decides whether to use TLS for email communication.");
+        return sw;
+    }
+    
+    public static boolean getArgSmtpTLS(JSAPResult arguments) {
+        return arguments.getBoolean("smtpTLS");
+    }
+    
     public static FlaggedOption defineArgSmtpUsername() {
         FlaggedOption opt = new FlaggedOption("smtpUsername");
         opt.setLongFlag("smtpUsername");
@@ -400,7 +425,7 @@ public class LauncherUtils {
         if (config.getSmtpServer() != null && config.getNotifyTo() != null) {
             logger.info("The email notifier engine will be used.");
 
-            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer(), config.getSmtpUsername(), config.getSmtpPassword()));
+            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer(), config.getSmtpPort(), config.getSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
         } else {
             logger.info("The email notifier engine won't be used.");
         }

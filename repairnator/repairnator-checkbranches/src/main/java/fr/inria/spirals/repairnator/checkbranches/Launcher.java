@@ -67,6 +67,10 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
         jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        //--smtpPort
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPort);
+        //--smtpTLS
+        jsap.registerParameter(LauncherUtils.defineArgSmtpTLS);
         // --smtpUsername
         jsap.registerParameter(LauncherUtils.defineArgSmtpUsername());
         // --smtpPassword
@@ -116,6 +120,8 @@ public class Launcher {
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
         this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setSmtpPort(LauncherUtils.getArgSmtpPort(arguments));
+        this.config.setSmtpTLS(LauncherUtils.getArgSmtpTLS(arguments));
         this.config.setSmtpUsername(LauncherUtils.getArgSmtpUsername(arguments));
         this.config.setSmtpPassword(LauncherUtils.getArgSmtpPassword(arguments));
         this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
