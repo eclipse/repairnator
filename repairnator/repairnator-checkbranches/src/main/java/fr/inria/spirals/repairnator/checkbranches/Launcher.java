@@ -68,9 +68,9 @@ public class Launcher {
         // --smtpServer
         jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
         //--smtpPort
-        jsap.registerParameter(LauncherUtils.defineArgSmtpPort);
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPort());
         //--smtpTLS
-        jsap.registerParameter(LauncherUtils.defineArgSmtpTLS);
+        jsap.registerParameter(LauncherUtils.defineArgSmtpTLS());
         // --smtpUsername
         jsap.registerParameter(LauncherUtils.defineArgSmtpUsername());
         // --smtpPassword
