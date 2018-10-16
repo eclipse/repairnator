@@ -29,10 +29,10 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
-function getByStatus(req, res, next) {
+function search(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  const { status } = req.params;
-  Inspector.getByStatus(status, { limit, skip })
+  const { status } = req.query;
+  Inspector.search({ status }, { limit, skip })
     .then(users => res.json(users))
     .catch(e => next(e));
 }
@@ -107,7 +107,7 @@ export default {
   load,
   get,
   list,
-  getByStatus,
+  search,
   count,
   hostnameStats,
   statusStats,
