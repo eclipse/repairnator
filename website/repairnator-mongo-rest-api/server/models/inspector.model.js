@@ -75,12 +75,12 @@ InspectorSchema.statics = {
   },
 
   search(params, { skip = 0, limit = 50 } = {}) {
-  const paramsFiltered = _.pickBy(params, _.identity);
-  return this.find(paramsFiltered)
-    .sort({ buildFinishedDate: -1 })
-    .skip(+skip)
-    .limit(+limit)
-    .exec();
+    const paramsFiltered = _.pickBy(params, _.identity);
+    return this.find(paramsFiltered)
+      .sort({ buildFinishedDate: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec();
   },
 
   getByStatus(status, { skip = 0, limit = 50 } = {}) {
