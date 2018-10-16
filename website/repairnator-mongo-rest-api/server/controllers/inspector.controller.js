@@ -29,6 +29,14 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
+function search(req, res, next) {
+  const { limit = 50, skip = 0 } = req.query;
+  const { status } = req.query;
+  Inspector.search({ status }, { limit, skip })
+    .then(users => res.json(users))
+    .catch(e => next(e));
+}
+
 function count(req, res, next) {
   Inspector.count()
     .then(result => res.json(result))
@@ -99,6 +107,7 @@ export default {
   load,
   get,
   list,
+  search,
   count,
   hostnameStats,
   statusStats,
