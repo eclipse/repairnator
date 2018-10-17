@@ -25,7 +25,7 @@ Project done with generous support from Inria, University of Lille, KTH Royal In
 
 * [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). In Proceedings of 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018. [(bibtex)](https://www.monperrus.net/martin/bibtexbrowser.php?key=urli%3Ahal-01691496&bib=monperrus.bib)
 
-## Talks about Repairnator
+### Talks
 
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Software Technology Exchange Workshop, STEW, 2018, Malmö, Oct 17 2018](https://www.swedsoft.se/event/stew-2018/)
 * "How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Talk at SAAB, Järfälla, Sep 21 2018
