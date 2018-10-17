@@ -43,6 +43,16 @@
       <div id="charts"></div>
     </section>
 
+    <div id="app-inspectors">
+      <table class="table-responsive">
+          <inspector-line
+            v-for="item in inspectors"
+            v-bind:inspector="item"
+            v-bind:key="item.id">
+          </inspector-line>
+      </table>
+
+    </div>
     <section id="realtimedata">
       <div class="table-responsive">
         <table class="table table-striped">
@@ -50,6 +60,32 @@
         </table>
       </div>
     </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="inspectorModal" tabindex="-1" role="dialog" aria-labelledby="inspectorModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="inspectorModalLabel">Build details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="inspector-details">
+              <h1>{{ buildId }}</h1>
+              <p v-for="key in inspectorKeys"> <strong>{{ key }} : </strong> <span class="pre-json"> {{ inspector[key] }} </span> </p>
+              <h2>Pipeline-errors</h2>
+              <p v-for="key in pipelineErrorKeys"> <strong>{{ key }} : </strong> <span class="pre-json"> {{ pipelineError[key] }} </span> </p>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- $Page footer-->
     <footer class="page-footer">
@@ -68,6 +104,7 @@
     <script src="/bower_components/d3/d3.js"></script>
     <script src="/bower_components/highcharts/highcharts.js"></script>
     <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/vue/dist/vue.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -87,6 +124,8 @@
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->
+    <script src="scripts/api.js"></script>
+    <script src="scripts/notification.js"></script>
     <script src="scripts/all-builds-bar.js"></script>
     <script src="scripts/scanner_timechart.js"></script>
     <script src="scripts/realtime_values.js"></script>

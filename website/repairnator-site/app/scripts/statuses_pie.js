@@ -41,7 +41,8 @@ var simplifyStatuses = function (dataArray) {
   return finalArray;
 };
 
-$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+apiGet( '/inspectors/statusStats', function (data) {
+  console.log('fsdf')
   var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
 
   var total = 0;
