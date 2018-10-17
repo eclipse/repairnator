@@ -1,20 +1,3 @@
-/*Vue.component('inspector-line', {
-  props: ['inspector'],
-  template: '<tr><td>{{inspector.buildId}}</td></tr>'
-})
-
-
-var appInspectors = new Vue({
-  el: '#app-inspectors',
-  data: {
-    inspectors: [
-      { buildId: 0, text: 'Vegetables' },
-      { buildId: 1, text: 'Cheese' },
-      { buildId: 2, text: 'Whatever else humans are supposed to eat' }
-    ]
-  }
-})*/
-
 const inspectorDetails = new Vue({
   el: '#inspector-details',
   data: {
