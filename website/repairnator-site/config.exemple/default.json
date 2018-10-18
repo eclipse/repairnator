@@ -1,0 +1,6 @@
+{
+  "constants": {
+    "apiHost": "http://repairnator.com",
+    "apiPort": 4040
+  }
+}

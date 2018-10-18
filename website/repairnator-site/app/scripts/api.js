@@ -1,6 +1,6 @@
 function getApiUri(path){
-  const apiHost = 'http://51.38.235.157:4040/repairnator-mongo-api';
-  return `${apiHost}${path}`
+  const { apiHost, apiPort } = config;
+  return `${apiHost}:${apiPort}/repairnator-mongo-api${path}`
 }
 
 function apiGet(path, callback){

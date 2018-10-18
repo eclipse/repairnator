@@ -17,6 +17,9 @@ $ npm install -g gulp bower
 $ npm install
 $ bower install
 
+# copy the config files (and edit them)
+$ cp -r config.exemple config
+
 # run gulp
 $ gulp
 
