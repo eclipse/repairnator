@@ -32,7 +32,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
     public static final String TEXT_PR = "This PR has been created automatically by [repairnator](https://github.com/Spirals-Team/repairnator).\n" +
                                         "It aims at fixing the following Travis failing build: %s \n\n" +
-                                        "If you don't want to receive those PR on the future, [open an issue on Repairnator Github repository](https://github.com/Spirals-Team/repairnator/issues/new?title=[BLACKLIST]%%20%s) with the following subject: `[BLACKLIST] %s`.";
+                                        "If you don't want to receive those PR in the future, [open an issue on Repairnator Github repository](https://github.com/Spirals-Team/repairnator/issues/new?title=[BLACKLIST]%%20%s) with the following subject: `[BLACKLIST] %s`.";
 
     public static final int MAX_PATCH_PER_TOOL = 1;
 
