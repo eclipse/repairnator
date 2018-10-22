@@ -155,6 +155,7 @@ public class ProjectInspector {
         return serializers;
     }
 
+
     public String getWorkspace() {
         return workspace;
     }
@@ -199,7 +200,6 @@ public class ProjectInspector {
             cloneRepo
                     .addNextStep(new CheckoutBuggyBuild(this, true))
                     .addNextStep(new BuildProject(this))
-                    .addNextStep(new Checkstyle(this));/*
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
                     .addNextStep(new InitRepoToPush(this))
@@ -222,7 +222,7 @@ public class ProjectInspector {
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
-                    .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));*/
+                    .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
 
             this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
 
@@ -305,7 +305,7 @@ public class ProjectInspector {
 
     public void printPipeline() {
         this.logger.info("----------------------------------------------------------------------");
-        this.logger.info("PIPELINE STEPS (w/ cs)");
+        this.logger.info("PIPELINE STEPS");
         this.logger.info("----------------------------------------------------------------------");
         for (int i = 0; i < this.steps.size(); i++) {
             this.logger.info(this.steps.get(i).getName());

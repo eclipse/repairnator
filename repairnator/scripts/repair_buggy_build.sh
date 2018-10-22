@@ -50,7 +50,7 @@ echo "Pull the docker machine (name: $DOCKER_TAG)..."
 
 LOG_FILENAME="repairnator-pipeline_`date \"+%Y-%m-%d_%H%M\"`_$BUILD_ID"
 
-DOCKER_ARGS="--env REPAIR_MODE=repair"
+DOCKER_ARGS="--env REPAIR_MODE=checkstyle"
 DOCKER_ARGS="$DOCKER_ARGS --env BUILD_ID=$BUILD_ID"
 DOCKER_ARGS="$DOCKER_ARGS --env GITHUB_OAUTH=$GITHUB_OAUTH"
 DOCKER_ARGS="$DOCKER_ARGS --env LOG_FILENAME=$LOG_FILENAME"
