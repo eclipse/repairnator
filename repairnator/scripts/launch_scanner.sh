@@ -40,6 +40,9 @@ supplementaryArgs="$supplementaryArgs `ca -l $SCANNER_NB_HOURS`"
 supplementaryArgs="$supplementaryArgs `ca --lookFromDate $LOOK_FROM_DATE`"
 supplementaryArgs="$supplementaryArgs `ca --lookToDate $LOOK_TO_DATE`"
 supplementaryArgs="$supplementaryArgs `ca --smtpServer $SMTP_SERVER`"
+supplementaryArgs="$supplementaryArgs `ca --smtpPort $SMTP_PORT`"
+supplementaryArgs="$supplementaryArgs `ca --smtpUsername $SMTP_USERNAME`"
+supplementaryArgs="$supplementaryArgs `ca --smtpPassword $SMTP_PASSWORD`"
 supplementaryArgs="$supplementaryArgs `ca --notifyto $NOTIFY_TO`"
 
 if [ "$BEARS_MODE" -eq 1 ]; then
@@ -49,6 +52,10 @@ if [ "$BEARS_MODE" -eq 1 ]; then
     if [ "$BEARS_DELIMITER" -eq 1 ]; then
         supplementaryArgs="$supplementaryArgs --bearsDelimiter"
     fi
+fi
+
+if [ "$SMTP_TLS" -eq 1 ]; then
+    supplementaryArgs="$args --smtpTLS"
 fi
 
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then

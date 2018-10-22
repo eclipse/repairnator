@@ -79,6 +79,10 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("MONGODB_HOST="+this.repairnatorConfig.getMongodbHost());
         this.envValues.add("MONGODB_NAME="+this.repairnatorConfig.getMongodbName());
         this.envValues.add("SMTP_SERVER="+this.repairnatorConfig.getSmtpServer());
+        this.envValues.add("SMTP_PORT="+this.repairnatorConfig.getSmtpPort());
+        this.envValues.add("SMTP_TLS="+this.repairnatorConfig.getSmtpTLS());
+        this.envValues.add("SMTP_USERNAME="+this.repairnatorConfig.getSmtpUsername());
+        this.envValues.add("SMTP_PASSWORD="+this.repairnatorConfig.getSmtpPassword());
         this.envValues.add("GITHUB_USERNAME="+this.repairnatorConfig.getGithubUserName());
         this.envValues.add("GITHUB_USEREMAIL="+this.repairnatorConfig.getGithubUserEmail());
         this.envValues.add("NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','));
