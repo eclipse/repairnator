@@ -39,7 +39,7 @@ public class Checkstyle extends AbstractStep {
         }
 
         if (result == MavenHelper.MAVEN_SUCCESS) {
-            return StepStatus.buildSuccess(this);
+            return StepStatus.buildError(this, PipelineState.NOTFAILING);
         } else {
             this.addStepError("Repository " + this.getInspector().getRepoSlug() + " has (maybe ?) checkstyle errors.");
             return StepStatus.buildError(this, PipelineState.CHECKSTYLE_ERRORS);
