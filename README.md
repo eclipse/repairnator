@@ -3,11 +3,10 @@
 # Repairnator: a program repair bot for continuous integration
 
 Repairnator is a software development bot that automatically repairs build failures on Travis CI.
-It scans failing Travis builds, tries to locally reproduce the failing build due to test failures and tries to repair it with program repair tools (e.g. Nopol and Astor).
+It monitors failing Travis builds, tries to locally reproduce the failing builds and finally attempts to repair it with the state-of-the-art of [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing) tools. 
 
-Friends of Repairnator (approx. chronological order): Simon Urli (lead designer), Martin Monperrus (project leader), Fernanda Madeiral (contributor), Zhongxing Yu (contributor), Lionel Seinturier (contributor), Thomas Durieux (repair tool master), Matias Martinez (repair tool master), Benoit Baudry (contributor), Benjamin Tellström (contributor), Benjamin Danglot (user), Benjamin Loriot (contributor)
+-- [The Repairnatot team](https://github.com/Spirals-Team/repairnator/issues/760)
 
-Project done with generous support from Inria, University of Lille, KTH Royal Institute of Technology, Wallenberg Autonomous Systems and Software Program.
 
 ## About Repairnator
 
@@ -121,5 +120,5 @@ Each directory contains its own Readme explaining its own internal organization.
 
 ## License
 
-This project has been funded by InriaHub. The content of this repository is licensed under the MIT terms. 
+The content of this repository is licensed under the MIT terms. 
 
