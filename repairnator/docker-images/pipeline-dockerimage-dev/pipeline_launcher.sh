@@ -21,6 +21,10 @@ if [ "$CREATE_PR" -eq 1 ]; then
   args="$args --createPR"
 fi
 
+if [ "$REPAIR_MODE" = "checkstyle" ]; then
+  args="$args --checkstyle"
+fi
+
 if [ ! -d "$OUTPUT" ]; then
     mkdir $OUTPUT
 fi
@@ -32,7 +36,7 @@ export PUSH_URL=
 export SMTP_SERVER=
 export NOTIFY_TO=
 
-LOCAL_REPAIR_MODE=repair
+LOCAL_REPAIR_MODE=$REPAIR_MODE
 
 LOCAL_BUILD_ID=$BUILD_ID
 export BUILD_ID=
