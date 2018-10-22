@@ -15,8 +15,9 @@ Project done with generous support from Inria, University of Lille, KTH Royal In
 
 * [Human-competitive Patches in Automatic Program Repair with Repairnator](https://medium.com/@martin.monperrus/human-competitive-patches-in-automatic-program-repair-with-repairnator-359042e00f6a), Medium, Oct. 16 2018
 
-### Press releases
+### Press
 
+* [The mysterious life of Luc Esape, bug fixer extraordinaire. His big secret? He’s not human (Thomas Claburn), The Register, Oct 17 2018](https://www.theregister.co.uk/2018/10/17/luc_esape_bug_fixer/)
 * [Repairnator, an autonomous robot to repair computer bugs (Sophie Timsit) inria.fr, Sep 4 2018](https://www.inria.fr/en/centre/lille/news/repairnator-an-autonomous-robot-to-repair-computer-bugs)
 
 ### Academic papers
