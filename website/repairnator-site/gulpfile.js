@@ -1,5 +1,6 @@
 // generated on 2017-04-06 using generator-webapp 2.4.1
 const gulp = require('gulp');
+const file = require('gulp-file');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const browserSync = require('browser-sync').create();
 const del = require('del');
@@ -8,6 +9,8 @@ const runSequence = require('run-sequence');
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
+
+const config = require('config')
 
 var dev = true;
 
@@ -26,7 +29,29 @@ gulp.task('styles', () => {
     .pipe(reload({stream: true}));
 });
 
-gulp.task('scripts', () => {
+gulp.task('constants', function () {
+  let constantsObjString;
+  const { constants } = config;
+  constantsObjString = '{';
+  for (let key in constants) {
+    let value = constants[key];
+    if (typeof value === 'string') {
+      value = '\'' + value + '\'';
+    }
+    constantsObjString += '\n ' + key + ': ' + value + ',';
+  }
+  constantsObjString += '\n }';
+  const codeString = 'const config = ' + constantsObjString + ';';
+  return file('constants.js', codeString, { src: true })
+    .pipe($.plumber())
+    .pipe($.if(dev, $.sourcemaps.init()))
+    .pipe($.babel())
+    .pipe($.if(dev, $.sourcemaps.write('.')))
+    .pipe(gulp.dest(".tmp/scripts"))
+    .pipe(reload({stream: true}));
+});
+
+gulp.task('scripts', ['constants'], () => {
   return gulp.src('app/scripts/**/*.js')
     .pipe($.plumber())
     .pipe($.if(dev, $.sourcemaps.init()))

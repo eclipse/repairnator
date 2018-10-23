@@ -18,11 +18,11 @@ describe('## Inspector', () => {
         .catch(done);
     });
   });
-  describe('# GET /repairnator-mongo-api/inspectors/status/:status', () => {
-    it('should return OK', (done) => {
+  describe('# GET /repairnator-mongo-api/inspectors/search', () => {
+    it('should search by status', (done) => {
       const status = 'NOTBUILDABLE';
       request(app)
-        .get(`/repairnator-mongo-api/inspectors/status/${status}`)
+        .get(`/repairnator-mongo-api/inspectors/search?status=${status}`)
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body).to.be.an('array');

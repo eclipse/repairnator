@@ -7,7 +7,8 @@
     "jquery": "^3.2.1",
     "d3": "^4.7.4",
     "highcharts": "^5.0.10",
-    "moment": "momentjs#^2.18.1"
+    "moment": "momentjs#^2.18.1",
+    "vue": "^2.5.17"
   },
   "overrides": {
     "bootstrap-sass": {
@@ -15,6 +16,11 @@
         "assets/stylesheets/_bootstrap.scss",
         "assets/fonts/bootstrap/*",
         "assets/javascripts/bootstrap.js"
+      ]
+    },
+    "vue": {
+      "main": [
+        "dist/vue.js"
       ]
     }
   },

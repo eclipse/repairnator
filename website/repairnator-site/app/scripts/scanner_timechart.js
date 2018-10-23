@@ -1,4 +1,4 @@
-$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', function (dataScanner) {
+$.get(getApiUri('/scanners/'), function (dataScanner) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
@@ -68,7 +68,7 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/scanners/', func
     }
   }, []);
 
-  $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/reproducedBuilds/', function (dataInspector) {
+  apiGet('/inspectors/reproducedBuilds/', function (dataInspector) {
 
     var reducedDataInspector = dataInspector.reduce(function (accumulator, currentValue) {
       var currentValueWeek = moment(currentValue._id, 'YYYY-MM-DD').isoWeek();

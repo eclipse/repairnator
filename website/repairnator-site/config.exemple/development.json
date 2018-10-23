@@ -1,0 +1,6 @@
+{
+  "constants": {
+    "apiHost": "http://localhost",
+    "apiPort": 4040
+  }
+}

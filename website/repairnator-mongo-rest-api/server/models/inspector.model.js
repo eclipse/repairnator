@@ -2,6 +2,7 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
+import _ from 'lodash';
 import moment from 'moment';
 import APIError from '../helpers/APIError';
 
@@ -67,6 +68,15 @@ InspectorSchema.statics = {
    */
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
+      .sort({ buildFinishedDate: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec();
+  },
+
+  search(params, { skip = 0, limit = 50 } = {}) {
+    const paramsFiltered = _.pickBy(params, _.identity);
+    return this.find(paramsFiltered)
       .sort({ buildFinishedDate: -1 })
       .skip(+skip)
       .limit(+limit)
