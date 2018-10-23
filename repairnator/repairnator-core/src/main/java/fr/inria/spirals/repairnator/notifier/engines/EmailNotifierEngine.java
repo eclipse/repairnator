@@ -31,11 +31,14 @@ public class EmailNotifierEngine implements NotifierEngine {
         this.properties = new Properties();
         this.properties.put("mail.smtp.host", smtpServer);
         this.properties.put("mail.smtp.port", smtpPort);
+        this.properties.put( "mail.smtp.user" , smtpUsername);
         // In the case where a secure connection is wished for
         if (smtpTLS) {
             this.properties.put("mail.smtp.starttls.enable", smtpTLS);
         }
         if (smtpPassword.length() > 1) {
+            this.properties.put("mail.smtp.auth", "true");
+            this.properties.put("mail.password", smtpPassword);
             this.session = Session.getDefaultInstance(this.properties, new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(smtpUsername, smtpPassword);
