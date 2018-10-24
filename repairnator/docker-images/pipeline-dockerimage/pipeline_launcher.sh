@@ -30,6 +30,10 @@ export MONGODB_HOST=
 export MONGODB_NAME=
 export PUSH_URL=
 export SMTP_SERVER=
+export SMTP_PORT=
+export SMTP_USERNAME=
+export SMTP_PASSWORD=
+export SMTP_TLS=
 export NOTIFY_TO=
 
 LOCAL_REPAIR_MODE=repair
