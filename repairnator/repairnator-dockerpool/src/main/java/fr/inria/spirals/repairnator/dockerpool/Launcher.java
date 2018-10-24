@@ -63,6 +63,8 @@ public class Launcher extends AbstractPoolManager {
         jsap.registerParameter(LauncherUtils.defineArgRunId());
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
+        // --checkstyle
+        jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // -i or --input
         jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
         // -o or --output
@@ -121,6 +123,8 @@ public class Launcher extends AbstractPoolManager {
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
+        } else if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
+            this.config.setLauncherMode(LauncherMode.CHECKSTYLE);
         } else {
             this.config.setLauncherMode(LauncherMode.REPAIR);
         }
@@ -185,15 +189,15 @@ public class Launcher extends AbstractPoolManager {
                     String[] buildIds = line.split(Utils.COMMA+"");
                     if (buildIds.length > 0) {
                         long buggyBuildId = Long.parseLong(buildIds[0]);
-                        if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
-                            result.add(new InputBuildId(buggyBuildId));
-                        } else {
+                        if (this.config.getLauncherMode() == LauncherMode.BEARS) {
                             if (buildIds.length > 1) {
                                 long patchedBuildId = Long.parseLong(buildIds[1]);
                                 result.add(new InputBuildId(buggyBuildId, patchedBuildId));
                             } else {
                                 LOGGER.error("The build "+buggyBuildId+" will not be processed because there is no next build for it in the input file.");
                             }
+                        } else {
+                            result.add(new InputBuildId(buggyBuildId));
                         }
                     }
                 }
