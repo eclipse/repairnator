@@ -72,7 +72,7 @@ const updateInspectors = function(component, page){
 
     component.gridData = datas.map(function (data) {
       let line = {
-        status: "",
+        status: '',
         data: {},
       };
       fieldNames.forEach(function (column) {
@@ -131,45 +131,6 @@ const updateInspectors = function(component, page){
   });
 }
 
-Vue.component('pagination', {
-  template: '#pagination-template',
-  props: {
-    length: Number,
-  },
-  data: function () {
-    return {
-      page: 0,
-    }
-  },
-  methods:{
-    prevPage(){
-      if ( this.page ){
-        this.page--;
-        this.$emit('update', this.page);
-      }
-    },
-    nextPage(){
-      if ( this.page < this.length ){
-        this.page++;
-        this.$emit('update', this.page);
-      }
-    },
-    setPage(value){
-      this.page = value;
-      this.$emit('update', this.page);
-    }
-  }
-})
-
-Vue.component('grid', {
-  template: '#grid-template',
-  props: {
-    data: Array,
-    columns: Array,
-    filterKey: String,
-  }
-})
-
 var realtime = new Vue({
   el: '#realtimedata',
   data: function() {
@@ -195,6 +156,4 @@ var realtime = new Vue({
       this.loadData();
     }.bind(this), 30000);
   }
-})
-//setInterval(updateInspectors, 30000)
-//updateInspectors();
+});

@@ -63,51 +63,6 @@
       </div>
     </section>
 
-    <script type="text/x-template" id="pagination-template">
-      <nav aria-label="Page navigation" style="padding: 0px 30px">
-        <ul class="pagination">
-          <li class="page-item" v-bind:class="{disabled: !page}">
-            <a class="page-link" @click="prevPage" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">Previous</span>
-            </a>
-          </li>
-          <li v-if="page" class="page-item"><a class="page-link" @click="setPage(0)"> 0 </a></li>
-          <li v-if="page==length" class="page-item"><a class="page-link" @click="setPage(page-1)"> {{page-1}}</a></li>
-          <li class="page-item active"><a class="page-link" @click="setPage(page)"> {{page}}</a></li>
-          <li v-if="page < length && !page" class="page-item"><a class="page-link" @click="setPage(page+1)"> {{page+1}}</a></li>
-          <li v-if="page<length" class="page-item"><a class="page-link" @click="setPage(length)"> {{length}} </a></li>
-
-          <li class="page-item" v-bind:class="{disabled: page>=length}">
-            <a class="page-link" @click="nextPage" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-              <span class="sr-only">Next</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </script>
-
-    <script type="text/x-template" id="grid-template">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th v-for="key in columns">
-                {{ key.readable }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="entry in data" v-bind:class="entry.status">
-              <td v-for="key in columns">
-                <span v-html="entry.data[key.id]"> </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </script>
     <!-- Modal -->
     <div class="modal fade" id="inspectorModal" tabindex="-1" role="dialog" aria-labelledby="inspectorModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -168,7 +123,11 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
-    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/pagination.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js scripts/components.js -->
+    <script src="components/pagination.js"></script>
+    <script src="components/grid.js"></script>
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->
