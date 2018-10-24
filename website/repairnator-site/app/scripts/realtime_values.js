@@ -39,55 +39,46 @@ function openInspectorInfoModal(buildId){
 
 let lastBuild;
 
-const updateInspectors = function(){
-  apiGet('/inspectors/', function (datas) {
-    var htmlElement = $('#tablerealtime');
-    htmlElement.html('')
+const updateInspectors = function(component, page){
+  const pageSize = 50;
+  const fieldNames = [
+    {id:'buildFinishedDate', readable: 'Original date'},
+    {id: 'buildReproductionDate', readable: 'Date of the reproduction'},
+    {id: 'buildId', readable: 'Build ID'},
+    {id: 'repositoryName', readable: 'Github Repository'},
+    {id: 'status', readable: 'Status'},
+    {id: 'prNumber', readable: 'Pull Request ID'},
+    {id: 'travisURL', readable: 'URL of Travis build'},
+    {id: 'typeOfFailures', readable: 'Type of failures'},
+    {id: 'branchURL', readable: 'URL of the branch'}
+  ];
+  apiGet('/inspectors/count', function(count) {
+    console.log(Math.floor(count / pageSize))
+    component.pageCount = Math.floor(count / pageSize);
+  })
+  apiGet(`/inspectors/?skip=${pageSize * page}`, function(datas) {
+    component.gridColumns = fieldNames;
 
-    var fieldNames = [
-      {id:'buildFinishedDate', readable: 'Original date'},
-      {id: 'buildReproductionDate', readable: 'Date of the reproduction'},
-      {id: 'buildId', readable: 'Build ID'},
-      {id: 'repositoryName', readable: 'Github Repository'},
-      {id: 'status', readable: 'Status'},
-      {id: 'prNumber', readable: 'Pull Request ID'},
-      {id: 'travisURL', readable: 'URL of Travis build'},
-      {id: 'typeOfFailures', readable: 'Type of failures'},
-      {id: 'branchURL', readable: 'URL of the branch'}
-    ];
-
-    var headersDisplayed = false;
-    // appInspectors.inspectors = datas;
-    if (lastBuild){
-      if (datas[0].buildId != lastBuild){
+    if (page == 0){
+      if (lastBuild){
+        if (datas[0].buildId != lastBuild){
+          lastBuild = datas[0].buildId;
+          notify(`New build found ${datas[0].status}`)
+        }
+      } else {
         lastBuild = datas[0].buildId;
-        notify(`New build found ${datas[0].status}`)
       }
-    } else {
-      lastBuild = datas[0].buildId;
     }
-    datas.forEach(function (data) {
-      var row = $('<tr></tr>');
-      htmlElement.append(row);
 
-      if (!headersDisplayed) {
-        fieldNames.forEach(function (fieldName) {
-          var th = $('<th></th>');
-          th.text(fieldName.readable);
-
-          row.append(th);
-        });
-
-        row = $('<tr></tr>');
-        htmlElement.append(row);
-        headersDisplayed = true;
-      }
-
+    component.gridData = datas.map(function (data) {
+      let line = {
+        status: "",
+        data: {},
+      };
       fieldNames.forEach(function (column) {
-        var fieldName = column.id;
-        var td = $('<td></td>');
+        const fieldName = column.id;
 
-        var dataValue = data[fieldName];
+        let dataValue = data[fieldName];
 
         if (fieldName == 'buildId') {
           dataValue = `<a onClick='openInspectorInfoModal(${dataValue})'>${dataValue}</a>`
@@ -103,9 +94,9 @@ const updateInspectors = function(){
 
         if (fieldName == 'status') {
           if (data[fieldName] == 'PATCHED') {
-            row.addClass('success');
+            line.status = 'success';
           } else if (data[fieldName] == 'test failure' || data[fieldName] == 'test errors') {
-            row.addClass('warning');
+            line.status = 'warning';
           }
         }
 
@@ -131,15 +122,79 @@ const updateInspectors = function(){
           } else {
             dataValue = 'N/A';
           }
-
         }
 
-        td.html(dataValue);
-
-        row.append(td);
+        line.data[fieldName] = dataValue;
       });
+      return line;
     });
   });
 }
-setInterval(updateInspectors, 30000)
-updateInspectors();
+
+Vue.component('pagination', {
+  template: '#pagination-template',
+  props: {
+    length: Number,
+  },
+  data: function () {
+    return {
+      page: 0,
+    }
+  },
+  methods:{
+    prevPage(){
+      if ( this.page ){
+        this.page--;
+        this.$emit('update', this.page);
+      }
+    },
+    nextPage(){
+      if ( this.page < this.length ){
+        this.page++;
+        this.$emit('update', this.page);
+      }
+    },
+    setPage(value){
+      this.page = value;
+      this.$emit('update', this.page);
+    }
+  }
+})
+
+Vue.component('grid', {
+  template: '#grid-template',
+  props: {
+    data: Array,
+    columns: Array,
+    filterKey: String,
+  }
+})
+
+var realtime = new Vue({
+  el: '#realtimedata',
+  data: function() {
+    return {
+      gridColumns: [],
+      gridData: [],
+      page: 0,
+      pageCount: 0,
+    };
+  },
+  methods: {
+    loadData: function (){
+      updateInspectors(this, this.page)
+    },
+    onPageChange (newPage) {
+      this.page = newPage;
+      this.loadData();
+    }
+  },
+  mounted: function(){
+    this.loadData();
+    this.interval = setInterval(function () {
+      this.loadData();
+    }.bind(this), 30000);
+  }
+})
+//setInterval(updateInspectors, 30000)
+//updateInspectors();
