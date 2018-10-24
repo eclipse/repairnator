@@ -52,7 +52,7 @@ public class EmailNotifierEngine implements NotifierEngine {
                 /* apparently kths mailserver does not accept complete mailaddresses, but sender needs one. This assumes that 
                  * the host name after "smtp." is the actual internet address. Might need modifications.
                  */
-                this.from = new InternetAddress(smtpUsername + "@" + this.properties.getProperty("mail.smtp.host").substring(5));
+                this.from = new InternetAddress(smtpUsername + "@" + this.properties.getProperty("mail.smtp.host").replace("smtp.",""));
             } else {
                 this.from = new InternetAddress(smtpUsername);
             }
