@@ -30,13 +30,15 @@ public class EmailNotifierEngine implements NotifierEngine {
             String smtpUsername, String smtpPassword) {
         this.properties = new Properties();
         this.properties.put("mail.smtp.host", smtpServer);
+        this.properties.put("mail.transport.protocol", "smtp");
         this.properties.put("mail.smtp.port", smtpPort);
         // In the case where a secure connection is wished for
         if (smtpTLS) {
             this.properties.put("mail.smtp.starttls.enable", smtpTLS);
         }
         if (smtpPassword.length() > 1) {
-            this.session = Session.getDefaultInstance(this.properties, new javax.mail.Authenticator() {
+            this.properties.setProperty("mail.smtp.auth", "true");
+            this.session = Session.getInstance(this.properties, new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(smtpUsername, smtpPassword);
                 }
@@ -46,7 +48,14 @@ public class EmailNotifierEngine implements NotifierEngine {
         }
 
         try {
-            this.from = new InternetAddress(smtpUsername);
+            if(!smtpUsername.contains("@")) {
+                /* apparently kths mailserver does not accept complete mailaddresses, but sender needs one. This assumes that 
+                 * the host name after "smtp." is the actual internet address. Might need modifications.
+                 */
+                this.from = new InternetAddress(smtpUsername + "@" + this.properties.getProperty("mail.smtp.host").replace("smtp.",""));
+            } else {
+                this.from = new InternetAddress(smtpUsername);
+            }
         } catch (AddressException e) {
             logger.error("Error while creating from adresses, the notifier won't be usable.", e);
         }
@@ -67,12 +76,17 @@ public class EmailNotifierEngine implements NotifierEngine {
             Message msg = new MimeMessage(this.session);
 
             try {
+                Address[] recipients = this.to.toArray(new Address[this.to.size()]);
+                Transport transport = this.session.getTransport();
+                
                 msg.setFrom(this.from);
-                msg.addRecipients(Message.RecipientType.TO, this.to.toArray(new Address[this.to.size()]));
+                msg.addRecipients(Message.RecipientType.TO, recipients);
                 msg.setSubject(subject);
                 msg.setText(message);
-
-                Transport.send(msg);
+                
+                transport.connect();
+                transport.sendMessage(msg, recipients);
+                transport.close();
             } catch (MessagingException e) {
                 logger.error("Error while sending notification message '" + subject + "'", e);
             }
