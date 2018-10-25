@@ -206,6 +206,7 @@ public class RTLauncher {
 
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
+        LOGGER.info("RTScanner mode : " + this.config.getLauncherMode());
         String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
