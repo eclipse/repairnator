@@ -230,10 +230,12 @@ public class ProjectScanner {
                 Optional<Build> optionalBeforeBuild = this.jTravis.build().getBefore(build, true);
                 if (optionalBeforeBuild.isPresent()) {
                     Build previousBuild = optionalBeforeBuild.get();
+                    // FIXME: the next line can be removed once the issue https://github.com/Spirals-Team/jtravis/issues/21 is fixed in jtravis.
+                    previousBuild = jTravis.build().getEntityFromUri(Build.class, previousBuild.getUri()).get();
                     this.logger.debug("Previous build: " + previousBuild.getId());
 
                     BearsMode mode = RepairnatorConfig.getInstance().getBearsMode();
-                    if ((mode == BearsMode.BOTH || mode == BearsMode.FAILING_PASSING) && previousBuild.getState() == StateType.FAILED && thereIsDiffOnJavaFile(build, previousBuild)) {
+                    if ((mode == BearsMode.BOTH || mode == BearsMode.FAILING_PASSING) && previousBuild.getState() == StateType.FAILED && thereIsDiffOnJavaFile(build, previousBuild) && isFailedBuildFailingByTestFailure(previousBuild)) {
                         this.totalNumberOfFailingAndPassingBuildPairs++;
                         this.logger.debug("The pair "+previousBuild.getId()+" ["+previousBuild.getState()+"], "+build.getId()+" ["+build.getState()+"] is interesting to be inspected.");
                         return new BuildToBeInspected(previousBuild, build, ScannedBuildStatus.FAILING_AND_PASSING, this.runId);
@@ -271,35 +273,14 @@ public class ProjectScanner {
             if (build.getState() == StateType.FAILED) {
                 this.totalBuildInJavaFailing++;
 
-                for (Job job : build.getJobs()) {
-                    RepairnatorConfig.getInstance().getJTravis().refresh(job);
-                    if (job.getState() == StateType.FAILED) {
-                        Optional<Log> optionalLog = job.getLog();
-
-                        if (optionalLog.isPresent()) {
-                            Log jobLog = optionalLog.get();
-                            if (jobLog.getBuildTool() == BuildTool.MAVEN) {
-                                TestsInformation testInfo = jobLog.getTestsInformation();
-
-                                // testInfo can be null if the build tool is unknown
-                                if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
-                                    this.totalBuildInJavaFailingWithFailingTests++;
-                                    if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
-                                        this.slugs.add(repo.getSlug());
-                                        this.repositories.add(repo);
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                } else {
-                                    logger.debug("No failing or erroring test found in build " + build.getId());
-                                }
-                            } else {
-                                logger.debug("Maven is not used in the build " + build.getId());
-                            }
-                        } else {
-                            logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
-                        }
+                if (isFailedBuildFailingByTestFailure(build)) {
+                    this.totalBuildInJavaFailingWithFailingTests++;
+                    if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
+                        this.slugs.add(repo.getSlug());
+                        this.repositories.add(repo);
+                        return true;
+                    } else {
+                        return false;
                     }
                 }
             } else if (build.getState() == StateType.PASSED) {
@@ -332,12 +313,40 @@ public class ProjectScanner {
         return false;
     }
 
+    private boolean isFailedBuildFailingByTestFailure(Build build) {
+        for (Job job : build.getJobs()) {
+            RepairnatorConfig.getInstance().getJTravis().refresh(job);
+            if (job.getState() == StateType.FAILED) {
+                Optional<Log> optionalLog = job.getLog();
+
+                if (optionalLog.isPresent()) {
+                    Log jobLog = optionalLog.get();
+                    if (jobLog.getBuildTool() == BuildTool.MAVEN) {
+                        TestsInformation testInfo = jobLog.getTestsInformation();
+
+                        // testInfo can be null if the build tool is unknown
+                        if (testInfo != null && (testInfo.getFailing() > 0 || testInfo.getErrored() > 0)) {
+                            return true;
+                        } else {
+                            logger.debug("No failing or erroring test found in build " + build.getId());
+                        }
+                    } else {
+                        logger.debug("Maven is not used in the build " + build.getId());
+                    }
+                } else {
+                    logger.error("Error while getting a job log: (jobId: " + job.getId() + ")");
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean thereIsDiffOnJavaFile(Build build, Build previousBuild) {
         GHCompare compare = this.getCompare(build, previousBuild);
         if (compare != null) {
             GHCommit.File[] modifiedFiles = compare.getFiles();
             for (GHCommit.File file : modifiedFiles) {
-                if (file.getFileName().endsWith(".java")) {
+                if (file.getFileName().endsWith(".java") && !file.getFileName().toLowerCase().contains("/test/")) {
                     this.logger.debug("First java file found: " + file.getFileName());
                     return true;
                 }
@@ -351,7 +360,7 @@ public class ProjectScanner {
         if (compare != null) {
             GHCommit.File[] modifiedFiles = compare.getFiles();
             for (GHCommit.File file : modifiedFiles) {
-                if (file.getFileName().toLowerCase().contains("test") && file.getFileName().endsWith(".java")) {
+                if (file.getFileName().toLowerCase().contains("/test/") && file.getFileName().endsWith(".java")) {
                     this.logger.debug("First probable test file found: " + file.getFileName());
                     return true;
                 }

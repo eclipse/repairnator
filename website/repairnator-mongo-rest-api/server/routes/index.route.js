@@ -1,6 +1,7 @@
 import express from 'express';
 import inspectorRoutes from './inspector.route';
 import scannerRoutes from './scanner.route';
+import pipelineErrorRoutes from './pipeline-error.route';
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -12,5 +13,6 @@ router.get('/health-check', (req, res) =>
 // mount user routes at /users
 router.use('/inspectors', inspectorRoutes);
 router.use('/scanners', scannerRoutes);
+router.use('/pipeline-errors', pipelineErrorRoutes);
 
 export default router;

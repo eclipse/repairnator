@@ -46,7 +46,7 @@ var simplifyStatuses = function (dataArray) {
     return b.y - a.y;
   });
 };
-$.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statusStats', function (data) {
+apiGet('/inspectors/statusStats', function (data) {
   var htmlElement = $('<div></div>');
   $('#charts').append(htmlElement);
 
@@ -60,7 +60,7 @@ $.get('https://repairnator.lille.inria.fr/repairnator-mongo-api/inspectors/statu
       type: 'bar',
       renderTo: htmlElement[0]
     },
-    colors: ["#7cb5ec", "#828282", "#90ed7d", "#f7a35c", "#8085e9", "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1"],
+    colors: ['#7cb5ec', '#828282', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
     title: {
       text: 'Build statuses (all times - '+total+' builds)'
     },

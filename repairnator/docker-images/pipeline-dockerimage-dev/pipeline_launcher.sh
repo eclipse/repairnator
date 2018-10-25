@@ -15,7 +15,7 @@ function ca {
   fi
 }
 
-args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO``ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
+args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --smtpPort $SMTP_PORT``ca --smtpUsername $SMTP_USERNAME``ca --smtpPassword $SMTP_PASSWORD``ca --notifyto $NOTIFY_TO``ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
 
 if [ "$CREATE_PR" -eq 1 ]; then
   args="$args --createPR"
@@ -23,6 +23,10 @@ fi
 
 if [ "$REPAIR_MODE" = "checkstyle" ]; then
   args="$args --checkstyle"
+fi
+
+if [ "$SMTP_TLS" -eq 1 ]; then
+    args="$args --smtpTLS"
 fi
 
 if [ ! -d "$OUTPUT" ]; then
@@ -34,6 +38,10 @@ export MONGODB_HOST=
 export MONGODB_NAME=
 export PUSH_URL=
 export SMTP_SERVER=
+export SMTP_PORT=
+export SMTP_USERNAME=
+export SMTP_PASSWORD=
+export SMTP_TLS=
 export NOTIFY_TO=
 
 LOCAL_REPAIR_MODE=$REPAIR_MODE

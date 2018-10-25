@@ -36,7 +36,7 @@
     <developers>
         <developer>
             <name>Simon Urli</name>
-            <roles>
+            <roles>https://github.com/Spirals-Team/repairnator/pull/757
                 <role>Contributor</role>
             </roles>
         </developer>
@@ -62,14 +62,14 @@
         </repository>
         <snapshotRepository>
             <id>ossrh-repairnator-snapshot</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://oss.sonatype.org/content/rehttps://github.com/Spirals-Team/repairnator/pull/757positories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
     <modules>
         <module>repairnator-pipeline</module>
         <module>repairnator-core</module>
-        <module>repairnator-scanner</module>
+        <module>repairnator-scanner</module>https://github.com/Spirals-Team/repairnator/pull/757
         <module>repairnator-dockerpool</module>
         <module>repairnator-checkbranches</module>
         <module>repairnator-realtime</module>
@@ -97,14 +97,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.12</version>https://github.com/Spirals-Team/repairnator/pull/757
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.2</version>
-        </dependency>	
+            <version>2.9.5</version>
+        </dependency>
         <dependency>
             <groupId>fr.inria.jtravis</groupId>
             <artifactId>jtravis</artifactId>

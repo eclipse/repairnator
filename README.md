@@ -3,21 +3,32 @@
 # Repairnator: a program repair bot for continuous integration
 
 Repairnator is a software development bot that automatically repairs build failures on Travis CI.
-It scans failing Travis builds, tries to locally reproduce the failing build due to test failures and tries to repair it with program repair tools (e.g. Nopol and Astor).
+It monitors failing Travis builds, tries to locally reproduce the failing builds and finally attempts to repair it with the state-of-the-art of [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing) tools. 
+
+-- [The Repairnator team](https://github.com/Spirals-Team/repairnator/issues/760)
+
 
 ## About Repairnator
 
+### Medium
+
+* [Human-competitive Patches in Automatic Program Repair with Repairnator](https://medium.com/@martin.monperrus/human-competitive-patches-in-automatic-program-repair-with-repairnator-359042e00f6a), Medium, Oct. 16 2018
+
+### Press
+
+* [The mysterious life of Luc Esape, bug fixer extraordinaire. His big secret? He’s not human (Thomas Claburn), The Register, Oct 17 2018](https://www.theregister.co.uk/2018/10/17/luc_esape_bug_fixer/)
+* [Repairnator, an autonomous robot to repair computer bugs (Sophie Timsit) inria.fr, Sep 4 2018](https://www.inria.fr/en/centre/lille/news/repairnator-an-autonomous-robot-to-repair-computer-bugs)
+
 ### Academic papers
+
+* [Human-competitive Patches in Automatic Program Repair with Repairnator](http://arxiv.org/abs/1810.05806v1) (Martin Monperrus, Simon Urli, Thomas Durieux, Matias Martinez, Benoit Baudry, Lionel Seinturier) arXiv 1810.05806, 2018
 
 * [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). In Proceedings of 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018. [(bibtex)](https://www.monperrus.net/martin/bibtexbrowser.php?key=urli%3Ahal-01691496&bib=monperrus.bib)
 
-### Press releases
-
-* [Repairnator, un robot autonome pour réparer les bugs informatiques (Sophie Timsit, inria.fr, Sep 4 2018)](https://www.inria.fr/centre/lille/actualites/repairnator-un-robot-autonome-pour-reparer-les-bugs-informatiques)
-
-## Talks about Repairnator
+### Talks
 
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Software Technology Exchange Workshop, STEW, 2018, Malmö, Oct 17 2018](https://www.swedsoft.se/event/stew-2018/)
+* "How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Talk at SAAB, Järfälla, Sep 21 2018
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Simon Urli), International Conference on Software Engineering, Gothenburg, June 1st 2018](https://www.icse2018.org/program/program-icse-2018)
 * "How to Design a Program Repair Bot for Travis CI?", (Simon Urli, Martin Monperrus) Webinar at Travis CI, May 15 2018
 * ["The Future of Automated Program Repair" (Martin Monperrus), 13th Annual Symposium on Future Trends in Service-Oriented Computing, Hasso Plattner Institute, Postdam, April 19 2018](https://hpi.de/veranstaltungen/wissenschaftliche-konferenzen/research-school/2018/symposium-on-future-trends-in-service-oriented-computing.html)
@@ -109,5 +120,5 @@ Each directory contains its own Readme explaining its own internal organization.
 
 ## License
 
-This project has been funded by InriaHub. The content of this repository is licensed under the MIT terms. 
+The content of this repository is licensed under the MIT terms. 
 

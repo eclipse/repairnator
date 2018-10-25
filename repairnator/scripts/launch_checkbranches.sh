@@ -55,7 +55,11 @@ echo "Analyze started: `date "+%Y-%m-%d_%H%M%S"`" > $OUTPUT
 echo "Considered repository: $CHECK_BRANCH_REPOSITORY" >> $OUTPUT
 
 echo "Launch docker pool checkbranches ..."
-args="`ca --smtpServer $SMTP_SERVER``ca --notifyto $NOTIFY_TO`"
+args="`ca --smtpServer $SMTP_SERVER``ca --smtpPort $SMTP_PORT``ca --smtpUsername $SMTP_USERNAME``ca --smtpPassword $SMTP_PASSWORD``ca --notifyto $NOTIFY_TO`"
+
+if [ "$SMTP_TLS" -eq 1 ]; then
+    args="$args --smtpTLS"
+fi
 if [ "$NOTIFY_ENDPROCESS" -eq 1 ]; then
     args="$args --notifyEndProcess"
 fi

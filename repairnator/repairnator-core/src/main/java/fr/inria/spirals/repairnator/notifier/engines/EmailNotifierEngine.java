@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -25,13 +26,36 @@ public class EmailNotifierEngine implements NotifierEngine {
     private Address from;
     private List<Address> to;
 
-    public EmailNotifierEngine(String[] receivers, String smtpServer) {
+    public EmailNotifierEngine(String[] receivers, String smtpServer, int smtpPort, boolean smtpTLS,
+            String smtpUsername, String smtpPassword) {
         this.properties = new Properties();
         this.properties.put("mail.smtp.host", smtpServer);
-        this.session = Session.getDefaultInstance(this.properties, null);
+        this.properties.put("mail.transport.protocol", "smtp");
+        this.properties.put("mail.smtp.port", smtpPort);
+        // In the case where a secure connection is wished for
+        if (smtpTLS) {
+            this.properties.put("mail.smtp.starttls.enable", smtpTLS);
+        }
+        if (smtpPassword.length() > 1) {
+            this.properties.setProperty("mail.smtp.auth", "true");
+            this.session = Session.getInstance(this.properties, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(smtpUsername, smtpPassword);
+                }
+            });
+        } else {
+            this.session = Session.getDefaultInstance(this.properties, null);
+        }
 
         try {
-            this.from = new InternetAddress("librepair@inria.fr");
+            if(!smtpUsername.contains("@")) {
+                /* apparently kths mailserver does not accept complete mailaddresses, but sender needs one. This assumes that 
+                 * the host name after "smtp." is the actual internet address. Might need modifications.
+                 */
+                this.from = new InternetAddress(smtpUsername + "@" + this.properties.getProperty("mail.smtp.host").replace("smtp.",""));
+            } else {
+                this.from = new InternetAddress(smtpUsername);
+            }
         } catch (AddressException e) {
             logger.error("Error while creating from adresses, the notifier won't be usable.", e);
         }
@@ -41,7 +65,8 @@ public class EmailNotifierEngine implements NotifierEngine {
             try {
                 this.to.add(new InternetAddress(receiver));
             } catch (AddressException e) {
-                logger.error("Error while creating 'to' adress for the following email: "+receiver+". This user won't receive notifications.", e);
+                logger.error("Error while creating 'to' adress for the following email: " + receiver
+                        + ". This user won't receive notifications.", e);
             }
         }
     }
@@ -51,14 +76,19 @@ public class EmailNotifierEngine implements NotifierEngine {
             Message msg = new MimeMessage(this.session);
 
             try {
+                Address[] recipients = this.to.toArray(new Address[this.to.size()]);
+                Transport transport = this.session.getTransport();
+                
                 msg.setFrom(this.from);
-                msg.addRecipients(Message.RecipientType.TO, this.to.toArray(new Address[this.to.size()]));
+                msg.addRecipients(Message.RecipientType.TO, recipients);
                 msg.setSubject(subject);
                 msg.setText(message);
-
-                Transport.send(msg);
+                
+                transport.connect();
+                transport.sendMessage(msg, recipients);
+                transport.close();
             } catch (MessagingException e) {
-                logger.error("Error while sending notification message '"+subject+"'", e);
+                logger.error("Error while sending notification message '" + subject + "'", e);
             }
         } else {
             logger.warn("From is null or to is empty. Notification won't be send.");

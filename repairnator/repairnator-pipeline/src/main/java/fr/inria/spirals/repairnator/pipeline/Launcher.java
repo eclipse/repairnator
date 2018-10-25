@@ -110,6 +110,14 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
         // --smtpServer
         jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --smtpPort
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPort());
+        // --smtpTLS
+        jsap.registerParameter(LauncherUtils.defineArgSmtpTLS());
+        // --smtpUsername
+        jsap.registerParameter(LauncherUtils.defineArgSmtpUsername());
+        // --smtpPassword
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPassword());
         // --notifyto
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // --pushurl
@@ -196,6 +204,10 @@ public class Launcher {
         this.getConfig().setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
         this.getConfig().setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
         this.getConfig().setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.getConfig().setSmtpPort(LauncherUtils.getArgSmtpPort(arguments));
+        this.getConfig().setSmtpTLS(LauncherUtils.getArgSmtpTLS(arguments));
+        this.getConfig().setSmtpUsername(LauncherUtils.getArgSmtpUsername(arguments));
+        this.getConfig().setSmtpPassword(LauncherUtils.getArgSmtpPassword(arguments));
         this.getConfig().setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
 
         if (LauncherUtils.getArgPushUrl(arguments) != null) {

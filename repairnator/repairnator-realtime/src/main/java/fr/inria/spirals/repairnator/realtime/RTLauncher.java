@@ -65,6 +65,14 @@ public class RTLauncher {
         jsap.registerParameter(LauncherUtils.defineArgNotifyEndProcess());
         // --smtpServer
         jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --smtpPort
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPort());
+        // --smtpTLS
+        jsap.registerParameter(LauncherUtils.defineArgSmtpTLS());
+        // --smtpUsername
+        jsap.registerParameter(LauncherUtils.defineArgSmtpUsername());
+        // --smtpPassword
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPassword());
         // --notifyto
         jsap.registerParameter(LauncherUtils.defineArgNotifyto());
         // -n or --name
@@ -156,6 +164,10 @@ public class RTLauncher {
         this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
         this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        this.config.setSmtpPort(LauncherUtils.getArgSmtpPort(arguments));
+        this.config.setSmtpTLS(LauncherUtils.getArgSmtpTLS(arguments));
+        this.config.setSmtpUsername(LauncherUtils.getArgSmtpUsername(arguments));
+        this.config.setSmtpPassword(LauncherUtils.getArgSmtpPassword(arguments));
         this.config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
         this.config.setDockerImageName(LauncherUtils.getArgDockerImageName(arguments));
         this.config.setSkipDelete(LauncherUtils.getArgSkipDelete(arguments));
