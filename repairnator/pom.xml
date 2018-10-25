@@ -36,7 +36,7 @@
     <developers>
         <developer>
             <name>Simon Urli</name>
-            <roles>https://github.com/Spirals-Team/repairnator/pull/757
+            <roles>
                 <role>Contributor</role>
             </roles>
         </developer>
@@ -62,14 +62,14 @@
         </repository>
         <snapshotRepository>
             <id>ossrh-repairnator-snapshot</id>
-            <url>https://oss.sonatype.org/content/rehttps://github.com/Spirals-Team/repairnator/pull/757positories/snapshots/</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
     <modules>
         <module>repairnator-pipeline</module>
         <module>repairnator-core</module>
-        <module>repairnator-scanner</module>https://github.com/Spirals-Team/repairnator/pull/757
+        <module>repairnator-scanner</module>
         <module>repairnator-dockerpool</module>
         <module>repairnator-checkbranches</module>
         <module>repairnator-realtime</module>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>https://github.com/Spirals-Team/repairnator/pull/757
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
