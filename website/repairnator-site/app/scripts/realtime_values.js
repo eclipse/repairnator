@@ -131,7 +131,7 @@ const updateInspectors = function(component, page){
   });
 }
 
-var realtime = new Vue({
+const realtime = new Vue({
   el: '#realtimedata',
   data: function() {
     return {
@@ -156,4 +156,12 @@ var realtime = new Vue({
       this.loadData();
     }.bind(this), 30000);
   }
+});
+
+const chartsVue = new Vue({
+  el: '#charts-vue',
+  data: function() {
+    return {
+    };
+  },
 });
