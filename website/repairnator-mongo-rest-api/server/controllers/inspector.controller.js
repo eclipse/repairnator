@@ -103,6 +103,12 @@ function countSuccessFullyReproducedBuild(req, res, next) {
     .catch(e => next(e));
 }
 
+function speedrate(req, res, next) {
+  Inspector.speedrate()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
 export default {
   load,
   get,
@@ -118,5 +124,6 @@ export default {
   getPatches,
   getNbFailuresByProject,
   getNbReproducedByProject,
-  countSuccessFullyReproducedBuild
+  countSuccessFullyReproducedBuild,
+  speedrate,
 };

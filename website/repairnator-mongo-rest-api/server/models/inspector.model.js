@@ -250,7 +250,41 @@ InspectorSchema.statics = {
         $in: ['PATCHED', 'test errors', 'test failure']
       }
     }).exec();
-  }
+  },
+
+  speedrate() {
+    const ltDateIso = moment().toISOString();
+    const gtDateIso = moment().subtract(24, 'hours').toISOString();
+
+    return this.aggregate([
+      {
+        $match: {
+          buildFinishedDate: {
+            $gte: new Date(gtDateIso),
+            $lt: new Date(ltDateIso)
+          }
+        }
+      },
+      {
+        $project: {
+          momentOfReproduction: { $dateToString: { format: '%Y-%m-%dT%H', date: '$buildFinishedDate' } }
+        }
+      },
+      {
+        $group: {
+          _id: '$momentOfReproduction',
+          counted: {
+            $sum: 1
+          }
+        }
+      },
+      {
+        $sort: {
+          _id: 1
+        }
+      }
+    ]).exec();
+  },
 };
 
 /**
