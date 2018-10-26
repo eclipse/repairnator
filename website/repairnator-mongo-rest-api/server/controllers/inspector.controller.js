@@ -116,7 +116,7 @@ function speedrate(req, res, next) {
       });
       // String to moment
       const parsedValues = values.map((value) => {
-        const time = moment(value._id);
+        const time = moment(`${value._id}:00:00.000+00:00`);
         return { _id: time, counted: value.counted };
       });
 
