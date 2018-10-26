@@ -9,23 +9,26 @@ Vue.component('speedrate-chart', {
     return {
       graphId: "nameOfTheChart",
       dataToPlot: [],
+      graph: null,
     }
   },
   methods: {
     loadData: function (){
       apiGet('/inspectors/speedrate', function(data) {
-        this.dataToPlot = data.map((value) => value.counted);
+        this.dataToPlot = data.map((value) => [moment(value._id).valueOf() ,value.counted]);
         this.startDate = moment.min(data.map((value) => moment(value["_id"])));
         this.updateGraph();
       }.bind(this));
     },
     updateGraph: function (){
-      console.log(this.startDate);
-      this.renderGraph();
+      if (this.graph){
+        const serie = this.graph.series[0];
+        serie.setData(this.dataToPlot);
+      }
     },
     renderGraph: function (){
       console.log("render");
-      Highcharts.chart(this.graphId, {
+      this.graph = Highcharts.chart(this.graphId, {
         title: {
           text: 'Speedrate during the past 24 hours.'
         },
@@ -48,10 +51,8 @@ Vue.component('speedrate-chart', {
         },
         series: [{
           name: 'Speedrate',
-          data: this.dataToPlot,
+          data: [],
           type: 'spline',
-          pointStart: this.startDate,
-          pointInterval: 3600 * 1000,
         }],
         xAxis: {
           type: 'datetime',
@@ -84,6 +85,8 @@ Vue.component('speedrate-chart', {
   },
   mounted: function(){
     this.loadData();
+    this.renderGraph();
+    
     this.interval = setInterval(function () {
       this.loadData();
     }.bind(this), 60000);
