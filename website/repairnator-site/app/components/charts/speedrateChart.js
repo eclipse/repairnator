@@ -16,9 +16,12 @@ Vue.component('speedrate-chart', {
       apiGet('/inspectors/speedrate', function(data) {
         this.dataToPlot = data.map((value) => value.counted);
         this.startDate = moment.min(data.map((value) => moment(value["_id"])));
-        console.log(data);
-        this.renderGraph();
+        this.updateGraph();
       }.bind(this));
+    },
+    updateGraph: function (){
+      console.log(this.startDate);
+      this.renderGraph();
     },
     renderGraph: function (){
       console.log("render");
@@ -48,7 +51,7 @@ Vue.component('speedrate-chart', {
           data: this.dataToPlot,
           type: 'spline',
           pointStart: this.startDate,
-          pointInterval: 3600 * 1000
+          pointInterval: 3600 * 1000,
         }],
         xAxis: {
           type: 'datetime',
