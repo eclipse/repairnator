@@ -186,6 +186,27 @@ It returns an object of the form:
 ]
 ```
 
+### /inspectors/speedrate
+
+Return the number of inspector added by every hours during the past 24hours.
+It provides detailed information on the speedrate of repairnator build reproduction (failing or not).
+
+It returns an object of the form:
+
+```json
+[
+{
+  "_id": "2018-10-25T14:00:00.000Z",
+  "count": 12
+}, {
+  "_id": "2018-10-25T15:00:00.000Z",
+  "count": 10
+}
+...
+]
+```
+
+
 ### /scanners/
 
 This endpoint returns the whole data from `scanner` collection.
