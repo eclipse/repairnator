@@ -122,7 +122,7 @@ function speedrate(req, res, next) {
       });
 
       // Return the union of the two array to avoid missing hours
-      return res.json(_.unionWith(parsedValues, hours, (a, b) => a._id.isSame(b._id)));
+      return res.json(_.sortBy(_.unionWith(parsedValues, hours, (a, b) => a._id.isSame(b._id)), '_id'));
     })
     .catch(e => next(e));
 }
