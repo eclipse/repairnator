@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import moment from 'moment';
 import Inspector from '../models/inspector.model';
 
 /**
@@ -105,7 +107,22 @@ function countSuccessFullyReproducedBuild(req, res, next) {
 
 function speedrate(req, res, next) {
   Inspector.speedrate()
-    .then(result => res.json(result))
+    .then((values) => {
+      const gtDateIso = moment().startOf('hour').subtract(24, 'hours');
+      // Array with count of 0
+      const hours = _.map(_.range(24), (plusHour) => {
+        const time = gtDateIso.clone().add(plusHour, 'hours');
+        return { _id: time, counted: 0 };
+      });
+      // String to moment
+      const parsedValues = values.map((value) => {
+        const time = moment(value._id);
+        return { _id: time, counted: value.counted };
+      });
+
+      // Return the union of the two array to avoid missing hours
+      return res.json(_.unionWith(parsedValues, hours, (a, b) => a._id.isSame(b._id)));
+    })
     .catch(e => next(e));
 }
 

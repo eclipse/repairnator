@@ -253,8 +253,9 @@ InspectorSchema.statics = {
   },
 
   speedrate() {
-    const ltDateIso = moment().toISOString();
-    const gtDateIso = moment().subtract(24, 'hours').toISOString();
+    const hour = moment().startOf('hour');
+    const ltDateIso = hour.toISOString();
+    const gtDateIso = hour.subtract(24, 'hours').toISOString();
 
     return this.aggregate([
       {
