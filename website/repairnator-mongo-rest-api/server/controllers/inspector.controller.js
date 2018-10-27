@@ -3,7 +3,7 @@ import moment from 'moment';
 import Inspector from '../models/inspector.model';
 
 /**
- * Load user and append to req.
+ * Load inspector and append to req.
  */
 function load(req, res, next, id) {
   Inspector.get(id)
@@ -19,10 +19,10 @@ function get(req, res) {
 }
 
 /**
- * Get user list.
+ * Get inspector list.
  * @property {number} req.query.skip - Number of users to be skipped.
  * @property {number} req.query.limit - Limit number of users to be returned.
- * @returns {User[]}
+ * @returns {Inspector[]}
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;

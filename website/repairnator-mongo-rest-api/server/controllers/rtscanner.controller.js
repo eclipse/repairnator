@@ -1,7 +1,7 @@
 import RtScanner from '../models/rtscanner.model';
 
 /**
- * Load user and append to req.
+ * Load rtScanner and append to req.
  */
 function load(req, res, next, id) {
   RtScanner.get(id)
@@ -14,17 +14,17 @@ function load(req, res, next, id) {
 
 /**
  * Get rtScanner
- * @returns {User}
+ * @returns {RtScanner}
  */
 function get(req, res) {
   return res.json(req.rtScanner);
 }
 
 /**
- * Get user list.
+ * Get rtScanner list.
  * @property {number} req.query.skip - Number of users to be skipped.
  * @property {number} req.query.limit - Limit number of users to be returned.
- * @returns {User[]}
+ * @returns {RtScanner[]}
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;

@@ -13,18 +13,16 @@ function load(req, res, next, id) {
 }
 
 /**
- * Get user
- * @returns {User}
+ * Get scanner
+ * @returns {Scanner}
  */
 function get(req, res) {
   return res.json(req.scanner);
 }
 
 /**
- * Get user list.
- * @property {number} req.query.skip - Number of users to be skipped.
- * @property {number} req.query.limit - Limit number of users to be returned.
- * @returns {User[]}
+ * Get scanner list.
+ * @returns {Scanner[]}
  */
 function list(req, res, next) {
   Scanner.list()
