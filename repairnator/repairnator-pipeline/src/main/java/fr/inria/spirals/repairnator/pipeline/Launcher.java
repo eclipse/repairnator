@@ -19,6 +19,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Checkstyle;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -99,6 +100,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgRunId());
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
+        // --checkstyle
+        jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
@@ -189,6 +192,8 @@ public class Launcher {
         this.getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.getConfig().setLauncherMode(LauncherMode.BEARS);
+        } else if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
+            this.getConfig().setLauncherMode(LauncherMode.CHECKSTYLE);
         } else {
             this.getConfig().setLauncherMode(LauncherMode.REPAIR);
         }
@@ -381,6 +386,8 @@ public class Launcher {
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+        } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
+            inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }

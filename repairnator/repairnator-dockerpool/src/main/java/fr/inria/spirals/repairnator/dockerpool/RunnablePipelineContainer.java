@@ -91,7 +91,7 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("CREATE_PR=1");
         }
 
-        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR) {
+        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR || this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE) {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
         }
     }

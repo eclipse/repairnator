@@ -155,6 +155,7 @@ public class ProjectInspector {
         return serializers;
     }
 
+
     public String getWorkspace() {
         return workspace;
     }
