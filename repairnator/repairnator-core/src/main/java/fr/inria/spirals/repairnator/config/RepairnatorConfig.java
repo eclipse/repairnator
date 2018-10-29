@@ -1,5 +1,10 @@
 package fr.inria.spirals.repairnator.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.inria.jtravis.JTravis;
 import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -16,28 +21,40 @@ import java.util.Set;
 
 /**
  * Created by urli on 08/03/2017.
+ *
+ * Contract: each field related to a file or directory should have the type String and the suffix of the field name should be "Path".
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RepairnatorConfig {
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
     private boolean serializeJson;
+    @JsonProperty("input")
     private String inputPath;
+    @JsonProperty("output")
     private String outputPath;
     private String mongodbHost;
     private String mongodbName;
+    @JsonProperty("smtpServer")
     private String smtpServer;
-    private int smtpPort;
-    private boolean smtpTLS;
+    @JsonProperty("smtpPort")
+    private int smtpPort = 25;
+    @JsonProperty("smtpTLS")
+    private boolean smtpTLS = false;
+    @JsonProperty("smtpUsername")
     private String smtpUsername;
+    @JsonProperty("smtpPassword")
     private String smtpPassword;
     private String[] notifyTo;
-    private boolean notifyEndProcess;
+    @JsonProperty("notifyEndProcess")
+    private boolean notifyEndProcess = false;
     private boolean push;
     private String pushRemoteRepo;
     private boolean fork;
     private boolean createPR;
-    private boolean debug;
+    @JsonProperty("debug")
+    private boolean debug = false;
 
     // Scanner
     private Date lookFromDate;
@@ -57,12 +74,16 @@ public class RepairnatorConfig {
     private String githubUserEmail;
 
     // Dockerpool
+    @JsonProperty("dockerImageName")
     private String dockerImageName;
-    private boolean skipDelete;
+    @JsonProperty("skipDelete")
+    private boolean skipDelete = false;
     private boolean createOutputDir;
     private String logDirectory;
-    private int nbThreads;
-    private int globalTimeout;
+    @JsonProperty("threads")
+    private int nbThreads = 2;
+    @JsonProperty("globalTimeout")
+    private int globalTimeout = 1;
 
     // Realtime
     private File whiteList;
@@ -73,7 +94,9 @@ public class RepairnatorConfig {
     private Duration duration;
 
     // Checkbranches
-    private boolean humanPatch;
+    @JsonProperty("humanPatch")
+    private boolean humanPatch = false;
+    @JsonProperty("repository")
     private String repository;
 
     private boolean clean;
@@ -97,6 +120,23 @@ public class RepairnatorConfig {
     public static RepairnatorConfig getInstance() {
         if (instance == null) {
             instance = new RepairnatorConfig();
+        }
+        return instance;
+    }
+
+    public static RepairnatorConfig loadConfig(String configPath) {
+        File file = new File(configPath);
+        ObjectMapper jsonMapper = new ObjectMapper();
+        JsonNode tree = null;
+        try {
+            tree = jsonMapper.readTree(file);
+            instance = jsonMapper.treeToValue(tree, RepairnatorConfig.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (tree.get("bears").isBoolean() && tree.get("bears").booleanValue()) {
+            instance.setLauncherMode(LauncherMode.BEARS);
         }
         return instance;
     }
@@ -201,8 +241,11 @@ public class RepairnatorConfig {
         return notifyTo;
     }
 
-    public void setNotifyTo(String[] notifyTo) {
-        this.notifyTo = notifyTo;
+    @JsonSetter("notifyTo")
+    public void setNotifyTo(String notifyTo) {
+        if (notifyTo != null && !notifyTo.isEmpty()) {
+            this.notifyTo = notifyTo.split(",");
+        }
     }
 
     public boolean isNotifyEndProcess() {

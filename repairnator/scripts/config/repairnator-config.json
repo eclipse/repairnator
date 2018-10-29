@@ -1,0 +1,19 @@
+{
+  "debug": false,
+  "bears": true,
+  "input": "/home/fernanda/torun.txt",
+  "output": "/home/fernanda/output_test.txt",
+  "notifyEndProcess": false,
+  "smtpServer": "",
+  "smtpPort": 25,
+  "smtpTLS": false,
+  "smtpUsername": "",
+  "smtpPassword": "",
+  "notifyTo": "",
+  "dockerImageName": "spirals/bears-checkbranches:3.0",
+  "skipDelete": false,
+  "threads": 2,
+  "globalTimeout": 1,
+  "humanPatch": false,
+  "repository": "https://github.com/fermadeiral/bears-benchmark"
+}

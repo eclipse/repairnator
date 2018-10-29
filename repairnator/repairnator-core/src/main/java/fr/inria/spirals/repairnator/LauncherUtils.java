@@ -16,13 +16,49 @@ import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fermadeiral
  */
 public class LauncherUtils {
+
+    /*
+        This map intends to hold the mandatory args for each LauncherType.
+        The mandatory args are stored in the map as Fields from RepairnatorConfig.
+        Then, when a Launcher starts to run, the check of the mandatory args is done based on the values in RepairnatorConfig.
+     */
+    public static final Map<LauncherType, List<Field>> mapLauncherTypeToMandatoryArgs = new HashMap<LauncherType, List<Field>>() {{
+        put(LauncherType.CHECKBRANCHES, new ArrayList<>());
+        try {
+            get(LauncherType.CHECKBRANCHES).add(RepairnatorConfig.getInstance().getClass().getDeclaredField("inputPath"));
+            get(LauncherType.CHECKBRANCHES).add(RepairnatorConfig.getInstance().getClass().getDeclaredField("outputPath"));
+            get(LauncherType.CHECKBRANCHES).add(RepairnatorConfig.getInstance().getClass().getDeclaredField("dockerImageName"));
+            get(LauncherType.CHECKBRANCHES).add(RepairnatorConfig.getInstance().getClass().getDeclaredField("repository"));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }};
+
+    public static FlaggedOption defineArgConfigPath() {
+        FlaggedOption opt = new FlaggedOption("configPath");
+        opt.setShortFlag('c');
+        opt.setLongFlag("configPath");
+        opt.setStringParser(FileStringParser.getParser().setMustExist(true).setMustBeFile(true));
+        opt.setRequired(true);
+        opt.setHelp("Provide the path to the repairnator-config.json file.");
+        return opt;
+    }
+
+    public static File getArgConfigPath(JSAPResult arguments) {
+        return arguments.getFile("configPath");
+    }
 
     public static Switch defineArgHelp() {
         Switch sw = new Switch("help");
@@ -401,6 +437,107 @@ public class LauncherUtils {
                 LauncherUtils.printUsage(jsap, launcherType);
             }
         }
+    }
+
+    /* This method intends to check the values in the fields of RepairnatorConfig.
+       The idea is that the mandatory args for the current LauncherType are really set.
+       This method was written in a way to avoid hard-coding field names too much, so this method will not
+       require changes when a field is added or removed from RepairnatorConfig (except if it's a field that requires special checking).
+       However, if a mandatory field is added or removed, changes in the mapLauncherTypeToMandatoryArgs are required, and only there.
+
+       The checking on a mandatory arg is as following:
+       - 1) assert non-null value;
+       - 2) if it's a string arg, assert non-empty string
+       - 3) if it's a file/directory path string arg, assert it based on the rule for such path depending on the LauncherType requirement.
+            For instance, "inputPath" should be a path to a file that must exist, for all LauncherTypes.
+            "outputPath", on the other hand, depends on the LauncherType.
+     */
+    public static void checkConfig(LauncherType launcherType) {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+
+        boolean checkPassed = true;
+
+        List<Field> mandatoryFieldsForLauncherType = mapLauncherTypeToMandatoryArgs.get(launcherType);
+        for (Field field : mandatoryFieldsForLauncherType) {
+            String fieldName = field.getName();
+            String fieldNameToGetMethod = fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
+            try {
+                Method getMethod = config.getClass().getMethod("get" + fieldNameToGetMethod);
+
+                Object value = getMethod.invoke(config);
+
+                // check if the value is null
+                if (!assertNotNull(fieldName, value)) {
+                    checkPassed = false;
+                    continue;
+                }
+
+                if (field.getGenericType().getTypeName().equals("String")) {
+
+                    // check if the value is an empty string
+                    if (!assertStringNotEmpty(fieldName, (String) value)) {
+                        checkPassed = false;
+                        continue;
+                    } else {
+
+                        // check values that are related to files/directories
+                        if (field.getName().endsWith("Path")) {
+
+                            // inputPath should be the path to a file, and that file must exist for all launchers
+                            if (field.getName().equals("inputPath")) {
+                                checkPassed = (assertPathIsToExistingFile(fieldName, (String) value)) && checkPassed;
+                            } else if (field.getName().equals("outputPath")) {
+                                if (launcherType == LauncherType.CHECKBRANCHES) {
+                                    checkPassed = (assertPathIsToFile(fieldName, (String) value)) && checkPassed;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                checkPassed = false;
+                e.printStackTrace();
+            }
+        }
+
+        if (!checkPassed) {
+            //printUsage();
+            System.exit(-1);
+        }
+    }
+
+    public static boolean assertNotNull(String argName, Object value) {
+        if (value != null) {
+            return true;
+        }
+        System.err.println("Error: the arg " + argName + " is null.");
+        return false;
+    }
+
+    public static boolean assertStringNotEmpty(String argName, String value) {
+        if (!value.isEmpty()) {
+            return true;
+        }
+        System.err.println("Error: the arg " + argName + " is empty.");
+        return false;
+    }
+
+    public static boolean assertPathIsToExistingFile(String argName, String value) {
+        File file = new File(value);
+        if (file.isFile() && file.exists()) {
+            return true;
+        }
+        System.err.println("Error: the arg " + argName + " is not a valid path to an existing file.");
+        return false;
+    }
+
+    public static boolean assertPathIsToFile(String argName, String value) {
+        File file = new File(value);
+        if (file.isFile()) {
+            return true;
+        }
+        System.err.println("Error: the arg " + argName + " is not a valid path to a file (the file does not need to exist).");
+        return false;
     }
 
     public static void printUsage(JSAP jsap, LauncherType launcherType) {
