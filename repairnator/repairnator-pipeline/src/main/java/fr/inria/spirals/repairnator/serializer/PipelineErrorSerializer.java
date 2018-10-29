@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.serializer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;

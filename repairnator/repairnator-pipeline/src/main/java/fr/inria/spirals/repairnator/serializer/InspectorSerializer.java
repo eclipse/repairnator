@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.serializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;

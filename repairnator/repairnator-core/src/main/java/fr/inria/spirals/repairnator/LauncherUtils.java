@@ -13,6 +13,7 @@ import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEn
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
+import fr.inria.spirals.repairnator.utils.Utils;
 import org.slf4j.Logger;
 
 import java.io.File;

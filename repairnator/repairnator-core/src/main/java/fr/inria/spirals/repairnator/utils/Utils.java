@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.utils;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

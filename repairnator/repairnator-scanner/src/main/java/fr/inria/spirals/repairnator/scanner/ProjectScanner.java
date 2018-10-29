@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.scanner;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.*;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
