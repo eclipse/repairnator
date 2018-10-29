@@ -85,11 +85,11 @@ const updateInspectors = function(component, page){
         }
 
         if (fieldName == 'buildFinishedDate') {
-          dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+          dataValue = moment(dataValue).subtract(1, 'hours').fromNow();
         }
 
         if (fieldName == 'buildReproductionDate') {
-          dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+          dataValue = moment(dataValue).subtract(1, 'hours').fromNow();
         }
 
         if (fieldName == 'status') {

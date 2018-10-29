@@ -8,22 +8,34 @@ Vue.component('speedrate-chart', {
   data: function () {
     return {
       graphId: "nameOfTheChart",
-      dataToPlot: [],
+      series: {
+        total: [],
+        failed: [],
+        inspectors: [],
+      },
       graph: null,
     }
   },
   methods: {
     loadData: function (){
       apiGet('/inspectors/speedrate', function(data) {
-        this.dataToPlot = data.map((value) => [moment(value._id).valueOf() ,value.counted]);
+        this.series.inspectors = data.map((value) => [moment(value._id).valueOf() ,value.counted]);
         this.startDate = moment.min(data.map((value) => moment(value["_id"])));
+        this.updateGraph();
+      }.bind(this));
+      apiGet('/rtscanners/speedrate', function(data) {
+        this.series.failed = data.map((value) => [moment(value._id).valueOf() ,value.status.FAILED]);
+        this.series.total = data.map((value) => [moment(value._id).valueOf() ,Object.values(value.status).reduce((acc, cur) => acc + cur)]);
+        console.log(this.series.failed)
         this.updateGraph();
       }.bind(this));
     },
     updateGraph: function (){
       if (this.graph){
         const serie = this.graph.series[0];
-        serie.setData(this.dataToPlot);
+        serie.setData(this.series.total);
+        const serie1 = this.graph.series[1];
+        serie1.setData(this.series.failed);
       }
     },
     renderGraph: function (){
@@ -49,11 +61,18 @@ Vue.component('speedrate-chart', {
             },
           }
         },
-        series: [{
-          name: 'Speedrate',
-          data: [],
-          type: 'spline',
-        }],
+        series: [
+          {
+            name: 'Total',
+            data: [],
+            type: 'spline',
+          },
+          {
+            name: 'Failed',
+            data: [],
+            type: 'spline',
+          }
+        ],
         xAxis: {
           type: 'datetime',
           dateTimeLabelFormats: {
@@ -86,7 +105,7 @@ Vue.component('speedrate-chart', {
   mounted: function(){
     this.loadData();
     this.renderGraph();
-    
+
     this.interval = setInterval(function () {
       this.loadData();
     }.bind(this), 60000);
