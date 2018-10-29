@@ -44,7 +44,16 @@
     </section>
 
     <div id="charts-vue">
-      <speedrate-chart/>
+      <div class="">
+        <div class="row">
+          <div class="col-md-8">
+            <speedrate-chart/>
+          </div>
+          <div class="col-md-4">
+            <speedrate-pie-chart/>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="app-inspectors">
@@ -127,12 +136,14 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+
     <!-- endbuild -->
 
     <!-- build:js scripts/components.js -->
     <script src="components/pagination.js"></script>
     <script src="components/grid.js"></script>
     <script src="components/charts/speedrateChart.js"></script>
+    <script src="components/charts/speedratePieChart.js"></script>
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->

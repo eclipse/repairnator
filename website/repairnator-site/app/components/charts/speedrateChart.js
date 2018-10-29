@@ -7,7 +7,7 @@ Vue.component('speedrate-chart', {
   template: speedrateChartTemplate,
   data: function () {
     return {
-      graphId: "nameOfTheChart",
+      graphId: "speedrateChart",
       series: {
         total: [],
         failed: [],
@@ -26,7 +26,6 @@ Vue.component('speedrate-chart', {
       apiGet('/rtscanners/speedrate', function(data) {
         this.series.failed = data.map((value) => [moment(value._id).valueOf() ,value.status.FAILED]);
         this.series.total = data.map((value) => [moment(value._id).valueOf() ,Object.values(value.status).reduce((acc, cur) => acc + cur)]);
-        console.log(this.series.failed)
         this.updateGraph();
       }.bind(this));
     },
@@ -39,7 +38,6 @@ Vue.component('speedrate-chart', {
       }
     },
     renderGraph: function (){
-      console.log("render");
       this.graph = Highcharts.chart(this.graphId, {
         title: {
           text: 'Speedrate during the past 24 hours.'
