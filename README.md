@@ -98,7 +98,7 @@ Then just run the script `launch_rtscanner.sh`.
 
 ### Integration
 
-If you want to bring your own tool in Repairnator, have a look on [contribution guidelines](/doc/contribute.md) :smile:
+If you want to bring your own tool in Repairnator, have a look on [contribution guidelines](/doc/README.md) :smile:
 
 ## Content of the repository
 
