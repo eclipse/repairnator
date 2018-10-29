@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.serializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
@@ -32,7 +33,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");
         dataCol.add(build.getRepository().getSlug());
-        dataCol.add(Utils.formatCompleteDate(new Date()));
+        dataCol.add(DateUtils.formatCompleteDate(new Date()));
         dataCol.add(Utils.getHostname());
         dataCol.add(inspector.getBuildToBeInspected().getRunId());
 
@@ -54,7 +55,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
 
         result.addProperty("buildId", build.getId());
         result.addProperty("repositoryName", build.getRepository().getSlug());
-        result.addProperty("buildReproductionDateStr", Utils.formatCompleteDate(new Date()));
+        result.addProperty("buildReproductionDateStr", DateUtils.formatCompleteDate(new Date()));
         this.addDate(result, "buildReproductionDate", new Date());
 
         result.addProperty("hostname", Utils.getHostname());

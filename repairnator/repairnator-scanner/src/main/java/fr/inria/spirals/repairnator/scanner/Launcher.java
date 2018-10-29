@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
+import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.ScannerDetailedDataSerializer;
@@ -182,7 +183,7 @@ public class Launcher {
         Date lookFromDate = arguments.getDate("lookFromDate");
         Date lookToDate = arguments.getDate("lookToDate");
         if (lookToDate != null) {
-            lookToDate = Utils.getLastTimeFromDate(lookToDate);
+            lookToDate = DateUtils.getLastTimeFromDate(lookToDate);
         }
         if (lookFromDate == null || lookToDate == null || lookFromDate.after(lookToDate)) {
             int lookupHours = arguments.getInt("lookupHours");

@@ -7,6 +7,7 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
@@ -55,7 +56,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
 
-        this.containerName = "repairnator-pipeline_"+ Utils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId()+"_"+this.repairnatorConfig.getRunId();
+        this.containerName = "repairnator-pipeline_"+ DateUtils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId()+"_"+this.repairnatorConfig.getRunId();
         String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
         this.envValues = new ArrayList<>();

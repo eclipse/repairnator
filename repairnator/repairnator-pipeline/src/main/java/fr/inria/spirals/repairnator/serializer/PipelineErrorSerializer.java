@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.serializer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
@@ -23,8 +24,8 @@ public class PipelineErrorSerializer extends AbstractDataSerializer {
         List<Object> dataAsList = new ArrayList<>();
         dataAsList.add(Utils.getHostname());
         dataAsList.add(inspector.getBuildToBeInspected().getRunId());
-        dataAsList.add(Utils.formatCompleteDate(new Date()));
-        dataAsList.add(Utils.formatOnlyDay(new Date()));
+        dataAsList.add(DateUtils.formatCompleteDate(new Date()));
+        dataAsList.add(DateUtils.formatOnlyDay(new Date()));
         dataAsList.add(inspector.getRepoSlug());
         dataAsList.add(inspector.getBuggyBuild().getId());
 
@@ -38,8 +39,8 @@ public class PipelineErrorSerializer extends AbstractDataSerializer {
         dataAsJson.addProperty("buildId", inspector.getBuggyBuild().getId());
         dataAsJson.addProperty("repositoryName", inspector.getRepoSlug());
         this.addDate(dataAsJson, "computedDate", new Date());
-        dataAsJson.addProperty("computedDateStr", Utils.formatCompleteDate(new Date()));
-        dataAsJson.addProperty("computedDay", Utils.formatOnlyDay(new Date()));
+        dataAsJson.addProperty("computedDateStr", DateUtils.formatCompleteDate(new Date()));
+        dataAsJson.addProperty("computedDay", DateUtils.formatOnlyDay(new Date()));
 
         for (Map.Entry<String, List<String>> stringListEntry : inspector.getJobStatus().getStepErrors().entrySet()) {
             JsonArray jsonElements = new JsonArray();
