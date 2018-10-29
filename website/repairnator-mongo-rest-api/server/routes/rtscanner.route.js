@@ -8,6 +8,9 @@ const router = express.Router(); // eslint-disable-line new-cap
 router.route('/')
   .get(rtScannerCtrl.list);
 
+router.route('/speedrate')
+  .get(rtScannerCtrl.speedrate);
+
 router.route('/:rtScannerId')
   .get(rtScannerCtrl.get);
 

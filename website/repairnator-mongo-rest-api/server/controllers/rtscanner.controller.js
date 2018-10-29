@@ -1,3 +1,6 @@
+import moment from 'moment';
+import _ from 'lodash';
+
 import RtScanner from '../models/rtscanner.model';
 
 /**
@@ -33,8 +36,44 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
+
+function speedrate(req, res, next) {
+  RtScanner.speedrate()
+    .then((result) => {
+      const gtDateIso = moment().startOf('hour').subtract(24, 'hours');
+      const baseStatus = {
+        ERRORED: 0,
+        FAILED: 0,
+        PASSED: 0,
+        CANCELED: 0,
+      };
+      // Array with count of 0
+      const hours = _.map(_.range(24), (plusHour) => {
+        const time = gtDateIso.clone().add(plusHour, 'hours');
+        return {
+          _id: time,
+          status: baseStatus,
+        };
+      });
+      // String to moment
+      const parsedValues = result.map((value) => {
+        // The query drop the timezone then we have to re-insert it
+        const time = moment(`${value._id}:00:00.000+00:00`);
+        const status = _.reduce(value.status, (acc, cur) => {
+          acc[cur] = acc[cur] + 1 || 1; // eslint-disable-line no-param-reassign
+          return acc;
+        }, _.clone(baseStatus));
+        return { _id: time, status };
+      });
+
+      return res.json(_.sortBy(_.unionWith(parsedValues, hours, (a, b) => a._id.isSame(b._id)), '_id'));
+    })
+    .catch(e => next(e));
+}
+
 export default {
   load,
   get,
   list,
+  speedrate,
 };

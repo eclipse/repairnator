@@ -2,8 +2,8 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
+import moment from 'moment';
 import APIError from '../helpers/APIError';
-
 
 /**
  * Scanner Schema
@@ -66,6 +66,36 @@ RtScannerSchema.statics = {
       .skip(+skip)
       .limit(+limit)
       .exec();
+  },
+
+  speedrate() {
+    const hour = moment().startOf('hour');
+    const ltDateIso = hour.toISOString();
+    const gtDateIso = hour.subtract(24, 'hours').toISOString();
+    return this.aggregate([
+      {
+        $match: {
+          dateWatched: {
+            $gte: new Date(gtDateIso),
+            $lt: new Date(ltDateIso)
+          }
+        }
+      },
+      {
+        $project: {
+          dateWatched: { $dateToString: { format: '%Y-%m-%dT%H', date: '$dateWatched' } },
+          status: '$status',
+        }
+      },
+      {
+        $group: {
+          _id: '$dateWatched',
+          status: {
+            $push: '$status'
+          }
+        }
+      }
+    ]).exec();
   },
 
 };
