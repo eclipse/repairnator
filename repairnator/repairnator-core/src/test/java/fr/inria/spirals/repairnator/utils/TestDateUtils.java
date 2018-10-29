@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * Created by urli on 21/02/2017.
  */
-public class TestSerializerUtils {
+public class TestDateUtils {
 
     @Test
     public void testFormatCompleteDate() {
