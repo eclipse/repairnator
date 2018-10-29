@@ -116,7 +116,6 @@ public class Launcher {
             this.config.setLauncherMode(LauncherMode.REPAIR);
         }
         this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
-        this.config.setSerializeJson(true);
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
         this.config.setNotifyEndProcess(LauncherUtils.getArgNotifyEndProcess(arguments));
         this.config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
