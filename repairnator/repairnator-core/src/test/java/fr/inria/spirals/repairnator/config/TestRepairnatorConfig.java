@@ -40,7 +40,6 @@ public class TestRepairnatorConfig {
         assertThat(config.getOutputPath(), is("/tmp"));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(false));
-        assertThat(config.isSerializeJson(), is(true));
         assertThat(config.getLauncherMode(), nullValue());
         assertThat(config.getWorkspacePath(), is("./workspace"));
         assertThat(config.getZ3solverPath(), is(""));
@@ -63,7 +62,6 @@ public class TestRepairnatorConfig {
         assertThat(config.getOutputPath(), is(""));
         assertThat(config.isClean(), is(true));
         assertThat(config.isPush(), is(true));
-        assertThat(config.isSerializeJson(), is(false));
         assertThat(config.getLauncherMode(), nullValue());
         assertThat(config.getWorkspacePath(), is("/tmp"));
         assertThat(config.getZ3solverPath(), is("/tmp/z3/z3_for_linux"));

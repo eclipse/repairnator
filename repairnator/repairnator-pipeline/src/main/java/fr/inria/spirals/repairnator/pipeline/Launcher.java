@@ -193,7 +193,6 @@ public class Launcher {
             this.getConfig().setLauncherMode(LauncherMode.REPAIR);
         }
         if (LauncherUtils.getArgOutput(arguments) != null) {
-            this.getConfig().setSerializeJson(true);
             this.getConfig().setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         }
         this.getConfig().setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
