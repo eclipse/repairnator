@@ -46,7 +46,7 @@ Vue.component('speedrate-pie-chart', {
               type: 'pie'
           },
           title: {
-              text: 'Browser market shares in January, 2018'
+              text: 'Status share of the rt scanner'
           },
           tooltip: {
               pointFormat: '{series.name}: <b>{point.y}</b>'
