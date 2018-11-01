@@ -1,17 +1,14 @@
 package fr.inria.spirals.repairnator.process.step.paths;
 
-import fr.inria.spirals.repairnator.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
-import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ComputePlugins extends AbstractStep {
