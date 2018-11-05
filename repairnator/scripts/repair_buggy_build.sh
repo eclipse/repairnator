@@ -68,10 +68,8 @@ DOCKER_ARGS="$DOCKER_ARGS `ca \"--env SMTP_PASSWORD\" $SMTP_PASSWORD`"
 DOCKER_ARGS="$DOCKER_ARGS `ca \"--env NOTIFY_TO\" $NOTIFY_TO`"
 DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_HOST\" $MONGODB_HOST`"
 DOCKER_ARGS="$DOCKER_ARGS `ca \"--env MONGODB_NAME\" $MONGODB_NAME`"
-
-if [ "$SMTP_TLS" -eq 1 ]; then
-    DOCKER_ARGS="$DOCKER_ARGS `ca \"--env SMTP_TLS\" $SMTP_TLS`"
-fi
+DOCKER_ARGS="$DOCKER_ARGS `ca \"--env CREATE_PR\" $CREATE_PR`"
+DOCKER_ARGS="$DOCKER_ARGS `ca \"--env SMTP_TLS\" $SMTP_TLS`"
 
 DOCKER_COMMAND="docker run -d $DOCKER_ARGS -v $LOG_DIR:/var/log $DOCKER_TAG"
 echo "Launch docker container with the following command: $DOCKER_COMMAND"
