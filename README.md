@@ -3,10 +3,11 @@
 # Repairnator: a program repair bot for continuous integration
 
 Repairnator is a software development bot that automatically repairs build failures on Travis CI.
-It monitors failing Travis builds, tries to locally reproduce the failing builds and finally attempts to repair it with the state-of-the-art of [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing) tools. 
+It monitors failing Travis builds, tries to locally reproduce the failing builds and finally attempts to repair them with the state-of-the-art of [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing) tools for Java. 
 
 -- [The Repairnator team](https://github.com/Spirals-Team/repairnator/issues/760)
 
+Want to join the Repairnator community? To receive monthly news about Repairnator, shoot an email at <mailto:repairnator.subscribe@4open.science>!
 
 ## About Repairnator
 
