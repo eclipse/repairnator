@@ -8,7 +8,7 @@ public class ProjectMetrics {
      */
     private int numberModules;
     /**
-     * {@code numberPluging} is calculated in the step
+     * {@code numberPlugins} is calculated in the step
      * {@link fr.inria.spirals.repairnator.process.step.paths.ComputePlugins}.
      */
     private int numberPlugins;
