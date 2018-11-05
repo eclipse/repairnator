@@ -9,6 +9,8 @@ import fr.inria.spirals.repairnator.states.PushState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.apache.maven.model.Plugin;
+
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -25,6 +27,7 @@ public class JobStatus {
     private File[] repairSourceDir;
     private File[] testDir;
     private File[] modules;
+    private List<Plugin> plugins;
 
     /**
      * List of patches indexed by the name of the tool to produce them
@@ -193,6 +196,14 @@ public class JobStatus {
 
     public void setModules(File[] modules) {
         this.modules = modules;
+    }
+
+    public List<Plugin> getPlugins() {
+        return plugins;
+    }
+
+    public void setPlugins(List<Plugin> plugins) {
+        this.plugins = plugins;
     }
 
     public Throwable getFatalError() {

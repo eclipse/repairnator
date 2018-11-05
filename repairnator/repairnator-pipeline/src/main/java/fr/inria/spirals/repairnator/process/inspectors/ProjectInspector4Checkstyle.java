@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
+import fr.inria.spirals.repairnator.process.step.paths.ComputePlugins;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.push.*;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -35,13 +35,13 @@ public class ProjectInspector4Checkstyle extends ProjectInspector {
             cloneRepo
                 .addNextStep(new CheckoutBuggyBuild(this, true))
                 .addNextStep(new BuildProject(this))
+                .addNextStep(new ComputePlugins(this, false))
                 .addNextStep(new Checkstyle(this));
 
             super.setFinalStep(new ComputeSourceDir(this, false, true));
 
 
             super.getFinalStep().
-                addNextStep(new ComputeModules(this, false)).
                 addNextStep(new WritePropertyFile(this)).
                 addNextStep(new CommitProcessEnd(this)).
                 addNextStep(new PushProcessEnd(this));
