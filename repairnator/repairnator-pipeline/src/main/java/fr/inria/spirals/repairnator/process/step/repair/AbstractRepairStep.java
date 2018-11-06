@@ -101,18 +101,17 @@ public abstract class AbstractRepairStep extends AbstractStep {
             } catch (IOException e) {
                 this.addStepError("Error while serializing patches", e);
             }
-
-            if (serializedPatches != null) {
-                try {
-                    this.createPullRequest(serializedPatches, MAX_PATCH_PER_TOOL);
-                } catch (IOException|GitAPIException|URISyntaxException e) {
-                    this.addStepError("Error while creating the PR", e);
+            if (this.getConfig().isCreatePR()) {
+                if (serializedPatches != null) {
+                    try {
+                        this.createPullRequest(serializedPatches, MAX_PATCH_PER_TOOL);
+                    } catch (IOException | GitAPIException | URISyntaxException e) {
+                        this.addStepError("Error while creating the PR", e);
+                    }
+                } else {
+                    this.addStepError("No file has been serialized, so no PR will be created");
                 }
-            } else {
-                this.addStepError("No file has been serialized, so no PR will be created");
             }
-
-
             this.notify(patchList);
         }
     }
