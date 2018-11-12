@@ -42,7 +42,6 @@ var simplifyStatuses = function (dataArray) {
 };
 
 apiGet( '/inspectors/statusStats', function (data) {
-  console.log('fsdf')
   var htmlElement = $('<div style="display: inline-block; width: 30%"></div>');
 
   var total = 0;

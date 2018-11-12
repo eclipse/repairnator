@@ -85,11 +85,11 @@ const updateInspectors = function(component, page){
         }
 
         if (fieldName == 'buildFinishedDate') {
-          dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+          dataValue = moment(dataValue).subtract(1, 'hours').fromNow();
         }
 
         if (fieldName == 'buildReproductionDate') {
-          dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+          dataValue = moment(dataValue).subtract(1, 'hours').fromNow();
         }
 
         if (fieldName == 'status') {
@@ -131,7 +131,7 @@ const updateInspectors = function(component, page){
   });
 }
 
-var realtime = new Vue({
+const realtime = new Vue({
   el: '#realtimedata',
   data: function() {
     return {
@@ -156,4 +156,12 @@ var realtime = new Vue({
       this.loadData();
     }.bind(this), 30000);
   }
+});
+
+const chartsVue = new Vue({
+  el: '#charts-vue',
+  data: function() {
+    return {
+    };
+  },
 });

@@ -51,8 +51,10 @@ PipelineErrorSchema.statics = {
        });
   },
 
-  list() {
+  list({ skip = 0, limit = 50 } = {}) {
     return this.find({ })
+      .skip(+skip)
+      .limit(+limit)
       .exec();
   },
 };
