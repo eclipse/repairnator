@@ -437,7 +437,7 @@ public class LauncherUtils {
         if (config.getSmtpServer() != null && config.getNotifyTo() != null) {
             logger.info("The email notifier engine will be used.");
 
-            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer(), config.getSmtpPort(), config.getSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
+            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer(), config.getSmtpPort(), config.isSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
         } else {
             logger.info("The email notifier engine won't be used.");
         }

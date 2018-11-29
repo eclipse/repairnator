@@ -164,7 +164,7 @@ public class RepairnatorConfig {
         this.smtpPort = smtpPort;
     }    
     
-    public boolean getSmtpTLS() {
+    public boolean isSmtpTLS() {
         return smtpTLS;
     }
 
