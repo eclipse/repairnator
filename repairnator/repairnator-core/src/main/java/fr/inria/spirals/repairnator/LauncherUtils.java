@@ -201,7 +201,7 @@ public class LauncherUtils {
     public static Switch defineArgSmtpTLS() {
         Switch sw = new Switch("smtpTLS");
         sw.setLongFlag("smtpTLS");
-        sw.setDefault("true");
+        sw.setDefault("false");
         sw.setHelp("Decides whether to use TLS for email communication.");
         return sw;
     }
