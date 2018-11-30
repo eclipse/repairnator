@@ -18,4 +18,16 @@ describe('## Patches', () => {
         .catch(done);
     });
   });
+  describe('# GET /repairnator-mongo-api/patches/builds/:buildId', () => {
+    it('should return OK', (done) => {
+      request(app)
+        .get('/repairnator-mongo-api/patches/builds/461420103')
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body).to.be.an('array');
+          done();
+        })
+        .catch(done);
+    });
+  });
 });

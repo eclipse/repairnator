@@ -12,10 +12,10 @@ const PatchSchema = new mongoose.Schema({
   dateStr: Date,
   runId: Date,
   buildId: Number,
-  toolname: Date,
+  toolname: String,
   diff: String,
   filepath: String,
-  hostname: Number,
+  hostname: String,
 }, { collection: 'patches', strict: false });
 
 /**
