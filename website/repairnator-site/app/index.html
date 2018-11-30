@@ -106,7 +106,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="inspectorModalLabel">Build details</h5>
+            <h5 class="modal-title" id="inspectorModalLabel">Patches details</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -117,6 +117,7 @@
               <div> Repairnator found {{ numberFound }} patches.</div>
               <p v-for="patch in patches">
                   <strong>Filepath : </strong> <br/> <span class="pre-json"> {{ patch['filepath'] }} </span> <br>
+                  <strong>Repair tool : </strong> <span class="pre-json"> {{ patch['toolname'] }} </span> <br>
                   <strong>Diff : </strong> <br/> <span class="pre-json"> {{ patch['diff'] }} </span>
               </p>
             </div>
