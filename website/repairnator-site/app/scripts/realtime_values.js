@@ -32,9 +32,40 @@ const inspectorDetails = new Vue({
   }
 })
 
+const patchesDetails = new Vue({
+  el: '#patches-details',
+  data: {
+    patches: [],
+    numberFound: 0,
+    buildId: 440200939,
+  },
+  watch: {
+    buildId: function (val) {
+      this.updateValues()
+    }
+  },
+  methods: {
+    updateValues: function(){
+      apiGet(`/patches/builds/${this.buildId}`, (response) => {
+        this.patches = response;
+        this.numberFound = this.patches.length
+        console.log(response)
+      })
+    }
+  },
+  mounted () {
+    this.updateValues()
+  }
+})
+
 function openInspectorInfoModal(buildId){
   inspectorDetails.buildId = buildId;
   $('#inspectorModal').modal('show');
+}
+
+function openPatchesModal(buildId){
+  patchesDetails.buildId = buildId;
+  $('#patchesModal').modal('show');
 }
 
 let lastBuild;
@@ -95,6 +126,7 @@ const updateInspectors = function(component, page){
         if (fieldName == 'status') {
           if (data[fieldName] == 'PATCHED') {
             line.status = 'success';
+            dataValue = `<a onClick='openPatchesModal(${data['buildId']})'>${dataValue}</a>`
           } else if (data[fieldName] == 'test failure' || data[fieldName] == 'test errors') {
             line.status = 'warning';
           }
