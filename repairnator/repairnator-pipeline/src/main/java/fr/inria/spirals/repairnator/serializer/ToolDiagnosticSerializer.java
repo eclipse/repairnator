@@ -33,8 +33,8 @@ public class ToolDiagnosticSerializer extends AbstractDataSerializer {
     private JsonElement serializeAsJson(ProjectInspector inspector, String toolName, JsonElement jsonElement) {
         BuildToBeInspected buildToBeInspected = inspector.getBuildToBeInspected();
         JsonObject data = new JsonObject();
-        data.addProperty("date", Utils.formatCompleteDate(new Date()));
-        this.addDate(data, "dateStr", new Date());
+        data.addProperty("dateStr", Utils.formatCompleteDate(new Date()));
+        this.addDate(data, "date", new Date());
         data.addProperty("runId", buildToBeInspected.getRunId());
         data.addProperty("buildId", buildToBeInspected.getBuggyBuild().getId());
         data.addProperty("toolname", toolName);
