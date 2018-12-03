@@ -324,3 +324,24 @@ This endpoint returns a specific rtScanner entry for the given `rtScannerId`. Th
   "status": "PASSED"
 }
 ```
+
+### /patches/
+
+Return the data of the 50 last data in patches collection.
+
+### /patches/:patchId
+
+This endpoint returns a specific patch entry for the given `patchId`. The argument must be the `_id` of an object.
+
+```json
+{
+  "_id":"5c00338dcff47e0013e55010",
+  "dateStr":"2018-11-29T19:44:29.144Z",
+  "buildId":461420103,
+  "diff":"...",
+  "filepath":"/root/workspace/Twasi/twasi-core/461420103/src/main/java/net/twasi/core/database/models/User.java"}
+```
+
+### /patches/builds/:buildId
+
+This endpoint returns the list of patches for the given `buildId`.
