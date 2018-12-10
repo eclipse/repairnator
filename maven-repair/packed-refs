@@ -1,0 +1,13 @@
+# pack-refs with: peeled fully-peeled sorted 
+ee0227b240796f54be51aa6cea74d49235ff3a6e refs/heads/master
+ad4c365f88bd7f2dc5bddf1e92c986daf1aec374 refs/heads/monperrus-patch-1
+0cdab9a965cb26b2da220385b8ab8ccdd81e9062 refs/tags/npefix-maven-1.0
+^26e64579f4b8cc91da5d1a8cf36e2526fda65afb
+9cbee3f48d82e2cab2f4a5af8b7a994ac4d1ffec refs/tags/npefix-maven-1.1
+^886e0c81cf043d49301c48380f4a41a7bf8604cb
+3d8f048ac573f0a342aa46fd1f38413bbc27f5d6 refs/tags/npefix-maven-1.2
+^e67ec9b6898e4dfa6f148c71e32a50625108bdc5
+7f72b75899349a4235cec5de92fa34ba8a501b2e refs/tags/npefix-maven-1.3
+^8577010e10416f2dead7d9d9cc83be19e27dd5de
+1330e2b399b71ccb987198514986c3c0e2ecb7bf refs/tags/repair-maven-plugin-1.5
+^0c8120b1e8253144285f2b998897e6c92b77948d
