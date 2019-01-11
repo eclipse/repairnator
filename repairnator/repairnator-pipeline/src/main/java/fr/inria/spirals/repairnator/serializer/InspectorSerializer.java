@@ -13,6 +13,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         String state = getPrettyPrintState(inspector);
 
         String realState = StringUtils.join(jobStatus.getStepStatuses(), " -> ");
-        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",")+"";
+        String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",") + "";
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(build.getId() + "");

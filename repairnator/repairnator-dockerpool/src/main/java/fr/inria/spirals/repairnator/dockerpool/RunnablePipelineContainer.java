@@ -81,7 +81,6 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("MONGODB_NAME="+this.repairnatorConfig.getMongodbName());
         this.envValues.add("SMTP_SERVER="+this.repairnatorConfig.getSmtpServer());
         this.envValues.add("SMTP_PORT="+this.repairnatorConfig.getSmtpPort());
-        this.envValues.add("SMTP_TLS="+this.repairnatorConfig.getSmtpTLS());
         this.envValues.add("SMTP_USERNAME="+this.repairnatorConfig.getSmtpUsername());
         this.envValues.add("SMTP_PASSWORD="+this.repairnatorConfig.getSmtpPassword());
         this.envValues.add("GITHUB_USERNAME="+this.repairnatorConfig.getGithubUserName());
@@ -91,8 +90,11 @@ public class RunnablePipelineContainer implements Runnable {
         if (this.repairnatorConfig.isCreatePR()) {
             this.envValues.add("CREATE_PR=1");
         }
+        if(this.repairnatorConfig.isSmtpTLS()) {
+            this.envValues.add("SMTP_TLS=1");
+        }
 
-        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR) {
+        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR || this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE) {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
         }
     }

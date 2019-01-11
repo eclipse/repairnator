@@ -168,7 +168,6 @@ public class Launcher {
         }
         this.config.setInputPath(LauncherUtils.getArgInput(arguments).getPath());
         if (LauncherUtils.getArgOutput(arguments) != null) {
-            this.config.setSerializeJson(true);
             this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
         }
         this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
@@ -268,7 +267,7 @@ public class Launcher {
     }
 
     private void processOutput(Map<ScannedBuildStatus, List<BuildToBeInspected>> listOfBuilds) {
-        if (this.config.isSerializeJson()) {
+        if (this.config.getOutputPath() != null && !this.config.getOutputPath().isEmpty()) {
             this.printToFile(listOfBuilds);
         } else {
             this.printToStdout(listOfBuilds);

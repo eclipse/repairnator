@@ -45,7 +45,6 @@ public class RepairnatorConfigReader {
             config.setPush(Boolean.parseBoolean(properties.getProperty("push")));
             config.setWorkspacePath(properties.getProperty("workspacePath"));
             config.setZ3solverPath(properties.getProperty("z3path"));
-            config.setSerializeJson(Boolean.parseBoolean(properties.getProperty("json")));
             config.setOutputPath(properties.getProperty("jsonOutputPath"));
             config.setPushRemoteRepo(properties.getProperty("pushRemoteRepo"));
         } catch (Exception e) {

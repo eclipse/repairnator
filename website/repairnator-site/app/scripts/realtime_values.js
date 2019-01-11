@@ -32,9 +32,40 @@ const inspectorDetails = new Vue({
   }
 })
 
+const patchesDetails = new Vue({
+  el: '#patches-details',
+  data: {
+    patches: [],
+    numberFound: 0,
+    buildId: 440200939,
+  },
+  watch: {
+    buildId: function (val) {
+      this.updateValues()
+    }
+  },
+  methods: {
+    updateValues: function(){
+      apiGet(`/patches/builds/${this.buildId}`, (response) => {
+        this.patches = response;
+        this.numberFound = this.patches.length
+        console.log(response)
+      })
+    }
+  },
+  mounted () {
+    this.updateValues()
+  }
+})
+
 function openInspectorInfoModal(buildId){
   inspectorDetails.buildId = buildId;
   $('#inspectorModal').modal('show');
+}
+
+function openPatchesModal(buildId){
+  patchesDetails.buildId = buildId;
+  $('#patchesModal').modal('show');
 }
 
 let lastBuild;
@@ -85,16 +116,17 @@ const updateInspectors = function(component, page){
         }
 
         if (fieldName == 'buildFinishedDate') {
-          dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+          dataValue = moment(dataValue).subtract(1, 'hours').fromNow();
         }
 
         if (fieldName == 'buildReproductionDate') {
-          dataValue = moment(dataValue).subtract(2, 'hours').fromNow();
+          dataValue = moment(dataValue).subtract(1, 'hours').fromNow();
         }
 
         if (fieldName == 'status') {
           if (data[fieldName] == 'PATCHED') {
             line.status = 'success';
+            dataValue = `<a onClick='openPatchesModal(${data['buildId']})'>${dataValue}</a>`
           } else if (data[fieldName] == 'test failure' || data[fieldName] == 'test errors') {
             line.status = 'warning';
           }
@@ -131,7 +163,7 @@ const updateInspectors = function(component, page){
   });
 }
 
-var realtime = new Vue({
+const realtime = new Vue({
   el: '#realtimedata',
   data: function() {
     return {
@@ -156,4 +188,12 @@ var realtime = new Vue({
       this.loadData();
     }.bind(this), 30000);
   }
+});
+
+const chartsVue = new Vue({
+  el: '#charts-vue',
+  data: function() {
+    return {
+    };
+  },
 });

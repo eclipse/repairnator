@@ -173,7 +173,6 @@ public class GitHelper {
         try {
             Process p = processBuilder.start();
             p.waitFor();
-
         } catch (InterruptedException|IOException e) {
             this.getLogger().error("Error while executing git command to get git submodules: " + e);
         }

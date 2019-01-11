@@ -28,7 +28,6 @@ import java.util.List;
  */
 public class RTLauncher {
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
-    private final LauncherMode launcherMode;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
@@ -37,7 +36,7 @@ public class RTLauncher {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.REALTIME);
-        this.launcherMode = LauncherMode.REPAIR;
+
 
         this.initConfig(arguments);
         this.initSerializerEngines();
@@ -56,6 +55,8 @@ public class RTLauncher {
         jsap.registerParameter(LauncherUtils.defineArgRunId());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.REALTIME, "Specify where to put serialized files from dockerpool"));
+        // --checkstyle
+        jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // --dbhost
         jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
         // --dbname
@@ -152,8 +153,12 @@ public class RTLauncher {
         if (LauncherUtils.getArgDebug(arguments)) {
             this.config.setDebug(true);
         }
+        if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
+            this.config.setLauncherMode(LauncherMode.CHECKSTYLE);
+        } else {
+            this.config.setLauncherMode(LauncherMode.REPAIR);
+        }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
-        this.config.setLauncherMode(this.launcherMode);
         this.config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         this.config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
         this.config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
@@ -213,6 +218,7 @@ public class RTLauncher {
 
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
+        LOGGER.info("RTScanner mode : " + this.config.getLauncherMode());
         String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();

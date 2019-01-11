@@ -1,7 +1,9 @@
+import _ from 'lodash';
+import moment from 'moment';
 import Inspector from '../models/inspector.model';
 
 /**
- * Load user and append to req.
+ * Load inspector and append to req.
  */
 function load(req, res, next, id) {
   Inspector.get(id)
@@ -17,10 +19,10 @@ function get(req, res) {
 }
 
 /**
- * Get user list.
+ * Get inspector list.
  * @property {number} req.query.skip - Number of users to be skipped.
  * @property {number} req.query.limit - Limit number of users to be returned.
- * @returns {User[]}
+ * @returns {Inspector[]}
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
@@ -103,6 +105,28 @@ function countSuccessFullyReproducedBuild(req, res, next) {
     .catch(e => next(e));
 }
 
+function speedrate(req, res, next) {
+  Inspector.speedrate()
+    .then((values) => {
+      const gtDateIso = moment().startOf('hour').subtract(24, 'hours');
+      // Array with count of 0
+      const hours = _.map(_.range(24), (plusHour) => {
+        const time = gtDateIso.clone().add(plusHour, 'hours');
+        return { _id: time, counted: 0 };
+      });
+      // String to moment
+      const parsedValues = values.map((value) => {
+        // The query drop the timezone then we have to re-insert it
+        const time = moment(`${value._id}:00:00.000+00:00`);
+        return { _id: time, counted: value.counted };
+      });
+
+      // Return the union of the two array to avoid missing hours
+      return res.json(_.sortBy(_.unionWith(parsedValues, hours, (a, b) => a._id.isSame(b._id)), '_id'));
+    })
+    .catch(e => next(e));
+}
+
 export default {
   load,
   get,
@@ -118,5 +142,6 @@ export default {
   getPatches,
   getNbFailuresByProject,
   getNbReproducedByProject,
-  countSuccessFullyReproducedBuild
+  countSuccessFullyReproducedBuild,
+  speedrate,
 };

@@ -1,6 +1,6 @@
 # LibRepair Data API
 
-This repository will contain codes for librepair mongoDB data API. 
+This repository will contain codes for librepair mongoDB data API.
 
 The code is directly forked from: https://github.com/KunalKapadia/express-mongoose-es6-rest-api, thanks for the great works done there!
 
@@ -35,13 +35,13 @@ Check the server health, it returns only "OK" if everything's ok.
 
 ### /inspectors/
 
-Return the data of the 50 last data in inspector collection. 
+Return the data of the 50 last data in inspector collection.
 
 ### /inspectors/hostnameStats
 
 This endpoint compute statistics about the hostname used to run the Repairnator inspector.
 The returned stats concern all data in the database.
-Return an object of the form: 
+Return an object of the form:
 
 ```json
 [
@@ -59,7 +59,7 @@ Return an object of the form:
 
 This endpoint compute statistics about the states reached at the end of the Repairnator inspector.
 The returned stats concern all data in the database.
-Return an object of the form: 
+Return an object of the form:
 
 ```json
 [
@@ -81,7 +81,7 @@ E.g: use `/inspectors/statusStats/7` to get the stats for a week.
 
 ### /inspectors/reproducedBuilds
 
-This endpoint computes the number of reproduced build (test failure, test error or patched) day by day. 
+This endpoint computes the number of reproduced build (test failure, test error or patched) day by day.
 The returned data concern all date in the database.
 
 It returns an object of the form:
@@ -123,7 +123,7 @@ This endpoint allows to request a unique inspector object from its buildId.
 
 E.g: `inspectors/343674821` returns a complete inspector object like this:
 
-```json 
+```json
 {
   "_id": "5a8ba62046e0fb001046807d",
   "buildId": 343674821,
@@ -146,7 +146,7 @@ E.g: `inspectors/343674821` returns a complete inspector object like this:
 
 ### /inspectors/patches
 
-Return all inspector data with a `PATCHED` status. 
+Return all inspector data with a `PATCHED` status.
 
 ### /inspectors/failuresByProject
 
@@ -185,6 +185,26 @@ It returns an object of the form:
 }
 ]
 ```
+
+### /inspectors/speedrate
+
+Return the number of inspector added by every hours during the past 24hours.
+It provides detailed information on the speedrate of repairnator build reproduction (failing or not).
+
+It returns an object of the form:
+
+```json
+[
+{
+  "_id": "2018-10-25T14:00:00.000Z",
+  "count": 12
+}, {
+  "_id": "2018-10-25T15:00:00.000Z",
+  "count": 10
+}
+]
+```
+
 
 ### /scanners/
 
@@ -246,7 +266,7 @@ This endpoint is the same as the previous ones but it returns the value for the 
 
 ### scanners/count
 
-This endpoint returns the total number of data in `scanner` collection. 
+This endpoint returns the total number of data in `scanner` collection.
 
 It returns an object of the form:
 
@@ -281,3 +301,47 @@ For example: `scanners/5a5f3ccf7bb0706d6090d76f` returns:
   "runId": "b4610a57-1ed2-4204-a6a1-114d6e2bb603"
 }
 ```
+
+### /rtScanners/
+
+Return the data of the 50 last data in rtscanners collection.
+
+### rtscanners/:rtScannerId
+
+This endpoint returns a specific rtScanner entry for the given `rtScannerId`. The argument must be the `_id` of an object.
+
+```json
+{
+  "_id": "5bd450217b081636a53d45eb",
+  "hostname": "repairnator-desktop",
+  "runId": "cf4548a6-5551-462f-b63b-b3729a39473b",
+  "dateWatched": "2018-10-27T13:46:41.456Z",
+  "dateWatchedStr": "27/10/18 13:46",
+  "dateBuildEnd": "2018-10-27T13:46:34.000Z",
+  "dateBuildEndStr": "27/10/18 13:46",
+  "repository": "Abrikosovp/junior",
+  "buildId": 447059411,
+  "status": "PASSED"
+}
+```
+
+### /patches/
+
+Return the data of the 50 last data in patches collection.
+
+### /patches/:patchId
+
+This endpoint returns a specific patch entry for the given `patchId`. The argument must be the `_id` of an object.
+
+```json
+{
+  "_id":"5c00338dcff47e0013e55010",
+  "dateStr":"2018-11-29T19:44:29.144Z",
+  "buildId":461420103,
+  "diff":"...",
+  "filepath":"/root/workspace/Twasi/twasi-core/461420103/src/main/java/net/twasi/core/database/models/User.java"}
+```
+
+### /patches/builds/:buildId
+
+This endpoint returns the list of patches for the given `buildId`.

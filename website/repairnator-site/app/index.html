@@ -43,6 +43,19 @@
       <div id="charts"></div>
     </section>
 
+    <div id="charts-vue">
+      <div class="">
+        <div class="row">
+          <div class="col-sm-8">
+            <speedrate-chart/>
+          </div>
+          <div class="col-sm-4">
+            <speedrate-pie-chart/>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="app-inspectors">
       <table class="table-responsive">
           <inspector-line
@@ -89,6 +102,33 @@
       </div>
     </div>
 
+    <div class="modal fade" id="patchesModal" tabindex="-1" role="dialog" aria-labelledby="patchesModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="inspectorModalLabel">Patches details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="patches-details">
+              <h1> Patches for {{ buildId }}</h1>
+              <div> Repairnator found {{ numberFound }} patches.</div>
+              <p v-for="patch in patches">
+                  <strong>Filepath : </strong> <br/> <span class="pre-json"> {{ patch['filepath'] }} </span> <br>
+                  <strong>Repair tool : </strong> <span class="pre-json"> {{ patch['toolname'] }} </span> <br>
+                  <strong>Diff : </strong> <br/> <span class="pre-json"> {{ patch['diff'] }} </span>
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- $Page footer-->
     <footer class="page-footer">
       <div class="page-footer__inner">
@@ -123,11 +163,14 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+
     <!-- endbuild -->
 
     <!-- build:js scripts/components.js -->
     <script src="components/pagination.js"></script>
     <script src="components/grid.js"></script>
+    <script src="components/charts/speedrateChart.js"></script>
+    <script src="components/charts/speedratePieChart.js"></script>
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->

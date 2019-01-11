@@ -39,8 +39,8 @@ public class PatchesSerializer extends AbstractDataSerializer {
     private JsonElement serializeAsJson(BuildToBeInspected buildToBeInspected, RepairPatch patch) {
         Build build = buildToBeInspected.getBuggyBuild();
         JsonObject data = new JsonObject();
-        data.addProperty("date", DateUtils.formatCompleteDate(new Date()));
-        this.addDate(data, "dateStr", new Date());
+        data.addProperty("dateStr", DateUtils.formatCompleteDate(new Date()));
+        this.addDate(data, "date", new Date());
         data.addProperty("runId", buildToBeInspected.getRunId());
         data.addProperty("buildId", build.getId());
         data.addProperty("toolname", patch.getToolname());

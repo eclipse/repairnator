@@ -61,7 +61,7 @@ InspectorSchema.statics = {
   },
 
   /**
-   * List users in descending order of 'createdAt' timestamp.
+   * List inspectors in descending order of 'createdAt' timestamp.
    * @param {number} skip - Number of users to be skipped.
    * @param {number} limit - Limit number of users to be returned.
    * @returns {Promise<User[]>}
@@ -250,7 +250,41 @@ InspectorSchema.statics = {
         $in: ['PATCHED', 'test errors', 'test failure']
       }
     }).exec();
-  }
+  },
+
+  speedrate() {
+    const hour = moment().startOf('hour');
+    const ltDateIso = hour.toISOString();
+    const gtDateIso = hour.subtract(24, 'hours').toISOString();
+    return this.aggregate([
+      {
+        $match: {
+          buildFinishedDate: {
+            $gte: new Date(gtDateIso),
+            $lt: new Date(ltDateIso)
+          }
+        }
+      },
+      {
+        $project: {
+          momentOfReproduction: { $dateToString: { format: '%Y-%m-%dT%H', date: '$buildFinishedDate' } }
+        }
+      },
+      {
+        $group: {
+          _id: '$momentOfReproduction',
+          counted: {
+            $sum: 1
+          }
+        }
+      },
+      {
+        $sort: {
+          _id: 1
+        }
+      }
+    ]).exec();
+  },
 };
 
 /**

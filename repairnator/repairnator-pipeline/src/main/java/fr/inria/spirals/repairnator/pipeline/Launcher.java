@@ -19,6 +19,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Checkstyle;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -100,6 +101,8 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgRunId());
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
+        // --checkstyle
+        jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
@@ -190,11 +193,12 @@ public class Launcher {
         this.getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.getConfig().setLauncherMode(LauncherMode.BEARS);
+        } else if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
+            this.getConfig().setLauncherMode(LauncherMode.CHECKSTYLE);
         } else {
             this.getConfig().setLauncherMode(LauncherMode.REPAIR);
         }
         if (LauncherUtils.getArgOutput(arguments) != null) {
-            this.getConfig().setSerializeJson(true);
             this.getConfig().setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         }
         this.getConfig().setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
@@ -383,6 +387,8 @@ public class Launcher {
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+        } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
+            inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }

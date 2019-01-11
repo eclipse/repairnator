@@ -8,6 +8,11 @@ public class ProjectMetrics {
      */
     private int numberModules;
     /**
+     * {@code numberPlugins} is calculated in the step
+     * {@link fr.inria.spirals.repairnator.process.step.paths.ComputePlugins}.
+     */
+    private int numberPlugins;
+    /**
      * {@code numberSourceFiles} is calculated in the step
      * {@link fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir}.
      */
@@ -33,6 +38,14 @@ public class ProjectMetrics {
 
     public void setNumberModules(int numberModules) {
         this.numberModules = numberModules;
+    }
+
+    public int getNumberPlugins() {
+        return numberPlugins;
+    }
+
+    public void setNumberPlugins(int numberPlugins) {
+        this.numberPlugins = numberPlugins;
     }
 
     public int getNumberSourceFiles() {

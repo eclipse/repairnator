@@ -73,6 +73,18 @@ public class LauncherUtils {
         return arguments.getBoolean("createPR");
     }
 
+    public static Switch defineArgCheckstyleMode() {
+        Switch sw = new Switch("checkstyle");
+        sw.setLongFlag("checkstyle");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator to analyze build failing because of checkstyle.");
+        return sw;
+    }
+
+    public static boolean gerArgCheckstyleMode(JSAPResult arguments) {
+        return arguments.getBoolean("checkstyle");
+    }
+
     public static Switch defineArgBearsMode() {
         Switch sw = new Switch("bears");
         sw.setLongFlag("bears");
@@ -426,7 +438,7 @@ public class LauncherUtils {
         if (config.getSmtpServer() != null && config.getNotifyTo() != null) {
             logger.info("The email notifier engine will be used.");
 
-            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer(), config.getSmtpPort(), config.getSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
+            notifierEngines.add(new EmailNotifierEngine(config.getNotifyTo(), config.getSmtpServer(), config.getSmtpPort(), config.isSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
         } else {
             logger.info("The email notifier engine won't be used.");
         }

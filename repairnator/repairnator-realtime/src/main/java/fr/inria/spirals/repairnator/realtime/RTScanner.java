@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -248,12 +249,22 @@ public class RTScanner {
                     Optional<Log> optionalLog = firstJob.getLog();
                     if (optionalLog.isPresent()) {
                         Log jobLog = optionalLog.get();
-                        if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
-                            LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-                            this.addInWhitelistRepository(repository);
-                            return true;
+                        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.CHECKSTYLE ) {
+                            if (jobLog.getContent().contains("maven-checkstyle")) {
+                                LOGGER.info("Checkstyle has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
+                                this.addInWhitelistRepository(repository);
+                                return true;
+                            } else {
+                                this.addInTempBlackList(repository, "No checkstyle found");
+                            }
                         } else {
-                            this.addInTempBlackList(repository, "No test found");
+                            if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
+                                LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
+                                this.addInWhitelistRepository(repository);
+                                return true;
+                            } else {
+                                this.addInTempBlackList(repository, "No test found");
+                            }
                         }
                     } else {
                         LOGGER.error("Error while getting log for job "+firstJob.getId());

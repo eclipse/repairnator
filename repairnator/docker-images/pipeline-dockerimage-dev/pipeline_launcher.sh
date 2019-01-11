@@ -21,6 +21,10 @@ if [ "$CREATE_PR" -eq 1 ]; then
   args="$args --createPR"
 fi
 
+if [ "$REPAIR_MODE" = "checkstyle" ]; then
+  args="$args --checkstyle"
+fi
+
 if [ "$SMTP_TLS" -eq 1 ]; then
     args="$args --smtpTLS"
 fi
@@ -40,7 +44,7 @@ export SMTP_PASSWORD=
 export SMTP_TLS=
 export NOTIFY_TO=
 
-LOCAL_REPAIR_MODE=repair
+LOCAL_REPAIR_MODE=$REPAIR_MODE
 
 LOCAL_BUILD_ID=$BUILD_ID
 export BUILD_ID=

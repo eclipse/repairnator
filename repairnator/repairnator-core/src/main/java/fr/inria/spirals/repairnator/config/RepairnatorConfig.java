@@ -21,7 +21,6 @@ public class RepairnatorConfig {
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
-    private boolean serializeJson;
     private String inputPath;
     private String outputPath;
     private String mongodbHost;
@@ -117,14 +116,6 @@ public class RepairnatorConfig {
         this.launcherMode = launcherMode;
     }
 
-    public boolean isSerializeJson() {
-        return serializeJson;
-    }
-
-    public void setSerializeJson(boolean serializeJson) {
-        this.serializeJson = serializeJson;
-    }
-
     public String getInputPath() {
         return inputPath;
     }
@@ -173,7 +164,7 @@ public class RepairnatorConfig {
         this.smtpPort = smtpPort;
     }    
     
-    public boolean getSmtpTLS() {
+    public boolean isSmtpTLS() {
         return smtpTLS;
     }
 
@@ -509,7 +500,6 @@ public class RepairnatorConfig {
         return "RepairnatorConfig{" +
                 "runId='" + runId + '\'' +
                 ", launcherMode=" + launcherMode +
-                ", serializeJson=" + serializeJson +
                 ", inputPath='" + inputPath + '\'' +
                 ", outputPath='" + outputPath + '\'' +
                 ", mongodbHost='" + mongoDbInfo + '\'' +

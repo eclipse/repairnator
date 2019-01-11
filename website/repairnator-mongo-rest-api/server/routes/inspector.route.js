@@ -34,6 +34,9 @@ router.param('nbDays', (req, res, next, nbDays) => {
   next();
 });
 
+router.route('/speedrate')
+  .get(inspectorCtrl.speedrate);
+
 router.route('/uniqueBuilds')
   .get(inspectorCtrl.nbUniqueBuilds);
 
