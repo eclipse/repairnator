@@ -5,8 +5,10 @@ import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 
@@ -30,6 +32,9 @@ public class TimedSummaryNotifier implements Runnable{
     private MongoDatabase mongo;
     private Calendar lastNotificationTime;
     private Duration interval;
+    private Bson dateFilter;
+    private Bson computeTestDirFilter;
+    private Map<String, Bson> toolFilters;
     
     
     
@@ -47,6 +52,11 @@ public class TimedSummaryNotifier implements Runnable{
         this.interval = interval;
         this.lastNotificationTime = new GregorianCalendar();
         this.lastNotificationTime.setTime(notificationTime);
+        
+        Date previousDate = lastNotificationTime.getTime();
+        this.dateFilter = new Document("$gte", MONGO_DATE_FORMAT.format(previousDate));
+        this.computeTestDirFilter = new Document("$gte", MONGO_DATE_FORMAT.format(previousDate));
+        this.toolFilters = new HashMap<String,Bson>();
     }
     /**
      * Constructor for when no specific time of day is wanted.
@@ -76,7 +86,7 @@ public class TimedSummaryNotifier implements Runnable{
     public void run() {
         while(true) {
             if(Duration.between(lastNotificationTime.getTime().toInstant(), (new Date()).toInstant()).compareTo(interval) < 0) {
-                createBsonFilter();
+                updateFilters();
                 String message = "Summary email from Repairnator. \n\n";
                 message += "This summary contains the operations of Repairnator between " + lastNotificationTime.getTime().toString();
                 updateCalendar();
@@ -85,25 +95,53 @@ public class TimedSummaryNotifier implements Runnable{
                 message += "Since the last summary Repairnator has: \n";
                 
                 // Number of analyzed builds, rtscanner
-                Iterator<Document> analysedBuilds = queryDatabase(rtScanner, dateFilter);
+                Iterator<Document> nrOfDocuments = queryDatabase(rtScanner, dateFilter);
                 
                 int iter = 0;
-                while(analysedBuilds.hasNext()) {
+                while(nrOfDocuments.hasNext()) {
                     iter++;
-                    analysedBuilds.next();
+                    nrOfDocuments.next();
                 }
                 
-                message += "Analysed " + iter + " builds.";
+                message += "Number of analyzed builds: " + iter + " \n";
                 
                 // Number of repair attempts, inspector ComputeTestDir will most likely help
                 
-                Iterator<Document> analysedBuilds = queryDatabase()
+                nrOfDocuments = queryDatabase(inspector, computeTestDirFilter);
+                
+                iter = 0;
+                while(nrOfDocuments.hasNext()) {
+                    iter++;
+                    nrOfDocuments.next();
+                }
+                
+                message += "Number of repair attempts made: " + iter + "\n";
                 
                 // Total number of patches, patches
                 
+                nrOfDocuments = queryDatabase(patches, dateFilter);
+                
+                iter = 0;
+                while(nrOfDocuments.hasNext()) {
+                    iter++;
+                    nrOfDocuments.next();
+                }
+                
+                message += "Total number of patches: " + iter + "\n";
                 
                 // Number of patches per tool, patches with an if
                 
+                for(Bson toolFilter: toolFilters){
+                    nrOfDocuments = queryDatabase(patches, toolFilter);
+                    
+                    iter = 0;
+                    while(nrOfDocuments.hasNext()) {
+                        iter++;
+                        nrOfDocuments.next();
+                    }
+                    
+                    message += "Total number of patches found by " + tool + ": " + iter + "\n";      
+                }
             }
             else {
                 try {
@@ -120,12 +158,13 @@ public class TimedSummaryNotifier implements Runnable{
         return iterDoc.iterator();
     }
     
-    private Bson getBsonFilter() {
-        Date previousDate = lastNotificationTime.getTime();
-        return new Document("$gte", MONGO_DATE_FORMAT.format(previousDate));
-    }
-    private Bson getBsonFilter(String toolName) {
-        Date previousDate = lastNotificationTime.getTime();
+    /**
+     * Function to update the filters to the last query date.
+     */
+    private void updateFilters() {
         
+        Date previousDate = lastNotificationTime.getTime();
+        this.dateFilter = new Document("$gte", MONGO_DATE_FORMAT.format(previousDate));
+        this.computeTestDirFilter = new Document("$gte", MONGO_DATE_FORMAT.format(previousDate));
     }
 }
