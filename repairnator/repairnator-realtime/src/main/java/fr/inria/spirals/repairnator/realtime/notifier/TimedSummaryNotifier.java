@@ -84,6 +84,26 @@ public class TimedSummaryNotifier implements Runnable{
                 message += lastNotificationTime.getTime().toString() + ".\n";
                 message += "Since the last summary Repairnator has: \n";
                 
+                // Number of analyzed builds, rtscanner
+                Iterator<Document> analysedBuilds = queryDatabase(rtScanner, dateFilter);
+                
+                int iter = 0;
+                while(analysedBuilds.hasNext()) {
+                    iter++;
+                    analysedBuilds.next();
+                }
+                
+                message += "Analysed " + iter + " builds.";
+                
+                // Number of repair attempts, inspector ComputeTestDir will most likely help
+                
+                Iterator<Document> analysedBuilds = queryDatabase()
+                
+                // Total number of patches, patches
+                
+                
+                // Number of patches per tool, patches with an if
+                
             }
             else {
                 try {
