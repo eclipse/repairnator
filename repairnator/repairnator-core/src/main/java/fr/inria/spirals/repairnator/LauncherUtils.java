@@ -452,7 +452,7 @@ public class LauncherUtils {
             
             summaryEngines.add(new EmailNotifierEngine(config.getNotifySummary(), config.getSmtpServer(), config.getSmtpPort(), config.isSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
         } else {
-            logger.info("The summary email engine will not be used,")
+            logger.info("The summary email engine will not be used.");
         }
         return summaryEngines;
     }
