@@ -24,22 +24,23 @@ import org.bson.conversions.Bson;
 
 public class TimedSummaryNotifier implements Runnable{
     
-    private static final String MONGO_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static final SimpleDateFormat MONGO_DATE_FORMAT = new SimpleDateFormat(MONGO_UTC_FORMAT);
     private static final long TIME_TO_SLEEP = 3600 * 1000;
     
-    private List<NotifierEngine> engines;
-    private MongoDatabase mongo;
-    private Calendar lastNotificationTime;
-    private Duration interval;
-    private Bson rtscannerFilter;
-    private Bson computeTestDirFilter;
-    private Bson patchesFilter;
-    private Map<String, Bson> toolFilters;
+    protected static final String MONGO_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    protected static final SimpleDateFormat MONGO_DATE_FORMAT = new SimpleDateFormat(MONGO_UTC_FORMAT);
+    
+    protected List<NotifierEngine> engines;
+    protected MongoDatabase mongo;
+    protected Calendar lastNotificationTime;
+    protected Duration interval;
+    protected Bson rtscannerFilter;
+    protected Bson computeTestDirFilter;
+    protected Bson patchesFilter;
+    protected Map<String, Bson> toolFilters;
     
     
     /**
-     * Base, mostly here for testing
+     * Base, mostly here for testing§
      * @param engines
      * @param interval
      * @param notificationTime
@@ -99,7 +100,7 @@ public class TimedSummaryNotifier implements Runnable{
     @Override
     public void run() {
         while(true) {
-            if(Duration.between(lastNotificationTime.getTime().toInstant(), (new Date()).toInstant()).compareTo(this.interval) < 0) {
+            if(this.intervalHasPassed()) {
                 
                 updateFilters(lastNotificationTime.getTime());
                 updateCalendar(new Date());
@@ -143,10 +144,15 @@ public class TimedSummaryNotifier implements Runnable{
         }
     }
     
+    protected boolean intervalHasPassed() {
+        return Duration.between(lastNotificationTime.getTime().toInstant(), 
+                (new Date()).toInstant()).compareTo(this.interval) < 0;
+    }
+    
     /**
      * Simple method for updating the calendar value
      */
-    private void updateCalendar(Date newTime) {
+    protected void updateCalendar(Date newTime) {
         this.lastNotificationTime.setTime(newTime);
     }
     
@@ -156,7 +162,7 @@ public class TimedSummaryNotifier implements Runnable{
      * @param filter the filter to apply to the collectionquery
      * @return
      */
-    private Iterator<Document> queryDatabase(String collectionName, Bson filter){
+    protected Iterator<Document> queryDatabase(String collectionName, Bson filter){
         FindIterable<Document> iterDoc = this.mongo.
                 getCollection(collectionName).find(filter);
         return iterDoc.iterator();
@@ -167,7 +173,7 @@ public class TimedSummaryNotifier implements Runnable{
      * when querying the database
      * @param previousDate the date that the filters should be based on
      */
-    private void updateFilters(Date previousDate) {
+    protected void updateFilters(Date previousDate) {
         
         this.rtscannerFilter = Filters.gte("dateWatched", MONGO_DATE_FORMAT.format(previousDate));
         this.computeTestDirFilter = Filters.and(
@@ -190,7 +196,7 @@ public class TimedSummaryNotifier implements Runnable{
      * @param documents the tierator to count
      * @return number of objects in documents
      */
-    private int nrOfObjects(Iterator<Document> documents) {
+    protected int nrOfObjects(Iterator<Document> documents) {
         int iter = 0;
         while(documents.hasNext()) {
             iter += 1;
@@ -208,7 +214,7 @@ public class TimedSummaryNotifier implements Runnable{
      * @param nrOfPatchesPerTool
      * @return the complete message
      */
-    private String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfPatches, String[] tools, int[] nrOfPatchesPerTool) {
+    protected String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfPatches, String[] tools, int[] nrOfPatchesPerTool) {
         
         String message = "Summary email from Repairnator. \n\n";
                 message += "This summary contains the operations of Repairnator between " + 
