@@ -9,6 +9,9 @@ import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
+import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
+import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.realtime.notifier.TimedSummaryNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -50,6 +53,7 @@ public class RTScanner {
     private List<SerializerEngine> engines;
     private BlacklistedSerializer blacklistedSerializer;
     private EndProcessNotifier endProcessNotifier;
+    private TimedSummaryNotifier summaryNotifier;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
         this.engines = engines;
@@ -61,10 +65,28 @@ public class RTScanner {
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+        
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if(config.getSummaryFrequency() != null) {
+            EmailNotifierEngine summaryEngine = new EmailNotifierEngine(
+                    config.getNotifySummary(), 
+                    config.getSmtpServer(), 
+                    config.getSmtpPort(), 
+                    config.isSmtpTLS(),
+                    config.getSmtpUsername(),
+                    config.getSmtpPassword());
+            List<NotifierEngine> emailEngines = new ArrayList<NotifierEngine>();
+            this.setSummaryNotifier(emailEngines, config.get, config.getSummaryFrequency());
+        }
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
         this.endProcessNotifier = endProcessNotifier;
+    }
+    
+    public void setSummaryNotifier(TimedSummaryNotifier summaryNotifier) {
+        LOGGER.info("Pipeline configured to send summary emails");
+        this.summaryNotifier = summaryNotifier;
     }
 
     public List<SerializerEngine> getEngines() {
@@ -127,6 +149,9 @@ public class RTScanner {
             this.buildRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
+            if(summaryNotifier != null) {
+                new Thread(this.summaryNotifier).start();
+            }
             this.running = true;
 
             if (RepairnatorConfig.getInstance().getDuration() != null) {
@@ -181,7 +206,9 @@ public class RTScanner {
     private void addInTempBlackList(Repository repository, String comment) {
         Date expirationDate = new Date(new Date().toInstant().plusSeconds(DURATION_IN_TEMP_BLACKLIST).toEpochMilli());
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is temporary blacklisted (expiration date: "+expirationDate.toString()+"). Reason: "+comment);
-        this.tempBlackList.put(repository.getId(), expirationDate);
+        this.tempBlackList.put(repository.getIif (arguments.getObject("duration") != null) {
+            this.config.setDuration((Duration) arguments.getObject("duration"));
+        }d(), expirationDate);
     }
 
     /**

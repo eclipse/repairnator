@@ -143,6 +143,19 @@ public class RTLauncher {
         opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
         opt2.setRequired(true);
         jsap.registerParameter(opt2);
+        
+        opt2 = new FlaggedOption("notifysummary");
+        opt2.setLongFlag("notifysummary");
+        opt2.setListSeparator(',');
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("The email addresses to notify with a summary email.");
+        jsap.registerParameter(opt2);
+        
+        opt2 = new FlaggedOption("summaryfrequency");
+        opt2.setLongFlag("summaryfrequency");
+        opt2.setStringParser(PeriodStringParser.getParser());
+        opt2.setHelp("Duration between summary emails. If not given, the emails will never be sent. This argument should be given on the ISO-8601 duration format: PWdTXhYmZs where W, X, Y, Z respectively represents number of Days, Hours, Minutes and Seconds. T is mandatory before the number of hours and P is always mandatory.");
+        jsap.registerParameter(opt2);
 
         return jsap;
     }
@@ -192,6 +205,10 @@ public class RTLauncher {
         this.config.setMaxInspectedBuilds(arguments.getInt("maxinspectedbuilds"));
         if (arguments.getObject("duration") != null) {
             this.config.setDuration((Duration) arguments.getObject("duration"));
+        }
+        this.config.setNotifySummary(arguments.getStringArray("notifysummary"));
+        if (arguments.getObject("summaryFrequency") != null) {
+            this.config.setDuration((Duration) arguments.getObject("summaryfrequenc"));
         }
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));

@@ -70,6 +70,8 @@ public class RepairnatorConfig {
     private int buildSleepTime;
     private int maxInspectedBuilds;
     private Duration duration;
+    private Duration summaryFrequency;
+    private String[] notifySummary;
 
     // Checkbranches
     private boolean humanPatch;
@@ -541,5 +543,21 @@ public class RepairnatorConfig {
                 ", githubUserName= " + githubUserName +
                 ", githubUserEmail=" + githubUserEmail +
                 '}';
+    }
+
+    public Duration getSummaryFrequency() {
+        return summaryFrequency;
+    }
+
+    public void setSummaryFrequency(Duration summaryFrequency) {
+        this.summaryFrequency = summaryFrequency;
+    }
+
+    public String[] getNotifySummary() {
+        return notifySummary;
+    }
+
+    public void setNotifySummary(String[] notifySummary) {
+        this.notifySummary = notifySummary;
     }
 }
