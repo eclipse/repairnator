@@ -9,8 +9,6 @@ import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
-import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
-import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.realtime.notifier.TimedSummaryNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
