@@ -443,6 +443,19 @@ public class LauncherUtils {
         }
         return notifierEngines;
     }
+    
+    public static List<NotifierEngine> initEmailSummaryEngines(Logger logger) {
+        List<NotifierEngine> summaryEngines = new ArrayList<>();
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        if(config.getSmtpServer() != null && config.getSummaryFrequency() != null && config.getNotifySummary() != null) {
+            logger.info("The summary email engine will be used.");
+            
+            summaryEngines.add(new EmailNotifierEngine(config.getNotifySummary(), config.getSmtpServer(), config.getSmtpPort(), config.isSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
+        } else {
+            logger.info("The summary email engine will not be used,")
+        }
+        return summaryEngines;
+    }
 
     public static SerializerEngine initMongoDBSerializerEngine(Logger logger) {
         RepairnatorConfig config = RepairnatorConfig.getInstance();

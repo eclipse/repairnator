@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.PeriodStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.realtime.notifier.TimedSummaryNotifier;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -31,6 +32,7 @@ public class RTLauncher {
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
+    private TimedSummaryNotifier summaryNotifier;
 
     private RTLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
@@ -41,6 +43,7 @@ public class RTLauncher {
         this.initConfig(arguments);
         this.initSerializerEngines();
         this.initNotifiers();
+        this.initSummaryEmails();
     }
 
     private JSAP defineArgs() throws JSAPException {
@@ -232,6 +235,13 @@ public class RTLauncher {
             this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.REALTIME.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }
+    
+    private void initSummaryEmails() {
+        List<NotifierEngine> summaryEngines = LauncherUtils.initEmailSummaryEngines(LOGGER);
+        if(summaryEngines.size() > 0) {
+            this.summaryNotifier = new TimedSummaryNotifier(summaryEngines, config.getSummaryFrequency());
+        }
+    }
 
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
@@ -240,6 +250,10 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
+        
+        if (this.summaryNotifier != null) {
+            rtScanner.setSummaryNotifier(this.summaryNotifier);
+        }
 
         if (this.config.getDuration() != null && this.endProcessNotifier != null) {
             rtScanner.setEndProcessNotifier(this.endProcessNotifier);

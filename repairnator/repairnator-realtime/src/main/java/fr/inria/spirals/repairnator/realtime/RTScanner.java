@@ -65,19 +65,6 @@ public class RTScanner {
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
-        
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        if(config.getSummaryFrequency() != null) {
-            EmailNotifierEngine summaryEngine = new EmailNotifierEngine(
-                    config.getNotifySummary(), 
-                    config.getSmtpServer(), 
-                    config.getSmtpPort(), 
-                    config.isSmtpTLS(),
-                    config.getSmtpUsername(),
-                    config.getSmtpPassword());
-            List<NotifierEngine> emailEngines = new ArrayList<NotifierEngine>();
-            this.setSummaryNotifier(emailEngines, config.get, config.getSummaryFrequency());
-        }
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -206,9 +193,7 @@ public class RTScanner {
     private void addInTempBlackList(Repository repository, String comment) {
         Date expirationDate = new Date(new Date().toInstant().plusSeconds(DURATION_IN_TEMP_BLACKLIST).toEpochMilli());
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is temporary blacklisted (expiration date: "+expirationDate.toString()+"). Reason: "+comment);
-        this.tempBlackList.put(repository.getIif (arguments.getObject("duration") != null) {
-            this.config.setDuration((Duration) arguments.getObject("duration"));
-        }d(), expirationDate);
+        this.tempBlackList.put(repository.getId(), expirationDate);
     }
 
     /**

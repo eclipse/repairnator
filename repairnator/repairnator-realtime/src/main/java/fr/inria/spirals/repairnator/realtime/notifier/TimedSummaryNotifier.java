@@ -13,7 +13,10 @@ import java.util.Set;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -30,7 +33,6 @@ public class TimedSummaryNotifier implements Runnable{
     protected static final SimpleDateFormat MONGO_DATE_FORMAT = new SimpleDateFormat(MONGO_UTC_FORMAT);
     
     protected List<NotifierEngine> engines;
-    protected MongoDatabase mongo;
     protected Calendar lastNotificationTime;
     protected Duration interval;
     protected Bson rtscannerFilter;
@@ -69,26 +71,13 @@ public class TimedSummaryNotifier implements Runnable{
     }
     
     /**
-     * Identical to the above one, but sets the last dates hour and time to specify from which date and 
-     * time it supposed to be sent.
-     * @param engines
-     * @param mongo
-     * @param interval
-     * @param notificationTime the time to notify next 
-     */
-    public TimedSummaryNotifier(List<NotifierEngine> engines, MongoDatabase mongo, Duration interval, Date notificationTime) {
-        this(engines, interval, notificationTime);
-        this.mongo = mongo;
-    }
-    
-    /**
      * Constructor for when no specific time of day is wanted.
      * @param engines recipients
      * @param mongo the database to query
      * @param interval the interval between notifications
      */
-    public TimedSummaryNotifier(List<NotifierEngine> engines, MongoDatabase mongo, Duration interval) {
-        this(engines, mongo, interval, (new GregorianCalendar()).getTime());
+    public TimedSummaryNotifier(List<NotifierEngine> engines, Duration interval) {
+        this(engines, interval, (new GregorianCalendar()).getTime());
     }    
 
     protected void notifyEngines(String subject, String text) {
@@ -102,30 +91,36 @@ public class TimedSummaryNotifier implements Runnable{
         while(true) {
             if(this.intervalHasPassed()) {
                 
+                RepairnatorConfig config = RepairnatorConfig.getInstance();
+                
+                MongoClient client = new MongoClient(
+                        new MongoClientURI(config.getMongodbHost() +"/" + config.getMongodbName()));
+                MongoDatabase mongo = client.getDatabase(config.getMongodbName());
+                
                 updateFilters(lastNotificationTime.getTime());
                 updateCalendar(new Date());
                 
                 // Number of analyzed builds, rtscanner
-                Iterator<Document> nrOfDocuments = queryDatabase("rtscanner", rtscannerFilter);
+                Iterator<Document> nrOfDocuments = queryDatabase("rtscanner", rtscannerFilter, mongo);
                 int nrOfAnalyzedBuilds = nrOfObjects(nrOfDocuments);                
                 
                 // Number of repair attempts, inspector ComputeTestDir will most likely help
                 
-                nrOfDocuments = queryDatabase("inspector", computeTestDirFilter);
+                nrOfDocuments = queryDatabase("inspector", computeTestDirFilter, mongo);
                 int nrOfRepairAttempts = nrOfObjects(nrOfDocuments);
                 
                 // Total number of patches, patches
                 
-                nrOfDocuments = queryDatabase("patches", patchesFilter);
+                nrOfDocuments = queryDatabase("patches", patchesFilter, mongo);
                 int nrOfPatches = nrOfObjects(nrOfDocuments);
                 
                 // Number of patches per tool, patches with an if
                 
-                String[] tools = (String[]) RepairnatorConfig.getInstance().getRepairTools().toArray();
+                String[] tools = (String[]) config.getRepairTools().toArray();
                 int[] nrOfPatchesPerTool = new int[tools.length];
                 
                 for(int i = 0; i < tools.length; i++){
-                    nrOfDocuments = queryDatabase("patches", toolFilters.get(tools[i]));
+                    nrOfDocuments = queryDatabase("patches", toolFilters.get(tools[i]), mongo);
                     nrOfPatchesPerTool[i] = nrOfObjects(nrOfDocuments);
                 }
                 
@@ -133,6 +128,8 @@ public class TimedSummaryNotifier implements Runnable{
                         nrOfRepairAttempts, nrOfPatches, tools, nrOfPatchesPerTool);
                 
                 notifyEngines("Repairnator: Summary email", message);
+                
+                client.close();
             }
             else {
                 try {
@@ -162,8 +159,8 @@ public class TimedSummaryNotifier implements Runnable{
      * @param filter the filter to apply to the collectionquery
      * @return
      */
-    protected Iterator<Document> queryDatabase(String collectionName, Bson filter){
-        FindIterable<Document> iterDoc = this.mongo.
+    protected Iterator<Document> queryDatabase(String collectionName, Bson filter, MongoDatabase mongo){
+        FindIterable<Document> iterDoc = mongo.
                 getCollection(collectionName).find(filter);
         return iterDoc.iterator();
     }
