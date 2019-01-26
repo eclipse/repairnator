@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 
 import com.mongodb.MongoClient;
@@ -36,6 +35,9 @@ public class TimedSummaryNotifier implements Runnable {
     protected Bson computeTestDirFilter;
     protected Bson patchesFilter;
     protected Map<String, Bson> toolFilters;
+    protected String mongodbHost;
+    protected String mongodbName;
+    protected String[] repairTools;
 
     /**
      * Base, mostly here for testing§
@@ -43,10 +45,15 @@ public class TimedSummaryNotifier implements Runnable {
      * @param engines
      * @param interval
      * @param notificationTime
+     * @param mongodbHost 
      */
-    public TimedSummaryNotifier(List<NotifierEngine> engines, Duration interval, Date notificationTime) {
+    public TimedSummaryNotifier(List<NotifierEngine> engines, Duration interval,
+            String[] tools, String mongodbHost, String mongodbName, Date notificationTime) {
         this.engines = engines;
         this.interval = interval;
+        this.mongodbHost = mongodbHost;
+        this.mongodbName = mongodbName;
+        this.repairTools = tools;
         this.lastNotificationTime = new GregorianCalendar();
         this.lastNotificationTime.setTime(notificationTime);
 
@@ -56,10 +63,8 @@ public class TimedSummaryNotifier implements Runnable {
                 Filters.eq("realStatus", "/NopolAllTests/i"));
         this.patchesFilter = Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate));
 
-        // Fetch the tools from config make map from name to filter
-        RepairnatorConfig instance = RepairnatorConfig.getInstance();
         this.toolFilters = new HashMap<String, Bson>();
-        for (String tool : instance.getRepairTools()) {
+        for (String tool : this.repairTools) {
             this.toolFilters.put(tool, Filters.and(Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate)),
                     Filters.eq("toolname", tool)));
         }
@@ -75,8 +80,9 @@ public class TimedSummaryNotifier implements Runnable {
      * @param interval
      *            the interval between notifications
      */
-    public TimedSummaryNotifier(List<NotifierEngine> engines, Duration interval) {
-        this(engines, interval, (new GregorianCalendar()).getTime());
+    public TimedSummaryNotifier(List<NotifierEngine> engines, Duration interval, String[] tools,
+            String mongdbHost, String mongodbName) {
+        this(engines, interval, tools, mongdbHost, mongodbName, (new GregorianCalendar()).getTime());
     }
 
     protected void notifyEngines(String subject, String text) {
@@ -90,11 +96,9 @@ public class TimedSummaryNotifier implements Runnable {
         while (true) {
             if (this.intervalHasPassed()) {
 
-                RepairnatorConfig config = RepairnatorConfig.getInstance();
-
                 MongoClient client = new MongoClient(
-                        new MongoClientURI(config.getMongodbHost() + "/" + config.getMongodbName()));
-                MongoDatabase mongo = client.getDatabase(config.getMongodbName());
+                        new MongoClientURI(this.mongodbHost + "/" + this.mongodbName));
+                MongoDatabase mongo = client.getDatabase(this.mongodbName);
 
                 updateFilters(lastNotificationTime.getTime());
                 updateCalendar(new Date());
@@ -115,15 +119,14 @@ public class TimedSummaryNotifier implements Runnable {
 
                 // Number of patches per tool, patches with an if
 
-                String[] tools = (String[]) config.getRepairTools().toArray();
-                int[] nrOfPatchesPerTool = new int[tools.length];
+                int[] nrOfPatchesPerTool = new int[repairTools.length];
 
-                for (int i = 0; i < tools.length; i++) {
-                    nrOfDocuments = queryDatabase("patches", toolFilters.get(tools[i]), mongo);
+                for (int i = 0; i < repairTools.length; i++) {
+                    nrOfDocuments = queryDatabase("patches", toolFilters.get(repairTools[i]), mongo);
                     nrOfPatchesPerTool[i] = nrOfObjects(nrOfDocuments);
                 }
 
-                String message = createMessage(nrOfAnalyzedBuilds, nrOfRepairAttempts, nrOfPatches, tools,
+                String message = createMessage(nrOfAnalyzedBuilds, nrOfRepairAttempts, nrOfPatches, 
                         nrOfPatchesPerTool);
 
                 notifyEngines("Repairnator: Summary email", message);
@@ -180,9 +183,8 @@ public class TimedSummaryNotifier implements Runnable {
         this.patchesFilter = Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate));
 
         // Fetch the tools from config make map from name to filter
-        RepairnatorConfig instance = RepairnatorConfig.getInstance();
         this.toolFilters = new HashMap<String, Bson>();
-        for (String tool : instance.getRepairTools()) {
+        for (String tool : repairTools) {
             this.toolFilters.put(tool, Filters.and(Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate)),
                     Filters.eq("toolname", tool)));
         }
@@ -214,8 +216,7 @@ public class TimedSummaryNotifier implements Runnable {
      * @param nrOfPatchesPerTool
      * @return the complete message
      */
-    protected String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfPatches, String[] tools,
-            int[] nrOfPatchesPerTool) {
+    protected String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfPatches, int[] nrOfPatchesPerTool) {
 
         String message = "Summary email from Repairnator. \n\n";
         message += "This summary contains the operations of Repairnator between "
@@ -234,10 +235,9 @@ public class TimedSummaryNotifier implements Runnable {
         message += "Total number of patches: " + nrOfPatches + "\n";
 
         // Number of patches per tool, patches with an if
-        tools = (String[]) RepairnatorConfig.getInstance().getRepairTools().toArray();
 
-        for (int i = 0; i < tools.length; i++) {
-            message += "Total number of patches found by " + tools[i] + ": " + nrOfPatchesPerTool[i] + "\n";
+        for (int i = 0; i < repairTools.length; i++) {
+            message += "Total number of patches found by " + repairTools[i] + ": " + nrOfPatchesPerTool[i] + "\n";
         }
         return message;
     }

@@ -239,7 +239,11 @@ public class RTLauncher {
     private void initSummaryEmails() {
         List<NotifierEngine> summaryEngines = LauncherUtils.initEmailSummaryEngines(LOGGER);
         if(summaryEngines.size() > 0) {
-            this.summaryNotifier = new TimedSummaryNotifier(summaryEngines, config.getSummaryFrequency());
+            this.summaryNotifier = new TimedSummaryNotifier(summaryEngines,
+                    config.getSummaryFrequency(),
+                    (String[]) config.getRepairTools().toArray(),
+                    config.getMongodbHost(),
+                    config.getMongodbName());
         }
     }
 
