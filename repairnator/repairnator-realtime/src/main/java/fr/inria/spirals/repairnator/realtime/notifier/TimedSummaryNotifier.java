@@ -20,7 +20,12 @@ import com.mongodb.client.model.Filters;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
+/**
+ * A class for querying the mongo database and summarising the actions of Repairnator 
+ * during a set interval.
+ * @author benjamin
+ *
+ */
 public class TimedSummaryNotifier implements Runnable {
 
     private static final long TIME_TO_SLEEP = 3600 * 1000;
@@ -39,13 +44,15 @@ public class TimedSummaryNotifier implements Runnable {
     protected String mongodbName;
     protected String[] repairTools;
 
+
     /**
-     * Base, mostly here for testing§
-     * 
+     * Basic constructor. Sets all relevant fields.
      * @param engines
      * @param interval
-     * @param notificationTime
-     * @param mongodbHost 
+     * @param tools
+     * @param mongodbHost
+     * @param mongodbName
+     * @param notificationTime not yet implemented
      */
     public TimedSummaryNotifier(List<NotifierEngine> engines, Duration interval,
             String[] tools, String mongodbHost, String mongodbName, Date notificationTime) {
@@ -70,21 +77,16 @@ public class TimedSummaryNotifier implements Runnable {
         }
     }
 
-    /**
-     * Constructor for when no specific time of day is wanted.
-     * 
-     * @param engines
-     *            recipients
-     * @param mongo
-     *            the database to query
-     * @param interval
-     *            the interval between notifications
-     */
     public TimedSummaryNotifier(List<NotifierEngine> engines, Duration interval, String[] tools,
             String mongdbHost, String mongodbName) {
         this(engines, interval, tools, mongdbHost, mongodbName, (new GregorianCalendar()).getTime());
     }
 
+    /**
+     * Use the notifier engine to send an email to all addressess specified in the engine.
+     * @param subject the subject line of the message
+     * @param text the actual message
+     */
     protected void notifyEngines(String subject, String text) {
         for (NotifierEngine engine : this.engines) {
             engine.notify(subject, text);
@@ -101,7 +103,6 @@ public class TimedSummaryNotifier implements Runnable {
                 MongoDatabase mongo = client.getDatabase(this.mongodbName);
 
                 updateFilters(lastNotificationTime.getTime());
-                updateCalendar(new Date());
 
                 // Number of analyzed builds, rtscanner
                 Iterator<Document> nrOfDocuments = queryDatabase("rtscanner", rtscannerFilter, mongo);
@@ -125,9 +126,12 @@ public class TimedSummaryNotifier implements Runnable {
                     nrOfDocuments = queryDatabase("patches", toolFilters.get(repairTools[i]), mongo);
                     nrOfPatchesPerTool[i] = nrOfObjects(nrOfDocuments);
                 }
-
+                
+                Date now = new Date();
+                
                 String message = createMessage(nrOfAnalyzedBuilds, nrOfRepairAttempts, nrOfPatches, 
-                        nrOfPatchesPerTool);
+                        nrOfPatchesPerTool, now);
+                updateCalendar(now);
 
                 notifyEngines("Repairnator: Summary email", message);
 
@@ -142,26 +146,29 @@ public class TimedSummaryNotifier implements Runnable {
         }
     }
 
+    /**
+     * Checks whether the interval has passed since the last time a summary email was sent out.
+     * @return
+     */
     protected boolean intervalHasPassed() {
         return Duration.between(lastNotificationTime.getTime().toInstant(), (new Date()).toInstant())
                 .compareTo(this.interval) < 0;
     }
 
     /**
-     * Simple method for updating the calendar value
+     * Updates the lastNotificationTime
+     * @param newTime the latest time a notification was sent out
      */
-    protected void updateCalendar(Date newTime) {
+    void updateCalendar(Date newTime) {
         this.lastNotificationTime.setTime(newTime);
     }
-
+    
     /**
-     * Query the database for the specfied collection given the special filter
-     * 
-     * @param collectionName
-     *            the collection to query
-     * @param filter
-     *            the filter to apply to the collectionquery
-     * @return
+     * Querys the mongodb for all documents fulfilling the requirements of the filter.
+     * @param collectionName the collection to look int
+     * @param filter the filer to apply
+     * @param mongo the database to look in
+     * @return all relevant documents
      */
     protected Iterator<Document> queryDatabase(String collectionName, Bson filter, MongoDatabase mongo) {
         FindIterable<Document> iterDoc = mongo.getCollection(collectionName).find(filter);
@@ -193,8 +200,7 @@ public class TimedSummaryNotifier implements Runnable {
     /**
      * Count the number of documents in the given iterator
      * 
-     * @param documents
-     *            the tierator to count
+     * @param documents the iterator to count
      * @return number of objects in documents
      */
     protected int nrOfObjects(Iterator<Document> documents) {
@@ -216,17 +222,17 @@ public class TimedSummaryNotifier implements Runnable {
      * @param nrOfPatchesPerTool
      * @return the complete message
      */
-    protected String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfPatches, int[] nrOfPatchesPerTool) {
+    protected String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfPatches, int[] nrOfPatchesPerTool, Date now) {
 
         String message = "Summary email from Repairnator. \n\n";
         message += "This summary contains the operations of Repairnator between "
                 + this.lastNotificationTime.getTime().toString();
         message += " and ";
-        message += this.lastNotificationTime.getTime().toString() + ".\n";
-        message += "Since the last summary Repairnator has: \n \n";
+        message += now.toString() + ".\n";
+        message += "Since the last summary Repairnator has: \n\n";
 
         // Number of analyzed builds, rtscanner
-        message += "Number of analyzed builds: " + nrAnalyzedBuilds + " \n";
+        message += "Number of analyzed builds: " + nrAnalyzedBuilds + "\n";
 
         // Number of repair attempts, inspector ComputeTestDir will most likely help
         message += "Number of repair attempts made: " + nrRepairAttempts + "\n";
