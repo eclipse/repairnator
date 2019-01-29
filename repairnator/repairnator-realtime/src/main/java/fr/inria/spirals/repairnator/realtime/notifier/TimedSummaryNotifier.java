@@ -131,7 +131,7 @@ public class TimedSummaryNotifier implements Runnable {
                 
                 String message = createMessage(nrOfAnalyzedBuilds, nrOfRepairAttempts, nrOfPatches, 
                         nrOfPatchesPerTool, now);
-                updateCalendar(now);
+                updateLastNotificationTime(now);
 
                 notifyEngines("Repairnator: Summary email", message);
 
@@ -159,7 +159,7 @@ public class TimedSummaryNotifier implements Runnable {
      * Updates the lastNotificationTime
      * @param newTime the latest time a notification was sent out
      */
-    void updateCalendar(Date newTime) {
+    void updateLastNotificationTime(Date newTime) {
         this.lastNotificationTime.setTime(newTime);
     }
     

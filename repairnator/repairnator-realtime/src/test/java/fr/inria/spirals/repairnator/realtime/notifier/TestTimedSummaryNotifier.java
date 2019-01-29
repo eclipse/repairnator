@@ -44,12 +44,12 @@ public class TestTimedSummaryNotifier {
      * Test that the calendar is correctly updated
      */
     @Test
-    public void testUpdateCalendar() {
+    public void testUpdateLastNotificationTime() {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         calendar.add(GregorianCalendar.HOUR, -1);
         
-        notifier.updateCalendar(calendar.getTime());
+        notifier.updateLastNotificationTime(calendar.getTime());
         
         assertTrue(notifier.lastNotificationTime.getTime().compareTo(new Date()) < 0);
     }
@@ -63,7 +63,7 @@ public class TestTimedSummaryNotifier {
         calendar.setTime(new Date());
         calendar.add(GregorianCalendar.HOUR, 2);
         
-        notifier.updateCalendar(calendar.getTime());
+        notifier.updateLastNotificationTime(calendar.getTime());
         
         assertTrue(notifier.intervalHasPassed());
     }
