@@ -16,7 +16,9 @@ before_script:
   - sudo apt-get install shunit2
 
 script:
+  matrix:
   - "./.travis/travis-run.sh"
+  - "./.travis/travis-maven-repair.sh"
 
 after_success:
   - "./.travis/travis-deploy.sh"
