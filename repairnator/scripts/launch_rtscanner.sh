@@ -39,6 +39,8 @@ args="$args`ca --smtpServer $SMTP_SERVER``ca --smtpPort $SMTP_PORT``ca --smtpUse
 args="$args`ca --buildsleeptime $BUILD_SLEEP_TIME``ca --maxinspectedbuilds $LIMIT_INSPECTED_BUILDS``ca --whitelist $WHITELIST_PATH`"
 args="$args`ca --blacklist $BLACKLIST_PATH``ca --duration $DURATION`"
 args="$args`ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
+args="$args`ca --notifysummary $NOTIFY_SUMMARY`"
+args="$args`ca --summaryfrequency $SUMMARY_FREQUENCY`"
 
 if [ "$SMTP_TLS" -eq 1 ]; then
     args="$args --smtpTLS"

@@ -9,6 +9,7 @@ import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
+import fr.inria.spirals.repairnator.realtime.notifier.TimedSummaryNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -50,6 +51,7 @@ public class RTScanner {
     private List<SerializerEngine> engines;
     private BlacklistedSerializer blacklistedSerializer;
     private EndProcessNotifier endProcessNotifier;
+    private TimedSummaryNotifier summaryNotifier;
 
     public RTScanner(String runId, List<SerializerEngine> engines) {
         this.engines = engines;
@@ -65,6 +67,11 @@ public class RTScanner {
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
         this.endProcessNotifier = endProcessNotifier;
+    }
+    
+    public void setSummaryNotifier(TimedSummaryNotifier summaryNotifier) {
+        LOGGER.info("Pipeline configured to send summary emails");
+        this.summaryNotifier = summaryNotifier;
     }
 
     public List<SerializerEngine> getEngines() {
@@ -127,6 +134,9 @@ public class RTScanner {
             this.buildRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
+            if(summaryNotifier != null) {
+                new Thread(this.summaryNotifier).start();
+            }
             this.running = true;
 
             if (RepairnatorConfig.getInstance().getDuration() != null) {
