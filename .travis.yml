@@ -9,7 +9,7 @@ services:
 
 env:
   matrix:
-  - SCRIPT="travis-run.sh"
+  - SCRIPT="travis-repairnator.sh"
   - SCRIPT="travis-maven-repair.sh"
 
 
