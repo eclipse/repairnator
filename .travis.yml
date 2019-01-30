@@ -7,6 +7,12 @@ jdk: openjdk8
 services:
  - docker
 
+env:
+  matrix:
+  - SCRIPT="travis-repairnator.sh"
+  - SCRIPT="travis-maven-repair.sh"
+
+
 before_script:
   - sudo apt-get update
   - sudo apt-get install cloc -y
@@ -15,8 +21,7 @@ before_script:
   - sudo npm install -g ajv-cli
   - sudo apt-get install shunit2
 
-script:
-  - "./.travis/travis-run.sh"
+script: ./.travis/$SCRIPT
 
 after_success:
   - "./.travis/travis-deploy.sh"

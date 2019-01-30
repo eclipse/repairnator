@@ -1,0 +1,290 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <groupId>fr.inria.gforge.spirals</groupId>
+    <artifactId>repair-maven-plugin</artifactId>
+    <version>1.6-SNAPSHOT</version>
+    <packaging>maven-plugin</packaging>
+
+    <name>Plugin to Automatically Fix failing test with Nopol and NPEFix</name>
+
+    <!-- FIXME change it to the project's website -->
+    <url />
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <default.encoding>UTF-8</default.encoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <java.src.version>1.8</java.src.version>
+        <java.test.version>1.8</java.test.version>
+        <github.global.server>github</github.global.server>
+    </properties>
+
+    <scm>
+        <connection>scm:git:ssh://github.com/Spirals-Team/maven-repair.git
+        </connection>
+        <developerConnection>
+            scm:git:[fetch=]https://github.com/Spirals-Team/maven-repair.git[push=]ssh://git@github.com/Spirals-Team/maven-repair.git
+        </developerConnection>
+    </scm>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>3.2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-report-parser</artifactId>
+            <version>2.20</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.0.15</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.inria.gforge.spirals</groupId>
+            <artifactId>nopol</artifactId>
+            <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.inria.sacha.automaticRepair</groupId>
+            <artifactId>astor</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.inria.spirals</groupId>
+            <artifactId>npefix</artifactId>
+            <version>0.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gzoltar</groupId>
+            <artifactId>gzoltar</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>exceptionparser</groupId>
+            <artifactId>exceptionparser</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-compat</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-testing</groupId>
+            <artifactId>maven-plugin-testing-harness</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>codedance on Github</id>
+            <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
+        </repository>
+        <repository>
+            <id>releases codedance on Github</id>
+            <url>https://tdurieux.github.io/maven-repository/releases/</url>
+        </repository>
+        <repository>
+            <!-- for gzoltar -->
+            <id>sachaproject.gforge.inria.fr-release</id>
+            <name>Maven Repository for Spoon Release</name>
+            <url>http://sachaproject.gforge.inria.fr/repositories/releases/
+            </url>
+            <snapshots />
+        </repository>
+        <repository>
+            <id>gforge.inria.fr-snapshot</id>
+            <name>Maven Repository for Spoon Snapshot</name>
+            <url>http://maven.inria.fr/artifactory/spoon-public-snapshot/</url>
+            <snapshots />
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <!--repository>
+          <id>internal-repo</id>
+          <name>Temporary Staging Repository</name>
+          <url>file://${project.build.directory}/mvn-repo/releases</url>
+        </repository-->
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>internal-snapshot-repo</id>
+            <name>Temporary Staging Snapshot Repository</name>
+            <url>file://${project.build.directory}/mvn-repo/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.5</version>
+                <configuration>
+                    <goalPrefix>repair</goalPrefix>
+                    <skipErrorNoDescriptorsFound>true
+                    </skipErrorNoDescriptorsFound>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>mojo-descriptor</id>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>help-goal</id>
+                        <goals>
+                            <goal>helpmojo</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+              <groupId>com.github.github</groupId>
+              <artifactId>site-maven-plugin</artifactId>
+              <version>0.12</version>
+              <configuration>
+                <merge>true</merge>
+                <message>Maven artifacts for ${project.artifactId}
+                  ${project.version}</message>
+                <noJekyll>true</noJekyll>
+                <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+                <branch>refs/heads/master</branch>
+                <includes>
+                  <include>**/*</include>
+                </includes>
+                <repositoryName>maven-repository</repositoryName>
+                <repositoryOwner>tdurieux</repositoryOwner>
+              </configuration>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>site</goal>
+                  </goals>
+                  <phase>deploy</phase>
+                </execution>
+              </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>run-its</id>
+            <build>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <debug>true</debug>
+                            <cloneProjectsTo>${project.build.directory}/it
+                            </cloneProjectsTo>
+                            <pomIncludes>
+                                <pomInclude>*/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <postBuildHookScript>verify</postBuildHookScript>
+                            <localRepositoryPath>
+                                ${project.build.directory}/local-repo
+                            </localRepositoryPath>
+                            <settingsFile>src/it/settings.xml</settingsFile>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>test-compile</goal>
+                            </goals>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+
+            </build>
+        </profile>
+    </profiles>
+</project>
