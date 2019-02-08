@@ -34,9 +34,9 @@ public class PatchNotifier {
         Build buggyBuild = inspector.getBuggyBuild();
         Repository repository = buggyBuild.getRepository();
 
-        String subject = "["+toolname+"] Patched build: "+buggyBuild.getId()+" - "+repository.getSlug();
+        String subject = "[Repairnator] Patched build: "+buggyBuild.getId()+" - "+repository.getSlug();
         String text = "Hurray !\n\n" +
-                patches.size() + " patch(es) has been found for the following build: "+ Utils.getTravisUrl(buggyBuild.getId(), repository.getSlug())+".\n";
+                toolname + " has found " + patches.size() + " patch(es) for the following build: "+ Utils.getTravisUrl(buggyBuild.getId(), repository.getSlug())+".\n";
 
         String slug = repository.getSlug();
         String repoURL = Utils.getCompleteGithubRepoUrl(slug);
