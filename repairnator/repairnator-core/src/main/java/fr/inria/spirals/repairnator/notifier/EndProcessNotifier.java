@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.notifier;
 
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 
 import java.util.Date;
@@ -24,7 +25,7 @@ public class EndProcessNotifier {
         String subject = "Process "+processName+" on "+Utils.getHostname()+" finished";
         Date endDate = new Date();
         String message = "The following process: "+ processName +" launched on "+ Utils.getHostname()+ " the "+ this.launchDate.toString()+" and finished "+endDate.toString()+". "
-                + "It ran for a total time of "+Utils.getDuration(this.launchDate, endDate);
+                + "It ran for a total time of "+DateUtils.getDuration(this.launchDate, endDate);
 
         for (NotifierEngine engine : this.engines) {
             engine.notify(subject, message);

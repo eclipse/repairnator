@@ -3,7 +3,8 @@ package fr.inria.spirals.repairnator.dockerpool.serializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -47,8 +48,8 @@ public class TreatedBuildTracking extends ProcessSerializer {
         dataCol.add(runid);
         dataCol.add(buildId);
         dataCol.add(containerId);
-        dataCol.add(Utils.formatCompleteDate(date));
-        dataCol.add(Utils.formatOnlyDay(date));
+        dataCol.add(DateUtils.formatCompleteDate(date));
+        dataCol.add(DateUtils.formatOnlyDay(date));
         dataCol.add(Utils.getHostname());
         dataCol.add(status);
         return dataCol;
@@ -61,10 +62,10 @@ public class TreatedBuildTracking extends ProcessSerializer {
         result.addProperty("runId", runid);
         result.addProperty("buildId", buildId);
         result.addProperty("containerId", containerId);
-        result.addProperty("dateReproducedBuildStr", Utils.formatCompleteDate(date));
+        result.addProperty("dateReproducedBuildStr", DateUtils.formatCompleteDate(date));
         this.addDate(result, "dateReproducedBuild", date);
 
-        result.addProperty("dayReproducedBuild", Utils.formatOnlyDay(date));
+        result.addProperty("dayReproducedBuild", DateUtils.formatOnlyDay(date));
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("status", status);
 

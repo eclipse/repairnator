@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;

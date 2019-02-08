@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.step.StepStatus;

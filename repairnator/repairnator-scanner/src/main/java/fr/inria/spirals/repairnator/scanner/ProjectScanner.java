@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.scanner;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.*;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.BearsMode;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -55,7 +55,7 @@ public class ProjectScanner {
         this.runId = runId;
         this.jTravis = RepairnatorConfig.getInstance().getJTravis();
 
-        this.logger.info("Look from " + Utils.formatCompleteDate(this.lookFromDate) + " to " + Utils.formatCompleteDate(this.lookToDate));
+        this.logger.info("Look from " + DateUtils.formatCompleteDate(this.lookFromDate) + " to " + DateUtils.formatCompleteDate(this.lookToDate));
     }
 
     public String getRunId() {

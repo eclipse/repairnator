@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 
 import org.apache.commons.io.FileUtils;

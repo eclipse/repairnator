@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.notifier;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.jtravis.entities.Repository;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;

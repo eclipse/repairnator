@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.notifier;
 
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;

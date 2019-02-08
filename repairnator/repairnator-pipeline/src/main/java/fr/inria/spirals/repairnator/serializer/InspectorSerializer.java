@@ -3,7 +3,8 @@ package fr.inria.spirals.repairnator.serializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -42,11 +43,11 @@ public class InspectorSerializer extends AbstractDataSerializer {
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(state);
         dataCol.add(build.getPullRequestNumber() + "");
-        dataCol.add(Utils.formatCompleteDate(build.getFinishedAt()));
-        dataCol.add(Utils.formatOnlyDay(build.getFinishedAt()));
+        dataCol.add(DateUtils.formatCompleteDate(build.getFinishedAt()));
+        dataCol.add(DateUtils.formatOnlyDay(build.getFinishedAt()));
         dataCol.add(realState);
         dataCol.add(Utils.getHostname());
-        dataCol.add(Utils.formatCompleteDate(new Date()));
+        dataCol.add(DateUtils.formatCompleteDate(new Date()));
         dataCol.add(Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));
         dataCol.add(typeOfFailures);
         dataCol.add(buildToBeInspected.getRunId());
@@ -69,13 +70,13 @@ public class InspectorSerializer extends AbstractDataSerializer {
         result.addProperty("repositoryName", build.getRepository().getSlug());
         result.addProperty("status", state);
         result.addProperty("prNumber", build.getPullRequestNumber());
-        result.addProperty("buildFinishedDateStr", Utils.formatCompleteDate(build.getFinishedAt()));
+        result.addProperty("buildFinishedDateStr", DateUtils.formatCompleteDate(build.getFinishedAt()));
         this.addDate(result, "buildFinishedDate", build.getFinishedAt());
 
-        result.addProperty("buildFinishedDay", Utils.formatOnlyDay(build.getFinishedAt()));
+        result.addProperty("buildFinishedDay", DateUtils.formatOnlyDay(build.getFinishedAt()));
         result.addProperty("realStatus", realState);
         result.addProperty("hostname", Utils.getHostname());
-        result.addProperty("buildReproductionDateStr", Utils.formatCompleteDate(new Date()));
+        result.addProperty("buildReproductionDateStr", DateUtils.formatCompleteDate(new Date()));
         this.addDate(result, "buildReproductionDate", new Date());
 
         result.addProperty("travisURL", Utils.getTravisUrl(build.getId(), build.getRepository().getSlug()));

@@ -1,7 +1,8 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.gson.JsonElement;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
@@ -147,7 +148,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
         for (int i = 0; i < nbPatch && i < patchList.size(); i++) {
             File patch = patchList.get(i);
 
-            String branchName = "repairnator-patch-" + Utils.formatFilenameDate(new Date()) + "-" + i;
+            String branchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date()) + "-" + i;
             int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
             if (status == 0) {
                 ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", patch.getAbsolutePath())

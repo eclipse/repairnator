@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.utils;
 
 import org.junit.Test;
 

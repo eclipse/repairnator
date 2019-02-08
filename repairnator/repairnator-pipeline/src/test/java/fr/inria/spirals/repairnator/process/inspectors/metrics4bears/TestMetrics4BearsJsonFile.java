@@ -12,7 +12,7 @@ import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
