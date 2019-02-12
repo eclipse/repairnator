@@ -3,7 +3,8 @@ package fr.inria.spirals.repairnator.dockerpool.serializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -40,14 +41,14 @@ public class EndProcessSerializer extends ProcessSerializer {
 
     private List<Object> serializeAsList() {
         Date now = new Date();
-        String humanDuration = Utils.getDuration(this.beginDate, now);
+        String humanDuration = DateUtils.getDuration(this.beginDate, now);
 
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(this.runId);
         dataCol.add(Utils.getHostname());
-        dataCol.add(Utils.formatOnlyDay(this.beginDate));
-        dataCol.add(Utils.formatCompleteDate(this.beginDate));
-        dataCol.add(Utils.formatCompleteDate(now));
+        dataCol.add(DateUtils.formatOnlyDay(this.beginDate));
+        dataCol.add(DateUtils.formatCompleteDate(this.beginDate));
+        dataCol.add(DateUtils.formatCompleteDate(now));
         dataCol.add(humanDuration);
         dataCol.add(this.status);
         dataCol.add(this.nbBuilds);
@@ -59,15 +60,15 @@ public class EndProcessSerializer extends ProcessSerializer {
         JsonObject result = new JsonObject();
 
         Date now = new Date();
-        String humanDuration = Utils.getDuration(this.beginDate, now);
+        String humanDuration = DateUtils.getDuration(this.beginDate, now);
 
         result.addProperty("runId", this.runId);
         result.addProperty("hostname", Utils.getHostname());
-        result.addProperty("beginDay", Utils.formatOnlyDay(this.beginDate));
-        result.addProperty("beginDateStr", Utils.formatCompleteDate(this.beginDate));
+        result.addProperty("beginDay", DateUtils.formatOnlyDay(this.beginDate));
+        result.addProperty("beginDateStr", DateUtils.formatCompleteDate(this.beginDate));
         this.addDate(result, "beginDate", this.beginDate);
 
-        result.addProperty("endDateStr", Utils.formatCompleteDate(now));
+        result.addProperty("endDateStr", DateUtils.formatCompleteDate(now));
         this.addDate(result, "endDate", now);
 
         result.addProperty("duration", humanDuration);

@@ -1,12 +1,11 @@
 package fr.inria.spirals.repairnator.config;
 
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.kohsuke.github.GHRateLimit;
 import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
 
 import java.io.File;
 import java.io.IOException;

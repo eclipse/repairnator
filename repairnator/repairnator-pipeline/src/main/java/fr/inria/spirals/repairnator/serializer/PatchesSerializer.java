@@ -4,7 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
@@ -24,7 +25,7 @@ public class PatchesSerializer extends AbstractDataSerializer {
         Build build = buildToBeInspected.getBuggyBuild();
 
         List<Object> result = new ArrayList<>();
-        result.add(Utils.formatCompleteDate(new Date()));
+        result.add(DateUtils.formatCompleteDate(new Date()));
         result.add(buildToBeInspected.getRunId());
         result.add(build.getId());
         result.add(patch.getToolname());
@@ -38,7 +39,7 @@ public class PatchesSerializer extends AbstractDataSerializer {
     private JsonElement serializeAsJson(BuildToBeInspected buildToBeInspected, RepairPatch patch) {
         Build build = buildToBeInspected.getBuggyBuild();
         JsonObject data = new JsonObject();
-        data.addProperty("dateStr", Utils.formatCompleteDate(new Date()));
+        data.addProperty("dateStr", DateUtils.formatCompleteDate(new Date()));
         this.addDate(data, "date", new Date());
         data.addProperty("runId", buildToBeInspected.getRunId());
         data.addProperty("buildId", build.getId());

@@ -2,7 +2,8 @@ package fr.inria.spirals.repairnator.serializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.scanner.ProjectScanner;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -24,8 +25,8 @@ public class ScannerSerializer extends ProcessSerializer {
     private List<Object> serializeAsList() {
         List<Object> dataCol = new ArrayList<Object>();
         dataCol.add(Utils.getHostname());
-        dataCol.add(Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
-        dataCol.add(Utils.formatCompleteDate(this.scanner.getLookFromDate()));
+        dataCol.add(DateUtils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
+        dataCol.add(DateUtils.formatCompleteDate(this.scanner.getLookFromDate()));
         dataCol.add(this.scanner.getTotalRepoNumber());
         dataCol.add(this.scanner.getTotalRepoUsingTravis());
         dataCol.add(this.scanner.getTotalScannedBuilds());
@@ -34,7 +35,7 @@ public class ScannerSerializer extends ProcessSerializer {
         dataCol.add(this.scanner.getTotalBuildInJavaFailing());
         dataCol.add(this.scanner.getTotalBuildInJavaFailingWithFailingTests());
         dataCol.add(this.scanner.getTotalPRBuilds());
-        dataCol.add(Utils.formatOnlyDay(this.scanner.getLookFromDate()));
+        dataCol.add(DateUtils.formatOnlyDay(this.scanner.getLookFromDate()));
         dataCol.add(this.scanner.getScannerDuration());
         dataCol.add(this.scanner.getRunId());
 
@@ -45,11 +46,11 @@ public class ScannerSerializer extends ProcessSerializer {
         JsonObject result = new JsonObject();
 
         result.addProperty("hostname", Utils.getHostname());
-        result.addProperty("dateBeginStr", Utils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
+        result.addProperty("dateBeginStr", DateUtils.formatCompleteDate(this.scanner.getScannerRunningBeginDate()));
         this.addDate(result, "dateBegin", this.scanner.getScannerRunningBeginDate());
-        result.addProperty("dateLimitStr", Utils.formatCompleteDate(this.scanner.getLookFromDate()));
+        result.addProperty("dateLimitStr", DateUtils.formatCompleteDate(this.scanner.getLookFromDate()));
         this.addDate(result, "dateLimit", this.scanner.getLookFromDate());
-        result.addProperty("dayLimit", Utils.formatOnlyDay(this.scanner.getLookFromDate()));
+        result.addProperty("dayLimit", DateUtils.formatOnlyDay(this.scanner.getLookFromDate()));
         result.addProperty("totalRepoNumber", this.scanner.getTotalRepoNumber());
         result.addProperty("totalRepoUsingTravis", this.scanner.getTotalRepoUsingTravis());
         result.addProperty("totalScannedBuilds", this.scanner.getTotalScannedBuilds());

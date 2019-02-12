@@ -2,7 +2,8 @@ package fr.inria.spirals.repairnator.realtime.serializer;
 
 import com.google.gson.JsonObject;
 import fr.inria.jtravis.entities.Repository;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.realtime.RTScanner;
 import fr.inria.spirals.repairnator.serializer.Serializer;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
@@ -32,7 +33,7 @@ public class BlacklistedSerializer extends Serializer {
         List<Object> result = new ArrayList<>();
         result.add(Utils.getHostname());
         result.add(this.rtScanner.getRunId());
-        result.add(Utils.formatCompleteDate(new Date()));
+        result.add(DateUtils.formatCompleteDate(new Date()));
         result.add(repo.getId());
         result.add(repo.getSlug());
         result.add(reason.name());
@@ -46,7 +47,7 @@ public class BlacklistedSerializer extends Serializer {
         result.addProperty("hostname", Utils.getHostname());
         result.addProperty("runId", this.rtScanner.getRunId());
         this.addDate(result, "dateBlacklist", new Date());
-        result.addProperty("dateBlacklistStr", Utils.formatCompleteDate(new Date()));
+        result.addProperty("dateBlacklistStr", DateUtils.formatCompleteDate(new Date()));
         result.addProperty("repoId", repo.getId());
         result.addProperty("repoName", repo.getSlug());
         result.addProperty("reason", reason.name());

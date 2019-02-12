@@ -2,7 +2,8 @@ package fr.inria.spirals.repairnator.notifier;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -45,9 +46,9 @@ public class BugAndFixerBuildsNotifier extends AbstractNotifier {
                 text += "You can find several information on the following about it: \n";
                 text += "\t Fixer build type: "+fixerBuildType+"\n" +
                         "\t Type of build: "+inspector.getBuildToBeInspected().getStatus().name()+"\n" +
-                        "\t Date of the buggy build: "+Utils.formatCompleteDate(buggyBuild.getFinishedAt())+"\n" +
+                        "\t Date of the buggy build: "+DateUtils.formatCompleteDate(buggyBuild.getFinishedAt())+"\n" +
                         "\t Url of the buggy build: "+Utils.getTravisUrl(buggyBuild.getId(), slug)+"\n" +
-                        "\t Date of the patched build: "+Utils.formatCompleteDate(patchedBuild.getFinishedAt())+"\n" +
+                        "\t Date of the patched build: "+DateUtils.formatCompleteDate(patchedBuild.getFinishedAt())+"\n" +
                         "\t Url of the patched build: "+Utils.getTravisUrl(patchedBuild.getId(), slug)+"\n";
 
                 Optional<GitUser> contactAuthor = patchedBuild.getAuthor();

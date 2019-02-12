@@ -3,7 +3,7 @@ package fr.inria.spirals.repairnator.notifier;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.PullRequest;
 import fr.inria.jtravis.entities.Repository;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
@@ -34,9 +34,9 @@ public class PatchNotifier {
         Build buggyBuild = inspector.getBuggyBuild();
         Repository repository = buggyBuild.getRepository();
 
-        String subject = "["+toolname+"] Patched build: "+buggyBuild.getId()+" - "+repository.getSlug();
+        String subject = "[Repairnator] Patched build: "+buggyBuild.getId()+" - "+repository.getSlug();
         String text = "Hurray !\n\n" +
-                patches.size() + " patch(es) has been found for the following build: "+ Utils.getTravisUrl(buggyBuild.getId(), repository.getSlug())+".\n";
+                toolname + " has found " + patches.size() + " patch(es) for the following build: "+ Utils.getTravisUrl(buggyBuild.getId(), repository.getSlug())+".\n";
 
         String slug = repository.getSlug();
         String repoURL = Utils.getCompleteGithubRepoUrl(slug);

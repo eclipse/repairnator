@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.process.git;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.PullRequest;
-import fr.inria.spirals.repairnator.Utils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.properties.patchDiff.PatchDiff;
