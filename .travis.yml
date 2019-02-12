@@ -1,3 +1,4 @@
+
 language: java
 
 sudo: true
@@ -7,19 +8,13 @@ jdk: openjdk8
 services:
  - docker
 
-env:
-  matrix:
-  - SCRIPT="travis-repairnator.sh"
-  - SCRIPT="travis-maven-repair.sh"
-
+install: ./.travis/travis-before.sh
 
 jobs:
   include:
-    - stage: before
-      script: "bash ./.travis/travis-before.sh"
-
     - stage: test
-      script: ./.travis/$SCRIPT
+      script: ./.travis/travis-repairnator.sh
+      script: ./.travis/travis-maven-repair.sh	
 
     - stage: deploy
       script: ./.travis/travis-deploy.sh
