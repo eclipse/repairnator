@@ -7,14 +7,18 @@ jdk: openjdk8
 
 services:
  - docker
- 
+
+env:
+  matrix:
+    -SCRIPT="travis-repairnator.sh"
+    -SCRIPT="travis-maven-repair.sh"
+
 install: ./.travis/travis-before.sh
 
 jobs:
   include:
     - stage: test
-      script: ./.travis/travis-repairnator.sh
-      script: ./.travis/travis-maven-repair.sh	
+      script: ./.travis/$SCRIPT	
 
     - stage: deploy
       script: ./.travis/travis-deploy.sh
