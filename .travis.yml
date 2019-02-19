@@ -13,7 +13,7 @@ install: ./.travis/travis-before.sh
 
 jobs:
   include:
-    - stage: prepate cache
+    - stage: prepare cache
       script: ./.travis/travis-before.sh
       
     - stage: test
