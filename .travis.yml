@@ -1,3 +1,4 @@
+
 language: java
 
 sudo: true
@@ -7,19 +8,22 @@ jdk: openjdk8
 services:
  - docker
 
-before_script:
-  - sudo apt-get update
-  - sudo apt-get install cloc -y
-  - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-  - sudo apt-get install -y nodejs
-  - sudo npm install -g ajv-cli
-  - sudo apt-get install shunit2
 
-script:
-  - "./.travis/travis-run.sh"
+install: ./.travis/travis-before.sh
 
-after_success:
-  - "./.travis/travis-deploy.sh"
+jobs:
+  include:
+    - stage: prepare cache
+      script: ./.travis/travis-before.sh
+      
+    - stage: test
+      script: ./.travis/travis-maven-repair.sh
+
+    - stage: test
+      script: ./.travis/travis-run.sh
+
+    - stage: deploy
+      script: ./.travis/travis-deploy.sh
 
 branches:
   only:
