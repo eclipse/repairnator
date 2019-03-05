@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: activemq
+  namespace: repairnator
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: activemq
+    spec:
+      containers:
+      - name: activemq
+        image: webcenter/activemq:5.14.3
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 61613
+        resources:
+          limits:
+            memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activemq
+  namespace: repairnator
+spec:
+  ports:
+  - port: 61613 
+    targetPort: 61613
+  selector:
+    app: activemq
