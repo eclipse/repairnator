@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 
@@ -28,7 +29,7 @@ import org.bson.conversions.Bson;
  */
 public class TimedSummaryNotifier implements Runnable {
 
-    private static final long TIME_TO_SLEEP = 3600 * 1000;
+    private static final long TIME_TO_SLEEP = 1 * 1000;
 
     protected static final String MONGO_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     protected static final SimpleDateFormat MONGO_DATE_FORMAT = new SimpleDateFormat(MONGO_UTC_FORMAT);
@@ -65,14 +66,17 @@ public class TimedSummaryNotifier implements Runnable {
         this.lastNotificationTime.setTime(notificationTime);
 
         Date previousDate = lastNotificationTime.getTime();
-        this.rtscannerFilter = Filters.gte("dateWatched", MONGO_DATE_FORMAT.format(previousDate));
-        this.computeTestDirFilter = Filters.and(Filters.gte("dateBuildEnd", MONGO_DATE_FORMAT.format(previousDate)),
-                Filters.eq("realStatus", "/NopolAllTests/i"));
-        this.patchesFilter = Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate));
+        
+        this.rtscannerFilter = Filters.gte("dateWatched", previousDate);
+        
+        Pattern computeTestDir = Pattern.compile("NopolAllTests", Pattern.CASE_INSENSITIVE);    
+        this.computeTestDirFilter = Filters.and(Filters.gte("dateBuildEnd", previousDate),
+                Filters.eq("realStatus", computeTestDir));
+        this.patchesFilter = Filters.gte("date", previousDate);
 
         this.toolFilters = new HashMap<String, Bson>();
         for (String tool : this.repairTools) {
-            this.toolFilters.put(tool, Filters.and(Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate)),
+            this.toolFilters.put(tool, Filters.and(Filters.gte("date", previousDate),
                     Filters.eq("toolname", tool)));
         }
     }
@@ -97,7 +101,6 @@ public class TimedSummaryNotifier implements Runnable {
     public void run() {
         while (true) {
             if (this.intervalHasPassed()) {
-
                 MongoClient client = new MongoClient(
                         new MongoClientURI(this.mongodbHost + "/" + this.mongodbName));
                 MongoDatabase mongo = client.getDatabase(this.mongodbName);
@@ -152,7 +155,7 @@ public class TimedSummaryNotifier implements Runnable {
      */
     protected boolean intervalHasPassed() {
         return Duration.between(lastNotificationTime.getTime().toInstant(), (new Date()).toInstant())
-                .compareTo(this.interval) < 0;
+                .compareTo(this.interval) > 0;
     }
 
     /**
@@ -183,16 +186,18 @@ public class TimedSummaryNotifier implements Runnable {
      *            the date that the filters should be based on
      */
     protected void updateFilters(Date previousDate) {
-
-        this.rtscannerFilter = Filters.gte("dateWatched", MONGO_DATE_FORMAT.format(previousDate));
-        this.computeTestDirFilter = Filters.and(Filters.gte("dateBuildEnd", MONGO_DATE_FORMAT.format(previousDate)),
-                Filters.eq("realStatus", "/NopolAllTests/i"));
-        this.patchesFilter = Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate));
+        
+        this.rtscannerFilter = Filters.gte("dateWatched", previousDate);
+        
+        Pattern computeTestDir = Pattern.compile("NopolAllTests", Pattern.CASE_INSENSITIVE);
+        this.computeTestDirFilter = Filters.and(Filters.gte("dateBuildEnd", previousDate),
+                Filters.eq("realStatus", computeTestDir));
+        this.patchesFilter = Filters.gte("date", previousDate);
 
         // Fetch the tools from config make map from name to filter
         this.toolFilters = new HashMap<String, Bson>();
         for (String tool : repairTools) {
-            this.toolFilters.put(tool, Filters.and(Filters.gte("date", MONGO_DATE_FORMAT.format(previousDate)),
+            this.toolFilters.put(tool, Filters.and(Filters.gte("date", previousDate),
                     Filters.eq("toolname", tool)));
         }
     }

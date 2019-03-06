@@ -210,8 +210,8 @@ public class RTLauncher {
             this.config.setDuration((Duration) arguments.getObject("duration"));
         }
         this.config.setNotifySummary(arguments.getStringArray("notifysummary"));
-        if (arguments.getObject("summaryFrequency") != null) {
-            this.config.setDuration((Duration) arguments.getObject("summaryfrequenc"));
+        if (arguments.getObject("summaryfrequency") != null) {
+            this.config.setSummaryFrequency((Duration) arguments.getObject("summaryfrequency"));
         }
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
@@ -241,7 +241,7 @@ public class RTLauncher {
         if(summaryEngines.size() > 0) {
             this.summaryNotifier = new TimedSummaryNotifier(summaryEngines,
                     config.getSummaryFrequency(),
-                    (String[]) config.getRepairTools().toArray(),
+                    config.getRepairTools().toArray(new String[config.getRepairTools().size()]),
                     config.getMongodbHost(),
                     config.getMongodbName());
         }

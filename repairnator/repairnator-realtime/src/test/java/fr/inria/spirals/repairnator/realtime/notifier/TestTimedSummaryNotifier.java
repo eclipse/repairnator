@@ -61,7 +61,7 @@ public class TestTimedSummaryNotifier {
     public void testIntervalHasPassed() {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
-        calendar.add(GregorianCalendar.HOUR, 2);
+        calendar.add(GregorianCalendar.HOUR, -2);
         
         notifier.updateLastNotificationTime(calendar.getTime());
         
