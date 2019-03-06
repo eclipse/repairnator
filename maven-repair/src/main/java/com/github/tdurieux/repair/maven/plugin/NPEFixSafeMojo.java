@@ -59,6 +59,8 @@ import java.util.Set;
         requiresDependencyResolution = ResolutionScope.TEST)
 public class NPEFixSafeMojo extends AbstractRepairMojo {
 
+    // taking the NpeFix version from Thomas' own Maven Repo
+    // https://github.com/tdurieux/maven-repository/tree/master/releases/fr/inria/spirals/npefix
     private static String HARDCODED_NPEFIX_VERSION = "0.7";
     /**
      * Location of the file.
