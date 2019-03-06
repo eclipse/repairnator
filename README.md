@@ -1,13 +1,13 @@
-[![Build Status](https://travis-ci.org/Spirals-Team/repairnator.svg?branch=master)](https://travis-ci.org/Spirals-Team/repairnator) [![Coverage Status](https://coveralls.io/repos/github/Spirals-Team/repairnator/badge.svg?branch=master)](https://coveralls.io/github/Spirals-Team/repairnator?branch=master)
+[![Build Status](https://travis-ci.org/Spirals-Team/repairnator.svg?branch=master)](https://travis-ci.org/Spirals-Team/repairnator)
 
 # Repairnator: a program repair bot for continuous integration
 
-Repairnator is a software development bot that automatically repairs build failures on Travis CI.
-It monitors failing Travis builds, tries to locally reproduce the failing builds and finally attempts to repair them with the state-of-the-art of [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing) tools for Java. 
+Repairnator is a software development bot that automatically repairs build failures on continuous integration.
+It monitors failing Travis CI builds in Java projects, tries to locally reproduce the failing builds and finally attempts to repair them with the state-of-the-art of [automated program repair research](https://en.wikipedia.org/wiki/Automatic_bug_fixing). Repairnator is a community effort, driven by Martin Monperrus at KTH Royal Institute of Technology. 
+
+Want to join the Repairnator community? To receive news about Repairnator, shoot an email at <mailto:repairnator.subscribe@4open.science>!
 
 -- [The Repairnator team](https://github.com/Spirals-Team/repairnator/issues/760)
-
-Want to join the Repairnator community? To receive monthly news about Repairnator, shoot an email at <mailto:repairnator.subscribe@4open.science>!
 
 ## About Repairnator
 
