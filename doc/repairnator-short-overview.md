@@ -1,7 +1,4 @@
----
-layout: page
-title: Repairnator - AI for Continuous Integration
----
+
 ## Repairnator: AI for Continuous Integration
 
 Repairnator is a software development robot that automatically repairs build failures on Continuous Integration (CI) flows. It monitors failing software builds, tries to locally reproduce these failings and finally attempts to repair them with the state-of-the-art of <a href="https://softwarediversity.eu/">automated program repair research</a>.
@@ -18,8 +15,10 @@ Repairnator is a software development robot that automatically repairs build fai
 
 ### Press & Medium
 
-<div style="margin-left: 20px;">
-<table summary="" cellpadding="10" cellspacing="10" >
+<div style="margin-left: 20px;" >
+  
+
+<table style="border:none" summary="" cellpadding="10" cellspacing="10" >
 <tr>
 <td>
 <div style="height:10px;font-size:10px;">&nbsp;</div>
@@ -30,9 +29,7 @@ Repairnator is a software development robot that automatically repairs build fai
 <td>
 <p>
 <span style="font-size:11pt;">
-<a href="https://www.theregister.co.uk/2018/10/17/luc_esape_bug_fixer/">The mysterious life of Luc Esape, bug fixer extraordinaire. His big secret? He’s not human</a>
-<br>
-The Register, Oct. 2018</a>
+<a href="https://www.theregister.co.uk/2018/10/17/luc_esape_bug_fixer/">The mysterious life of Luc Esape, bug fixer extraordinaire. His big secret? He’s not human</a>. From the Register, Oct. 2018</a>
 </span>
 </p>
 </td>
@@ -48,9 +45,7 @@ The Register, Oct. 2018</a>
 <td>
 <p>
 <span style="font-size:11pt;">
-<a href="https://www.inria.fr/en/centre/lille/news/repairnator-an-autonomous-robot-to-repair-computer-bugs">Repairnator, an autonomous robot to repair computer bugs</a>
-<br>
-inria.fr, Sep. 2018
+<a href="https://www.inria.fr/en/centre/lille/news/repairnator-an-autonomous-robot-to-repair-computer-bugs">Repairnator, an autonomous robot to repair computer bugs</a>. From inria.fr, Sep. 2018
 </span>
 </p>
 </td>
@@ -66,9 +61,7 @@ inria.fr, Sep. 2018
 <td>
 <p>
 <span style="font-size:11pt;">
-<a href="https://medium.com/@martin.monperrus/human-competitive-patches-in-automatic-program-repair-with-repairnator-359042e00f6a">Human-competitive Patches in Automatic Program Repair with Repairnator</a>
-<br>
-Medium, Oct. 2018
+<a href="https://medium.com/@martin.monperrus/human-competitive-patches-in-automatic-program-repair-with-repairnator-359042e00f6a">Human-competitive Patches in Automatic Program Repair with Repairnator</a>. From Medium, Oct. 2018
 </span>
 </p>
 </td>
@@ -77,7 +70,7 @@ Medium, Oct. 2018
 </table>
 </div>
 
-### For Developers (and more info)
+### For Developers (and for more info)
 
 <div style="margin-left: 20px;">
 <table summary="" cellpadding="10" cellspacing="10" >
@@ -91,7 +84,8 @@ Medium, Oct. 2018
 <td>
 <p>
 <span style="font-size:11pt;">
-<a href="https://github.com/Spirals-Team/repairnator/">Github Repository</a>
+<a href="https://github.com/Spirals-Team/repairnator/">The official Github Repository containing the open-source code of Repairnator, technical documentation, and presentations.</a>
+
 </span>
 </p>
 </td>
@@ -115,7 +109,7 @@ Medium, Oct. 2018
 <p>
 <span style="font-size:11pt;">
 <a href="https://hal.inria.fr/hal-01691496/document">How to Design a Program Repair Bot?
-Insights from the Repairnator Project</a>
+Insights from the Repairnator Project</a>, published in the 40th International Conference on Software Engineering, in May 2018.
 </span>
 </p>
 </td>
@@ -140,7 +134,7 @@ Insights from the Repairnator Project</a>
 <td>
 <p>
 <span style="font-size:11pt;">
-<a href="http://repairnator.proj.kth.se">Check our Robot's Online Health Status</a>
+Repairnator's robot is running 24/7 on our machines, constantly scanning many open-source projects, <a href="http://repairnator.proj.kth.se">check online our robot's health status</a>
 </span>
 </p>
 </td>
@@ -164,10 +158,13 @@ Insights from the Repairnator Project</a>
 </td>
 <td>
 <span style="font-size:11pt;">
-<a href="https://www.monperrus.net/martin/"><h4>Martin Monperrus</h4></a>
+<a href="https://www.monperrus.net/martin/">Martin Monperrus</a>, Professor at KTH, Division of Theoritical Computer Science.
 </span>
 <p>
-<span style="font-size:11pt;">martin.monperrus@csc.kth.se</span>
+<br>
+<span style="font-size:11pt;">
+<a href="mailto:martin.monperrus@csc.kth.se">martin.monperrus@csc.kth.se</a>  
+</span>
 </p>
 </td>
 </tr>
@@ -180,9 +177,12 @@ Insights from the Repairnator Project</a>
 </div>
 </td>
 <td>
-<a href="https://www.linkedin.com/in/fredericloiret/"><h4>Frédéric Loiret</h4></a>
+<a href="https://www.linkedin.com/in/fredericloiret/">Frédéric Loiret</a>, Senior Researcher at KTH, Divisions of Software and Computer Systems and Mechatronics.
 <p>
-<span style="font-size:11pt;">loiret@kth.se</span>
+<br>
+<span style="font-size:11pt;">
+<a href="mailto:loiret@kth.se">loiret@kth.se</a>  
+</span>
 </p>
 </td>
 </tr>
@@ -195,9 +195,13 @@ Insights from the Repairnator Project</a>
 </div>
 </td>
 <td>
-<a href="https://softwarediversity.eu"><h4>Benoit Baudry</h4></a>
+  <a href="https://softwarediversity.eu">Benoit Baudry</a>, Professor at KTH, Division of Software and Computer Systems.
 <p>
-<span style="font-size:11pt;">baudry@kth.se</span>
+<br>
+<span style="font-size:11pt;">
+<a href="mailto:baudry@kth.se">baudry@kth.se</a>
+
+</span>
 </p>
 </td>
 </tr>
