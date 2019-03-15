@@ -1,16 +1,21 @@
 ## Repairnator: AI for Continuous Integration
 
 Repairnator is a software development robot that automatically repairs build failures on Continuous Integration (CI) flows. It monitors failing software builds, tries to locally reproduce these failings and finally attempts to repair them with the state-of-the-art of <a href="https://softwarediversity.eu/">automated program repair research</a>.
+
+<br>
+
 <div style="width:100%; text-align:center"> 
 <img src="images/Repairnator_AI_for_CI.png" />
 </div>
+
+<br>
 
 ## About Repairnator
 
 ### Press & Medium
 
 <div style="margin-left: 20px;">
-<table border="0" summary="" cellpadding="10" cellspacing="10" >
+<table summary="" cellpadding="10" cellspacing="10" >
 <tr>
 <td>
 <div style="height:10px;font-size:10px;">&nbsp;</div>
@@ -71,7 +76,7 @@ Medium, Oct. 2018
 ### For Developers (and more info)
 
 <div style="margin-left: 20px;">
-<table border="0" summary="" cellpadding="10" cellspacing="10" >
+<table summary="" cellpadding="10" cellspacing="10" >
 <tr>
 <td>
 <div style="height:10px;font-size:10px;">&nbsp;</div>
@@ -94,7 +99,7 @@ Medium, Oct. 2018
 ### Academic Paper
 
 <div style="margin-left: 20px;">
-<table border="0" summary="" cellpadding="10" cellspacing="10" >
+<table summary="" cellpadding="10" cellspacing="10" >
 <tr>
 <td>
 <div style="height:10px;font-size:10px;">&nbsp;</div>
@@ -120,7 +125,7 @@ Insights from the Repairnator Project</a>
 ## What Is Repairnator Doing Right Now?
 
 <div style="margin-left: 20px;">
-<table border="0" summary="" cellpadding="10" cellspacing="10" >
+<table summary="" cellpadding="10" cellspacing="10" >
 <tr>
 <td>
 <div style="height:10px;font-size:10px;">&nbsp;</div>
