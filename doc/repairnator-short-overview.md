@@ -1,3 +1,7 @@
+---
+layout: page
+title: Repairnator - AI for Continuous Integration
+---
 ## Repairnator: AI for Continuous Integration
 
 Repairnator is a software development robot that automatically repairs build failures on Continuous Integration (CI) flows. It monitors failing software builds, tries to locally reproduce these failings and finally attempts to repair them with the state-of-the-art of <a href="https://softwarediversity.eu/">automated program repair research</a>.
