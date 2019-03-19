@@ -143,6 +143,7 @@ public class RTLauncher {
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         opt2.setListSeparator(',');
+        opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
         opt2.setRequired(true);
         jsap.registerParameter(opt2);
@@ -250,6 +251,7 @@ public class RTLauncher {
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
         LOGGER.info("RTScanner mode : " + this.config.getLauncherMode());
+        LOGGER.info("Number of tools" + config.getRepairTools().toArray(new String[0]).length + ", " + config.getRepairTools().size() + ", " + config.getRepairTools());
         String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();

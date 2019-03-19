@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 
@@ -38,8 +37,8 @@ public class TimedSummaryNotifier implements Runnable {
     protected Calendar lastNotificationTime;
     protected Duration interval;
     protected Bson rtscannerFilter;
-    protected Bson computeTestDirFilter;
-    protected Bson patchesFilter;
+    protected Bson repairAttemptsFilter;
+    protected Bson patchedBuildsFilter;
     protected Map<String, Bson> toolFilters;
     protected String mongodbHost;
     protected String mongodbName;
@@ -64,15 +63,15 @@ public class TimedSummaryNotifier implements Runnable {
         this.repairTools = tools;
         this.lastNotificationTime = new GregorianCalendar();
         this.lastNotificationTime.setTime(notificationTime);
-
+        
+        this.lastNotificationTime.add(GregorianCalendar.YEAR, -1);
         Date previousDate = lastNotificationTime.getTime();
         
-        this.rtscannerFilter = Filters.gte("dateWatched", previousDate);
-        
-        Pattern computeTestDir = Pattern.compile("NopolAllTests", Pattern.CASE_INSENSITIVE);    
-        this.computeTestDirFilter = Filters.and(Filters.gte("dateBuildEnd", previousDate),
-                Filters.eq("realStatus", computeTestDir));
-        this.patchesFilter = Filters.gte("date", previousDate);
+        this.rtscannerFilter = Filters.gte("dateWatched", previousDate);   
+        this.repairAttemptsFilter = Filters.and(Filters.gte("buildReproductionDate", MONGO_DATE_FORMAT.format(previousDate)),
+                Filters.or(Filters.eq("status", "test failure"), Filters.eq("status", "PATCHED")));
+        this.patchedBuildsFilter = Filters.and
+                (Filters.gte("buildReproductionDate", previousDate), Filters.eq("status", "PATCHED"));
 
         this.toolFilters = new HashMap<String, Bson>();
         for (String tool : this.repairTools) {
@@ -111,15 +110,15 @@ public class TimedSummaryNotifier implements Runnable {
                 Iterator<Document> nrOfDocuments = queryDatabase("rtscanner", rtscannerFilter, mongo);
                 int nrOfAnalyzedBuilds = nrOfObjects(nrOfDocuments);
 
-                // Number of repair attempts, inspector ComputeTestDir will most likely help
+                // Number of repair attempts, inspector status is everything needed
 
-                nrOfDocuments = queryDatabase("inspector", computeTestDirFilter, mongo);
+                nrOfDocuments = queryDatabase("inspector", repairAttemptsFilter, mongo);
                 int nrOfRepairAttempts = nrOfObjects(nrOfDocuments);
 
                 // Total number of patches, patches
 
-                nrOfDocuments = queryDatabase("patches", patchesFilter, mongo);
-                int nrOfPatches = nrOfObjects(nrOfDocuments);
+                nrOfDocuments = queryDatabase("inspector", patchedBuildsFilter, mongo);
+                int nrOfBuildsWithPatches = nrOfObjects(nrOfDocuments);
 
                 // Number of patches per tool, patches with an if
 
@@ -132,7 +131,7 @@ public class TimedSummaryNotifier implements Runnable {
                 
                 Date now = new Date();
                 
-                String message = createMessage(nrOfAnalyzedBuilds, nrOfRepairAttempts, nrOfPatches, 
+                String message = createMessage(nrOfAnalyzedBuilds, nrOfRepairAttempts, nrOfBuildsWithPatches, 
                         nrOfPatchesPerTool, now);
                 updateLastNotificationTime(now);
 
@@ -188,11 +187,9 @@ public class TimedSummaryNotifier implements Runnable {
     protected void updateFilters(Date previousDate) {
         
         this.rtscannerFilter = Filters.gte("dateWatched", previousDate);
-        
-        Pattern computeTestDir = Pattern.compile("NopolAllTests", Pattern.CASE_INSENSITIVE);
-        this.computeTestDirFilter = Filters.and(Filters.gte("dateBuildEnd", previousDate),
-                Filters.eq("realStatus", computeTestDir));
-        this.patchesFilter = Filters.gte("date", previousDate);
+        this.patchedBuildsFilter = Filters.and(Filters.gte("buildReproductionDate", previousDate), Filters.eq("status", "PATCHED"));
+        this.repairAttemptsFilter = Filters.and(Filters.gte("buildReproductionDate", previousDate),
+                Filters.or(Filters.eq("status", "test failure"), Filters.eq("status", "PATCHED")));
 
         // Fetch the tools from config make map from name to filter
         this.toolFilters = new HashMap<String, Bson>();
@@ -227,23 +224,22 @@ public class TimedSummaryNotifier implements Runnable {
      * @param nrOfPatchesPerTool
      * @return the complete message
      */
-    protected String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfPatches, int[] nrOfPatchesPerTool, Date now) {
+    protected String createMessage(int nrAnalyzedBuilds, int nrRepairAttempts, int nrOfBuildsWithPatches, int[] nrOfPatchesPerTool, Date now) {
 
         String message = "Summary email from Repairnator. \n\n";
         message += "This summary contains the operations of Repairnator between "
                 + this.lastNotificationTime.getTime().toString();
         message += " and ";
-        message += now.toString() + ".\n";
-        message += "Since the last summary Repairnator has: \n\n";
+        message += now.toString() + ".\n\n";
 
         // Number of analyzed builds, rtscanner
         message += "Number of analyzed builds: " + nrAnalyzedBuilds + "\n";
 
-        // Number of repair attempts, inspector ComputeTestDir will most likely help
+        // Number of builds repairnator found a test failure and attempte to create a patch
         message += "Number of repair attempts made: " + nrRepairAttempts + "\n";
 
         // Total number of patches, patches
-        message += "Total number of patches: " + nrOfPatches + "\n";
+        message += "Total number of builds with patches: " + nrOfBuildsWithPatches + "\n";
 
         // Number of patches per tool, patches with an if
 

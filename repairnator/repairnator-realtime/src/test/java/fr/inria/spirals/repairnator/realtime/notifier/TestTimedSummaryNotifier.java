@@ -82,22 +82,25 @@ public class TestTimedSummaryNotifier {
         Date previousDate = calendar.getTime();
         
         BsonDocument rtscannerFilter = notifier.rtscannerFilter.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry());
-        BsonDocument computeTestDirFilter = notifier.computeTestDirFilter.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry());
-        BsonDocument patchesFilter = notifier.patchesFilter.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry());
+        BsonDocument repairAttemptsFilter = notifier.repairAttemptsFilter.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry());
+        BsonDocument patchesFilter = notifier.patchedBuildsFilter.toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry());
         
         BsonDocument[] toolFilters = new BsonDocument[tools.length];
         for(int i = 0; i < tools.length; i++) {
             toolFilters[i] = notifier.toolFilters.get(tools[i]).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry());
         }
         
+        System.out.println(rtscannerFilter);
+        System.out.println(repairAttemptsFilter);
+        System.out.println(patchesFilter);
         
         assertTrue(rtscannerFilter.equals(Filters.gte("dateWatched",
                 TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
-        assertTrue(computeTestDirFilter.equals(Filters.and(
-                Filters.gte("dateBuildEnd", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
-                Filters.eq("realStatus", "/NopolAllTests/i")).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
-        assertTrue(patchesFilter.equals(
-                Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
+        assertTrue(repairAttemptsFilter.equals(Filters.and(
+                Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)), Filters.eq("status", "PATCHED"))));
+        assertTrue(patchesFilter.equals(Filters.and(
+                Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
+                Filters.eq("status", "PATCHED")).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
         for(int i = 0; i < toolFilters.length; i++) {
             assertTrue(toolFilters[i].equals(
                     Filters.and(Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
@@ -117,11 +120,10 @@ public class TestTimedSummaryNotifier {
                 + "This summary contains the operations of Repairnator between "
                 + notifier.lastNotificationTime.getTime().toString()
                 + " and "
-                + now.toString() + ".\n"
-                + "Since the last summary Repairnator has: \n\n"
+                + now.toString() + ".\n\n"
                 + "Number of analyzed builds: 100\n"
                 + "Number of repair attempts made: 15\n"
-                + "Total number of patches: 51\n"
+                + "Total number of builds with patches: 51\n"
                 + "Total number of patches found by Tool0: 1\n"
                 + "Total number of patches found by Tool1: 5\n"
                 + "Total number of patches found by Tool2: 10\n"
