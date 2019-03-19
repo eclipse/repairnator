@@ -11,9 +11,9 @@ public class DateUtils {
     private static final String MONGO_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final SimpleDateFormat MONGO_DATE_FORMAT = new SimpleDateFormat(MONGO_UTC_FORMAT);
 
-    private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/YY HH:mm");
-    private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/YYYY");
-    private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("YYYY-MM-dd_HHmm");
+    private static final SimpleDateFormat tsvCompleteDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+    private static final SimpleDateFormat csvOnlyDayFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmm");
 
     public static String formatCompleteDate(Date date) {
         return tsvCompleteDateFormat.format(date);
