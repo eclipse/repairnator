@@ -28,6 +28,7 @@ Want to join the Repairnator community? To receive news about Repairnator, shoot
 
 ### Talks
 
+* [Repairnator: Automatisk buggrättning med hjälp av AI (Martin Monperrus), Claremont Tech Talks, March 19 2019](https://www.meetup.com/Claremont-Tech-Labs/events/259387546/)
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Software Technology Exchange Workshop, STEW, 2018, Malmö, Oct 17 2018](https://www.swedsoft.se/event/stew-2018/)
 * "How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Talk at SAAB, Järfälla, Sep 21 2018
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Simon Urli), International Conference on Software Engineering, Gothenburg, June 1st 2018](https://www.icse2018.org/program/program-icse-2018)
