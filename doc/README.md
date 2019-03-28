@@ -1,4 +1,4 @@
-# Documentation
+# Documentation of Repairnator
 
 This directory provides a general documentation about Repairnator project.
 
@@ -21,11 +21,6 @@ So here a little bit of terminology to help the reader:
  - *Travis/Github Repository ID*: we might sometimes use specific IDs from third-party API like the Travis CI Repository ID we use to blacklist some repository: we explicit the tool in those cases, 
  but not that you may need to interrogate the third-party APIs to retrieve those IDs.
 
-## Usage
-
-There are several ways to use Repairnator.
-We tried to document some of them in [usage](usage) directory.
-
 ## Contributing
 
 Contribution on Repairnator are more than welcome!
@@ -46,4 +41,24 @@ The following is the list of program repair tools currently supported in Repairn
   - Astor
   - AssertFixer
   
-For more information about the program repair tools and their strategies implemented in Repairnator, [have a look on this page](usage/repair-tools.md).
+For more information about the program repair tools and their strategies implemented in Repairnator, [have a look on this page](repair-tools.md).
+
+## Architecture
+
+In order to understand properly Repairnator, have a first a look on [its internal architecture](architecture.md).
+
+## Scripts
+
+The easiest entry point to use Repairnator is through its scripts.
+The documentation about the scripts is [available here](scripts.md).
+It can be useful to also read more details about the [repairnator configuration file](repairnator-config.md).
+
+## Docker
+
+It is also possible to directly use Repairnator through its docker image. 
+Information about this docker image is [available there](docker.md).
+
+## JARs
+
+Finally, Repairnator being written in Java, everything can be executed directly through the JARS.
+The [following documentation](jars.md) might be helpful there.
