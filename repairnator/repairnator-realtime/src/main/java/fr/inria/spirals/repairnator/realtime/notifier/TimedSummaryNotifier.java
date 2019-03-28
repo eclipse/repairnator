@@ -28,7 +28,7 @@ import org.bson.conversions.Bson;
  */
 public class TimedSummaryNotifier implements Runnable {
 
-    private static final long TIME_TO_SLEEP = 1 * 1000;
+    private static final long TIME_TO_SLEEP = 3600 * 1000; // Check every hour
 
     protected static final String MONGO_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     protected static final SimpleDateFormat MONGO_DATE_FORMAT = new SimpleDateFormat(MONGO_UTC_FORMAT);
@@ -64,7 +64,6 @@ public class TimedSummaryNotifier implements Runnable {
         this.lastNotificationTime = new GregorianCalendar();
         this.lastNotificationTime.setTime(notificationTime);
         
-        this.lastNotificationTime.add(GregorianCalendar.YEAR, -1);
         Date previousDate = lastNotificationTime.getTime();
         
         this.rtscannerFilter = Filters.gte("dateWatched", previousDate);   

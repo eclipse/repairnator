@@ -142,6 +142,7 @@ public class RTLauncher {
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
+        opt2.setList(true);
         opt2.setListSeparator(',');
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
@@ -150,6 +151,7 @@ public class RTLauncher {
         
         opt2 = new FlaggedOption("notifysummary");
         opt2.setLongFlag("notifysummary");
+        opt2.setList(true);
         opt2.setListSeparator(',');
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("The email addresses to notify with a summary email.");
@@ -215,7 +217,7 @@ public class RTLauncher {
             this.config.setSummaryFrequency((Duration) arguments.getObject("summaryfrequency"));
         }
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
-        this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        this.config.setRepairTools(new HashSet<String>(Arrays.asList(arguments.getStringArray("repairTools"))));
     }
 
     private void initSerializerEngines() {
@@ -251,7 +253,7 @@ public class RTLauncher {
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
         LOGGER.info("RTScanner mode : " + this.config.getLauncherMode());
-        LOGGER.info("Number of tools" + config.getRepairTools().toArray(new String[0]).length + ", " + config.getRepairTools().size() + ", " + config.getRepairTools());
+        LOGGER.info("Number of tools" + config.getRepairTools().toArray(new String[0]));
         String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
