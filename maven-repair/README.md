@@ -4,17 +4,9 @@
 
 The goal of this projects is is to simplify automatic repair on Maven projects.
 
-
-## Automatic Repair Techniques
-
-- [X] NPEFix
-- [X] Nopol
-- [X] DynaMoth
-- [X] jGenProg
-- [X] jKali
-- [X] cardumen
-
 ## Install
+
+There are released versions on Maven Central, but they may not be up-to-date: https://search.maven.org/search?q=a:repair-maven-plugin
 
 ### Manual install
 
@@ -42,6 +34,7 @@ mvn fr.inria.gforge.spirals:repair-maven-plugin:npefix
 ```
 
 ## Usage to repair a condition bug
+
 ```bash
 git clone https://github.com/SpoonLabs/nopol-experiments
 
@@ -149,3 +142,12 @@ cat target/nopol/output.json
 # History
 
 For history on the project, visit https://github.com/Spirals-Team/maven-repair/
+
+## Automatic Repair Techniques Supported
+
+- [X] NPEFix
+- [X] Nopol
+- [X] DynaMoth
+- [X] jGenProg
+- [X] jKali
+- [X] cardumen
