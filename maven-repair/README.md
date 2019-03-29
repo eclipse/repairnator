@@ -24,28 +24,40 @@ cd maven-repair
 mvn install
 ```
 
-### Maven
+## Usage to repair a NullPointerException
 
 ```bash
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.1:get \
-    -DrepoUrl=https://tdurieux.github.io/maven-repository/snapshots/ \
-    -Dartifact=fr.inria.gforge.spirals:repair-maven-plugin:1.4-SNAPSHOT
-``` 
+git clone https://github.com/Spirals-Team/npe-dataset/
 
-## Usage
+# this is a real world NPE for Apache Commons Lang
+cd npe-dataset/lang-304
 
+# alternatively you can enter your own project at a commit with an NPE
+
+# check the failing tests
+mvn test -DtrimStackTrace=false
+
+# look for patches with NpeFix
+mvn fr.inria.gforge.spirals:repair-maven-plugin:npefix
+```
+
+## Usage to repair a condition bug
 ```bash
-cd /somewhere/my-project-with-failing-tests
+git clone https://github.com/SpoonLabs/nopol-experiments
+
+# this is a real world NPE for Apache Commons Lang
+cd nopol-experiments/dataset/cl5
+
+# alternatively you can enter your own project at a commit with a condition bug
 
 # check the failing tests
 mvn test -DtrimStackTrace=false
 
 # look for patches with Nopol
 mvn fr.inria.gforge.spirals:repair-maven-plugin:nopol
-
-# look for patches with NpeFix
-mvn fr.inria.gforge.spirals:repair-maven-plugin:npefix
 ```
+
+
 
 ## Output
 
