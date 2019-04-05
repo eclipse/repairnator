@@ -16,7 +16,7 @@ cd maven-repair
 mvn install
 ```
 
-## Usage to repair a NullPointerException
+## Usage to repair a NullPointerException (NpeFix)
 
 ```bash
 git clone https://github.com/Spirals-Team/npe-dataset/
@@ -33,7 +33,7 @@ mvn test -DtrimStackTrace=false
 mvn fr.inria.gforge.spirals:repair-maven-plugin:npefix
 ```
 
-## Usage to repair a condition bug
+## Usage to repair a condition bug (Nopol)
 
 ```bash
 git clone https://github.com/SpoonLabs/nopol-experiments
@@ -50,6 +50,25 @@ mvn test -DtrimStackTrace=false
 mvn fr.inria.gforge.spirals:repair-maven-plugin:nopol
 ```
 
+Maven-repair output for Nopol:
+
+```
+[INFO] ----PATCH FOUND----
+[INFO] className.length() == 0
+[INFO] Nb test that executes the patch: 37
+[INFO] org.apache.commons.lang.ClassUtils:258: CONDITIONAL
+[INFO] --- a/src/java/org/apache/commons/lang/ClassUtils.java
++++ b/src/java/org/apache/commons/lang/ClassUtils.java
+@@ -257,3 +257,3 @@
+     public static String getPackageName(String className) {
+-        if (className == null) {
++        if (className.length() == 0) {
+             return StringUtils.EMPTY;
+
+Nopol executed after: 14233 ms.
+
+```
+
 
 
 ## Output
@@ -63,7 +82,7 @@ cat target/nopol/output.json
 
 ## Output Format
 
-### NPEFix
+### NPEFix output in a JSON file in `target/`
 ```js
 {
   "executions": [
