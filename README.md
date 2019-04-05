@@ -9,16 +9,18 @@ Want to join the Repairnator community? To receive news about Repairnator, shoot
 
 -- [The Repairnator team](https://github.com/Spirals-Team/repairnator/issues/760)
 
-## About Repairnator
+## Learn about Repairnator
 
-### Medium
+* **Post:** [Human-competitive Patches in Automatic Program Repair with Repairnator](https://medium.com/@martin.monperrus/human-competitive-patches-in-automatic-program-repair-with-repairnator-359042e00f6a), Medium, Oct. 16 2018
+* **Youtube:** [Talk about Repairnator at Hasso-Plattner-Institut](https://hal.inria.fr/hal-01691496/document), April 19 2018
 
-* [Human-competitive Patches in Automatic Program Repair with Repairnator](https://medium.com/@martin.monperrus/human-competitive-patches-in-automatic-program-repair-with-repairnator-359042e00f6a), Medium, Oct. 16 2018
+## Resources
 
 ### Press
 
 * [The mysterious life of Luc Esape, bug fixer extraordinaire. His big secret? He’s not human (Thomas Claburn), The Register, Oct 17 2018](https://www.theregister.co.uk/2018/10/17/luc_esape_bug_fixer/)
 * [Repairnator, an autonomous robot to repair computer bugs (Sophie Timsit) inria.fr, Sep 4 2018](https://www.inria.fr/en/centre/lille/news/repairnator-an-autonomous-robot-to-repair-computer-bugs)
+* See all media news about Repairnator in <https://github.com/Spirals-Team/repairnator/issues/771>
 
 ### Academic papers
 
@@ -28,6 +30,7 @@ Want to join the Repairnator community? To receive news about Repairnator, shoot
 
 ### Talks
 
+* Repairnator & Descartes: the future of testing and continuous integration (Martin Monperrus), Webinar at Sopra-Steria, April 4 2019
 * [Repairnator: Automatisk buggrättning med hjälp av AI (Martin Monperrus), Claremont Tech Talks, March 19 2019](https://www.meetup.com/Claremont-Tech-Labs/events/259387546/)
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Software Technology Exchange Workshop, STEW, 2018, Malmö, Oct 17 2018](https://www.swedsoft.se/event/stew-2018/)
 * "How to Design a Program Repair Bot? Insights from the Repairnator Project" (Martin Monperrus), Talk at SAAB, Järfälla, Sep 21 2018
