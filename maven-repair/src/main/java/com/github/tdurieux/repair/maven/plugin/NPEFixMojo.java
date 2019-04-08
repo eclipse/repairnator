@@ -182,7 +182,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
                          
     private char getPatches(){
         System.out.println(printResults());
-        return result.toJSON();                       
+        return result.toJSON();     
+        System.console();
     
     private void printResults(NPEOutput result) {
         System.out.println("NPEFix executed after: "+result.getFailureCount());
