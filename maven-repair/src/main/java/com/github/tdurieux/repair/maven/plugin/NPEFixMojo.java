@@ -155,6 +155,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
             }
         }
         this.result = run(npefix, tests);
+        System.out.println(result);
 
 
         spoon.Launcher spoon = new spoon.Launcher();
@@ -167,6 +168,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
         JSONObject jsonObject = result.toJSON(spoon);
         jsonObject.put("endInit", initDate.getTime());
+        System.out.println(resultDirectory.getAbsolutePath());
+        System.out.println(result.toJSON(spoon));
         try {
             for (Decision decision : CallChecker.strategySelector.getSearchSpace()) {
                 jsonObject.append("searchSpace", decision.toJSON());
@@ -174,6 +177,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
             FileWriter writer = new FileWriter(resultDirectory.getAbsolutePath() + "/patches_" + new Date().getTime() + ".json");
             jsonObject.write(writer);
             writer.close();
+            System.out.println(writer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -344,6 +348,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
     }
 
     public NPEOutput getResult() {
+        System.out.println(result);
         return result;
     }
 }
