@@ -59,10 +59,6 @@ import java.util.Set;
         requiresDependencyResolution = ResolutionScope.TEST)
 public class NPEFixSafeMojo extends AbstractRepairMojo {
 
-    // taking the NpeFix version from Thomas' own Maven Repo
-    // https://github.com/tdurieux/maven-repository/tree/master/releases/fr/inria/spirals/npefix (release)
-    // https://github.com/tdurieux/maven-repository/tree/master/snapshots/fr/inria/spirals/npefix (snapshot)
-    private static String HARDCODED_NPEFIX_VERSION = "0.8-SNAPSHOT";
     /**
      * Location of the file.
      */
@@ -253,7 +249,7 @@ public class NPEFixSafeMojo extends AbstractRepairMojo {
             URL s = dependencies.get(i);
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
-        final Artifact artifact =artifactFactory.createArtifact("fr.inria.spirals","npefix", HARDCODED_NPEFIX_VERSION, null, "jar");
+        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix", "0.7", null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
 
         sb.append(file.getAbsoluteFile());
