@@ -110,7 +110,7 @@ public class TestAbstractStep {
 
         AbstractStep step = new AbstractStepNop(mockInspector);
 
-        String expectedPomPath = localRepoPath+"/repairnator/repairnator/pom.xml";
+        String expectedPomPath = localRepoPath+"/pom.xml";
         String actualPomPath = step.getPom();
 
         assertThat(actualPomPath, is(expectedPomPath));
