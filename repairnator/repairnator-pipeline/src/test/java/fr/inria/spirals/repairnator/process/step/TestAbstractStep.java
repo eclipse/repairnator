@@ -103,14 +103,14 @@ public class TestAbstractStep {
 
         ProjectInspector mockInspector = mock(ProjectInspector.class);
 
-        String localRepoPath = tmpDir.getAbsolutePath() + "/repairnator";
+        String localRepoPath = tmpDir.getAbsolutePath() + "/repairnator/repairnator";
         JobStatus jobStatus = new JobStatus(localRepoPath);
         when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
         when(mockInspector.getJobStatus()).thenReturn(jobStatus);
 
         AbstractStep step = new AbstractStepNop(mockInspector);
 
-        String expectedPomPath = localRepoPath+"/repairnator/pom.xml";
+        String expectedPomPath = localRepoPath+"/pom.xml";
         String actualPomPath = step.getPom();
 
         assertThat(actualPomPath, is(expectedPomPath));
