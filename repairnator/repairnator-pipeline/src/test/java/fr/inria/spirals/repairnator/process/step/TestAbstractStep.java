@@ -103,7 +103,7 @@ public class TestAbstractStep {
 
         ProjectInspector mockInspector = mock(ProjectInspector.class);
 
-        String localRepoPath = tmpDir.getAbsolutePath() + "/repairnator";
+        String localRepoPath = tmpDir.getAbsolutePath() + "/repairnator/repairnator";
         JobStatus jobStatus = new JobStatus(localRepoPath);
         when(mockInspector.getRepoLocalPath()).thenReturn(localRepoPath);
         when(mockInspector.getJobStatus()).thenReturn(jobStatus);
