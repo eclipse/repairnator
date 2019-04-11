@@ -169,15 +169,26 @@ public class NPEFixMojo extends AbstractRepairMojo {
         JSONObject jsonObject = result.toJSON(spoon);
         jsonObject.put("endInit", initDate.getTime());
         System.out.println(resultDirectory.getAbsolutePath());
-        System.out.println(result.toJSON(spoon));
+        //System.out.println(result.toJSON(spoon));
+
+        System.out.println(jsonObject.getJSONArray("executions"));
+        for(Object ob : jsonObject.getJSONArray("executions"))
+        {
+            System.out.println(((JSONObject)ob).getString("diff"));
+        }
+
+
+
+
         try {
             for (Decision decision : CallChecker.strategySelector.getSearchSpace()) {
                 jsonObject.append("searchSpace", decision.toJSON());
             }
             FileWriter writer = new FileWriter(resultDirectory.getAbsolutePath() + "/patches_" + new Date().getTime() + ".json");
             jsonObject.write(writer);
-            writer.close();
             System.out.println(writer);
+            writer.close();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -267,6 +278,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
             System.out.println("Multirun " + output.size() + "/" + nbIteration + " " + ((int)(output.size()/(double)nbIteration * 100)) + "%");
         }
         output.setEnd(new Date());
+
         return output;
     }
 
@@ -278,7 +290,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         }
         final Artifact artifact =artifactFactory.createArtifact("fr.inria.spirals","npefix", HARDCODED_NPEFIX_VERSION, null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
-
+        System.out.println(result);
         sb.append(file.getAbsoluteFile());
         System.out.println(sb);
         return sb.toString();
