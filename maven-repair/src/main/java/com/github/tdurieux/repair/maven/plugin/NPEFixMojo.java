@@ -156,6 +156,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         }
         this.result = run(npefix, tests);
 
+
         spoon.Launcher spoon = new spoon.Launcher();
         for (File s : sourceFolders) {
             spoon.addInputResource(s.getAbsolutePath());
@@ -167,16 +168,11 @@ public class NPEFixMojo extends AbstractRepairMojo {
         JSONObject jsonObject = result.toJSON(spoon);
         jsonObject.put("endInit", initDate.getTime());
         System.out.println(resultDirectory.getAbsolutePath());
-
         System.out.println(jsonObject.getJSONArray("executions"));
         for(Object ob : jsonObject.getJSONArray("executions"))
         {
-            System.out.println(((JSONObject)ob).getString("diff"));
+                System.out.println(((JSONObject)ob).getString("diff"));
         }
-
-
-
-
         try {
             for (Decision decision : CallChecker.strategySelector.getSearchSpace()) {
                 jsonObject.append("searchSpace", decision.toJSON());
@@ -184,7 +180,6 @@ public class NPEFixMojo extends AbstractRepairMojo {
             FileWriter writer = new FileWriter(resultDirectory.getAbsolutePath() + "/patches_" + new Date().getTime() + ".json");
             jsonObject.write(writer);
             writer.close();
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -192,31 +187,31 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
     private NPEOutput run(Launcher  npefix, List<String> npeTests) {
         switch (selector.toLowerCase()) {
-            case "dom":
-                return npefix.runStrategy(npeTests,
-                        new NoStrat(),
-                        new Strat1A(),
-                        new Strat1B(),
-                        new Strat2A(),
-                        new Strat2B(),
-                        new Strat3(),
-                        new Strat4(ReturnType.NULL),
-                        new Strat4(ReturnType.VAR),
-                        new Strat4(ReturnType.NEW),
-                        new Strat4(ReturnType.VOID));
-            case "exploration":
-                ExplorerSelector selector = new ExplorerSelector();
-                if (repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
-                    selector =  new ExplorerSelector(new Strat4(ReturnType.NULL), new Strat4(ReturnType.VAR), new Strat4(ReturnType.NEW), new Strat4(ReturnType.VOID));
-                }
-                return multipleRuns(npefix, npeTests, selector);
-            case "mono":
-                Config.CONFIG.setMultiPoints(false);
-                return multipleRuns(npefix, npeTests, new MonoExplorerSelector());
-            case "greedy":
-                return multipleRuns(npefix, npeTests, new GreedySelector());
-            case "random":
-                return multipleRuns(npefix, npeTests, new RandomSelector());
+        case "dom":
+            return npefix.runStrategy(npeTests,
+                    new NoStrat(),
+                    new Strat1A(),
+                    new Strat1B(),
+                    new Strat2A(),
+                    new Strat2B(),
+                    new Strat3(),
+                    new Strat4(ReturnType.NULL),
+                    new Strat4(ReturnType.VAR),
+                    new Strat4(ReturnType.NEW),
+                    new Strat4(ReturnType.VOID));
+        case "exploration":
+            ExplorerSelector selector = new ExplorerSelector();
+            if (repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
+                selector =  new ExplorerSelector(new Strat4(ReturnType.NULL), new Strat4(ReturnType.VAR), new Strat4(ReturnType.NEW), new Strat4(ReturnType.VOID));
+            }
+            return multipleRuns(npefix, npeTests, selector);
+        case "mono":
+            Config.CONFIG.setMultiPoints(false);
+            return multipleRuns(npefix, npeTests, new MonoExplorerSelector());
+        case "greedy":
+            return multipleRuns(npefix, npeTests, new GreedySelector());
+        case "random":
+            return multipleRuns(npefix, npeTests, new RandomSelector());
         }
         return null;
     }
@@ -274,7 +269,6 @@ public class NPEFixMojo extends AbstractRepairMojo {
             System.out.println("Multirun " + output.size() + "/" + nbIteration + " " + ((int)(output.size()/(double)nbIteration * 100)) + "%");
         }
         output.setEnd(new Date());
-
         return output;
     }
 
@@ -286,6 +280,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         }
         final Artifact artifact =artifactFactory.createArtifact("fr.inria.spirals","npefix", HARDCODED_NPEFIX_VERSION, null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
+
         sb.append(file.getAbsoluteFile());
         System.out.println(sb);
         return sb.toString();
