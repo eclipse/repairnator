@@ -171,6 +171,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         System.out.println(jsonObject.getJSONArray("executions"));
         for(Object ob : jsonObject.getJSONArray("executions"))
         {
+                // the patch in the json file
                 System.out.println(((JSONObject)ob).getString("diff"));
         }
         try {
