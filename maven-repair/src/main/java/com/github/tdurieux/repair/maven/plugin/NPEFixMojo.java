@@ -166,6 +166,13 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
         JSONObject jsonObject = result.toJSON(spoon);
         jsonObject.put("endInit", initDate.getTime());
+        System.out.println(resultDirectory.getAbsolutePath());
+        System.out.println(jsonObject.getJSONArray("executions"));
+        for(Object ob : jsonObject.getJSONArray("executions"))
+        {
+                // the patch in the json file
+                System.out.println(((JSONObject)ob).getString("diff"));
+        }
         try {
             for (Decision decision : CallChecker.strategySelector.getSearchSpace()) {
                 jsonObject.append("searchSpace", decision.toJSON());
