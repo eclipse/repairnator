@@ -271,7 +271,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
             URL s = dependencies.get(i);
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
-        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  "0.7", null, "jar");
+        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  System.getProperty("NPEFIX_VERSION"), null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
 
         sb.append(file.getAbsoluteFile());
