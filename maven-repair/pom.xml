@@ -101,7 +101,7 @@
         <dependency>
             <groupId>fr.inria.spirals</groupId>
             <artifactId>npefix</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
