@@ -25,7 +25,8 @@
 
         <java.src.version>1.8</java.src.version>
         <java.test.version>1.8</java.test.version>
-        <github.global.server>github</github.global.server>
+        
+        <npefix.version>0.7</npefix.version>
     </properties>
 
     <scm>
@@ -101,7 +102,8 @@
         <dependency>
             <groupId>fr.inria.gforge.spirals</groupId>
             <artifactId>npefix</artifactId>
-            <version>0.7</version>
+            <!-- set in src/main/java/versions.properties to have it at runtime -->
+            <version>${npefix.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -189,7 +191,30 @@
     </distributionManagement>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>   
         <plugins>
+            <plugin>
+                <!-- used for accessing the dependency versions at runtime -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>write-project-properties</goal>
+                        </goals>
+                        <configuration>
+                                <outputFile>${basedir}/src/main/java/versions.properties</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>

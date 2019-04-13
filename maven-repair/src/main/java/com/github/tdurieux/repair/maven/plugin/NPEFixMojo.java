@@ -272,13 +272,20 @@ public class NPEFixMojo extends AbstractRepairMojo {
         return output;
     }
 
+    public static String getNpeFixVersion() {
+        try {
+        final java.util.Properties properties = new java.util.Properties();
+        properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("versions.properties"));
+        return (properties.getProperty("npefix.version"));
+        } catch (Exception e) { throw new RuntimeException(e); }
+    }
     private String classpath(List<URL> dependencies) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < dependencies.size(); i++) {
             URL s = dependencies.get(i);
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
-        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  System.getProperty("NPEFIX_VERSION"), null, "jar");
+        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  getNpeFixVersion(), null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
 
         sb.append(file.getAbsoluteFile());
