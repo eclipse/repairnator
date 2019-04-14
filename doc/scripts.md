@@ -131,3 +131,20 @@ This script will check the given branches to verify they are correct given the f
 ### How it works
 
 It launches a docker container for each branch provided in argument, using a pool of container and the [NB_THREADS](repairnator-config.md#nb_threads) option.
+
+
+# Some info about the mongodb data
+
+The current database contains a lot of interesting data, and below will be some examples of queries that will extract some of this data. The date is an example and may be replaced with dates you intend to look between.
+
+## Number of builds with test-failures on travis
+
+db.rtscanner.find({$and :[ {dateWatched:{$gte:ISODate("2018-01-01T00:00:00Z"),$lt:ISODate("2018-06-30T23:59:59Z")}},{status:"failed"}]}).count()
+
+## Number of builds that were able to be reproduced by repairnator
+
+db.inspector.find({$and :[{buildFinishedDate:{$gte:ISODate("2018-01-01T00:00:00Z"),$lt:ISODate("2018-06-30T23:59:59Z")}},{$or:[{status:"test failure"}, {status:"PATCHED"}]}]}).count()
+
+## Number of builds where at least one patch was found
+
+db.inspector.find({$and :[ {buildFinishedDate:{$gte:ISODate("2018-01-01T00:00:00Z"),$lt:ISODate("2018-06-30T23:59:59Z")}},{status:"PATCHED"}]}).count()
