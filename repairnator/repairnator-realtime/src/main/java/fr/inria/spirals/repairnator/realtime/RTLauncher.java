@@ -144,7 +144,7 @@ public class RTLauncher {
         opt2.setLongFlag("repairTools");
         opt2.setListSeparator(',');
         opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
-        opt2.setRequired(true);
+        opt2.setDefault("AstorJKali");
         jsap.registerParameter(opt2);
         
         opt2 = new FlaggedOption("notifysummary");
