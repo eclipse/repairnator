@@ -142,13 +142,16 @@ public class RTLauncher {
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
+        opt2.setList(true);
         opt2.setListSeparator(',');
+        opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
         opt2.setRequired(true);
         jsap.registerParameter(opt2);
         
         opt2 = new FlaggedOption("notifysummary");
         opt2.setLongFlag("notifysummary");
+        opt2.setList(true);
         opt2.setListSeparator(',');
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("The email addresses to notify with a summary email.");
@@ -210,11 +213,11 @@ public class RTLauncher {
             this.config.setDuration((Duration) arguments.getObject("duration"));
         }
         this.config.setNotifySummary(arguments.getStringArray("notifysummary"));
-        if (arguments.getObject("summaryFrequency") != null) {
-            this.config.setDuration((Duration) arguments.getObject("summaryfrequenc"));
+        if (arguments.getObject("summaryfrequency") != null) {
+            this.config.setSummaryFrequency((Duration) arguments.getObject("summaryfrequency"));
         }
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
-        this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        this.config.setRepairTools(new HashSet<String>(Arrays.asList(arguments.getStringArray("repairTools"))));
     }
 
     private void initSerializerEngines() {
@@ -241,7 +244,7 @@ public class RTLauncher {
         if(summaryEngines.size() > 0) {
             this.summaryNotifier = new TimedSummaryNotifier(summaryEngines,
                     config.getSummaryFrequency(),
-                    (String[]) config.getRepairTools().toArray(),
+                    config.getRepairTools().toArray(new String[config.getRepairTools().size()]),
                     config.getMongodbHost(),
                     config.getMongodbName());
         }
@@ -250,6 +253,7 @@ public class RTLauncher {
     private void initAndRunRTScanner() {
         LOGGER.info("Init RTScanner...");
         LOGGER.info("RTScanner mode : " + this.config.getLauncherMode());
+        LOGGER.info("Number of tools" + config.getRepairTools().toArray(new String[0]));
         String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();

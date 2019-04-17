@@ -135,6 +135,7 @@ public class RTScanner {
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             if(summaryNotifier != null) {
+                LOGGER.info("Starting summary notifier");
                 new Thread(this.summaryNotifier).start();
             }
             this.running = true;
