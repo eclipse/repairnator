@@ -9,6 +9,10 @@ Want to join the Repairnator community? To receive news about Repairnator, shoot
 
 -- [The Repairnator team](https://github.com/Spirals-Team/repairnator/issues/760)
 
+## Recruit Luc Esape
+
+If you want that Luc Esape [@lucesape](http://github.com/lucesape), the coolest artificial software developer, joins your team, simply add him as collaborator to your Github project!
+
 ## Learn about Repairnator
 
 * **Post:** [Human-competitive Patches in Automatic Program Repair with Repairnator](https://medium.com/@martin.monperrus/human-competitive-patches-in-automatic-program-repair-with-repairnator-359042e00f6a), Medium, Oct. 16 2018
