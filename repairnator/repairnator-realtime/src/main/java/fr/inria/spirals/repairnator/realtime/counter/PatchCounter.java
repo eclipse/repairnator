@@ -27,7 +27,7 @@ import fr.inria.spirals.repairnator.realtime.InspectJobs;
 public class PatchCounter implements Runnable{
     
     // Sleep for this interval
-    private final static int INTERVAL = 1800 * 1000;
+    private static final int INTERVAL = 1800 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(PatchCounter.class);
     
     private int numberOfPatchesToRunFor;
@@ -118,8 +118,7 @@ public class PatchCounter implements Runnable{
             } catch (InterruptedException e) {              
                 LOGGER.warn("Sleep interrupted.");
             }
-        }
-        else {
+        } else {
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
