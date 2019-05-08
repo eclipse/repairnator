@@ -97,7 +97,11 @@ public class TestTimedSummaryNotifier {
         assertTrue(rtscannerFilter.equals(Filters.gte("dateWatched",
                 TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
         assertTrue(repairAttemptsFilter.equals(Filters.and(
-                Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)), Filters.eq("status", "PATCHED"))));
+                    Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
+                    Filters.or(
+                            Filters.eq("status", "test failure"),
+                            Filters.eq("status", "PATCHED")
+                            )).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
         assertTrue(patchesFilter.equals(Filters.and(
                 Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
                 Filters.eq("status", "PATCHED")).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
