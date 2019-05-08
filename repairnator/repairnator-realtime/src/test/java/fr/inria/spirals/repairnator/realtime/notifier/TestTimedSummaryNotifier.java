@@ -93,21 +93,26 @@ public class TestTimedSummaryNotifier {
         System.out.println(rtscannerFilter);
         System.out.println(repairAttemptsFilter);
         System.out.println(patchesFilter);
+        System.out.println(Filters.and(
+                Filters.gte("buildReproductionDate", previousDate),
+                Filters.or(
+                        Filters.eq("status", "test failure"),
+                        Filters.eq("status", "PATCHED")
+                        )).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry()));
         
-        assertTrue(rtscannerFilter.equals(Filters.gte("dateWatched",
-                TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
+        assertTrue(rtscannerFilter.equals(Filters.gte("dateWatched",previousDate).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
         assertTrue(repairAttemptsFilter.equals(Filters.and(
-                    Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
+                    Filters.gte("buildReproductionDate", previousDate),
                     Filters.or(
                             Filters.eq("status", "test failure"),
                             Filters.eq("status", "PATCHED")
                             )).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
         assertTrue(patchesFilter.equals(Filters.and(
-                Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
+                Filters.gte("buildReproductionDate", previousDate),
                 Filters.eq("status", "PATCHED")).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
         for(int i = 0; i < toolFilters.length; i++) {
             assertTrue(toolFilters[i].equals(
-                    Filters.and(Filters.gte("date", TimedSummaryNotifier.MONGO_DATE_FORMAT.format(previousDate)),
+                    Filters.and(Filters.gte("date",previousDate),
                             Filters.eq("toolname", tools[i])).toBsonDocument(BsonDocument.class, MongoClient.getDefaultCodecRegistry())));
         }
     }
