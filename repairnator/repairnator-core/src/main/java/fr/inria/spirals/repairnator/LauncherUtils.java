@@ -444,7 +444,7 @@ public class LauncherUtils {
         }
         return notifierEngines;
     }
-    
+
     public static List<NotifierEngine> initEmailSummaryEngines(Logger logger) {
         List<NotifierEngine> summaryEngines = new ArrayList<>();
         RepairnatorConfig config = RepairnatorConfig.getInstance();
