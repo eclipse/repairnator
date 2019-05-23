@@ -132,6 +132,15 @@ This script will check the given branches to verify they are correct given the f
 
 It launches a docker container for each branch provided in argument, using a pool of container and the [NB_THREADS](repairnator-config.md#nb_threads) option.
 
+# patched_builds.py
+
+This is a script that fetches data from a specified database that
+follows the document specification described in chore. 
+
+It will create a txt-file for each build in the collection `inspector`
+with the travis-build URL, the github commit URL along with every
+patch that was created for this specific build together with the
+toolname that produced each patch.
 
 # Some info about the mongodb data
 
