@@ -41,6 +41,7 @@ args="$args`ca --blacklist $BLACKLIST_PATH``ca --duration $DURATION`"
 args="$args`ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
 args="$args`ca --notifysummary $NOTIFY_SUMMARY`"
 args="$args`ca --summaryfrequency $SUMMARY_FREQUENCY`"
+args="$args`ca --numberofpatchedbuilds $PATCHED_BUILDS_LIMIT`"
 
 if [ "$SMTP_TLS" -eq 1 ]; then
     args="$args --smtpTLS"

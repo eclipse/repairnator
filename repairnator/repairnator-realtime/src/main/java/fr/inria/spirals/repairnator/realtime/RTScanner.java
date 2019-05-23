@@ -9,6 +9,7 @@ import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
+import fr.inria.spirals.repairnator.realtime.counter.PatchCounter;
 import fr.inria.spirals.repairnator.realtime.notifier.TimedSummaryNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,6 +151,32 @@ public class RTScanner {
                 }
 
                 new Thread(inspectProcessDuration).start();
+            }
+            if(RepairnatorConfig.getInstance().getNumberOfPatchedBuilds() != 0) {
+                RepairnatorConfig conf = RepairnatorConfig.getInstance();
+                LOGGER.info("RTScanner configured to stop after " + conf.getNumberOfPatchedBuilds() + " patched builds.");
+                PatchCounter patchCounter;
+                if(this.endProcessNotifier != null) {
+                    patchCounter = new PatchCounter(
+                            conf.getNumberOfPatchedBuilds(),
+                            conf.getMongodbHost(),
+                            conf.getMongodbName(),
+                            new GregorianCalendar().getTime(),
+                            this.inspectBuilds,
+                            this.inspectJobs,
+                            this.buildRunner,
+                            this.endProcessNotifier);
+                } else {
+                    patchCounter = new PatchCounter(
+                            conf.getNumberOfPatchedBuilds(),
+                            conf.getMongodbHost(),
+                            conf.getMongodbName(),
+                            new GregorianCalendar().getTime(),
+                            this.inspectBuilds,
+                            this.inspectJobs,
+                            this.buildRunner);
+                }
+                new Thread(patchCounter).start();
             }
         }
     }
