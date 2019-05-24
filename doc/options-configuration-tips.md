@@ -1,3 +1,19 @@
+# This file
+
+This file contains some general things that are good to know when
+operating and adding to repairnator.
+
+* **Scripts** describes the files in the
+[scripts](https://github.com/Spirals-Team/repairnator/tree/master/repairnator/scripts)
+directory, their usage as well as how to configure them. Many are for running repairnator in
+different ways, while some are for fetching data.
+
+* **Querying the database** describes some interesting queries to perform
+  on the database that repairnator populates.
+  
+* **Contribution tips** contains some tips as to how to add different
+  common things to repairnator.
+
 # Scripts
 We detail here all the scripts that are available in `repairnator/scripts` and their usage.
 
@@ -142,7 +158,7 @@ with the travis-build URL, the github commit URL along with every
 patch that was created for this specific build together with the
 toolname that produced each patch.
 
-# Some info about the mongodb data
+# Querying the database
 
 The current database contains a lot of interesting data, and below will be some examples of queries that will extract some of this data. The date is an example and may be replaced with dates you intend to look between.
 
@@ -157,3 +173,25 @@ db.inspector.find({$and :[{buildFinishedDate:{$gte:ISODate("2018-01-01T00:00:00Z
 ## Number of builds where at least one patch was found
 
 db.inspector.find({$and :[ {buildFinishedDate:{$gte:ISODate("2018-01-01T00:00:00Z"),$lt:ISODate("2018-06-30T23:59:59Z")}},{status:"PATCHED"}]}).count()
+
+# Contribution tips
+
+## Adding an option
+
+Differs according to which module you inted to update
+
+### realtime scanner
+
+Add option to `repairnator.cfg` and `launch_rtscanner.sh`
+
+Add to `fr.inria.spirals.repairnator.config.RepairnatorConfig.java`
+	* [ ] With a setter and getter as a private attribute
+
+Add to `fr.inria.spirals.repairnator.realtime.RTLauncher.java`:
+	* [ ] Add a new `FlaggedOption`
+	* [ ] Read from the arguments given to set value in the config
+          (`this.config.set"newOption"(arguments.getObject("option"))`)
+		  
+If it needs to be initialized, add a method to
+`fr.inria.spirals.repairnator.realtime.RTScanner.java` and possibly to 
+`fr.inria.spirals.repairnator.LauncherUtils.java` depending on the complexity.
