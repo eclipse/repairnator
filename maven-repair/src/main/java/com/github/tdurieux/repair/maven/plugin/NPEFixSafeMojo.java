@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-@Mojo( name = "npefix-safe", aggregator = true,
+@Mojo( name = "NPEFixSafe", aggregator = true,
         defaultPhase = LifecyclePhase.TEST,
         requiresDependencyResolution = ResolutionScope.TEST)
 public class NPEFixSafeMojo extends AbstractRepairMojo {
