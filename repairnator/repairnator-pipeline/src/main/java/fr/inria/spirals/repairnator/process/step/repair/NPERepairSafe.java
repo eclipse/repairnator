@@ -25,9 +25,9 @@ import java.util.List;
 // This class is a straight copt of NPERepair, but with different fields for TOOL_NAME and NPEFIX_GOAL to avoid hiding
 public class NPERepairSafe extends AbstractRepairStep {
     protected static final String TOOL_NAME = "NPEFixSafe";
-    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.5:npefix-safe";
+    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.6-SNAPSHOT:npefix";
 
-    public NPERepair() {}
+    public NPERepairSafe() {}
 
     @Override
     public String getRepairToolName() {
@@ -47,10 +47,10 @@ public class NPERepairSafe extends AbstractRepairStep {
 
     @Override
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Entrance in NPERepair step...");
+        this.getLogger().debug("Entrance in NPERepairSafe step...");
 
         if (isThereNPE()) {
-            this.getLogger().info("NPE found, start NPEFix");
+            this.getLogger().info("NPE found, start NPEFixSafe");
 
             List<RepairPatch> repairPatches = new ArrayList<>();
 
@@ -63,20 +63,20 @@ public class NPERepairSafe extends AbstractRepairStep {
             }
 
             if (status == MavenHelper.MAVEN_ERROR) {
-                this.addStepError("Error while running NPE fix: maybe the project does not contain a NPE?");
-                return StepStatus.buildSkipped(this,"Error while running maven goal for NPEFix.");
+                this.addStepError("Error while running NPEfixSafe: maybe the project does not contain a NPE?");
+                return StepStatus.buildSkipped(this,"Error while running maven goal for NPEFixSafe.");
             } else {
-                Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { "json"}, false);
+                Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix-safe"), new String[] { "json"}, false);
                 if (!files.isEmpty()) {
 
                     File patchesFiles = files.iterator().next();
                     try {
-                        FileUtils.copyFile(patchesFiles, new File(this.getInspector().getRepoLocalPath()+"/repairnator.npefix.results"));
+                        FileUtils.copyFile(patchesFiles, new File(this.getInspector().getRepoLocalPath()+"/repairnator.npefix-safe.results"));
                     } catch (IOException e) {
-                        this.addStepError("Error while moving NPE fix results", e);
+                        this.addStepError("Error while moving NPEfixSafe results", e);
                     }
 
-                    this.getInspector().getJobStatus().addFileToPush("repairnator.npefix.results");
+                    this.getInspector().getJobStatus().addFileToPush("repairnator.npefix-safe.results");
 
                     boolean effectivelyPatched = false;
                     File patchDir = new File(this.getInspector().getRepoLocalPath()+"/repairnatorPatches");
