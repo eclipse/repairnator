@@ -17,6 +17,7 @@ import fr.inria.spirals.npefix.resi.selector.ExplorerSelector;
 import fr.inria.spirals.npefix.resi.selector.GreedySelector;
 import fr.inria.spirals.npefix.resi.selector.MonoExplorerSelector;
 import fr.inria.spirals.npefix.resi.selector.RandomSelector;
+import fr.inria.spirals.npefix.resi.selector.SafeMonoSelector;
 import fr.inria.spirals.npefix.resi.selector.Selector;
 import fr.inria.spirals.npefix.resi.strategies.NoStrat;
 import fr.inria.spirals.npefix.resi.strategies.ReturnType;
@@ -53,10 +54,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-@Mojo( name = "npefix", aggregator = true,
+@Mojo( name = "npefix-safe", aggregator = true,
         defaultPhase = LifecyclePhase.TEST,
         requiresDependencyResolution = ResolutionScope.TEST)
-public class NPEFixMojo extends AbstractRepairMojo {
+public class NPEFixSafeMojo extends AbstractRepairMojo {
 
     /**
      * Location of the file.
@@ -67,7 +68,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
     @Parameter( defaultValue = "${project.build.directory}/npefix", property = "resultDir", required = true )
     private File resultDirectory;
 
-    @Parameter( defaultValue = "exploration", property = "selector", required = true )
+    @Parameter( defaultValue = "safe-mono", property = "selector", required = true )
     private String selector;
 
     @Parameter( defaultValue = "100", property = "laps", required = true )
@@ -166,13 +167,6 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
         JSONObject jsonObject = result.toJSON(spoon);
         jsonObject.put("endInit", initDate.getTime());
-        System.out.println(resultDirectory.getAbsolutePath());
-        System.out.println(jsonObject.getJSONArray("executions"));
-        for(Object ob : jsonObject.getJSONArray("executions"))
-        {
-                // the patch in the json file
-                System.out.println(((JSONObject)ob).getString("diff"));
-        }
         try {
             for (Decision decision : CallChecker.strategySelector.getSearchSpace()) {
                 jsonObject.append("searchSpace", decision.toJSON());
@@ -187,31 +181,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
     private NPEOutput run(Launcher  npefix, List<String> npeTests) {
         switch (selector.toLowerCase()) {
-        case "dom":
-            return npefix.runStrategy(npeTests,
-                    new NoStrat(),
-                    new Strat1A(),
-                    new Strat1B(),
-                    new Strat2A(),
-                    new Strat2B(),
-                    new Strat3(),
-                    new Strat4(ReturnType.NULL),
-                    new Strat4(ReturnType.VAR),
-                    new Strat4(ReturnType.NEW),
-                    new Strat4(ReturnType.VOID));
-        case "exploration":
-            ExplorerSelector selector = new ExplorerSelector();
-            if (repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
-                selector =  new ExplorerSelector(new Strat4(ReturnType.NULL), new Strat4(ReturnType.VAR), new Strat4(ReturnType.NEW), new Strat4(ReturnType.VOID));
-            }
-            return multipleRuns(npefix, npeTests, selector);
-        case "mono":
-            Config.CONFIG.setMultiPoints(false);
-            return multipleRuns(npefix, npeTests, new MonoExplorerSelector());
-        case "greedy":
-            return multipleRuns(npefix, npeTests, new GreedySelector());
-        case "random":
-            return multipleRuns(npefix, npeTests, new RandomSelector());
+        case "safe-mono":
+            return multipleRuns(npefix, npeTests, new SafeMonoSelector());
         }
         return null;
     }
@@ -278,7 +249,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
             URL s = dependencies.get(i);
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
-        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  System.getProperty("NPEFIX_VERSION"), null, "jar");
+        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix", System.getProperty("NPEFIX_VERSION"), null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
 
         sb.append(file.getAbsoluteFile());

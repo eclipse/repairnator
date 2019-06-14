@@ -4,17 +4,9 @@
 
 The goal of this projects is is to simplify automatic repair on Maven projects.
 
-
-## Automatic Repair Techniques
-
-- [X] NPEFix
-- [X] Nopol
-- [X] DynaMoth
-- [X] jGenProg
-- [X] jKali
-- [X] cardumen
-
 ## Install
+
+There are released versions on Maven Central, but they may not be up-to-date: https://search.maven.org/search?q=a:repair-maven-plugin
 
 ### Manual install
 
@@ -24,28 +16,60 @@ cd maven-repair
 mvn install
 ```
 
-### Maven
+## Usage to repair a NullPointerException (NpeFix)
 
 ```bash
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.1:get \
-    -DrepoUrl=https://tdurieux.github.io/maven-repository/snapshots/ \
-    -Dartifact=fr.inria.gforge.spirals:repair-maven-plugin:1.4-SNAPSHOT
-``` 
+git clone https://github.com/Spirals-Team/npe-dataset/
 
-## Usage
+# this is a real world NPE for Apache Commons Lang
+cd npe-dataset/lang-304
+
+# alternatively you can enter your own project at a commit with an NPE
+
+# check the failing tests
+mvn test -DtrimStackTrace=false
+
+# look for patches with NpeFix
+mvn fr.inria.gforge.spirals:repair-maven-plugin:npefix
+```
+
+## Usage to repair a condition bug (Nopol)
 
 ```bash
-cd /somewhere/my-project-with-failing-tests
+git clone https://github.com/SpoonLabs/nopol-experiments
+
+# this is a real world NPE for Apache Commons Lang
+cd nopol-experiments/dataset/cl5
+
+# alternatively you can enter your own project at a commit with a condition bug
 
 # check the failing tests
 mvn test -DtrimStackTrace=false
 
 # look for patches with Nopol
 mvn fr.inria.gforge.spirals:repair-maven-plugin:nopol
-
-# look for patches with NpeFix
-mvn fr.inria.gforge.spirals:repair-maven-plugin:npefix
 ```
+
+Maven-repair output for Nopol:
+
+```
+[INFO] ----PATCH FOUND----
+[INFO] className.length() == 0
+[INFO] Nb test that executes the patch: 37
+[INFO] org.apache.commons.lang.ClassUtils:258: CONDITIONAL
+[INFO] --- a/src/java/org/apache/commons/lang/ClassUtils.java
++++ b/src/java/org/apache/commons/lang/ClassUtils.java
+@@ -257,3 +257,3 @@
+     public static String getPackageName(String className) {
+-        if (className == null) {
++        if (className.length() == 0) {
+             return StringUtils.EMPTY;
+
+Nopol executed after: 14233 ms.
+
+```
+
+
 
 ## Output
 
@@ -58,7 +82,7 @@ cat target/nopol/output.json
 
 ## Output Format
 
-### NPEFix
+### NPEFix output in a JSON file in `target/`
 ```js
 {
   "executions": [
@@ -137,3 +161,12 @@ cat target/nopol/output.json
 # History
 
 For history on the project, visit https://github.com/Spirals-Team/maven-repair/
+
+## Automatic Repair Techniques Supported
+
+- [X] NPEFix
+- [X] Nopol
+- [X] DynaMoth
+- [X] jGenProg
+- [X] jKali
+- [X] cardumen

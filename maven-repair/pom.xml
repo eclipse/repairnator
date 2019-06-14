@@ -99,7 +99,7 @@
             <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>fr.inria.spirals</groupId>
+            <groupId>fr.inria.gforge.spirals</groupId>
             <artifactId>npefix</artifactId>
             <version>0.7</version>
             <exclusions>
