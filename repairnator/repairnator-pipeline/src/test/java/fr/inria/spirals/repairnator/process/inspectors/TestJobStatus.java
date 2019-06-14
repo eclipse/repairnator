@@ -1,14 +1,13 @@
-package fr.inria.spirals.repairnator.process.step.repair;
+package fr.inria.spirals.repairnator.process.inspectors;
 
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
@@ -36,7 +35,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class TestGatheredPatches {
+public class TestJobStatus {
 
     private File tmpDir;
 
@@ -54,7 +53,7 @@ public class TestGatheredPatches {
     }
 
     @Test
-    public void testGatheredPatches() throws IOException {
+    public void testGatheringPatches() throws IOException {
         long buildId = 382484026; // surli/failingProject build
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -100,92 +99,6 @@ public class TestGatheredPatches {
         assertThat(allPatches.size(), is(16)); // 12 (nopol) + 4 (npe)
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
     }
-
-//    @Test
-//    public void testNopolSingleRepair() throws IOException {
-//        long buildId = 382484026; // surli/failingProject build
-//
-//        Build build = this.checkBuildAndReturn(buildId, false);
-//
-//        tmpDir = Files.createTempDirectory("test_nopolrepair").toFile();
-//
-//        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
-//
-//        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
-//
-//        CloneRepository cloneStep = new CloneRepository(inspector);
-//        NopolSingleTestRepair nopolRepair = new NopolSingleTestRepair();
-//        nopolRepair.setProjectInspector(inspector);
-//        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(nopolRepair.getRepairToolName()));
-//
-//        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
-//                .addNextStep(new TestProject(inspector))
-//                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-//                .addNextStep(new ComputeClasspath(inspector, true))
-//                .addNextStep(new ComputeSourceDir(inspector, true, false))
-//                .addNextStep(nopolRepair);
-//        cloneStep.execute();
-//
-//        assertThat(nopolRepair.isShouldStop(), is(false));
-//
-//        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-//        assertThat(stepStatusList.size(), is(7));
-//        StepStatus nopolStatus = stepStatusList.get(6);
-//        assertThat(nopolStatus.getStep(), is(nopolRepair));
-//
-//        for (StepStatus stepStatus : stepStatusList) {
-//            assertThat(stepStatus.isSuccess(), is(true));
-//        }
-//
-//        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-//        assertThat(finalStatus, is("PATCHED"));
-//
-//        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-//        assertThat(allPatches.size(), is(12));
-//        assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
-//    }
-//
-//    @Test
-//    public void testNPERepair() throws IOException {
-//        long buildId = 382484026; // surli/failingProject build
-//
-//        Build build = this.checkBuildAndReturn(buildId, false);
-//
-//        tmpDir = Files.createTempDirectory("test_nperepair").toFile();
-//
-//        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
-//
-//        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
-//        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
-//
-//        CloneRepository cloneStep = new CloneRepository(inspector);
-//        NPERepair npeRepair = new NPERepair();
-//        npeRepair.setProjectInspector(inspector);
-//
-//        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
-//                .addNextStep(new TestProject(inspector))
-//                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-//                .addNextStep(npeRepair);
-//        cloneStep.execute();
-//
-//        assertThat(npeRepair.isShouldStop(), is(false));
-//
-//        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-//        assertThat(stepStatusList.size(), is(5));
-//        StepStatus npeStatus = stepStatusList.get(4);
-//        assertThat(npeStatus.getStep(), is(npeRepair));
-//
-//        for (StepStatus stepStatus : stepStatusList) {
-//            assertThat(stepStatus.isSuccess(), is(true));
-//        }
-//
-//        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-//        assertThat(finalStatus, is("PATCHED"));
-//
-//        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-//        assertThat(allPatches.size(), is(4));
-//        assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
-//    }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
