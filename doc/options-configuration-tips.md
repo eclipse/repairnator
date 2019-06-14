@@ -158,6 +158,27 @@ with the travis-build URL, the github commit URL along with every
 patch that was created for this specific build together with the
 toolname that produced each patch.
 
+The text file will have a html format and the following xpath queries
+provide some interesting data for each file.
+
+### Select all patches created by "tool"
+`//[@title="tool"]`
+
+### Select all patches
+`//[@class="patch"]`
+
+### Select travis-url
+`//[@id="travis-url"]`
+
+### Select commit-url
+`//[@id="commit-url"]`
+
+### Get all links
+`//[@href]`
+
+### Get all toolnames (may have duplicates)
+`//@title`
+
 # Querying the database
 
 The current database contains a lot of interesting data, and below will be some examples of queries that will extract some of this data. The date is an example and may be replaced with dates you intend to look between.

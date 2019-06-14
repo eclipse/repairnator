@@ -45,6 +45,19 @@ def patches_query(mongoDB, inspectorJson):
 
 
 """
+We will be parsing html, so we need to change the < and > and & icons 
+"""
+def replace_spec_chars(string):
+    string = string.replace("&", "&amp;")
+    string = string.replace("<", "&lt;")
+    string = string.replace(">", "&gt;")
+    string = string.replace("\"", "&quot;")
+    string = string.replace("\'", "&apos;")
+    return string
+    
+
+
+"""
 Query the inspector once and return all documents
 """
 def inspector_query(mongoDB):
@@ -64,7 +77,7 @@ def inspector_query(mongoDB):
     elif(dateFrom == None and dateTo != None):
         inspectorFilter = {"buildFinishedDate" : { "$lt" : dateTo}, "status" : "PATCHED"}
 
-    return mongoDB.inspector.find(inspectorFilter)
+    return mongoDB.inspector.find(inspectorFilter).batch_size(50)
 
 """
 Build the string that will ultimately be written to the txt-file
@@ -72,10 +85,9 @@ Build the string that will ultimately be written to the txt-file
 patchDocs - all docs with the same buildId, so that we gather all patches
 diffs - a string of the different diffse
 """
-def txt_builder(patchDocs, inspectorJson):
+def file_builder(patchDocs, inspectorJson):
 
     global driver
-    
     buildURL = inspectorJson['travisURL']
 
     driver.get(buildURL)
@@ -84,33 +96,32 @@ def txt_builder(patchDocs, inspectorJson):
         commitURL = links[0].get_attribute("href")
     else:
         return None
+
+    # Where we do have a commit url we build the html file
+    f = open(str(inspectorJson['buildId']) + ".html", "w")
+
+    # Write commit and travis url
+    f.write("<html>\n<body>\n")
+    f.write("<p><a href=\"" + buildURL + "\" id=\"travis-url\">" + buildURL + "</a></p>\n")
+    f.write("<p><a href=\"" + commitURL + "\" id=\"commit-url\">" + commitURL + "</a></p>\n")
     
-    diffs = []
+    index = 0
     for json in patchDocs:
-        diffs.append(patch_diffs(json))
+        diff = json['diff']
+        tool = json ['toolname']
+        diff = replace_spec_chars(diff)
+        if diff != None and diff != "" and isinstance(diff, str) and tool != None:
+            f.write("<pre>" + tool +
+                    "<code id=\" " + str(index) + "\" class=\"patch\" title=\"" + tool + "\">\n" 
+                    + diff + 
+                    "</code></pre>\n")
+            index += 1
 
-    diffString = "\n\n\n".join(diffs)
-
-    return "\n".join([buildURL, commitURL, diffString]);
-    
-    
-    
-
-"""
-Since we can have multiple patches we will have to handle these one by one as well
-Will have to look at tools as well
-"""
-def patch_diffs(patchJson):
-    patchTool = patchJson['toolname']
-    patchDiff = patchJson['diff']
-
-    ret = patchTool + " found a patch with the following diff :\n\n" + patchDiff
-    print(ret)
-
-    return ret
+    f.write("</body>\n</html>\n")
+    f.close()
+    return 0
         
     
-
 """
 Fetch info and write a file for each build found
 """
@@ -124,14 +135,11 @@ def main():
     
     for inspectorJson in inspector_query(mongoDB):        
         patchesDocs = patches_query(mongoDB, inspectorJson)
-        txt = txt_builder(patchesDocs, inspectorJson)
-        if(txt != None):
-            f = open(str(inspectorJson['buildId']) + ".txt", "w")
-            f.write(txt)
-            f.close();
+        file_builder(patchesDocs, inspectorJson)
+        print(inspectorJson['buildId'])
             
             
 # Start a webdriver to make sure we can fetch the correct url
 driver = webdriver.Firefox()
-driver.implicitly_wait(10)
+driver.implicitly_wait(5)
 main()
