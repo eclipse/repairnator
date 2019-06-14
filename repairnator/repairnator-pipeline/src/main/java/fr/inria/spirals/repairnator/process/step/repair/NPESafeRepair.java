@@ -23,8 +23,8 @@ import java.util.List;
  */
 
 // This class is a straight copt of NPERepair, but with different fields for TOOL_NAME and NPEFIX_GOAL to avoid hiding
-public class NPERepair extends AbstractRepairStep {
-    protected static final String TOOL_NAME = "NPEFix";
+public class NPERepairSafe extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "NPEFixSafe";
     private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.5:npefix-safe";
 
     public NPERepair() {}
