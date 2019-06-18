@@ -2,7 +2,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: activemq
-  namespace: repairnator
 spec:
   replicas: 1
   template:
@@ -24,7 +23,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: activemq
-  namespace: repairnator
 spec:
   ports:
   - port: 61613 

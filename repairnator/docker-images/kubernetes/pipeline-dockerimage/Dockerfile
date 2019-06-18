@@ -1,4 +1,4 @@
-FROM maven:3.3.9-jdk-8
+FROM maven:3.6.1-jdk-8
 
 LABEL Description="Repairnator Pipeline docker image for k8s" Vendor="Spirals" Version="0.0.0"
 LABEL maintainer="Long Zhang <longz@kth.se>"
