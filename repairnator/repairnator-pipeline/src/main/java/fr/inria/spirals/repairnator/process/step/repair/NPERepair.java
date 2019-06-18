@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class NPERepair extends AbstractRepairStep {
     protected static final String TOOL_NAME = "NPEFix";
-    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.6-SNAPSHOT:npefix-safe";
+    private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.5:npefix";
 
     public NPERepair() {}
 
@@ -48,7 +48,7 @@ public class NPERepair extends AbstractRepairStep {
         this.getLogger().debug("Entrance in NPERepair step...");
 
         if (isThereNPE()) {
-            this.getLogger().info("NPE found, start NPEFixSafe");
+            this.getLogger().info("NPE found, start NPEFix");
 
             List<RepairPatch> repairPatches = new ArrayList<>();
 
