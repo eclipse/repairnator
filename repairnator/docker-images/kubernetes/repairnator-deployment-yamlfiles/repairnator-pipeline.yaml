@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repairnator-pipeline
+  labels:
+    app: repairnator-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repairnator-pipeline
+  template:
+    metadata:
+      labels:
+        app: repairnator-pipeline
+    spec:
+      containers:
+      - name: repairnator-pipeline
+        image: gcr.io/{PROJECT_NAME}/{IMAGE_NAME}:tag
+        env:
+        - name: MONGODB_HOST
+          value: mongodb://mongo:27017
+
+
+          

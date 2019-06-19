@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repairnator-scanner
+  labels:
+    app: repairnator-scanner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repairnator-scanner
+  template:
+    metadata:
+      labels:
+        app: repairnator-scanner
+    spec:
+      containers:
+      - name: repairnator-scanner
+        image: gcr.io/PROJECT_NAME/IMAGE_NAME:tag
+        env:
+        - name: MONGODB_HOST
+          value: mongodb://mongo:27017
+
+
+          
