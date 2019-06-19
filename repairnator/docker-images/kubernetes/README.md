@@ -10,6 +10,9 @@ In order to make Repairnator highly available, it might be good to have configur
 
 # How to set up repairnator on K8s
 
+![Design](K8sRepairnatorDesign.jpg)
+
+
 ## Setup mongodb and ActiveMQ
 First set up mongodb on kubernetes with a persistent memory volume(This mean that even if you erase the deployment and redeploy nothing will be lost, the database would look the same)
 
