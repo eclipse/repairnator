@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer; 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -14,6 +15,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
@@ -63,7 +65,16 @@ public class POMModifier {
         DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
         Document doc = builder.parse(fileName);
         
-        Node repoId = doc.getElementsByTagName(id).item(0);
+        NodeList repoIds = doc.getElementsByTagName("id");
+        Node repoId = null;
+        for(int i = 0; i < repoIds.getLength(); i++) {
+            if(repoIds.item(i).getTextContent().equals(id)) {
+                repoId = repoIds.item(i);
+                break;
+            }
+        }
+        if(repoId == null)
+            throw new IOException();
         Node repairRepo = repoId.getParentNode();
         Node pluginRepos = repairRepo.getParentNode();
         pluginRepos.removeChild(repairRepo);
@@ -76,6 +87,10 @@ public class POMModifier {
                 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
+        
+        
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         
         StreamResult result = new StreamResult(fileName);
         transformer.transform(source, result);
