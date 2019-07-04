@@ -206,9 +206,11 @@ Differs according to which module you inted to update
 Add option to `repairnator.cfg` and `launch_rtscanner.sh`
 
 Add to `fr.inria.spirals.repairnator.config.RepairnatorConfig.java`
+
 	* [ ] With a setter and getter as a private attribute
 
 Add to `fr.inria.spirals.repairnator.realtime.RTLauncher.java`:
+
 	* [ ] Add a new `FlaggedOption`
 	* [ ] Read from the arguments given to set value in the config
           (`this.config.set"newOption"(arguments.getObject("option"))`)
