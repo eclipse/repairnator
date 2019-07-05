@@ -73,8 +73,9 @@ public class POMModifier {
                 break;
             }
         }
-        if(repoId == null)
+        if(repoId == null) {
             throw new IOException();
+        }
         Node repairRepo = repoId.getParentNode();
         Node pluginRepos = repairRepo.getParentNode();
         pluginRepos.removeChild(repairRepo);
