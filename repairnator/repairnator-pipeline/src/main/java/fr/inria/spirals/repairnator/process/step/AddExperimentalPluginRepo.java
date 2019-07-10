@@ -26,6 +26,9 @@ public class AddExperimentalPluginRepo extends AbstractStep {
     
     public AddExperimentalPluginRepo(ProjectInspector inspector, boolean blockingStep, String stepName, String repoId, String repoName, String repoUrl) {
         super(inspector, blockingStep, stepName);
+        this.repoId = repoId;
+        this.repoName = repoName;
+        this.repoUrl = repoUrl;
     }
     @Override
     protected StepStatus businessExecute() {

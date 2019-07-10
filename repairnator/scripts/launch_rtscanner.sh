@@ -42,6 +42,7 @@ args="$args`ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_U
 args="$args`ca --notifysummary $NOTIFY_SUMMARY`"
 args="$args`ca --summaryfrequency $SUMMARY_FREQUENCY`"
 args="$args`ca --numberofpatchedbuilds $PATCHED_BUILDS_LIMIT`"
+args="$args`ca --experimentalPluginRepoList $EXPERIMENTAL_PLUGIN_REPOS`"
 
 if [ "$SMTP_TLS" -eq 1 ]; then
     args="$args --smtpTLS"
