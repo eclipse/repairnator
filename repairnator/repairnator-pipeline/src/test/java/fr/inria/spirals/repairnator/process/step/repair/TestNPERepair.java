@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
+import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -69,7 +70,7 @@ public class TestNPERepair {
         npeRepair.setProjectInspector(inspector);
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
-        .addNextStep(new AddExperimentalPluginRepo(inspector, "experimental-snapshot", "custom-experimental-snapshot-repo", "http://repairnator.proj.kth.se:55555/"))
+                .addNextStep(new AddExperimentalPluginRepo(inspector, "experimental-snapshot", "custom-experimental-snapshot-repo", "http://repairnator.proj.kth.se:55555/"))
                 .addNextStep(new TestProject(inspector))
                 .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                 .addNextStep(npeRepair);
@@ -78,8 +79,8 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(5));
-        StepStatus npeStatus = stepStatusList.get(4);
+        assertThat(stepStatusList.size(), is(6));
+        StepStatus npeStatus = stepStatusList.get(5);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
         for (StepStatus stepStatus : stepStatusList) {
