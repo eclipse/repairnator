@@ -70,7 +70,6 @@ public class TestNPERepair {
         npeRepair.setProjectInspector(inspector);
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
-                .addNextStep(new AddExperimentalPluginRepo(inspector, "experimental-snapshot", "custom-experimental-snapshot-repo", "http://repairnator.proj.kth.se:55555/"))
                 .addNextStep(new TestProject(inspector))
                 .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                 .addNextStep(npeRepair);
