@@ -251,14 +251,12 @@ public class Launcher {
         // Make sure that it is a multiple of three in the list
         if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
             this.getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));
-        }
-        else if (arguments.getStringArray("experimentalPluginRepoList").length != 0) {
+        } else if (arguments.getStringArray("experimentalPluginRepoList").length != 0) {
             LOGGER.warn("The experimental plugin repo list is not correctly formed."
                     + " Please make sure you have provided id, name and url for all repos. "
                     + "Repairnator will continue without these repos.");
             this.getConfig().setExperimentalPluginRepoList(null);
-        }
-        else {
+        } else {
             this.getConfig().setExperimentalPluginRepoList(null);
         }
     }
