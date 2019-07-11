@@ -1,0 +1,78 @@
+{
+  "$id": "http://repairnator.lille.inria.fr/mongo/inspector",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "$id": "/properties/_id",
+      "type": "string",
+      "description": "MongoDB UUID of the record",
+      "default": "",
+      "examples": [
+        "5b5fab6212ce7600123dadcb"
+      ]
+    },
+    "buildId": {
+      "$id": "/properties/buildId",
+      "type": "integer",
+      "description": "Travis ID of the build being repaired",
+      "default": 0,
+      "examples": [
+        410105917
+      ]
+    },
+    "repositoryName": {
+      "$id": "/properties/repositoryName",
+      "type": "string",
+      "description": "Repository slug (i.e. user/name) of the repository where the build comes from",
+      "default": "",
+      "examples": [
+        "vavr-io/vavr-gwt"
+      ]
+    },
+    "buildFinishedDateStr": {
+      "$id": "/properties/buildFinisheddateStr",
+      "type": "string",
+      "description": "The exact date the build was executed, as a string",
+      "default": "",
+        "examples": [
+            "31/07/18 02:20"
+        ]
+    },
+    "buildFinishedDate": {
+      "$id": "/properties/buildFinishedDate",
+      "type": "string",
+      "description": "The exact date the build was executed",
+      "default": "",
+      "examples":[
+          "2018-07-31T02:20:50.532+0000"
+      ]
+    },
+    "dateOfPRStr": {
+      "$id": "/properteis/dateOfPRStr",
+      "type": "string",
+      "description": "The exact date this PR was created, as a string",
+      "default": "",
+      "examples": [
+          "31/07/18 02:20"
+      ]
+    },
+    "dateOfPR": {
+      "$id": "/properties/dateOfPR",
+      "type": "string",
+      "description": "The exact date this PR was created",
+      "default": "",
+      "examples": [
+          "2018-07-31T02:20:50.532+0000"
+      ]
+    },
+    "PRurl": {
+        "$id": "/properties/PRurl",
+        "type": "string",
+        "description": "The url of this PR on github",
+        "default": "",
+        "examples": [
+            "https://github.com/Spirals-Team/repairnator/pull/855"
+        ]
+    }
+  }
+}

@@ -382,6 +382,7 @@ public class Launcher {
         serializers.add(new PipelineErrorSerializer(this.engines));
         serializers.add(new PatchesSerializer(this.engines));
         serializers.add(new ToolDiagnosticSerializer(this.engines));
+        serializers.add(new PullRequestSerializer(this.engines));
 
         ProjectInspector inspector;
 
