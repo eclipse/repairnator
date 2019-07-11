@@ -54,6 +54,7 @@ public class RepairnatorConfig {
     private Set<String> repairTools;
     private String githubUserName;
     private String githubUserEmail;
+    private String[] experimentalPluginRepoList;
 
     // Dockerpool
     private String dockerImageName;
@@ -568,5 +569,13 @@ public class RepairnatorConfig {
 
     public void setNumberOfPatchedBuilds(int numberOfPatchedBuilds) {
         this.numberOfPatchedBuilds = numberOfPatchedBuilds;
+    }
+
+    public String[] getExperimentalPluginRepoList() {
+        return experimentalPluginRepoList;
+    }
+
+    public void setExperimentalPluginRepoList(String[] experimentalPluginRepoList) {
+        this.experimentalPluginRepoList = experimentalPluginRepoList;
     }
 }

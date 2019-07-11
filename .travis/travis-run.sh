@@ -5,7 +5,7 @@ export M2_HOME=/usr/local/maven
 
 cd repairnator
 
-mvn clean install -Ptravis
+mvn clean install -Ptravis -B
 mvn jacoco:report coveralls:report --fail-never
 
 ./docker-images/checkbranches-dockerimage/check_branches_test.sh

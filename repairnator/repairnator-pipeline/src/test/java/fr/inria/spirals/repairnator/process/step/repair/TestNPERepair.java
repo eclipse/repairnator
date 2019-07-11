@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
+import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
