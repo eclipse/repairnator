@@ -79,7 +79,7 @@ public class TestNPERepairSafe {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(5));
+        assertThat(stepStatusList.size(), is(6));
         StepStatus npeStatus = stepStatusList.get(5);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
