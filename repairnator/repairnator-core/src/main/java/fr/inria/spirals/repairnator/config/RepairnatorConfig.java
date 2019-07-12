@@ -73,7 +73,7 @@ public class RepairnatorConfig {
     private Duration duration;
     private Duration summaryFrequency;
     private String[] notifySummary;
-    private int numberOfPatchedBuilds;
+    private int numberOfPRs;
 
     // Checkbranches
     private boolean humanPatch;
@@ -563,12 +563,12 @@ public class RepairnatorConfig {
         this.notifySummary = notifySummary;
     }
 
-    public int getNumberOfPatchedBuilds() {
-        return numberOfPatchedBuilds;
+    public int getNumberOfPRs() {
+        return numberOfPRs;
     }
 
-    public void setNumberOfPatchedBuilds(int numberOfPatchedBuilds) {
-        this.numberOfPatchedBuilds = numberOfPatchedBuilds;
+    public void setNumberOfPRs(int numberOfPRs) {
+        this.numberOfPRs = numberOfPRs;
     }
 
     public String[] getExperimentalPluginRepoList() {

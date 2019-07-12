@@ -24,14 +24,14 @@ import fr.inria.spirals.repairnator.realtime.InspectJobs;
  *
  */
 
-public class PatchCounter implements Runnable{
+public class PullRequestCounter implements Runnable{
     
     // Sleep for this interval
     private static final int INTERVAL = 1800 * 1000;
-    private static final Logger LOGGER = LoggerFactory.getLogger(PatchCounter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PullRequestCounter.class);
     
-    private int numberOfPatchesToRunFor;
-    private Bson patchesFilter;
+    private int numberOfPRsToRunFor;
+    private Bson PRFilter;
     private Bson buildFilter;
     private String mongodbHost;
     private String mongodbName;
@@ -40,7 +40,7 @@ public class PatchCounter implements Runnable{
     private InspectJobs inspectJobs;
     private BuildRunner buildRunner;
     
-    public PatchCounter(int numberOfPatchesToRunFor, 
+    public PullRequestCounter(int numberOfPRsToRunFor, 
             String mongodbHost,
             String mongodbName,
             Date startDate,
@@ -48,19 +48,19 @@ public class PatchCounter implements Runnable{
             InspectJobs inspectJobs,
             BuildRunner buildRunner) {
         // Set the variables
-        this.numberOfPatchesToRunFor = numberOfPatchesToRunFor;
+        this.numberOfPRsToRunFor = numberOfPRsToRunFor;
         this.mongodbHost = mongodbHost;
         this.mongodbName = mongodbName;
         
         // Create a filter that fetches each patch-document since the scanner started
         
-        this.patchesFilter = Filters.gte("date", startDate);
+        this.PRFilter = Filters.gte("date", startDate);
         this.buildFilter = Filters.and(
                 Filters.gte("buildFinishedDate", startDate),
                 Filters.eq("status", "PATCHED"));
     }
     
-    public PatchCounter(int numberOfPatchesToRunFor, 
+    public PullRequestCounter(int numberOfPRsToRunFor, 
             String mongodbHost,
             String mongodbName,
             Date startDate,
@@ -68,7 +68,7 @@ public class PatchCounter implements Runnable{
             InspectJobs inspectJobs,
             BuildRunner buildRunner,
             EndProcessNotifier endProcessNotifier) {
-        this(numberOfPatchesToRunFor, mongodbHost, mongodbName, startDate,
+        this(numberOfPRsToRunFor, mongodbHost, mongodbName, startDate,
                 inspectBuilds, inspectJobs, buildRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
@@ -79,13 +79,13 @@ public class PatchCounter implements Runnable{
      * @return yes or no (true or false)
      */
     public boolean keepRunning() {
-        if(numberOfPatchesToRunFor == 0) {
+        if(numberOfPRsToRunFor == 0) {
             return true;
         }
         MongoClient client = new MongoClient(new MongoClientURI(this.mongodbHost + "/" + this.mongodbName));
         MongoDatabase mongo = client.getDatabase(this.mongodbName);
         
-        boolean run = this.numberOfPatchesToRunFor > numberOfBuildsPatched(mongo);
+        boolean run = this.numberOfPRsToRunFor > numberOfPRs(mongo);
         
         client.close();
         return run;
@@ -106,8 +106,8 @@ public class PatchCounter implements Runnable{
      * @param mongo the database to search through
      * @return number of builds patched
      */
-    protected long numberOfPatches(MongoDatabase mongo) {
-        return mongo.getCollection("inspector").count(this.patchesFilter);
+    protected long numberOfPRs(MongoDatabase mongo) {
+        return mongo.getCollection("pull-request").count(this.PRFilter);
     }
 
     @Override
