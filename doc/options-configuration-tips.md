@@ -158,6 +158,27 @@ with the travis-build URL, the github commit URL along with every
 patch that was created for this specific build together with the
 toolname that produced each patch.
 
+The text file will have a html format and the following xpath queries
+provide some interesting data for each file.
+
+### Select all patches created by "tool"
+`//[@title="tool"]`
+
+### Select all patches
+`//[@class="patch"]`
+
+### Select travis-url
+`//[@id="travis-url"]`
+
+### Select commit-url
+`//[@id="commit-url"]`
+
+### Get all links
+`//[@href]`
+
+### Get all toolnames (may have duplicates)
+`//@title`
+
 # Querying the database
 
 The current database contains a lot of interesting data, and below will be some examples of queries that will extract some of this data. The date is an example and may be replaced with dates you intend to look between.
@@ -185,12 +206,14 @@ Differs according to which module you inted to update
 Add option to `repairnator.cfg` and `launch_rtscanner.sh`
 
 Add to `fr.inria.spirals.repairnator.config.RepairnatorConfig.java`
-	* [ ] With a setter and getter as a private attribute
+
+* [ ] With a setter and getter as a private attribute
 
 Add to `fr.inria.spirals.repairnator.realtime.RTLauncher.java`:
-	* [ ] Add a new `FlaggedOption`
-	* [ ] Read from the arguments given to set value in the config
-          (`this.config.set"newOption"(arguments.getObject("option"))`)
+
+* [ ] Add a new `FlaggedOption`
+* [ ] Read from the arguments given to set value in the config 
+      (`this.config.set"newOption"(arguments.getObject("option"))`)
 		  
 If it needs to be initialized, add a method to
 `fr.inria.spirals.repairnator.realtime.RTScanner.java` and possibly to 

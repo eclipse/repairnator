@@ -15,7 +15,7 @@ function ca {
   fi
 }
 
-args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --smtpPort $SMTP_PORT``ca --smtpUsername $SMTP_USERNAME``ca --smtpPassword $SMTP_PASSWORD``ca --notifyto $NOTIFY_TO``ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL`"
+args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --pushurl $PUSH_URL``ca --smtpServer $SMTP_SERVER``ca --smtpPort $SMTP_PORT``ca --smtpUsername $SMTP_USERNAME``ca --smtpPassword $SMTP_PASSWORD``ca --notifyto $NOTIFY_TO``ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL``ca --experimentalPluginRepoList $EXPERIMENTAL_PLUGIN_REPOS`"
 
 if [ "$CREATE_PR" -eq 1 ]; then
   args="$args --createPR"
@@ -43,6 +43,7 @@ export SMTP_USERNAME=
 export SMTP_PASSWORD=
 export SMTP_TLS=
 export NOTIFY_TO=
+export EXPERIMENTAL_PLUGIN_REPOS=
 
 LOCAL_REPAIR_MODE=$REPAIR_MODE
 

@@ -197,8 +197,17 @@ public class ProjectInspector {
     public void run() {
         if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
+            cloneRepo.addNextStep(new CheckoutBuggyBuild(this, true));
+            
+            // If we have experimental plugins, we need to add them here.
+            String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
+            if(repos != null) {
+                for(int i = 0; i < repos.length-1; i =+ 2) {
+                    cloneRepo.addNextStep(new AddExperimentalPluginRepo(this, repos[i], repos[i+1], repos[i+2]));
+                }
+            }
+            // Add the next steps
             cloneRepo
-                    .addNextStep(new CheckoutBuggyBuild(this, true))
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))

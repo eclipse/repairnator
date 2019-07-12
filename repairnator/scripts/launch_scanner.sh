@@ -44,6 +44,7 @@ supplementaryArgs="$supplementaryArgs `ca --smtpPort $SMTP_PORT`"
 supplementaryArgs="$supplementaryArgs `ca --smtpUsername $SMTP_USERNAME`"
 supplementaryArgs="$supplementaryArgs `ca --smtpPassword $SMTP_PASSWORD`"
 supplementaryArgs="$supplementaryArgs `ca --notifyto $NOTIFY_TO`"
+supplementaryArgs="$supplementaryArgs `ca --experimentalPluginRepoList $EXPERIMENTAL_PLUGIN_REPOS`"
 
 if [ "$BEARS_MODE" -eq 1 ]; then
     supplementaryArgs="$supplementaryArgs --bears"

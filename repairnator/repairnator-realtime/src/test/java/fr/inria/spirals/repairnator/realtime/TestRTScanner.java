@@ -3,6 +3,8 @@ package fr.inria.spirals.repairnator.realtime;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -37,8 +39,9 @@ public class TestRTScanner {
         assertFalse(result);
     }
 
-    @Test
+    @Ignore
     public void testRepositoryWithoutCheckstyleIsInteresting() {
+        // TODO find another interesting repo
         String slug = "nosan/embedded-cassandra";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
         Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
