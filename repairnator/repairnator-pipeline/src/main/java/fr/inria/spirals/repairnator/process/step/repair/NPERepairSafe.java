@@ -66,12 +66,12 @@ public class NPERepairSafe extends AbstractRepairStep {
                 this.addStepError("Error while running NPEfixSafe: maybe the project does not contain a NPE?");
                 return StepStatus.buildSkipped(this,"Error while running maven goal for NPEFixSafe.");
             } else {
-                Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix-safe"), new String[] { "json"}, false);
+                Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { "json"}, false);
                 if (!files.isEmpty()) {
 
                     File patchesFiles = files.iterator().next();
                     try {
-                        FileUtils.copyFile(patchesFiles, new File(this.getInspector().getRepoLocalPath()+"/repairnator.npefix-safe.results"));
+                        FileUtils.copyFile(patchesFiles, new File(this.getInspector().getRepoLocalPath()+"/repairnator.npefix.results"));
                     } catch (IOException e) {
                         this.addStepError("Error while moving NPEfixSafe results", e);
                     }
