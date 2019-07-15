@@ -326,6 +326,7 @@ public class LauncherUtils {
         opt.setShortFlag('n');
         opt.setLongFlag("name");
         opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("spirals/repairnator:latest");
         opt.setHelp("Specify the docker image name to use.");
         return opt;
     }
