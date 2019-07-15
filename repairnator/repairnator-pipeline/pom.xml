@@ -20,6 +20,16 @@
             <name>tdurieux.github.io maven-repository</name>
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
+        <repository>
+            <id>tdurieux-maven-repository-release-github</id>
+            <name>Tdurieux github.com maven-repository</name>
+            <url>https://github.com/tdurieux/maven-repository/tree/master/releases</url>
+        </repository>
+        <repository>
+            <id>tdurieux-maven-repository-snapshot-github</id>
+            <name>Tdurieux github.com maven-repository</name>
+            <url>https://github.com/tdurieux/maven-repository/tree/master/snapshots</url>
+        </repository>
     </repositories>
 
     <dependencies>
