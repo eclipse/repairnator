@@ -14,7 +14,16 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 
 /**
- * 
+ * Serializes data regarding pull requests created by Repairnator. Will be used when 
+ * documenting the pull requests in a document database such as Mongo DB.
+ *
+ * The data stored in the generated documents and lists are:
+ *      1. The build id of the travis-ci build repairnator was executed on.
+ *      2. The slug of the github repository for which the pull request was created (user/organisation + projectname)
+ *      3. The date when the travis-ci build finished.
+ *      4. The date on which the pull request was created.
+ *      5. The url of the created pull request.
+ *
  * @author Benjamin Tellström
  * Created on 11/07-2019
  *
