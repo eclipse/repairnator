@@ -39,10 +39,9 @@ public class TestRTScanner {
         assertFalse(result);
     }
 
-    @Ignore
+    @Test
     public void testRepositoryWithoutCheckstyleIsInteresting() {
-        // TODO find another interesting repo
-        String slug = "nosan/embedded-cassandra";
+        String slug = "repairnator/embedded-cassandra";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
         Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
         assertTrue(repositoryOptional.isPresent());
