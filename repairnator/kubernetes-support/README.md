@@ -14,6 +14,7 @@ The starting folder for these deployment below is "repairnator/kubernetes-suppor
 
 To deploy ActiveMQ for effective queue managements of jobs to the pipeline and scanner. First apply the yaml file inside the queue-for-buildids folder
 ```
+	cd repairnator/kubernetes-support/
 	kubectl create -f /queue-for-buildids/activemq.yaml
 ```
 To access to the web interface
@@ -32,6 +33,7 @@ Access webinterface with "http://localhost:8161/admin/" in your browser. The def
 
 To send message to queue use the publisher.py script in queue-for-buildids folder. Syntax
 ```
+	cd repairnator/kubernetes-support/
 	python publisher.py -d queue-name message-1 message-2 message3 ... message-N
 ```
 
