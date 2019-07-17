@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repairnator-scanner
+  labels:
+    app: repairnator-scanner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repairnator-scanner
+  template:
+    metadata:
+      labels:
+        app: repairnator-scanner
+    spec:
+      containers:
+      - name: repairnator-scanner
+        image: IMAGENAME
+        env:
+        - name: MONGODB_HOST
+          value: mongodb://mongo:27017 # default if service of Mongodb deployed on K8s is called mongo with port 27017.
+        - name: MONGODB_NAME
+          value: admin   # Name of the database for the pipeline to store files when done repairing
+        # Optionals can either be changed or be left as it is 
+        - name: LOOK_FROM_DATE 
+          value:        
+        - name: SCANNER_NB_HOURS 
+          value: "1"  # if value is 4 then check for failed builds 4 hours ago from now
+        - name: JAVA_OPTS
+          value:      # THis can be left blank
+        - name: SMTP_SERVER
+          value:
+        - name: SMTP_PORT
+          value:
+        - name: SMTP_USERNAME
+          value:
+        - name: SMTP_PORT
+          value:
+        - name: SMTP_USERNAME
+          value:
+        - name: SMTP_PASSWORD
+          value:
+        - name: SMTP_TLS
+          value: "1"
+        - name: NOTIFY_TO
+          value:
+        - name: NOTIFY_ENDPROCESS
+          value: "0"
+
+
+
+          

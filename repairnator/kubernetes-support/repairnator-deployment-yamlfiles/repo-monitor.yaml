@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repo-monitor
+  labels:
+    app: repo-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repo-monitor
+  template:
+    metadata:
+      labels:
+        app: repo-monitor
+    spec:
+      containers:
+      - name: repo-monitor
+        image: IMAGENAME
+        ports:
+          - containerPort: 30050
+        env:
+        - name: MONGODB_HOST
+          value: mongodb://mongo:27017 # default if service of Mongodb deployed on K8s is called mongo with port 27017.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: repo-monitor
+spec:
+  ports:
+  - port: 80
+    targetPort: 30050
+  selector:
+    app: repo-monitor
+  type: LoadBalancer

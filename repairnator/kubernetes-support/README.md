@@ -9,6 +9,7 @@ Note: to store data you can either deploy activeMQ on cloud described at the bot
 * a working k8s cluster (preferable high cpu capacity)
 * gcloud (for creating the cluster mentoned above and creating mongodb if you don't have them already)
 
+The starting folder for these deployment below is "repairnator/kubernetes-support".
 ## Setup ActiveMQ
 
 To deploy ActiveMQ for effective queue managements of jobs to the pipeline and scanner. First apply the yaml file inside the queue-for-buildids folder
