@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# This is the same as the script for building a docker image 
+# This first gather the provided enviroment variables and then 
+# build the repairnator itself into the container.
 
 # Use to create args in the command line for optionnal arguments
 function ca {

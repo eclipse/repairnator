@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# This script listen to the activeMQ queue. When a message , a build id arrives
+# it will pull and run repairnator as a subprocess with the provided build id.
+
 #encoding=utf-8
 
 import time, os, tempfile, subprocess, signal, logging

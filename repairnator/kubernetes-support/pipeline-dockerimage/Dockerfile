@@ -5,7 +5,7 @@ LABEL maintainer="Long Zhang <longz@kth.se>"
 
 VOLUME ["/var/log/"]
 
-COPY z3_for_linux /root/
+
 COPY projects_to_ignore.txt /root/
 COPY logback.xml /root/
 COPY configure_git.sh /root/
@@ -15,6 +15,7 @@ COPY pipeline_launcher.sh /root/
 COPY pipeline_worker.py /root/
 COPY version.ini /root/
 
+RUN touch /root/z3_for_linux
 RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone
 RUN apt-get update
