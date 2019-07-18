@@ -37,7 +37,9 @@ public class BuildRunner extends AbstractPoolManager {
     }
 
     public void initRunner() {
-        this.setDockerImageName(RepairnatorConfig.getInstance().getDockerImageName());
+        if (RepairnatorConfig.getInstance().getDockerImageName() != null) {
+            this.setDockerImageName(RepairnatorConfig.getInstance().getDockerImageName());
+        }
         this.initExecutorService(RepairnatorConfig.getInstance().getNbThreads());
     }
 
