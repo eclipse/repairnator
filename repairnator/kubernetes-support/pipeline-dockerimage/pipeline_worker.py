@@ -51,6 +51,7 @@ conn.set_listener(LISTENER_NAME, BuildIdListener(conn))
 conn.start()
 conn.connect()
 conn.subscribe(QUEUE_NAME,ack='client',headers={'activemq.prefetchSize': 1})
+logging.warning("PIPELINE MESSAGE: CONNECTED TO QUEUE , AWAITING FOR BUILD ID")
 while True:
     time.sleep(3)
 conn.disconnect()

@@ -28,8 +28,7 @@ RUN /root/build_repairnator.sh
 ENV REPAIR_TOOLS=NopolAllTests,AstorJMut,NPEFix
 # Need to be specified if planning to push or create PR to Git with push url later
 # Since this will be used to setup Git during container building
-ENV GITHUB_USERNAME=Repairnator
-ENV GITHUB_USEREMAIL=tailp@kth.se
+ENV GITHUB_USEREMAIL=
 ENV CREATE_PR=0 
 
 # Can be set in repairnator-pipeline.yaml file
@@ -52,6 +51,9 @@ ENV LOG_FILENAME=pipeline_log
 ENV OUTPUT=pipeline_output
 ENV ACTIVEMQ_QUEUE_NAME=/queue/pipeline
 ENV RUN_ID=0
+# This need to be fixed for the repo monitor to recognize commits made by 
+# repairnator itself and not to resubmit it again to the scanner.
+ENV GITHUB_USERNAME=repairnator 
 
 # Does not need to be specified this will be updated by ActiveMQ message for each new build recieved
 ENV BUILD_ID=

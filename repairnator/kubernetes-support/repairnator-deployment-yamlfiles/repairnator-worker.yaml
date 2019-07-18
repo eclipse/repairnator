@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: repairnator-pipeline
+  name: repairnator-worker
   labels:
-    app: repairnator-pipeline
+    app: repairnator-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: repairnator-pipeline
+      app: repairnator-worker
   template:
     metadata:
       labels:
-        app: repairnator-pipeline
+        app: repairnator-worker
     spec:
       containers:
-      - name: repairnator-pipeline
-        image: IMAGENAME
+      - name: repairnator-worker
+        image: repairnator/repairnator-worker
         env: 
         - name: MONGODB_HOST
           value: mongodb://mongo:27017 # default if service of Mongodb deployed on K8s is called mongo with port 27017.
@@ -25,13 +25,11 @@ spec:
                          # Also note that the db choosed need to have write access like admin default database
         # Optional for pushing or creating PR to github repo provided with the PUSH_PR otherwise can be left blank
         - name: GITHUB_OAUTH
-          value: 
+          value: 214aca06fc00bcb19576fce039e62ce8033864b8
         - name: PUSH_URL
-          value: 
-        - name: GITHUB_USERNAME
-          value: 
+          value: https://github.com/Tailp/travisplay
         - name: GITHUB_USEREMAIL
-          value: 
+          value: tailp@kth.se
         - name: CREATE_PR 
           value: "0"  # "1" if decide to create PR to the repo provided with the PUSH_URL
         # Optional for notifications otherwise can be left blank

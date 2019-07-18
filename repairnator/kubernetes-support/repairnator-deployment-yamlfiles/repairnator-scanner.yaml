@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: repairnator-scanner
-        image: IMAGENAME
+        image: tailp/repairnator-scanner
         env:
         - name: MONGODB_HOST
           value: mongodb://mongo:27017 # default if service of Mongodb deployed on K8s is called mongo with port 27017.
