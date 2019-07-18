@@ -164,7 +164,7 @@ public class RTLauncher {
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("numberofpatchedbuilds");
-        opt2.setLongFlag("numberofatchedbuilds");
+        opt2.setLongFlag("numberofpatchedbuilds");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault(0 + "");
         opt2.setHelp("The number of builds that Repairnator should patched before shutting down. If 0, it will run indefinitely.");
