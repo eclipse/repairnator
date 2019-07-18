@@ -14,20 +14,20 @@ The starting folder for these deployment below is "repairnator/kubernetes-suppor
 
 To deploy ActiveMQ for effective queue managements of jobs to the pipeline and scanner. First apply the yaml file inside the queue-for-buildids folder
 ```
-	cd repairnator/kubernetes-support/
-	kubectl create -f /queue-for-buildids/activemq.yaml
+  cd repairnator/kubernetes-support/
+  kubectl create -f /queue-for-buildids/activemq.yaml
 ```
 To access to the web interface
 ```
-	kubectl get pods 
+  kubectl get pods 
 ```
 It should look like activemq-XXXXXXX-XXXXX. Then 
 ```
-	kubectl exec -it activemq-XXXXXXX-XXXXX bash
+  kubectl exec -it activemq-XXXXXXX-XXXXX bash
 ```
 To expose to localhost for webinterface access and also publishing(sending message to queue) outside the cluster. 
 ```
-	kubectl port-forward activemq-XXXXXXX-XXXXX 8161:8161 61613:61613
+  kubectl port-forward activemq-XXXXXXX-XXXXX 8161:8161 61613:61613
 ```
 Access webinterface with "http://localhost:8161/admin/" in your browser. The default username is "admin" and password is also "admin".
 
