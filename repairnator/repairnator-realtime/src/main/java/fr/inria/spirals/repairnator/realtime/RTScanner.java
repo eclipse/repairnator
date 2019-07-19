@@ -358,12 +358,10 @@ public class RTScanner {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
             if (!RTScanner.kubernetesmode) {
                 this.DockerPipelineRunner.submitBuild(build);
-            }
-            else {
+            } else {
                 try {
                     this.ActiveMQPipelineRunner.submitBuild(build);
-                }
-                catch(Exception e){
+                } catch(Exception e){
                     LOGGER.warn("Failed to send message to ActiveMQ queue");
                 }
             }

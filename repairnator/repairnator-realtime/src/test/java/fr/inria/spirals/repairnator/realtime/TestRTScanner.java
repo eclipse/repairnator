@@ -74,4 +74,11 @@ public class TestRTScanner {
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
         assertFalse(result);
     }
+
+    @Test
+    public void testActiveMQRunnerConnection()
+    {
+        ActiveMQPipelineRunner activeRunner = new ActiveMQPipelineRunner();
+        assertTrue(activeRunner.testConnection());
+    }
 }

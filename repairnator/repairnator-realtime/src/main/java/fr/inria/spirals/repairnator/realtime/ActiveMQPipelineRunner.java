@@ -13,10 +13,8 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import java.lang.Exception;
 /**
  * This class is used to submit builds found to the k8s pipeline.
  * for running.
@@ -71,8 +69,7 @@ public class ActiveMQPipelineRunner extends AbstractPoolManager {
         }
     }
 
-    public void submitBuild(Build build) throws JMSException
-    {
+    public void submitBuild(Build build) throws JMSException {
         /*
          * Getting JMS connection from the JMS server and starting it
          */
