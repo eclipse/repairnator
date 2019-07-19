@@ -25,14 +25,14 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     fi
 
     # building the image
-    docker build -q -t repairnator/repairnator:$TAG docker-images/pipeline-dockerimage
+    docker build -q -t repairnator/pipeline:$TAG docker-images/pipeline-dockerimage
     if [[ $? != 0 ]]
     then
         echo "Error while building pipeline docker image"
         exit 1
     fi
-    # pushing to dockerhub https://hub.docker.com/r/spirals/repairnator
-    docker push repairnator/repairnator:$TAG
+    # pushing to dockerhub 
+    docker push repairnator/pipeline:$TAG
     if [[ $? != 0 ]]
     then
         echo "Error while pushing pipeline docker image"
