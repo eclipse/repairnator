@@ -65,7 +65,7 @@ Each directory contains its own Readme explaining its own internal organization.
 
 * Github releases: https://github.com/Spirals-Team/repairnator/releases
 * Maven releases: https://search.maven.org/search?q=repairnator
-* DockerHub releases: https://hub.docker.com/r/spirals/repairnator/
+* DockerHub releases: https://hub.docker.com/r/repairnator/
 
 ## License
 
