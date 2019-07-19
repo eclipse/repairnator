@@ -71,9 +71,10 @@ public class RTScanner {
 
 
 
-    public void initKubernetesMode(Boolean kubernetesmode) {
+    public void initKubernetesMode(Boolean kubernetesmode, String ActiveMQUrl, String ActiveMQQueueName) {
         this.kubernetesmode = kubernetesmode;
-        if (RTScanner.kubernetesmode) {
+        this.ActiveMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
+        if (this.kubernetesmode) {
             this.ActiveMQPipelineRunner.testConnection();
         }
     }
@@ -196,27 +197,31 @@ public class RTScanner {
 
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
-        this.blacklistedSerializer.serialize(repository, reason, comment);
-        this.blackListedRepository.add(repository.getId());
 
-        if (this.blacklistWriter != null) {
-            try {
-                this.blacklistWriter.append(repository.getId()+"");
-                this.blacklistWriter.append("\n");
-                this.blacklistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in blacklist");
+        if (!this.kubernetesmode) {
+            this.blacklistedSerializer.serialize(repository, reason, comment);
+            this.blackListedRepository.add(repository.getId());
+
+            if (this.blacklistWriter != null) {
+                try {
+                    this.blacklistWriter.append(repository.getId()+"");
+                    this.blacklistWriter.append("\n");
+                    this.blacklistWriter.flush();
+                } catch (IOException e) {
+                    LOGGER.error("Error while writing entry in blacklist");
+                }
+            } else {
+                LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
             }
-        } else {
-            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
         }
+        
 
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-
-        if (this.whitelistWriter != null) {
+        if (!this.kubernetesmode) {
+            if (this.whitelistWriter != null) {
             try {
                 this.whitelistWriter.append(String.valueOf(repository.getId()));
                 this.whitelistWriter.append("\n");
@@ -224,10 +229,10 @@ public class RTScanner {
             } catch (IOException e) {
                 LOGGER.error("Error while writing entry in whitelist");
             }
-        } else {
-            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
+            } else {
+                LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
+            }
         }
-
     }
 
     private void addInTempBlackList(Repository repository, String comment) {

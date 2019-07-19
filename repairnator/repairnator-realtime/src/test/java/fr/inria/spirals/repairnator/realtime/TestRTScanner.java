@@ -75,6 +75,10 @@ public class TestRTScanner {
         assertFalse(result);
     }
 
+    /**
+     * Note this test might fail locally if you don't have activeMQ
+     * In that case this test can be temporarily be commented out
+     */
     @Test
     public void testActiveMQRunnerConnection()
     {

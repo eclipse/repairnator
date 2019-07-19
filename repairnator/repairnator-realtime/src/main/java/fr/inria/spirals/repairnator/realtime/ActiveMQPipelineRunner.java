@@ -26,9 +26,9 @@ public class ActiveMQPipelineRunner {
 
     public ActiveMQPipelineRunner(){}
 
-    public ActiveMQPipelineRunner(String url_ln , String queueName_ln) {
-        this.url = url_ln;
-        this.queueName = queueName_ln;
+    public void setUrlAndQueue(String url, String queueName) {
+        this.url = url;
+        this.queueName = queueName;
     }
 
     public Boolean testConnection() {
@@ -61,8 +61,11 @@ public class ActiveMQPipelineRunner {
             producer.send(message);
             connection.close();
             LOGGER.warn("Connection to activemq Succeeded"); 
+            LOGGER.warn("Connected to url: " + this.url + " and queueName: " + this.queueName);
+
             return true;
         }catch(Exception e){
+            LOGGER.warn("Tried to connect to url " + this.url);
             LOGGER.warn("Connection to activemq failed, please double check the ActiveMQ server"); 
             return false;   
         }

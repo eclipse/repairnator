@@ -33,7 +33,9 @@ public class RTLauncher {
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
-    private Boolean KubernetesMode = false;
+    private Boolean KubernetesMode;
+    private String ActiveMQUrl;
+    private String ActiveMQQueueName;
 
     private RTLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
@@ -177,6 +179,20 @@ public class RTLauncher {
         opt2.setHelp("if 1 then the scanner will run with ActiveMQPipelineRunner instead of DockerPipelineRunner");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("activemqurl");
+        opt2.setLongFlag("activemqurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("tcp://localhost:61616");
+        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqqueuename");
+        opt2.setLongFlag("activemqqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("pipeline");
+        opt2.setHelp("Just a name, default as 'pipeline'");
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -234,6 +250,8 @@ public class RTLauncher {
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
         this.KubernetesMode = arguments.getBoolean("kubernetesmode");
+        this.ActiveMQUrl = arguments.getString("activemqurl");
+        this.ActiveMQQueueName = arguments.getString("activemqqueuename");
     }
 
     private void initSerializerEngines() {
@@ -274,7 +292,7 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
-        rtScanner.initKubernetesMode(KubernetesMode);
+        rtScanner.initKubernetesMode(KubernetesMode,this.ActiveMQUrl,this.ActiveMQQueueName);
         
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);
