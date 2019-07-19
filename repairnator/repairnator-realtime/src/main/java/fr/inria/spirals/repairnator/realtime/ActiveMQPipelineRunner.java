@@ -16,12 +16,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
+import org.apache.activemq.ActiveMQConnection;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import java.lang.Exception;
 /**
  * This class is in charge with launching the docker containers
  */
 public class ActiveMQPipelineRunner extends AbstractPoolManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
+    private static String url = "tcp://localhost:61616"; //Default address for Activemq server
+    private static String queueName = "pipeline";  //Default pipeline queue name to push ids to
+
     private int nbThreads;
     private Deque<Build> waitingBuilds;
     private ExecutorService executorService;
@@ -34,6 +49,7 @@ public class ActiveMQPipelineRunner extends AbstractPoolManager {
         super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
         super.setRunId(RepairnatorConfig.getInstance().getRunId());
         super.setEngines(rtScanner.getEngines());
+
     }
 
     public void initRunner() {
@@ -71,7 +87,37 @@ public class ActiveMQPipelineRunner extends AbstractPoolManager {
         return this.submittedRunnablePipelineContainers.size();
     }
 
-    public void submitBuild(Build build) {
+    public void submitBuild(Build build) throws JMSException
+    {
+        /*
+         * Getting JMS connection from the JMS server and starting it
+         */
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(this.url);
+        Connection connection = connectionFactory.createConnection();
+        connection.start();
+
+        /*
+         * Creating a non transactional session to send/receive JMS message.
+         */
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        /*
+         * The queue will be created automatically on the server.
+         */
+        Destination destination = session.createQueue(this.queueName);
+
+        /*
+         * Destination represents here our queue 'MESSAGE_QUEUE' on the JMS server.
+         * 
+         * MessageProducer is used for sending messages to the queue.
+         */
+        MessageProducer producer = session.createProducer(destination);
+        TextMessage message = session.createTextMessage(Long.toString(build.getId()));
+
+        producer.send(message);
+
+        System.out.println("Build id '" + message.getText() + ", Sent Successfully to the Queue");
+        connection.close();
     }
 
     public void switchOff() {
@@ -91,7 +137,11 @@ public class ActiveMQPipelineRunner extends AbstractPoolManager {
         super.removeSubmittedRunnablePipelineContainer(pipelineContainer);
         if (!this.waitingBuilds.isEmpty()) {
             Build build = this.waitingBuilds.pollFirst();
-            this.submitBuild(build);
+            try {
+                this.submitBuild(build);
+            }catch(Exception e){
+                LOGGER.warn("Failed to send build to Activemq queue");
+            }
         }
     }
 }
