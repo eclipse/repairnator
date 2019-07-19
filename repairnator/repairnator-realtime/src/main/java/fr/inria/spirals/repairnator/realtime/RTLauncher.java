@@ -29,17 +29,16 @@ import java.util.List;
  */
 public class RTLauncher {
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
-    private static Boolean KubernetesMode = false;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
+    private Boolean KubernetesMode = false;
 
     private RTLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.REALTIME);
-
 
         this.initConfig(arguments);
         this.initSerializerEngines();
@@ -170,7 +169,14 @@ public class RTLauncher {
         opt2.setDefault(0 + "");
         opt2.setHelp("The number of builds that Repairnator should patched before shutting down. If 0, it will run indefinitely.");
         jsap.registerParameter(opt2);
-        
+
+        opt2 = new FlaggedOption("kubernetesmode");
+        opt2.setLongFlag("kubernetesmode");
+        opt2.setStringParser(JSAP.BOOLEAN_PARSER);
+        opt2.setDefault(0 + "");
+        opt2.setHelp("if 1 then the scanner will run with ActiveMQPipelineRunner instead of DockerPipelineRunner");
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -227,6 +233,7 @@ public class RTLauncher {
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
+        this.KubernetesMode = arguments.getBoolean("kubernetesmode");
     }
 
     private void initSerializerEngines() {
@@ -267,6 +274,7 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
+        rtScanner.initKubernetesMode(KubernetesMode);
         
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);
@@ -283,7 +291,6 @@ public class RTLauncher {
         if (this.config.getBlackList() != null) {
             rtScanner.initBlackListedRepository(this.config.getBlackList());
         }
-
         LOGGER.info("Start RTScanner...");
         rtScanner.launch();
     }

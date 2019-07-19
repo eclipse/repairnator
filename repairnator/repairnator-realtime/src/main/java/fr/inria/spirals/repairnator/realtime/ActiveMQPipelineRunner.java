@@ -27,17 +27,14 @@ public class ActiveMQPipelineRunner extends AbstractPoolManager {
     private static String url = "tcp://localhost:61616"; //Default address for Activemq server
     private static String queueName = "pipeline";  //Default pipeline queue name to push ids to
 
-    public ActiveMQPipelineRunner(){
-        testConnection();
-    }
+    public ActiveMQPipelineRunner(){}
+
     public ActiveMQPipelineRunner(String url_ln , String queueName_ln) {
         this.url = url_ln;
         this.queueName = queueName_ln;
-
-        testConnection();
     }
 
-    public void testConnection() {
+    public Boolean testConnection() {
         try {
             /*
              * Getting JMS connection from the JMS server and starting it
@@ -65,12 +62,12 @@ public class ActiveMQPipelineRunner extends AbstractPoolManager {
             TextMessage message = session.createTextMessage("Testing");
 
             producer.send(message);
-
-            LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue");
             connection.close();
             LOGGER.warn("Connection to activemq Succeeded"); 
+            return true;
         }catch(Exception e){
-            LOGGER.warn("Connection to activemq failed, please double check the ActiveMQ server");    
+            LOGGER.warn("Connection to activemq failed, please double check the ActiveMQ server"); 
+            return false;   
         }
     }
 

@@ -33,7 +33,7 @@ import java.util.Optional;
  * This class is the backbone for the realtime scanner.
  */
 public class RTScanner {
-
+    public static Boolean kubernetesmode = false;
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
 
@@ -67,6 +67,15 @@ public class RTScanner {
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+    }
+
+
+
+    public void initKubernetesMode(Boolean kubernetesmode) {
+        this.kubernetesmode = kubernetesmode;
+        if (RTScanner.kubernetesmode) {
+            this.ActiveMQPipelineRunner.testConnection();
+        }
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -135,7 +144,9 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            //this.DockerPipelineRunner.initRunner();
+            if (!RTScanner.kubernetesmode) {
+                this.DockerPipelineRunner.initRunner();  
+            }
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             if(summaryNotifier != null) {
@@ -345,12 +356,16 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            //this.DockerPipelineRunner.submitBuild(build);
-            try {
-                this.ActiveMQPipelineRunner.submitBuild(build);
+            if (!RTScanner.kubernetesmode) {
+                this.DockerPipelineRunner.submitBuild(build);
             }
-            catch(Exception e){
-                LOGGER.warn("Failed to send message to ActiveMQ queue");
+            else {
+                try {
+                    this.ActiveMQPipelineRunner.submitBuild(build);
+                }
+                catch(Exception e){
+                    LOGGER.warn("Failed to send message to ActiveMQ queue");
+                }
             }
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");

@@ -21,7 +21,7 @@ public class InspectProcessDuration implements Runnable {
     private ActiveMQPipelineRunner ActiveMQPipelineRunner;
 
     public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner DockerPipelineRunner, EndProcessNotifier endProcessNotifier) {
-        //this(inspectBuilds, inspectJobs, DockerPipelineRunner);
+        this(inspectBuilds, inspectJobs, DockerPipelineRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
 
@@ -29,7 +29,7 @@ public class InspectProcessDuration implements Runnable {
         this.duration = RepairnatorConfig.getInstance().getDuration();
         this.inspectBuilds = inspectBuilds;
         this.inspectJobs = inspectJobs;
-        //this.DockerPipelineRunner = DockerPipelineRunner;
+        this.DockerPipelineRunner = DockerPipelineRunner;
     }
 
     @Override
@@ -48,8 +48,10 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        //this.DockerPipelineRunner.switchOff();
-
+        if (!RTScanner.kubernetesmode) {
+            this.DockerPipelineRunner.switchOff(); 
+        }
+        
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
         }
