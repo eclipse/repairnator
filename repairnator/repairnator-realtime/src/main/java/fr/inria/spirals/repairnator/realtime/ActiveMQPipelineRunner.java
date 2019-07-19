@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.dockerpool.AbstractPoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  * This class is used to submit builds found to the k8s pipeline.
  * for running.
  */
-public class ActiveMQPipelineRunner extends AbstractPoolManager {
+public class ActiveMQPipelineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private static String url = "tcp://localhost:61616"; //Default address for Activemq server
