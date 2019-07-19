@@ -122,7 +122,7 @@ public class PatchCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            this.DockerPipelineRunner.switchOff();
+            //this.DockerPipelineRunner.switchOff();
             if(this.endProcessNotifier != null) {
                 this.endProcessNotifier.notifyEnd();
             }

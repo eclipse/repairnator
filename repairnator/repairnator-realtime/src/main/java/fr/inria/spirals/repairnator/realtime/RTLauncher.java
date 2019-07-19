@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class RTLauncher {
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
+    private static Boolean KubernetesMode = false;
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
@@ -169,7 +170,7 @@ public class RTLauncher {
         opt2.setDefault(0 + "");
         opt2.setHelp("The number of builds that Repairnator should patched before shutting down. If 0, it will run indefinitely.");
         jsap.registerParameter(opt2);
-
+        
         return jsap;
     }
 

@@ -46,6 +46,7 @@ public class RTScanner {
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final DockerPipelineRunner DockerPipelineRunner;
+    private final ActiveMQPipelineRunner ActiveMQPipelineRunner;
     private FileWriter blacklistWriter;
     private FileWriter whitelistWriter;
     private boolean running;
@@ -61,6 +62,7 @@ public class RTScanner {
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
         this.DockerPipelineRunner = new DockerPipelineRunner(this);
+        this.ActiveMQPipelineRunner = new ActiveMQPipelineRunner();
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
@@ -133,7 +135,7 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            this.DockerPipelineRunner.initRunner();
+            //this.DockerPipelineRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             if(summaryNotifier != null) {
@@ -343,7 +345,13 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            this.DockerPipelineRunner.submitBuild(build);
+            //this.DockerPipelineRunner.submitBuild(build);
+            try {
+                this.ActiveMQPipelineRunner.submitBuild(build);
+            }
+            catch(Exception e){
+                LOGGER.warn("Failed to send message to ActiveMQ queue");
+            }
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }
