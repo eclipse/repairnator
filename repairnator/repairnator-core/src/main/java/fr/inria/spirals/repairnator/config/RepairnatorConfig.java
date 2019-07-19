@@ -580,6 +580,6 @@ public class RepairnatorConfig {
         this.experimentalPluginRepoList = experimentalPluginRepoList;
     }
     public void setKubernetesMode(Boolean kubernetesMode) {
-        this.kubernetesMode = kubernetesmode; 
+        this.kubernetesMode = kubernetesMode; 
     }
 }
