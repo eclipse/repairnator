@@ -80,6 +80,7 @@ public class RepairnatorConfig {
     private String repository;
 
     private boolean clean;
+    private boolean kubernetesMode;
 
     private static RepairnatorConfig instance;
 
@@ -577,5 +578,8 @@ public class RepairnatorConfig {
 
     public void setExperimentalPluginRepoList(String[] experimentalPluginRepoList) {
         this.experimentalPluginRepoList = experimentalPluginRepoList;
+    }
+    public void setKubernetesMode(Boolean kubernetesMode) {
+        this.kubernetesMode = kubernetesmode; 
     }
 }
