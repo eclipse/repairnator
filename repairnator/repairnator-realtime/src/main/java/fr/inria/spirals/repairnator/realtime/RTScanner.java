@@ -222,13 +222,13 @@ public class RTScanner {
         this.whiteListedRepository.add(repository.getId());
         if (!this.kubernetesmode) {
             if (this.whitelistWriter != null) {
-            try {
-                this.whitelistWriter.append(String.valueOf(repository.getId()));
-                this.whitelistWriter.append("\n");
-                this.whitelistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in whitelist");
-            }
+                try {
+                    this.whitelistWriter.append(String.valueOf(repository.getId()));
+                    this.whitelistWriter.append("\n");
+                    this.whitelistWriter.flush();
+                } catch (IOException e) {
+                    LOGGER.error("Error while writing entry in whitelist");
+                }
             } else {
                 LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
             }
