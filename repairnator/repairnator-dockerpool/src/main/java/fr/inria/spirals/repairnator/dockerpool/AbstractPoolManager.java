@@ -70,9 +70,9 @@ public abstract class AbstractPoolManager {
     /**
      * For submitting build, we first call {@link #prepareBeforeSubmitBuild(long)}, then we create the container and add it to the list of submitted.
      */
-    public RunnablePipelineContainer submitBuild(Tuple<String,InputBuildId> tuple) {
-        TreatedBuildTracking treatedBuildTracking = this.prepareBeforeSubmitBuild(tuple.y.getBuggyBuildId());
-        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, tuple.x, tuple.y, this.dockerOutputDir, treatedBuildTracking);
+    public RunnablePipelineContainer submitBuild(String imageId, InputBuildId inputBuildId) {
+        TreatedBuildTracking treatedBuildTracking = this.prepareBeforeSubmitBuild(inputBuildId.getBuggyBuildId());
+        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, inputBuildId, this.dockerOutputDir, treatedBuildTracking);
         this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
 
         return runnablePipelineContainer;

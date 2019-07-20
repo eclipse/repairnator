@@ -244,7 +244,7 @@ public class Launcher extends AbstractPoolManager {
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         for (InputBuildId inputBuildId : buildIds) {
-            executorService.submit(this.submitBuild(new Tuple<String,InputBuildId> (imageId, inputBuildId)));
+            executorService.submit(this.submitBuild(imageId, inputBuildId));
         }
 
         executorService.shutdown();
