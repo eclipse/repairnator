@@ -38,7 +38,7 @@ public class PatchCounter implements Runnable{
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private DockerPipelineRunner DockerPipelineRunner;
+    private DockerPipelineRunner pipelineRunner;
     
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
@@ -46,7 +46,7 @@ public class PatchCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            DockerPipelineRunner DockerPipelineRunner) {
+            DockerPipelineRunner pipelineRunner) {
         // Set the variables
         this.numberOfPatchesToRunFor = numberOfPatchesToRunFor;
         this.mongodbHost = mongodbHost;
@@ -66,10 +66,10 @@ public class PatchCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            DockerPipelineRunner DockerPipelineRunner,
+            DockerPipelineRunner pipelineRunner,
             EndProcessNotifier endProcessNotifier) {
         this(numberOfPatchesToRunFor, mongodbHost, mongodbName, startDate,
-                inspectBuilds, inspectJobs, DockerPipelineRunner);
+                inspectBuilds, inspectJobs, pipelineRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
     
@@ -122,7 +122,7 @@ public class PatchCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            this.DockerPipelineRunner.switchOff();
+            this.pipelineRunner.switchOff();
             if(this.endProcessNotifier != null) {
                 this.endProcessNotifier.notifyEnd();
             }
