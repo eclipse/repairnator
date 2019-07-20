@@ -55,6 +55,10 @@
                             <mainClass>fr.inria.spirals.repairnator.realtime.RTLauncher</mainClass>
                         </manifest>
                     </archive>
+                    <outputDirectory>
+                        ${dir}
+                    </outputDirectory>
+                     <finalName>${finalname}</finalName>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
