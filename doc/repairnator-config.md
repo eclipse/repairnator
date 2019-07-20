@@ -356,16 +356,11 @@ This attribute is mandatory.
 
 It defines the name of the docker image to use for Repairnator pipeline, with the associated tag to use (see the previous `PIPELINE_VERSION`).
 
-Its default value is `spirals/repairnator:$PIPELINE_VERSION`.
-
-
 #### DOCKER_TAG_BEARS
 
 This attribute is mandatory for BEARS.
 
 It defines the name of the docker image to use for Repairnator pipeline when using BEARS, and the associated tag to use (see the previous `PIPELINE_VERSION`).
-
-Its default value is `spirals/repairnator:$PIPELINE_VERSION`.
 
 #### DOCKER_CHECKBRANCHES_TAG
 
@@ -373,15 +368,12 @@ This attribute is mandatory for using checkbranch.
 
 It defines the name of the docker image to use for Repairnator checkbranch, and the associated tag to use.
 
-Its default value is `spirals/checkbranches:latest`.
-
 #### DOCKER_CHECKBRANCHES_TAG_BEARS
 
 This attribute is mandatory for using BEARS checkbranch.
 
 It defines the name of the docker image to use for Repairnator BEARS checkbranch, and the associated tag to use.
 
-Its default value is `spirals/checkbranches:latest`.
 
 ### Root paths
 

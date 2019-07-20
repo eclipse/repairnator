@@ -4,7 +4,7 @@ All scripts that are using the pipeline are using a docker-container
 created from a docker image of repairnator-pipeline. 
 
 The image used is specified in repairnator.cfg, and is by default
-`spirals/repairnator:latest`.
+`repairnator/pipeline:latest`.
 
 We create this image from the Dockerfile found in
 `docker-images/pipeline-dockerimage`, which calls a script that
