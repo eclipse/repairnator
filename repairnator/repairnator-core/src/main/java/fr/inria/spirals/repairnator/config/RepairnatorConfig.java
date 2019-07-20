@@ -115,7 +115,7 @@ public class RepairnatorConfig {
         this.kubernetesMode = kubernetesMode;
     }
 
-    public Boolean getKubernetesMode(Boolean kubernetesMode) {
+    public Boolean getKubernetesMode() {
         return this.kubernetesMode;
     }
 
@@ -123,7 +123,7 @@ public class RepairnatorConfig {
         this.activeMQUrl = activeMQUrl;
     }
 
-    public String getActiveMQUrl(String activeMQUrl) {
+    public String getActiveMQUrl() {
         return this.activeMQUrl;
     }
 
@@ -131,7 +131,7 @@ public class RepairnatorConfig {
         this.activeMQQueueName = activeMQQueueName;
     }
 
-    public String getActiveMQQueueName(String activeMQQueueName) {
+    public String getActiveMQQueueName() {
         return this.activeMQQueueName;
     }
 
