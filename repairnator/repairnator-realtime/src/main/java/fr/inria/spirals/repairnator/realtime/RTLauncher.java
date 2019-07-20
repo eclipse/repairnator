@@ -33,9 +33,9 @@ public class RTLauncher {
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
-    private Boolean KubernetesMode;
-    private String ActiveMQUrl;
-    private String ActiveMQQueueName;
+    private Boolean kubernetesMode;
+    private String activeMQUrl;
+    private String activeMQQueueName;
 
     private RTLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
@@ -249,9 +249,9 @@ public class RTLauncher {
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
-        this.KubernetesMode = arguments.getBoolean("kubernetesmode");
-        this.ActiveMQUrl = arguments.getString("activemqurl");
-        this.ActiveMQQueueName = arguments.getString("activemqqueuename");
+        this.config.setKubernetesMode(arguments.getBoolean("kubernetesmode"));
+        this.config.setActiveMQUrl(arguments.getString("activemqurl"));
+        this.config.setActiveMQQueueName(arguments.getString("activemqqueuename"));
     }
 
     private void initSerializerEngines() {
@@ -292,7 +292,7 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
-        rtScanner.initKubernetesMode(KubernetesMode,this.ActiveMQUrl,this.ActiveMQQueueName);
+        rtScanner.initKubernetesMode(this.config.getKubernetesMode(),this.config.getActiveMQUrl(),this.config.getActiveMQQueueName());
         
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);
