@@ -1,7 +1,5 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.jtravis.entities.Build;
-
-public interface PipelineRunner {
-    void submitBuild(Build build);
+public interface PipelineRunner <T,C>{
+    T submitBuild(C c);
 }

@@ -17,7 +17,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  * This class is used to submit builds found to the k8s pipeline.
  * for running.
  */
-public class ActiveMQPipelineRunner implements PipelineRunner{
+public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private static String url = "tcp://localhost:61616"; //Default address for Activemq server
@@ -70,7 +70,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner{
         }
     }
 
-    public void submitBuild(Build build) {
+    public Boolean submitBuild(Build build) {
         try {
             /*
              * Getting JMS connection from the JMS server and starting it
@@ -101,8 +101,10 @@ public class ActiveMQPipelineRunner implements PipelineRunner{
 
             LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue");
             connection.close();
+            return true;
         } catch(JMSException jsme) {
             LOGGER.info("Failed to submit build, please double check ActiveMQ server");
+            return false;
         }
     }
 
