@@ -45,7 +45,7 @@ public class RTScanner {
 
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
-    private final BuildRunner buildRunner;
+    private final DockerPipelineRunner pipelineRunner;
     private FileWriter blacklistWriter;
     private FileWriter whitelistWriter;
     private boolean running;
@@ -60,7 +60,7 @@ public class RTScanner {
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
-        this.buildRunner = new BuildRunner(this);
+        this.pipelineRunner = new DockerPipelineRunner(this);
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
@@ -133,7 +133,7 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            this.buildRunner.initRunner();
+            this.pipelineRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             if(summaryNotifier != null) {
@@ -145,9 +145,9 @@ public class RTScanner {
             if (RepairnatorConfig.getInstance().getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.pipelineRunner, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.pipelineRunner);
                 }
 
                 new Thread(inspectProcessDuration).start();
@@ -164,7 +164,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.buildRunner,
+                            this.pipelineRunner,
                             this.endProcessNotifier);
                 } else {
                     patchCounter = new PatchCounter(
@@ -174,7 +174,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.buildRunner);
+                            this.pipelineRunner);
                 }
                 new Thread(patchCounter).start();
             }
@@ -343,7 +343,7 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            this.buildRunner.submitBuild(build);
+            this.pipelineRunner.submitBuild(build);
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }
