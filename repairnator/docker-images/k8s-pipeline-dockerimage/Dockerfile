@@ -5,7 +5,6 @@ LABEL maintainer="Long Zhang <longz@kth.se>"
 
 VOLUME ["/var/log/"]
 
-
 COPY projects_to_ignore.txt /root/
 COPY logback.xml /root/
 COPY configure_git.sh /root/
@@ -24,8 +23,6 @@ RUN /root/configure_git.sh
 RUN /root/install_python_stomp.sh
 RUN /root/build_repairnator.sh
 
-# Can add more tools or remove some. Need at least 1 tool otherwise can be left as it is.
-ENV REPAIR_TOOLS=NopolAllTests,AstorJMut,NPEFix
 # Need to be specified if planning to push or create PR to Git with push url later
 # Since this will be used to setup Git during container building
 ENV GITHUB_USERNAME=Repairnator
@@ -35,7 +32,7 @@ ENV CREATE_PR=0
 # Can be set in repairnator-pipeline.yaml file
 ENV MONGODB_HOST=mongodb://mongo:27017
 ENV MONGODB_NAME=admin
-ENV GITHUB_OAUTH=
+ENV GITHUB_OAUTH=0
 ENV PUSH_URL=
 # Optional can be specified in the repairnator-pipeline.yaml file or left as it is
 ENV SMTP_SERVER=
@@ -48,6 +45,7 @@ ENV NOTIFY_TO=
 # Fixed values does not need to change
 ENV M2_HOME=$MAVEN_HOME
 ENV REPAIR_MODE=repair
+ENV REPAIR_TOOLS=NopolAllTests,AstorJMut,NPEFix
 ENV LOG_FILENAME=pipeline_log
 ENV OUTPUT=pipeline_output
 ENV ACTIVEMQ_QUEUE_NAME=/queue/pipeline
