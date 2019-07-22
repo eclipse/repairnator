@@ -1,5 +1,5 @@
 # Deploy Repairnator in Kubernetes
-Note: to store data you can either deploy activeMQ on cloud described at the bottom of this README or if you have a mongodb outside the cluster you can map it as an external service named as mongo (since all of the default mongo k8s service name is named "mongo" if you don't like a lot changes). More details for how this is done is described in [this link](https://cloud.google.com/blog/products/gcp/kubernetes-best-practices-mapping-external-services)
+Note: to store data you can either deploy mongodb on cloud described at the bottom of this README or if you have a mongodb outside the cluster you can map it as an external service named as mongo (since all of the default mongo k8s service name is named "mongo" if you don't like a lot changes). More details for how this is done is described in [this link](https://cloud.google.com/blog/products/gcp/kubernetes-best-practices-mapping-external-services)
 
 ![Design](K8sRepairnatorDesign.jpg)
 

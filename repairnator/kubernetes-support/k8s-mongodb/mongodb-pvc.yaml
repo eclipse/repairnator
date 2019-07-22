@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: repairnator-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: REPLACE_WITH_YOUR_NFS_SERVER_IP
+    path: PATH_TO_YOUR_NFS_FOLDER
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: repairnator-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
