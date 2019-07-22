@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: repairnator-worker
-        image: repairnator/repainator-worker:latest
+        image: tailp/repairnator-pipeline
         env: 
         - name: MONGODB_HOST
           value: mongodb://mongo:27017 # default if service of Mongodb deployed on K8s is called mongo with port 27017.
@@ -25,7 +25,7 @@ spec:
                          # Also note that the db choosed need to have write access like admin default database
         # Optional for pushing or creating PR to github repo provided with the PUSH_PR otherwise can be left blank
         - name: GITHUB_OAUTH
-          value: 
+          value: 0
         - name: PUSH_URL
           value: 
         - name: GITHUB_USERNAME
