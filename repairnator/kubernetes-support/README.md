@@ -124,7 +124,8 @@ Same logic apply for any repo want to be monitored. First register the slug in d
 
 ## Setup Mongodb (optional)
 
-First set up mongodb on kubernetes with a persistent memory volume(PVC)(This mean that even if you erase the deployment and redeploy nothing will be lost, the database would look the same)
+### Mongodb on k8s cloud
+In `k8s-mongodb` folder, First set up mongodb on kubernetes with a persistent memory volume(PVC)(This mean that even if you erase the deployment and redeploy nothing will be lost, the database would look the same)
 
 ```
   gcloud compute disks create --size=200GB --zone=$ZONE mongo-disk
@@ -132,7 +133,7 @@ First set up mongodb on kubernetes with a persistent memory volume(PVC)(This mea
 Then create the mongodb deployemnt using mongodb.yaml in the k8s-mongodb folder .
 
 ```
-  kubectl create -f k8s-mongodb/mongodb.yaml
+  kubectl create -f k8s-mongodb/mongodb-with-gcloud.yaml
 ```
 Try it out
 ```
@@ -143,7 +144,22 @@ Our mongodb pod should be named like "mongo-controller-XXXXX" then we can get in
   kubectl exec -it mongo-controller-XXXXX bash
   mongo
 ```
+### Mongodb with nfs mapped to K8s
+For this you need to go `k8s-mongodb` folder and edit the `mongo-pvc.yaml` file by filling your nfs server IP and path to your nfs folder. Then apply this yaml and the `mongodb.yaml` file.
 
+```
+  kubectl apply -f mongodb-pvc.yaml
+  kubectl apply -f mongodb.yaml
+```
+Then you can find out the name of the pods and access to mongodb 
+```
+  kubectl get pods 
+```
+Our mongodb pod should be named like "mongo-controller-XXXXX" then we can get into the pod 
+```
+  kubectl exec -it mongo-controller-XXXXX bash
+  mongo
+```
 
 ## Delete deployment
 Provided with every yaml files mentioned in this readme (all of them are in "repairnator-deployment-yamlfile" folder), call 
