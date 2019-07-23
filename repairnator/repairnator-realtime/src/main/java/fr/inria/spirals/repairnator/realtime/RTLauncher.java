@@ -33,12 +33,14 @@ public class RTLauncher {
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
+    private Boolean kubernetesMode;
+    private String activeMQUrl;
+    private String activeMQQueueName;
 
     private RTLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.REALTIME);
-
 
         this.initConfig(arguments);
         this.initSerializerEngines();
@@ -164,10 +166,31 @@ public class RTLauncher {
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("numberofpatchedbuilds");
-        opt2.setLongFlag("numberofatchedbuilds");
+        opt2.setLongFlag("numberofpatchedbuilds");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
         opt2.setDefault(0 + "");
         opt2.setHelp("The number of builds that Repairnator should patched before shutting down. If 0, it will run indefinitely.");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("kubernetesmode");
+        opt2.setLongFlag("kubernetesmode");
+        opt2.setStringParser(JSAP.BOOLEAN_PARSER);
+        opt2.setDefault(0 + "");
+        opt2.setHelp("if 1 then the scanner will run with ActiveMQPipelineRunner instead of DockerPipelineRunner");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqurl");
+        opt2.setLongFlag("activemqurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("tcp://localhost:61616");
+        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqqueuename");
+        opt2.setLongFlag("activemqqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("pipeline");
+        opt2.setHelp("Just a name, default as 'pipeline'");
         jsap.registerParameter(opt2);
 
         return jsap;
@@ -226,6 +249,9 @@ public class RTLauncher {
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
+        this.config.setKubernetesMode(arguments.getBoolean("kubernetesmode"));
+        this.config.setActiveMQUrl(arguments.getString("activemqurl"));
+        this.config.setActiveMQQueueName(arguments.getString("activemqqueuename"));
     }
 
     private void initSerializerEngines() {
@@ -266,6 +292,7 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
+        rtScanner.initKubernetesMode(this.config.getKubernetesMode(),this.config.getActiveMQUrl(),this.config.getActiveMQQueueName());
         
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);
@@ -282,7 +309,6 @@ public class RTLauncher {
         if (this.config.getBlackList() != null) {
             rtScanner.initBlackListedRepository(this.config.getBlackList());
         }
-
         LOGGER.info("Start RTScanner...");
         rtScanner.launch();
     }

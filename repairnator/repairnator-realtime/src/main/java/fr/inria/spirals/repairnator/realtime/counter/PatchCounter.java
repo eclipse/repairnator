@@ -15,6 +15,7 @@ import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.DockerPipelineRunner;
 import fr.inria.spirals.repairnator.realtime.InspectBuilds;
 import fr.inria.spirals.repairnator.realtime.InspectJobs;
+import fr.inria.spirals.repairnator.realtime.RTScanner;
 
 /**
  * A class that counts the number of patches created since 
@@ -38,7 +39,7 @@ public class PatchCounter implements Runnable{
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private DockerPipelineRunner pipelineRunner;
+    private DockerPipelineRunner DockerPipelineRunner;
     
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
@@ -46,7 +47,7 @@ public class PatchCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            DockerPipelineRunner pipelineRunner) {
+            DockerPipelineRunner DockerPipelineRunner) {
         // Set the variables
         this.numberOfPatchesToRunFor = numberOfPatchesToRunFor;
         this.mongodbHost = mongodbHost;
@@ -66,10 +67,10 @@ public class PatchCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            DockerPipelineRunner pipelineRunner,
+            DockerPipelineRunner DockerPipelineRunner,
             EndProcessNotifier endProcessNotifier) {
         this(numberOfPatchesToRunFor, mongodbHost, mongodbName, startDate,
-                inspectBuilds, inspectJobs, pipelineRunner);
+                inspectBuilds, inspectJobs, DockerPipelineRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
     
@@ -122,11 +123,12 @@ public class PatchCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            this.pipelineRunner.switchOff();
+            if (!RTScanner.kubernetesmode) {
+                this.DockerPipelineRunner.switchOff();
+            }
             if(this.endProcessNotifier != null) {
                 this.endProcessNotifier.notifyEnd();
             }
         }
-    }
-    
+    }    
 }

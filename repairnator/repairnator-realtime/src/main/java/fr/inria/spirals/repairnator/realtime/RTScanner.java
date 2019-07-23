@@ -33,7 +33,7 @@ import java.util.Optional;
  * This class is the backbone for the realtime scanner.
  */
 public class RTScanner {
-
+    public static Boolean kubernetesmode = false;
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
 
@@ -45,7 +45,8 @@ public class RTScanner {
 
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
-    private final DockerPipelineRunner pipelineRunner;
+    private final DockerPipelineRunner DockerPipelineRunner;
+    private final ActiveMQPipelineRunner ActiveMQPipelineRunner;
     private FileWriter blacklistWriter;
     private FileWriter whitelistWriter;
     private boolean running;
@@ -60,11 +61,22 @@ public class RTScanner {
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
-        this.pipelineRunner = new DockerPipelineRunner(this);
+        this.DockerPipelineRunner = new DockerPipelineRunner(this);
+        this.ActiveMQPipelineRunner = new ActiveMQPipelineRunner();
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+    }
+
+
+
+    public void initKubernetesMode(Boolean kubernetesmode, String ActiveMQUrl, String ActiveMQQueueName) {
+        this.kubernetesmode = kubernetesmode;
+        this.ActiveMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
+        if (this.kubernetesmode) {
+            this.ActiveMQPipelineRunner.testConnection();
+        }
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -133,7 +145,9 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            this.pipelineRunner.initRunner();
+            if (!RTScanner.kubernetesmode) {
+                this.DockerPipelineRunner.initRunner();  
+            }
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             if(summaryNotifier != null) {
@@ -145,9 +159,9 @@ public class RTScanner {
             if (RepairnatorConfig.getInstance().getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.pipelineRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.DockerPipelineRunner, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.pipelineRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.DockerPipelineRunner);
                 }
 
                 new Thread(inspectProcessDuration).start();
@@ -164,7 +178,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.pipelineRunner,
+                            this.DockerPipelineRunner,
                             this.endProcessNotifier);
                 } else {
                     patchCounter = new PatchCounter(
@@ -174,7 +188,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.pipelineRunner);
+                            this.DockerPipelineRunner);
                 }
                 new Thread(patchCounter).start();
             }
@@ -183,38 +197,42 @@ public class RTScanner {
 
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
-        this.blacklistedSerializer.serialize(repository, reason, comment);
-        this.blackListedRepository.add(repository.getId());
 
-        if (this.blacklistWriter != null) {
-            try {
-                this.blacklistWriter.append(repository.getId()+"");
-                this.blacklistWriter.append("\n");
-                this.blacklistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in blacklist");
+        if (!this.kubernetesmode) {
+            this.blacklistedSerializer.serialize(repository, reason, comment);
+            this.blackListedRepository.add(repository.getId());
+
+            if (this.blacklistWriter != null) {
+                try {
+                    this.blacklistWriter.append(repository.getId()+"");
+                    this.blacklistWriter.append("\n");
+                    this.blacklistWriter.flush();
+                } catch (IOException e) {
+                    LOGGER.error("Error while writing entry in blacklist");
+                }
+            } else {
+                LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
             }
-        } else {
-            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
         }
+        
 
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-
-        if (this.whitelistWriter != null) {
-            try {
-                this.whitelistWriter.append(String.valueOf(repository.getId()));
-                this.whitelistWriter.append("\n");
-                this.whitelistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in whitelist");
+        if (!this.kubernetesmode) {
+            if (this.whitelistWriter != null) {
+                try {
+                    this.whitelistWriter.append(String.valueOf(repository.getId()));
+                    this.whitelistWriter.append("\n");
+                    this.whitelistWriter.flush();
+                } catch (IOException e) {
+                    LOGGER.error("Error while writing entry in whitelist");
+                }
+            } else {
+                LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
             }
-        } else {
-            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
         }
-
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
@@ -343,7 +361,15 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            this.pipelineRunner.submitBuild(build);
+            if (!RTScanner.kubernetesmode) {
+                this.DockerPipelineRunner.submitBuild(build);
+            } else {
+                try {
+                    this.ActiveMQPipelineRunner.submitBuild(build);
+                } catch(Exception e){
+                    LOGGER.warn("Failed to send message to ActiveMQ queue");
+                }
+            }
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }
