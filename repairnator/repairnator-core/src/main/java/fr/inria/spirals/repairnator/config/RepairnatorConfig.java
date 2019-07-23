@@ -74,6 +74,9 @@ public class RepairnatorConfig {
     private Duration summaryFrequency;
     private String[] notifySummary;
     private int numberOfPatchedBuilds;
+    private Boolean kubernetesMode;
+    private String activeMQUrl;
+    private String activeMQQueueName;
 
     // Checkbranches
     private boolean humanPatch;
@@ -106,6 +109,30 @@ public class RepairnatorConfig {
 
     public String getRunId() {
         return runId;
+    }
+
+    public void setKubernetesMode(Boolean kubernetesMode) {
+        this.kubernetesMode = kubernetesMode;
+    }
+
+    public Boolean getKubernetesMode() {
+        return this.kubernetesMode;
+    }
+
+    public void setActiveMQUrl(String activeMQUrl) {
+        this.activeMQUrl = activeMQUrl;
+    }
+
+    public String getActiveMQUrl() {
+        return this.activeMQUrl;
+    }
+
+    public void setActiveMQQueueName(String activeMQQueueName) {
+        this.activeMQQueueName = activeMQQueueName;
+    }
+
+    public String getActiveMQQueueName() {
+        return this.activeMQQueueName;
     }
 
     public void setRunId(String runId) {
@@ -544,6 +571,9 @@ public class RepairnatorConfig {
                 ", repairTools=" + StringUtils.join(this.repairTools, ",") +
                 ", githubUserName= " + githubUserName +
                 ", githubUserEmail=" + githubUserEmail +
+                ", kubernetesMode=" + kubernetesMode +
+                ", activeMQUrl=" + activeMQUrl +
+                ", activeMQQueueName=" + activeMQQueueName +
                 '}';
     }
 
