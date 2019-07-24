@@ -19,8 +19,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * This class is in charge with launching the docker containers
  */
-public class BuildRunner extends AbstractPoolManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BuildRunner.class);
+public class DockerPipelineRunner extends AbstractPoolManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DockerPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private int nbThreads;
     private Deque<Build> waitingBuilds;
@@ -29,7 +29,7 @@ public class BuildRunner extends AbstractPoolManager {
     private String dockerImageName;
     private Date limitDateNextRetrieveDockerImage;
 
-    public BuildRunner(RTScanner rtScanner) {
+    public DockerPipelineRunner(RTScanner rtScanner) {
         LOGGER.info("Init build runner");
         super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
         super.setRunId(RepairnatorConfig.getInstance().getRunId());
@@ -37,7 +37,9 @@ public class BuildRunner extends AbstractPoolManager {
     }
 
     public void initRunner() {
-        this.setDockerImageName(RepairnatorConfig.getInstance().getDockerImageName());
+        if (RepairnatorConfig.getInstance().getDockerImageName() != null) {
+            this.setDockerImageName(RepairnatorConfig.getInstance().getDockerImageName());
+        }
         this.initExecutorService(RepairnatorConfig.getInstance().getNbThreads());
     }
 

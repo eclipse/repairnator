@@ -17,18 +17,18 @@ public class InspectProcessDuration implements Runnable {
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private BuildRunner buildRunner;
+    private DockerPipelineRunner pipelineRunner;
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner, EndProcessNotifier endProcessNotifier) {
-        this(inspectBuilds, inspectJobs, buildRunner);
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner pipelineRunner, EndProcessNotifier endProcessNotifier) {
+        this(inspectBuilds, inspectJobs, pipelineRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner) {
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner pipelineRunner) {
         this.duration = RepairnatorConfig.getInstance().getDuration();
         this.inspectBuilds = inspectBuilds;
         this.inspectJobs = inspectJobs;
-        this.buildRunner = buildRunner;
+        this.pipelineRunner = pipelineRunner;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        this.buildRunner.switchOff();
+        this.pipelineRunner.switchOff();
 
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();

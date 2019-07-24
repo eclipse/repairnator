@@ -180,6 +180,16 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setDefault(repairTools);
         jsap.registerParameter(opt2);
+        
+        // This option will have a list and must have n*3 elements, otherwise the last will be ignored.
+        opt2 = new FlaggedOption("experimentalPluginRepoList");
+        opt2.setLongFlag("experimentalPluginRepoList");
+        opt2.setList(true);
+        opt2.setListSeparator(',');
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
+        jsap.registerParameter(opt2);
+        
 
         return jsap;
     }
@@ -236,6 +246,18 @@ public class Launcher {
         this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
+        }
+        
+        // Make sure that it is a multiple of three in the list
+        if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
+            this.getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));
+        } else if (arguments.getStringArray("experimentalPluginRepoList").length != 0) {
+            LOGGER.warn("The experimental plugin repo list is not correctly formed."
+                    + " Please make sure you have provided id, name and url for all repos. "
+                    + "Repairnator will continue without these repos.");
+            this.getConfig().setExperimentalPluginRepoList(null);
+        } else {
+            this.getConfig().setExperimentalPluginRepoList(null);
         }
     }
 

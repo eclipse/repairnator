@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by urli on 11/07/2017.
  */
-public class TestNPERepair {
+public class TestNPERepairSafe {
 
     private File tmpDir;
 
@@ -53,23 +53,24 @@ public class TestNPERepair {
     }
 
     @Test
-    public void testNPERepair() throws IOException {
+    public void testNPERepairSafe() throws IOException {
         long buildId = 252712792; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
-        tmpDir = Files.createTempDirectory("test_nperepair").toFile();
+        tmpDir = Files.createTempDirectory("test_nperepairsafe").toFile();
 
         BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 
-        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepairSafe.TOOL_NAME));
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        NPERepair npeRepair = new NPERepair();
+        NPERepairSafe npeRepair = new NPERepairSafe();
         npeRepair.setProjectInspector(inspector);
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new AddExperimentalPluginRepo(inspector, "ExperimentalNPEFixSafe", "repairnator.proj.kth", "http://repairnator.proj.kth.se:55555/"))
                 .addNextStep(new TestProject(inspector))
                 .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                 .addNextStep(npeRepair);
@@ -78,8 +79,8 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(5));
-        StepStatus npeStatus = stepStatusList.get(4);
+        assertThat(stepStatusList.size(), is(6));
+        StepStatus npeStatus = stepStatusList.get(5);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
         for (StepStatus stepStatus : stepStatusList) {
