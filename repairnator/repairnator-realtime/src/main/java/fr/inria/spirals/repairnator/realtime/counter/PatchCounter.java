@@ -58,6 +58,7 @@ public class PatchCounter implements Runnable{
         this.buildFilter = Filters.and(
                 Filters.gte("buildFinishedDate", startDate),
                 Filters.eq("status", "PATCHED"));
+        this.dockerPipelineRunner = dockerPipelineRunner;
     }
         
     public PatchCounter(int numberOfPatchesToRunFor, 
