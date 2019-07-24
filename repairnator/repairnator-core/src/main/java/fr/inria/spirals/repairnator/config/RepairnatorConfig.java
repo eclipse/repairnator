@@ -74,7 +74,7 @@ public class RepairnatorConfig {
     private Duration summaryFrequency;
     private String[] notifySummary;
     private int numberOfPatchedBuilds;
-    private Boolean kubernetesMode;
+    private boolean kubernetesMode;
     private String activeMQUrl;
     private String activeMQQueueName;
 
@@ -111,11 +111,11 @@ public class RepairnatorConfig {
         return runId;
     }
 
-    public void setKubernetesMode(Boolean kubernetesMode) {
+    public void setKubernetesMode(boolean kubernetesMode) {
         this.kubernetesMode = kubernetesMode;
     }
 
-    public Boolean getKubernetesMode() {
+    public boolean getKubernetesMode() {
         return this.kubernetesMode;
     }
 
