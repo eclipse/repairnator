@@ -12,7 +12,8 @@ import java.util.Date;
 public class InspectProcessDuration implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectProcessDuration.class);
     private static final int SLEEP_TIME = 10; // seconds
-
+    private Boolean kubernetesmode = false;
+    
     private Duration duration;
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
@@ -32,6 +33,10 @@ public class InspectProcessDuration implements Runnable {
         this.dockerPipelineRunner = dockerPipelineRunner;
     }
 
+    public void setKubernetesMode(Boolean kubernetesmode) {
+        this.kubernetesmode = kubernetesmode;
+    }
+
     @Override
     public void run() {
         Instant endOfProcessDate = new Date().toInstant().plus(duration);
@@ -48,7 +53,7 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        if (!RTScanner.kubernetesmode) {
+        if (!kubernetesmode) {
             this.dockerPipelineRunner.switchOff(); 
         }
         

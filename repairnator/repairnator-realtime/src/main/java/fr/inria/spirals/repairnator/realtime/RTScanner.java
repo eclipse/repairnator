@@ -33,10 +33,10 @@ import java.util.Optional;
  * This class is the backbone for the realtime scanner.
  */
 public class RTScanner {
-    public static Boolean kubernetesmode = false;
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
-
+    private Boolean kubernetesmode = false;
+    
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
     private final List<Long> whiteListedRepository;
@@ -145,7 +145,7 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            if (!RTScanner.kubernetesmode) {
+            if (!this.kubernetesmode) {
                 this.dockerPipelineRunner.initRunner();  
             }
             new Thread(this.inspectBuilds).start();
@@ -163,7 +163,7 @@ public class RTScanner {
                 } else {
                     inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner);
                 }
-
+                inspectProcessDuration.setKubernetesMode(this.kubernetesmode);
                 new Thread(inspectProcessDuration).start();
             }
             if(RepairnatorConfig.getInstance().getNumberOfPatchedBuilds() != 0) {
@@ -190,6 +190,7 @@ public class RTScanner {
                             this.inspectJobs,
                             this.dockerPipelineRunner);
                 }
+                patchCounter.setKubernetesMode(this.kubernetesmode);
                 new Thread(patchCounter).start();
             }
         }
@@ -361,7 +362,7 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            if (!RTScanner.kubernetesmode) {
+            if (!this.kubernetesmode) {
                 this.dockerPipelineRunner.submitBuild(build);
             } else {
                 try {

@@ -15,8 +15,6 @@ import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.DockerPipelineRunner;
 import fr.inria.spirals.repairnator.realtime.InspectBuilds;
 import fr.inria.spirals.repairnator.realtime.InspectJobs;
-import fr.inria.spirals.repairnator.realtime.RTScanner;
-
 /**
  * A class that counts the number of patches created since 
  * the rtscanner started running.
@@ -30,6 +28,7 @@ public class PatchCounter implements Runnable{
     // Sleep for this interval
     private static final int INTERVAL = 1800 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(PatchCounter.class);
+    private Boolean kubernetesmode = false;
     
     private int numberOfPatchesToRunFor;
     private Bson patchesFilter;
@@ -40,7 +39,7 @@ public class PatchCounter implements Runnable{
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
     private DockerPipelineRunner dockerPipelineRunner;
-    
+
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
             String mongodbName,
@@ -60,7 +59,7 @@ public class PatchCounter implements Runnable{
                 Filters.gte("buildFinishedDate", startDate),
                 Filters.eq("status", "PATCHED"));
     }
-    
+        
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
             String mongodbName,
@@ -74,6 +73,10 @@ public class PatchCounter implements Runnable{
         this.endProcessNotifier = endProcessNotifier;
     }
     
+    public void setKubernetesMode(Boolean kubernetesmode) {
+        this.kubernetesmode = kubernetesmode;
+    }
+
     /**
      * Has the number of patches or patched builds exceeded the number
      * we intend them to run for?
@@ -123,7 +126,7 @@ public class PatchCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            if (!RTScanner.kubernetesmode) {
+            if (!kubernetesmode) {
                 this.dockerPipelineRunner.switchOff();
             }
             if(this.endProcessNotifier != null) {
