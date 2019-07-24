@@ -17,19 +17,19 @@ public class InspectProcessDuration implements Runnable {
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private DockerPipelineRunner DockerPipelineRunner;
+    private DockerPipelineRunner dockerPipelineRunner;
     private ActiveMQPipelineRunner ActiveMQPipelineRunner;
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner DockerPipelineRunner, EndProcessNotifier endProcessNotifier) {
-        this(inspectBuilds, inspectJobs, DockerPipelineRunner);
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner dockerPipelineRunner, EndProcessNotifier endProcessNotifier) {
+        this(inspectBuilds, inspectJobs, dockerPipelineRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner DockerPipelineRunner) {
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner dockerPipelineRunner) {
         this.duration = RepairnatorConfig.getInstance().getDuration();
         this.inspectBuilds = inspectBuilds;
         this.inspectJobs = inspectJobs;
-        this.DockerPipelineRunner = DockerPipelineRunner;
+        this.dockerPipelineRunner = dockerPipelineRunner;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class InspectProcessDuration implements Runnable {
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
         if (!RTScanner.kubernetesmode) {
-            this.DockerPipelineRunner.switchOff(); 
+            this.dockerPipelineRunner.switchOff(); 
         }
         
         if (this.endProcessNotifier != null) {

@@ -39,7 +39,7 @@ public class PatchCounter implements Runnable{
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private DockerPipelineRunner DockerPipelineRunner;
+    private DockerPipelineRunner dockerPipelineRunner;
     
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
@@ -47,7 +47,7 @@ public class PatchCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            DockerPipelineRunner DockerPipelineRunner) {
+            DockerPipelineRunner dockerPipelineRunner) {
         // Set the variables
         this.numberOfPatchesToRunFor = numberOfPatchesToRunFor;
         this.mongodbHost = mongodbHost;
@@ -67,10 +67,10 @@ public class PatchCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            DockerPipelineRunner DockerPipelineRunner,
+            DockerPipelineRunner dockerPipelineRunner,
             EndProcessNotifier endProcessNotifier) {
         this(numberOfPatchesToRunFor, mongodbHost, mongodbName, startDate,
-                inspectBuilds, inspectJobs, DockerPipelineRunner);
+                inspectBuilds, inspectJobs, dockerPipelineRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
     
@@ -124,7 +124,7 @@ public class PatchCounter implements Runnable{
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
             if (!RTScanner.kubernetesmode) {
-                this.DockerPipelineRunner.switchOff();
+                this.dockerPipelineRunner.switchOff();
             }
             if(this.endProcessNotifier != null) {
                 this.endProcessNotifier.notifyEnd();

@@ -45,7 +45,7 @@ public class RTScanner {
 
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
-    private final DockerPipelineRunner DockerPipelineRunner;
+    private final DockerPipelineRunner dockerPipelineRunner;
     private final ActiveMQPipelineRunner ActiveMQPipelineRunner;
     private FileWriter blacklistWriter;
     private FileWriter whitelistWriter;
@@ -61,7 +61,7 @@ public class RTScanner {
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
-        this.DockerPipelineRunner = new DockerPipelineRunner(this);
+        this.dockerPipelineRunner = new DockerPipelineRunner(this);
         this.ActiveMQPipelineRunner = new ActiveMQPipelineRunner();
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
@@ -146,7 +146,7 @@ public class RTScanner {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
             if (!RTScanner.kubernetesmode) {
-                this.DockerPipelineRunner.initRunner();  
+                this.dockerPipelineRunner.initRunner();  
             }
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
@@ -159,9 +159,9 @@ public class RTScanner {
             if (RepairnatorConfig.getInstance().getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.DockerPipelineRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.DockerPipelineRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner);
                 }
 
                 new Thread(inspectProcessDuration).start();
@@ -178,7 +178,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.DockerPipelineRunner,
+                            this.dockerPipelineRunner,
                             this.endProcessNotifier);
                 } else {
                     patchCounter = new PatchCounter(
@@ -188,7 +188,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.DockerPipelineRunner);
+                            this.dockerPipelineRunner);
                 }
                 new Thread(patchCounter).start();
             }
@@ -362,7 +362,7 @@ public class RTScanner {
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
             if (!RTScanner.kubernetesmode) {
-                this.DockerPipelineRunner.submitBuild(build);
+                this.dockerPipelineRunner.submitBuild(build);
             } else {
                 try {
                     this.ActiveMQPipelineRunner.submitBuild(build);
