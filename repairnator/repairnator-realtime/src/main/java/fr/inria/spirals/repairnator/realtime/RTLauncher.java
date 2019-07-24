@@ -33,7 +33,7 @@ public class RTLauncher {
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
-    private Boolean kubernetesMode;
+    private boolean kubernetesmode;
     private String activeMQUrl;
     private String activeMQQueueName;
 

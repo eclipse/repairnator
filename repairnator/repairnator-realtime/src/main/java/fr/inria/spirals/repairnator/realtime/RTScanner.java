@@ -35,7 +35,7 @@ import java.util.Optional;
 public class RTScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
-    private Boolean kubernetesmode = false;
+    private boolean kubernetesmode = false;
     
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
@@ -71,7 +71,7 @@ public class RTScanner {
 
 
 
-    public void initKubernetesMode(Boolean kubernetesmode, String ActiveMQUrl, String ActiveMQQueueName) {
+    public void initKubernetesMode(boolean kubernetesmode, String ActiveMQUrl, String ActiveMQQueueName) {
         this.kubernetesmode = kubernetesmode;
         this.ActiveMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
         if (this.kubernetesmode) {

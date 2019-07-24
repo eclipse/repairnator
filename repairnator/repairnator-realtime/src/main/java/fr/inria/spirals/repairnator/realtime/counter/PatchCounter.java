@@ -28,7 +28,7 @@ public class PatchCounter implements Runnable{
     // Sleep for this interval
     private static final int INTERVAL = 1800 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(PatchCounter.class);
-    private Boolean kubernetesmode = false;
+    private boolean kubernetesmode = false;
     
     private int numberOfPatchesToRunFor;
     private Bson patchesFilter;
@@ -74,7 +74,7 @@ public class PatchCounter implements Runnable{
         this.endProcessNotifier = endProcessNotifier;
     }
     
-    public void setKubernetesMode(Boolean kubernetesmode) {
+    public void setKubernetesMode(boolean kubernetesmode) {
         this.kubernetesmode = kubernetesmode;
     }
 
