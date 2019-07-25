@@ -18,6 +18,12 @@ import java.util.Set;
  * Created by urli on 08/03/2017.
  */
 public class RepairnatorConfig {
+    public enum PIPELINE_MODE {
+        DOCKER,
+        KUBERNETES,
+        NOPE
+    }
+
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -74,7 +80,7 @@ public class RepairnatorConfig {
     private Duration summaryFrequency;
     private String[] notifySummary;
     private int numberOfPatchedBuilds;
-    private String pipelineMode;
+    private PIPELINE_MODE pipelineMode;
     private String activeMQUrl;
     private String activeMQQueueName;
 
@@ -112,10 +118,16 @@ public class RepairnatorConfig {
     }
 
     public void setPipelineMode(String pipelineMode) {
-        this.pipelineMode = pipelineMode;
+        if (pipelineMode.equals("DOCKER")) {
+            this.pipelineMode = PIPELINE_MODE.DOCKER;
+        }else if (pipelineMode.equals("KUBERNETES")) {
+            this.pipelineMode = PIPELINE_MODE.KUBERNETES;
+        }else if (pipelineMode.equals("NOPE")) {
+            this.pipelineMode = PIPELINE_MODE.NOPE;
+        }
     }
 
-    public String getPipelineMode() {
+    public PIPELINE_MODE getPipelineMode() {
         return this.pipelineMode;
     }
 
