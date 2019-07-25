@@ -14,7 +14,7 @@ import java.util.Date;
 public class InspectProcessDuration implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectProcessDuration.class);
     private static final int SLEEP_TIME = 10; // seconds
-    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.NOPE;
     
     private Duration duration;
     private EndProcessNotifier endProcessNotifier;

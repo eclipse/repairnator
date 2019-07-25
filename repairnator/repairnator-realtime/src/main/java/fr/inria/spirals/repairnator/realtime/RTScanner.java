@@ -38,7 +38,7 @@ public class RTScanner {
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
     
     // by default, the RTScanner does nothing
-    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.NOPE;
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
     
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
@@ -202,38 +202,35 @@ public class RTScanner {
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
 
-            this.blacklistedSerializer.serialize(repository, reason, comment);
-            this.blackListedRepository.add(repository.getId());
+        this.blacklistedSerializer.serialize(repository, reason, comment);
+        this.blackListedRepository.add(repository.getId());
 
-            if (this.blacklistWriter != null) {
-                try {
-                    this.blacklistWriter.append(repository.getId()+"");
-                    this.blacklistWriter.append("\n");
-                    this.blacklistWriter.flush();
-                } catch (IOException e) {
-                    LOGGER.error("Error while writing entry in blacklist");
-                }
-            } else {
-                LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
+        if (this.blacklistWriter != null) {
+            try {
+                this.blacklistWriter.append(repository.getId()+"");
+                this.blacklistWriter.append("\n");
+                this.blacklistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in blacklist");
             }
-        
-        
-
+        } else {
+            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
+        }
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-            if (this.whitelistWriter != null) {
-                try {
-                    this.whitelistWriter.append(String.valueOf(repository.getId()));
-                    this.whitelistWriter.append("\n");
-                    this.whitelistWriter.flush();
-                } catch (IOException e) {
-                    LOGGER.error("Error while writing entry in whitelist");
-                }
-            } else {
-                LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
+        if (this.whitelistWriter != null) {
+            try {
+                this.whitelistWriter.append(String.valueOf(repository.getId()));
+                this.whitelistWriter.append("\n");
+                this.whitelistWriter.flush();
+            } catch (IOException e) {
+                LOGGER.error("Error while writing entry in whitelist");
             }
+        } else {
+            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
+        }
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
@@ -364,7 +361,7 @@ public class RTScanner {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
             if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
                 this.dockerPipelineRunner.submitBuild(build);
-            } else {
+            } else if(this.pipelineMode.equals(PIPELINE_MODE.KUBERNETES)) {
                 try {
                     this.ActiveMQPipelineRunner.submitBuild(build);
                 } catch(Exception e){

@@ -177,7 +177,7 @@ public class RTLauncher {
         opt2 = new FlaggedOption("pipelinemode");
         opt2.setLongFlag("pipelinemode");
         opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("DOCKER");
+        opt2.setDefault("NOPE");
         opt2.setHelp("Possible string values DOCKER,KUBERNETES,NOPE . DOCKER is for running DockerPipeline, KUBERNETES is for running ActiveMQPipeline and Nope is for NopeRunner. The last two options do not use docker during run.");
         jsap.registerParameter(opt2);
 

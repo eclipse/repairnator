@@ -30,7 +30,7 @@ public class PatchCounter implements Runnable{
     // Sleep for this interval
     private static final int INTERVAL = 1800 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(PatchCounter.class);
-    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.NOPE;
     
     private int numberOfPatchesToRunFor;
     private Bson patchesFilter;
