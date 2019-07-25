@@ -87,8 +87,8 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             /*
-             * The queue will be created automatically on the server.
-             */
+            * The queue will be created automatically on the server.
+            */
             Destination destination = session.createQueue(this.queueName);
 
             /*
@@ -104,8 +104,8 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue");
             connection.close();
             return true;
-        } catch(JMSException jsme) {
-            LOGGER.info("Failed to submit build, please double check ActiveMQ server");
+        }catch (JMSException e) {
+            LOGGER.warn("Failed to submit message to ActiveMQ queue");
             return false;
         }
     }

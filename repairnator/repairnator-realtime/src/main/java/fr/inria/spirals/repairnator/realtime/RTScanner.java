@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 /**
  * This class is the backbone for the realtime scanner.
  */
@@ -362,11 +361,7 @@ public class RTScanner {
             if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
                 this.dockerPipelineRunner.submitBuild(build);
             } else if(this.pipelineMode.equals(PIPELINE_MODE.KUBERNETES)) {
-                try {
-                    this.ActiveMQPipelineRunner.submitBuild(build);
-                } catch(Exception e){
-                    LOGGER.warn("Failed to send message to ActiveMQ queue");
-                }
+                this.ActiveMQPipelineRunner.submitBuild(build);            
             }
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
