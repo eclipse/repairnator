@@ -21,7 +21,7 @@ public class InspectProcessDuration implements Runnable {
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
     private DockerPipelineRunner dockerPipelineRunner;
-    private ActiveMQPipelineRunner ActiveMQPipelineRunner;
+    private ActiveMQPipelineRunner activeMQPipelineRunner;
 
     public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner dockerPipelineRunner, EndProcessNotifier endProcessNotifier) {
         this(inspectBuilds, inspectJobs, dockerPipelineRunner);

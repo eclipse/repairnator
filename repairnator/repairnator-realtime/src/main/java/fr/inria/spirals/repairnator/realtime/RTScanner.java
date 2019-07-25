@@ -48,7 +48,7 @@ public class RTScanner {
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final DockerPipelineRunner dockerPipelineRunner;
-    private final ActiveMQPipelineRunner ActiveMQPipelineRunner;
+    private final ActiveMQPipelineRunner activeMQPipelineRunner;
     private FileWriter blacklistWriter;
     private FileWriter whitelistWriter;
     private boolean running;
@@ -64,7 +64,7 @@ public class RTScanner {
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
         this.dockerPipelineRunner = new DockerPipelineRunner(this);
-        this.ActiveMQPipelineRunner = new ActiveMQPipelineRunner();
+        this.activeMQPipelineRunner = new ActiveMQPipelineRunner();
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
@@ -75,9 +75,9 @@ public class RTScanner {
 
     public void initPipelineMode(PIPELINE_MODE pipelineMode, String ActiveMQUrl, String ActiveMQQueueName) {
         this.pipelineMode = pipelineMode;
-        this.ActiveMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
+        this.activeMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
         if (this.pipelineMode.equals(PIPELINE_MODE.KUBERNETES)) {
-            this.ActiveMQPipelineRunner.testConnection();
+            this.activeMQPipelineRunner.testConnection();
         }
     }
 
@@ -252,7 +252,7 @@ public class RTScanner {
      * This will fetch one message from the queue and return it.
      */
     public String receiveFromActiveMQQueue() {
-        return this.ActiveMQPipelineRunner.receiveBuildFromQueue();
+        return this.activeMQPipelineRunner.receiveBuildFromQueue();
     }
     /**
      * Main method for specifying if a repositoryId is interesting or not.
@@ -377,7 +377,7 @@ public class RTScanner {
             if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
                 this.dockerPipelineRunner.submitBuild(build);
             } else if(this.pipelineMode.equals(PIPELINE_MODE.KUBERNETES)) {
-                this.ActiveMQPipelineRunner.submitBuild(build);            
+                this.activeMQPipelineRunner.submitBuild(build);            
             }
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
