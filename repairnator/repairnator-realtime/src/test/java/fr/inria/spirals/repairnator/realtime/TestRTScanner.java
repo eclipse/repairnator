@@ -1,6 +1,9 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
+
 import fr.inria.jtravis.entities.Repository;
+import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
@@ -12,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class TestRTScanner {
 
@@ -78,11 +82,20 @@ public class TestRTScanner {
     /**
      * Note this test might fail locally if you don't have activeMQ
      * In that case this test can be temporarily be commented out
+     * Also this build is taken from Tailp/travisplay, so if
+     * fetch another fail build from there or from another repo
+     * if 560996872 disappears in the future.
      */
     @Test
     public void testActiveMQRunnerConnection()
     {
-        ActiveMQPipelineRunner activeRunner = new ActiveMQPipelineRunner();
-        assertTrue(activeRunner.testConnection());
+        int buildId = 560996872;
+        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
+        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
+
+        RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
+        rtScanner.submitIfBuildIsInteresting(optionalBuild.get());
+        assertEquals("560996872",rtScanner.receiveFromActiveMQQueue());
     }
 }

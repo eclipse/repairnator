@@ -12,6 +12,10 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+/*For reciever*/
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 /**
@@ -110,4 +114,36 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
         }
     }
 
+    public String receiveBuildFromQueue() {
+        try {
+            // Create a ConnectionFactory
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(this.url);
+
+            // Create a Connection
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // Create a Session
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            // Create the destination (Topic or Queue)
+            Destination destination = session.createQueue(this.queueName);
+
+            // Create a MessageConsumer from the Session to the Topic or Queue
+            MessageConsumer consumer = session.createConsumer(destination);
+
+            // Wait for a message
+            Message message = consumer.receive(1000);
+
+            TextMessage textMessage = (TextMessage) message;
+            String text = textMessage.getText();
+
+            consumer.close();
+            session.close();
+            connection.close();
+            return text;
+        } catch (Exception e) {
+            return "Caught: " + e;
+        }
+    }
 }

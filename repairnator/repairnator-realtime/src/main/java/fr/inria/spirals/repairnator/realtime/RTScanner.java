@@ -239,6 +239,22 @@ public class RTScanner {
     }
 
     /**
+     * Give to build to inspectBuilds and it will submit to 
+     * ActiveMQ queue in KUBERNETES Mode if it's interesting.
+     */
+    public void submitIfBuildIsInteresting(Build build) {
+        this.initPipelineMode(PIPELINE_MODE.KUBERNETES,"tcp://localhost:61616","TestQueue");
+        this.inspectBuilds.submitIfBuildIsInteresting(build);
+    }
+
+    /**
+     * This function is used for testing since ActiveMQPipelineRunner is private.
+     * This will fetch one message from the queue and return it.
+     */
+    public String receiveFromActiveMQQueue() {
+        return this.ActiveMQPipelineRunner.receiveBuildFromQueue();
+    }
+    /**
      * Main method for specifying if a repositoryId is interesting or not.
      * It checks on the whitelist and blacklists first, and then apply the following criteria:
      *   - check if the repo already has a successful build, (tempblacklist if not the case)
