@@ -38,7 +38,7 @@ public class RTScanner {
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
     
     // by default, the RTScanner does nothing
-    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.NOPE;
     
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
