@@ -74,7 +74,7 @@ public class RepairnatorConfig {
     private Duration summaryFrequency;
     private String[] notifySummary;
     private int numberOfPatchedBuilds;
-    private boolean kubernetesMode;
+    private String pipelineMode;
     private String activeMQUrl;
     private String activeMQQueueName;
 
@@ -111,12 +111,12 @@ public class RepairnatorConfig {
         return runId;
     }
 
-    public void setKubernetesMode(boolean kubernetesMode) {
-        this.kubernetesMode = kubernetesMode;
+    public void setPipelineMode(String pipelineMode) {
+        this.pipelineMode = pipelineMode;
     }
 
-    public boolean getKubernetesMode() {
-        return this.kubernetesMode;
+    public String getPipelineMode() {
+        return this.pipelineMode;
     }
 
     public void setActiveMQUrl(String activeMQUrl) {
@@ -571,7 +571,7 @@ public class RepairnatorConfig {
                 ", repairTools=" + StringUtils.join(this.repairTools, ",") +
                 ", githubUserName= " + githubUserName +
                 ", githubUserEmail=" + githubUserEmail +
-                ", kubernetesMode=" + kubernetesMode +
+                ", pipelineMode=" + pipelineMode +
                 ", activeMQUrl=" + activeMQUrl +
                 ", activeMQQueueName=" + activeMQQueueName +
                 '}';
