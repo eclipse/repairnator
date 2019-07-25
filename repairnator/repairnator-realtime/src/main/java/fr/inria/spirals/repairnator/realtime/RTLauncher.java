@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -28,6 +29,7 @@ import java.util.List;
  * This is the launcher class for Repairnator realtime.
  */
 public class RTLauncher {
+
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
@@ -172,11 +174,11 @@ public class RTLauncher {
         opt2.setHelp("The number of builds that Repairnator should patched before shutting down. If 0, it will run indefinitely.");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("kubernetesmode");
-        opt2.setLongFlag("kubernetesmode");
-        opt2.setStringParser(JSAP.BOOLEAN_PARSER);
-        opt2.setDefault(0 + "");
-        opt2.setHelp("if 1 then the scanner will run with ActiveMQPipelineRunner instead of DockerPipelineRunner");
+        opt2 = new FlaggedOption("pipelinemode");
+        opt2.setLongFlag("pipelinemode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("DOCKER");
+        opt2.setHelp("Possible string values DOCKER,KUBERNETES,NOPE . DOCKER is for running DockerPipeline, KUBERNETES is for running ActiveMQPipeline and Nope is for NopeRunner. The last two options do not use docker during run.");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("activemqurl");
@@ -249,7 +251,7 @@ public class RTLauncher {
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
-        this.config.setKubernetesMode(arguments.getBoolean("kubernetesmode"));
+        this.config.setPipelineMode(arguments.getString("pipelinemode"));
         this.config.setActiveMQUrl(arguments.getString("activemqurl"));
         this.config.setActiveMQQueueName(arguments.getString("activemqqueuename"));
     }
@@ -292,7 +294,10 @@ public class RTLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = new RTScanner(runId, this.engines);
-        rtScanner.initKubernetesMode(this.config.getKubernetesMode(),this.config.getActiveMQUrl(),this.config.getActiveMQQueueName());
+
+        if (this.config.getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
+            rtScanner.initPipelineMode(this.config.getPipelineMode(),this.config.getActiveMQUrl(),this.config.getActiveMQQueueName());
+        }
         
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);

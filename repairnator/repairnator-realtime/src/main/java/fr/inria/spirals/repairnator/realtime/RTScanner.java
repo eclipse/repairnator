@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildTool;
@@ -35,7 +36,7 @@ import java.util.Optional;
 public class RTScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
-    private boolean kubernetesmode = false;
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
     
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
@@ -71,10 +72,10 @@ public class RTScanner {
 
 
 
-    public void initKubernetesMode(boolean kubernetesmode, String ActiveMQUrl, String ActiveMQQueueName) {
-        this.kubernetesmode = kubernetesmode;
+    public void initPipelineMode(PIPELINE_MODE pipelineMode, String ActiveMQUrl, String ActiveMQQueueName) {
+        this.pipelineMode = pipelineMode;
         this.ActiveMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
-        if (this.kubernetesmode) {
+        if (this.pipelineMode.equals(PIPELINE_MODE.KUBERNETES)) {
             this.ActiveMQPipelineRunner.testConnection();
         }
     }
@@ -145,7 +146,7 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            if (!this.kubernetesmode) {
+            if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
                 this.dockerPipelineRunner.initRunner();  
             }
             new Thread(this.inspectBuilds).start();
@@ -163,7 +164,7 @@ public class RTScanner {
                 } else {
                     inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner);
                 }
-                inspectProcessDuration.setKubernetesMode(this.kubernetesmode);
+                inspectProcessDuration.setPipelineMode(this.pipelineMode);
                 new Thread(inspectProcessDuration).start();
             }
             if(RepairnatorConfig.getInstance().getNumberOfPatchedBuilds() != 0) {
@@ -190,7 +191,7 @@ public class RTScanner {
                             this.inspectJobs,
                             this.dockerPipelineRunner);
                 }
-                patchCounter.setKubernetesMode(this.kubernetesmode);
+                patchCounter.setPipelineMode(this.pipelineMode);
                 new Thread(patchCounter).start();
             }
         }
@@ -199,7 +200,7 @@ public class RTScanner {
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
 
-        if (!this.kubernetesmode) {
+        if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
             this.blacklistedSerializer.serialize(repository, reason, comment);
             this.blackListedRepository.add(repository.getId());
 
@@ -221,7 +222,7 @@ public class RTScanner {
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-        if (!this.kubernetesmode) {
+        if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
             if (this.whitelistWriter != null) {
                 try {
                     this.whitelistWriter.append(String.valueOf(repository.getId()));
@@ -362,7 +363,7 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            if (!this.kubernetesmode) {
+            if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
                 this.dockerPipelineRunner.submitBuild(build);
             } else {
                 try {

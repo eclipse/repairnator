@@ -1,5 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
+
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import org.slf4j.Logger;
@@ -12,7 +14,7 @@ import java.util.Date;
 public class InspectProcessDuration implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectProcessDuration.class);
     private static final int SLEEP_TIME = 10; // seconds
-    private boolean kubernetesmode = false;
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
     
     private Duration duration;
     private EndProcessNotifier endProcessNotifier;
@@ -33,8 +35,8 @@ public class InspectProcessDuration implements Runnable {
         this.dockerPipelineRunner = dockerPipelineRunner;
     }
 
-    public void setKubernetesMode(boolean kubernetesmode) {
-        this.kubernetesmode = kubernetesmode;
+    public void setPipelineMode(PIPELINE_MODE pipelineMode) {
+        this.pipelineMode = pipelineMode;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        if (!kubernetesmode) {
+        if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
             this.dockerPipelineRunner.switchOff(); 
         }
         

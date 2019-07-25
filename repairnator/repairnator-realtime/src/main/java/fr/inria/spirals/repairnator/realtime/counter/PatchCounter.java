@@ -1,5 +1,7 @@
 package fr.inria.spirals.repairnator.realtime.counter;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
+
 import java.util.Date;
 
 import org.bson.conversions.Bson;
@@ -28,7 +30,7 @@ public class PatchCounter implements Runnable{
     // Sleep for this interval
     private static final int INTERVAL = 1800 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(PatchCounter.class);
-    private boolean kubernetesmode = false;
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
     
     private int numberOfPatchesToRunFor;
     private Bson patchesFilter;
@@ -74,8 +76,8 @@ public class PatchCounter implements Runnable{
         this.endProcessNotifier = endProcessNotifier;
     }
     
-    public void setKubernetesMode(boolean kubernetesmode) {
-        this.kubernetesmode = kubernetesmode;
+    public void setPipelineMode(PIPELINE_MODE pipelineMode) {
+        this.pipelineMode = pipelineMode;
     }
 
     /**
@@ -127,7 +129,7 @@ public class PatchCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            if (!kubernetesmode) {
+            if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
                 this.dockerPipelineRunner.switchOff();
             }
             if(this.endProcessNotifier != null) {
