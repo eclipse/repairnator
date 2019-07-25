@@ -36,7 +36,9 @@ import java.util.Optional;
 public class RTScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
-    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.DOCKER;
+    
+    // by default, the RTScanner does nothing
+    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.NOPE;
     
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
@@ -200,7 +202,6 @@ public class RTScanner {
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
 
-        if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
             this.blacklistedSerializer.serialize(repository, reason, comment);
             this.blackListedRepository.add(repository.getId());
 
@@ -215,14 +216,13 @@ public class RTScanner {
             } else {
                 LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
             }
-        }
+        
         
 
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-        if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
             if (this.whitelistWriter != null) {
                 try {
                     this.whitelistWriter.append(String.valueOf(repository.getId()));
@@ -234,7 +234,6 @@ public class RTScanner {
             } else {
                 LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
             }
-        }
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
