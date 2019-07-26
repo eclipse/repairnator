@@ -293,7 +293,7 @@ public class RTLauncher {
         RTScanner rtScanner = new RTScanner(runId, this.engines);
 
         if (this.config.getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
-            rtScanner.initPipelineMode(this.config.getActiveMQUrl(),this.config.getActiveMQQueueName());
+            rtScanner.testActiveMQConnection();
         }
 
         if (this.summaryNotifier != null) {

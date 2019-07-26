@@ -70,7 +70,7 @@ public class RTScanner {
 
 
 
-    public void initPipelineMode(String ActiveMQUrl, String ActiveMQQueueName) {
+    public void testActiveMQConnection() {
         this.activeMQPipelineRunner.testConnection();
     }
 
@@ -234,7 +234,6 @@ public class RTScanner {
      * ActiveMQ queue in KUBERNETES Mode if it's interesting.
      */
     public void submitIfBuildIsInteresting(Build build) {
-        this.initPipelineMode("tcp://localhost:61616","TestQueue");
         this.inspectBuilds.submitIfBuildIsInteresting(build);
     }
 
