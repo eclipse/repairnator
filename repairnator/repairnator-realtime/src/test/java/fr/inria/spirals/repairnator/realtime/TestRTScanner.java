@@ -90,8 +90,13 @@ public class TestRTScanner {
     public void testActiveMQRunnerConnection()
     {
         int buildId = 560996872;
-        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.REPAIR);
+        config.setPipelineMode(PIPELINE_MODE.KUBERNETES.name());
+        config.setActiveMQUrl("tcp://localhost:61616");
+        config.setActiveMQQueueName("testing");
+
+        Optional<Build> optionalBuild = config.getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());

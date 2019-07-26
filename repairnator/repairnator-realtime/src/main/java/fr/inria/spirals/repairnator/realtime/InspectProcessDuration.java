@@ -14,7 +14,6 @@ import java.util.Date;
 public class InspectProcessDuration implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectProcessDuration.class);
     private static final int SLEEP_TIME = 10; // seconds
-    private PIPELINE_MODE pipelineMode = PIPELINE_MODE.NOPE;
     
     private Duration duration;
     private EndProcessNotifier endProcessNotifier;
@@ -35,10 +34,6 @@ public class InspectProcessDuration implements Runnable {
         this.dockerPipelineRunner = dockerPipelineRunner;
     }
 
-    public void setPipelineMode(PIPELINE_MODE pipelineMode) {
-        this.pipelineMode = pipelineMode;
-    }
-
     @Override
     public void run() {
         Instant endOfProcessDate = new Date().toInstant().plus(duration);
@@ -55,7 +50,7 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
+        if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
             this.dockerPipelineRunner.switchOff(); 
         }
         

@@ -17,6 +17,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
 /**
  * This class will take the builds qualified by the inspectBuild
@@ -26,22 +27,16 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
-    private static String url = "tcp://localhost:61616"; //Default address for Activemq server
-    private static String queueName = "pipeline";  //Default pipeline queue name to push ids to
+    private static final RepairnatorConfig config = RepairnatorConfig.getInstance();
 
     public ActiveMQPipelineRunner(){}
-
-    public void setUrlAndQueue(String url, String queueName) {
-        this.url = url;
-        this.queueName = queueName;
-    }
 
     public Boolean testConnection() {
         try {
             /*
              * Getting JMS connection from the JMS server and starting it
              */
-            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(this.url);
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(config.getActiveMQUrl());
             Connection connection = connectionFactory.createConnection();
             connection.start();
 
@@ -66,11 +61,11 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             producer.send(message);
             connection.close();
             LOGGER.warn("Connection to activemq Succeeded"); 
-            LOGGER.warn("Connected to url: " + this.url + " and queueName: " + this.queueName);
+            LOGGER.warn("Connected to url: " + config.getActiveMQUrl() + " and queueName: " + "Con_test");
 
             return true;
         }catch(JMSException e){
-            LOGGER.warn("Tried to connect to url " + this.url);
+            LOGGER.warn("Tried to connect to url " + config.getActiveMQUrl());
             LOGGER.warn("Connection to activemq failed, please double check the ActiveMQ server"); 
             throw new RuntimeException(e);
         }
@@ -81,7 +76,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             /*
              * Getting JMS connection from the JMS server and starting it
              */
-            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(this.url);
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(config.getActiveMQUrl());
             Connection connection = connectionFactory.createConnection();
             connection.start();
 
@@ -93,7 +88,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             /*
             * The queue will be created automatically on the server.
             */
-            Destination destination = session.createQueue(this.queueName);
+            Destination destination = session.createQueue(config.getActiveMQQueueName());
 
             /*
              * Destination represents here our queue 'MESSAGE_QUEUE' on the JMS server.
@@ -105,7 +100,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
 
             producer.send(message);
 
-            LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue");
+            LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue " + config.getActiveMQQueueName());
             connection.close();
             return true;
         }catch (JMSException e) {
@@ -116,7 +111,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
     public String receiveBuildFromQueue() {
         try {
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(this.url);
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(config.getActiveMQUrl());
 
             // Create a Connection
             Connection connection = connectionFactory.createConnection();
@@ -126,7 +121,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             // Create the destination (Topic or Queue)
-            Destination destination = session.createQueue(this.queueName);
+            Destination destination = session.createQueue(config.getActiveMQQueueName());
 
             // Create a MessageConsumer from the Session to the Topic or Queue
             MessageConsumer consumer = session.createConsumer(destination);
