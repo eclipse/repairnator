@@ -93,8 +93,6 @@ public class Launcher extends AbstractPoolManager {
         jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // --createOutputDir
         jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
-        // -l or --logDirectory
-        jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
         jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // -g or --globalTimeout
