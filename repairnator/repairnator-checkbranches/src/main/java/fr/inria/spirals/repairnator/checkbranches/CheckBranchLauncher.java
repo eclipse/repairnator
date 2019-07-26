@@ -30,15 +30,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by urli on 13/03/2017.
  */
-public class Launcher {
-    private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
+public class CheckBranchLauncher {
+    private static Logger LOGGER = LoggerFactory.getLogger(CheckBranchLauncher.class);
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
     public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
 
-    private Launcher(String[] args) throws JSAPException {
+    private CheckBranchLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.CHECKBRANCHES);
@@ -196,7 +196,7 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws Exception {
-        Launcher launcher = new Launcher(args);
+        CheckBranchLauncher launcher = new CheckBranchLauncher(args);
         launcher.runPool();
     }
 
