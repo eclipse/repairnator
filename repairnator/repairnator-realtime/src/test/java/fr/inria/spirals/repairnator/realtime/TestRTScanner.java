@@ -91,7 +91,7 @@ public class TestRTScanner {
 		ArrayList<SerializerEngine> engines = new ArrayList<>();
 		engines.add(new JSONFileSerializerEngine("."));
 		RTScanner rtScanner = new RTScanner("test", engines);
-		rtScanner.initBlackListedRepository(new File("repairnator-realtime/src/test/resources/blacklist.txt"));
+		rtScanner.initBlackListedRepository(new File("src/test/resources/blacklist.txt"));
 
 		JsonReader reader = new JsonReader(new FileReader(fileName));
 		JsonObject data = new Gson().fromJson(reader, JsonObject.class);
