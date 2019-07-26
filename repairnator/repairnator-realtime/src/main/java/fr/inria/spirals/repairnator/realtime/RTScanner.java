@@ -7,6 +7,7 @@ import fr.inria.jtravis.entities.Job;
 import fr.inria.jtravis.entities.Log;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
+import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.counter.PatchCounter;
@@ -108,8 +109,7 @@ public class RTScanner {
             List<String> lines = Files.readAllLines(blackListFile.toPath());
             for (String repoId : lines) {
                 if (!repoId.trim().isEmpty()) {
-                    Repository repository = new Repository();
-                    addInBlacklistRepository(repository, BlacklistedSerializer.Reason.CONFIGURED_AS_BLACKLISTED, repoId);
+                    addInBlacklistRepository(RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(repoId).get(), BlacklistedSerializer.Reason.CONFIGURED_AS_BLACKLISTED, "blacklisted from "+blackListFile.getPath());
                 }
             }
         } catch (IOException e) {

@@ -1,15 +1,23 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -74,4 +82,23 @@ public class TestRTScanner {
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
         assertFalse(result);
     }
+
+	@Test
+	public void testBlacklisting() throws Exception {
+		String fileName = "./blacklisted.json";
+		new File(fileName).delete();
+
+		ArrayList<SerializerEngine> engines = new ArrayList<>();
+		engines.add(new JSONFileSerializerEngine("."));
+		RTScanner rtScanner = new RTScanner("test", engines);
+		rtScanner.initBlackListedRepository(new File("repairnator-realtime/src/test/resources/blacklist.txt"));
+
+		JsonReader reader = new JsonReader(new FileReader(fileName));
+		JsonObject data = new Gson().fromJson(reader, JsonObject.class);
+		assertEquals("INRIA/spoon", data.get("repoName").getAsString());
+
+		data = new Gson().fromJson(reader, JsonObject.class);
+		assertEquals("rails/rails", data.get("repoName").getAsString());
+	}
+
 }
