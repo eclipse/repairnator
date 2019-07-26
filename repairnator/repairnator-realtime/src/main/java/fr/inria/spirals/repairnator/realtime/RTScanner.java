@@ -74,11 +74,15 @@ public class RTScanner {
 
 
     public void initPipelineMode(PIPELINE_MODE pipelineMode, String ActiveMQUrl, String ActiveMQQueueName) {
-        this.pipelineMode = pipelineMode;
+        this.setPipelineMode(pipelineMode);
         this.activeMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
         if (this.pipelineMode.equals(PIPELINE_MODE.KUBERNETES)) {
             this.activeMQPipelineRunner.testConnection();
         }
+    }
+
+    public void setPipelineMode(PIPELINE_MODE pipelineMode) {
+        this.pipelineMode = pipelineMode;
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -147,6 +151,8 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
+            LOGGER.warn("PIPELINE_MODE is DOCKER " + this.pipelineMode.equals(PIPELINE_MODE.DOCKER));
+            LOGGER.warn("PIPELINE_MODE is " + this.pipelineMode.name());
             if (this.pipelineMode.equals(PIPELINE_MODE.DOCKER)) {
                 this.dockerPipelineRunner.initRunner();  
             }
