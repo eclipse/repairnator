@@ -83,9 +83,8 @@ public class RTLauncher {
         // --skipDelete
         jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // --createOutputDir
+        // the output directory contains CSV files, JSON files and LOG files
         jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
-        // -l or --logDirectory
-        jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
         jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // --pushurl
@@ -207,12 +206,8 @@ public class RTLauncher {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
         }
-        if (arguments.contains("whitelist")) {
-            this.config.setWhiteList(arguments.getFile("whitelist"));
-        }
-        if (arguments.contains("blacklist")) {
-            this.config.setBlackList(arguments.getFile("blacklist"));
-        }
+        this.config.setWhiteList(arguments.getFile("whitelist"));
+        this.config.setBlackList(arguments.getFile("blacklist"));
         this.config.setJobSleepTime(arguments.getInt("jobsleeptime"));
         this.config.setBuildSleepTime(arguments.getInt("buildsleeptime"));
         this.config.setMaxInspectedBuilds(arguments.getInt("maxinspectedbuilds"));

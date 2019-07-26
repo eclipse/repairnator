@@ -112,7 +112,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("input");
         opt.setShortFlag('i');
         opt.setLongFlag("input");
-        opt.setDefault("/tmp/input.txt");
+        opt.setDefault("./input.txt");
         opt.setHelp(helpMessage);
         return opt;
     }
@@ -125,7 +125,8 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("output");
         opt.setShortFlag('o');
         opt.setLongFlag("output");
-        opt.setDefault("/tmp/repairnator-output");
+        // we don't assume the presence of "/tmp" (eg on windows) and the it is writable
+        opt.setDefault("./repairnator-output");
         if (launcherType == LauncherType.DOCKERPOOL || launcherType == LauncherType.CHECKBRANCHES) {
             opt.setRequired(true);
         }
@@ -255,18 +256,9 @@ public class LauncherUtils {
         return arguments.getBoolean("createOutputDir");
     }
 
-    public static FlaggedOption defineArgLogDirectory() {
-        FlaggedOption opt = new FlaggedOption("logDirectory");
-        opt.setShortFlag('l');
-        opt.setLongFlag("logDirectory");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("/tmp/repairnator-logs");
-        opt.setHelp("Specify where to put logs and serialized files created by docker machines.");
-        return opt;
-    }
 
     public static String getArgLogDirectory(JSAPResult arguments) {
-        return arguments.getString("logDirectory");
+        return arguments.getString("output");
     }
 
     public static Switch defineArgSkipDelete() {
