@@ -74,11 +74,15 @@ public class RTScanner {
 
 
     public void initPipelineMode(PIPELINE_MODE pipelineMode, String ActiveMQUrl, String ActiveMQQueueName) {
-        this.pipelineMode = pipelineMode;
+        this.setPipelineMode(pipelineMode);
         this.activeMQPipelineRunner.setUrlAndQueue(ActiveMQUrl,ActiveMQQueueName);
         if (this.pipelineMode.equals(PIPELINE_MODE.KUBERNETES)) {
             this.activeMQPipelineRunner.testConnection();
         }
+    }
+
+    public void setPipelineMode(PIPELINE_MODE pipelineMode) {
+        this.pipelineMode = pipelineMode;
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
