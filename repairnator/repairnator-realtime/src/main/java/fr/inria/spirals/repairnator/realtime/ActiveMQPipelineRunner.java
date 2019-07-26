@@ -69,10 +69,10 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             LOGGER.warn("Connected to url: " + this.url + " and queueName: " + this.queueName);
 
             return true;
-        }catch(Exception e){
+        }catch(JMSException e){
             LOGGER.warn("Tried to connect to url " + this.url);
             LOGGER.warn("Connection to activemq failed, please double check the ActiveMQ server"); 
-            return false;   
+            throw new RuntimeException(e);
         }
     }
 
@@ -109,8 +109,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             connection.close();
             return true;
         }catch (JMSException e) {
-            LOGGER.warn("Failed to submit message to ActiveMQ queue");
-            return false;
+            throw new RuntimeException(e);
         }
     }
 
@@ -142,8 +141,8 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
             session.close();
             connection.close();
             return text;
-        } catch (Exception e) {
-            return "Caught: " + e;
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
         }
     }
 }
