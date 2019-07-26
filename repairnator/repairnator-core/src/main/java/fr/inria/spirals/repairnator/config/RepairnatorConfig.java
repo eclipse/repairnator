@@ -118,11 +118,11 @@ public class RepairnatorConfig {
     }
 
     public void setPipelineMode(String pipelineMode) {
-        if (pipelineMode.equals("DOCKER")) {
+        if (pipelineMode.equals(PIPELINE_MODE.DOCKER.name())) {
             this.pipelineMode = PIPELINE_MODE.DOCKER;
-        }else if (pipelineMode.equals("KUBERNETES")) {
+        }else if (pipelineMode.equals(PIPELINE_MODE.KUBERNETES.name())) {
             this.pipelineMode = PIPELINE_MODE.KUBERNETES;
-        }else if (pipelineMode.equals("NOPE")) {
+        }else if (pipelineMode.equals(PIPELINE_MODE.NOPE.name())) {
             this.pipelineMode = PIPELINE_MODE.NOPE;
         }
     }
