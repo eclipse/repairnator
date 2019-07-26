@@ -36,9 +36,6 @@ public class RTLauncher {
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
 
-    private String activeMQUrl;
-    private String activeMQQueueName;
-
     private RTLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
