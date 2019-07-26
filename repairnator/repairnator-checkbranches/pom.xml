@@ -35,7 +35,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.inria.spirals.repairnator.checkbranches.Launcher</mainClass>
+                            <mainClass>fr.inria.spirals.repairnator.checkbranches.CheckBranchLauncher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
