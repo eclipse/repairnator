@@ -20,7 +20,8 @@ public class BlacklistedSerializer extends Serializer {
         OTHER_LANGUAGE,
         USE_GRADLE,
         UNKNOWN_BUILD_TOOL,
-        NO_SUCCESSFUL_BUILD
+        NO_SUCCESSFUL_BUILD,
+        CONFIGURED_AS_BLACKLISTED
     }
 
     RTScanner rtScanner;

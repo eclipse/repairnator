@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -46,8 +45,6 @@ public class RTScanner {
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
     private final DockerPipelineRunner pipelineRunner;
-    private FileWriter blacklistWriter;
-    private FileWriter whitelistWriter;
     private boolean running;
     private String runId;
     private List<SerializerEngine> engines;
@@ -97,25 +94,22 @@ public class RTScanner {
                     this.whiteListedRepository.add(Long.parseLong(repoId));
                 }
             }
-
-            this.whitelistWriter = new FileWriter(whiteListFile, true);
         } catch (IOException e) {
             LOGGER.error("Error while initializing whitelist", e);
         }
         LOGGER.info("Whitelist initialized with: "+this.whiteListedRepository.size()+" entries");
     }
 
+    /** repairnator can be configured with a initial black list */
     public void initBlackListedRepository(File blackListFile) {
         LOGGER.info("Init blacklist repository...");
         try {
             List<String> lines = Files.readAllLines(blackListFile.toPath());
             for (String repoId : lines) {
                 if (!repoId.trim().isEmpty()) {
-                    this.blackListedRepository.add(Long.parseLong(repoId));
+                    addInBlacklistRepository(RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(repoId).get(), BlacklistedSerializer.Reason.CONFIGURED_AS_BLACKLISTED, "blacklisted from "+blackListFile.getPath());
                 }
             }
-
-            this.blacklistWriter = new FileWriter(blackListFile, true);
         } catch (IOException e) {
             LOGGER.error("Error while initializing blacklist", e);
         }
@@ -185,36 +179,10 @@ public class RTScanner {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
         this.blacklistedSerializer.serialize(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
-
-        if (this.blacklistWriter != null) {
-            try {
-                this.blacklistWriter.append(repository.getId()+"");
-                this.blacklistWriter.append("\n");
-                this.blacklistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in blacklist");
-            }
-        } else {
-            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
-        }
-
     }
 
     private void addInWhitelistRepository(Repository repository) {
         this.whiteListedRepository.add(repository.getId());
-
-        if (this.whitelistWriter != null) {
-            try {
-                this.whitelistWriter.append(String.valueOf(repository.getId()));
-                this.whitelistWriter.append("\n");
-                this.whitelistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in whitelist");
-            }
-        } else {
-            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
-        }
-
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
