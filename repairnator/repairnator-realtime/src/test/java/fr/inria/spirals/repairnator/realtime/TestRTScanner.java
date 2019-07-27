@@ -1,9 +1,13 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
+
 import fr.inria.jtravis.entities.Repository;
+import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
@@ -20,6 +24,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class TestRTScanner {
 
@@ -83,22 +88,47 @@ public class TestRTScanner {
         assertFalse(result);
     }
 
-	@Test
-	public void testBlacklisting() throws Exception {
-		String fileName = "./blacklisted.json";
-		new File(fileName).delete();
+    /**
+     * Note this test might fail locally if you don't have activeMQ
+     * In that case this test can be temporarily be commented out
+     * Also this build is taken from Tailp/travisplay, so if
+     * fetch another fail build from there or from another repo
+     * if 560996872 disappears in the future.
+     */
+    @Test
+    public void testActiveMQRunnerConnection()
+    {
+        int buildId = 560996872;
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setLauncherMode(LauncherMode.REPAIR);
+        config.setPipelineMode(PIPELINE_MODE.KUBERNETES.name());
+        config.setActiveMQUrl("tcp://localhost:61616");
+        config.setActiveMQQueueName("testing");
 
-		ArrayList<SerializerEngine> engines = new ArrayList<>();
-		engines.add(new JSONFileSerializerEngine("."));
-		RTScanner rtScanner = new RTScanner("test", engines);
-		rtScanner.initBlackListedRepository(new File("src/test/resources/blacklist.txt"));
+        Optional<Build> optionalBuild = config.getJTravis().build().fromId(buildId);
+        assertTrue(optionalBuild.isPresent());
 
-		JsonReader reader = new JsonReader(new FileReader(fileName));
-		JsonObject data = new Gson().fromJson(reader, JsonObject.class);
-		assertEquals("INRIA/spoon", data.get("repoName").getAsString());
+        RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
+        rtScanner.submitIfBuildIsInteresting(optionalBuild.get());
+        assertEquals("560996872",rtScanner.receiveFromActiveMQQueue());
+    }
 
-		data = new Gson().fromJson(reader, JsonObject.class);
-		assertEquals("rails/rails", data.get("repoName").getAsString());
-	}
+    @Test
+    public void testBlacklisting() throws Exception {
+      String fileName = "./blacklisted.json";
+      new File(fileName).delete();
+
+      ArrayList<SerializerEngine> engines = new ArrayList<>();
+      engines.add(new JSONFileSerializerEngine("."));
+      RTScanner rtScanner = new RTScanner("test", engines);
+      rtScanner.initBlackListedRepository(new File("src/test/resources/blacklist.txt"));
+
+      JsonReader reader = new JsonReader(new FileReader(fileName));
+      JsonObject data = new Gson().fromJson(reader, JsonObject.class);
+      assertEquals("INRIA/spoon", data.get("repoName").getAsString());
+
+      data = new Gson().fromJson(reader, JsonObject.class);
+      assertEquals("rails/rails", data.get("repoName").getAsString());
+    }
 
 }

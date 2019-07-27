@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildTool;
@@ -27,15 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 /**
  * This class is the backbone for the realtime scanner.
  */
 public class RTScanner {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
-
+    
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
     private final List<Long> whiteListedRepository;
@@ -44,7 +43,9 @@ public class RTScanner {
 
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
-    private final DockerPipelineRunner pipelineRunner;
+    private final DockerPipelineRunner dockerPipelineRunner;
+    private final ActiveMQPipelineRunner activeMQPipelineRunner;
+
     private boolean running;
     private String runId;
     private List<SerializerEngine> engines;
@@ -57,11 +58,18 @@ public class RTScanner {
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
-        this.pipelineRunner = new DockerPipelineRunner(this);
+        this.dockerPipelineRunner = new DockerPipelineRunner(this);
+        this.activeMQPipelineRunner = new ActiveMQPipelineRunner();
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
         this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+    }
+
+
+
+    public void testActiveMQConnection() {
+        this.activeMQPipelineRunner.testConnection();
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -127,7 +135,9 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            this.pipelineRunner.initRunner();
+            if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
+                this.dockerPipelineRunner.initRunner();  
+            }
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
             if(summaryNotifier != null) {
@@ -139,11 +149,10 @@ public class RTScanner {
             if (RepairnatorConfig.getInstance().getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.pipelineRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.pipelineRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner);
                 }
-
                 new Thread(inspectProcessDuration).start();
             }
             if(RepairnatorConfig.getInstance().getNumberOfPatchedBuilds() != 0) {
@@ -158,7 +167,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.pipelineRunner,
+                            this.dockerPipelineRunner,
                             this.endProcessNotifier);
                 } else {
                     patchCounter = new PatchCounter(
@@ -168,7 +177,7 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.pipelineRunner);
+                            this.dockerPipelineRunner);
                 }
                 new Thread(patchCounter).start();
             }
@@ -177,6 +186,7 @@ public class RTScanner {
 
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
+
         this.blacklistedSerializer.serialize(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
     }
@@ -191,6 +201,21 @@ public class RTScanner {
         this.tempBlackList.put(repository.getId(), expirationDate);
     }
 
+    /**
+     * Give to build to inspectBuilds and it will submit to 
+     * ActiveMQ queue in KUBERNETES Mode if it's interesting.
+     */
+    public void submitIfBuildIsInteresting(Build build) {
+        this.inspectBuilds.submitIfBuildIsInteresting(build);
+    }
+
+    /**
+     * This function is used for testing since ActiveMQPipelineRunner is private.
+     * This will fetch one message from the queue and return it.
+     */
+    public String receiveFromActiveMQQueue() {
+        return this.activeMQPipelineRunner.receiveBuildFromQueue();
+    }
     /**
      * Main method for specifying if a repositoryId is interesting or not.
      * It checks on the whitelist and blacklists first, and then apply the following criteria:
@@ -311,7 +336,11 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            this.pipelineRunner.submitBuild(build);
+            if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
+                this.dockerPipelineRunner.submitBuild(build);
+            } else if(RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
+                this.activeMQPipelineRunner.submitBuild(build);            
+            }
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }

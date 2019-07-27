@@ -1,5 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
+
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import org.slf4j.Logger;
@@ -12,23 +14,24 @@ import java.util.Date;
 public class InspectProcessDuration implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectProcessDuration.class);
     private static final int SLEEP_TIME = 10; // seconds
-
+    
     private Duration duration;
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private DockerPipelineRunner pipelineRunner;
+    private DockerPipelineRunner dockerPipelineRunner;
+    private ActiveMQPipelineRunner activeMQPipelineRunner;
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner pipelineRunner, EndProcessNotifier endProcessNotifier) {
-        this(inspectBuilds, inspectJobs, pipelineRunner);
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner dockerPipelineRunner, EndProcessNotifier endProcessNotifier) {
+        this(inspectBuilds, inspectJobs, dockerPipelineRunner);
         this.endProcessNotifier = endProcessNotifier;
     }
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner pipelineRunner) {
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner dockerPipelineRunner) {
         this.duration = RepairnatorConfig.getInstance().getDuration();
         this.inspectBuilds = inspectBuilds;
         this.inspectJobs = inspectJobs;
-        this.pipelineRunner = pipelineRunner;
+        this.dockerPipelineRunner = dockerPipelineRunner;
     }
 
     @Override
@@ -47,8 +50,10 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        this.pipelineRunner.switchOff();
-
+        if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
+            this.dockerPipelineRunner.switchOff(); 
+        }
+        
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
         }

@@ -18,6 +18,12 @@ import java.util.Set;
  * Created by urli on 08/03/2017.
  */
 public class RepairnatorConfig {
+    public enum PIPELINE_MODE {
+        DOCKER,
+        KUBERNETES,
+        NOPE
+    }
+
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -74,6 +80,9 @@ public class RepairnatorConfig {
     private Duration summaryFrequency;
     private String[] notifySummary;
     private int numberOfPatchedBuilds;
+    private PIPELINE_MODE pipelineMode;
+    private String activeMQUrl;
+    private String activeMQQueueName;
 
     // Checkbranches
     private boolean humanPatch;
@@ -106,6 +115,36 @@ public class RepairnatorConfig {
 
     public String getRunId() {
         return runId;
+    }
+
+    public void setPipelineMode(String pipelineMode) {
+        if (pipelineMode.equals(PIPELINE_MODE.DOCKER.name())) {
+            this.pipelineMode = PIPELINE_MODE.DOCKER;
+        }else if (pipelineMode.equals(PIPELINE_MODE.KUBERNETES.name())) {
+            this.pipelineMode = PIPELINE_MODE.KUBERNETES;
+        }else if (pipelineMode.equals(PIPELINE_MODE.NOPE.name())) {
+            this.pipelineMode = PIPELINE_MODE.NOPE;
+        }
+    }
+
+    public PIPELINE_MODE getPipelineMode() {
+        return this.pipelineMode;
+    }
+
+    public void setActiveMQUrl(String activeMQUrl) {
+        this.activeMQUrl = activeMQUrl;
+    }
+
+    public String getActiveMQUrl() {
+        return this.activeMQUrl;
+    }
+
+    public void setActiveMQQueueName(String activeMQQueueName) {
+        this.activeMQQueueName = activeMQQueueName;
+    }
+
+    public String getActiveMQQueueName() {
+        return this.activeMQQueueName;
     }
 
     public void setRunId(String runId) {
@@ -544,6 +583,9 @@ public class RepairnatorConfig {
                 ", repairTools=" + StringUtils.join(this.repairTools, ",") +
                 ", githubUserName= " + githubUserName +
                 ", githubUserEmail=" + githubUserEmail +
+                ", pipelineMode=" + pipelineMode +
+                ", activeMQUrl=" + activeMQUrl +
+                ", activeMQQueueName=" + activeMQQueueName +
                 '}';
     }
 

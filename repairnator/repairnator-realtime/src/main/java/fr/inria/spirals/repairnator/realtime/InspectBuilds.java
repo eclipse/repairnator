@@ -82,6 +82,38 @@ public class InspectBuilds implements Runnable {
         }
     }
 
+    public void submitIfBuildIsInteresting(Build build) {
+        boolean refreshStatus = RepairnatorConfig.getInstance().getJTravis().refresh(build);
+        if (!refreshStatus) {
+            LOGGER.error("Error while refreshing build: "+build.getId());
+        } else {
+
+            // when the refresh worked well, we check if it finished or not
+
+            if (build.getFinishedAt() != null) {
+                LOGGER.debug("Build finished (id:"+build.getId()+" | Status: "+build.getState()+")");
+
+                // we check that the build is indeed failing
+                if (build.getState() == StateType.FAILED) {
+
+                    // if it's the case we submit it
+                    this.rtScanner.submitBuildToExecution(build);
+                }
+
+                try {
+                    this.watchedBuildSerializer.serialize(build);
+                } catch (Throwable e) {
+                    LOGGER.error("Error while serializing", e);
+                }
+
+                this.waitingBuilds.remove(build);
+                synchronized (this) {
+                    this.nbSubmittedBuilds--;
+                }
+            }
+        }
+    }
+
     @Override
     public void run() {
         LOGGER.debug("Start running inspect builds....");
@@ -93,35 +125,7 @@ public class InspectBuilds implements Runnable {
 
             // we iterate over all builds to refresh them
             for (Build build : this.waitingBuilds) {
-                boolean refreshStatus = RepairnatorConfig.getInstance().getJTravis().refresh(build);
-                if (!refreshStatus) {
-                    LOGGER.error("Error while refreshing build: "+build.getId());
-                } else {
-
-                    // when the refresh worked well, we check if it finished or not
-
-                    if (build.getFinishedAt() != null) {
-                        LOGGER.debug("Build finished for https://api.travis-ci.org/v3/build/"+build.getId()+" | Status: "+build.getState()+")");
-
-                        // we check that the build is indeed failing
-                        if (build.getState() == StateType.FAILED) {
-
-                            // if it's the case we submit it
-                            this.rtScanner.submitBuildToExecution(build);
-                        }
-
-                        try {
-                            this.watchedBuildSerializer.serialize(build);
-                        } catch (Throwable e) {
-                            LOGGER.error("Error while serializing", e);
-                        }
-
-                        this.waitingBuilds.remove(build);
-                        synchronized (this) {
-                            this.nbSubmittedBuilds--;
-                        }
-                    }
-                }
+                this.submitIfBuildIsInteresting(build);
             }
 
             try {
