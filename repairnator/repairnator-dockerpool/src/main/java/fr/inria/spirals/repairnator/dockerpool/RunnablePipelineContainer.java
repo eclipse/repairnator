@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -121,7 +122,8 @@ public class RunnablePipelineContainer implements Runnable {
 
             // inside the docker containers the log will be produced in /var/log
             // so we need to bind the directory with the local directory for logs
-            HostConfig hostConfig = HostConfig.builder().appendBinds(this.logDirectory+":/var/log").build();
+            // an undocumented constraint is to have an absolute path
+            HostConfig hostConfig = HostConfig.builder().appendBinds(new File(this.logDirectory).getAbsolutePath()+":/var/log").build();
 
             // we soecify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()
