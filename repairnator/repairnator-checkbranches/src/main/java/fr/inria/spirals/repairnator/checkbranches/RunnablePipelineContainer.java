@@ -38,7 +38,7 @@ public class RunnablePipelineContainer implements Runnable {
     @Override
     public void run() {
         String containerId = null;
-        DockerClient docker = Launcher.docker;
+        DockerClient docker = CheckBranchLauncher.docker;
         try {
             LOGGER.info("Start to run check container for branch "+branchName);
 
@@ -86,7 +86,7 @@ public class RunnablePipelineContainer implements Runnable {
         } catch (DockerException e) {
             LOGGER.error("Error while creating or running the container for branch name "+branchName, e);
         }
-        Launcher.submittedRunnablePipelineContainers.remove(this);
+        CheckBranchLauncher.submittedRunnablePipelineContainers.remove(this);
     }
 
     private void killDockerContainer(DockerClient docker, String containerId) {

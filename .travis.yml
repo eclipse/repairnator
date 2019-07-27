@@ -17,12 +17,15 @@ jobs:
       script: ./.travis/travis-before.sh
       
     - stage: test
+      name: "maven-repair"
       script: ./.travis/travis-maven-repair.sh
 
     - stage: test
+      name: "repairnator"
       script: ./.travis/travis-run.sh
 
     - stage: deploy
+      name: "deploy to Sonatype and Dockerhub"
       script: ./.travis/travis-deploy.sh
 
 branches:
