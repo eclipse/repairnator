@@ -7,7 +7,6 @@ import fr.inria.jtravis.entities.Job;
 import fr.inria.jtravis.entities.Log;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
-import fr.inria.jtravis.helpers.RepositoryHelper;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.counter.PatchCounter;
@@ -19,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
