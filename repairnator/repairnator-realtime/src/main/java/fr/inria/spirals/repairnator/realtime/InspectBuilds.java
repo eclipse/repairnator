@@ -101,7 +101,7 @@ public class InspectBuilds implements Runnable {
                     // when the refresh worked well, we check if it finished or not
 
                     if (build.getFinishedAt() != null) {
-                        LOGGER.debug("Build finished (id:"+build.getId()+" | Status: "+build.getState()+")");
+                        LOGGER.debug("Build finished for https://api.travis-ci.org/v3/build/"+build.getId()+" | Status: "+build.getState()+")");
 
                         // we check that the build is indeed failing
                         if (build.getState() == StateType.FAILED) {
