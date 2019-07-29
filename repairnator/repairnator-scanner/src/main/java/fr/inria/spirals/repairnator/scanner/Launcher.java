@@ -87,7 +87,7 @@ public class Launcher {
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // -i or --input
-        jsap.registerParameter(LauncherUtils.defineArgInput("Specify where to find the list of projects to scan."));
+        jsap.registerParameter(LauncherUtils.defineArgProjectInput());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.SCANNER, "Specify where to write the list of build ids (default: stdout)"));
         // --dbhost

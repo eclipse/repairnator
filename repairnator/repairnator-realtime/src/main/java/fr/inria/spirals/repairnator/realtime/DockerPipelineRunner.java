@@ -4,7 +4,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
-import fr.inria.spirals.repairnator.dockerpool.AbstractPoolManager;
+import fr.inria.spirals.repairnator.dockerpool.DockerPoolManager;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * This class is in charge with launching the docker containers
  */
-public class DockerPipelineRunner extends AbstractPoolManager {
+public class DockerPipelineRunner extends DockerPoolManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DockerPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private int nbThreads;

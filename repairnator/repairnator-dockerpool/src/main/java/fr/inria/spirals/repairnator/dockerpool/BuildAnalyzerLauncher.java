@@ -33,15 +33,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by urli on 13/03/2017.
+ * Run one docker container with the pipeline per line of the input file builds.txt
  */
-public class Launcher extends AbstractPoolManager {
-    private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
+public class BuildAnalyzerLauncher {
+    private static Logger LOGGER = LoggerFactory.getLogger(BuildAnalyzerLauncher.class);
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
+    private DockerPoolManager dockerPool = new DockerPoolManager();
 
-    private Launcher(String[] args) throws JSAPException {
+    private BuildAnalyzerLauncher(String[] args) throws JSAPException {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.DOCKERPOOL);
@@ -66,7 +67,7 @@ public class Launcher extends AbstractPoolManager {
         // --checkstyle
         jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // -i or --input
-        jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of build ids."));
+        jsap.registerParameter(LauncherUtils.defineArgInput());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.DOCKERPOOL,"Specify where to put serialized files from dockerpool"));
         // --dbhost
@@ -113,7 +114,7 @@ public class Launcher extends AbstractPoolManager {
         opt2.setList(true);
         opt2.setListSeparator(',');
         opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
-        opt2.setRequired(true);
+        opt2.setDefault("NopolAllTests");
         jsap.registerParameter(opt2);
 
         return jsap;
@@ -232,17 +233,20 @@ public class Launcher extends AbstractPoolManager {
 
         endProcessSerializer.setNbBuilds(buildIds.size());
 
-        String imageId = DockerHelper.findDockerImage(this.config.getDockerImageName(), this.getDockerClient());
+        String imageId = DockerHelper.findDockerImage(this.config.getDockerImageName(), dockerPool.getDockerClient());
         LOGGER.info("Found the following docker image id: "+imageId);
 
-        this.setDockerOutputDir(this.config.getLogDirectory());
-        this.setRunId(runId);
-        this.setEngines(this.engines);
+        dockerPool.setDockerOutputDir(this.config.getLogDirectory());
+        dockerPool.setRunId(runId);
+        dockerPool.setEngines(this.engines);
+
+        //
+        // ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         for (InputBuildId inputBuildId : buildIds) {
-            executorService.submit(this.submitBuild(imageId, inputBuildId));
+            executorService.submit(dockerPool.submitBuild(imageId, inputBuildId));
         }
 
         executorService.shutdown();
@@ -251,19 +255,19 @@ public class Launcher extends AbstractPoolManager {
                 LOGGER.info("Job finished within time.");
                 endProcessSerializer.setStatus("ok");
             } else {
-                LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).");
+                LOGGER.warn("Timeout launched: the job is running for one day. Force stopped "+ dockerPool.submittedRunnablePipelineContainers.size()+" docker container(s).");
                 executorService.shutdownNow();
                 this.setStatusForUnexecutedJobs();
                 endProcessSerializer.setStatus("timeout");
             }
         } catch (InterruptedException e) {
-            LOGGER.error("Error while await termination. Force stopped "+ submittedRunnablePipelineContainers.size()+" docker container(s).", e);
+            LOGGER.error("Error while await termination. Force stopped "+ dockerPool.submittedRunnablePipelineContainers.size()+" docker container(s).", e);
             executorService.shutdownNow();
             this.setStatusForUnexecutedJobs();
             endProcessSerializer.setStatus("interrupted");
         }
 
-        this.getDockerClient().close();
+        dockerPool.getDockerClient().close();
         endProcessSerializer.serialize();
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
@@ -271,14 +275,14 @@ public class Launcher extends AbstractPoolManager {
     }
 
     private void setStatusForUnexecutedJobs() {
-        for (RunnablePipelineContainer runnablePipelineContainer : submittedRunnablePipelineContainers) {
+        for (RunnablePipelineContainer runnablePipelineContainer : dockerPool.submittedRunnablePipelineContainers) {
             runnablePipelineContainer.serialize("ABORTED");
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Launcher launcher = new Launcher(args);
-        launcher.runPool();
+        BuildAnalyzerLauncher buildAnalyzerLauncher = new BuildAnalyzerLauncher(args);
+        buildAnalyzerLauncher.runPool();
     }
 
 }
