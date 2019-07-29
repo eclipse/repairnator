@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +34,7 @@ public class RepairnatorConfig {
     private String mongodbHost;
     private String mongodbName;
     private String smtpServer;
-    private int smtpPort;
+    private int smtpPort = 25;
     private boolean smtpTLS;
     private String smtpUsername;
     private String smtpPassword;
@@ -67,7 +69,7 @@ public class RepairnatorConfig {
     private boolean skipDelete;
     private boolean createOutputDir;
     private String logDirectory;
-    private int nbThreads;
+    private int nbThreads = 1; // safe default value
     private int globalTimeout;
 
     // Realtime

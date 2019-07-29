@@ -8,7 +8,10 @@ import com.google.gson.stream.JsonReader;
 
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.helpers.BuildHelper;
+import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -19,6 +22,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -27,6 +32,19 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class TestRTScanner {
+
+    // a failing build from surli/failingProject
+    public final int easyFailingBuild = 564711868;
+
+    @Test
+    public void testDockerPipelineRunner() throws Exception {
+        RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"NPEFix"})));
+        DockerPipelineRunner d = new DockerPipelineRunner();
+        d.initRunner();
+        RunnablePipelineContainer runner = d.submitBuild(DockerPipelineRunner.REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME, new InputBuildId(RepairnatorConfig.getInstance().getJTravis().build().fromId(easyFailingBuild).get().getId()));
+        runner.run();
+        assertEquals(0, runner.getExitStatus().statusCode().longValue());
+    }
 
     @Test
     public void testRepositoryWithoutSuccessfulBuildIsNotInteresting() {

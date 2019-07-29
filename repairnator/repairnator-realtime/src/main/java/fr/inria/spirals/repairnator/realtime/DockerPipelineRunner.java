@@ -6,10 +6,13 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.dockerpool.DockerPoolManager;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Deque;
 import java.util.concurrent.ExecutorService;
@@ -22,8 +25,14 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class DockerPipelineRunner extends DockerPoolManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DockerPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
+    public static final String REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME = "repairnator/pipeline";
     private int nbThreads;
     private Deque<Build> waitingBuilds;
+
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
+
     private ExecutorService executorService;
     private String dockerImageId;
     private String dockerImageName;
@@ -34,6 +43,15 @@ public class DockerPipelineRunner extends DockerPoolManager {
         super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
         super.setRunId(RepairnatorConfig.getInstance().getRunId());
         super.setEngines(rtScanner.getEngines());
+    }
+
+    public DockerPipelineRunner() {
+        LOGGER.info("Init build runner");
+        super.setDockerOutputDir("./");
+        super.setRunId("hardcoded-in-constructor");
+        ArrayList<SerializerEngine> engines = new ArrayList<>();
+        engines.add(new JSONFileSerializerEngine("."));
+        super.setEngines(engines);
     }
 
     public void initRunner() {
@@ -72,7 +90,7 @@ public class DockerPipelineRunner extends DockerPoolManager {
     }
 
     public void submitBuild(Build build) {
-        if (this.limitDateNextRetrieveDockerImage.before(new Date())) {
+        if (this.limitDateNextRetrieveDockerImage != null && this.limitDateNextRetrieveDockerImage.before(new Date())) {
             this.refreshDockerImage();
         }
         if (getRunning() < this.nbThreads) {
