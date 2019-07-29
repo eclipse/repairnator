@@ -40,6 +40,12 @@ public class RunnablePipelineContainer implements Runnable {
     private List<String> envValues;
     private Set<String> volumes;
 
+    public ContainerExit getExitStatus() {
+        return exitStatus;
+    }
+
+    private ContainerExit exitStatus;
+
     /**
      * The constructor will init all the environment values for the container.
      *
@@ -81,7 +87,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("MONGODB_HOST="+this.repairnatorConfig.getMongodbHost());
         this.envValues.add("MONGODB_NAME="+this.repairnatorConfig.getMongodbName());
         this.envValues.add("SMTP_SERVER="+this.repairnatorConfig.getSmtpServer());
-        this.envValues.add("SMTP_PORT="+this.repairnatorConfig.getSmtpPort());
+        this.envValues.add("SMTP_PORT="+Integer.toString(this.repairnatorConfig.getSmtpPort()));
         this.envValues.add("SMTP_USERNAME="+this.repairnatorConfig.getSmtpUsername());
         this.envValues.add("SMTP_PASSWORD="+this.repairnatorConfig.getSmtpPassword());
         this.envValues.add("GITHUB_USERNAME="+this.repairnatorConfig.getGithubUserName());
@@ -93,6 +99,8 @@ public class RunnablePipelineContainer implements Runnable {
         }
         if(this.repairnatorConfig.isSmtpTLS()) {
             this.envValues.add("SMTP_TLS=1");
+        } else {
+            this.envValues.add("SMTP_TLS=0");
         }
 
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR || this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE) {
@@ -144,15 +152,16 @@ public class RunnablePipelineContainer implements Runnable {
 
             this.containerId = container.id();
             treatedBuildTracking.setContainerId(this.containerId);
+            LOGGER.info(docker.listContainers().toString());
 
             // now the container is created: let's start it
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Start the container: "+this.containerName);
             docker.startContainer(container.id());
 
             // and now we wait until it's finished
-            ContainerExit exitStatus = docker.waitContainer(this.containerId);
+            exitStatus = docker.waitContainer(this.containerId);
 
-            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+exitStatus.statusCode());
+            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+ exitStatus.statusCode());
 
             // standard bash: if it's 0 everything's fine.
             if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
