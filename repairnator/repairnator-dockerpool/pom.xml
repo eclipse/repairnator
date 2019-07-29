@@ -35,7 +35,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.inria.spirals.repairnator.dockerpool.Launcher</mainClass>
+                            <mainClass>fr.inria.spirals.repairnator.dockerpool.BuildAnalyzerLauncher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

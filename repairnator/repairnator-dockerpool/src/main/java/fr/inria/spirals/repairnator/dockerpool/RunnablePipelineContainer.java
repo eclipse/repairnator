@@ -34,7 +34,7 @@ public class RunnablePipelineContainer implements Runnable {
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
-    private AbstractPoolManager poolManager;
+    private DockerPoolManager poolManager;
     private String containerId;
     private String containerName;
     private List<String> envValues;
@@ -49,7 +49,7 @@ public class RunnablePipelineContainer implements Runnable {
      * @param logDirectory the path of the produced logs
      * @param treatedBuildTracking a serializer for recording the docker containers statuses
      */
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
+    public RunnablePipelineContainer(DockerPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.inputBuildId = inputBuildId;

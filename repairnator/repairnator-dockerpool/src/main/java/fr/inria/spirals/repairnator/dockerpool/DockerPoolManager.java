@@ -18,8 +18,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * This class defines the main property to manage a pool of docker containers in Repairnator.
  * This class does not provide a way to run the pool: the concrete implementations should do that.
  */
-public abstract class AbstractPoolManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPoolManager.class);
+public class DockerPoolManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DockerPoolManager.class);
     private static int counter = 0;
     private static final String DEFAULT_RUN_ID = "RUN-"+(counter++);
     private static final String DEFAULT_OUTPUT_DIR = "/var/log/repairnator";

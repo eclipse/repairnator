@@ -108,12 +108,61 @@ public class LauncherUtils {
         return arguments.getString("runId");
     }
 
-    public static FlaggedOption defineArgInput(String helpMessage) {
+    public static FlaggedOption defineArgInput() {
+        /* ./builds.txt contain one build id per line
+
+            346537408
+            347223109
+            348887356
+            349620528
+            351046304
+            353774072
+            358555930
+            361311603
+            368867994
+            369727490
+            369854684
+            369859631
+            370885458
+            371144762
+            371488143
+            374841318
+            376812142
+
+            (this is the list from Expedition 2)
+         */
         FlaggedOption opt = new FlaggedOption("input");
         opt.setShortFlag('i');
         opt.setLongFlag("input");
-        opt.setDefault("./input.txt");
-        opt.setHelp(helpMessage);
+        opt.setDefault("./builds.txt");
+        opt.setHelp("Specify the input file containing the list of build ids.");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgProjectInput() {
+        /* ./projects.txt contain one slug per line
+
+        INRIA/spoon
+        rails/rails
+        ....
+         */
+        FlaggedOption opt = new FlaggedOption("input");
+        opt.setShortFlag('i');
+        opt.setLongFlag("input");
+        opt.setDefault("./projects.txt");
+        opt.setHelp("Specify where to find the list of projects to scan.");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgBranchInput() {
+        /* ./branches.txt contain one branch per line
+            typically from https://github.com/Spirals-Team/librepair-experiments/
+         */
+        FlaggedOption opt = new FlaggedOption("input");
+        opt.setShortFlag('i');
+        opt.setLongFlag("input");
+        opt.setDefault("./projects.txt");
+        opt.setHelp("Specify the input file containing the list of branches to reproduce (one branch per line)");
         return opt;
     }
 
@@ -278,7 +327,7 @@ public class LauncherUtils {
         opt.setShortFlag('t');
         opt.setLongFlag("threads");
         opt.setStringParser(JSAP.INTEGER_PARSER);
-        opt.setDefault("2");
+        opt.setDefault("1");
         opt.setHelp("Specify the number of threads to run in parallel");
         return opt;
     }

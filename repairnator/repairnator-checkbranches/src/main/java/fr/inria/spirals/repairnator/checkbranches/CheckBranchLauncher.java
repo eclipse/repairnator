@@ -60,7 +60,7 @@ public class CheckBranchLauncher {
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // -i or --input
-        jsap.registerParameter(LauncherUtils.defineArgInput("Specify the input file containing the list of branches to reproduce"));
+        jsap.registerParameter(LauncherUtils.defineArgBranchInput());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.CHECKBRANCHES, "Specify where to put output data"));
         // --notifyEndProcess
