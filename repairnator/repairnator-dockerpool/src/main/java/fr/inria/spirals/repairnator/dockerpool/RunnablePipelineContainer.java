@@ -40,13 +40,13 @@ public class RunnablePipelineContainer implements Runnable {
     private List<String> envValues;
     private Set<String> volumes;
 
-	public ContainerExit getExitStatus() {
-		return exitStatus;
-	}
+    public ContainerExit getExitStatus() {
+        return exitStatus;
+    }
 
-	private ContainerExit exitStatus;
+    private ContainerExit exitStatus;
 
-	/**
+    /**
      * The constructor will init all the environment values for the container.
      *
      * @param poolManager the manager of the pool of running containers
@@ -159,7 +159,7 @@ public class RunnablePipelineContainer implements Runnable {
             docker.startContainer(container.id());
 
             // and now we wait until it's finished
-			exitStatus = docker.waitContainer(this.containerId);
+            exitStatus = docker.waitContainer(this.containerId);
 
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+ exitStatus.statusCode());
 
