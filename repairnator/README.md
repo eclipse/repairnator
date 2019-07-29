@@ -11,9 +11,7 @@ This directory contains the different subfolders:
   - docker-images: contains the content of the different docker images produced for Repairnator
   - scripts: contains all the script to run Repairnator
 
-## How does Repairnator work?
-
-### Modules
+## Maven modules
 
 Repairnator is decomposed in 6 different modules: 
   - repairnator-core: contains shared elements for all other elements, it can be also use to generate Google Spreadsheets Credentials
@@ -21,11 +19,10 @@ Repairnator is decomposed in 6 different modules:
   - repairnator-dockerpool: this part can be used to create a pool of docker containers to launch taking as input a list of build ids
   - repairnator-pipeline: it is the engine of Repairnator. Given a build id this part, compile, test and repair it, gathering data on it, and push on Github and on MongoDB
   - repairnator-realtime: inspects in realtime the builds from Travis (typically every minute)
-  - repairnator-checkbranches: this part is used to validate efficiently a large set of data produced by Repairnator
 
 Usage of each parts are detailed in their own Readme file.
 
-### Process 
+## Build Process 
 
 The following process is generally used.
 
