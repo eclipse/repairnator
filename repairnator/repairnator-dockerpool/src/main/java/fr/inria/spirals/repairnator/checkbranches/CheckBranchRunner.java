@@ -21,15 +21,15 @@ import java.util.Map;
 /**
  * Created by urli on 14/03/2017.
  */
-public class RunnablePipelineContainer implements Runnable {
+public class CheckBranchRunner implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RunnablePipelineContainer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckBranchRunner.class);
     private String imageId;
     private String branchName;
     private RepairnatorConfig repairnatorConfig;
 
 
-    public RunnablePipelineContainer(String imageId, String branchName) {
+    public CheckBranchRunner(String imageId, String branchName) {
         this.imageId = imageId;
         this.branchName = branchName;
         this.repairnatorConfig = RepairnatorConfig.getInstance();
