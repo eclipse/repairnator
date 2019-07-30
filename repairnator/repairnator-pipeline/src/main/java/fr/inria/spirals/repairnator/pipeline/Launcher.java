@@ -151,7 +151,7 @@ public class Launcher {
         opt2 = new FlaggedOption("z3");
         opt2.setLongFlag("z3");
         opt2.setDefault("./z3_for_linux");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        // opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
         opt2.setHelp("Specify path to Z3");
         jsap.registerParameter(opt2);
 
@@ -180,7 +180,7 @@ public class Launcher {
         opt2.setRequired(true);
         opt2.setDefault(repairTools);
         jsap.registerParameter(opt2);
-        
+
         // This option will have a list and must have n*3 elements, otherwise the last will be ignored.
         opt2 = new FlaggedOption("experimentalPluginRepoList");
         opt2.setLongFlag("experimentalPluginRepoList");
@@ -189,7 +189,7 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
         jsap.registerParameter(opt2);
-        
+
 
         return jsap;
     }
@@ -234,7 +234,7 @@ public class Launcher {
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             this.getConfig().setNextBuildId(arguments.getInt("nextBuild"));
         }
-        this.getConfig().setZ3solverPath(arguments.getFile("z3").getPath());
+        this.getConfig().setZ3solverPath(new File(arguments.getString("z3")).getPath());
         this.getConfig().setWorkspacePath(arguments.getString("workspace"));
         this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
         this.getConfig().setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
@@ -247,7 +247,7 @@ public class Launcher {
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
         }
-        
+
         // Make sure that it is a multiple of three in the list
         if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
             this.getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));
@@ -275,18 +275,8 @@ public class Launcher {
 
     private void checkNopolSolverPath(JSAP jsap) {
         String solverPath = this.getConfig().getZ3solverPath();
-
-        if (solverPath != null) {
-            File file = new File(solverPath);
-
-            if (!file.exists()) {
-                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
-                LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
-            }
-        } else {
-            System.err.println("The Nopol solver path should be provided.");
-            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
-        }
+        // by default Nopol run in Dynamoth mode
+        // so no solver is mandatory
     }
 
     private void checkNextBuildId(JSAP jsap) {
@@ -384,7 +374,7 @@ public class Launcher {
         }
     }
 
-    private void mainProcess() {
+    public void mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
         this.getBuildToBeInspected();
 
