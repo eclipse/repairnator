@@ -430,7 +430,6 @@ public class Launcher {
         inspector.run();
 
         LOGGER.info("Inspector is finished. The process will exit now.");
-        System.exit(0);
     }
 
     public static void main(String[] args) throws JSAPException {
