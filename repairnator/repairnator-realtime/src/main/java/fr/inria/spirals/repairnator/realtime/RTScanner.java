@@ -13,6 +13,7 @@ import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.counter.PatchCounter;
 import fr.inria.spirals.repairnator.realtime.notifier.TimedSummaryNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
+import fr.inria.spirals.repairnator.serializer.engines.NullEngine;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -60,12 +62,14 @@ public class RTScanner {
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
-        this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+
+        this.blacklistedSerializer = new BlacklistedSerializer(this);
     }
 
-    public RTScanner(String runId, List<SerializerEngine> engines) {
+    public RTScanner(String runId, List<SerializerEngine> theengines) {
         this(runId);
-        this.engines = engines;
+        this.engines = theengines;
+        this.blacklistedSerializer = new BlacklistedSerializer(this, theengines.toArray(new SerializerEngine[0]));
     }
 
     public RTScanner(String runId, List<SerializerEngine> engines, PipelineRunner runner) {
