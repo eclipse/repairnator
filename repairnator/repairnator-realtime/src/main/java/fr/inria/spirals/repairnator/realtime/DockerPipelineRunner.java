@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * This class is in charge with launching the docker containers
  */
-public class DockerPipelineRunner extends DockerPoolManager {
+public class DockerPipelineRunner extends DockerPoolManager implements PipelineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(DockerPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     public static final String REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME = "repairnator/pipeline";

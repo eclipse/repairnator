@@ -1,7 +1,5 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
-
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import org.slf4j.Logger;
@@ -19,19 +17,16 @@ public class InspectProcessDuration implements Runnable {
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private DockerPipelineRunner dockerPipelineRunner;
-    private ActiveMQPipelineRunner activeMQPipelineRunner;
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner dockerPipelineRunner, EndProcessNotifier endProcessNotifier) {
-        this(inspectBuilds, inspectJobs, dockerPipelineRunner);
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, EndProcessNotifier endProcessNotifier) {
+        this(inspectBuilds, inspectJobs);
         this.endProcessNotifier = endProcessNotifier;
     }
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, DockerPipelineRunner dockerPipelineRunner) {
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs) {
         this.duration = RepairnatorConfig.getInstance().getDuration();
         this.inspectBuilds = inspectBuilds;
         this.inspectJobs = inspectJobs;
-        this.dockerPipelineRunner = dockerPipelineRunner;
     }
 
     @Override
@@ -50,10 +45,7 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-            this.dockerPipelineRunner.switchOff(); 
-        }
-        
+
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
         }

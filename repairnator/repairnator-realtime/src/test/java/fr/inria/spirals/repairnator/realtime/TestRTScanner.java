@@ -126,9 +126,10 @@ public class TestRTScanner {
         Optional<Build> optionalBuild = config.getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());
 
-        RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
+        ActiveMQPipelineRunner runner = new ActiveMQPipelineRunner();
+        RTScanner rtScanner = new RTScanner("test", new ArrayList<>(), runner);
         rtScanner.submitIfBuildIsInteresting(optionalBuild.get());
-        assertEquals("560996872",rtScanner.receiveFromActiveMQQueue());
+        assertEquals("560996872",runner.receiveBuildFromQueue());
     }
 
     @Test
