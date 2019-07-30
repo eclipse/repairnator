@@ -21,7 +21,7 @@ public class RepairnatorConfig {
     public enum PIPELINE_MODE {
         DOCKER,
         KUBERNETES,
-        NOPE
+        NOOP
     }
 
     private String runId;
@@ -122,8 +122,8 @@ public class RepairnatorConfig {
             this.pipelineMode = PIPELINE_MODE.DOCKER;
         }else if (pipelineMode.equals(PIPELINE_MODE.KUBERNETES.name())) {
             this.pipelineMode = PIPELINE_MODE.KUBERNETES;
-        }else if (pipelineMode.equals(PIPELINE_MODE.NOPE.name())) {
-            this.pipelineMode = PIPELINE_MODE.NOPE;
+        }else if (pipelineMode.equals(PIPELINE_MODE.NOOP.name())) {
+            this.pipelineMode = PIPELINE_MODE.NOOP;
         }
     }
 

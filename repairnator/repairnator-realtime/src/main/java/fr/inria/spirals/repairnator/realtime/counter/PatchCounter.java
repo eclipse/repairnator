@@ -1,23 +1,17 @@
 package fr.inria.spirals.repairnator.realtime.counter;
 
-import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-
-import java.util.Date;
-
-import org.bson.conversions.Bson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
-import fr.inria.spirals.repairnator.realtime.DockerPipelineRunner;
 import fr.inria.spirals.repairnator.realtime.InspectBuilds;
 import fr.inria.spirals.repairnator.realtime.InspectJobs;
+import org.bson.conversions.Bson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 /**
  * A class that counts the number of patches created since 
  * the rtscanner started running.
@@ -40,15 +34,13 @@ public class PatchCounter implements Runnable{
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private DockerPipelineRunner dockerPipelineRunner;
 
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
             String mongodbName,
             Date startDate,
             InspectBuilds inspectBuilds,
-            InspectJobs inspectJobs,
-            DockerPipelineRunner dockerPipelineRunner) {
+            InspectJobs inspectJobs) {
         // Set the variables
         this.numberOfPatchesToRunFor = numberOfPatchesToRunFor;
         this.mongodbHost = mongodbHost;
@@ -60,7 +52,6 @@ public class PatchCounter implements Runnable{
         this.buildFilter = Filters.and(
                 Filters.gte("buildFinishedDate", startDate),
                 Filters.eq("status", "PATCHED"));
-        this.dockerPipelineRunner = dockerPipelineRunner;
     }
         
     public PatchCounter(int numberOfPatchesToRunFor, 
@@ -69,10 +60,9 @@ public class PatchCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            DockerPipelineRunner dockerPipelineRunner,
             EndProcessNotifier endProcessNotifier) {
         this(numberOfPatchesToRunFor, mongodbHost, mongodbName, startDate,
-                inspectBuilds, inspectJobs, dockerPipelineRunner);
+                inspectBuilds, inspectJobs);
         this.endProcessNotifier = endProcessNotifier;
     }
 
@@ -125,9 +115,6 @@ public class PatchCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-                this.dockerPipelineRunner.switchOff();
-            }
             if(this.endProcessNotifier != null) {
                 this.endProcessNotifier.notifyEnd();
             }

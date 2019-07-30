@@ -24,7 +24,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
  * and submit to an ActiveMQ queue for the repairnator-worker
  * to run on Kubernetes.
  */
-public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
+public class ActiveMQPipelineRunner implements PipelineRunner  {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private static final RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -71,7 +71,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
         }
     }
 
-    public Boolean submitBuild(Build build) {
+    public void submitBuild(Build build) {
         try {
             /*
              * Getting JMS connection from the JMS server and starting it
@@ -102,10 +102,14 @@ public class ActiveMQPipelineRunner implements PipelineRunner<Boolean,Build> {
 
             LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue " + config.getActiveMQQueueName());
             connection.close();
-            return true;
         }catch (JMSException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void initRunner() {
+        // so far, nothing to set up the connection
     }
 
     public String receiveBuildFromQueue() {

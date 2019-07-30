@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.BuildTool;
@@ -28,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 /**
  * This class is the backbone for the realtime scanner.
  */
@@ -43,8 +44,7 @@ public class RTScanner {
 
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
-    private final DockerPipelineRunner dockerPipelineRunner;
-    private final ActiveMQPipelineRunner activeMQPipelineRunner;
+    private PipelineRunner pipelineRunner;
 
     private boolean running;
     private String runId;
@@ -53,23 +53,27 @@ public class RTScanner {
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
 
-    public RTScanner(String runId, List<SerializerEngine> engines) {
-        this.engines = engines;
+    public RTScanner(String runId) {
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
-        this.dockerPipelineRunner = new DockerPipelineRunner(this);
-        this.activeMQPipelineRunner = new ActiveMQPipelineRunner();
+        this.pipelineRunner = new DockerPipelineRunner(this);
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
-        this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+
+        this.blacklistedSerializer = new BlacklistedSerializer(this);
     }
 
+    public RTScanner(String runId, List<SerializerEngine> theengines) {
+        this(runId);
+        this.engines = theengines;
+        this.blacklistedSerializer = new BlacklistedSerializer(this, theengines.toArray(new SerializerEngine[0]));
+    }
 
-
-    public void testActiveMQConnection() {
-        this.activeMQPipelineRunner.testConnection();
+    public RTScanner(String runId, List<SerializerEngine> engines, PipelineRunner runner) {
+        this(runId, engines);
+        this.pipelineRunner = runner;
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -136,7 +140,7 @@ public class RTScanner {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
             if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-                this.dockerPipelineRunner.initRunner();  
+                this.pipelineRunner.initRunner();
             }
             new Thread(this.inspectBuilds).start();
             new Thread(this.inspectJobs).start();
@@ -149,9 +153,9 @@ public class RTScanner {
             if (RepairnatorConfig.getInstance().getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.dockerPipelineRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs);
                 }
                 new Thread(inspectProcessDuration).start();
             }
@@ -167,7 +171,6 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.dockerPipelineRunner,
                             this.endProcessNotifier);
                 } else {
                     patchCounter = new PatchCounter(
@@ -176,8 +179,7 @@ public class RTScanner {
                             conf.getMongodbName(),
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
-                            this.inspectJobs,
-                            this.dockerPipelineRunner);
+                            this.inspectJobs);
                 }
                 new Thread(patchCounter).start();
             }
@@ -209,13 +211,6 @@ public class RTScanner {
         this.inspectBuilds.submitIfBuildIsInteresting(build);
     }
 
-    /**
-     * This function is used for testing since ActiveMQPipelineRunner is private.
-     * This will fetch one message from the queue and return it.
-     */
-    public String receiveFromActiveMQQueue() {
-        return this.activeMQPipelineRunner.receiveBuildFromQueue();
-    }
     /**
      * Main method for specifying if a repositoryId is interesting or not.
      * It checks on the whitelist and blacklists first, and then apply the following criteria:
@@ -336,11 +331,7 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-                this.dockerPipelineRunner.submitBuild(build);
-            } else if(RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
-                this.activeMQPipelineRunner.submitBuild(build);            
-            }
+            this.pipelineRunner.submitBuild(build);
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }

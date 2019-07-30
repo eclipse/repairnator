@@ -47,7 +47,7 @@ public class JSONFileSerializerEngine implements SerializerEngine {
 
     @Override
     public void serialize(List<SerializedData> data, SerializerType serializer) {
-        String filename = serializer.getFilename()+FILE_EXTENSION;
+        String filename = repoOutputPath + "/" +serializer.getFilename()+FILE_EXTENSION;
         BufferedWriter writer = this.openFile(filename);
 
         if (writer != null) {
