@@ -380,7 +380,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("ghOauth");
         opt.setLongFlag("ghOauth");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("foobar");
+        opt.setDefault(System.getenv("GITHUB_OAUTH"));
         opt.setHelp("Specify Github Token to use");
         return opt;
     }

@@ -33,7 +33,7 @@ public class RunnableMavenInvoker implements Runnable {
         request.setGoals(Arrays.asList(this.mavenHelper.getGoal()));
         request.setProperties(this.mavenHelper.getProperties());
         request.setBatchMode(true);
-
+        request.setShowErrors(true);
         Invoker invoker = new DefaultInvoker();
 
         if (this.mavenHelper.getErrorHandler() != null) {
@@ -48,7 +48,7 @@ public class RunnableMavenInvoker implements Runnable {
             this.logger.error("Error while executing goal " + this.mavenHelper.getGoal()
                     + " on the following pom file: " + this.mavenHelper.getPomFile()
                     + ". Properties: " + this.mavenHelper.getProperties());
-            this.logger.debug(e.getMessage());
+            this.logger.error(e.getMessage());
             this.mavenHelper.getInspector().getJobStatus().addStepError(this.mavenHelper.getName(), e.getMessage());
             this.exitCode = MavenHelper.MAVEN_ERROR;
         }
