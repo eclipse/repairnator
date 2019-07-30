@@ -49,7 +49,7 @@ In order to understand properly Repairnator, have a first a look on [its interna
 
 ## Java main classes
 
-The [following documentation](jars.md) documents the main classes of Repairnator.
+The [following documentation](main-classes.md) documents the main classes of Repairnator.
 
 ## Scripts
 
