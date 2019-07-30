@@ -168,7 +168,6 @@ public class Launcher {
 
         opt2 = new FlaggedOption("projectsToIgnore");
         opt2.setLongFlag("projectsToIgnore");
-        opt2.setDefault("./projects_to_ignore.txt");
         opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
