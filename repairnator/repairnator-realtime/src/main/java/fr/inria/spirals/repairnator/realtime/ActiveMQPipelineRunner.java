@@ -11,6 +11,7 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.jms.MessageListener;
 
 /*For reciever*/
 import javax.jms.Message;
@@ -19,12 +20,13 @@ import javax.jms.MessageConsumer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
+import java.util.concurrent.TimeUnit;
 /**
  * This class will take the builds qualified by the inspectBuild
  * and submit to an ActiveMQ queue for the repairnator-worker
  * to run on Kubernetes.
  */
-public class ActiveMQPipelineRunner implements PipelineRunner  {
+public class ActiveMQPipelineRunner implements PipelineRunner,MessageListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private static final RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -71,6 +73,10 @@ public class ActiveMQPipelineRunner implements PipelineRunner  {
         }
     }
 
+    /**
+     * Given a build object, produce am ActiveMQ message and send to queue
+     * @param build object containing a build id.
+     */
     public void submitBuild(Build build) {
         try {
             /*
@@ -112,6 +118,11 @@ public class ActiveMQPipelineRunner implements PipelineRunner  {
         // so far, nothing to set up the connection
     }
 
+    /**
+     * Fetch one message from queue and done
+     * 
+     * @return a String message
+     */
     public String receiveBuildFromQueue() {
         try {
             // Create a ConnectionFactory
@@ -140,6 +151,51 @@ public class ActiveMQPipelineRunner implements PipelineRunner  {
             session.close();
             connection.close();
             return text;
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Run this as a listener server and fetch one message as a time
+     */
+    public void runAsConsumerServer() {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(config.getActiveMQUrl() + "?jms.prefetchPolicy.all=1");
+        Connection connection;
+        try {
+            connection = connectionFactory.createConnection();
+            connection.start();
+            Session session = connection.createSession(false,Session.CLIENT_ACKNOWLEDGE);
+            Destination queue = session.createQueue(config.getActiveMQQueueName());
+
+            MessageConsumer responseConsumer = session.createConsumer(queue);
+            responseConsumer.setMessageListener(this);
+            LOGGER.warn("Listening");
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Method implemented from MessageListener and is called 
+     * each time this is done with the previous message
+     *
+     * @param message ActiveMQ message object containing a string message.
+     */
+    public void onMessage(Message message) {
+        String messageText = null;
+        try {
+            message.acknowledge();
+            try {
+                TimeUnit.SECONDS.sleep(10);
+            } catch(java.lang.InterruptedException e) {
+
+            }
+            if (message instanceof TextMessage) {
+                TextMessage textMessage = (TextMessage) message;
+                messageText = textMessage.getText();
+                System.out.println("messageText = " + messageText);
+            }
         } catch (JMSException e) {
             throw new RuntimeException(e);
         }
