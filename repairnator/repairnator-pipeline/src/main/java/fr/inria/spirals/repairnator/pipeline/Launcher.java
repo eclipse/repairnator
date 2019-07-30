@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
@@ -213,6 +214,26 @@ public class Launcher {
         opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("pipelinemode");
+        opt2.setLongFlag("pipelinemode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault(PIPELINE_MODE.NOOP.name());
+        opt2.setHelp("Possible string values DOCKER,KUBERNETES,NOOP . DOCKER is for running DockerPipeline, KUBERNETES is for running ActiveMQPipeline and "+PIPELINE_MODE.NOOP.name()+" is for NoopRunner. The last two options do not use docker during run.");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqurl");
+        opt2.setLongFlag("activemqurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("tcp://localhost:61616");
+        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqqueuename");
+        opt2.setLongFlag("activemqqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("pipeline");
+        opt2.setHelp("Just a name, default as 'pipeline'");
+        jsap.registerParameter(opt2);
 
         return jsap;
     }
@@ -282,6 +303,10 @@ public class Launcher {
         } else {
             this.getConfig().setExperimentalPluginRepoList(null);
         }
+
+        this.getConfig().setPipelineMode(arguments.getString("pipelinemode"));
+        this.getConfig().setActiveMQUrl(arguments.getString("activemqurl"));
+        this.getConfig().setActiveMQQueueName(arguments.getString("activemqqueuename"));
     }
 
     private void checkToolsLoaded(JSAP jsap) {
@@ -434,7 +459,12 @@ public class Launcher {
 
     public static void main(String[] args) throws JSAPException {
         Launcher launcher = new Launcher(args);
-        launcher.mainProcess();
+        if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
+            LOGGER.warn("We are now running with kubernetes mode");
+            PipelineBuildListener pipelineBuildListener = new PipelineBuildListener(launcher);
+        } else {
+            launcher.mainProcess();
+        }
     }
 
     public ProjectInspector getInspector() {
