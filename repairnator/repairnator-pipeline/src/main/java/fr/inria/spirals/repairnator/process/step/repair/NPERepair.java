@@ -22,7 +22,7 @@ import java.util.List;
  * Created by urli on 10/07/2017.
  */
 public class NPERepair extends AbstractRepairStep {
-    protected static final String TOOL_NAME = "NPEFix";
+    public static final String TOOL_NAME = "NPEFix";
     private static final String NPEFIX_GOAL = "fr.inria.gforge.spirals:repair-maven-plugin:1.5:npefix";
 
     public NPERepair() {}

@@ -147,7 +147,8 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
 
         nopolInformation.setNopolContext(nopolContext);
 
-        SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
+        // not required in Dynamoth mode
+        // SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
 
         long beforeNopol = new Date().getTime();
 

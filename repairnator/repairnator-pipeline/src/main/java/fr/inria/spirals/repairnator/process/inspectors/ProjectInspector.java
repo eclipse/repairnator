@@ -359,11 +359,15 @@ public class ProjectInspector {
             }
             this.logger.info(stepNameFormatted + stepStatus + stepDurationFormatted);
         }
-        String finding = AbstractDataSerializer.getPrettyPrintState(this).toUpperCase();
+        String finding = getFinding();
         finding = (finding.equals("UNKNOWN")) ? "-" : finding;
         this.logger.info("----------------------------------------------------------------------");
         this.logger.info("PIPELINE FINDING: "+finding);
         this.logger.info("----------------------------------------------------------------------");
+    }
+
+    public String getFinding() {
+        return AbstractDataSerializer.getPrettyPrintState(this).toUpperCase();
     }
 
 }

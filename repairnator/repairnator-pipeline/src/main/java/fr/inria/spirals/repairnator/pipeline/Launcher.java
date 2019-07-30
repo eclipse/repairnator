@@ -9,6 +9,8 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.*;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepairSafe;
 import fr.inria.spirals.repairnator.serializer.*;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -46,6 +48,7 @@ public class Launcher {
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
     private PatchNotifier patchNotifier;
+    private ProjectInspector  inspector;
 
     private RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
@@ -172,7 +175,13 @@ public class Launcher {
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
-        String repairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
+        String repairTools;
+
+        // too ambitious as default :-)
+        // repairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
+
+        repairTools = NPERepair.TOOL_NAME;
+
         opt2.setStringParser(EnumeratedStringParser.getParser(repairTools.replace(',',';'), true));
         opt2.setList(true);
         opt2.setListSeparator(',');
@@ -395,8 +404,6 @@ public class Launcher {
         serializers.add(new PatchesSerializer(this.engines));
         serializers.add(new ToolDiagnosticSerializer(this.engines));
 
-        ProjectInspector inspector;
-
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
@@ -417,4 +424,7 @@ public class Launcher {
         launcher.mainProcess();
     }
 
+    public ProjectInspector getInspector() {
+        return inspector;
+    }
 }
