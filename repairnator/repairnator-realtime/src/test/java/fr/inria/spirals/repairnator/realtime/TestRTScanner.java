@@ -12,6 +12,7 @@ import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
+import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -134,13 +135,13 @@ public class TestRTScanner {
 
     @Test
     public void testBlacklisting() throws Exception {
-      String fileName = "./blacklisted.json";
+      String fileName = "./"+ SerializerType.BLACKLISTED.getFilename()+".json";
       new File(fileName).delete();
 
       ArrayList<SerializerEngine> engines = new ArrayList<>();
       engines.add(new JSONFileSerializerEngine("."));
       RTScanner rtScanner = new RTScanner("test", engines);
-      rtScanner.initBlackListedRepository(new File("repairnator-realtime/src/test/resources/blacklist.txt"));
+      rtScanner.initBlackListedRepository(new File("./src/test/resources/blacklist.txt"));
 
       JsonReader reader = new JsonReader(new FileReader(fileName));
       JsonObject data = new Gson().fromJson(reader, JsonObject.class);
