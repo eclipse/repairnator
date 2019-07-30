@@ -33,7 +33,7 @@ public class RunnableMavenInvoker implements Runnable {
         request.setGoals(Arrays.asList(this.mavenHelper.getGoal()));
         request.setProperties(this.mavenHelper.getProperties());
         request.setBatchMode(true);
-
+        request.setShowErrors(true);
         Invoker invoker = new DefaultInvoker();
 
         if (this.mavenHelper.getErrorHandler() != null) {
