@@ -37,10 +37,4 @@ public class TestPipeline {
         assertEquals("PATCHED", l.getInspector().getFinding());
     }
 
-    @Test
-    public void testBug20190731() throws Exception {
-        Launcher l = new Launcher(new String[]{"--build", "565519878", "--repairTools", "AstorJKali" });
-        l.mainProcess();
-        assertEquals("PATCHED", l.getInspector().getFinding());
-    }
 }
