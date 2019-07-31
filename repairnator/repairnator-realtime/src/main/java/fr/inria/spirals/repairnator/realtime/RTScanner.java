@@ -248,53 +248,47 @@ public class RTScanner {
             Optional<Build> optionalBuild = jTravis.build().lastBuildFromMasterWithState(repository, StateType.PASSED);
             if (!optionalBuild.isPresent()) {
                 this.addInTempBlackList(repository, "No successful build found.");
-                return false;
             } else {
                 Build masterBuild = optionalBuild.get();
                 if (masterBuild.getLanguage() == null || !masterBuild.getLanguage().equals("java")) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.OTHER_LANGUAGE, masterBuild.getLanguage());
-                    return false;
                 }
 
                 Optional<BuildTool> optionalBuildTool = masterBuild.getBuildTool();
                 if (!optionalBuildTool.isPresent()) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
-                    return false;
                 }
 
                 BuildTool buildTool = optionalBuildTool.get();
                 if (buildTool == BuildTool.GRADLE) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.USE_GRADLE, "");
-                    return false;
                 } else if (buildTool == BuildTool.UNKNOWN) {
                     this.addInBlacklistRepository(repository, BlacklistedSerializer.Reason.UNKNOWN_BUILD_TOOL, "");
-                    return false;
                 }
 
                 if (!masterBuild.getJobs().isEmpty()) {
-                    Job firstJob = masterBuild.getJobs().get(0);
-                    Optional<Log> optionalLog = firstJob.getLog();
-                    if (optionalLog.isPresent()) {
-                        Log jobLog = optionalLog.get();
-                        if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.CHECKSTYLE ) {
-                            if (jobLog.getContent().contains("maven-checkstyle")) {
-                                LOGGER.info("Checkstyle has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-                                this.addInWhitelistRepository(repository);
-                                return true;
+                    for (Job firstJob : masterBuild.getJobs()) {
+                        Optional<Log> optionalLog = firstJob.getLog();
+                        if (optionalLog.isPresent()) {
+                            Log jobLog = optionalLog.get();
+                            if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.CHECKSTYLE) {
+                                if (jobLog.getContent().contains("maven-checkstyle")) {
+                                    LOGGER.info("Checkstyle has been found in repository " + repository.getSlug() + " (id: " + repositoryId + ") build (id: " + masterBuild.getId() + "). The repo is now whitelisted.");
+                                    this.addInWhitelistRepository(repository);
+                                } else {
+                                    this.addInTempBlackList(repository, "No checkstyle found");
+                                }
                             } else {
-                                this.addInTempBlackList(repository, "No checkstyle found");
+                                if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
+                                    LOGGER.info("Tests has been found in repository " + repository.getSlug() + " (id: " + repositoryId + ") build (id: " + masterBuild.getId() + "). The repo is now whitelisted.");
+                                    this.addInWhitelistRepository(repository);
+                                } else {
+                                    this.addInTempBlackList(repository, "No test found");
+                                }
                             }
                         } else {
-                            if (jobLog.getTestsInformation() != null && jobLog.getTestsInformation().getRunning() > 0) {
-                                LOGGER.info("Tests has been found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). The repo is now whitelisted.");
-                                this.addInWhitelistRepository(repository);
-                                return true;
-                            } else {
-                                this.addInTempBlackList(repository, "No test found");
-                            }
+                            LOGGER.error("Error while getting log for job " + firstJob.getId());
                         }
-                    } else {
-                        LOGGER.error("Error while getting log for job "+firstJob.getId());
                     }
                 } else {
                     LOGGER.info("No job found in repository "+repository.getSlug()+" (id: "+repositoryId+") build (id: "+masterBuild.getId()+"). It is not considered right now.");
@@ -306,6 +300,10 @@ public class RTScanner {
             this.tempBlackList.put(repositoryId, expirationDate);
         }
 
+        // maybe it has just been added to the whitelist
+        if (this.whiteListedRepository.contains(repositoryId)) {
+            return true;
+        }
 
         return false;
     }
