@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
