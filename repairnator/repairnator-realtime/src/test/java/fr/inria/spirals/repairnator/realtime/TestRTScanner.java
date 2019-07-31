@@ -127,7 +127,7 @@ public class TestRTScanner {
 
         ActiveMQPipelineRunner runner = new ActiveMQPipelineRunner();
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>(), runner);
-        rtScanner.submitIfBuildIsInteresting(optionalBuild.get());
+        rtScanner.submitBuildToExecution(optionalBuild.get());
         assertEquals("560996872",runner.receiveBuildFromQueue());
     }
 
