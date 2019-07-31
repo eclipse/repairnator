@@ -459,7 +459,12 @@ public class Launcher {
 
     public static void main(String[] args) throws JSAPException {
         Launcher launcher = new Launcher(args);
-        launcher.mainProcess();
+        if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
+            LOGGER.warn("We are now running with kubernetes mode");
+            PipelineBuildListener pipelineBuildListener = new PipelineBuildListener(launcher);
+        } else {
+            launcher.mainProcess();
+        }
     }
 
     public ProjectInspector getInspector() {
