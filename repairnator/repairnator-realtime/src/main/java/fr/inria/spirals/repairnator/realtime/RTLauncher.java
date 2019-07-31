@@ -116,21 +116,21 @@ public class RTLauncher {
         opt2 = new FlaggedOption("jobsleeptime");
         opt2.setLongFlag("jobsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectJobs.JOB_SLEEP_TIME+"");
+        opt2.setDefault(InspectJobs.JOB_SLEEP_TIME_IN_SECOND +"");
         opt2.setHelp("Specify the sleep time between two requests to Travis Job endpoint (in seconds)");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("buildsleeptime");
         opt2.setLongFlag("buildsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME+"");
+        opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME_IN_SECOND +"");
         opt2.setHelp("Specify the sleep time between two refresh of build statuses (in seconds)");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("maxinspectedbuilds");
         opt2.setLongFlag("maxinspectedbuilds");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.LIMIT_SUBMITTED_BUILDS+"");
+        opt2.setDefault(InspectBuilds.LIMIT_WAITING_BUILDS +"");
         opt2.setHelp("Specify the maximum number of watched builds");
         jsap.registerParameter(opt2);
 

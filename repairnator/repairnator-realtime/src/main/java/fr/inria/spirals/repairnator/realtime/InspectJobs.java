@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
@@ -14,14 +15,12 @@ import java.util.Optional;
 public class InspectJobs implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectJobs.class);
 
-    public static final int JOB_SLEEP_TIME = 60;
+    public static final int JOB_SLEEP_TIME_IN_SECOND = 10;
     private RTScanner rtScanner;
-    private int sleepTime;
     private boolean shouldStop;
 
     public InspectJobs(RTScanner scanner) {
         this.rtScanner = scanner;
-        this.sleepTime = RepairnatorConfig.getInstance().getJobSleepTime();
     }
 
     /**
@@ -34,9 +33,6 @@ public class InspectJobs implements Runnable {
     @Override
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
-        if (sleepTime == -1) {
-            throw new RuntimeException("Sleep time has to be set before running this.");
-        }
         while (!shouldStop) {
             Optional<List<JobV2>> jobListOpt = RepairnatorConfig.getInstance().getJTravis().job().allFromV2();
 
@@ -45,14 +41,14 @@ public class InspectJobs implements Runnable {
                 LOGGER.info("Retrieved "+jobList.size()+" jobs");
                 for (JobV2 job : jobList) {
                     if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
-                        this.rtScanner.submitWaitingBuild(job.getBuildId());
+                        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
+                        this.rtScanner.getInspectBuilds().submitNewBuild(optionalBuild.get());
                     }
                 }
             }
             if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || !jobListOpt.isPresent()) {
-                LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
                 try {
-                    Thread.sleep(sleepTime * 1000);
+                    Thread.sleep(RepairnatorConfig.getInstance().getJobSleepTime() * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

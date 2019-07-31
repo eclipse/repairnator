@@ -337,13 +337,4 @@ public class RTScanner {
         }
     }
 
-    /**
-     * Use this method to submit a build to the thread which refresh their status.
-     */
-    public void submitWaitingBuild(int buildId) {
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        if (optionalBuild.isPresent()) {
-            this.inspectBuilds.submitNewBuild(optionalBuild.get());
-        }
-    }
 }
