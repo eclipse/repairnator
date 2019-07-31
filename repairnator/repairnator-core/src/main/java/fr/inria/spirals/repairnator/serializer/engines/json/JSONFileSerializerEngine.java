@@ -32,7 +32,8 @@ public class JSONFileSerializerEngine implements SerializerEngine {
     }
 
     private BufferedWriter getWriterStream() {
-        String outputFile = getFileName();
+        File outputFile = new File(getFileName());
+        outputFile.getParentFile().mkdirs();
         BufferedWriter stream;
         try {
             stream = new BufferedWriter(new FileWriter(outputFile, true));
