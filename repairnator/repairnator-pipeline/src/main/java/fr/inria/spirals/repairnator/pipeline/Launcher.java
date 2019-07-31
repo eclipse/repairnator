@@ -19,6 +19,7 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
@@ -323,7 +324,7 @@ public class Launcher {
         this.notifiers = new ArrayList<>();
         this.notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
-        this.patchNotifier = new PatchNotifier(notifierEngines);
+        this.patchNotifier = new PatchNotifierImpl(notifierEngines);
     }
 
     private List<String> getListOfProjectsToIgnore() {
@@ -434,5 +435,9 @@ public class Launcher {
 
     public ProjectInspector getInspector() {
         return inspector;
+    }
+
+    public void setPatchNotifier(PatchNotifier patchNotifier) {
+        this.patchNotifier = patchNotifier;
     }
 }

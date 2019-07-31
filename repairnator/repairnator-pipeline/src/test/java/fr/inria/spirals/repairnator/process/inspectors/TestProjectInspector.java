@@ -6,7 +6,7 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
@@ -99,7 +99,7 @@ public class TestProjectInspector {
         serializers.add(new ToolDiagnosticSerializer(serializerEngines));
 
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
-        inspector.setPatchNotifier(new PatchNotifier(notifierEngines));
+        inspector.setPatchNotifier(new PatchNotifierImpl(notifierEngines));
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();
