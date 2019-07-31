@@ -60,7 +60,7 @@ public class CSVSerializerEngine implements SerializerEngine {
 
     @Override
     public void serialize(List<SerializedData> data, SerializerType serializer) {
-        String filename = serializer.getFilename()+FILE_EXTENSION;
+        String filename = serializer.getName()+FILE_EXTENSION;
 
         BufferedWriter writer = this.openFile(filename);
 

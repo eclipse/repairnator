@@ -28,7 +28,7 @@ public class MongoDBSerializerEngine implements SerializerEngine {
     @Override
     public void serialize(List<SerializedData> data, SerializerType serializer) {
         if (this.mongoDatabase != null) {
-            MongoCollection<Document> collection = this.mongoDatabase.getCollection(serializer.getFilename());
+            MongoCollection<Document> collection = this.mongoDatabase.getCollection(serializer.getName());
 
             List<Document> listDocuments = new ArrayList<>();
             for (SerializedData oneData : data) {

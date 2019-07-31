@@ -8,7 +8,6 @@ import com.google.gson.stream.JsonReader;
 
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.helpers.BuildHelper;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
@@ -17,7 +16,6 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -135,7 +133,7 @@ public class TestRTScanner {
 
     @Test
     public void testBlacklisting() throws Exception {
-      String fileName = "./"+ SerializerType.BLACKLISTED.getFilename()+".json";
+      String fileName = "./"+ SerializerType.BLACKLISTED.getName()+".json";
       new File(fileName).delete();
 
       ArrayList<SerializerEngine> engines = new ArrayList<>();
