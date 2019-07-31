@@ -107,7 +107,7 @@ public class Launcher {
         this.initNotifiers();
     }
 
-    private JSAP defineArgs() throws JSAPException {
+    public static JSAP defineArgs() throws JSAPException {
         // Verbose output
         JSAP jsap = new JSAP();
 
@@ -189,19 +189,14 @@ public class Launcher {
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
-        String repairTools;
+        String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
 
-        // too ambitious as default :-)
-        // repairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
-
-        repairTools = NPERepair.TOOL_NAME;
-
-        opt2.setStringParser(EnumeratedStringParser.getParser(repairTools.replace(',',';'), true));
+        opt2.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',',';'), true));
         opt2.setList(true);
         opt2.setListSeparator(',');
-        opt2.setHelp("Specify one or several repair tools to use among: "+repairTools);
+        opt2.setHelp("Specify one or several repair tools to use among: "+availablerepairTools);
         opt2.setRequired(true);
-        opt2.setDefault(repairTools);
+        opt2.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
         jsap.registerParameter(opt2);
 
         // This option will have a list and must have n*3 elements, otherwise the last will be ignored.
