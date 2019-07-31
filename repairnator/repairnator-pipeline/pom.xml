@@ -98,16 +98,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-all -->
+        <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-core -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-all</artifactId>
-            <version>5.15.8</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>activemq-core</artifactId>
+            <version>5.7.0</version>
         </dependency>
     </dependencies>
 
