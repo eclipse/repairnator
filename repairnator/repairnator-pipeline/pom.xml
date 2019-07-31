@@ -100,8 +100,8 @@
         <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-all -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-all</artifactId>
-            <version>5.15.8</version>
+            <artifactId>activemq-core</artifactId>
+            <version>5.7.0</version>
         </dependency>
     </dependencies>
 
