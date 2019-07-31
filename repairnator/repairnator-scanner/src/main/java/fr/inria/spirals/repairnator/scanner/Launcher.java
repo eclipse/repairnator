@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.scanner;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
@@ -144,6 +145,34 @@ public class Launcher {
         opt2.setHelp("This option is only useful in case of '--bears' is used: it defines the type of fixer build to get. Available values: "+options);
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("pipelinemode");
+        opt2.setLongFlag("pipelinemode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault(PIPELINE_MODE.NOOP.name());
+        opt2.setHelp("Possible string values DOCKER,KUBERNETES,NOOP. If KUBERNETES then the scanner will listen for reposlugs and send build ids to the queue");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqurl");
+        opt2.setLongFlag("activemqurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("tcp://localhost:61616");
+        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqlistenqueuename");
+        opt2.setLongFlag("activemqlistenqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("scanner");
+        opt2.setHelp("The queue name which the scanner listen for slug, default as 'scanner'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqsendqueuename");
+        opt2.setLongFlag("activemqsendqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("pipeline");
+        opt2.setHelp("The queue name which the scanner send the output build ids to for repairing, default as 'pipeline'");
+        jsap.registerParameter(opt2);
+
         Switch aSwitch = new Switch("bearsDelimiter");
         aSwitch.setLongFlag("bearsDelimiter");
         aSwitch.setHelp("This option is only useful in case of '--bears' is used and '--bearsMode both' (default) is used: it allows to" +
@@ -228,7 +257,6 @@ public class Launcher {
                     Launcher.LOGGER.info("Incriminated project and pair of builds: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
                 }
             }*/
-
             this.processOutput(buildsToBeInspected);
         } else {
             Launcher.LOGGER.warn("The variable 'builds to be inspected' has null value.");
@@ -244,7 +272,7 @@ public class Launcher {
         ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId());
 
         Map<ScannedBuildStatus, List<BuildToBeInspected>> buildsToBeInspected = scanner.getListOfBuildsToBeInspectedFromProjects(this.config.getInputPath());
-
+        
         ProcessSerializer scannerSerializer;
         if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
             scannerSerializer = new ScannerSerializer(this.engines, scanner);
