@@ -166,8 +166,8 @@ public class Launcher {
         opt2.setHelp("The queue name which the scanner listen for slug, default as 'scanner'");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("activemqsendqueuename");
-        opt2.setLongFlag("activemqsendqueuename");
+        opt2 = new FlaggedOption("activemqreceivequeuename");
+        opt2.setLongFlag("activemqreceivequeuename");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault("pipeline");
         opt2.setHelp("The queue name which the scanner send the output build ids to for repairing, default as 'pipeline'");
