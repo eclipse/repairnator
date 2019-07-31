@@ -21,24 +21,23 @@ public class JSONFileSerializerEngine implements SerializerEngine {
     private static final String FILE_EXTENSION = ".json";
     private String repoOutputPath;
 
+    // file base with dir and extension (which are added later)
+    private String fileNameBase = "defaultfilename";
     public JSONFileSerializerEngine(String repoOutputPath) {
         this.repoOutputPath = repoOutputPath;
     }
 
-    private BufferedWriter openFile(String filename) {
-        File outputFile = new File(this.repoOutputPath);
+    public String getFileName() {
+        return new File(this.repoOutputPath + File.separator + fileNameBase + FILE_EXTENSION).getPath();
+    }
 
-        if (!outputFile.isDirectory()) {
-            outputFile = outputFile.getParentFile();
-        }
-
-        outputFile = new File(outputFile.getPath() + File.separator + filename);
-
+    private BufferedWriter getWriterStream() {
+        String outputFile = getFileName();
         BufferedWriter stream;
         try {
             stream = new BufferedWriter(new FileWriter(outputFile, true));
         } catch (IOException e) {
-            logger.error("Error while creating file writer for: " + outputFile.getPath(), e);
+            logger.error("Error while creating file writer for: " + outputFile, e);
             stream = null;
         }
         return stream;
@@ -47,8 +46,8 @@ public class JSONFileSerializerEngine implements SerializerEngine {
 
     @Override
     public void serialize(List<SerializedData> data, SerializerType serializer) {
-        String filename = repoOutputPath + "/" +serializer.getFilename()+FILE_EXTENSION;
-        BufferedWriter writer = this.openFile(filename);
+        fileNameBase = serializer.getName();
+        BufferedWriter writer = this.getWriterStream();
 
         if (writer != null) {
             try {

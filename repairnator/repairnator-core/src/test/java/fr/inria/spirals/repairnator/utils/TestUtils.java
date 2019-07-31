@@ -1,8 +1,11 @@
 package fr.inria.spirals.repairnator.utils;
 
+import fr.inria.spirals.repairnator.serializer.Serializer;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class TestUtils {
@@ -86,4 +89,9 @@ public class TestUtils {
         assertThat(Utils.matchesGithubRepoUrl(repoUrl), is(false));
     }
 
+    @Test
+    public void testSerializer() {
+        JSONFileSerializerEngine j = new JSONFileSerializerEngine("./tt/ff/");
+        assertEquals("./tt/ff/defaultfilename.json", j.getFileName());
+    }
 }
