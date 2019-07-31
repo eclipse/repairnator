@@ -37,13 +37,4 @@ public class TestPipeline {
         assertEquals("PATCHED", l.getInspector().getFinding());
     }
 
-
-	@Test
-	public void testPRLuc12() throws Exception {
-    	// reproducing the past PR of Luc
-		Launcher l = new Launcher(new String[]{"--build", "395891390", "--repairTools", "NPEFix" });
-		l.mainProcess();
-		assertEquals("PATCHED", l.getInspector().getFinding());
-	}
-
 }
