@@ -72,6 +72,7 @@
         <module>repairnator-scanner</module>
         <module>repairnator-dockerpool</module>
         <module>repairnator-realtime</module>
+        <module>build-rainer</module>
     </modules>
 
     <repositories>
@@ -79,7 +80,7 @@
             <id>oss-snapshot</id>
             <name>oss-snapshot</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots />
+            <snapshots/>
         </repository>
     </repositories>
 
