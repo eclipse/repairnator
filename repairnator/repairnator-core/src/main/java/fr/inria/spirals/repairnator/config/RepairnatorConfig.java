@@ -130,10 +130,11 @@ public class RepairnatorConfig {
     public void setPipelineMode(String pipelineMode) {
         for (PIPELINE_MODE mode: PIPELINE_MODE.values()) {
             if (pipelineMode.equals(mode.name())) {
-                this.pipelineMode = PIPELINE_MODE.DOCKER;
+                this.pipelineMode = PIPELINE_MODE.valueOf(pipelineMode);
+                return;
             }
         }
-        throw new RuntimeException("unknown pipeline");
+        throw new RuntimeException("unknown pipeline "+pipelineMode);
     }
 
     public PIPELINE_MODE getPipelineMode() {
