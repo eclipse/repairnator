@@ -3,7 +3,6 @@ package fr.inria.spirals.repairnator.process.step.repair.nopol;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
 import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.RepairType;
@@ -13,10 +12,10 @@ import fr.inria.spirals.repairnator.GsonPathTypeAdapter;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.nopol.IgnoreStatus;
 import fr.inria.spirals.repairnator.process.nopol.NopolInformation;
 import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import spoon.SpoonException;
@@ -147,7 +146,8 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
 
         nopolInformation.setNopolContext(nopolContext);
 
-        SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
+        // not required in Dynamoth mode
+        // SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
 
         long beforeNopol = new Date().getTime();
 

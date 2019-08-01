@@ -47,6 +47,10 @@ For more information about the program repair tools and their strategies impleme
 
 In order to understand properly Repairnator, have a first a look on [its internal architecture](architecture.md).
 
+## Java main classes
+
+The [following documentation](main-classes.md) documents the main classes of Repairnator.
+
 ## Scripts
 
 The easiest entry point to use Repairnator is through its scripts.
@@ -57,8 +61,3 @@ It can be useful to also read more details about the [repairnator configuration 
 
 It is also possible to directly use Repairnator through its docker image. 
 Information about this docker image is [available there](docker.md).
-
-## JARs
-
-Finally, Repairnator being written in Java, everything can be executed directly through the JARS.
-The [following documentation](jars.md) might be helpful there.

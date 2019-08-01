@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class BlacklistedSerializer extends Serializer {
     }
 
     RTScanner rtScanner;
-    public BlacklistedSerializer(List<SerializerEngine> engines, RTScanner rtScanner) {
-        super(engines, SerializerType.BLACKLISTED);
+    public BlacklistedSerializer(RTScanner rtScanner, SerializerEngine... engines) {
+        super(Arrays.asList(engines), SerializerType.BLACKLISTED);
         this.rtScanner = rtScanner;
     }
 

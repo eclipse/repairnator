@@ -380,7 +380,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("ghOauth");
         opt.setLongFlag("ghOauth");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("foobar");
+        opt.setDefault(System.getenv("GITHUB_OAUTH"));
         opt.setHelp("Specify Github Token to use");
         return opt;
     }
@@ -428,19 +428,11 @@ public class LauncherUtils {
             printUsage(jsap, launcherType);
         }
 
-        if (launcherType == LauncherType.PIPELINE) {
-            checkEnvironmentVariable(Utils.M2_HOME, jsap, launcherType);
-        }
 
         checkPushUrlArg(jsap, arguments, launcherType);
     }
 
-    public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
-        if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
-            System.err.println("You must set the following environment variable: "+envVariable);
-            LauncherUtils.printUsage(jsap, launcherType);
-        }
-    }
+
 
     public static void checkPushUrlArg(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (getArgPushUrl(arguments) != null) {

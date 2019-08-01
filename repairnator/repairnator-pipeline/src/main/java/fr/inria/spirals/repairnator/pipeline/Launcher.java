@@ -1,32 +1,50 @@
 package fr.inria.spirals.repairnator.pipeline;
 
 import ch.qos.logback.classic.Level;
-import com.martiansoftware.jsap.*;
+import com.martiansoftware.jsap.FlaggedOption;
+import com.martiansoftware.jsap.JSAP;
+import com.martiansoftware.jsap.JSAPException;
+import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
-import fr.inria.spirals.repairnator.*;
-import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.serializer.*;
-import fr.inria.spirals.repairnator.states.LauncherMode;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
+import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Checkstyle;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
+import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
+import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
+import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
+import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
+import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
+import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -46,6 +64,7 @@ public class Launcher {
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
     private PatchNotifier patchNotifier;
+    private ProjectInspector  inspector;
 
     private RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
@@ -89,7 +108,7 @@ public class Launcher {
         this.initNotifiers();
     }
 
-    private JSAP defineArgs() throws JSAPException {
+    public static JSAP defineArgs() throws JSAPException {
         // Verbose output
         JSAP jsap = new JSAP();
 
@@ -151,7 +170,7 @@ public class Launcher {
         opt2 = new FlaggedOption("z3");
         opt2.setLongFlag("z3");
         opt2.setDefault("./z3_for_linux");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
+        // opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
         opt2.setHelp("Specify path to Z3");
         jsap.registerParameter(opt2);
 
@@ -165,22 +184,22 @@ public class Launcher {
 
         opt2 = new FlaggedOption("projectsToIgnore");
         opt2.setLongFlag("projectsToIgnore");
-        opt2.setDefault("./projects_to_ignore.txt");
         opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
-        String repairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
-        opt2.setStringParser(EnumeratedStringParser.getParser(repairTools.replace(',',';'), true));
+        String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
+
+        opt2.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',',';'), true));
         opt2.setList(true);
         opt2.setListSeparator(',');
-        opt2.setHelp("Specify one or several repair tools to use among: "+repairTools);
+        opt2.setHelp("Specify one or several repair tools to use among: "+availablerepairTools);
         opt2.setRequired(true);
-        opt2.setDefault(repairTools);
+        opt2.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
         jsap.registerParameter(opt2);
-        
+
         // This option will have a list and must have n*3 elements, otherwise the last will be ignored.
         opt2 = new FlaggedOption("experimentalPluginRepoList");
         opt2.setLongFlag("experimentalPluginRepoList");
@@ -189,7 +208,7 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
         jsap.registerParameter(opt2);
-        
+
 
         return jsap;
     }
@@ -234,7 +253,7 @@ public class Launcher {
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             this.getConfig().setNextBuildId(arguments.getInt("nextBuild"));
         }
-        this.getConfig().setZ3solverPath(arguments.getFile("z3").getPath());
+        this.getConfig().setZ3solverPath(new File(arguments.getString("z3")).getPath());
         this.getConfig().setWorkspacePath(arguments.getString("workspace"));
         this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
         this.getConfig().setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
@@ -247,7 +266,7 @@ public class Launcher {
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
         }
-        
+
         // Make sure that it is a multiple of three in the list
         if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
             this.getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));
@@ -275,18 +294,8 @@ public class Launcher {
 
     private void checkNopolSolverPath(JSAP jsap) {
         String solverPath = this.getConfig().getZ3solverPath();
-
-        if (solverPath != null) {
-            File file = new File(solverPath);
-
-            if (!file.exists()) {
-                System.err.println("The Nopol solver path should be an existing file: " + file.getPath() + " does not exist.");
-                LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
-            }
-        } else {
-            System.err.println("The Nopol solver path should be provided.");
-            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
-        }
+        // by default Nopol run in Dynamoth mode
+        // so no solver is mandatory
     }
 
     private void checkNextBuildId(JSAP jsap) {
@@ -315,7 +324,7 @@ public class Launcher {
         this.notifiers = new ArrayList<>();
         this.notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
-        this.patchNotifier = new PatchNotifier(notifierEngines);
+        this.patchNotifier = new PatchNotifierImpl(notifierEngines);
     }
 
     private List<String> getListOfProjectsToIgnore() {
@@ -384,7 +393,7 @@ public class Launcher {
         }
     }
 
-    private void mainProcess() {
+    public void mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
         this.getBuildToBeInspected();
 
@@ -405,8 +414,6 @@ public class Launcher {
         serializers.add(new PatchesSerializer(this.engines));
         serializers.add(new ToolDiagnosticSerializer(this.engines));
 
-        ProjectInspector inspector;
-
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
@@ -419,7 +426,6 @@ public class Launcher {
         inspector.run();
 
         LOGGER.info("Inspector is finished. The process will exit now.");
-        System.exit(0);
     }
 
     public static void main(String[] args) throws JSAPException {
@@ -427,4 +433,11 @@ public class Launcher {
         launcher.mainProcess();
     }
 
+    public ProjectInspector getInspector() {
+        return inspector;
+    }
+
+    public void setPatchNotifier(PatchNotifier patchNotifier) {
+        this.patchNotifier = patchNotifier;
+    }
 }

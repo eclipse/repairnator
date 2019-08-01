@@ -35,7 +35,7 @@ public class CheckBranchLauncher {
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
-    public static List<RunnablePipelineContainer> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
+    public static List<CheckBranchRunner> submittedRunnablePipelineContainers = new CopyOnWriteArrayList<>();
     public static DockerClient docker;
 
     private CheckBranchLauncher(String[] args) throws JSAPException {
@@ -171,7 +171,7 @@ public class CheckBranchLauncher {
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
         for (String branchName : branchNames) {
-            RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(imageId, branchName);
+            CheckBranchRunner runnablePipelineContainer = new CheckBranchRunner(imageId, branchName);
             submittedRunnablePipelineContainers.add(runnablePipelineContainer);
             executorService.submit(runnablePipelineContainer);
         }

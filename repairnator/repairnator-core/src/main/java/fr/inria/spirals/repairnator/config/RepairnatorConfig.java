@@ -21,7 +21,7 @@ public class RepairnatorConfig {
     public enum PIPELINE_MODE {
         DOCKER,
         KUBERNETES,
-        NOPE
+        NOOP
     }
 
     private String runId;
@@ -32,7 +32,7 @@ public class RepairnatorConfig {
     private String mongodbHost;
     private String mongodbName;
     private String smtpServer;
-    private int smtpPort;
+    private int smtpPort = 25;
     private boolean smtpTLS;
     private String smtpUsername;
     private String smtpPassword;
@@ -67,7 +67,7 @@ public class RepairnatorConfig {
     private boolean skipDelete;
     private boolean createOutputDir;
     private String logDirectory;
-    private int nbThreads;
+    private int nbThreads = 1; // safe default value
     private int globalTimeout;
 
     // Realtime
@@ -122,8 +122,8 @@ public class RepairnatorConfig {
             this.pipelineMode = PIPELINE_MODE.DOCKER;
         }else if (pipelineMode.equals(PIPELINE_MODE.KUBERNETES.name())) {
             this.pipelineMode = PIPELINE_MODE.KUBERNETES;
-        }else if (pipelineMode.equals(PIPELINE_MODE.NOPE.name())) {
-            this.pipelineMode = PIPELINE_MODE.NOPE;
+        }else if (pipelineMode.equals(PIPELINE_MODE.NOOP.name())) {
+            this.pipelineMode = PIPELINE_MODE.NOOP;
         }
     }
 
