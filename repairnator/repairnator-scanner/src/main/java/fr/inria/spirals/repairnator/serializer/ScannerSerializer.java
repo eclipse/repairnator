@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by urli on 02/02/2017.
  */
-public class ScannerSerializer extends ProcessSerializer {
+public class ScannerSerializer extends SerializerImpl {
 
     private ProjectScanner scanner;
 

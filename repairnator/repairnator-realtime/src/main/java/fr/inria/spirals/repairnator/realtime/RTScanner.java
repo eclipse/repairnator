@@ -194,13 +194,14 @@ public class RTScanner {
     }
 
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
-        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
+        LOGGER.info("Repository "+repository.getSlug()+" is blacklisted, "+reason.name()+" "+comment+"(total bl: "+blackListedRepository.size()+")" );
 
-        this.blacklistedSerializer.serialize(repository, reason, comment);
+        this.blacklistedSerializer.addBlackListedRepo(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
     }
 
     private void addInWhitelistRepository(Repository repository) {
+        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is whitelisted. Total ("+whiteListedRepository.size()+")");
         this.whiteListedRepository.add(repository.getId());
     }
 
@@ -342,6 +343,10 @@ public class RTScanner {
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }
+    }
+
+    public void saveInfoToDisk() {
+        blacklistedSerializer.serialize();;
     }
 
 }

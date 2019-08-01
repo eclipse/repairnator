@@ -199,7 +199,7 @@ public abstract class AbstractStep {
                 this.getLogger().info("Serialize all data for build: " + this.getInspector().getBuggyBuild().getId());
             }
             for (AbstractDataSerializer serializer : this.serializers) {
-                serializer.serializeData(this.inspector);
+                serializer.serialize();
             }
         }
     }

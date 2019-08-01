@@ -94,11 +94,12 @@ public class TestProjectInspector {
         NotifierEngine notifierEngine = mock(NotifierEngine.class);
         notifierEngines.add(notifierEngine);
 
-        serializers.add(new InspectorSerializer(serializerEngines));
-        serializers.add(new PatchesSerializer(serializerEngines));
-        serializers.add(new ToolDiagnosticSerializer(serializerEngines));
-
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+
+        serializers.add(new InspectorSerializer(serializerEngines, inspector));
+        serializers.add(new PatchesSerializer(serializerEngines, inspector));
+        serializers.add(new ToolDiagnosticSerializer(serializerEngines, inspector));
+
         inspector.setPatchNotifier(new PatchNotifierImpl(notifierEngines));
         inspector.run();
 
@@ -163,9 +164,10 @@ public class TestProjectInspector {
         SerializerEngine serializerEngine = mock(SerializerEngine.class);
         serializerEngines.add(serializerEngine);
 
-        serializers.add(new InspectorSerializer(serializerEngines));
-
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+
+        serializers.add(new InspectorSerializer(serializerEngines, inspector));
+
         inspector.run();
 
         JobStatus jobStatus = inspector.getJobStatus();

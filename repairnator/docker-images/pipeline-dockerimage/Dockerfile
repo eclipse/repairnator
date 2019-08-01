@@ -11,11 +11,12 @@ COPY configure_git.sh /root/
 COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
 
-RUN echo repairnator-`git rev-parse HEAD` > /root/version.ini
+RUN apt-get update 
+RUN apt-get install xmlstarlet apt-utils cloc -y 
+RUN curl -O -s https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/repairnator-pipeline/maven-metadata.xml
+RUN echo `xmlstarlet sel -t -v '//latest' maven-metadata.xml` > /root/version.ini
 RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone 
-RUN apt-get update 
-RUN apt-get install cloc -y 
 RUN /root/configure_git.sh 
 RUN /root/build_repairnator.sh
 

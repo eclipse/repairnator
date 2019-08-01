@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by fernanda on 13/03/17.
  */
-public class ScannerDetailedDataSerializer extends ProcessSerializer {
+public class ScannerDetailedDataSerializer extends SerializerImpl {
 
     private Map<ScannedBuildStatus, List<BuildToBeInspected>> buildsToBeInspected;
 

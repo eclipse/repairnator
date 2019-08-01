@@ -72,7 +72,6 @@ public class TestProjectInspector4Bears {
         List<SerializerEngine> serializerEngines = new ArrayList<>();
         serializerEngines.add(serializerEngine);
         serializers = new ArrayList<>();
-        serializers.add(new InspectorSerializer4Bears(serializerEngines));
 
         notifierEngine = mock(NotifierEngine.class);
         List<NotifierEngine> notifierEngines = new ArrayList<>();
@@ -121,7 +120,6 @@ public class TestProjectInspector4Bears {
         assertThat(finalStatus, is(PipelineState.BUG_FAILING_PASSING.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
-        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
 
         Git gitDir = Git.open(new File(inspector.getRepoToPushLocalPath()));
         Iterable<RevCommit> logs = gitDir.log().call();
@@ -174,7 +172,6 @@ public class TestProjectInspector4Bears {
         assertThat(finalStatus, is(PipelineState.BUG_PASSING_PASSING.name()));
 
         verify(notifierEngine, times(1)).notify(anyString(), anyString());
-        verify(serializerEngine, times(1)).serialize(anyListOf(SerializedData.class), eq(SerializerType.INSPECTOR4BEARS));
 
         Git gitDir = Git.open(new File(inspector.getRepoToPushLocalPath()));
         Iterable<RevCommit> logs = gitDir.log().call();
