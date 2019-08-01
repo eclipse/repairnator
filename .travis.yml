@@ -14,17 +14,16 @@ jobs:
   include:
     - stage: test
       name: "maven-repair"
-      install: ./.travis/travis-before.sh
+      install: true
       script: ./.travis/travis-maven-repair.sh
 
     - stage: test
       name: "repairnator"
+      install: ./.travis/travis-before.sh
       script: ./.travis/travis-run.sh
 
     - stage: deploy
       name: "deploy to Sonatype and Dockerhub"
       script: ./.travis/travis-deploy.sh
-      branches:
-        only:
-            - master
+      if: branch = master
 
