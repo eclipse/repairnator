@@ -23,8 +23,8 @@ import java.util.List;
 public class InspectorSerializer4Bears extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(InspectorSerializer4Bears.class);
 
-    public InspectorSerializer4Bears(List<SerializerEngine> engines) {
-        super(engines, SerializerType.INSPECTOR4BEARS);
+    public InspectorSerializer4Bears(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.INSPECTOR4BEARS, inspector);
     }
 
     private List<Object> serializeAsList(ProjectInspector inspector) {
@@ -115,7 +115,7 @@ public class InspectorSerializer4Bears extends AbstractDataSerializer {
     }
 
     @Override
-    public void serializeData(ProjectInspector inspector) {
+    public void serialize() {
         SerializedData data = new SerializedData(this.serializeAsList(inspector), this.serializeAsJson(inspector));
 
         List<SerializedData> allData = new ArrayList<>();

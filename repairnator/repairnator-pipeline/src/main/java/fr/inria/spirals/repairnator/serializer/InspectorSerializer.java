@@ -24,8 +24,8 @@ import java.util.List;
 public class InspectorSerializer extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(InspectorSerializer.class);
 
-    public InspectorSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.INSPECTOR);
+    public InspectorSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.INSPECTOR, inspector);
     }
 
     private List<Object> serializeAsList(ProjectInspector inspector) {
@@ -88,7 +88,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
     }
 
     @Override
-    public void serializeData(ProjectInspector inspector) {
+    public void serialize() {
         SerializedData data = new SerializedData(this.serializeAsList(inspector), this.serializeAsJson(inspector));
 
         List<SerializedData> allData = new ArrayList<>();

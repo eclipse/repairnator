@@ -402,17 +402,6 @@ public class Launcher {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            serializers.add(new InspectorSerializer4Bears(this.engines));
-        } else {
-            serializers.add(new InspectorSerializer(this.engines));
-        }
-
-        serializers.add(new PropertiesSerializer(this.engines));
-        serializers.add(new InspectorTimeSerializer(this.engines));
-        serializers.add(new PipelineErrorSerializer(this.engines));
-        serializers.add(new PatchesSerializer(this.engines));
-        serializers.add(new ToolDiagnosticSerializer(this.engines));
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
@@ -421,6 +410,18 @@ public class Launcher {
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }
+
+        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+            serializers.add(new InspectorSerializer4Bears(this.engines, inspector));
+        } else {
+            serializers.add(new InspectorSerializer(this.engines, inspector));
+        }
+
+        serializers.add(new PropertiesSerializer(this.engines, inspector));
+        serializers.add(new InspectorTimeSerializer(this.engines, inspector));
+        serializers.add(new PipelineErrorSerializer(this.engines, inspector));
+        serializers.add(new PatchesSerializer(this.engines, inspector));
+        serializers.add(new ToolDiagnosticSerializer(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();

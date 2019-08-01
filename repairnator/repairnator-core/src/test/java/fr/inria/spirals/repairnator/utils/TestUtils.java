@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.utils;
 
-import fr.inria.spirals.repairnator.serializer.Serializer;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import org.junit.Test;
 

@@ -271,7 +271,7 @@ public class ProjectInspector {
                 }
 
                 for (AbstractDataSerializer serializer : this.serializers) {
-                    serializer.serializeData(this);
+                    serializer.serialize();
                 }
             }
         } else {
