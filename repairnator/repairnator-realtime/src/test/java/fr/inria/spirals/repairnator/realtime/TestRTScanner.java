@@ -113,8 +113,8 @@ public class TestRTScanner {
      * fetch another fail build from there or from another repo
      * if 560996872 disappears in the future.
      */
-    @Test
     @Ignore
+    @Test
     public void testActiveMQRunnerConnection()
     {
         int buildId = 560996872;

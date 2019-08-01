@@ -63,7 +63,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
 
-        this.containerName = "repairnator-pipeline_"+ DateUtils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId()+"_"+this.repairnatorConfig.getRunId();
+        this.containerName = "docker_pipeline"+ DateUtils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId()+"_"+StringUtils.join(this.repairnatorConfig.getRepairTools(),",");
         String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
         this.envValues = new ArrayList<>();
