@@ -143,7 +143,16 @@ public class RTScanner {
                 this.pipelineRunner.initRunner();
             }
             new Thread(this.inspectBuilds).start();
-            new Thread(this.inspectJobs).start();
+            Thread rtScannerThread = Thread.currentThread();
+            Thread thread = new Thread(this.inspectJobs);
+
+            thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(Thread t, Throwable e) {
+                    rtScannerThread.interrupt();
+                }
+            });
+            thread.start();
             if(summaryNotifier != null) {
                 LOGGER.info("Starting summary notifier");
                 new Thread(this.summaryNotifier).start();
