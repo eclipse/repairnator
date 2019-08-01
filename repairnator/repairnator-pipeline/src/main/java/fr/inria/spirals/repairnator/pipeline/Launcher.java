@@ -288,7 +288,6 @@ public class Launcher {
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
             System.err.println("Tools.jar must be loaded. The classpath given for your app is: "+System.getProperty("java.class.path"));
-            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
 
@@ -301,7 +300,6 @@ public class Launcher {
     private void checkNextBuildId(JSAP jsap) {
         if (this.getConfig().getNextBuildId() == InputBuildId.NO_PATCH) {
             System.err.println("A pair of builds needs to be provided in BEARS mode.");
-            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
 
