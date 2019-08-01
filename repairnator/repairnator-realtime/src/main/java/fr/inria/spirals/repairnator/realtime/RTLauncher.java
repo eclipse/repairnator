@@ -287,16 +287,13 @@ public class RTLauncher {
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = null;
 
-        if (this.config.getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-            PipelineRunner runner = new DockerPipelineRunner();
-            rtScanner = new RTScanner(runId, engines, runner);
+        PipelineRunner runner = null;
+        try {
+            runner = (PipelineRunner) Class.forName(this.config.getPipelineMode().getKlass()).newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        if (this.config.getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
-            ActiveMQPipelineRunner runner = new ActiveMQPipelineRunner();
-            rtScanner = new RTScanner(runId, engines, runner);
-            runner.testConnection();
-        }
+        rtScanner = new RTScanner(runId, engines, runner);
 
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);
