@@ -38,13 +38,15 @@ public class InspectJobs implements Runnable {
 
             if (jobListOpt.isPresent()) {
                 List<JobV2> jobList = jobListOpt.get();
-                LOGGER.info("Retrieved "+jobList.size()+" jobs");
+                int nInteresting = 0;
                 for (JobV2 job : jobList) {
                     if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
+                        nInteresting++;
                         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
                         this.rtScanner.getInspectBuilds().submitNewBuild(optionalBuild.get());
                     }
                 }
+                LOGGER.info("Retrieved "+jobList.size()+" jobs, with "+nInteresting+" repos");
             }
             if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || !jobListOpt.isPresent()) {
                 try {
@@ -53,6 +55,7 @@ public class InspectJobs implements Runnable {
                     e.printStackTrace();
                 }
             }
+            rtScanner.saveInfoToDisk();
         }
         LOGGER.info("This will now stop.");
     }

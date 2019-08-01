@@ -58,12 +58,16 @@ public class BlacklistedSerializer extends SerializerImpl {
         return result;
     }
 
-    public void serialize(Repository repo, Reason reason, String comment) {
+    List<SerializedData> allData = new ArrayList<>();
+
+    public void addBlackListedRepo(Repository repo, Reason reason, String comment) {
         SerializedData data = new SerializedData(this.serializeAsList(repo, reason, comment), this.serializeAsJson(repo, reason, comment));
 
-        List<SerializedData> allData = new ArrayList<>();
         allData.add(data);
+    }
 
+    @Override
+    public void serialize() {
         for (SerializerEngine engine : this.getEngines()) {
             engine.serialize(allData, this.getType());
         }

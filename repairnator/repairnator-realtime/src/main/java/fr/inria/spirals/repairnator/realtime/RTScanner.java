@@ -198,7 +198,7 @@ public class RTScanner {
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
 
-        this.blacklistedSerializer.serialize(repository, reason, comment);
+        this.blacklistedSerializer.addBlackListedRepo(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
     }
 
@@ -344,6 +344,10 @@ public class RTScanner {
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }
+    }
+
+    public void saveInfoToDisk() {
+        blacklistedSerializer.serialize();;
     }
 
 }

@@ -3,7 +3,6 @@ package fr.inria.spirals.repairnator.realtime;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.realtime.serializer.WatchedBuildSerializer;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +29,10 @@ public class InspectBuilds implements Runnable {
     private Deque<Build> waitingBuilds = new ConcurrentLinkedDeque<>();
 
     private RTScanner rtScanner;
-    private WatchedBuildSerializer watchedBuildSerializer;
     private boolean shouldStop;
 
     public InspectBuilds(RTScanner rtScanner) {
         this.rtScanner = rtScanner;
-        this.watchedBuildSerializer = new WatchedBuildSerializer(this.rtScanner.getEngines(), this.rtScanner);
     }
 
     /**
@@ -88,12 +85,6 @@ public class InspectBuilds implements Runnable {
 
                     // if it's the case we submit it
                     this.rtScanner.submitBuildToExecution(build);
-                }
-
-                try {
-                    this.watchedBuildSerializer.serialize(build);
-                } catch (Throwable e) {
-                    LOGGER.error("Error while serializing", e);
                 }
 
                 this.waitingBuilds.remove(build);
