@@ -9,5 +9,4 @@ cd repairnator
 mvn clean test -B
 
 # printing timing results to identify slow tests
-grep -h time= target/surefire-reports/*xml
 grep -h time= */target/surefire-reports/*xml
