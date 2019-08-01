@@ -20,12 +20,12 @@ import java.util.Map;
  */
 public class PropertiesSerializer extends AbstractDataSerializer {
 
-    public PropertiesSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.PROPERTIES);
+    public PropertiesSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.PROPERTIES, inspector);
     }
 
     @Override
-    public void serializeData(ProjectInspector inspector) {
+    public void serialize() {
         Gson gson = new GsonBuilder().registerTypeAdapter(Properties.class, new PropertiesSerializerAdapter()).create();
         JsonObject element = (JsonObject)gson.toJsonTree(inspector.getJobStatus().getProperties());
 

@@ -5,7 +5,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.realtime.RTScanner;
-import fr.inria.spirals.repairnator.serializer.Serializer;
+import fr.inria.spirals.repairnator.serializer.SerializerImpl;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class WatchedBuildSerializer extends Serializer {
+public class WatchedBuildSerializer extends SerializerImpl {
 
     RTScanner rtScanner;
 
