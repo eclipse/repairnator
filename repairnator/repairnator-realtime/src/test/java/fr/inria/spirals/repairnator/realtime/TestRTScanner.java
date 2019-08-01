@@ -16,6 +16,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -113,6 +114,7 @@ public class TestRTScanner {
      * if 560996872 disappears in the future.
      */
     @Test
+    @Ignore
     public void testActiveMQRunnerConnection()
     {
         int buildId = 560996872;
