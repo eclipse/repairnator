@@ -65,7 +65,7 @@ public class InspectBuilds implements Runnable {
                     this.observedBuilds.add(build.getId());
                     this.waitingBuilds.add(build);
                 }
-                LOGGER.info("New build in waiting list (id: "+build.getId()+") Total: "+this.waitingBuilds.size()+")");
+                LOGGER.info("New build in waiting list "+build.getUri()+" with "+build.getJobs().size()+" jobs (Total: "+this.waitingBuilds.size()+")");
             }
         } else {
             LOGGER.debug("Build submission ignored. (maximum reached)");
