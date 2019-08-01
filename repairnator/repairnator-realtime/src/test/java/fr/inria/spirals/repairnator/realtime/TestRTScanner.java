@@ -138,6 +138,7 @@ public class TestRTScanner {
       engines.add(new JSONFileSerializerEngine("."));
       RTScanner rtScanner = new RTScanner("test", engines);
       rtScanner.initBlackListedRepository(new File("./src/test/resources/blacklist.txt"));
+      rtScanner.saveInfoToDisk();
 
       JsonReader reader = new JsonReader(new FileReader(fileName));
       JsonObject data = new Gson().fromJson(reader, JsonObject.class);
