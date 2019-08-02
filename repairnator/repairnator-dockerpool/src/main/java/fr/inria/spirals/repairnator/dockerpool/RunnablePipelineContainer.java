@@ -131,7 +131,7 @@ public class RunnablePipelineContainer implements Runnable {
             // inside the docker containers the log will be produced in /var/log
             // so we need to bind the directory with the local directory for logs
             // an undocumented constraint is to have an absolute path
-            HostConfig hostConfig = HostConfig.builder().appendBinds(new File(this.logDirectory).getAbsolutePath()+":/var/log").build();
+            HostConfig hostConfig = HostConfig.builder().build();
 
             // we soecify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()
