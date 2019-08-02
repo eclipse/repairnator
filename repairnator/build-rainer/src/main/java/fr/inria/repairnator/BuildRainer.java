@@ -11,7 +11,6 @@ import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
-import 
 import java.io.IOException;
 import java.io.FileWriter;
 /**
