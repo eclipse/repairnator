@@ -8,7 +8,7 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     cd repairnator
     
     # pushing snapshot to https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/
-    mvn deploy -DskipTests
+    mvn deploy -DskipTests -Dcheckstyle.skip
 fi
 
 
