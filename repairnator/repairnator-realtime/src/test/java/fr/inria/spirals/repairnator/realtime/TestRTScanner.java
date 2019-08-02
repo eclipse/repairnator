@@ -109,8 +109,11 @@ public class TestRTScanner {
      * fetch another fail build from there or from another repo
      * if 560996872 disappears in the future.
      */
+    /*
+    // for some obscure reasons @Ignore is ignored
     @Ignore
     @Test
+     */
     public void tactiveMQRunnerConnection()
     {
         int buildId = 560996872;

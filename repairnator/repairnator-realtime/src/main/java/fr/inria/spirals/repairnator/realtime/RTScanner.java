@@ -139,9 +139,7 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-                this.pipelineRunner.initRunner();
-            }
+            this.pipelineRunner.initRunner();
             new Thread(this.inspectBuilds).start();
             Thread rtScannerThread = Thread.currentThread();
             Thread thread = new Thread(this.inspectJobs);
