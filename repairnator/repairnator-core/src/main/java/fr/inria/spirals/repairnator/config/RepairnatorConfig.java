@@ -19,9 +19,19 @@ import java.util.Set;
  */
 public class RepairnatorConfig {
     public enum PIPELINE_MODE {
-        DOCKER,
-        KUBERNETES,
-        NOOP
+        DOCKER("fr.inria.spirals.repairnator.realtime.DockerPipelineRunner"),
+        KUBERNETES("fr.inria.spirals.repairnator.realtime.ActiveMQPipelineRunner"),
+        NOOP("fr.inria.spirals.repairnator.realtime.NoopRunner");
+
+        private final String klass;
+
+        PIPELINE_MODE(String s) {
+            this.klass = s;
+        }
+
+        public String getKlass() {
+            return klass;
+        }
     }
 
     private String runId;
@@ -116,15 +126,15 @@ public class RepairnatorConfig {
     public String getRunId() {
         return runId;
     }
-
+    
     public void setPipelineMode(String pipelineMode) {
-        if (pipelineMode.equals(PIPELINE_MODE.DOCKER.name())) {
-            this.pipelineMode = PIPELINE_MODE.DOCKER;
-        }else if (pipelineMode.equals(PIPELINE_MODE.KUBERNETES.name())) {
-            this.pipelineMode = PIPELINE_MODE.KUBERNETES;
-        }else if (pipelineMode.equals(PIPELINE_MODE.NOOP.name())) {
-            this.pipelineMode = PIPELINE_MODE.NOOP;
+        for (PIPELINE_MODE mode: PIPELINE_MODE.values()) {
+            if (pipelineMode.equals(mode.name())) {
+                this.pipelineMode = PIPELINE_MODE.valueOf(pipelineMode);
+                return;
+            }
         }
+        throw new RuntimeException("unknown pipeline "+pipelineMode);
     }
 
     public PIPELINE_MODE getPipelineMode() {

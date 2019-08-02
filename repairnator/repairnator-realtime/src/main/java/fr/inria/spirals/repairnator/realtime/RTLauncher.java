@@ -116,21 +116,21 @@ public class RTLauncher {
         opt2 = new FlaggedOption("jobsleeptime");
         opt2.setLongFlag("jobsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectJobs.JOB_SLEEP_TIME+"");
+        opt2.setDefault(InspectJobs.JOB_SLEEP_TIME_IN_SECOND +"");
         opt2.setHelp("Specify the sleep time between two requests to Travis Job endpoint (in seconds)");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("buildsleeptime");
         opt2.setLongFlag("buildsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME+"");
+        opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME_IN_SECOND +"");
         opt2.setHelp("Specify the sleep time between two refresh of build statuses (in seconds)");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("maxinspectedbuilds");
         opt2.setLongFlag("maxinspectedbuilds");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.LIMIT_SUBMITTED_BUILDS+"");
+        opt2.setDefault(InspectBuilds.LIMIT_WAITING_BUILDS +"");
         opt2.setHelp("Specify the maximum number of watched builds");
         jsap.registerParameter(opt2);
 
@@ -287,16 +287,13 @@ public class RTLauncher {
         hardwareInfoSerializer.serialize();
         RTScanner rtScanner = null;
 
-        if (this.config.getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-            PipelineRunner runner = new DockerPipelineRunner();
-            rtScanner = new RTScanner(runId, engines, runner);
+        PipelineRunner runner = null;
+        try {
+            runner = (PipelineRunner) Class.forName(this.config.getPipelineMode().getKlass()).newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        if (this.config.getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
-            ActiveMQPipelineRunner runner = new ActiveMQPipelineRunner();
-            rtScanner = new RTScanner(runId, engines, runner);
-            runner.testConnection();
-        }
+        rtScanner = new RTScanner(runId, engines, runner);
 
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);

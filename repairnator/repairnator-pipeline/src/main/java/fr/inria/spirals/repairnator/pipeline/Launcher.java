@@ -19,6 +19,7 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
@@ -107,7 +108,7 @@ public class Launcher {
         this.initNotifiers();
     }
 
-    private JSAP defineArgs() throws JSAPException {
+    public static JSAP defineArgs() throws JSAPException {
         // Verbose output
         JSAP jsap = new JSAP();
 
@@ -189,19 +190,14 @@ public class Launcher {
 
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
-        String repairTools;
+        String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
 
-        // too ambitious as default :-)
-        // repairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
-
-        repairTools = NPERepair.TOOL_NAME;
-
-        opt2.setStringParser(EnumeratedStringParser.getParser(repairTools.replace(',',';'), true));
+        opt2.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',',';'), true));
         opt2.setList(true);
         opt2.setListSeparator(',');
-        opt2.setHelp("Specify one or several repair tools to use among: "+repairTools);
+        opt2.setHelp("Specify one or several repair tools to use among: "+availablerepairTools);
         opt2.setRequired(true);
-        opt2.setDefault(repairTools);
+        opt2.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
         jsap.registerParameter(opt2);
 
         // This option will have a list and must have n*3 elements, otherwise the last will be ignored.
@@ -292,7 +288,6 @@ public class Launcher {
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
             System.err.println("Tools.jar must be loaded. The classpath given for your app is: "+System.getProperty("java.class.path"));
-            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
 
@@ -305,7 +300,6 @@ public class Launcher {
     private void checkNextBuildId(JSAP jsap) {
         if (this.getConfig().getNextBuildId() == InputBuildId.NO_PATCH) {
             System.err.println("A pair of builds needs to be provided in BEARS mode.");
-            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
     }
 
@@ -328,7 +322,7 @@ public class Launcher {
         this.notifiers = new ArrayList<>();
         this.notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
-        this.patchNotifier = new PatchNotifier(notifierEngines);
+        this.patchNotifier = new PatchNotifierImpl(notifierEngines);
     }
 
     private List<String> getListOfProjectsToIgnore() {
@@ -406,17 +400,6 @@ public class Launcher {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            serializers.add(new InspectorSerializer4Bears(this.engines));
-        } else {
-            serializers.add(new InspectorSerializer(this.engines));
-        }
-
-        serializers.add(new PropertiesSerializer(this.engines));
-        serializers.add(new InspectorTimeSerializer(this.engines));
-        serializers.add(new PipelineErrorSerializer(this.engines));
-        serializers.add(new PatchesSerializer(this.engines));
-        serializers.add(new ToolDiagnosticSerializer(this.engines));
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
@@ -425,6 +408,18 @@ public class Launcher {
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }
+
+        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+            serializers.add(new InspectorSerializer4Bears(this.engines, inspector));
+        } else {
+            serializers.add(new InspectorSerializer(this.engines, inspector));
+        }
+
+        serializers.add(new PropertiesSerializer(this.engines, inspector));
+        serializers.add(new InspectorTimeSerializer(this.engines, inspector));
+        serializers.add(new PipelineErrorSerializer(this.engines, inspector));
+        serializers.add(new PatchesSerializer(this.engines, inspector));
+        serializers.add(new ToolDiagnosticSerializer(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
@@ -439,5 +434,9 @@ public class Launcher {
 
     public ProjectInspector getInspector() {
         return inspector;
+    }
+
+    public void setPatchNotifier(PatchNotifier patchNotifier) {
+        this.patchNotifier = patchNotifier;
     }
 }

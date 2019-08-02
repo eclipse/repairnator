@@ -139,11 +139,18 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.DOCKER)) {
-                this.pipelineRunner.initRunner();
-            }
+            this.pipelineRunner.initRunner();
             new Thread(this.inspectBuilds).start();
-            new Thread(this.inspectJobs).start();
+            Thread rtScannerThread = Thread.currentThread();
+            Thread thread = new Thread(this.inspectJobs);
+
+            thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(Thread t, Throwable e) {
+                    rtScannerThread.interrupt();
+                }
+            });
+            thread.start();
             if(summaryNotifier != null) {
                 LOGGER.info("Starting summary notifier");
                 new Thread(this.summaryNotifier).start();
@@ -187,13 +194,14 @@ public class RTScanner {
     }
 
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
-        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
+        LOGGER.info("Repository "+repository.getSlug()+" is blacklisted, "+reason.name()+" "+comment+"(total bl: "+blackListedRepository.size()+")" );
 
-        this.blacklistedSerializer.serialize(repository, reason, comment);
+        this.blacklistedSerializer.addBlackListedRepo(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
     }
 
     private void addInWhitelistRepository(Repository repository) {
+        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is whitelisted. Total ("+whiteListedRepository.size()+")");
         this.whiteListedRepository.add(repository.getId());
     }
 
@@ -337,13 +345,8 @@ public class RTScanner {
         }
     }
 
-    /**
-     * Use this method to submit a build to the thread which refresh their status.
-     */
-    public void submitWaitingBuild(int buildId) {
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        if (optionalBuild.isPresent()) {
-            this.inspectBuilds.submitNewBuild(optionalBuild.get());
-        }
+    public void saveInfoToDisk() {
+        blacklistedSerializer.serialize();;
     }
+
 }
