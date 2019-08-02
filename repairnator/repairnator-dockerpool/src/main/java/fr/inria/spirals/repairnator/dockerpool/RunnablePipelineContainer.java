@@ -152,7 +152,6 @@ public class RunnablePipelineContainer implements Runnable {
 
             this.containerId = container.id();
             treatedBuildTracking.setContainerId(this.containerId);
-            LOGGER.info(docker.listContainers().toString());
 
             // now the container is created: let's start it
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Start the container: "+this.containerName);
