@@ -23,7 +23,7 @@ public class InspectBuilds implements Runnable {
 
     // this fifo queue contains all the ids of the builds that we observed
     // it prevents us for watching twice the same build
-    private CircularFifoQueue<Long> observedBuilds = new CircularFifoQueue<>(2000);
+    private CircularFifoQueue<Long> observedBuilds = new CircularFifoQueue<>(NB_ELEMENT_TRAVIS_JOB);
 
     // we use a ConcurrentLinkedDeque because new builds might be submitted while we iterate over it
     private Deque<Build> waitingBuilds = new ConcurrentLinkedDeque<>();

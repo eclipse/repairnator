@@ -34,7 +34,7 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
     }
 
     private ExecutorService executorService;
-    private String dockerImageId;
+    private String dockerImageId= REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME;
     private String dockerImageName;
     private Date limitDateNextRetrieveDockerImage;
 

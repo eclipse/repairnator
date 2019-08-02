@@ -58,6 +58,7 @@ public class RTScanner {
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
         this.pipelineRunner = new DockerPipelineRunner(this);
+		this.pipelineRunner.initRunner();
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;

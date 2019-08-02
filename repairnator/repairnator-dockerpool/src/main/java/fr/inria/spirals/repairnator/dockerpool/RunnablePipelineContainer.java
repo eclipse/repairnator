@@ -56,6 +56,9 @@ public class RunnablePipelineContainer implements Runnable {
      * @param treatedBuildTracking a serializer for recording the docker containers statuses
      */
     public RunnablePipelineContainer(DockerPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
+        if (imageId == null) {
+            throw new IllegalArgumentException("imageId is null");
+        }
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.inputBuildId = inputBuildId;
@@ -131,7 +134,7 @@ public class RunnablePipelineContainer implements Runnable {
             // inside the docker containers the log will be produced in /var/log
             // so we need to bind the directory with the local directory for logs
             // an undocumented constraint is to have an absolute path
-            HostConfig hostConfig = HostConfig.builder().appendBinds(new File(this.logDirectory).getAbsolutePath()+":/var/log").build();
+            HostConfig hostConfig = HostConfig.builder().build();
 
             // we soecify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()
