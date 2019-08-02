@@ -15,12 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 public class PipelineErrorSerializer extends AbstractDataSerializer {
-    public PipelineErrorSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.PIPELINE_ERRORS);
+    public PipelineErrorSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.PIPELINE_ERRORS, inspector);
     }
 
-    @Override
-    public void serializeData(ProjectInspector inspector) {
+    public void serialize() {
         List<Object> dataAsList = new ArrayList<>();
         dataAsList.add(Utils.getHostname());
         dataAsList.add(inspector.getBuildToBeInspected().getRunId());

@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ToolDiagnosticSerializer extends AbstractDataSerializer {
-    public ToolDiagnosticSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.TOOL_DIAGNOSTIC);
+    public ToolDiagnosticSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.TOOL_DIAGNOSTIC, inspector);
     }
 
     private List<Object> serializeAsList(ProjectInspector inspector, String toolName, JsonElement jsonElement) {
@@ -43,7 +43,7 @@ public class ToolDiagnosticSerializer extends AbstractDataSerializer {
     }
 
     @Override
-    public void serializeData(ProjectInspector inspector) {
+    public void serialize() {
         List<SerializedData> data = new ArrayList<>();
 
         for (Map.Entry<String, JsonElement> toolDiag : inspector.getJobStatus().getToolDiagnostic().entrySet()) {

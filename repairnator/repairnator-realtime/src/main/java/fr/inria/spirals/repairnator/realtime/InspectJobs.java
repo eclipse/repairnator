@@ -24,102 +24,50 @@ import java.util.Optional;
  * This class is launched in a dedicated thread to interrogate regularly the /job endpoint of Travis CI
  */
 public class InspectJobs implements Runnable {
-	private static final Logger LOGGER = LoggerFactory.getLogger(InspectJobs.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InspectJobs.class);
 
-	public static final int JOB_SLEEP_TIME_IN_SECOND = 10;
-	private RTScanner rtScanner;
-	private boolean shouldStop;
+    public static final int JOB_SLEEP_TIME_IN_SECOND = 10;
+    private RTScanner rtScanner;
+    private boolean shouldStop;
 
-	public InspectJobs(RTScanner scanner) {
-		this.rtScanner = scanner;
-	}
+    public InspectJobs(RTScanner scanner) {
+        this.rtScanner = scanner;
+    }
 
-	/**
-	 * This is used to stop the thread execution.
-	 */
-	public void switchOff() {
-		this.shouldStop = true;
-	}
+    /**
+     * This is used to stop the thread execution.
+     */
+    public void switchOff() {
+        this.shouldStop = true;
+    }
 
-	@Override
-	public void run() {
-		LOGGER.debug("Start running inspect Jobs...");
-		int nInteresting = 0;
-		while (!shouldStop) {
-			try {
-				Optional<List<JobV2>> jobListOpt = RepairnatorConfig.getInstance().getJTravis().job().allFromV2();
-				JobV2 jobV2 = null;
-				List<JobV2> jobList = jobListOpt.get();
+    @Override
+    public void run() {
+        LOGGER.debug("Start running inspect Jobs...");
+        while (!shouldStop) {
+            Optional<List<JobV2>> jobListOpt = RepairnatorConfig.getInstance().getJTravis().job().allFromV2();
 
-				JobHelper2 v = new JobHelper2(JTravis.builder().build());
-				Map<StateType, Integer> stats = new HashMap<>();
-				int nstats=0;
-				jobV2 = jobList.get(0);
-				int N=20;
-				int GO_IN_THE_PAST= 100;
-				for (int k=0;k<N;k++) {
-					for (JobV2 job : v.allSubSequentBuildsFrom(jobV2.getId() - 250*N - GO_IN_THE_PAST)) {
-						if (stats.keySet().contains(job.getState())) {
-							stats.put(job.getState(), stats.get(job.getState()) + 1);
-						} else {
-							stats.put(job.getState(), 1);
-						}
-						nstats++;
-
-						if ("java".equals(job.getConfig().getLanguage()) && StateType.FAILED.equals(job.getState())) {
-							// 	System.out.println("=====" + job.getId());
-							new Thread(new Runnable() {
-								@Override
-								public void run() {
-									Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
-									InspectJobs.this.rtScanner.getInspectBuilds().submitNewBuild(optionalBuild.get());
-								}
-							}).run();
-						}
-						jobV2 = job;
-					}
-				}
-
-				System.out.println(stats);
-				System.out.println(stats.get(StateType.FAILED)*1./nstats);
-				//rtScanner.saveInfoToDisk();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} // end while loop
-		LOGGER.info("This will now stop.");
-	}
-
-	class JobHelper2 extends JobHelper {
-		JobHelper2(JTravis jTravis) {
-			super(jTravis);
-		}
-
-		public List<JobV2> allSubSequentBuildsFrom(int start) throws Exception {
-
-			List<String> l = new ArrayList<>();
-			for (int i = 0; i < 250; i++) {
-				l.add(Integer.toString(start + i));
-			}
-			//?ids[]=' + job_ids.join('&ids[]='
-			String sep = "ids[]=";
-			String url = this.getConfig().getTravisEndpoint() + "/" + "jobs"
-					+ "?" + sep
-					+ StringUtils.join(l, "&" + sep);
-			String response = this.get(url, true, 2);
-			JsonObject jsonObj = getJsonFromStringContent(response);
-			JsonArray jsonArray = jsonObj.getAsJsonArray("jobs");
-			List<JobV2> result = new ArrayList();
-			Iterator var6 = jsonArray.iterator();
-
-			while (var6.hasNext()) {
-				JsonElement jsonElement = (JsonElement) var6.next();
-				result.add(createGson().fromJson(jsonElement, JobV2.class));
-			}
-			//System.out.println(result.size());
-			return result;
-
-		}
-
-	}
+            if (jobListOpt.isPresent()) {
+                List<JobV2> jobList = jobListOpt.get();
+                int nInteresting = 0;
+                for (JobV2 job : jobList) {
+                    if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
+                        nInteresting++;
+                        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
+                        this.rtScanner.getInspectBuilds().submitNewBuild(optionalBuild.get());
+                    }
+                }
+                LOGGER.info("Retrieved "+jobList.size()+" jobs, with "+nInteresting+" repos");
+            }
+            if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || !jobListOpt.isPresent()) {
+                try {
+                    Thread.sleep(RepairnatorConfig.getInstance().getJobSleepTime() * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            rtScanner.saveInfoToDisk();
+        }
+        LOGGER.info("This will now stop.");
+    }
 }

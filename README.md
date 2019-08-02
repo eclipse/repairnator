@@ -43,23 +43,15 @@ If you want that Luc Esape [@lucesape](http://github.com/lucesape), the coolest 
 * ["The Future of Automated Program Repair" (Martin Monperrus), 13th Annual Symposium on Future Trends in Service-Oriented Computing, Hasso Plattner Institute, Postdam, April 19 2018](https://hpi.de/veranstaltungen/wissenschaftliche-konferenzen/research-school/2018/symposium-on-future-trends-in-service-oriented-computing.html)
 * ["How to Design a Program Repair Bot? Insights from the Repairnator Project" (Simon Urli) 58th CREST Open Workshop - Automating Programmers’ Programming Experiments for Analytic Result Reporting in Code Review and Continuous Integration, London, February 27 2018](http://crest.cs.ucl.ac.uk/cow/58/)
 
-## Usage
-
-[See the usage section of our documentation](doc/jars.md).
-
-If you want to bring your own tool in Repairnator, have a look on [contribution guidelines](/doc/README.md) :smile:
-
 ## Content of the repository
 
 This repository is organized as follows:
 
-  * [doc](/doc) contains some documentation about Repairnator and its usage
+  * [doc](/doc) contains the reference documentation about Repairnator and its usage
   * [repairnator](/repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
   * [bears-usage](/bears-usage) is a side project dedicated to gather data from repairnator.json files
   * [resources](/resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
   * [website](/website) contains all data to produce repairnator website
-  
-Each directory contains its own Readme explaining its own internal organization.
 
 ## Releases
 

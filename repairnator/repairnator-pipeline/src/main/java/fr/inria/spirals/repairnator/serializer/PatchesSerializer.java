@@ -17,8 +17,8 @@ import java.util.List;
 
 public class PatchesSerializer extends AbstractDataSerializer {
 
-    public PatchesSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.PATCHES);
+    public PatchesSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.PATCHES, inspector);
     }
 
     private List<Object> serializeAsList(BuildToBeInspected buildToBeInspected, RepairPatch patch) {
@@ -52,7 +52,7 @@ public class PatchesSerializer extends AbstractDataSerializer {
     }
 
     @Override
-    public void serializeData(ProjectInspector inspector) {
+    public void serialize() {
         List<SerializedData> allData = new ArrayList<>();
 
         for (RepairPatch repairPatch : inspector.getJobStatus().getAllPatches()) {
