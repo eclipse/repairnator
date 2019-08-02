@@ -128,9 +128,6 @@ public class RunnablePipelineContainer implements Runnable {
             Map<String,String> labels = new HashMap<>();
             labels.put("name",this.containerName);
 
-            // inside the docker containers the log will be produced in /var/log
-            // so we need to bind the directory with the local directory for logs
-            // an undocumented constraint is to have an absolute path
             HostConfig hostConfig = HostConfig.builder().build();
 
             // we soecify the complete configuration of the container
