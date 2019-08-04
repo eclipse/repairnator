@@ -177,7 +177,7 @@ public class ProjectScanner {
             Optional<Repository> repositoryOptional = this.jTravis.repository().fromSlug(slug);
             if (repositoryOptional.isPresent()) {
                 Repository repo = repositoryOptional.get();
-                Optional<Build> lastBuild = repo.getLastBuild(false);
+                Optional<Build> lastBuild = repo.getLastBuild();
                 if (lastBuild.isPresent()) {
                     result.add(repo);
                 } else {
