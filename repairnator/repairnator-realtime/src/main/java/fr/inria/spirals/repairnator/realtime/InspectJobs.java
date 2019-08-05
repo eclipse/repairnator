@@ -97,4 +97,3 @@ class JobHelperv2 extends JobHelper {
     }
 
 }
-}
