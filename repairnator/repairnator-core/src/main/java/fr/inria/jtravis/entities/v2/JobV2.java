@@ -1,6 +1,7 @@
 package fr.inria.jtravis.entities.v2;
 
 import com.google.gson.annotations.Expose;
+import fr.inria.jtravis.entities.Config;
 import fr.inria.jtravis.entities.StateType;
 
 import java.util.Objects;
@@ -23,7 +24,7 @@ public final class JobV2 {
     private StateType state;
 
     @Expose
-    private ConfigV2 config;
+    private Config config;
 
     public int getId() {
         return id;
@@ -41,7 +42,7 @@ public final class JobV2 {
         return state;
     }
 
-    public ConfigV2 getConfig() {
+    public Config getConfig() {
         return config;
     }
 
@@ -65,7 +66,7 @@ public final class JobV2 {
         this.state = state;
     }
 
-    protected void setConfig(ConfigV2 config) {
+    protected void setConfig(Config config) {
         this.config = config;
     }
 
