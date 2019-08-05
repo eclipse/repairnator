@@ -100,7 +100,7 @@ public class TestNopolRepair {
         assertThat(finalStatus, is("PATCHED"));
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertTrue(allPatches.size()>50);
+        assertThat(allPatches.size(), is(77));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
     }
 
