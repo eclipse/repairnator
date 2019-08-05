@@ -31,6 +31,7 @@ public class BuildRainer extends WebSocketClient {
     @Override
     public void onOpen( ServerHandshake handshakedata ) {
         System.out.println( "opened connection" );
+        send("Hi");
     }
 
     @Override
