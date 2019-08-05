@@ -29,6 +29,7 @@ public class FastScanner implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(FastScanner.class);
 
     private RTScanner rtScanner;
+    public int nMaxBuildsToBeAnalyzedWithPipeline = 1000;
 
     public FastScanner() {
         this.rtScanner = new RTScanner("foo");
@@ -77,7 +78,11 @@ public class FastScanner implements Runnable {
 
                 System.out.println(stats);
                 System.out.println(stats.get(StateType.FAILED)*1./nstats);
-                //rtScanner.saveInfoToDisk();
+
+                if (done.size()>nMaxBuildsToBeAnalyzedWithPipeline) {
+                    break;
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
