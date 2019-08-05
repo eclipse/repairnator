@@ -56,7 +56,8 @@
         <dependency>
             <groupId>fr.inria.gforge.spirals</groupId>
             <artifactId>nopol</artifactId>
-            <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+            <!-- from https://github.com/tdurieux/maven-repository/tree/master/releases/fr/inria/gforge/spirals/nopol -->
+            <version>03c148c25be02493784e2574fbbf4e6c6686dba4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -71,7 +72,7 @@
         <dependency>
             <groupId>eu.stamp-project</groupId>
             <artifactId>assert-fixer</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.8</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

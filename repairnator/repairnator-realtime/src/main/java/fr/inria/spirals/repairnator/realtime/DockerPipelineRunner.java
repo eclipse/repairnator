@@ -26,15 +26,13 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
     private static final Logger LOGGER = LoggerFactory.getLogger(DockerPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     public static final String REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME = "repairnator/pipeline";
-    private int nbThreads;
-    private Deque<Build> waitingBuilds;
 
     public ExecutorService getExecutorService() {
         return executorService;
     }
 
     private ExecutorService executorService;
-    private String dockerImageId;
+    private String dockerImageId= REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME;
     private String dockerImageName;
     private Date limitDateNextRetrieveDockerImage;
 
@@ -76,12 +74,8 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
     }
 
     public void initExecutorService(int nbThreads) {
-        this.nbThreads = nbThreads;
         this.executorService = Executors.newFixedThreadPool(nbThreads);
 
-        // we init a list of waiting builds, when the pool is already full
-        // its size it 4 times the size of the pool
-        this.waitingBuilds = new LinkedBlockingDeque<>(this.nbThreads*4);
         LOGGER.debug("Executor service initialized for "+nbThreads+" threads.");
     }
 
@@ -93,22 +87,11 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         if (this.limitDateNextRetrieveDockerImage != null && this.limitDateNextRetrieveDockerImage.before(new Date())) {
             this.refreshDockerImage();
         }
-        if (getRunning() < this.nbThreads) {
-            LOGGER.info("Build (id: "+build.getId()+") immediately submitted for running.");
-            this.executorService.submit(this.submitBuild(this.dockerImageId, new InputBuildId(build.getId())));
-        } else {
-            LOGGER.info("All threads currently running (Limit: "+this.nbThreads+"). Add build (id: "+build.getId()+") to wait list");
-            if (this.waitingBuilds.size() == this.nbThreads) {
-                Build b = this.waitingBuilds.removeLast();
-                LOGGER.debug("Remove oldest build (id: "+b.getId()+")");
-            }
-            this.waitingBuilds.push(build);
-        }
+		this.executorService.submit(this.submitBuild(this.dockerImageId, new InputBuildId(build.getId())));
     }
 
     public void switchOff() {
         LOGGER.warn("The process will now stop. "+this.getRunning()+" docker containers will be stopped.");
-        this.waitingBuilds.clear();
         for (RunnablePipelineContainer container : this.submittedRunnablePipelineContainers) {
             container.serialize("ABORT");
             container.killDockerContainer(this.getDockerClient(), false);
@@ -120,10 +103,7 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
     @Override
     public void removeSubmittedRunnablePipelineContainer(RunnablePipelineContainer pipelineContainer) {
         LOGGER.info("Build (id: "+pipelineContainer.getInputBuildId().getBuggyBuildId()+") has finished.");
+        pipelineContainer.killDockerContainer(this.getDockerClient(), false);
         super.removeSubmittedRunnablePipelineContainer(pipelineContainer);
-        if (!this.waitingBuilds.isEmpty()) {
-            Build build = this.waitingBuilds.pollFirst();
-            this.submitBuild(build);
-        }
     }
 }
