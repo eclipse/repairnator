@@ -100,6 +100,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("runId");
         opt.setLongFlag("runId");
         opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("1234");
         opt.setHelp("Specify the run id for this launch.");
         return opt;
     }

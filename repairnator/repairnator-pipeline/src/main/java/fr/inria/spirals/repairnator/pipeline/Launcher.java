@@ -196,7 +196,6 @@ public class Launcher {
         opt2.setList(true);
         opt2.setListSeparator(',');
         opt2.setHelp("Specify one or several repair tools to use among: "+availablerepairTools);
-        opt2.setRequired(true);
         opt2.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
         jsap.registerParameter(opt2);
 
