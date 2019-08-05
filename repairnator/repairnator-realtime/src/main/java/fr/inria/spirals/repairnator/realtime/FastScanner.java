@@ -44,20 +44,21 @@ public class FastScanner implements Runnable {
         LOGGER.debug("Start running inspect Jobs...");
         int nInteresting = 0;
         Set<Integer> done = new HashSet<Integer>();
+        JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
         while (true) {
             try {
-                Optional<List<JobV2>> jobListOpt = RepairnatorConfig.getInstance().getJTravis().job().allFromV2();
+                Optional<List<JobV2>> jobListOpt = jobHelperv2.allFromV2();
                 JobV2 jobV2 = null;
                 List<JobV2> jobList = jobListOpt.get();
 
-                JobHelper2 v = new JobHelper2(JTravis.builder().build());
+
                 Map<StateType, Integer> stats = new HashMap<>();
                 int nstats=0;
                 jobV2 = jobList.get(0);
                 int N=20;
                 int GO_IN_THE_PAST= 100;
                 for (int k=0;k<N;k++) {
-                    for (JobV2 job : v.allSubSequentBuildsFrom(jobV2.getId() - 250*N - GO_IN_THE_PAST)) {
+                    for (JobV2 job : jobHelperv2.allSubSequentBuildsFrom(jobV2.getId() - 250*N - GO_IN_THE_PAST)) {
                         if (stats.keySet().contains(job.getState())) {
                             stats.put(job.getState(), stats.get(job.getState()) + 1);
                         } else {
@@ -89,36 +90,4 @@ public class FastScanner implements Runnable {
         } // end while loop
     }
 
-    class JobHelper2 extends JobHelper {
-        JobHelper2(JTravis jTravis) {
-            super(jTravis);
-        }
-
-        public List<JobV2> allSubSequentBuildsFrom(int start) throws Exception {
-
-            List<String> l = new ArrayList<>();
-            for (int i = 0; i < 250; i++) {
-                l.add(Integer.toString(start + i));
-            }
-            //?ids[]=' + job_ids.join('&ids[]='
-            String sep = "ids[]=";
-            String url = this.getConfig().getTravisEndpoint() + "/" + "jobs"
-                    + "?" + sep
-                    + StringUtils.join(l, "&" + sep);
-            String response = this.get(url, true, 2);
-            JsonObject jsonObj = getJsonFromStringContent(response);
-            JsonArray jsonArray = jsonObj.getAsJsonArray("jobs");
-            List<JobV2> result = new ArrayList();
-            Iterator var6 = jsonArray.iterator();
-
-            while (var6.hasNext()) {
-                JsonElement jsonElement = (JsonElement) var6.next();
-                result.add(createGson().fromJson(jsonElement, JobV2.class));
-            }
-            //System.out.println(result.size());
-            return result;
-
-        }
-
-    }
 }
