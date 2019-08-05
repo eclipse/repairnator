@@ -13,9 +13,7 @@ import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,10 +71,12 @@ public class AssertFixerRepair extends AbstractRepairStep {
 
         StringBuilder classpathBuilder = new StringBuilder();
         for (String s: System.getProperty("java.class.path").split(File.pathSeparator)) {
-            try {
-                classPath.add(new URI("file:"+new File(s).getAbsolutePath()).toURL());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            if (s.contains("assert-fixer")) { // require to get access to "Logger" in the instrumented code
+                try {
+                    classPath.add(new URI("file:" + new File(s).getAbsolutePath()).toURL());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
