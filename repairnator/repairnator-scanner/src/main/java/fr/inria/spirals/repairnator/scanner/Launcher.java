@@ -376,6 +376,7 @@ public class Launcher {
 
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
+        ScannerBuildListener.getInstance().setLauncher(launcher);
         launcher.mainProcess();
     }
 
