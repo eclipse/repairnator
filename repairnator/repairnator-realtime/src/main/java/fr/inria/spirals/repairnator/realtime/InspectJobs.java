@@ -71,29 +71,3 @@ public class InspectJobs implements Runnable {
     }
 }
 
-class JobHelperv2 extends JobHelper {
-    JobHelperv2(JTravis jTravis) {
-        super(jTravis);
-    }
-
-    public Optional<List<JobV2>> allFromV2() {
-        String url = this.getConfig().getTravisEndpoint() + "/" + TravisConstants.JOBS_ENDPOINT;
-        try {
-            String response = this.get(url, API_VERSION.v2, TravisConstants.DEFAULT_NUMBER_OF_RETRY);
-            JsonObject jsonObj = getJsonFromStringContent(response);
-            JsonArray jsonArray = jsonObj.getAsJsonArray("jobs");
-            List<JobV2> result = new ArrayList<>();
-
-            for (JsonElement jsonElement : jsonArray) {
-                result.add(createGson().fromJson(jsonElement, JobV2.class));
-            }
-
-            return Optional.of(result);
-        } catch (IOException |JsonSyntaxException e) {
-            this.getLogger().error("Error while getting jobs from V2 API", e);
-        }
-
-        return Optional.empty();
-    }
-
-}
