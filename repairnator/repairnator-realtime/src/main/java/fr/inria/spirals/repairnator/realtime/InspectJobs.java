@@ -1,11 +1,21 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import fr.inria.jtravis.API_VERSION;
+import fr.inria.jtravis.JTravis;
+import fr.inria.jtravis.TravisConstants;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.v2.JobV2;
+import fr.inria.jtravis.helpers.JobHelper;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +44,7 @@ public class InspectJobs implements Runnable {
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
         while (!shouldStop) {
-            Optional<List<JobV2>> jobListOpt = RepairnatorConfig.getInstance().getJTravis().job().allFromV2();
+            Optional<List<JobV2>> jobListOpt = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis()).allFromV2();
 
             if (jobListOpt.isPresent()) {
                 List<JobV2> jobList = jobListOpt.get();
@@ -59,4 +69,32 @@ public class InspectJobs implements Runnable {
         }
         LOGGER.info("This will now stop.");
     }
+}
+
+class JobHelperv2 extends JobHelper {
+    JobHelperv2(JTravis jTravis) {
+        super(jTravis);
+    }
+
+    public Optional<List<JobV2>> allFromV2() {
+        String url = this.getConfig().getTravisEndpoint() + "/" + TravisConstants.JOBS_ENDPOINT;
+        try {
+            String response = this.get(url, API_VERSION.v2, TravisConstants.DEFAULT_NUMBER_OF_RETRY);
+            JsonObject jsonObj = getJsonFromStringContent(response);
+            JsonArray jsonArray = jsonObj.getAsJsonArray("jobs");
+            List<JobV2> result = new ArrayList<>();
+
+            for (JsonElement jsonElement : jsonArray) {
+                result.add(createGson().fromJson(jsonElement, JobV2.class));
+            }
+
+            return Optional.of(result);
+        } catch (IOException |JsonSyntaxException e) {
+            this.getLogger().error("Error while getting jobs from V2 API", e);
+        }
+
+        return Optional.empty();
+    }
+
+}
 }
