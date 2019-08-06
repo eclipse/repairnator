@@ -29,7 +29,7 @@ public class FastScanner implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(FastScanner.class);
 
     private RTScanner rtScanner;
-    public int nMaxBuildsToBeAnalyzedWithPipeline = 1000;
+    public int nMaxBuildsToBeAnalyzedWithPipeline = 100;
 
     public FastScanner() {
         this.rtScanner = new RTScanner("foo");
@@ -43,22 +43,20 @@ public class FastScanner implements Runnable {
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
         int nInteresting = 0;
-        Set<Integer> done = new HashSet<Integer>();
+        Set<Long> done = new HashSet<>();
         JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
         while (true) {
             try {
                 Optional<List<JobV2>> jobListOpt = jobHelperv2.allFromV2();
-                JobV2 jobV2 = null;
                 List<JobV2> jobList = jobListOpt.get();
 
 
                 Map<StateType, Integer> stats = new HashMap<>();
                 int nstats=0;
-                jobV2 = jobList.get(0);
                 int N=20;
                 int GO_IN_THE_PAST= 100;
                 for (int k=0;k<N;k++) {
-                    for (JobV2 job : jobHelperv2.allSubSequentBuildsFrom(jobV2.getId() - 250*N - GO_IN_THE_PAST)) {
+                    for (JobV2 job : jobHelperv2.allSubSequentJobsFrom(jobList.get(0).getId() - 250*N - GO_IN_THE_PAST)) {
                         if (stats.keySet().contains(job.getState())) {
                             stats.put(job.getState(), stats.get(job.getState()) + 1);
                         } else {
@@ -66,14 +64,13 @@ public class FastScanner implements Runnable {
                         }
                         nstats++;
 
-                        if ("java".equals(job.getConfig().getLanguage()) && StateType.FAILED.equals(job.getState()) && ! done.contains(job.getId())) {
-                            System.out.println("=====" + job.getId());
-                            done.add(job.getId());
+                        if ("java".equals(job.getConfig().getLanguage()) && StateType.FAILED.equals(job.getState()) && ! done.contains(job.getBuildId())) {
+                            System.out.println("=====" + job.getId() + " " +job.getBuildId());
+                            done.add((long)job.getBuildId());
 
                             Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
                             FastScanner.this.rtScanner.submitBuildToExecution(optionalBuild.get());
                         }
-                        jobV2 = job;
                     }
                 }
 
