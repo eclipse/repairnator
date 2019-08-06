@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator;
 
 import javax.jms.MessageListener;
 /**
