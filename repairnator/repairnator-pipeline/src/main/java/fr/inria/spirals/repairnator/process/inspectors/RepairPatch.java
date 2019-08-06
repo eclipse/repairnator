@@ -18,6 +18,11 @@ public class RepairPatch {
      */
     private String diff;
 
+    /**
+     * Score of the overfitting likelihood
+     */
+    private float overfittingScore;
+
     public RepairPatch(String toolname, String filePath, String diff) {
         this.toolname = toolname;
         this.filePath = filePath;
