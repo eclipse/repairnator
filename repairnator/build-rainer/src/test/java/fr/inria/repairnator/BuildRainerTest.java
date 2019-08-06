@@ -14,7 +14,11 @@ public class BuildRainerTest {
 	 */
 	public void testWebSocket()
     {
-        TestServer.getInstance().run();
-        assertEquals(TestServer.getInstance().getRecentMessage(),"Hi");
+    	TestServer testServer =TestServer.getInstance();
+    	testServer.setReuseAddr(true);
+        testServer.run();
+        String receivedMsg = testServer.getBuildRainer().getRecentMessage();
+
+        assertEquals(receivedMsg,"Test");
     }
 }

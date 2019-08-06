@@ -18,20 +18,25 @@ import java.io.FileWriter;
  * to fetch most recent builds from Travis in realtime.
  */
 public class BuildRainer extends WebSocketClient {
+    private String recentMessage;
 
     public BuildRainer( URI serverURI ) {
         super( serverURI );
     }
 
+    public String getRecentMessage() {
+        return recentMessage;
+    }
+
     @Override
     public void onMessage( String message ) {
         System.out.println( "received: " + message);
+        this.recentMessage = message;
     }
 
     @Override
     public void onOpen( ServerHandshake handshakedata ) {
         System.out.println( "opened connection" );
-        send("Hi");
     }
 
     @Override

@@ -8,15 +8,14 @@ import java.util.concurrent.TimeUnit;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import java.util.concurrent.TimeUnit;
 
 //Test server for BuildRainer
 public class TestServer extends WebSocketServer {
 	private static String host = "localhost";
 	private static int port = 8887;
 	private static TestServer server;
-	private static String recentMessage;
-	private BuildRainer buildRainer;
-
+	private static BuildRainer buildRainer;
 
 	public TestServer(InetSocketAddress address) {
 		super(address);
@@ -25,13 +24,12 @@ public class TestServer extends WebSocketServer {
 	public static TestServer getInstance() {
 		if (server == null) {
 			server = new TestServer(new InetSocketAddress(host, port));
-			recentMessage = "";
 		}
 		return server;
 	}
 
-	public String getRecentMessage() {
-		return recentMessage;
+	public BuildRainer getBuildRainer() {
+		return this.buildRainer;
 	}
 
 	public void serverInit(String host , int port) {
@@ -41,8 +39,14 @@ public class TestServer extends WebSocketServer {
 
 	@Override
 	public void onOpen(WebSocket conn, ClientHandshake handshake) {
-		conn.send("Server closed"); //This method sends a message to the new client
+		conn.send("Test"); //This method sends a message to the new client
 		System.out.println("new connection to " + conn.getRemoteSocketAddress());
+		conn.close();
+		try {
+			this.stop(); /*Done testing*/
+		} catch(Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -53,12 +57,6 @@ public class TestServer extends WebSocketServer {
 	@Override
 	public void onMessage(WebSocket conn, String message) {
 		System.out.println("received message from "	+ conn.getRemoteSocketAddress() + ": " + message);
-		recentMessage = message;
-		try {
-			this.stop(); /*Done testing*/
-		} catch(Exception e){
-			throw new RuntimeException(e);
-		}
 	}
 
 	@Override
