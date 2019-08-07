@@ -276,7 +276,7 @@ public class JobStatus {
     public List<RepairPatch> getRankedPatches() {
         List<RepairPatch> allPatches = getAllPatches();
         allPatches.sort((patch1, patch2) -> { // ascending
-            float diff = patch1.getOverfittingScore() - patch2.getOverfittingScore();
+            double diff = patch1.getOverfittingScore() - patch2.getOverfittingScore();
             if (diff < 0) {
                 return -1;
             } else if (diff > 0) {

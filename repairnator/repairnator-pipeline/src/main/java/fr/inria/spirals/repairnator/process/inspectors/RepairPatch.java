@@ -1,5 +1,8 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
 
 public class RepairPatch {
@@ -21,19 +24,29 @@ public class RepairPatch {
     /**
      * Score of the overfitting likelihood
      */
-    private float overfittingScore;
+    private double overfittingScore;
 
     public RepairPatch(String toolname, String filePath, String diff) {
         this.toolname = toolname;
         this.filePath = filePath;
         this.diff = diff;
+        System.out.println(">>>>>>>>>>>>>>>>");
+        System.out.println(diff);
+        System.out.println("<<<<<<<<<<<<<<<<");
         this.overfittingScore = computeOverfittingScore();
     }
 
-    private float computeOverfittingScore() {
-        // todo
-        //  here we need two versions of code files
-        //  then invoke functional module of Coming
+    private double computeOverfittingScore() {
+        try {
+            File buggyFile = new File(filePath);
+            String tmpName = buggyFile.getName();
+            // TODO
+            File patchedFile = Files.createTempFile(tmpName, ".java").toFile();
+            return 0;
+//            return computeOverfittingScore(buggyFile, patchedFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -49,7 +62,7 @@ public class RepairPatch {
         return diff;
     }
 
-    public float getOverfittingScore() {
+    public double getOverfittingScore() {
         return overfittingScore;
     }
 
@@ -59,8 +72,8 @@ public class RepairPatch {
         if (o == null || getClass() != o.getClass()) return false;
         final RepairPatch that = (RepairPatch) o;
         return Objects.equals(toolname, that.toolname) &&
-                Objects.equals(filePath, that.filePath) &&
-                Objects.equals(diff, that.diff);
+            Objects.equals(filePath, that.filePath) &&
+            Objects.equals(diff, that.diff);
     }
 
     @Override

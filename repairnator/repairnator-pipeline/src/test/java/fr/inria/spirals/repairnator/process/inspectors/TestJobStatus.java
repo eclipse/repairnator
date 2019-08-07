@@ -23,7 +23,6 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -83,12 +82,12 @@ public class TestJobStatus {
         RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(nopolRepair.getRepairToolName(), npeRepair.getRepairToolName())));
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
-                .addNextStep(new TestProject(inspector))
-                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-                .addNextStep(new ComputeClasspath(inspector, true))
-                .addNextStep(new ComputeSourceDir(inspector, true, false))
-                .addNextStep(nopolRepair)
-                .addNextStep(npeRepair);
+            .addNextStep(new TestProject(inspector))
+            .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+            .addNextStep(new ComputeClasspath(inspector, true))
+            .addNextStep(new ComputeSourceDir(inspector, true, false))
+            .addNextStep(nopolRepair)
+            .addNextStep(npeRepair);
         cloneStep.execute();
 
         assertThat(nopolRepair.isShouldStop(), is(false));
@@ -113,7 +112,6 @@ public class TestJobStatus {
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
     }
 
-    @Ignore
     @Test
     public void testRankingPatches() throws IOException {
         long buildId = 382484026; // surli/failingProject build
@@ -143,6 +141,7 @@ public class TestJobStatus {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(16)); // 12 (nopol) + 4 (npe)
         List<RepairPatch> rankedPatches = inspector.getJobStatus().getRankedPatches();
+        System.out.println(rankedPatches.size());
         rankedPatches.forEach(repairPatch -> {
             System.out.print(repairPatch.getDiff());
             System.out.print(repairPatch.getFilePath());
