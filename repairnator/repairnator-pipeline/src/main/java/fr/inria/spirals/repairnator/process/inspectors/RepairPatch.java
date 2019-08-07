@@ -1,9 +1,19 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
+import com.github.difflib.DiffUtils;
+import com.github.difflib.UnifiedDiffUtils;
+import com.github.difflib.patch.Patch;
+import com.github.difflib.patch.PatchFailedException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class RepairPatch {
     /**
@@ -37,14 +47,28 @@ public class RepairPatch {
     }
 
     private double computeOverfittingScore() {
+        // read from buggyFile
+        List<String> buggyLines = new ArrayList<>();
+        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+            stream.forEach(buggyLines::add);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // prepare patches
+        List<String> diffLines = Arrays.asList(diff.split("\n"));
+        Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
+
         try {
+            // create patchedFile
             File buggyFile = new File(filePath);
             String tmpName = buggyFile.getName();
-            // TODO
             File patchedFile = Files.createTempFile(tmpName, ".java").toFile();
-            return 0;
-//            return computeOverfittingScore(buggyFile, patchedFile);
-        } catch (IOException e) {
+            // generate content of patchedFile by applying patches
+            List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
+            // write to patchedFile
+            Files.write(Paths.get(patchedFile.getPath()), patchedLines);
+            return 0; // computeOverfittingScore(buggyFile, patchedFile);
+        } catch (PatchFailedException | IOException e) {
             e.printStackTrace();
         }
         return 0;
