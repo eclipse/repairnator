@@ -273,6 +273,20 @@ public class JobStatus {
         return allPatches;
     }
 
+    public List<RepairPatch> getRankedPatches() {
+        List<RepairPatch> allPatches = getAllPatches();
+        allPatches.sort((patch1, patch2) -> { // ascending
+            float diff = patch1.getOverfittingScore() - patch2.getOverfittingScore();
+            if (diff < 0) {
+                return -1;
+            } else if (diff > 0) {
+                return 1;
+            }
+            return 0;
+        });
+        return allPatches;
+    }
+
     public Map<String, List<RepairPatch>> getListOfPatches() {
         return listOfPatches;
     }

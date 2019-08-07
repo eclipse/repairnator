@@ -27,6 +27,14 @@ public class RepairPatch {
         this.toolname = toolname;
         this.filePath = filePath;
         this.diff = diff;
+        this.overfittingScore = computeOverfittingScore();
+    }
+
+    private float computeOverfittingScore() {
+        // todo
+        //  here we need two versions of code files
+        //  then invoke functional module of Coming
+        return 0;
     }
 
     public String getToolname() {
@@ -39,6 +47,10 @@ public class RepairPatch {
 
     public String getDiff() {
         return diff;
+    }
+
+    public float getOverfittingScore() {
+        return overfittingScore;
     }
 
     @Override
