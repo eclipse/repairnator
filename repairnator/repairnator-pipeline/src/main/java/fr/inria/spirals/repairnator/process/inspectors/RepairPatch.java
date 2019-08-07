@@ -46,6 +46,7 @@ public class RepairPatch {
         this.overfittingScore = computeOverfittingScore();
     }
 
+    // todo check
     private double computeOverfittingScore() {
         // read from buggyFile
         List<String> buggyLines = new ArrayList<>();
