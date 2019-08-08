@@ -34,6 +34,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.spoonlabs.coming</groupId>
+            <artifactId>coming</artifactId>
+            <version>2</version>
+        </dependency>
+        <dependency>
             <groupId>io.github.java-diff-utils</groupId>
             <artifactId>java-diff-utils</artifactId>
             <version>4.0</version>

@@ -4,6 +4,7 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
+import fr.inria.prophet4j.P4J;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class RepairPatch {
             List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
             // write to patchedFile
             Files.write(Paths.get(patchedFile.getPath()), patchedLines);
-            return 0; // computeOverfittingScore(buggyFile, patchedFile);
+            new P4J().computeOverfittingScore(buggyFile, patchedFile);
         } catch (PatchFailedException | IOException e) {
             e.printStackTrace();
         }
