@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 public class BuildRainerTest {
 
-	@Ignore
+	@Test
 	/**
 	 * This test if BuildRainer can connect
 	 * and communicate with a ws server

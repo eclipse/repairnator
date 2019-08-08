@@ -114,7 +114,7 @@ public class TestRTScanner {
     @Ignore
     @Test
      */
-    public void tactiveMQRunnerConnection()
+    /*public void tactiveMQRunnerConnection()
     {
         int buildId = 560996872;
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -130,7 +130,7 @@ public class TestRTScanner {
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>(), runner);
         rtScanner.submitBuildToExecution(optionalBuild.get());
         assertEquals("560996872",runner.receiveBuildFromQueue());
-    }
+    }*/
 
     @Test
     public void testBlacklisting() throws Exception {
