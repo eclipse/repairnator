@@ -21,4 +21,15 @@ public class BuildRainerTest {
 
         assertEquals(receivedMsg,"Test");
     }
+
+    @Test
+    /**
+     * Test if ActiveMQSubmitter can successfully submit to queue
+     */
+    public void testActiveMQSubmitter()
+    {
+        ActiveMQBuildSubmitter submitter = new ActiveMQBuildSubmitter("tcp://localhost:61616","testQueue");
+        submitter.submit("Test");
+        assertEquals(submitter.receiveFromQueue(),"Test");
+    }
 }
