@@ -29,8 +29,8 @@ import static org.junit.Assert.assertTrue;
 
 public class TestRTScanner {
 
-    // a failing build from surli/failingProject
-    public final int easyFailingBuild = 564711868;
+    // a failing build from tailp/Travisplay , branch failForRepairnator
+    public final int easyFailingBuild = 569514744;
 
     @Test
     public void testDockerPipelineRunner() throws Exception {
@@ -114,7 +114,8 @@ public class TestRTScanner {
     @Ignore
     @Test
      */
-    /*public void tactiveMQRunnerConnection()
+    @Test
+    public void tactiveMQRunnerConnection()
     {
         int buildId = 560996872;
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -130,7 +131,7 @@ public class TestRTScanner {
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>(), runner);
         rtScanner.submitBuildToExecution(optionalBuild.get());
         assertEquals("560996872",runner.receiveBuildFromQueue());
-    }*/
+    }
 
     @Test
     public void testBlacklisting() throws Exception {
