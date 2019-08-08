@@ -41,39 +41,39 @@ public class RepairPatch {
         this.toolname = toolname;
         this.filePath = filePath;
         this.diff = diff;
-        System.out.println(">>>>>>>>>>>>>>>>");
-        System.out.println(diff);
-        System.out.println("<<<<<<<<<<<<<<<<");
         this.overfittingScore = computeOverfittingScore();
     }
 
-    // todo check
     private double computeOverfittingScore() {
-        // read from buggyFile
-        List<String> buggyLines = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-            stream.forEach(buggyLines::add);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // prepare patches
-        List<String> diffLines = Arrays.asList(diff.split("\n"));
-        Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
+        double overfittingScore = Double.POSITIVE_INFINITY;
 
-        try {
-            // create patchedFile
-            File buggyFile = new File(filePath);
-            String tmpName = buggyFile.getName();
-            File patchedFile = Files.createTempFile(tmpName, ".java").toFile();
-            // generate content of patchedFile by applying patches
-            List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
-            // write to patchedFile
-            Files.write(Paths.get(patchedFile.getPath()), patchedLines);
-            new P4J().computeOverfittingScore(buggyFile, patchedFile);
-        } catch (PatchFailedException | IOException e) {
-            e.printStackTrace();
+        File buggyFile = new File(filePath);
+        if (buggyFile.isFile()) {
+            // read from buggyFile
+            List<String> buggyLines = new ArrayList<>();
+            try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+                stream.forEach(buggyLines::add);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // prepare patches
+            List<String> diffLines = Arrays.asList(diff.split("\n"));
+            Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
+
+            try {
+                // create patchedFile
+                String tmpName = buggyFile.getName();
+                File patchedFile = Files.createTempFile(tmpName, ".java").toFile();
+                // generate content of patchedFile by applying patches
+                List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
+                // write to patchedFile
+                Files.write(Paths.get(patchedFile.getPath()), patchedLines);
+                overfittingScore = new P4J().computeOverfittingScore(buggyFile, patchedFile);
+            } catch (PatchFailedException | IOException e) {
+                e.printStackTrace();
+            }
         }
-        return 0;
+        return overfittingScore;
     }
 
     public String getToolname() {

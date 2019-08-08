@@ -30,8 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -138,16 +137,54 @@ public class TestJobStatus {
             .addNextStep(npeRepair);
         cloneStep.execute();
 
-        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertThat(allPatches.size(), is(16)); // 12 (nopol) + 4 (npe)
         List<RepairPatch> rankedPatches = inspector.getJobStatus().getRankedPatches();
-        System.out.println(rankedPatches.size());
-        rankedPatches.forEach(repairPatch -> {
-            System.out.print(repairPatch.getDiff());
-            System.out.print(repairPatch.getFilePath());
-            System.out.print(repairPatch.getToolname());
-            System.out.print(repairPatch.getOverfittingScore());
-            System.out.println();
-        });
+        assertThat(rankedPatches.size(), is(16)); // 12 (nopol) + 4 (npe)
+
+        assertThat(rankedPatches.get(0).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(0).getFilePath(), endsWith("modelo/Solver.java"));
+        assertThat(rankedPatches.get(0).getOverfittingScore(), is(-3190.603359887649));
+        assertThat(rankedPatches.get(1).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(1).getFilePath(), endsWith("Stub/ProxyPlatoStub.java"));
+        assertThat(rankedPatches.get(1).getOverfittingScore(), is(-2775.6773763492697));
+        assertThat(rankedPatches.get(2).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(2).getFilePath(), endsWith("modelo/ApiDB.java"));
+        assertThat(rankedPatches.get(2).getOverfittingScore(), is(-1544.2008323597074));
+        assertThat(rankedPatches.get(3).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(3).getFilePath(), endsWith("modelo/InternalDB.java"));
+        assertThat(rankedPatches.get(3).getOverfittingScore(), is(-1011.203142967915));
+        assertThat(rankedPatches.get(4).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(4).getFilePath(), endsWith("modelo/ControllerInternalDB.java"));
+        assertThat(rankedPatches.get(4).getOverfittingScore(), is(-732.199911962387));
+        assertThat(rankedPatches.get(5).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(5).getFilePath(), endsWith("modelo/InternalDB.java"));
+        assertThat(rankedPatches.get(5).getOverfittingScore(), is(-589.2194952242268));
+        assertThat(rankedPatches.get(6).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(6).getFilePath(), endsWith("modelo/ControllerInternalDB.java"));
+        assertThat(rankedPatches.get(6).getOverfittingScore(), is(-525.0518968819456));
+        assertThat(rankedPatches.get(7).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(7).getFilePath(), endsWith("Validadores/ValidadorPlato.java"));
+        assertThat(rankedPatches.get(7).getOverfittingScore(), is(-41.19421176656324));
+        assertThat(rankedPatches.get(8).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(8).getFilePath(), endsWith("modelo/InternalDB.java"));
+        assertThat(rankedPatches.get(8).getOverfittingScore(), is(-41.19421176656324));
+        assertThat(rankedPatches.get(9).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(9).getFilePath(), endsWith("modelo/ControllerInternalDB.java"));
+        assertThat(rankedPatches.get(9).getOverfittingScore(), is(-41.19421176656324));
+        assertThat(rankedPatches.get(10).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(10).getFilePath(), endsWith("modelo/ControllerInternalDB.java"));
+        assertThat(rankedPatches.get(10).getOverfittingScore(), is(230.96289712519297));
+        assertThat(rankedPatches.get(11).getToolname(), is("NopolSingleTest"));
+        assertThat(rankedPatches.get(11).getFilePath(), endsWith("modelo/ControllerInternalDB.java"));
+        assertThat(rankedPatches.get(11).getOverfittingScore(), is(3465.24494158228));
+
+        // in following cases, OverfittingScore can not be computed because of invalid filePaths
+        assertThat(rankedPatches.get(12).getToolname(), is("NPEFix"));
+        assertThat(rankedPatches.get(12).getOverfittingScore(), is(Double.POSITIVE_INFINITY));
+        assertThat(rankedPatches.get(13).getToolname(), is("NPEFix"));
+        assertThat(rankedPatches.get(13).getOverfittingScore(), is(Double.POSITIVE_INFINITY));
+        assertThat(rankedPatches.get(14).getToolname(), is("NPEFix"));
+        assertThat(rankedPatches.get(14).getOverfittingScore(), is(Double.POSITIVE_INFINITY));
+        assertThat(rankedPatches.get(15).getToolname(), is("NPEFix"));
+        assertThat(rankedPatches.get(15).getOverfittingScore(), is(Double.POSITIVE_INFINITY));
     }
 }
