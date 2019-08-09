@@ -1,9 +1,10 @@
 package fr.inria.spirals.repairnator.scanner;
 
 import fr.inria.spirals.repairnator.BuildListener;
+import javax.jms.MessageListener;
 import javax.jms.Message;
 
-public class ScannerBuildListener implements BuildListener{
+public class ScannerBuildListener implements BuildListener,MessageListener{
     private static ScannerBuildListener scannerBuildListener;
     private static Launcher launcher;
 
