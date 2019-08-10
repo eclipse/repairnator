@@ -1,26 +1,23 @@
 package fr.inria.spirals.repairnator.scanner;
 
-import fr.inria.spirals.repairnator.BuildListener;
+import fr.inria.spirals.repairnator.Listener;
 import javax.jms.MessageListener;
 import javax.jms.Message;
 
-public class ScannerBuildListener implements BuildListener,MessageListener{
-    private static ScannerBuildListener scannerBuildListener;
+/**
+ * This class fetch build ids from ActiveMQ queue and run the pipeline with it.
+ */
+public class ScannerBuildListener implements Listener,MessageListener{
     private static Launcher launcher;
 
     public ScannerBuildListener (){}
-    public void setLauncher (Launcher launcher) {
+
+    public ScannerBuildListener (Launcher launcher) {
+        this();
         this.launcher = launcher;
     }
-
-    public static ScannerBuildListener getInstance() {
-        if (scannerBuildListener == null) {
-            scannerBuildListener = new ScannerBuildListener();
-        }
-        return scannerBuildListener;
-    }
-    public void runAsConsumerServer() {}
-
+    
+    public void runListenerServer() {}
 
     /**
      * Method implemented from MessageListener and is called 

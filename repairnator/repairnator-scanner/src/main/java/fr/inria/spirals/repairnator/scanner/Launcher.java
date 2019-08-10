@@ -6,6 +6,7 @@ import ch.qos.logback.classic.Logger;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
+import fr.inria.spirals.repairnator.Listener;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
@@ -42,6 +43,7 @@ import java.util.Properties;
  */
 public class Launcher {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(Launcher.class);
+    private static Listener listener = new NoopListener();
     private RepairnatorConfig config;
     private List<SerializerEngine> engines;
     private EndProcessNotifier endProcessNotifier;
@@ -376,8 +378,13 @@ public class Launcher {
 
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
-        ScannerBuildListener.getInstance().setLauncher(launcher);
-        launcher.mainProcess();
+        boolean kubernetesMode = true; /*will become a JSAP option in a new PR*/
+        if(kubernetesMode){
+            listener = new ScannerBuildListener(launcher);
+            listener.runListenerServer();
+        }else {
+            launcher.mainProcess();
+        }
     }
 
 }
