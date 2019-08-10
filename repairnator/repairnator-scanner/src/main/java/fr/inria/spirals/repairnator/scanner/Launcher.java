@@ -378,7 +378,7 @@ public class Launcher {
 
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
-        boolean kubernetesMode = true; /*will become a JSAP option in a new PR*/
+        boolean kubernetesMode = false; /*will become a JSAP option in a new PR*/
         if(kubernetesMode){
             listener = new ScannerBuildListener(launcher);
             listener.runListenerServer();

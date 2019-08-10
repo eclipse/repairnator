@@ -10,10 +10,7 @@ import javax.jms.Message;
 public class ScannerBuildListener implements Listener,MessageListener{
     private static Launcher launcher;
 
-    public ScannerBuildListener (){}
-
     public ScannerBuildListener (Launcher launcher) {
-        this();
         this.launcher = launcher;
     }
     
