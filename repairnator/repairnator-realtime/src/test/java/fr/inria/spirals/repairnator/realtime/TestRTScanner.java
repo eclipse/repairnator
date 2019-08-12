@@ -122,7 +122,7 @@ public class TestRTScanner {
         config.setLauncherMode(LauncherMode.REPAIR);
         config.setPipelineMode(PIPELINE_MODE.KUBERNETES.name());
         config.setActiveMQUrl("tcp://localhost:61616");
-        config.setActiveMQQueueName("testing");
+        config.setActiveMQSubmitQueueName("testing");
 
         Optional<Build> optionalBuild = config.getJTravis().build().fromId(buildId);
         assertTrue(optionalBuild.isPresent());

@@ -39,14 +39,14 @@ public class ScannerBuildListener implements Listener,MessageListener{
 
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            Destination destination = session.createQueue(config.getActiveMQQueueName());
+            Destination destination = session.createQueue(config.getActiveMQSubmitQueueName());
 
             MessageProducer producer = session.createProducer(destination);
             TextMessage message = session.createTextMessage(buildStr);
 
             producer.send(message);
 
-            LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue " + config.getActiveMQQueueName());
+            LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue " + config.getActiveMQSubmitQueueName());
             connection.close();
         }catch (JMSException e) {
             throw new RuntimeException(e);

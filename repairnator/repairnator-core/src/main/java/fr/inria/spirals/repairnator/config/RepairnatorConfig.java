@@ -93,7 +93,7 @@ public class RepairnatorConfig {
     private int numberOfPatchedBuilds;
     private PIPELINE_MODE pipelineMode;
     private String activeMQUrl;
-    private String activeMQQueueName;
+    private String activeMQSubmitQueueName;
 
     // Checkbranches
     private boolean humanPatch;
@@ -150,12 +150,12 @@ public class RepairnatorConfig {
         return this.activeMQUrl;
     }
 
-    public void setActiveMQQueueName(String activeMQQueueName) {
-        this.activeMQQueueName = activeMQQueueName;
+    public void setActiveMQSubmitQueueName(String activeMQSubmitQueueName) {
+        this.activeMQSubmitQueueName = activeMQSubmitQueueName;
     }
 
-    public String getActiveMQQueueName() {
-        return this.activeMQQueueName;
+    public String getActiveMQSubmitQueueName() {
+        return this.activeMQSubmitQueueName;
     }
 
     public void setActiveMQListenQueueName(String activeMQListenQueueName) {
@@ -604,7 +604,7 @@ public class RepairnatorConfig {
                 ", githubUserEmail=" + githubUserEmail +
                 ", pipelineMode=" + pipelineMode +
                 ", activeMQUrl=" + activeMQUrl +
-                ", activeMQQueueName=" + activeMQQueueName +
+                ", activeMQSubmitQueueName=" + activeMQSubmitQueueName +
                 '}';
     }
 
