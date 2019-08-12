@@ -29,8 +29,8 @@ import static org.junit.Assert.assertTrue;
 
 public class TestRTScanner {
 
-    // a failing build from surli/failingProject
-    public final int easyFailingBuild = 564711868;
+    // a failing build from tailp/Travisplay , branch failForRepairnator
+    public final int easyFailingBuild = 569514744;
 
     @Test
     public void testDockerPipelineRunner() throws Exception {
@@ -114,6 +114,7 @@ public class TestRTScanner {
     @Ignore
     @Test
      */
+    @Test
     public void tactiveMQRunnerConnection()
     {
         int buildId = 560996872;
