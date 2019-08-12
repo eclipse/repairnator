@@ -147,8 +147,8 @@ public class Launcher {
         opt2.setHelp("This option is only useful in case of '--bears' is used: it defines the type of fixer build to get. Available values: "+options);
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("pipelineMode");
-        opt2.setLongFlag("pipelineMode");
+        opt2 = new FlaggedOption("pipelinemode");
+        opt2.setLongFlag("pipelinemode");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault(PIPELINE_MODE.NOOP.name());
         opt2.setHelp("Possible string values DOCKER,KUBERNETES,NOOP. If KUBERNETES then the scanner will listen for reposlugs and send build ids to the queue");
@@ -169,8 +169,8 @@ public class Launcher {
         jsap.registerParameter(opt2);
 
         /*Should be refactored later to activemqreceivequeuename*/
-        opt2 = new FlaggedOption("activemqsubmitqueuename");
-        opt2.setLongFlag("activemqsubmitqueuename");
+        opt2 = new FlaggedOption("activemqqueuename");
+        opt2.setLongFlag("activemqqueuename");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault("pipeline");
         opt2.setHelp("The queue name which the scanner send the output build ids to for repairing, default as 'pipeline'");
@@ -227,9 +227,9 @@ public class Launcher {
         this.config.setLookToDate(lookToDate);
         this.config.setBearsMode(BearsMode.valueOf(arguments.getString("bearsMode").toUpperCase()));
         this.config.setBearsDelimiter(arguments.getBoolean("bearsDelimiter"));
-        this.config.setPipelineMode(arguments.getString("pipelineMode"));
+        this.config.setPipelineMode(arguments.getString("pipelinemode"));
         this.config.setActiveMQUrl(arguments.getString("activemqurl"));
-        this.config.setActiveMQSubmitQueueName(arguments.getString("activemqsubmitqueuename"));
+        this.config.setActiveMQSubmitQueueName(arguments.getString("activemqqueuename"));
         this.config.setActiveMQListenQueueName(arguments.getString("activemqlistenqueuename"));
     }
 
@@ -375,8 +375,7 @@ public class Launcher {
                         // If KUBERNETES mode then build id will also be sent to ActiveMQ queue.
                         if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
                             Launcher.LOGGER.info("Submit build to activemq");
-                            ScannerBuildListener scannerBuildListener = (ScannerBuildListener) listener;
-                            scannerBuildListener.submitBuild(Long.toString(buildToBeInspected.getBuggyBuild().getId()));
+                            listener.submitBuild(Long.toString(buildToBeInspected.getBuggyBuild().getId()));
                         }
                     } else {
                         Launcher.LOGGER.info("Incriminated project and pair of builds: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
