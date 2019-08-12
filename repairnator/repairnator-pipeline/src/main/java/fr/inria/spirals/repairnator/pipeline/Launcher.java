@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import fr.inria.spirals.repairnator.Listener;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
@@ -431,7 +432,7 @@ public class Launcher {
         boolean kubernetesMode = false;
         if (kubernetesMode) {
             LOGGER.warn("We are now running with kubernetes mode");
-            PipelineBuildListener pipelineBuildListener = new PipelineBuildListener(launcher);
+            Listener pipelineBuildListener = new PipelineBuildListener(launcher);
             pipelineBuildListener.runListenerServer();
         } else {
             launcher.mainProcess();
