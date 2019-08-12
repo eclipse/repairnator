@@ -428,7 +428,14 @@ public class Launcher {
 
     public static void main(String[] args) throws JSAPException {
         Launcher launcher = new Launcher(args);
-        launcher.mainProcess();
+        boolean kubernetesMode = false;
+        if (kubernetesMode) {
+            LOGGER.warn("We are now running with kubernetes mode");
+            PipelineBuildListener pipelineBuildListener = new PipelineBuildListener(launcher);
+            pipelineBuildListener.runListenerServer();
+        } else {
+            launcher.mainProcess();
+        }
     }
 
     public ProjectInspector getInspector() {
