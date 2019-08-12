@@ -34,14 +34,26 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.spoonlabs.coming</groupId>
+            <groupId>com.github.spoonlabs</groupId>
             <artifactId>coming</artifactId>
-            <version>2</version>
+            <version>0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.github.java-diff-utils</groupId>
             <artifactId>java-diff-utils</artifactId>
             <version>4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>fr.inria.repairnator</groupId>

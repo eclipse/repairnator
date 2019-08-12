@@ -1,11 +1,9 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair;
-import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
@@ -42,7 +40,6 @@ public class TestJobStatus {
     public void setup() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
-        Utils.setLoggersLevel(Level.ERROR);
     }
 
     @After
@@ -139,6 +136,12 @@ public class TestJobStatus {
 
         List<RepairPatch> rankedPatches = inspector.getJobStatus().getRankedPatches();
         assertThat(rankedPatches.size(), is(16)); // 12 (nopol) + 4 (npe)
+
+//        rankedPatches.forEach(repairPatch -> {
+//            System.out.println(repairPatch.getToolname());
+//            System.out.println(repairPatch.getFilePath());
+//            System.out.println(repairPatch.getOverfittingScore());
+//        });
 
         assertThat(rankedPatches.get(0).getToolname(), is("NopolSingleTest"));
         assertThat(rankedPatches.get(0).getFilePath(), endsWith("modelo/Solver.java"));
