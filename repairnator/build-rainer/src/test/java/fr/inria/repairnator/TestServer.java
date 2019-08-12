@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import java.util.concurrent.TimeUnit;
 
 //Test server for BuildRainer
 public class TestServer extends WebSocketServer {
