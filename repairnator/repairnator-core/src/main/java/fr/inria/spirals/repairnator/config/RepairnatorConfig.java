@@ -59,6 +59,7 @@ public class RepairnatorConfig {
     private Date lookToDate;
     private BearsMode bearsMode = BearsMode.BOTH;
     private boolean bearsDelimiter;
+    private String activeMQListenQueueName;
 
     // Pipeline
     private int buildId;
@@ -155,6 +156,14 @@ public class RepairnatorConfig {
 
     public String getActiveMQQueueName() {
         return this.activeMQQueueName;
+    }
+
+    public void setActiveMQListenQueueName(String activeMQListenQueueName) {
+        this.activeMQListenQueueName = activeMQListenQueueName;
+    }
+
+    public String getActiveMQListenQueueName() {
+        return this.activeMQListenQueueName;
     }
 
     public void setRunId(String runId) {
