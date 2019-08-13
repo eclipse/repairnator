@@ -88,7 +88,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner  {
             /*
             * The queue will be created automatically on the server.
             */
-            Destination destination = session.createQueue(config.getActiveMQQueueName());
+            Destination destination = session.createQueue(config.getActiveMQSubmitQueueName());
 
             /*
              * Destination represents here our queue 'MESSAGE_QUEUE' on the JMS server.
@@ -100,7 +100,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner  {
 
             producer.send(message);
 
-            LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue " + config.getActiveMQQueueName());
+            LOGGER.info("Build id '" + message.getText() + ", Sent Successfully to the Queue " + config.getActiveMQSubmitQueueName());
             connection.close();
         }catch (JMSException e) {
             throw new RuntimeException(e);
@@ -112,6 +112,11 @@ public class ActiveMQPipelineRunner implements PipelineRunner  {
         // so far, nothing to set up the connection
     }
 
+    /** 
+     * This is used to test the submit method
+     *
+     * @return String text received from the submit queue
+     */
     public String receiveBuildFromQueue() {
         try {
             // Create a ConnectionFactory
@@ -125,7 +130,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner  {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             // Create the destination (Topic or Queue)
-            Destination destination = session.createQueue(config.getActiveMQQueueName());
+            Destination destination = session.createQueue(config.getActiveMQSubmitQueueName());
 
             // Create a MessageConsumer from the Session to the Topic or Queue
             MessageConsumer consumer = session.createConsumer(destination);

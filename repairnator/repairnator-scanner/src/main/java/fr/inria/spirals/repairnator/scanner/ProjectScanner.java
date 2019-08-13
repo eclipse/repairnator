@@ -166,6 +166,15 @@ public class ProjectScanner {
         return builds;
     }
 
+    public Map<ScannedBuildStatus, List<BuildToBeInspected>> getBuildsGivenSlug (String slug) {
+        ArrayList<String> listSlug = new ArrayList<String>();
+        listSlug.add(slug);
+
+        List<Repository> repo = getListOfValidRepository(listSlug);
+        
+        return getListOfBuildsFromRepo(repo);
+    }
+    
     private List<Repository> getListOfValidRepository(List<String> allSlugs) {
         List<Repository> result = new ArrayList<Repository>();
 

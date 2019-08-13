@@ -74,6 +74,7 @@ public class RepairnatorConfig {
     private Date lookToDate;
     private BearsMode bearsMode = BearsMode.BOTH;
     private boolean bearsDelimiter;
+    private String activeMQListenQueueName;
 
     // Pipeline
     private int buildId;
@@ -108,7 +109,7 @@ public class RepairnatorConfig {
     private int numberOfPatchedBuilds;
     private PIPELINE_MODE pipelineMode;
     private String activeMQUrl;
-    private String activeMQQueueName;
+    private String activeMQSubmitQueueName;
 
     // Checkbranches
     private boolean humanPatch;
@@ -179,12 +180,20 @@ public class RepairnatorConfig {
         return this.activeMQUrl;
     }
 
-    public void setActiveMQQueueName(String activeMQQueueName) {
-        this.activeMQQueueName = activeMQQueueName;
+    public void setActiveMQSubmitQueueName(String activeMQSubmitQueueName) {
+        this.activeMQSubmitQueueName = activeMQSubmitQueueName;
     }
 
-    public String getActiveMQQueueName() {
-        return this.activeMQQueueName;
+    public String getActiveMQSubmitQueueName() {
+        return this.activeMQSubmitQueueName;
+    }
+
+    public void setActiveMQListenQueueName(String activeMQListenQueueName) {
+        this.activeMQListenQueueName = activeMQListenQueueName;
+    }
+
+    public String getActiveMQListenQueueName() {
+        return this.activeMQListenQueueName;
     }
 
     public void setRunId(String runId) {
@@ -626,7 +635,7 @@ public class RepairnatorConfig {
                 ", pipelineMode=" + pipelineMode +
                 ", listenerMode=" + listenerMode +
                 ", activeMQUrl=" + activeMQUrl +
-                ", activeMQQueueName=" + activeMQQueueName +
+                ", activeMQSubmitQueueName=" + activeMQSubmitQueueName +
                 '}';
     }
 
