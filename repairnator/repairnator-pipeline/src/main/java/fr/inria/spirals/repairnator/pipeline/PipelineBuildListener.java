@@ -18,7 +18,7 @@ public class PipelineBuildListener implements Listener,MessageListener {
 
     public PipelineBuildListener(Launcher launcher){
         this.launcher = launcher;
-        this.runListenerServer();
+        LOGGER.warn("KUBERNETES MODE");
     }
 
     /**
