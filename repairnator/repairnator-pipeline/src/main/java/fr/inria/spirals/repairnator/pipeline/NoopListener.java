@@ -16,7 +16,7 @@ public class NoopListener implements Listener{
     }
 
     /**
-     * Run this as a listener server and fetch one message as a time
+     * Run launcher mainProcess . 
      */
     public void runListenerServer() {
         launcher.mainProcess();
