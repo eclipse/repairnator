@@ -184,8 +184,8 @@ public class RTLauncher {
         opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("activemqqueuename");
-        opt2.setLongFlag("activemqqueuename");
+        opt2 = new FlaggedOption("activemqsubmitqueuename");
+        opt2.setLongFlag("activemqsubmitqueuename");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault("pipeline");
         opt2.setHelp("Just a name, default as 'pipeline'");
@@ -245,7 +245,7 @@ public class RTLauncher {
         this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
         this.config.setPipelineMode(arguments.getString("pipelinemode"));
         this.config.setActiveMQUrl(arguments.getString("activemqurl"));
-        this.config.setActiveMQQueueName(arguments.getString("activemqqueuename"));
+        this.config.setActiveMQSubmitQueueName(arguments.getString("activemqsubmitqueuename"));
     }
 
     private void initSerializerEngines() {

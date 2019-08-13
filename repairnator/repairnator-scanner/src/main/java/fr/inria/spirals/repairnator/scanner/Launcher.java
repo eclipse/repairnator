@@ -169,8 +169,8 @@ public class Launcher {
         jsap.registerParameter(opt2);
 
         /*Should be refactored later to activemqreceivequeuename*/
-        opt2 = new FlaggedOption("activemqueuename");
-        opt2.setLongFlag("activemqueuename");
+        opt2 = new FlaggedOption("activemqqueuename");
+        opt2.setLongFlag("activemqqueuename");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault("pipeline");
         opt2.setHelp("The queue name which the scanner send the output build ids to for repairing, default as 'pipeline'");
@@ -227,6 +227,10 @@ public class Launcher {
         this.config.setLookToDate(lookToDate);
         this.config.setBearsMode(BearsMode.valueOf(arguments.getString("bearsMode").toUpperCase()));
         this.config.setBearsDelimiter(arguments.getBoolean("bearsDelimiter"));
+        this.config.setPipelineMode(arguments.getString("pipelinemode"));
+        this.config.setActiveMQUrl(arguments.getString("activemqurl"));
+        this.config.setActiveMQSubmitQueueName(arguments.getString("activemqqueuename"));
+        this.config.setActiveMQListenQueueName(arguments.getString("activemqlistenqueuename"));
     }
 
     private void initSerializerEngines() {
@@ -367,6 +371,12 @@ public class Launcher {
                     if (this.config.getLauncherMode() == LauncherMode.REPAIR) {
                         Launcher.LOGGER.info("Incriminated project and build: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId());
                         System.out.println(buildToBeInspected.getBuggyBuild().getId());
+
+                        // If KUBERNETES mode then build id will also be sent to ActiveMQ queue.
+                        if (RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)) {
+                            Launcher.LOGGER.info("Submit build to activemq");
+                            listener.submitBuild(Long.toString(buildToBeInspected.getBuggyBuild().getId()));
+                        }
                     } else {
                         Launcher.LOGGER.info("Incriminated project and pair of builds: " + buildToBeInspected.getBuggyBuild().getRepository().getSlug() + ":" + buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
                         System.out.println(buildToBeInspected.getBuggyBuild().getId() + "" + Utils.COMMA + "" + buildToBeInspected.getPatchedBuild().getId());
@@ -376,11 +386,26 @@ public class Launcher {
         }
     }
 
+    protected void kubernetesProcess(String slug) throws IOException {
+        LOGGER.info("Configuration: " + this.config.toString());
+
+        ProjectScanner scanner = new ProjectScanner(this.config.getLookFromDate(), this.config.getLookToDate(), this.config.getRunId());
+
+        Map<ScannedBuildStatus, List<BuildToBeInspected>> buildsToBeInspected = scanner.getBuildsGivenSlug(slug);
+
+        if (buildsToBeInspected != null) {
+            Launcher.LOGGER.warn("Build will be sent to ActivemMQ");
+            this.printToStdout(buildsToBeInspected);
+        } else {
+            Launcher.LOGGER.warn("The variable 'builds to be inspected' has null value.");
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher(args);
-        boolean kubernetesMode = false; /*will become a JSAP option in a new PR*/
-        if(kubernetesMode){
+        if(RepairnatorConfig.getInstance().getPipelineMode().equals(PIPELINE_MODE.KUBERNETES)){
             listener = new ScannerBuildListener(launcher);
+            LOGGER.warn("Now running in KUBERNETES mode");
             listener.runListenerServer();
         }else {
             launcher.mainProcess();

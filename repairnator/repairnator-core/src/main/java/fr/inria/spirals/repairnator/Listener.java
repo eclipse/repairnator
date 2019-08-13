@@ -5,4 +5,5 @@ package fr.inria.spirals.repairnator;
  */
 public interface Listener {
     void runListenerServer();
+    void submitBuild(String buildStr);
 }
