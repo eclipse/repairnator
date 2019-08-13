@@ -4,8 +4,7 @@ import fr.inria.spirals.repairnator.Listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
- * A listener which does nothing , Next PR will move 
- * NoopListener of the scanner to core and this will reuse it.
+ * A listener which does nothing.
  */
 public class NoopListener implements Listener{
     private static final Logger LOGGER = LoggerFactory.getLogger(NoopListener.class);
