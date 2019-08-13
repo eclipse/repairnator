@@ -10,5 +10,6 @@ public class NoopListener implements Listener{
 
     public NoopListener (){}
 
+    public void submitBuild(String buildStr){}
     public void runListenerServer() {}
 }
