@@ -94,11 +94,12 @@ public class RepairnatorConfig {
     private PIPELINE_MODE pipelineMode;
     private String activeMQUrl;
     private String activeMQSubmitQueueName;
-
+  
     // BuildRainer
     private String webSocketUrl;
     private String jmxHostName;
     private int queueLimit;
+
 
     // Checkbranches
     private boolean humanPatch;
@@ -194,7 +195,7 @@ public class RepairnatorConfig {
     public int getQueueLimit() {
         return this.queueLimit;
     }
-
+  
     public void setRunId(String runId) {
         this.runId = runId;
     }
