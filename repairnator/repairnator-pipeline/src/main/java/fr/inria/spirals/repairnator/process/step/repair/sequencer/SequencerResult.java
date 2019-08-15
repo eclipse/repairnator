@@ -1,57 +1,62 @@
 package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import static java.nio.file.Files.readAllBytes;
+import java.nio.file.Paths;
+
 // todo rewrite
 public class SequencerResult {
-    private String testClass;
-    private String testMethod;
+    private String buggyFilePath;
+    private String outputDirPath;
+    private String message;
     private boolean success;
-    private String exceptionMessage;
-    private String diff;
-    private String filePath;
+    private List<String> diffs;
 
-    public SequencerResult(String testClass, String testMethod) {
-        this.testClass = testClass;
-        this.testMethod = testMethod;
+    public SequencerResult(String buggyFilePath, String outputDirPath, String message) {
+        this.buggyFilePath = buggyFilePath;
+        this.outputDirPath = outputDirPath;
+        this.message = message;
+        File outputDir = new File(outputDirPath);
+        if (outputDir.exists() && outputDir.isDirectory()) {
+            List<File> patchFiles = Arrays.asList(outputDir.listFiles());
+            success = patchFiles.size() > 0;
+            diffs = new ArrayList<>();
+            if (success) {
+                for (File patchFile: patchFiles) {
+                    try {
+                        Path path = Paths.get(patchFile.getAbsolutePath());
+                        String diff = new String(readAllBytes((path)));
+                        diffs.add(diff);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
-    public String getTestClass() {
-        return this.testClass;
+    public String getBuggyFilePath() {
+        return this.buggyFilePath;
     }
 
-    public String getTestMethod() {
-        return this.testMethod;
+    public String getOutputDirPath() {
+        return this.outputDirPath;
+    }
+
+    public String getMessage() {
+        return this.message;
     }
 
     public boolean isSuccess() {
         return this.success;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public List<String> getDiffs() {
+        return this.diffs;
     }
-
-    public String getExceptionMessage() {
-        return this.exceptionMessage;
-    }
-
-    public void setExceptionMessage(String exceptionMessage) {
-        this.exceptionMessage = exceptionMessage;
-    }
-
-    public String getDiff() {
-        return this.diff;
-    }
-
-    public void setDiff(String diff) {
-        this.diff = diff;
-    }
-
-    public String getFilePath() {
-        return this.filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
 }

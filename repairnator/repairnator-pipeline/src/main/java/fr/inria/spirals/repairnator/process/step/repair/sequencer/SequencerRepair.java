@@ -64,15 +64,19 @@ public class SequencerRepair extends AbstractRepairStep {
 
             try {
                 List<SequencerResult> sequencerResults = new ArrayList<>();
-                sequencerResults.add(new SequencerResult(null, null));
-
+                int smpId = 0;
                 for (SuspiciousModificationPoint smp : susp) {
                     try {
                         File suspiciousFile = smp.getCodeElement().getPosition().getFile();
                         String buggyFilePath = suspiciousFile.getAbsolutePath();
                         int buggyLineNumber = new SuspiciousFile(smp).getSuspiciousLineNumber();
                         int beamSize = 50; // Sequencer paper http://arxiv.org/pdf/1901.01808
-                        String outputDirPath = patchDir.getAbsolutePath();
+                        String buggyFileName = suspiciousFile.getName();
+                        String outputDirPath = patchDir.getAbsolutePath() + File.separator + buggyFileName + smpId++;
+                        File outputDir = new File(outputDirPath);
+                        if (!outputDir.exists() || !outputDir.isDirectory()) {
+                            outputDir.mkdirs();
+                        }
 
                         final String command = "docker run sequencer "
                             + "bash ./src/sequencer-predict.sh "
@@ -83,9 +87,13 @@ public class SequencerRepair extends AbstractRepairStep {
                         System.out.println("Command:\n" + command);
 
                         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        StringBuilder stringBuilder = new StringBuilder();
+                        bufferedReader.lines().forEach(stringBuilder::append);
+                        String message = stringBuilder.toString();
                         process.waitFor();
-//                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-//                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath,message));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -115,28 +123,29 @@ public class SequencerRepair extends AbstractRepairStep {
             JsonObject diag = new JsonObject();
 
             diag.addProperty("success", result.isSuccess());
-            diag.addProperty("className", result.getTestClass());
-            diag.addProperty("methodName", result.getTestMethod());
-            diag.addProperty("exceptionMessage", result.getExceptionMessage());
+            diag.addProperty("message", result.getMessage());
             toolDiagnostic.add(diag);
 
             if (result.isSuccess()) {
                 success = true;
-                RepairPatch patch = new RepairPatch(this.getRepairToolName(), result.getTestClass(), result.getDiff());
-                listPatches.add(patch);
+                List<String> diffs = result.getDiffs();
+                for (String diff : diffs) {
+                    RepairPatch patch = new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff);
+                    listPatches.add(patch);
+                }
             }
         }
 
         /// record results
-        File nopolLog = new File(System.getProperty("user.dir"), "debug.log");
-        if (nopolLog.exists()) {
-            String nopolDestName = "repairnator.nopol.log";
-            File nopolDest = new File(this.getInspector().getRepoLocalPath(), nopolDestName);
+        File sequencerLog = new File(System.getProperty("user.dir"), "debug.log");
+        if (sequencerLog.exists()) {
+            String sequencerDestName = "repairnator.sequencer.log";
+            File sequencerDest = new File(this.getInspector().getRepoLocalPath(), sequencerDestName);
             try {
-                Files.move(nopolLog.toPath(), nopolDest.toPath());
-                this.getInspector().getJobStatus().addFileToPush(nopolDestName);
+                Files.move(sequencerLog.toPath(), sequencerDest.toPath());
+                this.getInspector().getJobStatus().addFileToPush(sequencerDestName);
             } catch (IOException e) {
-                getLogger().error("Error while renaming nopol log", e);
+                getLogger().error("Error while renaming sequencer log", e);
             }
         }
 
