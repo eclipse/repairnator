@@ -12,16 +12,12 @@ import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.Runtime;
 import java.lang.Process;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -60,33 +56,7 @@ public class SequencerRepair extends AbstractRepairStep {
             e.printStackTrace();
         }
         ZmEngine zmengine = (ZmEngine) astorMain.getEngine();
-
-        // prepare suspicious info
         List<SuspiciousModificationPoint> susp = zmengine.getSuspicious();
-        String path_output = "/mnt/vdb/output_extension";
-
-        for (SuspiciousModificationPoint smp : susp) {
-            try {
-                SuspiciousFile suspFile = new SuspiciousFile(smp);
-
-                File suspiciousFile = smp.getCodeElement().getPosition().getFile();
-                String suspiciousAbsolutePath = suspiciousFile.getAbsolutePath();
-                String suspiciousFileName = suspFile.getFileName();
-                String suspiciousClassName = suspFile.getClassName();
-                String suspiciousLine = suspFile.getSuspiciousLine();
-                int suspiciousLineNumber = suspFile.getSuspiciousLineNumber();
-
-                String path_to_diff = path_output + File.separator + suspiciousFileName + File.separator + "diff";
-                String command = "diff -u " + suspiciousAbsolutePath;
-                System.out.println("Execute command: " + command);
-
-                Process p = Runtime.getRuntime().exec(command);
-                p.waitFor();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         /// run Sequencer
         final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -95,37 +65,27 @@ public class SequencerRepair extends AbstractRepairStep {
             try {
                 List<SequencerResult> sequencerResults = new ArrayList<>();
                 sequencerResults.add(new SequencerResult(null, null));
-                // todo
+
                 for (SuspiciousModificationPoint smp : susp) {
                     try {
-                        SuspiciousFile suspFile = new SuspiciousFile(smp);
-
                         File suspiciousFile = smp.getCodeElement().getPosition().getFile();
-                        String suspiciousAbsolutePath = suspiciousFile.getAbsolutePath();
-                        String suspiciousFileName = suspFile.getFileName();
-                        String suspiciousClassName = suspFile.getClassName();
-                        String suspiciousLine = suspFile.getSuspiciousLine();
-                        int suspiciousLineNumber = suspFile.getSuspiciousLineNumber();
+                        String buggyFilePath = suspiciousFile.getAbsolutePath();
+                        int buggyLineNumber = new SuspiciousFile(smp).getSuspiciousLineNumber();
+                        int beamSize = 50; // Sequencer paper http://arxiv.org/pdf/1901.01808
+                        String outputDirPath = patchDir.getAbsolutePath();
 
-                        String outputPath = patchDir.getAbsolutePath();
-
-                        String path_to_diff = path_output + File.separator + suspiciousFileName + File.separator + "diff";
-
-                        // todo check the session issue
-                        final String command = "docker run -it sequencer";
-                        System.out.println("Execute command: " + command);
+                        final String command = "docker run sequencer "
+                            + "bash ./src/sequencer-predict.sh "
+                            + "--buggy_file=" + buggyFilePath
+                            + "--buggy_line=" + buggyLineNumber
+                            + "--beam_size=" + beamSize
+                            + "--output=" + outputDirPath;
+                        System.out.println("Command:\n" + command);
 
                         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
-                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-                        bufferedWriter.write("./src/sequencer-predict.sh "
-                            + "--buggy_file=" + "[abs path] "
-                            + "--buggy_line=" + "[int] "
-                            + "--beam_size=" + "[int] "
-                            + "--output=" + "[abs path]");
-                        bufferedWriter.write("exit");
-                        bufferedWriter.close();
-
                         process.waitFor();
+//                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+//                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
