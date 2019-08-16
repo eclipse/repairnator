@@ -5,18 +5,16 @@ LABEL maintainer="Henry Luong <tailp@kth.se>"
 
 VOLUME ["/var/log/"]
 
-COPY configure_git.sh /root/
-COPY build_scanner.sh /root/
-COPY scanner_launcher.sh /root/
-
 RUN touch /root/project_list.txt
 RUN touch /root/z3_for_linux
-RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone
 RUN apt-get update
 RUN apt-get install cloc -y
-RUN /root/configure_git.sh
-RUN /root/build_scanner.sh
+# Configure git 
+RUN git config --global core.whitespace trailing-space,space-before-tab
+RUN git config --global apply.whitespace fix
+# Build scanner
+RUN mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-scanner:LATEST:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots/ -Ddest=/root/repairnator-projectscanner.jar
 
 # Possible values: NOOP (does nothing, usual project scanner), KUBERNETES (receive/send to ActiveMQ)
 ENV PIPELINE_MODE=NOOP
@@ -53,4 +51,4 @@ ENV NOTIFY_TO=
 ENV NOTIFY_ENDPROCESS=0	
 
 WORKDIR /root
-ENTRYPOINT /root/scanner_launcher.sh
+ENTRYPOINT java $JAVA_OPTS -jar /root/repairnator-projectscanner.jar -d -i $REPAIR_PROJECT_LIST_PATH -o $REPAIRNATOR_BUILD_LIST --runId $RUN_ID --pipelinemode $PIPELINE_MODE --activemqurl $ACTIVEMQ_URL --activemqlistenqueuename $ACTIVEMQ_LISTEN_QUEUE_NAME --activemqqueuename $ACTIVEMQ_SUBMIT_QUEUE_NAME --dbhost $MONGODB_HOST --dbname $MONGODB_NAME -l $SCANNER_NB_HOURS --smtpTLS
