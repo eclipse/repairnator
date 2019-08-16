@@ -137,12 +137,6 @@ public class TestJobStatus {
         List<RepairPatch> rankedPatches = inspector.getJobStatus().getRankedPatches();
         assertThat(rankedPatches.size(), is(16)); // 12 (nopol) + 4 (npe)
 
-//        rankedPatches.forEach(repairPatch -> {
-//            System.out.println(repairPatch.getToolname());
-//            System.out.println(repairPatch.getFilePath());
-//            System.out.println(repairPatch.getOverfittingScore());
-//        });
-
         assertThat(rankedPatches.get(0).getToolname(), is("NopolSingleTest"));
         assertThat(rankedPatches.get(0).getFilePath(), endsWith("modelo/Solver.java"));
         assertThat(rankedPatches.get(0).getOverfittingScore(), is(-3190.603359887649));
