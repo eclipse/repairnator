@@ -19,10 +19,6 @@ RUN mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.i
 # Possible values: NOOP (does nothing, usual project scanner), KUBERNETES (receive/send to ActiveMQ)
 ENV PIPELINE_MODE=NOOP
 
-# Github information is provided if the repaired builds should be submitted on some repo
-# optional for something can be empty
-# Number of hours to inspect to get last builds (e.g. 4 will mean 4 hours in the past)
-
 # Can be specified later in repairnator-scanner.yaml file later when deploying
 ENV MONGODB_HOST=mongodb://mongo:27017 
 ENV MONGODB_NAME=repairnator
@@ -38,7 +34,8 @@ ENV ACTIVEMQ_LISTEN_QUEUE_NAME=scanner
 ENV ACTIVEMQ_SUBMIT_QUEUE_NAME=pipeline
 ENV ACTIVEMQ_URL=tcp://activemq:61616
 
-# Optional can either be changed or left as it is in repairnator-scanner.yaml 
+## Optional can either be changed or left as it is in repairnator-scanner.yaml 
+# Number of hours to inspect to get last builds (e.g. 4 will mean 4 hours in the past)
 ENV SCANNER_NB_HOURS=1      
 ENV LOOK_FROM_DATE=
 ENV JAVA_OPTS=  
