@@ -3,13 +3,13 @@ package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static java.nio.file.Files.readAllBytes;
-import java.nio.file.Paths;
 
-// todo rewrite
+import static java.nio.file.Files.readAllBytes;
+
 public class SequencerResult {
     private String buggyFilePath;
     private String outputDirPath;
@@ -27,7 +27,7 @@ public class SequencerResult {
             success = patchFiles.size() > 0;
             diffs = new ArrayList<>();
             if (success) {
-                for (File patchFile: patchFiles) {
+                for (File patchFile : patchFiles) {
                     try {
                         Path path = Paths.get(patchFile.getAbsolutePath());
                         String diff = new String(readAllBytes((path)));

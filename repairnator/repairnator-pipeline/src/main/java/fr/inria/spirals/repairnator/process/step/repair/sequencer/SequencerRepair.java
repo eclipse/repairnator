@@ -11,13 +11,16 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
 import java.lang.Runtime;
 import java.lang.Process;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -45,16 +48,41 @@ public class SequencerRepair extends AbstractRepairStep {
         this.patchDir = new File(this.getInspector().getRepoLocalPath()+"/"+"repairnator." + this.getRepairToolName().toLowerCase() + ".results");
         this.patchDir.mkdirs();
 
-        // construct ZmEngine
-        AstorMain astorMain = new AstorMain();
+        // check ...
+        List<URL> classPath = this.getInspector().getJobStatus().getRepairClassPath();
+        File[] sources = this.getInspector().getJobStatus().getRepairSourceDir();
+        if (classPath == null || sources == null) {
+            return StepStatus.buildSkipped(this,"Classpath or Sources not computed.");
+        }
+        // prepare CommandSummary
         CommandSummary cs = new CommandSummary();
+        List<String> dependencies = new ArrayList<>();
+        for (URL url : jobStatus.getRepairClassPath()) {
+            if (url.getFile().endsWith(".jar")) {
+                dependencies.add(url.getPath());
+            }
+        }
+        cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
+        cs.command.put("-mode", "sequencer");
+        cs.command.put("-location", jobStatus.getFailingModulePath());
+        String relativeSourcePath = new File(jobStatus.getFailingModulePath()).toURI().relativize(jobStatus.getRepairSourceDir()[0].toURI()).getPath();
+        cs.command.put("-srcjavafolder", relativeSourcePath);
+        cs.command.put("-stopfirst", "true");
+        cs.command.put("-population", "1");
+        cs.command.put("-maxtime", TOTAL_TIME + "");
+        cs.command.put("-seed", "1");
+        cs.command.put("-ingredientstrategy", "fr.inria.astor.test.repair.evaluation.extensionpoints.ingredients.MaxLcsSimSearchStrategy"); // is this needed?
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
-        cs.command.put("-parameters", "disablelog:false:logtestexecution:true");
+        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:\"+this.getInspector().getRepoLocalPath()+\"/repairnator.astor.sequencer.log\"");
+
+        // construct AstorMain
+        AstorMain astorMain = new AstorMain();
         try {
             astorMain.execute(cs.flat());
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // construct ZmEngine
         ZmEngine zmengine = (ZmEngine) astorMain.getEngine();
         List<SuspiciousModificationPoint> susp = zmengine.getSuspicious();
 
@@ -80,20 +108,22 @@ public class SequencerRepair extends AbstractRepairStep {
 
                         final String command = "docker run sequencer "
                             + "bash ./src/sequencer-predict.sh "
-                            + "--buggy_file=" + buggyFilePath
-                            + "--buggy_line=" + buggyLineNumber
-                            + "--beam_size=" + beamSize
+                            + "--buggy_file=" + buggyFilePath + " "
+                            + "--buggy_line=" + buggyLineNumber + " "
+                            + "--beam_size=" + beamSize + " "
                             + "--output=" + outputDirPath;
                         System.out.println("Command:\n" + command);
 
                         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        StringBuilder stringBuilder = new StringBuilder();
-                        bufferedReader.lines().forEach(stringBuilder::append);
-                        String message = stringBuilder.toString();
+                        StringJoiner stringJoiner = new StringJoiner("\n");
+                        bufferedReader.lines().forEach(stringJoiner::add);
+                        String message = stringJoiner.toString();
                         process.waitFor();
-
-                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath,message));
+                        System.out.println(">>>>>>>>>>>>>>>>");
+                        System.out.println(message);
+                        System.out.println("<<<<<<<<<<<<<<<<");
+                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, message));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

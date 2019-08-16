@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import fr.inria.astor.core.entities.SuspiciousModificationPoint;
 
 // this class can be replaced by the same-name class in Astor lib once the latter one become public
+// make sure the "SuspiciousFile" class in the "fr.inria.astor.approaches._3sfix" package is public
 public class SuspiciousFile {
     private int suspiciousLineNumber;
     private String suspiciousLine;
