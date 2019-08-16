@@ -54,11 +54,16 @@ public class TestSequencerRepair {
         FileHelper.deleteFile(tmpDir);
     }
 
+    /* main issue
+    ModuleNotFoundError: No module named 'torch' (running OpenNMT-py)
+     */
     @Test
     public void testSequencerRepair() throws IOException {
         // 207890790 susp.size() == 34
-        // 252712792 susp.size() == 3
-        // 376820338 susp.size() == 6
+//        long buildId = 207890790; // surli/failingProject build
+        // 252712792 susp.size() == 3 all fail
+//        long buildId = 252712792; // surli/failingProject build
+        // 376820338 susp.size() == 6 all fail except the last one
         long buildId = 376820338; // surli/failingProject build
         Build build = this.checkBuildAndReturn(buildId, false);
 

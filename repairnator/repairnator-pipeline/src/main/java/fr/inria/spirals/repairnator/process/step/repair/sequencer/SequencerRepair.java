@@ -31,7 +31,6 @@ public class SequencerRepair extends AbstractRepairStep {
     private static final int TOTAL_TIME = 120; // 120 minutes
 
     private File patchDir;
-    private List<RepairPatch> repairPatches;
 
     @Override
     public String getRepairToolName() {
@@ -106,7 +105,9 @@ public class SequencerRepair extends AbstractRepairStep {
                             outputDir.mkdirs();
                         }
 
-                        final String command = "docker run sequencer "
+                        final String command = "docker run "
+                            + "-v /private/var/folders:/private/var/folders "
+                            + "sequencer "
                             + "bash ./src/sequencer-predict.sh "
                             + "--buggy_file=" + buggyFilePath + " "
                             + "--buggy_line=" + buggyLineNumber + " "
@@ -119,9 +120,15 @@ public class SequencerRepair extends AbstractRepairStep {
                         StringJoiner stringJoiner = new StringJoiner("\n");
                         bufferedReader.lines().forEach(stringJoiner::add);
                         String message = stringJoiner.toString();
+                        BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                        StringJoiner errorJoiner = new StringJoiner("\n");
+                        errorReader.lines().forEach(errorJoiner::add);
+                        String errorInfo = errorJoiner.toString();
                         process.waitFor();
                         System.out.println(">>>>>>>>>>>>>>>>");
                         System.out.println(message);
+                        System.out.println("================");
+                        System.out.println(errorInfo);
                         System.out.println("<<<<<<<<<<<<<<<<");
                         sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, message));
                     } catch (Exception e) {
