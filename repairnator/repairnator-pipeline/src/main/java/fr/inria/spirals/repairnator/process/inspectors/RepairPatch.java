@@ -4,16 +4,14 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
-import fr.inria.prophet4j.P4J;
+import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
+import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class RepairPatch {
@@ -35,17 +33,20 @@ public class RepairPatch {
     /**
      * Score of the overfitting likelihood
      */
-    private double overfittingScore;
+    private Map<Features, Double> overfittingScores;
 
     public RepairPatch(String toolname, String filePath, String diff) {
         this.toolname = toolname;
         this.filePath = filePath;
         this.diff = diff;
-        this.overfittingScore = computeOverfittingScore();
+        this.overfittingScores = computeOverfittingScores();
     }
 
-    private double computeOverfittingScore() {
-        double overfittingScore = Double.POSITIVE_INFINITY;
+    private Map<Features, Double> computeOverfittingScores() {
+        Map<Features, Double> overfittingScores = new HashMap<>();
+        for (Features features: Features.values()) {
+            overfittingScores.put(features, Double.POSITIVE_INFINITY);
+        }
 
         File buggyFile = new File(filePath);
         if (buggyFile.isFile()) {
@@ -68,12 +69,16 @@ public class RepairPatch {
                 List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
                 // write to patchedFile
                 Files.write(Paths.get(patchedFile.getPath()), patchedLines);
-                overfittingScore = new P4J().computeOverfittingScore(buggyFile, patchedFile);
+                for (Features features: Features.values()) {
+                    Overfitting overfitting = new Overfitting(features);
+                    double overfittingScore = overfitting.computeScore(buggyFile, patchedFile);
+                    overfittingScores.put(features, overfittingScore);
+                }
             } catch (PatchFailedException | IOException e) {
                 e.printStackTrace();
             }
         }
-        return overfittingScore;
+        return overfittingScores;
     }
 
     public String getToolname() {
@@ -88,8 +93,8 @@ public class RepairPatch {
         return diff;
     }
 
-    public double getOverfittingScore() {
-        return overfittingScore;
+    public double getOverfittingScore(Features features) {
+        return overfittingScores.get(features);
     }
 
     @Override
