@@ -1,14 +1,14 @@
 package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static java.nio.file.Files.readAllBytes;
+import java.util.stream.Collectors;
 
 public class SequencerResult {
     private String buggyFilePath;
@@ -23,17 +23,19 @@ public class SequencerResult {
         this.message = message;
         File outputDir = new File(outputDirPath);
         if (outputDir.exists() && outputDir.isDirectory()) {
-            List<File> patchFiles = Arrays.asList(outputDir.listFiles());
-            success = patchFiles.size() > 0;
+            List<File> patchDirs = Arrays.asList(outputDir.listFiles());
+            success = patchDirs.size() > 0;
             diffs = new ArrayList<>();
             if (success) {
-                for (File patchFile : patchFiles) {
-                    try {
-                        Path path = Paths.get(patchFile.getAbsolutePath());
-                        String diff = new String(readAllBytes((path)));
-                        diffs.add(diff);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                for (File patchDir : patchDirs) {
+                    for (File patchFile : patchDir.listFiles()) {
+                        try {
+                            List<String> diffList = Files.readLines(patchFile, Charsets.UTF_8);
+                            String diff = diffList.stream().collect(Collectors.joining());
+                            diffs.add(diff);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

@@ -44,7 +44,7 @@ public class SequencerRepair extends AbstractRepairStep {
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
-        this.patchDir = new File(this.getInspector().getRepoLocalPath()+"/"+"repairnator." + this.getRepairToolName().toLowerCase() + ".results");
+        this.patchDir = new File("/private" + this.getInspector().getRepoLocalPath()+"/"+"repairnator." + this.getRepairToolName().toLowerCase() + ".results");
         this.patchDir.mkdirs();
 
         // check ...
@@ -72,7 +72,7 @@ public class SequencerRepair extends AbstractRepairStep {
         cs.command.put("-seed", "1");
         cs.command.put("-ingredientstrategy", "fr.inria.astor.test.repair.evaluation.extensionpoints.ingredients.MaxLcsSimSearchStrategy"); // is this needed?
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
-        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:\"+this.getInspector().getRepoLocalPath()+\"/repairnator.astor.sequencer.log\"");
+        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.sequencer.log");
 
         // construct AstorMain
         AstorMain astorMain = new AstorMain();

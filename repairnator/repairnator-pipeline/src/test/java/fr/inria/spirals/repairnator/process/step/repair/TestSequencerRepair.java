@@ -94,17 +94,13 @@ public class TestSequencerRepair {
         for (StepStatus stepStatus : stepStatusList.subList(0, 6)) {
             assertThat(stepStatus.isSuccess(), is(true));
         }
-        System.out.println(stepStatusList.get(6).getStatus());
-        System.out.println(stepStatusList.get(6).getDiagnostic());
-        assertThat(stepStatusList.get(6).getStatus(), is(StepStatus.StatusKind.SKIPPED));
-//        assertThat(stepStatusList.get(6).getStatus(), is(StepStatus.StatusKind.SUCCESS));
-//        assertThat(stepStatusList.get(6).isSuccess(), is(true));
+        assertThat(stepStatusList.get(6).getStatus(), is(StepStatus.StatusKind.SUCCESS));
 
-//        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
-//        assertThat(finalStatus, is("PATCHED"));
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertThat(allPatches.size(), is(16));
+        assertThat(allPatches.size(), is(432));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(sequencerRepair.getRepairToolName()), notNullValue());
     }
 
