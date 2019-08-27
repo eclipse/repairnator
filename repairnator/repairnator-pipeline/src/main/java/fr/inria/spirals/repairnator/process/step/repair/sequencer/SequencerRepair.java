@@ -17,7 +17,6 @@ import java.io.*;
 import java.lang.Runtime;
 import java.lang.Process;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -44,7 +43,7 @@ public class SequencerRepair extends AbstractRepairStep {
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
-        this.patchDir = new File("/private" + this.getInspector().getRepoLocalPath()+"/"+"repairnator." + this.getRepairToolName().toLowerCase() + ".results");
+        this.patchDir = new File("/private" + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
         this.patchDir.mkdirs();
 
         // check ...
@@ -61,18 +60,16 @@ public class SequencerRepair extends AbstractRepairStep {
                 dependencies.add(url.getPath());
             }
         }
+//        cs.command.put("-loglevel", "DEBUG");
+        cs.command.put("-mode", "custom");
         cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
-        cs.command.put("-mode", "sequencer");
         cs.command.put("-location", jobStatus.getFailingModulePath());
         String relativeSourcePath = new File(jobStatus.getFailingModulePath()).toURI().relativize(jobStatus.getRepairSourceDir()[0].toURI()).getPath();
         cs.command.put("-srcjavafolder", relativeSourcePath);
-        cs.command.put("-stopfirst", "true");
-        cs.command.put("-population", "1");
-        cs.command.put("-maxtime", TOTAL_TIME + "");
-        cs.command.put("-seed", "1");
-        cs.command.put("-ingredientstrategy", "fr.inria.astor.test.repair.evaluation.extensionpoints.ingredients.MaxLcsSimSearchStrategy"); // is this needed?
+        cs.command.put("-maxgen", "0");
+        cs.command.put("-javacompliancelevel", "8");
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
-        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:timezone:Europe/Paris:maxnumbersolutions:3:limitbysuspicious:false:maxmodificationpoints:1000:javacompliancelevel:8:logfilepath:"+this.getInspector().getRepoLocalPath()+"/repairnator.sequencer.log");
+        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"+ "/private" + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".log");
 
         // construct AstorMain
         AstorMain astorMain = new AstorMain();
@@ -113,7 +110,6 @@ public class SequencerRepair extends AbstractRepairStep {
                             + "--buggy_line=" + buggyLineNumber + " "
                             + "--beam_size=" + beamSize + " "
                             + "--output=" + outputDirPath;
-                        System.out.println("Command:\n" + command);
 
                         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -123,14 +119,9 @@ public class SequencerRepair extends AbstractRepairStep {
                         BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                         StringJoiner errorJoiner = new StringJoiner("\n");
                         errorReader.lines().forEach(errorJoiner::add);
-                        String errorInfo = errorJoiner.toString();
+                        String warning = errorJoiner.toString();
                         process.waitFor();
-                        System.out.println(">>>>>>>>>>>>>>>>");
-                        System.out.println(message);
-                        System.out.println("================");
-                        System.out.println(errorInfo);
-                        System.out.println("<<<<<<<<<<<<<<<<");
-                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, message));
+                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, message, warning));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -161,6 +152,7 @@ public class SequencerRepair extends AbstractRepairStep {
 
             diag.addProperty("success", result.isSuccess());
             diag.addProperty("message", result.getMessage());
+            diag.addProperty("warning", result.getWarning());
             toolDiagnostic.add(diag);
 
             if (result.isSuccess()) {
@@ -170,19 +162,6 @@ public class SequencerRepair extends AbstractRepairStep {
                     RepairPatch patch = new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff);
                     listPatches.add(patch);
                 }
-            }
-        }
-
-        /// record results
-        File sequencerLog = new File(System.getProperty("user.dir"), "debug.log");
-        if (sequencerLog.exists()) {
-            String sequencerDestName = "repairnator.sequencer.log";
-            File sequencerDest = new File(this.getInspector().getRepoLocalPath(), sequencerDestName);
-            try {
-                Files.move(sequencerLog.toPath(), sequencerDest.toPath());
-                this.getInspector().getJobStatus().addFileToPush(sequencerDestName);
-            } catch (IOException e) {
-                getLogger().error("Error while renaming sequencer log", e);
             }
         }
 

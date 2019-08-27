@@ -36,7 +36,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-// todo recheck
 public class TestSequencerRepair {
 
     private File tmpDir;
@@ -54,17 +53,9 @@ public class TestSequencerRepair {
         FileHelper.deleteFile(tmpDir);
     }
 
-    /* main issue
-    ModuleNotFoundError: No module named 'torch' (running OpenNMT-py)
-     */
     @Test
     public void testSequencerRepair() throws IOException {
-        // 207890790 susp.size() == 34
-//        long buildId = 207890790; // surli/failingProject build
-        // 252712792 susp.size() == 3 all fail
-//        long buildId = 252712792; // surli/failingProject build
-        // 376820338 susp.size() == 6 all fail except the last one
-        long buildId = 376820338; // surli/failingProject build
+        long buildId = 252712792; // surli/failingProject build
         Build build = this.checkBuildAndReturn(buildId, false);
 
         tmpDir = Files.createTempDirectory("test_sequencer_repair").toFile();
@@ -100,7 +91,7 @@ public class TestSequencerRepair {
         assertThat(finalStatus, is("PATCHED"));
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertThat(allPatches.size(), is(432));
+        assertThat(allPatches.size(), is(248));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(sequencerRepair.getRepairToolName()), notNullValue());
     }
 

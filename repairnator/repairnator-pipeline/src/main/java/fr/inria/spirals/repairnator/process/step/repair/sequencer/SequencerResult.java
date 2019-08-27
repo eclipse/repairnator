@@ -14,13 +14,15 @@ public class SequencerResult {
     private String buggyFilePath;
     private String outputDirPath;
     private String message;
+    private String warning;
     private boolean success;
     private List<String> diffs;
 
-    public SequencerResult(String buggyFilePath, String outputDirPath, String message) {
+    public SequencerResult(String buggyFilePath, String outputDirPath, String message, String warning) {
         this.buggyFilePath = buggyFilePath;
         this.outputDirPath = outputDirPath;
         this.message = message;
+        this.warning = warning;
         File outputDir = new File(outputDirPath);
         if (outputDir.exists() && outputDir.isDirectory()) {
             List<File> patchDirs = Arrays.asList(outputDir.listFiles());
@@ -52,6 +54,10 @@ public class SequencerResult {
 
     public String getMessage() {
         return this.message;
+    }
+
+    public String getWarning() {
+        return this.warning;
     }
 
     public boolean isSuccess() {
