@@ -1,5 +1,6 @@
 package fr.inria.repairnator;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.junit.Test;
 import org.junit.Ignore;
 import static org.junit.Assert.assertEquals;
@@ -30,8 +31,16 @@ public class BuildRainerTest {
      */
     public void testActiveMQSubmitter()
     {
-        ActiveMQBuildSubmitter submitter = new ActiveMQBuildSubmitter("tcp://localhost:61616","testQueue");
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setActiveMQUrl("tcp://localhost:61616");
+        config.setActiveMQSubmitQueueName("testQueue");
+        config.setJmxHostName("localhost");
+        config.setQueueLimit(1);
+
+        ActiveMQBuildSubmitter submitter = new ActiveMQBuildSubmitter();
+        submitter.initBroker();
         submitter.submit("Test");
+        submitter.submit("WrongTest");
         assertEquals(submitter.receiveFromQueue(),"Test");
     }
 }

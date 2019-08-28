@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import java.util.concurrent.TimeUnit;
 
 //Test server for BuildRainer
 public class TestServer extends WebSocketServer {
@@ -43,6 +42,7 @@ public class TestServer extends WebSocketServer {
 		System.out.println("new connection to " + conn.getRemoteSocketAddress());
 		conn.close();
 		try {
+			TimeUnit.SECONDS.sleep(3);
 			this.stop(); /*Done testing*/
 		} catch(Exception e){
 			throw new RuntimeException(e);

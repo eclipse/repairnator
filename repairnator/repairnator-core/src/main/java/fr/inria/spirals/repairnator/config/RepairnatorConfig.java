@@ -94,6 +94,12 @@ public class RepairnatorConfig {
     private PIPELINE_MODE pipelineMode;
     private String activeMQUrl;
     private String activeMQSubmitQueueName;
+  
+    // BuildRainer
+    private String webSocketUrl;
+    private String jmxHostName;
+    private int queueLimit;
+
 
     // Checkbranches
     private boolean humanPatch;
@@ -166,6 +172,30 @@ public class RepairnatorConfig {
         return this.activeMQListenQueueName;
     }
 
+    public void setWebSocketUrl(String webSocketUrl) {
+        this.webSocketUrl = webSocketUrl;
+    }
+
+    public String getWebSocketUrl() {
+        return this.webSocketUrl;
+    }
+
+    public void setJmxHostName(String jmxHostName) {
+        this.jmxHostName = jmxHostName;
+    }
+
+    public String getJmxHostName() {
+        return this.jmxHostName;
+    }
+
+    public void setQueueLimit(int queueLimit) {
+        this.queueLimit = queueLimit;
+    }
+
+    public int getQueueLimit() {
+        return this.queueLimit;
+    }
+  
     public void setRunId(String runId) {
         this.runId = runId;
     }
