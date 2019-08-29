@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: activemq
-        image: webcenter/activemq:5.14.3
+        image: antonw/activemq-jmx
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 61613

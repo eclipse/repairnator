@@ -1,28 +1,87 @@
 package fr.inria.repairnator;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.HashMap;
 
-import javax.jms.JMSException;
+import com.martiansoftware.jsap.JSAP;
+import com.martiansoftware.jsap.JSAPException;
+import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.FlaggedOption;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_6455;
-import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
-import java.io.IOException;
-import java.io.FileWriter;
 import org.json.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This is a websocket, intended for listening to "tdurieux/travis-listener"
  * to fetch most recent builds from Travis in realtime.
  */
 public class BuildRainer extends WebSocketClient {
+    private static Logger LOGGER = LoggerFactory.getLogger(BuildRainer.class);
     private static final BuildSubmitter submitter = new ActiveMQBuildSubmitter();
+    private static final RepairnatorConfig config = RepairnatorConfig.getInstance();
     private String recentMessage;
+
+    private static JSAP defineArgs() throws JSAPException{
+        JSAP jsap = new JSAP();
+
+        FlaggedOption opt2 = new FlaggedOption("activemqurl");
+        opt2.setLongFlag("activemqurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("tcp://localhost:61616");
+        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqsubmitqueuename");
+        opt2.setLongFlag("activemqsubmitqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("pipeline");
+        opt2.setHelp("Just a name, default as 'pipeline'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("websocketurl");
+        opt2.setLongFlag("websocketurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("ws://localhost:9080");
+        opt2.setHelp("websocket url of the nodejs websocket, default: ws://localhost:9080");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("jmxhost");
+        opt2.setLongFlag("jmxhost");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("localhost");
+        opt2.setHelp("HostName of the activemq jmxhost, default: localhost");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("queuelimit");
+        opt2.setLongFlag("queuelimit");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("100");
+        opt2.setHelp("limit before stop submitting new builds to queue, default: 100 enqueued build ids");
+        jsap.registerParameter(opt2);
+
+        return jsap;
+    }
+
+    private static void initConfig(JSAPResult arguments) {
+        config.setActiveMQUrl(arguments.getString("activemqurl"));
+        config.setActiveMQSubmitQueueName(arguments.getString("activemqsubmitqueuename"));
+        config.setWebSocketUrl(arguments.getString("websocketurl"));
+        config.setJmxHostName(arguments.getString("jmxhost"));
+        config.setQueueLimit(arguments.getInt("queuelimit"));
+    }
+
+    private static void initOptions(String[] args) throws JSAPException{
+        JSAP jsap = defineArgs();
+        JSAPResult arguments = jsap.parse(args);
+        initConfig(arguments);
+    }
 
     public BuildRainer( URI serverURI ) {
         super( serverURI );
@@ -33,15 +92,15 @@ public class BuildRainer extends WebSocketClient {
     }
 
     public boolean isJSONValid(String test) {
-    try {
-        new JSONObject(test);
-    } catch (JSONException ex) {
         try {
-            new JSONArray(test);
-        } catch (JSONException ex1) {
-            return false;
+            new JSONObject(test);
+        } catch (JSONException ex) {
+            try {
+                new JSONArray(test);
+            } catch (JSONException ex1) {
+                return false;
+            }
         }
-    }
         return true;
     }
 
@@ -52,7 +111,7 @@ public class BuildRainer extends WebSocketClient {
             String state = obj.getJSONObject("data").getString("state");
             String language = obj.getJSONObject("data").getJSONObject("config").getString("language");
             if (state.equals("failed") && language.equals("java")) {
-                System.out.println("state: " + state + " language: " + language);
+                LOGGER.info("state: " + state + " language: " + language);
                 int build_id = obj.getJSONObject("data").getInt("build_id");
                 submitter.submit(Integer.toString(build_id));
             }
@@ -62,12 +121,12 @@ public class BuildRainer extends WebSocketClient {
 
     @Override
     public void onOpen( ServerHandshake handshakedata ) {
-        System.out.println( "opened connection" );
+        LOGGER.warn( "opened connection" );
     }
 
     @Override
     public void onClose( int code, String reason, boolean remote ) {
-        System.out.println( "Connection closed by " + ( remote ? "remote peer" : "us" ) + " Code: " + code + " Reason: " + reason );
+        LOGGER.warn( "Connection closed by " + ( remote ? "remote peer" : "us" ) + " Code: " + code + " Reason: " + reason );
     }
 
     @Override
@@ -75,8 +134,11 @@ public class BuildRainer extends WebSocketClient {
         ex.printStackTrace();
     }
 
-    public static void main( String[] args )  throws URISyntaxException{
-        BuildRainer buildRainer = new BuildRainer( new URI( "ws://localhost:9080" )); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
+    public static void main( String[] args )  throws URISyntaxException,JSAPException{
+        initOptions(args);
+        ((ActiveMQBuildSubmitter) submitter).initBroker();
+
+        BuildRainer buildRainer = new BuildRainer( new URI( config.getWebSocketUrl() )); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
         buildRainer.connect();
     }
 } 
