@@ -34,6 +34,21 @@ public class RepairnatorConfig {
         }
     }
 
+    public enum LISTENER_MODE {
+        KUBERNETES("fr.inria.spirals.repairnator.pipeline.PipelineBuildListener"),
+        NOOP("fr.inria.spirals.repairnator.pipeline.NoopListener");
+
+        private final String klass;
+
+        LISTENER_MODE(String s) {
+            this.klass = s;
+        }
+
+        public String getKlass() {
+            return klass;
+        }
+    }
+
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -72,6 +87,7 @@ public class RepairnatorConfig {
     private String githubUserName;
     private String githubUserEmail;
     private String[] experimentalPluginRepoList;
+    private LISTENER_MODE listenerMode;
 
     // Dockerpool
     private String dockerImageName;
@@ -134,6 +150,20 @@ public class RepairnatorConfig {
         return runId;
     }
     
+    public void setListenerMode(String listenerMode) {
+        for (LISTENER_MODE mode: LISTENER_MODE.values()) {
+            if (listenerMode.equals(mode.name())) {
+                this.listenerMode = LISTENER_MODE.valueOf(listenerMode);
+                return;
+            }
+        }
+        throw new RuntimeException("unknown listener "+listenerMode);
+    }
+
+    public LISTENER_MODE getListenerMode() {
+        return this.listenerMode;
+    }
+
     public void setPipelineMode(String pipelineMode) {
         for (PIPELINE_MODE mode: PIPELINE_MODE.values()) {
             if (pipelineMode.equals(mode.name())) {
@@ -633,6 +663,7 @@ public class RepairnatorConfig {
                 ", githubUserName= " + githubUserName +
                 ", githubUserEmail=" + githubUserEmail +
                 ", pipelineMode=" + pipelineMode +
+                ", listenerMode=" + listenerMode +
                 ", activeMQUrl=" + activeMQUrl +
                 ", activeMQSubmitQueueName=" + activeMQSubmitQueueName +
                 '}';

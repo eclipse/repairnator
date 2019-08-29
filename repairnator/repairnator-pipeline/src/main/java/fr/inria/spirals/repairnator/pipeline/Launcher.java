@@ -1,5 +1,8 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
+import java.lang.reflect.Constructor;
+import fr.inria.spirals.repairnator.Listener;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
@@ -59,14 +62,14 @@ import java.util.Properties;
  */
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    
+    private static Listener listener = null;
     private BuildToBeInspected buildToBeInspected;
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
     private PatchNotifier patchNotifier;
     private ProjectInspector  inspector;
 
-    private RepairnatorConfig getConfig() {
+    private static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
     
@@ -188,6 +191,13 @@ public class Launcher {
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("listenerMode");
+        opt2.setLongFlag("listenerMode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault(LISTENER_MODE.NOOP.name());
+        opt2.setHelp("Possible string values KUBERNETES,NOOP . KUBERNETES is for running ActiveMQListener and "+LISTENER_MODE.NOOP.name()+" is for NoopRunner.");
+        jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
@@ -207,7 +217,6 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
         jsap.registerParameter(opt2);
-
 
         return jsap;
     }
@@ -256,7 +265,7 @@ public class Launcher {
         this.getConfig().setWorkspacePath(arguments.getString("workspace"));
         this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
         this.getConfig().setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
-
+        this.getConfig().setListenerMode(arguments.getString("listenerMode"));
         if (arguments.getFile("projectsToIgnore") != null) {
             this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
@@ -426,9 +435,25 @@ public class Launcher {
         LOGGER.info("Inspector is finished. The process will exit now.");
     }
 
+    /**
+     * if listener mode is NOOP it will run the usual pipeline, aka mainProcess in runListenerServer 
+     * if KUBERNETES it will run as ActiveMQListener and run kubernetesProcess.
+     *
+     * @param launcher , launch depending on listenerMode 
+     */
+    private static void initProcess(Launcher launcher) {
+        try {
+            Constructor c = Class.forName(getConfig().getListenerMode().getKlass()).getConstructor(Launcher.class);
+            listener = (Listener) c.newInstance(launcher);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        listener.runListenerServer();
+    }
+
     public static void main(String[] args) throws JSAPException {
         Launcher launcher = new Launcher(args);
-        launcher.mainProcess();
+        initProcess(launcher);
     }
 
     public ProjectInspector getInspector() {

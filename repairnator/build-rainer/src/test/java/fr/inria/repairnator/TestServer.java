@@ -40,9 +40,9 @@ public class TestServer extends WebSocketServer {
 	public void onOpen(WebSocket conn, ClientHandshake handshake) {
 		conn.send("Test"); //This method sends a message to the new client
 		System.out.println("new connection to " + conn.getRemoteSocketAddress());
-		conn.close();
 		try {
-			TimeUnit.SECONDS.sleep(3);
+			// Wait a bit before closing it down making sure that message is received, to avoid flakiness.
+			TimeUnit.SECONDS.sleep(2);
 			this.stop(); /*Done testing*/
 		} catch(Exception e){
 			throw new RuntimeException(e);
