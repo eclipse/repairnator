@@ -419,7 +419,6 @@ public class Launcher {
         serializers.add(new PipelineErrorSerializer(this.engines));
         serializers.add(new PatchesSerializer(this.engines));
         serializers.add(new ToolDiagnosticSerializer(this.engines));
-        serializers.add(new PullRequestSerializer(this.engines));
 
         ProjectInspector inspector;
 
@@ -442,6 +441,7 @@ public class Launcher {
         serializers.add(new PipelineErrorSerializer(this.engines, inspector));
         serializers.add(new PatchesSerializer(this.engines, inspector));
         serializers.add(new ToolDiagnosticSerializer(this.engines, inspector));
+        serializers.add(new PullRequestSerializer(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
