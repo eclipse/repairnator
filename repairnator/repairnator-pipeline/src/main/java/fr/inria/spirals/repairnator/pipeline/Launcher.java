@@ -37,6 +37,7 @@ import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
 import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
+import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;

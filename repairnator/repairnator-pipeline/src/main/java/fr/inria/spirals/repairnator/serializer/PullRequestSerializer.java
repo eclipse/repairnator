@@ -67,7 +67,7 @@ public class PullRequestSerializer extends AbstractDataSerializer {
     }
     
     @Override
-    public void serialize(ProjectInspector inspector) {
+    public void serialize() {
         List<SerializedData> allData = new ArrayList<>();
         
         for(String prUrl: inspector.getJobStatus().getPRCreated()) {
