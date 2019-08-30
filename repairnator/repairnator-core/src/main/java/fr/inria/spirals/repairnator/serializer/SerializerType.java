@@ -33,7 +33,7 @@ public enum SerializerType {
         this.filename = filename;
     }
 
-    public String getFilename() {
+    public String getName() {
         return filename;
     }
 }

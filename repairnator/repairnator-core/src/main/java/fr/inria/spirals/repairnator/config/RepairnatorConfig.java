@@ -18,6 +18,37 @@ import java.util.Set;
  * Created by urli on 08/03/2017.
  */
 public class RepairnatorConfig {
+    public enum PIPELINE_MODE {
+        DOCKER("fr.inria.spirals.repairnator.realtime.DockerPipelineRunner"),
+        KUBERNETES("fr.inria.spirals.repairnator.realtime.ActiveMQPipelineRunner"),
+        NOOP("fr.inria.spirals.repairnator.realtime.NoopRunner");
+
+        private final String klass;
+
+        PIPELINE_MODE(String s) {
+            this.klass = s;
+        }
+
+        public String getKlass() {
+            return klass;
+        }
+    }
+
+    public enum LISTENER_MODE {
+        KUBERNETES("fr.inria.spirals.repairnator.pipeline.PipelineBuildListener"),
+        NOOP("fr.inria.spirals.repairnator.pipeline.NoopListener");
+
+        private final String klass;
+
+        LISTENER_MODE(String s) {
+            this.klass = s;
+        }
+
+        public String getKlass() {
+            return klass;
+        }
+    }
+
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -26,7 +57,7 @@ public class RepairnatorConfig {
     private String mongodbHost;
     private String mongodbName;
     private String smtpServer;
-    private int smtpPort;
+    private int smtpPort = 25;
     private boolean smtpTLS;
     private String smtpUsername;
     private String smtpPassword;
@@ -43,6 +74,7 @@ public class RepairnatorConfig {
     private Date lookToDate;
     private BearsMode bearsMode = BearsMode.BOTH;
     private boolean bearsDelimiter;
+    private String activeMQListenQueueName;
 
     // Pipeline
     private int buildId;
@@ -55,13 +87,14 @@ public class RepairnatorConfig {
     private String githubUserName;
     private String githubUserEmail;
     private String[] experimentalPluginRepoList;
+    private LISTENER_MODE listenerMode;
 
     // Dockerpool
     private String dockerImageName;
     private boolean skipDelete;
     private boolean createOutputDir;
     private String logDirectory;
-    private int nbThreads;
+    private int nbThreads = 1; // safe default value
     private int globalTimeout;
 
     // Realtime
@@ -74,6 +107,15 @@ public class RepairnatorConfig {
     private Duration summaryFrequency;
     private String[] notifySummary;
     private int numberOfPatchedBuilds;
+    private PIPELINE_MODE pipelineMode;
+    private String activeMQUrl;
+    private String activeMQSubmitQueueName;
+  
+    // BuildRainer
+    private String webSocketUrl;
+    private String jmxHostName;
+    private int queueLimit;
+
 
     // Checkbranches
     private boolean humanPatch;
@@ -107,7 +149,83 @@ public class RepairnatorConfig {
     public String getRunId() {
         return runId;
     }
+    
+    public void setListenerMode(String listenerMode) {
+        for (LISTENER_MODE mode: LISTENER_MODE.values()) {
+            if (listenerMode.equals(mode.name())) {
+                this.listenerMode = LISTENER_MODE.valueOf(listenerMode);
+                return;
+            }
+        }
+        throw new RuntimeException("unknown listener "+listenerMode);
+    }
 
+    public LISTENER_MODE getListenerMode() {
+        return this.listenerMode;
+    }
+
+    public void setPipelineMode(String pipelineMode) {
+        for (PIPELINE_MODE mode: PIPELINE_MODE.values()) {
+            if (pipelineMode.equals(mode.name())) {
+                this.pipelineMode = PIPELINE_MODE.valueOf(pipelineMode);
+                return;
+            }
+        }
+        throw new RuntimeException("unknown pipeline "+pipelineMode);
+    }
+
+    public PIPELINE_MODE getPipelineMode() {
+        return this.pipelineMode;
+    }
+
+    public void setActiveMQUrl(String activeMQUrl) {
+        this.activeMQUrl = activeMQUrl;
+    }
+
+    public String getActiveMQUrl() {
+        return this.activeMQUrl;
+    }
+
+    public void setActiveMQSubmitQueueName(String activeMQSubmitQueueName) {
+        this.activeMQSubmitQueueName = activeMQSubmitQueueName;
+    }
+
+    public String getActiveMQSubmitQueueName() {
+        return this.activeMQSubmitQueueName;
+    }
+
+    public void setActiveMQListenQueueName(String activeMQListenQueueName) {
+        this.activeMQListenQueueName = activeMQListenQueueName;
+    }
+
+    public String getActiveMQListenQueueName() {
+        return this.activeMQListenQueueName;
+    }
+
+    public void setWebSocketUrl(String webSocketUrl) {
+        this.webSocketUrl = webSocketUrl;
+    }
+
+    public String getWebSocketUrl() {
+        return this.webSocketUrl;
+    }
+
+    public void setJmxHostName(String jmxHostName) {
+        this.jmxHostName = jmxHostName;
+    }
+
+    public String getJmxHostName() {
+        return this.jmxHostName;
+    }
+
+    public void setQueueLimit(int queueLimit) {
+        this.queueLimit = queueLimit;
+    }
+
+    public int getQueueLimit() {
+        return this.queueLimit;
+    }
+  
     public void setRunId(String runId) {
         this.runId = runId;
     }
@@ -544,6 +662,10 @@ public class RepairnatorConfig {
                 ", repairTools=" + StringUtils.join(this.repairTools, ",") +
                 ", githubUserName= " + githubUserName +
                 ", githubUserEmail=" + githubUserEmail +
+                ", pipelineMode=" + pipelineMode +
+                ", listenerMode=" + listenerMode +
+                ", activeMQUrl=" + activeMQUrl +
+                ", activeMQSubmitQueueName=" + activeMQSubmitQueueName +
                 '}';
     }
 

@@ -12,12 +12,14 @@ import java.util.List;
 /**
  * Created by urli on 20/01/2017.
  */
-public abstract class AbstractDataSerializer extends Serializer {
+public abstract class AbstractDataSerializer extends SerializerImpl {
 
 
+    protected ProjectInspector inspector;
 
-    public AbstractDataSerializer(List<SerializerEngine> engines, SerializerType type) {
+    public AbstractDataSerializer(List<SerializerEngine> engines, SerializerType type,ProjectInspector inspector) {
         super(engines, type);
+        this.inspector = inspector;
     }
 
     public static String getPrettyPrintState(ProjectInspector inspector) {
@@ -53,5 +55,4 @@ public abstract class AbstractDataSerializer extends Serializer {
         return "UNKNOWN";
     }
 
-    public abstract void serializeData(ProjectInspector inspector);
 }

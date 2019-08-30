@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: activemq
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: activemq
+    spec:
+      containers:
+      - name: activemq
+        image: antonw/activemq-jmx
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 61613
+        resources:
+          limits:
+            memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activemq
+spec:
+  ports:
+  - port: 61613 
+    targetPort: 61613
+  selector:
+    app: activemq

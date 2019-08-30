@@ -92,7 +92,10 @@ public class TestAssertFixerRepair {
         assertThat(finalStatus, is("PATCHED"));
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertThat(allPatches.size(), is(4));
+        for (RepairPatch p :inspector.getJobStatus().getAllPatches()) {
+            // System.out.println(p.getDiff());
+        }
+        assertThat(allPatches.size(), is(8));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(assertFixerRepair.getRepairToolName()), notNullValue());
     }
 

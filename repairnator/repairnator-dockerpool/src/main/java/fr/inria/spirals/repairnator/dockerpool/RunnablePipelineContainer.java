@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -33,11 +34,17 @@ public class RunnablePipelineContainer implements Runnable {
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
-    private AbstractPoolManager poolManager;
+    private DockerPoolManager poolManager;
     private String containerId;
     private String containerName;
     private List<String> envValues;
     private Set<String> volumes;
+
+    public ContainerExit getExitStatus() {
+        return exitStatus;
+    }
+
+    private ContainerExit exitStatus;
 
     /**
      * The constructor will init all the environment values for the container.
@@ -48,7 +55,7 @@ public class RunnablePipelineContainer implements Runnable {
      * @param logDirectory the path of the produced logs
      * @param treatedBuildTracking a serializer for recording the docker containers statuses
      */
-    public RunnablePipelineContainer(AbstractPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
+    public RunnablePipelineContainer(DockerPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.inputBuildId = inputBuildId;
@@ -56,7 +63,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
 
-        this.containerName = "repairnator-pipeline_"+ DateUtils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId()+"_"+this.repairnatorConfig.getRunId();
+        this.containerName = "docker_pipeline"+ DateUtils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId()+"_"+StringUtils.join(this.repairnatorConfig.getRepairTools(),",");
         String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
 
         this.envValues = new ArrayList<>();
@@ -80,7 +87,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("MONGODB_HOST="+this.repairnatorConfig.getMongodbHost());
         this.envValues.add("MONGODB_NAME="+this.repairnatorConfig.getMongodbName());
         this.envValues.add("SMTP_SERVER="+this.repairnatorConfig.getSmtpServer());
-        this.envValues.add("SMTP_PORT="+this.repairnatorConfig.getSmtpPort());
+        this.envValues.add("SMTP_PORT="+Integer.toString(this.repairnatorConfig.getSmtpPort()));
         this.envValues.add("SMTP_USERNAME="+this.repairnatorConfig.getSmtpUsername());
         this.envValues.add("SMTP_PASSWORD="+this.repairnatorConfig.getSmtpPassword());
         this.envValues.add("GITHUB_USERNAME="+this.repairnatorConfig.getGithubUserName());
@@ -92,6 +99,8 @@ public class RunnablePipelineContainer implements Runnable {
         }
         if(this.repairnatorConfig.isSmtpTLS()) {
             this.envValues.add("SMTP_TLS=1");
+        } else {
+            this.envValues.add("SMTP_TLS=0");
         }
 
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR || this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE) {
@@ -119,9 +128,7 @@ public class RunnablePipelineContainer implements Runnable {
             Map<String,String> labels = new HashMap<>();
             labels.put("name",this.containerName);
 
-            // inside the docker containers the log will be produced in /var/log
-            // so we need to bind the directory with the local directory for logs
-            HostConfig hostConfig = HostConfig.builder().appendBinds(this.logDirectory+":/var/log").build();
+            HostConfig hostConfig = HostConfig.builder().build();
 
             // we soecify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()
@@ -148,9 +155,9 @@ public class RunnablePipelineContainer implements Runnable {
             docker.startContainer(container.id());
 
             // and now we wait until it's finished
-            ContainerExit exitStatus = docker.waitContainer(this.containerId);
+            exitStatus = docker.waitContainer(this.containerId);
 
-            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+exitStatus.statusCode());
+            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+ exitStatus.statusCode());
 
             // standard bash: if it's 0 everything's fine.
             if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {

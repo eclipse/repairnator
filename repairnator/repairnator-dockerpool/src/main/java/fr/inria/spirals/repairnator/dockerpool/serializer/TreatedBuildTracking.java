@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.dockerpool.serializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fr.inria.spirals.repairnator.serializer.ProcessSerializer;
+import fr.inria.spirals.repairnator.serializer.SerializerImpl;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by urli on 03/03/2017.
  */
-public class TreatedBuildTracking extends ProcessSerializer {
+public class TreatedBuildTracking extends SerializerImpl {
 
     private String runid;
     private Long buildId;

@@ -21,8 +21,8 @@ import java.util.Map;
 public class InspectorTimeSerializer extends AbstractDataSerializer {
     private Logger logger = LoggerFactory.getLogger(InspectorTimeSerializer.class);
 
-    public InspectorTimeSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.TIMES);
+    public InspectorTimeSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.TIMES, inspector);
     }
 
     private List<Object> serializeAsList(ProjectInspector inspector) {
@@ -74,7 +74,7 @@ public class InspectorTimeSerializer extends AbstractDataSerializer {
 
 
     @Override
-    public void serializeData(ProjectInspector inspector) {
+    public void serialize() {
         SerializedData data = new SerializedData(this.serializeAsList(inspector), this.serializeAsJson(inspector));
 
         List<SerializedData> allData = new ArrayList<>();

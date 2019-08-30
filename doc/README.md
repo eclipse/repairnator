@@ -4,12 +4,10 @@ This directory provides a general documentation about Repairnator project.
 
 ## Overview
 
-Repairnator's project aimed at creating a bot to automatically repair failing builds coming from Travis CI.
-By repairing we mean proposing patches that make the entire test-suite passing on a given build.
+Repairnator is  a bot to automatically repair failing builds coming from Travis CI. By repairing we mean proposing patches that make the entire test-suite passing on a given build.
 
-Another project, called BEARS, was built as a collaboration and aimed at creating a database of bugs by mining bugs and patches on Travis CI and Github.
+A sub project, called BEARS, aimed at creating a database of bugs by mining bugs and patches on Travis CI and Github, see [Bears: An Extensible Java Bug Benchmark for Automatic Program Repair Studies](https://arxiv.org/pdf/1901.06024).
 
-We will mostly rely on Repairnator on this documentation.
 
 ## Terminology
 
@@ -26,7 +24,19 @@ So here a little bit of terminology to help the reader:
 Contribution on Repairnator are more than welcome!
 A first way to contribute is to look on the label [good-first-issue](https://github.com/Spirals-Team/repairnator/labels/good-first-issue).
 
-Another way for contributing is to add a new program repair tool in Repairnator: [we provided a guide to help us](contributing/add-repair-tool.md).
+## Running Repairnator
+
+### Docker
+
+To fix a specific Travis build:
+
+```
+docker run -e BUILD_ID=564711868 repairnator/pipeline
+```
+
+### Scripts
+
+The documentation about the scripts is [available here](scripts.md). More details about the [repairnator configuration file](repairnator-config.md).
 
 ## Chores
 
@@ -43,22 +53,13 @@ The following is the list of program repair tools currently supported in Repairn
   
 For more information about the program repair tools and their strategies implemented in Repairnator, [have a look on this page](repair-tools.md).
 
+**Adding a new tool:** To add a new program repair tool in Repairnator: [here is the guide](contributing/add-repair-tool.md).
+
+
 ## Architecture
 
 In order to understand properly Repairnator, have a first a look on [its internal architecture](architecture.md).
 
-## Scripts
+## Java main classes
 
-The easiest entry point to use Repairnator is through its scripts.
-The documentation about the scripts is [available here](scripts.md).
-It can be useful to also read more details about the [repairnator configuration file](repairnator-config.md).
-
-## Docker
-
-It is also possible to directly use Repairnator through its docker image. 
-Information about this docker image is [available there](docker.md).
-
-## JARs
-
-Finally, Repairnator being written in Java, everything can be executed directly through the JARS.
-The [following documentation](jars.md) might be helpful there.
+The [following documentation](main-classes.md) documents the main classes of Repairnator.

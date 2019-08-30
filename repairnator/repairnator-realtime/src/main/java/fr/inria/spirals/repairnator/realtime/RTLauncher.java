@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -28,6 +29,7 @@ import java.util.List;
  * This is the launcher class for Repairnator realtime.
  */
 public class RTLauncher {
+
     private static Logger LOGGER = LoggerFactory.getLogger(RTLauncher.class);
     private List<SerializerEngine> engines;
     private RepairnatorConfig config;
@@ -38,7 +40,6 @@ public class RTLauncher {
         JSAP jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.REALTIME);
-
 
         this.initConfig(arguments);
         this.initSerializerEngines();
@@ -83,9 +84,8 @@ public class RTLauncher {
         // --skipDelete
         jsap.registerParameter(LauncherUtils.defineArgSkipDelete());
         // --createOutputDir
+        // the output directory contains CSV files, JSON files and LOG files
         jsap.registerParameter(LauncherUtils.defineArgCreateOutputDir());
-        // -l or --logDirectory
-        jsap.registerParameter(LauncherUtils.defineArgLogDirectory());
         // -t or --threads
         jsap.registerParameter(LauncherUtils.defineArgNbThreads());
         // --pushurl
@@ -116,21 +116,21 @@ public class RTLauncher {
         opt2 = new FlaggedOption("jobsleeptime");
         opt2.setLongFlag("jobsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectJobs.JOB_SLEEP_TIME+"");
+        opt2.setDefault(InspectJobs.JOB_SLEEP_TIME_IN_SECOND +"");
         opt2.setHelp("Specify the sleep time between two requests to Travis Job endpoint (in seconds)");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("buildsleeptime");
         opt2.setLongFlag("buildsleeptime");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME+"");
+        opt2.setDefault(InspectBuilds.BUILD_SLEEP_TIME_IN_SECOND +"");
         opt2.setHelp("Specify the sleep time between two refresh of build statuses (in seconds)");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("maxinspectedbuilds");
         opt2.setLongFlag("maxinspectedbuilds");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InspectBuilds.LIMIT_SUBMITTED_BUILDS+"");
+        opt2.setDefault(InspectBuilds.LIMIT_WAITING_BUILDS +"");
         opt2.setHelp("Specify the maximum number of watched builds");
         jsap.registerParameter(opt2);
 
@@ -170,6 +170,27 @@ public class RTLauncher {
         opt2.setHelp("The number of builds that Repairnator should patched before shutting down. If 0, it will run indefinitely.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("pipelinemode");
+        opt2.setLongFlag("pipelinemode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault(PIPELINE_MODE.NOOP.name());
+        opt2.setHelp("Possible string values DOCKER,KUBERNETES,NOOP . DOCKER is for running DockerPipeline, KUBERNETES is for running ActiveMQPipeline and "+PIPELINE_MODE.NOOP.name()+" is for NoopRunner. The last two options do not use docker during run.");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqurl");
+        opt2.setLongFlag("activemqurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("tcp://localhost:61616");
+        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqsubmitqueuename");
+        opt2.setLongFlag("activemqsubmitqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("pipeline");
+        opt2.setHelp("Just a name, default as 'pipeline'");
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -207,12 +228,8 @@ public class RTLauncher {
             this.config.setPush(true);
             this.config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
         }
-        if (arguments.contains("whitelist")) {
-            this.config.setWhiteList(arguments.getFile("whitelist"));
-        }
-        if (arguments.contains("blacklist")) {
-            this.config.setBlackList(arguments.getFile("blacklist"));
-        }
+        this.config.setWhiteList(arguments.getFile("whitelist"));
+        this.config.setBlackList(arguments.getFile("blacklist"));
         this.config.setJobSleepTime(arguments.getInt("jobsleeptime"));
         this.config.setBuildSleepTime(arguments.getInt("buildsleeptime"));
         this.config.setMaxInspectedBuilds(arguments.getInt("maxinspectedbuilds"));
@@ -226,6 +243,9 @@ public class RTLauncher {
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
+        this.config.setPipelineMode(arguments.getString("pipelinemode"));
+        this.config.setActiveMQUrl(arguments.getString("activemqurl"));
+        this.config.setActiveMQSubmitQueueName(arguments.getString("activemqsubmitqueuename"));
     }
 
     private void initSerializerEngines() {
@@ -265,8 +285,16 @@ public class RTLauncher {
         String runId = this.config.getRunId();
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, runId, "rtScanner");
         hardwareInfoSerializer.serialize();
-        RTScanner rtScanner = new RTScanner(runId, this.engines);
-        
+        RTScanner rtScanner = null;
+
+        PipelineRunner runner = null;
+        try {
+            runner = (PipelineRunner) Class.forName(this.config.getPipelineMode().getKlass()).newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        rtScanner = new RTScanner(runId, engines, runner);
+
         if (this.summaryNotifier != null) {
             rtScanner.setSummaryNotifier(this.summaryNotifier);
         }
@@ -282,7 +310,6 @@ public class RTLauncher {
         if (this.config.getBlackList() != null) {
             rtScanner.initBlackListedRepository(this.config.getBlackList());
         }
-
         LOGGER.info("Start RTScanner...");
         rtScanner.launch();
     }

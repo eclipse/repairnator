@@ -1,10 +1,21 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import fr.inria.jtravis.API_VERSION;
+import fr.inria.jtravis.JTravis;
+import fr.inria.jtravis.TravisConstants;
+import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.v2.JobV2;
+import fr.inria.jtravis.helpers.JobHelper;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,14 +25,12 @@ import java.util.Optional;
 public class InspectJobs implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectJobs.class);
 
-    public static final int JOB_SLEEP_TIME = 60;
+    public static final int JOB_SLEEP_TIME_IN_SECOND = 10;
     private RTScanner rtScanner;
-    private int sleepTime;
     private boolean shouldStop;
 
     public InspectJobs(RTScanner scanner) {
         this.rtScanner = scanner;
-        this.sleepTime = RepairnatorConfig.getInstance().getJobSleepTime();
     }
 
     /**
@@ -34,30 +43,31 @@ public class InspectJobs implements Runnable {
     @Override
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
-        if (sleepTime == -1) {
-            throw new RuntimeException("Sleep time has to be set before running this.");
-        }
         while (!shouldStop) {
-            Optional<List<JobV2>> jobListOpt = RepairnatorConfig.getInstance().getJTravis().job().allFromV2();
+            Optional<List<JobV2>> jobListOpt = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis()).allFromV2();
 
             if (jobListOpt.isPresent()) {
                 List<JobV2> jobList = jobListOpt.get();
-                LOGGER.info("Retrieved "+jobList.size()+" jobs");
+                int nInteresting = 0;
                 for (JobV2 job : jobList) {
                     if (this.rtScanner.isRepositoryInteresting(job.getRepositoryId())) {
-                        this.rtScanner.submitWaitingBuild(job.getBuildId());
+                        nInteresting++;
+                        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
+                        this.rtScanner.getInspectBuilds().submitNewBuild(optionalBuild.get());
                     }
                 }
+                LOGGER.info("Retrieved "+jobList.size()+" jobs, with "+nInteresting+" repos");
             }
             if (this.rtScanner.getInspectBuilds().maxSubmittedBuildsReached() || !jobListOpt.isPresent()) {
-                LOGGER.debug("Max number of submitted builds reached. Sleep for "+sleepTime+" seconds.");
                 try {
-                    Thread.sleep(sleepTime * 1000);
+                    Thread.sleep(RepairnatorConfig.getInstance().getJobSleepTime() * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+            rtScanner.saveInfoToDisk();
         }
         LOGGER.info("This will now stop.");
     }
 }
+

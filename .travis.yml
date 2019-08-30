@@ -9,22 +9,21 @@ services:
  - docker
 
 
-install: ./.travis/travis-before.sh
 
 jobs:
   include:
-    - stage: prepare cache
-      script: ./.travis/travis-before.sh
-      
     - stage: test
+      name: "maven-repair"
+      install: true
       script: ./.travis/travis-maven-repair.sh
 
     - stage: test
+      name: "repairnator"
+      install: ./.travis/travis-before.sh
       script: ./.travis/travis-run.sh
 
     - stage: deploy
+      name: "deploy to Sonatype and Dockerhub"
       script: ./.travis/travis-deploy.sh
+      if: branch = master
 
-branches:
-  only:
-  - master

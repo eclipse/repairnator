@@ -100,6 +100,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("runId");
         opt.setLongFlag("runId");
         opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("1234");
         opt.setHelp("Specify the run id for this launch.");
         return opt;
     }
@@ -108,12 +109,61 @@ public class LauncherUtils {
         return arguments.getString("runId");
     }
 
-    public static FlaggedOption defineArgInput(String helpMessage) {
+    public static FlaggedOption defineArgInput() {
+        /* ./builds.txt contain one build id per line
+
+            346537408
+            347223109
+            348887356
+            349620528
+            351046304
+            353774072
+            358555930
+            361311603
+            368867994
+            369727490
+            369854684
+            369859631
+            370885458
+            371144762
+            371488143
+            374841318
+            376812142
+
+            (this is the list from Expedition 2)
+         */
         FlaggedOption opt = new FlaggedOption("input");
         opt.setShortFlag('i');
         opt.setLongFlag("input");
-        opt.setDefault("/tmp/input.txt");
-        opt.setHelp(helpMessage);
+        opt.setDefault("./builds.txt");
+        opt.setHelp("Specify the input file containing the list of build ids.");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgProjectInput() {
+        /* ./projects.txt contain one slug per line
+
+        INRIA/spoon
+        rails/rails
+        ....
+         */
+        FlaggedOption opt = new FlaggedOption("input");
+        opt.setShortFlag('i');
+        opt.setLongFlag("input");
+        opt.setDefault("./projects.txt");
+        opt.setHelp("Specify where to find the list of projects to scan.");
+        return opt;
+    }
+
+    public static FlaggedOption defineArgBranchInput() {
+        /* ./branches.txt contain one branch per line
+            typically from https://github.com/Spirals-Team/librepair-experiments/
+         */
+        FlaggedOption opt = new FlaggedOption("input");
+        opt.setShortFlag('i');
+        opt.setLongFlag("input");
+        opt.setDefault("./projects.txt");
+        opt.setHelp("Specify the input file containing the list of branches to reproduce (one branch per line)");
         return opt;
     }
 
@@ -125,7 +175,8 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("output");
         opt.setShortFlag('o');
         opt.setLongFlag("output");
-        opt.setDefault("/tmp/repairnator-output");
+        // we don't assume the presence of "/tmp" (eg on windows) and the it is writable
+        opt.setDefault("./repairnator-output");
         if (launcherType == LauncherType.DOCKERPOOL || launcherType == LauncherType.CHECKBRANCHES) {
             opt.setRequired(true);
         }
@@ -255,18 +306,9 @@ public class LauncherUtils {
         return arguments.getBoolean("createOutputDir");
     }
 
-    public static FlaggedOption defineArgLogDirectory() {
-        FlaggedOption opt = new FlaggedOption("logDirectory");
-        opt.setShortFlag('l');
-        opt.setLongFlag("logDirectory");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("/tmp/repairnator-logs");
-        opt.setHelp("Specify where to put logs and serialized files created by docker machines.");
-        return opt;
-    }
 
     public static String getArgLogDirectory(JSAPResult arguments) {
-        return arguments.getString("logDirectory");
+        return arguments.getString("output");
     }
 
     public static Switch defineArgSkipDelete() {
@@ -286,7 +328,7 @@ public class LauncherUtils {
         opt.setShortFlag('t');
         opt.setLongFlag("threads");
         opt.setStringParser(JSAP.INTEGER_PARSER);
-        opt.setDefault("2");
+        opt.setDefault("1");
         opt.setHelp("Specify the number of threads to run in parallel");
         return opt;
     }
@@ -339,7 +381,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("ghOauth");
         opt.setLongFlag("ghOauth");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("foobar");
+        opt.setDefault(System.getenv("GITHUB_OAUTH"));
         opt.setHelp("Specify Github Token to use");
         return opt;
     }
@@ -387,19 +429,11 @@ public class LauncherUtils {
             printUsage(jsap, launcherType);
         }
 
-        if (launcherType == LauncherType.PIPELINE) {
-            checkEnvironmentVariable(Utils.M2_HOME, jsap, launcherType);
-        }
 
         checkPushUrlArg(jsap, arguments, launcherType);
     }
 
-    public static void checkEnvironmentVariable(String envVariable, JSAP jsap, LauncherType launcherType) {
-        if (System.getenv(envVariable) == null || System.getenv(envVariable).equals("")) {
-            System.err.println("You must set the following environment variable: "+envVariable);
-            LauncherUtils.printUsage(jsap, launcherType);
-        }
-    }
+
 
     public static void checkPushUrlArg(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (getArgPushUrl(arguments) != null) {

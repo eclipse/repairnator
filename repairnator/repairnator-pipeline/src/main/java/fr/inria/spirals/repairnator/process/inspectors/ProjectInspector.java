@@ -2,30 +2,39 @@ package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
-import fr.inria.spirals.repairnator.process.step.push.*;
-import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
-import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
-import fr.inria.spirals.repairnator.process.step.*;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.TestProject;
+import fr.inria.spirals.repairnator.process.step.WritePropertyFile;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
+import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
+import fr.inria.spirals.repairnator.process.step.push.CommitProcessEnd;
+import fr.inria.spirals.repairnator.process.step.push.CommitType;
+import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
+import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
+import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.utils.Utils;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
@@ -34,7 +43,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class initialize the pipelines by creating the steps:
@@ -198,7 +209,7 @@ public class ProjectInspector {
         if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
             AbstractStep cloneRepo = new CloneRepository(this);
             cloneRepo.addNextStep(new CheckoutBuggyBuild(this, true));
-            
+
             // If we have experimental plugins, we need to add them here.
             String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
             if(repos != null) {
@@ -260,7 +271,7 @@ public class ProjectInspector {
                 }
 
                 for (AbstractDataSerializer serializer : this.serializers) {
-                    serializer.serializeData(this);
+                    serializer.serialize();
                 }
             }
         } else {
@@ -360,11 +371,15 @@ public class ProjectInspector {
             }
             this.logger.info(stepNameFormatted + stepStatus + stepDurationFormatted);
         }
-        String finding = AbstractDataSerializer.getPrettyPrintState(this).toUpperCase();
+        String finding = getFinding();
         finding = (finding.equals("UNKNOWN")) ? "-" : finding;
         this.logger.info("----------------------------------------------------------------------");
         this.logger.info("PIPELINE FINDING: "+finding);
         this.logger.info("----------------------------------------------------------------------");
+    }
+
+    public String getFinding() {
+        return AbstractDataSerializer.getPrettyPrintState(this).toUpperCase();
     }
 
 }
