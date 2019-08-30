@@ -5,27 +5,29 @@ import fr.inria.jtravis.entities.Repository;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.realtime.RTScanner;
-import fr.inria.spirals.repairnator.serializer.Serializer;
+import fr.inria.spirals.repairnator.serializer.SerializerImpl;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class BlacklistedSerializer extends Serializer {
+public class BlacklistedSerializer extends SerializerImpl {
 
     public enum Reason {
         OTHER_LANGUAGE,
         USE_GRADLE,
         UNKNOWN_BUILD_TOOL,
-        NO_SUCCESSFUL_BUILD
+        NO_SUCCESSFUL_BUILD,
+        CONFIGURED_AS_BLACKLISTED
     }
 
     RTScanner rtScanner;
-    public BlacklistedSerializer(List<SerializerEngine> engines, RTScanner rtScanner) {
-        super(engines, SerializerType.BLACKLISTED);
+    public BlacklistedSerializer(RTScanner rtScanner, SerializerEngine... engines) {
+        super(Arrays.asList(engines), SerializerType.BLACKLISTED);
         this.rtScanner = rtScanner;
     }
 
@@ -56,12 +58,16 @@ public class BlacklistedSerializer extends Serializer {
         return result;
     }
 
-    public void serialize(Repository repo, Reason reason, String comment) {
+    List<SerializedData> allData = new ArrayList<>();
+
+    public void addBlackListedRepo(Repository repo, Reason reason, String comment) {
         SerializedData data = new SerializedData(this.serializeAsList(repo, reason, comment), this.serializeAsJson(repo, reason, comment));
 
-        List<SerializedData> allData = new ArrayList<>();
         allData.add(data);
+    }
 
+    @Override
+    public void serialize() {
         for (SerializerEngine engine : this.getEngines()) {
             engine.serialize(allData, this.getType());
         }

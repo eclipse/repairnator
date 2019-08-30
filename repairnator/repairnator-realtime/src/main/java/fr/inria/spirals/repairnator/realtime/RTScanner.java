@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -29,14 +28,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 /**
  * This class is the backbone for the realtime scanner.
  */
 public class RTScanner {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(RTScanner.class);
     private static final int DURATION_IN_TEMP_BLACKLIST = 600; // in seconds
-
+    
     // lists are using repository ID: that's why they're typed with long
     private final List<Long> blackListedRepository;
     private final List<Long> whiteListedRepository;
@@ -45,9 +44,8 @@ public class RTScanner {
 
     private final InspectBuilds inspectBuilds;
     private final InspectJobs inspectJobs;
-    private final BuildRunner buildRunner;
-    private FileWriter blacklistWriter;
-    private FileWriter whitelistWriter;
+    private PipelineRunner pipelineRunner;
+
     private boolean running;
     private String runId;
     private List<SerializerEngine> engines;
@@ -55,16 +53,28 @@ public class RTScanner {
     private EndProcessNotifier endProcessNotifier;
     private TimedSummaryNotifier summaryNotifier;
 
-    public RTScanner(String runId, List<SerializerEngine> engines) {
-        this.engines = engines;
+    public RTScanner(String runId) {
         this.blackListedRepository = new ArrayList<>();
         this.whiteListedRepository = new ArrayList<>();
         this.tempBlackList = new HashMap<>();
-        this.buildRunner = new BuildRunner(this);
+        this.pipelineRunner = new DockerPipelineRunner(this);
+		this.pipelineRunner.initRunner();
         this.inspectBuilds = new InspectBuilds(this);
         this.inspectJobs = new InspectJobs(this);
         this.runId = runId;
-        this.blacklistedSerializer = new BlacklistedSerializer(this.engines, this);
+
+        this.blacklistedSerializer = new BlacklistedSerializer(this);
+    }
+
+    public RTScanner(String runId, List<SerializerEngine> theengines) {
+        this(runId);
+        this.engines = theengines;
+        this.blacklistedSerializer = new BlacklistedSerializer(this, theengines.toArray(new SerializerEngine[0]));
+    }
+
+    public RTScanner(String runId, List<SerializerEngine> engines, PipelineRunner runner) {
+        this(runId, engines);
+        this.pipelineRunner = runner;
     }
 
     public void setEndProcessNotifier(EndProcessNotifier endProcessNotifier) {
@@ -97,25 +107,22 @@ public class RTScanner {
                     this.whiteListedRepository.add(Long.parseLong(repoId));
                 }
             }
-
-            this.whitelistWriter = new FileWriter(whiteListFile, true);
         } catch (IOException e) {
             LOGGER.error("Error while initializing whitelist", e);
         }
         LOGGER.info("Whitelist initialized with: "+this.whiteListedRepository.size()+" entries");
     }
 
+    /** repairnator can be configured with a initial black list */
     public void initBlackListedRepository(File blackListFile) {
         LOGGER.info("Init blacklist repository...");
         try {
             List<String> lines = Files.readAllLines(blackListFile.toPath());
             for (String repoId : lines) {
                 if (!repoId.trim().isEmpty()) {
-                    this.blackListedRepository.add(Long.parseLong(repoId));
+                    addInBlacklistRepository(RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(repoId).get(), BlacklistedSerializer.Reason.CONFIGURED_AS_BLACKLISTED, "blacklisted from "+blackListFile.getPath());
                 }
             }
-
-            this.blacklistWriter = new FileWriter(blackListFile, true);
         } catch (IOException e) {
             LOGGER.error("Error while initializing blacklist", e);
         }
@@ -133,9 +140,18 @@ public class RTScanner {
     public void launch() {
         if (!this.running) {
             LOGGER.info("Start running RTScanner...");
-            this.buildRunner.initRunner();
+            this.pipelineRunner.initRunner();
             new Thread(this.inspectBuilds).start();
-            new Thread(this.inspectJobs).start();
+            Thread rtScannerThread = Thread.currentThread();
+            Thread thread = new Thread(this.inspectJobs);
+
+            thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(Thread t, Throwable e) {
+                    rtScannerThread.interrupt();
+                }
+            });
+            thread.start();
             if(summaryNotifier != null) {
                 LOGGER.info("Starting summary notifier");
                 new Thread(this.summaryNotifier).start();
@@ -145,11 +161,10 @@ public class RTScanner {
             if (RepairnatorConfig.getInstance().getDuration() != null) {
                 InspectProcessDuration inspectProcessDuration;
                 if (this.endProcessNotifier != null) {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner, this.endProcessNotifier);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.endProcessNotifier);
                 } else {
-                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs, this.buildRunner);
+                    inspectProcessDuration = new InspectProcessDuration(this.inspectBuilds, this.inspectJobs);
                 }
-
                 new Thread(inspectProcessDuration).start();
             }
             if(RepairnatorConfig.getInstance().getNumberOfPRs() != 0) {
@@ -164,7 +179,6 @@ public class RTScanner {
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs,
-                            this.buildRunner,
                             this.endProcessNotifier);
                 } else {
                     PRCounter = new PullRequestCounter(
@@ -173,8 +187,7 @@ public class RTScanner {
                             conf.getMongodbName(),
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
-                            this.inspectJobs,
-                            this.buildRunner);
+                            this.inspectJobs);
                 }
                 new Thread(PRCounter).start();
             }
@@ -182,45 +195,29 @@ public class RTScanner {
     }
 
     private void addInBlacklistRepository(Repository repository, BlacklistedSerializer.Reason reason, String comment) {
-        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is blacklisted. Reason: "+reason.name()+" Comment: "+comment);
-        this.blacklistedSerializer.serialize(repository, reason, comment);
+        LOGGER.info("Repository "+repository.getSlug()+" is blacklisted, "+reason.name()+" "+comment+"(total bl: "+blackListedRepository.size()+")" );
+
+        this.blacklistedSerializer.addBlackListedRepo(repository, reason, comment);
         this.blackListedRepository.add(repository.getId());
-
-        if (this.blacklistWriter != null) {
-            try {
-                this.blacklistWriter.append(repository.getId()+"");
-                this.blacklistWriter.append("\n");
-                this.blacklistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in blacklist");
-            }
-        } else {
-            LOGGER.warn("Blacklist file not initialized: the entry won't be written.");
-        }
-
     }
 
     private void addInWhitelistRepository(Repository repository) {
+        LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is whitelisted. Total ("+whiteListedRepository.size()+")");
         this.whiteListedRepository.add(repository.getId());
-
-        if (this.whitelistWriter != null) {
-            try {
-                this.whitelistWriter.append(String.valueOf(repository.getId()));
-                this.whitelistWriter.append("\n");
-                this.whitelistWriter.flush();
-            } catch (IOException e) {
-                LOGGER.error("Error while writing entry in whitelist");
-            }
-        } else {
-            LOGGER.warn("Whitelist file not initialized: the entry won't be written.");
-        }
-
     }
 
     private void addInTempBlackList(Repository repository, String comment) {
         Date expirationDate = new Date(new Date().toInstant().plusSeconds(DURATION_IN_TEMP_BLACKLIST).toEpochMilli());
         LOGGER.info("Repository "+repository.getSlug()+" (id: "+repository.getId()+") is temporary blacklisted (expiration date: "+expirationDate.toString()+"). Reason: "+comment);
         this.tempBlackList.put(repository.getId(), expirationDate);
+    }
+
+    /**
+     * Give to build to inspectBuilds and it will submit to 
+     * ActiveMQ queue in KUBERNETES Mode if it's interesting.
+     */
+    public void submitIfBuildIsInteresting(Build build) {
+        this.inspectBuilds.submitIfBuildIsInteresting(build);
     }
 
     /**
@@ -343,19 +340,14 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            this.buildRunner.submitBuild(build);
+            this.pipelineRunner.submitBuild(build);
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }
     }
 
-    /**
-     * Use this method to submit a build to the thread which refresh their status.
-     */
-    public void submitWaitingBuild(int buildId) {
-        Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
-        if (optionalBuild.isPresent()) {
-            this.inspectBuilds.submitNewBuild(optionalBuild.get());
-        }
+    public void saveInfoToDisk() {
+        blacklistedSerializer.serialize();;
     }
+
 }

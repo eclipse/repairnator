@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
+# running the Java tests of Repairnator on Travis
 
 set -e
 export M2_HOME=/usr/local/maven
 
 cd repairnator
 
-mvn clean install -Ptravis -B
-mvn jacoco:report coveralls:report --fail-never
+mvn clean test -B
 
-./docker-images/checkbranches-dockerimage/check_branches_test.sh
-./docker-images/bears-checkbranches-dockerimage/check_branches_test.sh
+# printing timing results to identify slow tests
+grep -h time= */target/surefire-reports/*xml

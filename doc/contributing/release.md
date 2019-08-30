@@ -54,10 +54,10 @@ Don't forget also to zip the `scripts` folder and to add it to the Github releas
 ## Release the docker image
 
 You have to build the docker images, to tag them with the right tag, and then to deploy them.
-First ensure your are logged in with repairnator user:
+First ensure your are logged in:
 
 ```
-docker login -u repairnator
+docker login -u <user>
 ```
 
 Then follow each step for each docker image you want to deploy (e.g. pipeline-dockerimage, bears-dockerimage, ...).
@@ -71,10 +71,10 @@ $ cat docker-images/pipeline-dockerimage/version.ini
 
 Then launch the image build with the right version number as a tag: 
 ```
-docker build -t spirals/repairnator:<version> docker-images/pipeline-dockerimage
+docker build -t repairnator/pipeline:<version> docker-images/pipeline-dockerimage
 ```
 
 And finally deploy the image:
 ```
-docker push spirals/repairnator:<version>
+docker push repairnator/pipeline:<version>
 ```

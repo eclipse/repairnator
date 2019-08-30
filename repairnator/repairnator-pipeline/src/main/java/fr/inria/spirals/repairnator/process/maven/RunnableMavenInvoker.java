@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Properties;
 
 /**
  * This class allows us to run a Maven goal in a dedicated thread that we can interrupt for timeout
@@ -31,8 +32,15 @@ public class RunnableMavenInvoker implements Runnable {
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile(new File(this.mavenHelper.getPomFile()));
         request.setGoals(Arrays.asList(this.mavenHelper.getGoal()));
-        request.setProperties(this.mavenHelper.getProperties());
+        Properties props = this.mavenHelper.getProperties();
+        if (System.getenv("M2_HOME") == null) {
+            // sensible value
+            // https://stackoverflow.com/questions/14793015/programmatically-launch-m2e-maven-command
+            System.setProperty("maven.home", "/usr/share/maven");
+        }
+        request.setProperties(props);
         request.setBatchMode(true);
+        request.setShowErrors(true);
 
         Invoker invoker = new DefaultInvoker();
 
@@ -48,7 +56,7 @@ public class RunnableMavenInvoker implements Runnable {
             this.logger.error("Error while executing goal " + this.mavenHelper.getGoal()
                     + " on the following pom file: " + this.mavenHelper.getPomFile()
                     + ". Properties: " + this.mavenHelper.getProperties());
-            this.logger.debug(e.getMessage());
+            this.logger.error(e.getMessage());
             this.mavenHelper.getInspector().getJobStatus().addStepError(this.mavenHelper.getName(), e.getMessage());
             this.exitCode = MavenHelper.MAVEN_ERROR;
         }

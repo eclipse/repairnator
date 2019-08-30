@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by urli on 21/04/2017.
  */
-public class HardwareInfoSerializer extends ProcessSerializer {
+public class HardwareInfoSerializer extends SerializerImpl {
 
     private String runId;
     private String buildId;

@@ -1,21 +1,17 @@
 package fr.inria.spirals.repairnator.realtime.counter;
 
-import java.util.Date;
-
-import org.bson.conversions.Bson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
-import fr.inria.spirals.repairnator.realtime.BuildRunner;
 import fr.inria.spirals.repairnator.realtime.InspectBuilds;
 import fr.inria.spirals.repairnator.realtime.InspectJobs;
+import org.bson.conversions.Bson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 /**
  * A class that counts the number of patches created since 
  * the rtscanner started running.
@@ -29,7 +25,7 @@ public class PatchCounter implements Runnable{
     // Sleep for this interval
     private static final int INTERVAL = 1800 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(PatchCounter.class);
-    
+
     private int numberOfPatchesToRunFor;
     private Bson patchesFilter;
     private Bson buildFilter;
@@ -38,15 +34,13 @@ public class PatchCounter implements Runnable{
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private BuildRunner buildRunner;
-    
+
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
             String mongodbName,
             Date startDate,
             InspectBuilds inspectBuilds,
-            InspectJobs inspectJobs,
-            BuildRunner buildRunner) {
+            InspectJobs inspectJobs) {
         // Set the variables
         this.numberOfPatchesToRunFor = numberOfPatchesToRunFor;
         this.mongodbHost = mongodbHost;
@@ -59,20 +53,19 @@ public class PatchCounter implements Runnable{
                 Filters.gte("buildFinishedDate", startDate),
                 Filters.eq("status", "PATCHED"));
     }
-    
+        
     public PatchCounter(int numberOfPatchesToRunFor, 
             String mongodbHost,
             String mongodbName,
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            BuildRunner buildRunner,
             EndProcessNotifier endProcessNotifier) {
         this(numberOfPatchesToRunFor, mongodbHost, mongodbName, startDate,
-                inspectBuilds, inspectJobs, buildRunner);
+                inspectBuilds, inspectJobs);
         this.endProcessNotifier = endProcessNotifier;
     }
-    
+
     /**
      * Has the number of patches or patched builds exceeded the number
      * we intend them to run for?
@@ -122,11 +115,9 @@ public class PatchCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            this.buildRunner.switchOff();
             if(this.endProcessNotifier != null) {
                 this.endProcessNotifier.notifyEnd();
             }
         }
-    }
-    
+    }    
 }

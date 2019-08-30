@@ -12,23 +12,21 @@ import java.util.Date;
 public class InspectProcessDuration implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(InspectProcessDuration.class);
     private static final int SLEEP_TIME = 10; // seconds
-
+    
     private Duration duration;
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private BuildRunner buildRunner;
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner, EndProcessNotifier endProcessNotifier) {
-        this(inspectBuilds, inspectJobs, buildRunner);
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, EndProcessNotifier endProcessNotifier) {
+        this(inspectBuilds, inspectJobs);
         this.endProcessNotifier = endProcessNotifier;
     }
 
-    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs, BuildRunner buildRunner) {
+    public InspectProcessDuration(InspectBuilds inspectBuilds, InspectJobs inspectJobs) {
         this.duration = RepairnatorConfig.getInstance().getDuration();
         this.inspectBuilds = inspectBuilds;
         this.inspectJobs = inspectJobs;
-        this.buildRunner = buildRunner;
     }
 
     @Override
@@ -47,7 +45,6 @@ public class InspectProcessDuration implements Runnable {
         LOGGER.info("The process will now stop.");
         this.inspectBuilds.switchOff();
         this.inspectJobs.switchOff();
-        this.buildRunner.switchOff();
 
         if (this.endProcessNotifier != null) {
             this.endProcessNotifier.notifyEnd();
