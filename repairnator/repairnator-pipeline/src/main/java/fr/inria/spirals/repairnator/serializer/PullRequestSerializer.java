@@ -30,9 +30,9 @@ import fr.inria.spirals.repairnator.utils.DateUtils;
  */
 
 public class PullRequestSerializer extends AbstractDataSerializer {
-
-    public PullRequestSerializer(List<SerializerEngine> engines) {
-        super(engines, SerializerType.PULL_REQUEST);
+    
+    public PullRequestSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
+        super(engines, SerializerType.PULL_REQUEST, inspector);
     }
     
 
@@ -66,7 +66,7 @@ public class PullRequestSerializer extends AbstractDataSerializer {
         
     }
     
-    @Override
+    
     public void serializeData(ProjectInspector inspector) {
         List<SerializedData> allData = new ArrayList<>();
         
