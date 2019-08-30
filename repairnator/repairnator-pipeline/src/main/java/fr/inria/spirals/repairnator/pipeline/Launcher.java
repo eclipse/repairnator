@@ -408,19 +408,6 @@ public class Launcher {
         hardwareInfoSerializer.serialize();
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
-
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            serializers.add(new InspectorSerializer4Bears(this.engines));
-        } else {
-            serializers.add(new InspectorSerializer(this.engines));
-        }
-
-        serializers.add(new PropertiesSerializer(this.engines));
-        serializers.add(new InspectorTimeSerializer(this.engines));
-        serializers.add(new PipelineErrorSerializer(this.engines));
-        serializers.add(new PatchesSerializer(this.engines));
-        serializers.add(new ToolDiagnosticSerializer(this.engines));
-
         ProjectInspector inspector;
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
