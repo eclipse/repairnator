@@ -68,7 +68,7 @@ public class Launcher {
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
     private PatchNotifier patchNotifier;
-    private ProjectInspector  inspector;
+    private ProjectInspector inspector;
 
     private static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
@@ -408,7 +408,6 @@ public class Launcher {
         hardwareInfoSerializer.serialize();
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
-        ProjectInspector inspector;
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
