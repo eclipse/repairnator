@@ -28,7 +28,7 @@ public class Checkstyle extends AbstractStep {
         Properties properties = new Properties();
         properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
 
-        MavenHelper helper = new MavenHelper(this.getPom(), "checkstyle:checkstyle", properties, this.getClass().getSimpleName(), this.getInspector(), true, false);
+        MavenHelper helper = new MavenHelper(this.getPom(), "checkstyle:checkstyle", properties, this.getClass().getSimpleName(), this.getInspector(), false);
 
         int result;
         try {
