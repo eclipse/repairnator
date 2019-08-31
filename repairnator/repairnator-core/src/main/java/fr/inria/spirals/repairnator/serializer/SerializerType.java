@@ -11,6 +11,7 @@ public enum SerializerType {
     PIPELINE_ERRORS("pipeline-errors"),
     PATCHES("patches"),
     TOOL_DIAGNOSTIC("tool-diagnostic"),
+    PULL_REQUEST("pull-request"),
 
     // dockerpool
     TREATEDBUILD("treatedbuild"),

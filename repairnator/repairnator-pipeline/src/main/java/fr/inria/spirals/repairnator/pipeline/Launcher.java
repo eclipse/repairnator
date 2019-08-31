@@ -37,6 +37,7 @@ import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
 import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
+import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -67,7 +68,7 @@ public class Launcher {
     private List<SerializerEngine> engines;
     private List<AbstractNotifier> notifiers;
     private PatchNotifier patchNotifier;
-    private ProjectInspector  inspector;
+    private ProjectInspector inspector;
 
     private static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
@@ -408,7 +409,6 @@ public class Launcher {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
@@ -428,6 +428,7 @@ public class Launcher {
         serializers.add(new PipelineErrorSerializer(this.engines, inspector));
         serializers.add(new PatchesSerializer(this.engines, inspector));
         serializers.add(new ToolDiagnosticSerializer(this.engines, inspector));
+        serializers.add(new PullRequestSerializer(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
