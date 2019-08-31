@@ -65,11 +65,11 @@ public class MavenHelper {
     private InvocationOutputHandler errorHandler;
     private InvocationOutputHandler outputHandler;
 
-    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers) {
-        this(pomFile, goal, properties, name, inspector, enableHandlers, true);
+    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector) {
+        this(pomFile, goal, properties, name, inspector, true);
     }
 
-    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean enableHandlers, boolean skipCheckstyle) {
+    public MavenHelper(String pomFile, String goal, Properties properties, String name, ProjectInspector inspector, boolean skipCheckstyle) {
         this.goal = goal;
         this.pomFile = pomFile;
         this.properties = properties;
@@ -77,12 +77,8 @@ public class MavenHelper {
         this.inspector = inspector;
         this.skipCheckstyle = skipCheckstyle;
 
-        if (enableHandlers) {
-            this.errorHandler = new MavenErrorHandler(this);
-            this.outputHandler = new MavenFilterOutputHandler(this);
-        } else {
-            this.outputHandler = new MavenMuteOutputHandler(this);
-        }
+        this.errorHandler = new MavenErrorHandler(this);
+        this.outputHandler = new MavenFilterOutputHandler(this);
 
         this.updateProperties();
     }
