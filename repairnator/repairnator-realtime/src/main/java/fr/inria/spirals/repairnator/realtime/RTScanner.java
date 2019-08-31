@@ -9,7 +9,7 @@ import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
-import fr.inria.spirals.repairnator.realtime.counter.PatchCounter;
+import fr.inria.spirals.repairnator.realtime.counter.PullRequestCounter;
 import fr.inria.spirals.repairnator.realtime.notifier.TimedSummaryNotifier;
 import fr.inria.spirals.repairnator.realtime.serializer.BlacklistedSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -167,13 +167,13 @@ public class RTScanner {
                 }
                 new Thread(inspectProcessDuration).start();
             }
-            if(RepairnatorConfig.getInstance().getNumberOfPatchedBuilds() != 0) {
+            if(RepairnatorConfig.getInstance().getNumberOfPRs() != 0) {
                 RepairnatorConfig conf = RepairnatorConfig.getInstance();
-                LOGGER.info("RTScanner configured to stop after " + conf.getNumberOfPatchedBuilds() + " patched builds.");
-                PatchCounter patchCounter;
+                LOGGER.info("RTScanner configured to stop after " + conf.getNumberOfPRs() + " patched builds.");
+                PullRequestCounter PRCounter;
                 if(this.endProcessNotifier != null) {
-                    patchCounter = new PatchCounter(
-                            conf.getNumberOfPatchedBuilds(),
+                    PRCounter = new PullRequestCounter(
+                            conf.getNumberOfPRs(),
                             conf.getMongodbHost(),
                             conf.getMongodbName(),
                             new GregorianCalendar().getTime(),
@@ -181,15 +181,15 @@ public class RTScanner {
                             this.inspectJobs,
                             this.endProcessNotifier);
                 } else {
-                    patchCounter = new PatchCounter(
-                            conf.getNumberOfPatchedBuilds(),
+                    PRCounter = new PullRequestCounter(
+                            conf.getNumberOfPRs(),
                             conf.getMongodbHost(),
                             conf.getMongodbName(),
                             new GregorianCalendar().getTime(),
                             this.inspectBuilds,
                             this.inspectJobs);
                 }
-                new Thread(patchCounter).start();
+                new Thread(PRCounter).start();
             }
         }
     }
