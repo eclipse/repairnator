@@ -192,11 +192,25 @@ public class Launcher {
         opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("listenerMode");
-        opt2.setLongFlag("listenerMode");
+        opt2 = new FlaggedOption("listenermode");
+        opt2.setLongFlag("listenermode");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault(LISTENER_MODE.NOOP.name());
         opt2.setHelp("Possible string values KUBERNETES,NOOP . KUBERNETES is for running ActiveMQListener and "+LISTENER_MODE.NOOP.name()+" is for NoopRunner.");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqurl");
+        opt2.setLongFlag("activemqurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("tcp://localhost:61616");
+        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqlistenqueuename");
+        opt2.setLongFlag("activemqlistenqueuename");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("pipeline");
+        opt2.setHelp("Just a name, default as 'pipeline'");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("repairTools");
@@ -266,7 +280,10 @@ public class Launcher {
         this.getConfig().setWorkspacePath(arguments.getString("workspace"));
         this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
         this.getConfig().setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
-        this.getConfig().setListenerMode(arguments.getString("listenerMode"));
+        this.getConfig().setListenerMode(arguments.getString("listenermode"));
+        this.getConfig().setActiveMQUrl(arguments.getString("activemqurl"));
+        this.getConfig().setActiveMQListenQueueName(arguments.getString("activemqlistenqueuename"));
+
         if (arguments.getFile("projectsToIgnore") != null) {
             this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
