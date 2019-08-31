@@ -183,6 +183,7 @@
                 <version>2.19.1</version>
                 <configuration>
                     <argLine>${argLine}</argLine>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
             </plugin>
             <plugin>
