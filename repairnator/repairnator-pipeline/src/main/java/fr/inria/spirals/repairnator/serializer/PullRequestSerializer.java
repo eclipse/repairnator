@@ -14,7 +14,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 
 /**
- * Serializes data regarding pull requests created by Repairnator. Will be used when 
+ * Serializes data about pull requests created by Repairnator. Will be used when 
  * documenting the pull requests in a document database such as Mongo DB.
  *
  * The data stored in the generated documents and lists are:
@@ -25,10 +25,8 @@ import fr.inria.spirals.repairnator.utils.DateUtils;
  *      5. The url of the created pull request.
  *
  * @author Benjamin Tellström
- * Created on 11/07-2019
  *
  */
-
 public class PullRequestSerializer extends AbstractDataSerializer {
     
     public PullRequestSerializer(List<SerializerEngine> engines, ProjectInspector inspector) {
