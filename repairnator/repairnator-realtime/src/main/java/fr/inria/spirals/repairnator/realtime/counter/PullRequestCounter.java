@@ -12,7 +12,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
-import fr.inria.spirals.repairnator.realtime.BuildRunner;
 import fr.inria.spirals.repairnator.realtime.InspectBuilds;
 import fr.inria.spirals.repairnator.realtime.InspectJobs;
 
@@ -38,15 +37,13 @@ public class PullRequestCounter implements Runnable{
     private EndProcessNotifier endProcessNotifier;
     private InspectBuilds inspectBuilds;
     private InspectJobs inspectJobs;
-    private BuildRunner buildRunner;
     
     public PullRequestCounter(int numberOfPRsToRunFor, 
             String mongodbHost,
             String mongodbName,
             Date startDate,
             InspectBuilds inspectBuilds,
-            InspectJobs inspectJobs,
-            BuildRunner buildRunner) {
+            InspectJobs inspectJobs) {
         // Set the variables
         this.numberOfPRsToRunFor = numberOfPRsToRunFor;
         this.mongodbHost = mongodbHost;
@@ -66,10 +63,9 @@ public class PullRequestCounter implements Runnable{
             Date startDate,
             InspectBuilds inspectBuilds,
             InspectJobs inspectJobs,
-            BuildRunner buildRunner,
             EndProcessNotifier endProcessNotifier) {
         this(numberOfPRsToRunFor, mongodbHost, mongodbName, startDate,
-                inspectBuilds, inspectJobs, buildRunner);
+                inspectBuilds, inspectJobs);
         this.endProcessNotifier = endProcessNotifier;
     }
     
@@ -122,7 +118,6 @@ public class PullRequestCounter implements Runnable{
             LOGGER.info("The process will now stop.");
             this.inspectBuilds.switchOff();
             this.inspectJobs.switchOff();
-            this.buildRunner.switchOff();
             if(this.endProcessNotifier != null) {
                 this.endProcessNotifier.notifyEnd();
             }
