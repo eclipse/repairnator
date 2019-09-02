@@ -30,9 +30,9 @@ import static org.junit.Assert.assertTrue;
 public class TestRTScanner {
 
     // a failing build from tailp/Travisplay , branch failForRepairnator
-    public final int easyFailingBuild = 569514744;
+    public final int easyFailingBuild = 579936493;
 
-    /*@Test
+    @Test
     public void testDockerPipelineRunner() throws Exception {
         RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"NPEFix"})));
         DockerPipelineRunner d = new DockerPipelineRunner();
@@ -40,7 +40,7 @@ public class TestRTScanner {
         RunnablePipelineContainer runner = d.submitBuild(DockerPipelineRunner.REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME, new InputBuildId(RepairnatorConfig.getInstance().getJTravis().build().fromId(easyFailingBuild).get().getId()));
         runner.run();
         assertEquals(0, runner.getExitStatus().statusCode().longValue());
-    }*/
+    }
 
     /*@Test
     public void testRepositoryWithoutSuccessfulBuildIsNotInteresting() {
@@ -114,7 +114,7 @@ public class TestRTScanner {
     @Ignore
     @Test
      */
-    @Test
+    /*@Test
     public void tactiveMQRunnerConnection()
     {
         int buildId = 560996872;
@@ -150,6 +150,6 @@ public class TestRTScanner {
 
       data = new Gson().fromJson(reader, JsonObject.class);
       assertEquals("rails/rails", data.get("repoName").getAsString());
-    }
+    }*/
 
 }
