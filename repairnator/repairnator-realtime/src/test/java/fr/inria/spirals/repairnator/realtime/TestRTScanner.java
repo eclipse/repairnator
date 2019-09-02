@@ -42,7 +42,7 @@ public class TestRTScanner {
         assertEquals(0, runner.getExitStatus().statusCode().longValue());
     }*/
 
-    @Test
+    /*@Test
     public void testRepositoryWithoutSuccessfulBuildIsNotInteresting() {
         String slug = "surli/failingProject";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
@@ -52,9 +52,9 @@ public class TestRTScanner {
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
         assertFalse(result);
-    }
+    }*/
 
-    /*@Test
+    @Test
     public void testRepositoryWithoutCheckstyleIsNotInteresting() {
         String slug = "surli/test-repairnator";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
@@ -66,7 +66,7 @@ public class TestRTScanner {
         assertFalse(result);
     }
 
-    @Test
+    /*@Test
     public void testRepositoryWithoutCheckstyleIsInteresting() {
         String slug = "repairnator/embedded-cassandra";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
@@ -100,8 +100,8 @@ public class TestRTScanner {
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
         assertFalse(result);
-    }*/
-
+    }
+*/
     /**
      * Note this test might fail locally if you don't have activeMQ
      * In that case this test can be temporarily be commented out
