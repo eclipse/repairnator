@@ -61,12 +61,11 @@ public class SequencerRepair extends AbstractRepairStep {
                 dependencies.add(url.getPath());
             }
         }
-//        cs.command.put("-loglevel", "DEBUG");
+        cs.command.put("-loglevel", "DEBUG");
         cs.command.put("-mode", "custom");
         cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
         cs.command.put("-location", jobStatus.getFailingModulePath());
-        String relativeSourcePath = new File(jobStatus.getFailingModulePath()).toURI().relativize(jobStatus.getRepairSourceDir()[0].toURI()).getPath();
-        cs.command.put("-srcjavafolder", relativeSourcePath);
+        cs.command.put("-flthreshold", "0.5");
         cs.command.put("-maxgen", "0");
         cs.command.put("-javacompliancelevel", "8");
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
