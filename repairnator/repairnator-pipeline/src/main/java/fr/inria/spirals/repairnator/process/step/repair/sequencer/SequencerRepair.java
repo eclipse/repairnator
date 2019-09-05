@@ -44,7 +44,7 @@ public class SequencerRepair extends AbstractRepairStep {
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
-        this.patchDir = new File("/private" + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
+        this.patchDir = new File(this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
         this.patchDir.mkdirs();
 
         // check ...
@@ -69,7 +69,7 @@ public class SequencerRepair extends AbstractRepairStep {
         cs.command.put("-maxgen", "0");
         cs.command.put("-javacompliancelevel", "8");
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
-        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"+ "/private" + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".log");
+        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"+ this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".log");
 
         // construct AstorMain
         AstorMain astorMain = new AstorMain();
@@ -103,7 +103,7 @@ public class SequencerRepair extends AbstractRepairStep {
                         }
 
                         final String command = "docker run "
-                            + "-v /private/var/folders:/private/var/folders "
+                            + "-v /var/folders:/var/folders "
                             + "sequencer "
                             + "bash ./src/sequencer-predict.sh "
                             + "--buggy_file=" + buggyFilePath + " "
