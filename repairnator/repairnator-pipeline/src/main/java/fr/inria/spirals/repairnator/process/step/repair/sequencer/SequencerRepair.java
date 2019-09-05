@@ -61,7 +61,7 @@ public class SequencerRepair extends AbstractRepairStep {
                 dependencies.add(url.getPath());
             }
         }
-        cs.command.put("-loglevel", "DEBUG");
+//         cs.command.put("-loglevel", "DEBUG");
         cs.command.put("-mode", "custom");
         cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
         cs.command.put("-location", jobStatus.getFailingModulePath());
