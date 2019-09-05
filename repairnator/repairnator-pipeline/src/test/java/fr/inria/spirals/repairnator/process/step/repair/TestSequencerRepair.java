@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.repair;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -73,19 +74,20 @@ public class TestSequencerRepair {
             .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
             .addNextStep(new ComputeClasspath(inspector, true))
             .addNextStep(new ComputeSourceDir(inspector, true, false))
+            .addNextStep(new ComputeTestDir(inspector, true))
             .addNextStep(sequencerRepair);
         cloneStep.execute();
 
         assertThat(sequencerRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(7));
-        assertThat(stepStatusList.get(6).getStep(), is(sequencerRepair));
+        assertThat(stepStatusList.size(), is(8));
+        assertThat(stepStatusList.get(7).getStep(), is(sequencerRepair));
 
-        for (StepStatus stepStatus : stepStatusList.subList(0, 6)) {
+        for (StepStatus stepStatus : stepStatusList) {
             assertThat(stepStatus.isSuccess(), is(true));
         }
-        assertThat(stepStatusList.get(6).getStatus(), is(StepStatus.StatusKind.SUCCESS));
+        assertThat(stepStatusList.get(7).getStatus(), is(StepStatus.StatusKind.SUCCESS));
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));

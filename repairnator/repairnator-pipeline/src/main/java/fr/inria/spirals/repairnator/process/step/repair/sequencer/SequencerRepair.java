@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import fr.inria.astor.approaches._3sfix.SuspiciousFile;
 import fr.inria.astor.approaches._3sfix.ZmEngine;
 import fr.inria.astor.core.entities.SuspiciousModificationPoint;
 import fr.inria.main.CommandSummary;
