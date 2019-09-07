@@ -19,8 +19,8 @@ jobs:
 
     - stage: test
       name: "repairnator"
-      install: ./.travis/travis-before.sh
-      script: ./.travis/travis-run.sh
+      install: travis_wait 60 ./.travis/travis-before.sh
+      script: travis_wait 60 ./.travis/travis-run.sh
 
     - stage: deploy
       name: "deploy to Sonatype and Dockerhub"
