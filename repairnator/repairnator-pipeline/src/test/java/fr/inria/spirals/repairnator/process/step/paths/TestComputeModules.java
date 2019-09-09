@@ -81,7 +81,7 @@ public class TestComputeModules {
 
     @Test
     public void testComputeModulesWithMultiModuleProject() throws IOException {
-        long buggyBuildCandidateId = 380717778; // https://travis-ci.org/Spirals-Team/repairnator/builds/380717778
+        long buggyBuildCandidateId = 380717778; // https://travis-ci.org/eclipse/repairnator/builds/380717778
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 

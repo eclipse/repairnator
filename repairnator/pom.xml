@@ -18,7 +18,7 @@
     <licenses>
         <license>
             <name>MIT</name>
-            <url>https://github.com/Spirals-Team/repairnator/blob/master/LICENSE</url>
+            <url>https://github.com/eclipse/repairnator/blob/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -30,7 +30,7 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/Spirals-Team/repairnator/issues</url>
+        <url>https://github.com/eclipse/repairnator/issues</url>
     </issueManagement>
 
     <developers>
@@ -49,9 +49,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/Spirals-Team/repairnator</url>
-        <connection>scm:git:git://github.com:Spirals-Team/repairnator.git</connection>
-        <developerConnection>scm:git:git@github.com:Spirals-Team/repairnator.git</developerConnection>
+        <url>https://github.com/eclipse/repairnator</url>
+        <connection>scm:git:git://github.com:eclipse/repairnator.git</connection>
+        <developerConnection>scm:git:git@github.com:eclipse/repairnator.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

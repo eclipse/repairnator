@@ -84,7 +84,7 @@ Repairnator is a software development robot that automatically repairs build fai
 <td>
 <p>
 <span style="font-size:11pt;">
-<a href="https://github.com/Spirals-Team/repairnator/">The official Github Repository containing the open-source code of Repairnator, technical documentation, and presentations.</a>
+<a href="https://github.com/eclipse/repairnator/">The official Github Repository containing the open-source code of Repairnator, technical documentation, and presentations.</a>
 
 </span>
 </p>

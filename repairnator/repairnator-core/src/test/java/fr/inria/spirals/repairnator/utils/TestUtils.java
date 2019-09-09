@@ -62,7 +62,7 @@ public class TestUtils {
 
     @Test
     public void testMatchesGithubRepoUrlWithRightRepoUrl() {
-        String repoUrl = "https://github.com/Spirals-Team/repairnator";
+        String repoUrl = "https://github.com/eclipse/repairnator";
 
         assertThat(Utils.matchesGithubRepoUrl(repoUrl), is(true));
     }
@@ -76,14 +76,14 @@ public class TestUtils {
 
     @Test
     public void testMatchesGithubRepoUrlWithWrongRepoUrlWithSlashAtTheEnd() {
-        String repoUrl = "https://github.com/Spirals-Team/repairnator/";
+        String repoUrl = "https://github.com/eclipse/repairnator/";
 
         assertThat(Utils.matchesGithubRepoUrl(repoUrl), is(false));
     }
 
     @Test
     public void testMatchesGithubRepoUrlWithWrongRepoUrlWithDotGitAtTheEnd() {
-        String repoUrl = "https://github.com/Spirals-Team/repairnator.git";
+        String repoUrl = "https://github.com/eclipse/repairnator.git";
 
         assertThat(Utils.matchesGithubRepoUrl(repoUrl), is(false));
     }

@@ -27,7 +27,7 @@ Then, Yyou create a new Java class in package `fr.inria.spirals.repairnator.proc
 * This class must declare a public constructor without any parameter.
 * The class must be declared with its fully qualified name in `repairnator-pipeline/src/main/resources/META-INF/services/fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep`.
  
- See for example [AssertFixerRepair.java](https://github.com/Spirals-Team/repairnator/blob/master/repairnator/repairnator-pipeline/src/main/java/fr/inria/spirals/repairnator/process/step/repair/AssertFixerRepair.java)
+ See for example [AssertFixerRepair.java](https://github.com/eclipse/repairnator/blob/master/repairnator/repairnator-pipeline/src/main/java/fr/inria/spirals/repairnator/process/step/repair/AssertFixerRepair.java)
  
 (Technical note: Repairnator use a Java SPI to automatically discover the available repair tools step.)
 
