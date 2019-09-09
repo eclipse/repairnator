@@ -45,6 +45,7 @@ public class TestComputePlugins {
         FileHelper.deleteFile(tmpDir);
     }
 
+/*
     @Test
     public void testComputePluginsWithSingleModuleProject() throws IOException {
         long buggyBuildCandidateId = 380717778; // https://travis-ci.org/Spirals-Team/repairnator/builds/380717778
@@ -77,7 +78,7 @@ public class TestComputePlugins {
         }
 
         assertThat(jobStatus.getProperties().getProjectMetrics().getNumberPlugins(), is(8));
-    }
+    }*/
 
     @Test
     public void testComputePluginsWithNoPlugin() throws IOException {
