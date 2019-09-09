@@ -16,7 +16,7 @@ jobs:
       name: "prepare cache"
       script: ./.travis/travis-before.sh
 
-    - stage: test
+    - stage: repair
       name: "maven-repair"
       script: ./.travis/travis-maven-repair.sh
 
