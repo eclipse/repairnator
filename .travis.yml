@@ -12,14 +12,16 @@ services:
 
 jobs:
   include:
+    - stage: prepare
+      name: "prepare cache"
+      script: ./.travis/travis-before.sh
+
     - stage: test
       name: "maven-repair"
-      install: true
       script: ./.travis/travis-maven-repair.sh
 
     - stage: test
       name: "repairnator"
-      install: travis_retry ./.travis/travis-before.sh
       script: ./.travis/travis-run.sh
 
     - stage: deploy
