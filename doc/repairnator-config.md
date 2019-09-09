@@ -146,7 +146,7 @@ Those attributes are used for the scanner.
 
 This attribute is mandatory for the scanner.
 
-The Repairnator Scanner uses a list of project slugs (a slug is composed by a Github username and a repository name, the slug of Repairnator is then `Spirals-Team/repairnator`) as input for scanning Travis CI builds.
+The Repairnator Scanner uses a list of project slugs (a slug is composed by a Github username and a repository name, the slug of Repairnator is then `eclipse/repairnator`) as input for scanning Travis CI builds.
 This attribute gives the path of the list of projects to scan. This list should be a textual file, with a slug name by line. The given path should rely on an existing file.
 
 Its default value is `$HOME_REPAIR/project_list.txt`. More explanation about `HOME_REPAIR` are given on the beginning of this page.

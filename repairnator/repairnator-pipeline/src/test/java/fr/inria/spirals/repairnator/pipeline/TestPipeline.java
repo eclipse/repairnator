@@ -62,7 +62,7 @@ public class TestPipeline {
 	@Test
 	public void testPRLuc12() throws Exception {
     	// reproducing the 12th PR of Luc
-		// see https://github.com/Spirals-Team/repairnator/issues/758
+		// see https://github.com/eclipse/repairnator/issues/758
 		Launcher l = new Launcher(new String[]{"--build", "395891390", "--repairTools", "NPEFix" });
 		Patches patchNotifier = new Patches();
 		l.setPatchNotifier(patchNotifier);

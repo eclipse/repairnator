@@ -71,7 +71,7 @@
         "description": "The url of this PR on github",
         "default": "",
         "examples": [
-            "https://github.com/Spirals-Team/repairnator/pull/855"
+            "https://github.com/eclipse/repairnator/pull/855"
         ]
     }
   }

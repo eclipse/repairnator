@@ -90,7 +90,7 @@ public class TestAbstractStep {
 
     @Test
     public void testGetPomOnProjectWithSubModule() throws IOException, InterruptedException {
-        String projectUrl = "https://github.com/Spirals-Team/repairnator.git";
+        String projectUrl = "https://github.com/eclipse/repairnator.git";
 
         File tmpDir = Files.createTempDirectory("test_get_pom_project_with_submodule").toFile();
         tmpDir.deleteOnExit();

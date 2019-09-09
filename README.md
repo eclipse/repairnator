@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Spirals-Team/repairnator.svg?branch=master)](https://travis-ci.org/Spirals-Team/repairnator)
+[![Build Status](https://travis-ci.org/eclipse/repairnator.svg?branch=master)](https://travis-ci.org/eclipse/repairnator)
 
 # Repairnator: a program repair bot for continuous integration
 
@@ -7,7 +7,7 @@ It monitors failing Travis CI builds in Java projects, tries to locally reproduc
 
 Want to join the Repairnator community? To receive news about Repairnator, shoot an email at <mailto:repairnator.subscribe@4open.science>!
 
--- [The Repairnator team](https://github.com/Spirals-Team/repairnator/issues/760)
+-- [The Repairnator team](https://github.com/eclipse/repairnator/issues/760)
 
 ## Recruit Luc Esape
 
@@ -24,7 +24,7 @@ If you want that Luc Esape [@lucesape](http://github.com/lucesape), the coolest 
 
 * [The mysterious life of Luc Esape, bug fixer extraordinaire. His big secret? He’s not human (Thomas Claburn), The Register, Oct 17 2018](https://www.theregister.co.uk/2018/10/17/luc_esape_bug_fixer/)
 * [Repairnator, an autonomous robot to repair computer bugs (Sophie Timsit) inria.fr, Sep 4 2018](https://www.inria.fr/en/centre/lille/news/repairnator-an-autonomous-robot-to-repair-computer-bugs)
-* See all media news about Repairnator in <https://github.com/Spirals-Team/repairnator/issues/771>
+* See all media news about Repairnator in <https://github.com/eclipse/repairnator/issues/771>
 
 ### Academic papers
 
@@ -55,7 +55,7 @@ This repository is organized as follows:
 
 ## Releases
 
-* Github releases: https://github.com/Spirals-Team/repairnator/releases
+* Github releases: https://github.com/eclipse/repairnator/releases
 * Maven releases: https://search.maven.org/search?q=repairnator
 * DockerHub releases: https://hub.docker.com/r/repairnator/
 

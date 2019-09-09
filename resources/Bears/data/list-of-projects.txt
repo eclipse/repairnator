@@ -89,7 +89,7 @@ eugenp/learn-spring-security
 B3Partners/brmo
 ekong-server-sdk/java
 tencentyun/cos-java-sdk-v5
-Spirals-Team/repairnator
+eclipse/repairnator
 spoluyan/livelib-crawler
 jnidzwetzki/bboxdb
 Flipkart/foxtrot
