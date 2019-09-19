@@ -40,11 +40,11 @@ public class SequencerRepair extends AbstractRepairStep {
     @Override
     protected StepStatus businessExecute() {
         this.getLogger().info("Start SequencerRepair");
-
+        String pathPrefix = ""; // for macOS: "/private";
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
-        this.patchDir = new File(this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
+        this.patchDir = new File(pathPrefix + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
         this.patchDir.mkdirs();
 
         // check ...
@@ -61,15 +61,18 @@ public class SequencerRepair extends AbstractRepairStep {
                 dependencies.add(url.getPath());
             }
         }
-//         cs.command.put("-loglevel", "DEBUG");
+//        cs.command.put("-loglevel", "DEBUG");
         cs.command.put("-mode", "custom");
         cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
         cs.command.put("-location", jobStatus.getFailingModulePath());
+//        cs.command.put("-ingredientstrategy", "fr.inria.astor.test.repair.evaluation.extensionpoints.ingredients.MaxLcsSimSearchStrategy");
         cs.command.put("-flthreshold", "0.5");
         cs.command.put("-maxgen", "0");
+//        cs.command.put("-population", "1");
+//        cs.command.put("-seed", "1");
         cs.command.put("-javacompliancelevel", "8");
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
-        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"+ this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".log");
+        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"+ pathPrefix + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".log");
 
         // construct AstorMain
         AstorMain astorMain = new AstorMain();
@@ -102,8 +105,11 @@ public class SequencerRepair extends AbstractRepairStep {
                             outputDir.mkdirs();
                         }
 
+                        // make sure that "privileged: true" in running container
                         final String command = "docker run "
-                            + "-v /var/folders:/var/folders "
+//                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
+//                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/folders "
+                            + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
                             + "sequencer "
                             + "bash ./src/sequencer-predict.sh "
                             + "--buggy_file=" + buggyFilePath + " "
@@ -116,10 +122,12 @@ public class SequencerRepair extends AbstractRepairStep {
                         StringJoiner stringJoiner = new StringJoiner("\n");
                         bufferedReader.lines().forEach(stringJoiner::add);
                         String message = stringJoiner.toString();
+                        System.out.println(message);
                         BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                         StringJoiner errorJoiner = new StringJoiner("\n");
                         errorReader.lines().forEach(errorJoiner::add);
                         String warning = errorJoiner.toString();
+                        System.err.println(warning);
                         process.waitFor();
                         sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, message, warning));
                     } catch (Exception e) {

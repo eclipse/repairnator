@@ -12,9 +12,6 @@ COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
 
 RUN apt-get update
-# HOW TO RUN
-# docker run -it -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker pipeline-dockerimage
-# RUN apt-get install -y libltdl7
 RUN apt-get install xmlstarlet apt-utils cloc -y
 RUN curl -O -s https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/repairnator-pipeline/maven-metadata.xml
 RUN echo `xmlstarlet sel -t -v '//latest' maven-metadata.xml` > /root/version.ini

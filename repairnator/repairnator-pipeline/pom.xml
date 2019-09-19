@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
-            <version>20190905</version>
+            <version>20190919</version>
         </dependency>
         <dependency>
             <groupId>com.github.java-json-tools</groupId>
