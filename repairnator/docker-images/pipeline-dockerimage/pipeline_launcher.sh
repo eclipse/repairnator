@@ -87,4 +87,4 @@ java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurati
 # https://github.com/KTH/sequencer
 # https://hub.docker.com/r/zimin/sequencer
 # https://hub.docker.com/r/ycaxgjd/sequencer
-docker pull ycaxgjd/sequencer
+docker pull ycaxgjd/sequencer:1.0

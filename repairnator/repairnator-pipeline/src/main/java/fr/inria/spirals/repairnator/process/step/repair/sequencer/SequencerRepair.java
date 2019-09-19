@@ -110,7 +110,7 @@ public class SequencerRepair extends AbstractRepairStep {
 //                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
 //                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/folders "
                             + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
-                            + "sequencer "
+                            + "ycaxgjd/sequencer:1.0 "
                             + "bash ./src/sequencer-predict.sh "
                             + "--buggy_file=" + buggyFilePath + " "
                             + "--buggy_line=" + buggyLineNumber + " "
