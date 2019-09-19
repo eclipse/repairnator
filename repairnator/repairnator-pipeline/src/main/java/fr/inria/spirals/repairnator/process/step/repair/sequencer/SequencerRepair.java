@@ -41,6 +41,7 @@ public class SequencerRepair extends AbstractRepairStep {
     protected StepStatus businessExecute() {
         this.getLogger().info("Start SequencerRepair");
         String pathPrefix = ""; // for macOS: "/private";
+        String imageTag = "ycaxgjd/sequencer:1.0";
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
@@ -106,30 +107,36 @@ public class SequencerRepair extends AbstractRepairStep {
                         }
 
                         // make sure that "privileged: true" in running container
-                        final String command = "docker run "
+                        StringJoiner commandStringJoiner = new StringJoiner(";");
+                        commandStringJoiner
+                            .add("if [ -z `docker images " + imageTag + " -q` ]")
+                            .add("then docker pull " + imageTag)
+                            .add("fi");
+                        commandStringJoiner.add("docker run "
 //                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
 //                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/folders "
                             + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
-                            + "ycaxgjd/sequencer:1.0 "
+                            + imageTag + " "
                             + "bash ./src/sequencer-predict.sh "
                             + "--buggy_file=" + buggyFilePath + " "
                             + "--buggy_line=" + buggyLineNumber + " "
                             + "--beam_size=" + beamSize + " "
-                            + "--output=" + outputDirPath;
+                            + "--output=" + outputDirPath);
 
-                        Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        StringJoiner stringJoiner = new StringJoiner("\n");
-                        bufferedReader.lines().forEach(stringJoiner::add);
-                        String message = stringJoiner.toString();
-                        System.out.println(message);
-                        BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        StringJoiner errorJoiner = new StringJoiner("\n");
-                        errorReader.lines().forEach(errorJoiner::add);
-                        String warning = errorJoiner.toString();
-                        System.err.println(warning);
+                        String commandStr = commandStringJoiner.toString();
+                        Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandStr});
+                        BufferedReader outputBufferReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        StringJoiner outputStringJoiner = new StringJoiner("\n");
+                        outputBufferReader.lines().forEach(outputStringJoiner::add);
+                        String outputStr = outputStringJoiner.toString();
+                        System.out.println(">>> outputStr: \n" + outputStr);
+                        BufferedReader errorBufferReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                        StringJoiner errorStringJoiner = new StringJoiner("\n");
+                        errorBufferReader.lines().forEach(errorStringJoiner::add);
+                        String errorStr = errorStringJoiner.toString();
+                        System.err.println(">>> errorStr: \n" + errorStr);
                         process.waitFor();
-                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, message, warning));
+                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, outputStr, errorStr));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

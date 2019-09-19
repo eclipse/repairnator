@@ -84,7 +84,7 @@ public class TestSequencerRepair {
         assertThat(stepStatusList.size(), is(8));
         assertThat(stepStatusList.get(7).getStep(), is(sequencerRepair));
 
-        for (StepStatus stepStatus : stepStatusList) {
+        for (StepStatus stepStatus : stepStatusList.subList(0, 7)) {
             assertThat(stepStatus.isSuccess(), is(true));
         }
         assertThat(stepStatusList.get(7).getStatus(), is(StepStatus.StatusKind.SUCCESS));
