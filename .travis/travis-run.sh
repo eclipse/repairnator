@@ -6,7 +6,7 @@ export M2_HOME=/usr/local/maven
 
 cd repairnator
 
-mvn clean test -B -e
+mvn clean test -B -X
 
 # printing timing results to identify slow tests
 grep -h time= */target/surefire-reports/*xml
