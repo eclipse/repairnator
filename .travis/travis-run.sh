@@ -11,3 +11,5 @@ mvn clean test -DfailIfNoTests=false -Dtest=fr.inria.spirals.repairnator.process
 
 # printing timing results to identify slow tests
 grep -h time= */target/surefire-reports/*xml
+
+cat /home/travis/build/eclipse/repairnator/repairnator/repairnator-pipeline/target/surefire-reports
