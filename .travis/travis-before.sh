@@ -5,6 +5,7 @@ sudo apt-get install -y nodejs
 sudo npm install -g ajv-cli
 sudo apt-get install shunit2
 docker pull repairnator/pipeline
+docker pull ycaxgjd/sequencer:1.0
 docker pull antonw/activemq-jmx:latest
 docker run -d --net=host antonw/activemq-jmx:latest
 docker ps -a
