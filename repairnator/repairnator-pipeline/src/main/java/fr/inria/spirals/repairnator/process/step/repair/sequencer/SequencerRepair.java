@@ -40,7 +40,7 @@ public class SequencerRepair extends AbstractRepairStep {
     @Override
     protected StepStatus businessExecute() {
         this.getLogger().info("Start SequencerRepair");
-        String pathPrefix = "~"; // for macOS: "/private";
+        String pathPrefix = ""; // for macOS: "/private";
         String imageTag = "ycaxgjd/sequencer:1.0";
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
@@ -113,6 +113,7 @@ public class SequencerRepair extends AbstractRepairStep {
                             .add("then docker pull " + imageTag)
                             .add("fi");
                         commandStringJoiner.add("docker run "
+                            + "-v " + pathPrefix + "/tmp:" + pathPrefix + "/tmp "
 //                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
 //                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/folders "
                             + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
