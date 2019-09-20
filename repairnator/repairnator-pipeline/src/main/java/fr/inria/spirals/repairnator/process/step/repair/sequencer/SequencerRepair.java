@@ -123,6 +123,7 @@ public class SequencerRepair extends AbstractRepairStep {
                             + "--buggy_line=" + buggyLineNumber + " "
                             + "--beam_size=" + beamSize + " "
                             + "--output=" + outputDirPath);
+                        commandStringJoiner.add("docker kill $(docker ps -aq)");
 
                         String commandStr = commandStringJoiner.toString();
                         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandStr});
