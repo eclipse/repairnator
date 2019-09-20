@@ -113,9 +113,9 @@ public class SequencerRepair extends AbstractRepairStep {
                             .add("then docker pull " + imageTag)
                             .add("fi");
                         commandStringJoiner.add("docker run "
-                            + "-v " + pathPrefix + "/tmp:" + pathPrefix + "/tmp "
 //                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
 //                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/folders "
+                            + "-v " + pathPrefix + "/tmp:" + pathPrefix + "/tmp "
                             + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
                             + imageTag + " "
                             + "bash ./src/sequencer-predict.sh "
@@ -123,7 +123,7 @@ public class SequencerRepair extends AbstractRepairStep {
                             + "--buggy_line=" + buggyLineNumber + " "
                             + "--beam_size=" + beamSize + " "
                             + "--output=" + outputDirPath);
-                        commandStringJoiner.add("docker kill $(docker ps -aq)");
+                        commandStringJoiner.add("docker rm $(docker ps -aq)");
 
                         String commandStr = commandStringJoiner.toString();
                         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandStr});
