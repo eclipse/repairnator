@@ -112,7 +112,7 @@ public class SequencerRepair extends AbstractRepairStep {
                             .add("if [ -z `docker images " + imageTag + " -q` ]")
                             .add("then docker pull " + imageTag)
                             .add("fi");
-                        commandStringJoiner.add("docker run "
+                        commandStringJoiner.add("docker run --rm "
 //                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
 //                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/folders "
                             + "-v " + pathPrefix + "/tmp:" + pathPrefix + "/tmp "
@@ -123,8 +123,8 @@ public class SequencerRepair extends AbstractRepairStep {
                             + "--buggy_line=" + buggyLineNumber + " "
                             + "--beam_size=" + beamSize + " "
                             + "--output=" + outputDirPath);
-                        commandStringJoiner.add("docker stop $(docker ps -aq)");
-                        commandStringJoiner.add("docker rm $(docker ps -aq)");
+//                        commandStringJoiner.add("docker stop $(docker ps -aq)");
+//                        commandStringJoiner.add("docker rm $(docker ps -aq)");
 
                         String commandStr = commandStringJoiner.toString();
                         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandStr});
@@ -140,7 +140,7 @@ public class SequencerRepair extends AbstractRepairStep {
                         System.err.println(">>> errorStr: \n" + errorStr);
                         process.waitFor();
                         sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, outputStr, errorStr));
-                        process.destroy();
+//                        process.destroy();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
