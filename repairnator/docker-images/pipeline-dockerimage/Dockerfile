@@ -8,7 +8,8 @@ COPY z3_for_linux /root/
 COPY projects_to_ignore.txt /root/
 COPY logback.xml /root/
 COPY configure_git.sh /root/
-COPY build_repairnator.sh /root/
+#COPY build_repairnator.sh /root/
+COPY repairnator-pipeline.jar /root/
 COPY pipeline_launcher.sh /root/
 
 RUN apt-get update 
@@ -18,29 +19,34 @@ RUN echo `xmlstarlet sel -t -v '//latest' maven-metadata.xml` > /root/version.in
 RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone 
 RUN /root/configure_git.sh 
-RUN /root/build_repairnator.sh
+#RUN /root/build_repairnator.sh
 
 ENV M2_HOME=$MAVEN_HOME
 ENV GITHUB_OAUTH=
 ENV REPAIR_MODE=
 ENV BUILD_ID=
 ENV LOG_FILENAME=
-ENV RUN_ID=
-ENV MONGODB_HOST=
-ENV MONGODB_NAME=
+ENV RUN_ID=1
+ENV MONGODB_HOST=mongodb://localhost:27017
+ENV MONGODB_NAME=repairnator
 ENV OUTPUT=
 ENV PUSH_URL=
 ENV SMTP_SERVER=
 ENV SMTP_PORT=
 ENV SMTP_USERNAME=
 ENV SMTP_PASSWORD=
-ENV SMTP_TLS=
+ENV SMTP_TLS=1
 ENV NOTIFY_TO=
 ENV REPAIR_TOOLS=
 ENV GITHUB_USERNAME=
 ENV GITHUB_USEREMAIL=
 ENV EXPERIMENTAL_PLUGIN_REPOS=
 ENV CREATE_PR=0
+
+# NOOP = regular repairnator, KUBERNETES = will fetch build id from activeMQ.
+ENV LISTEN_MODE=NOOP
+ENV ACTIVEMQ_URL=tcp://localhost:61616
+ENV ACTIVEMQ_LISTEN_QUEUE=pipeline
 
 WORKDIR /root
 ENTRYPOINT /root/pipeline_launcher.sh

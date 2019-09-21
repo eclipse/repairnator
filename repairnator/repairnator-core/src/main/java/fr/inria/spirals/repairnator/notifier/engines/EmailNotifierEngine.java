@@ -31,10 +31,10 @@ public class EmailNotifierEngine implements NotifierEngine {
         this.properties = new Properties();
         this.properties.put("mail.smtp.host", smtpServer);
         this.properties.put("mail.transport.protocol", "smtp");
-        this.properties.put("mail.smtp.port", smtpPort);
+        this.properties.put("mail.smtp.port", "" + smtpPort);
         // In the case where a secure connection is wished for
         if (smtpTLS) {
-            this.properties.put("mail.smtp.starttls.enable", smtpTLS);
+            this.properties.put("mail.smtp.starttls.enable", "true");
         }
         if (smtpPassword.length() > 1) {
             this.properties.setProperty("mail.smtp.auth", "true");
