@@ -51,7 +51,7 @@ public class TestSequencerRepair {
     @After
     public void tearDown() throws IOException {
         RepairnatorConfig.deleteInstance();
-        FileHelper.deleteFile(tmpDir);
+//        FileHelper.deleteFile(tmpDir);
     }
 
     @Test
