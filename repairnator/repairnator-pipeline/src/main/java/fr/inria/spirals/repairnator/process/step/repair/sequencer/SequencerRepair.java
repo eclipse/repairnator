@@ -123,6 +123,7 @@ public class SequencerRepair extends AbstractRepairStep {
                             + "--buggy_line=" + buggyLineNumber + " "
                             + "--beam_size=" + beamSize + " "
                             + "--output=" + outputDirPath);
+                        commandStringJoiner.add("docker stop $(docker ps -aq)");
                         commandStringJoiner.add("docker rm $(docker ps -aq)");
 
                         String commandStr = commandStringJoiner.toString();
