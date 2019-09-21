@@ -140,6 +140,7 @@ public class SequencerRepair extends AbstractRepairStep {
                         System.err.println(">>> errorStr: \n" + errorStr);
                         process.waitFor();
                         sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, outputStr, errorStr));
+                        process.destroy();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
