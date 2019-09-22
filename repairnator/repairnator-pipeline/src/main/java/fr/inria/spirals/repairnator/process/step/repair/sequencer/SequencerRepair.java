@@ -26,6 +26,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+/**
+* SequencerRepair is one builtin repair tool. It generates
+* patches by invoking SequenceR docker image.
+* 
+* SequencerRepair is dependent on Astor as it collects info
+* about suspicious modification locations from the latter
+* to feed SequenceR.
+* 
+* SequenceR is one seq2seq model designed to predict source
+* code change on line level. Check its paper for more info:
+* https://arxiv.org/abs/1901.01808
+* 
+* @author Jian GU
+*/
 public class SequencerRepair extends AbstractRepairStep {
     protected static final String TOOL_NAME = "SequencerRepair";
     private static final int TOTAL_TIME = 120; // 120 minutes
@@ -98,7 +112,7 @@ public class SequencerRepair extends AbstractRepairStep {
                         File suspiciousFile = smp.getCodeElement().getPosition().getFile();
                         String buggyFilePath = suspiciousFile.getAbsolutePath();
                         int buggyLineNumber = new SuspiciousFile(smp).getSuspiciousLineNumber();
-                        int beamSize = 50; // Sequencer paper http://arxiv.org/pdf/1901.01808
+                        int beamSize = 50; // Sequencer paper https://arxiv.org/abs/1901.01808
                         String buggyFileName = suspiciousFile.getName();
                         String outputDirPath = patchDir.getAbsolutePath() + File.separator + buggyFileName + smpId++;
                         File outputDir = new File(outputDirPath);
@@ -114,7 +128,7 @@ public class SequencerRepair extends AbstractRepairStep {
                             .add("fi");
                         commandStringJoiner.add("docker run --rm "
 //                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
-//                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/folders "
+//                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/docker "
                             + "-v " + pathPrefix + "/tmp:" + pathPrefix + "/tmp "
                             + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
                             + imageTag + " "

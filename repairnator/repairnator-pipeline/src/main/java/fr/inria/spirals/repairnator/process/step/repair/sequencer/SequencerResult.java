@@ -10,6 +10,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+* SequencerResult is SequencerRepair's data class, and is
+* mainly used to generate corresponding RepairPatch data.
+* SequencerRepair's execution info, namely CLI's output
+* message and error message, are also stored for inquiry.
+* 
+* @author Jian GU
+*/
 public class SequencerResult {
     private String buggyFilePath;
     private String outputDirPath;
