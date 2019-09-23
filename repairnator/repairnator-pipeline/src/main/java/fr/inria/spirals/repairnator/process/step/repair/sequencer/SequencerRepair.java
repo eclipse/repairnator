@@ -55,7 +55,7 @@ public class SequencerRepair extends AbstractRepairStep {
     protected StepStatus businessExecute() {
         this.getLogger().info("Start SequencerRepair");
         String pathPrefix = ""; // for macOS: "/private";
-        String imageTag = "ycaxgjd/sequencer:1.0";
+        String imageTag = "repairnator/sequencer:1.0";
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
