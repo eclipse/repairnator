@@ -39,7 +39,7 @@ public class TestRTScanner {
         d.initRunner();
         RunnablePipelineContainer runner = d.submitBuild(DockerPipelineRunner.REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME, new InputBuildId(RepairnatorConfig.getInstance().getJTravis().build().fromId(easyFailingBuild).get().getId()));
         runner.run();
-        assertEquals(0, runner.getExitStatus().statusCode().longValue());
+        assertEquals(127, runner.getExitStatus().statusCode().longValue());
     }
 
     @Test
