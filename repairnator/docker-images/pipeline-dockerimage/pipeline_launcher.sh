@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Use to create args in the command line for optionnal arguments
+# Use to create args in the command line for optional arguments
 function ca {
   if [[ -z "$2" || "$2" == "null" ]];
   then
@@ -81,4 +81,11 @@ LOCAL_GITHUB_USERNAME=$GITHUB_USEREMAIL
 export GITHUB_USEREMAIL=
 
 echo "Execute pipeline with following supplementary args: $args"
+
 java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d $args -b $LOCAL_BUILD_ID --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --repairTools $REPAIR_TOOLS
+
+# prepare the SequenceR docker image
+# https://github.com/KTH/sequencer
+# https://hub.docker.com/r/zimin/sequencer
+# https://hub.docker.com/r/repairnator/sequencer
+docker pull repairnator/sequencer:1.0
