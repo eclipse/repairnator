@@ -32,7 +32,6 @@ public class TestRTScanner {
     // a failing build from tailp/Travisplay , branch failForRepairnator
     public final int easyFailingBuild = 569514744;
 
-    @Ignore
     @Test
     public void testDockerPipelineRunner() throws Exception {
         RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"NPEFix"})));
@@ -40,7 +39,7 @@ public class TestRTScanner {
         d.initRunner();
         RunnablePipelineContainer runner = d.submitBuild(DockerPipelineRunner.REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME, new InputBuildId(RepairnatorConfig.getInstance().getJTravis().build().fromId(easyFailingBuild).get().getId()));
         runner.run();
-        assertEquals(127, runner.getExitStatus().statusCode().longValue());
+        assertEquals(0, runner.getExitStatus().statusCode().longValue());
     }
 
     @Test
