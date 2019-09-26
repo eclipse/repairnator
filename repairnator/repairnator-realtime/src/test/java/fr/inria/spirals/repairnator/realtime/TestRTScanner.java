@@ -32,6 +32,7 @@ public class TestRTScanner {
     // a failing build from tailp/Travisplay , branch failForRepairnator
     public final int easyFailingBuild = 569514744;
 
+    @Ignore
     @Test
     public void testDockerPipelineRunner() throws Exception {
         RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"NPEFix"})));
