@@ -9,7 +9,7 @@ function ca {
     echo "$1 $2 "
   fi
 }
-echo $SMTP_PORT
+
 args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --smtpServer $SMTP_SERVER``ca --smtpPort $SMTP_PORT``ca --smtpUsername $SMTP_USERNAME``ca --smtpPassword $SMTP_PASSWORD``ca --notifyto $NOTIFY_TO``ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL``ca --experimentalPluginRepoList $EXPERIMENTAL_PLUGIN_REPOS``ca --listenermode $LISTEN_MODE``ca --activemqurl $ACTIVEMQ_URL``ca --activemqlistenqueuename $ACTIVEMQ_LISTEN_QUEUE``ca --pushurl $PUSH_URL`"
 
 if [[ "$CREATE_PR" == 1 ]]; then
