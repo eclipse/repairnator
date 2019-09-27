@@ -13,7 +13,7 @@ fi
 
 
 ### DOCKERHUB
-if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "deploy" ]; then
     echo deploy to Dockerhub
 
     # $DOCKER_PASSWORD is set in the Travis UI

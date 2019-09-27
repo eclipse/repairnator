@@ -15,12 +15,13 @@ jobs:
     - stage: test
       name: "maven-repair"
       install: true
-      script: ./.travis/travis-maven-repair.sh
+      script: true
 
     - stage: test
       name: "repairnator"
       install: ./.travis/travis-before.sh
-      script: ./.travis/travis-run.sh
+      # we only deploy
+      script: true
 
     - stage: deploy
       name: "deploy to Sonatype and Dockerhub"
