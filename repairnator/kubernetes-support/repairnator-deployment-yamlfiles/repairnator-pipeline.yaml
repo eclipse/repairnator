@@ -27,7 +27,7 @@ spec:
         # For pushing or creating PR to github repo provided with the PUSH_PR otherwise can be left blank
         # Obligatory to clone from github
         - name: GITHUB_OAUTH
-          value: 2bb21f52fca41e169356d1f44b437c2e365e02a1 
+          value: 
         - name: PUSH_URL
           value: 
         - name: GITHUB_USERNAME
@@ -38,17 +38,17 @@ spec:
           value: "0"  # "1" if decide to create PR to the repo provided with the PUSH_URL
         # Optional for notifications otherwise can be left blank, SMTP
         - name: SMTP_SERVER
-          value: smtp.gmail.com
+          value: 
         - name: SMTP_PORT
-          value: "587"
+          value: 
         - name: SMTP_USERNAME
-          value: stampdspotresult@gmail.com
+          value: 
         - name: SMTP_PASSWORD
-          value: abcde12345@
+          value: 
         - name: SMTP_TLS
           value: "1"
         - name: NOTIFY_TO
-          value: tailp@kth.se
+          value: 
         # ActiveMQ related
         - name: LISTEN_MODE
           value: KUBERNETES
