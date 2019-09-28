@@ -23,7 +23,8 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Super fast scanner inspired from @tduriex's travis-listener
+ * Super fast scanner inspired from @tdurieux's travis-listener https://github.com/tdurieux/travis-listener
+ * The core idea is to directly iterate over build and job numbers. 
  */
 public class FastScanner implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(FastScanner.class);
