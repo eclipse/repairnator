@@ -14,8 +14,11 @@ import javax.jms.TextMessage;
 import javax.jms.BytesMessage;
 import javax.jms.MessageListener;
 import javax.jms.MessageConsumer;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
+
+import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This class fetch build ids from ActiveMQ queue and run the pipeline with it.
@@ -75,8 +78,65 @@ public class PipelineBuildListener implements Listener,MessageListener {
                 config.setBuildId(Integer.parseInt(messageText));
                 this.launcher.mainProcess();
             }
+            /* Delete the folder when done*/
+            this.deleteDir(messageText);
+            this.deleteDir("workspace");
+
+            LOGGER.warn("Done repairning. Awaiting for new build ... ");
         } catch (JMSException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+
+    /* Helpers */
+
+    public void deleteDir(String dirPath) {
+        File directory = new File(dirPath);
+        //make sure directory exists
+        if(!directory.exists()){
+ 
+           LOGGER.warn("Directory " + dirPath + " does not exist.");
+ 
+        }else{
+ 
+           try{
+               
+               this.delete(directory);
+            
+           }catch(IOException e){
+               e.printStackTrace();
+           }
+        }
+    }
+
+    public void delete(File file) throws IOException{
+        if(file.isDirectory()){
+            //directory is empty, then delete it
+            if(file.list().length==0){
+               file.delete();
+            }else{
+                
+               //list all the directory contents
+               String files[] = file.list();
+     
+               for (String temp : files) {
+                  //construct the file structure
+                  File fileDelete = new File(file, temp);
+                 
+                  //recursive delete
+                 delete(fileDelete);
+               }
+                
+               //check the directory again, if empty then delete it
+               if(file.list().length==0){
+                 file.delete();
+               }
+            }
+            
+        }else{
+            //if file, then delete it
+            file.delete();
         }
     }
 
