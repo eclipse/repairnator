@@ -17,13 +17,17 @@ kubectl create -f queue-for-buildids/activemq.yaml
 kubectl create -f queue-for-buildids/repairnator-pipeline.yaml
 ```
 
-Send build ids to pipeline, first proxy activemq server 
+Proxy activemq server 
 
 ```
 kubectl get pods
 kubectl port-forward activemq-XXXXXXX-XXXXX 1099:1099 8161:8161 61613:61613 61616:61616
+```
 
-# 566070885 is a failed travis build from this [repo](https://github.com/Tailp/travisplay)
+Send a build id to queue 
+
+```
+# 566070885 is a failed travis build from this [repo](https://github.com/Tailp/travisplay)
 python /queue-for-buildids/publisher.py -d /queue/pipeline 566070885
 ```
 
