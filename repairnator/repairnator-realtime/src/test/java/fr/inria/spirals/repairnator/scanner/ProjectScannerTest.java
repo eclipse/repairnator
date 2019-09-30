@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.scanner;
 
-import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
@@ -19,11 +18,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ProjectScannerTest {
-
-    @Before
-    public void setUp() {
-        Utils.setLoggersLevel(Level.DEBUG);
-    }
 
     @Test
     public void testTestBuildWithFailingWithoutFailingTestAndRepairMode() {

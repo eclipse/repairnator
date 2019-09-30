@@ -1,8 +1,7 @@
 package fr.inria.spirals.repairnator.scanner;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
+import org.slf4j.Logger;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.DateStringParser;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
@@ -66,12 +65,6 @@ public class Launcher {
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.SCANNER);
         this.initConfig(arguments); // "this.config" is only available after this call, which initializes the config
-
-        if (this.config.isDebug()) {
-            Utils.setLoggersLevel(Level.DEBUG);
-        } else {
-            Utils.setLoggersLevel(Level.INFO);
-        }
 
         this.initSerializerEngines();
         this.initNotifiers();
