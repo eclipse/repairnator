@@ -8,6 +8,14 @@ Repairnator is  a bot to automatically repair failing builds coming from Travis 
 
 A sub project, called BEARS, aimed at creating a database of bugs by mining bugs and patches on Travis CI and Github, see [Bears: An Extensible Java Bug Benchmark for Automatic Program Repair Studies](https://arxiv.org/pdf/1901.06024).
 
+## Content of the repository
+
+This repository is organized as follows:
+
+  * [doc](../doc) contains the reference documentation about Repairnator and its usage
+  * [repairnator](../repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools
+  * [resources](../resources) contains mainly data produced by Repairnator and scripts to retrieve those data. It also contain the schema of repairnator.json files.
+  * [website](../website) contains all data to produce repairnator website
 
 ## Terminology
 
