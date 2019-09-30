@@ -14,7 +14,7 @@ spec:
         image: antonw/activemq-jmx
         imagePullPolicy: IfNotPresent
         ports:
-          - containerPort: 61613
+          - containerPort: 61616
         resources:
           limits:
             memory: 1Gi
@@ -25,7 +25,7 @@ metadata:
   name: activemq
 spec:
   ports:
-  - port: 61613 
-    targetPort: 61613
+  - port: 61616
+    targetPort: 61616
   selector:
     app: activemq
