@@ -420,14 +420,6 @@ This directory will be created automatically and deleted at the end of the scrip
 
 Its default value is `$ROOT_BIN_DIR\`date "+%Y-%m-%d_%H%M"\``.
 
-#### REPAIRNATOR_SCANNER_DEST_JAR
-
-This attribute is mandatory.
-
-It defines the absolute path of the jar used for Repairnator scanner.
-
-Its default value is `$REPAIRNATOR_RUN_DIR/repairnator-scanner.jar`.
-
 #### REPAIRNATOR_DOCKERPOOL_DEST_JAR
 
 This attribute is mandatory.
