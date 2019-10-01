@@ -69,7 +69,6 @@
     <modules>
         <module>repairnator-pipeline</module>
         <module>repairnator-core</module>
-        <module>repairnator-dockerpool</module>
         <module>repairnator-realtime</module>
         <module>build-rainer</module>
     </modules>

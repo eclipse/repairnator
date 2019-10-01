@@ -366,18 +366,18 @@ public class Launcher {
         return result;
     }
 
-    private void getBuildToBeInspected() {
+    private boolean getBuildToBeInspected() {
         JTravis jTravis = this.getConfig().getJTravis();
         Optional<Build> optionalBuild = jTravis.build().fromId(this.getConfig().getBuildId());
         if (!optionalBuild.isPresent()) {
             LOGGER.error("Error while retrieving the buggy build. The process will exit now.");
-            System.exit(-1);
+            return false;
         }
 
         Build buggyBuild = optionalBuild.get();
         if (buggyBuild.getFinishedAt() == null) {
             LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
-            System.exit(-1);
+            return false;
         }
         String runId = this.getConfig().getRunId();
 
@@ -385,7 +385,7 @@ public class Launcher {
             Optional<Build> optionalBuildPatch = jTravis.build().fromId(this.getConfig().getNextBuildId());
             if (!optionalBuildPatch.isPresent()) {
                 LOGGER.error("Error while getting patched build: null value was obtained. The process will exit now.");
-                System.exit(-1);
+                return false;
             }
 
             Build patchedBuild = optionalBuildPatch.get();
@@ -415,11 +415,14 @@ public class Launcher {
                 LOGGER.info("The build "+this.getConfig().getBuildId()+" is from a project to be ignored ("+project+"), thus the pipeline deactivated serialization for that build.");
             }
         }
+        return true;
     }
 
-    public void mainProcess() {
+    public boolean mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
-        this.getBuildToBeInspected();
+        if (!this.getBuildToBeInspected()) {
+            return false;
+        }
 
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.getConfig().getRunId(), this.getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
@@ -451,6 +454,7 @@ public class Launcher {
         inspector.run();
 
         LOGGER.info("Inspector is finished. The process will exit now.");
+        return true;
     }
 
     /**
