@@ -9,6 +9,8 @@ Repairnator is done by a [a nice team](https://github.com/eclipse/repairnator/is
 
 The entry point to the documentation is <https://github.com/eclipse/repairnator/blob/master/doc/README.md>.
 
+The post ["Repairnator patches programs automatically"](https://ubiquity.acm.org/article.cfm?id=3349589) gives a high-level overview of Repairnator.
+
 ## Releases
 
 * Maven releases: https://search.maven.org/search?q=repairnator
