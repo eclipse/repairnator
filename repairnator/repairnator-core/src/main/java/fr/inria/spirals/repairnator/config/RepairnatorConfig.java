@@ -21,6 +21,7 @@ public class RepairnatorConfig {
     public enum PIPELINE_MODE {
         DOCKER("fr.inria.spirals.repairnator.realtime.DockerPipelineRunner"),
         KUBERNETES("fr.inria.spirals.repairnator.realtime.ActiveMQPipelineRunner"),
+        BUILDRAINER("fr.inria.spirals.repairnator.realtime.BuildRainer"),
         NOOP("fr.inria.spirals.repairnator.realtime.NoopRunner");
 
         private final String klass;
@@ -167,8 +168,10 @@ public class RepairnatorConfig {
     }
 
     public void setPipelineMode(String pipelineMode) {
+        System.out.println("HENRY FAIL HERE");
         for (PIPELINE_MODE mode: PIPELINE_MODE.values()) {
             if (pipelineMode.equals(mode.name())) {
+                System.out.println("HENRY FAIL HERE");
                 this.pipelineMode = PIPELINE_MODE.valueOf(pipelineMode);
                 return;
             }
