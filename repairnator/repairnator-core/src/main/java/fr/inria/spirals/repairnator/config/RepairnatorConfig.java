@@ -17,6 +17,7 @@ import java.util.Set;
 /**
  * Created by urli on 08/03/2017.
  */
+
 public class RepairnatorConfig {
     public enum PIPELINE_MODE {
         DOCKER("fr.inria.spirals.repairnator.realtime.DockerPipelineRunner"),
