@@ -38,9 +38,6 @@ else if [ ! -f "$REPAIR_PROJECT_LIST_PATH" ]; then
     fi
 fi
 
-if [ "$SKIP_SCAN" -eq 0 ]; then
-    . $SCRIPT_DIR/launch_scanner.sh
-fi
 
 if [ "$SKIP_LAUNCH_REPAIRNATOR" -eq 0 ]; then
     . $SCRIPT_DIR/launch_dockerpool.sh $REPAIRNATOR_BUILD_LIST

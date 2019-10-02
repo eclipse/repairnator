@@ -15,7 +15,6 @@ This directory contains the different subfolders:
 
 Repairnator is decomposed in 6 different modules: 
   - repairnator-core: contains shared elements for all other elements, it can be also use to generate Google Spreadsheets Credentials
-  - repairnator-scanner: scan automatically Travis Build and produce metrics and list of build ids (only for Bears)
   - repairnator-pipeline: it is the engine of Repairnator. Given a build id this part, compile, test and repair it, gathering data on it, and push on Github and on MongoDB
   - repairnator-realtime: inspects in realtime the builds from Travis (typically every minute)
 
