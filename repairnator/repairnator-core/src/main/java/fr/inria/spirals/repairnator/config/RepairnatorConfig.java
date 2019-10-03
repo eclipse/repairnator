@@ -168,10 +168,8 @@ public class RepairnatorConfig {
     }
 
     public void setPipelineMode(String pipelineMode) {
-        System.out.println("HENRY FAIL HERE");
         for (PIPELINE_MODE mode: PIPELINE_MODE.values()) {
             if (pipelineMode.equals(mode.name())) {
-                System.out.println("HENRY FAIL HERE");
                 this.pipelineMode = PIPELINE_MODE.valueOf(pipelineMode);
                 return;
             }
