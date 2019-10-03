@@ -21,7 +21,6 @@ public class RepairnatorConfig {
     public enum PIPELINE_MODE {
         DOCKER("fr.inria.spirals.repairnator.realtime.DockerPipelineRunner"),
         KUBERNETES("fr.inria.spirals.repairnator.realtime.ActiveMQPipelineRunner"),
-        BUILDRAINER("fr.inria.spirals.repairnator.realtime.BuildRainer"),
         NOOP("fr.inria.spirals.repairnator.realtime.NoopRunner");
 
         private final String klass;
