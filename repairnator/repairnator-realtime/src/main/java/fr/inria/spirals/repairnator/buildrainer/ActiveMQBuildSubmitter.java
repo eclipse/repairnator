@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.realtime;
+package fr.inria.spirals.repairnator.buildrainer;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.jtravis.entities.Build;

@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.realtime;
+package fr.inria.spirals.repairnator.buildrainer;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.jtravis.entities.Build;
@@ -39,7 +39,7 @@ public class BuildRainer extends WebSocketClient implements BuildSubmitter{
         return jsap;
     }
 
-    private BuildRainer( URI serverURI ) {
+    public BuildRainer( URI serverURI ) {
         super( serverURI );
     }
 
