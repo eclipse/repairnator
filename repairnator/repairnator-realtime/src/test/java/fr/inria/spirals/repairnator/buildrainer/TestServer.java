@@ -1,4 +1,4 @@
-package fr.inria.repairnator;
+package fr.inria.spirals.repairnator.buildrainer;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

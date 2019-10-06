@@ -24,7 +24,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
  * and submit to an ActiveMQ queue for the repairnator-worker
  * to run on Kubernetes.
  */
-public class ActiveMQPipelineRunner implements PipelineRunner  {
+public class ActiveMQPipelineRunner implements PipelineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
     private static final RepairnatorConfig config = RepairnatorConfig.getInstance();

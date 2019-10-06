@@ -1,6 +1,8 @@
-package fr.inria.repairnator;
+package fr.inria.spirals.repairnator.buildrainer;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.jtravis.entities.Build;
+
 /*For sender*/
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -48,7 +50,8 @@ public class ActiveMQBuildSubmitter implements BuildSubmitter {
         }
     }
 
-	public void submit(String str_message) {
+	public void submitBuild(Build b) {
+		String str_message = "" +b.getId();
 		try {
 			if (mostRecentQueueSize < RepairnatorConfig.getInstance().getQueueLimit()) {
 				/*

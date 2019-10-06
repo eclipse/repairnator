@@ -191,6 +191,34 @@ public class RTLauncher {
         opt2.setHelp("Just a name, default as 'pipeline'");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("websocketurl");
+        opt2.setLongFlag("websocketurl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("ws://localhost:9080");
+        opt2.setHelp("websocket url of the nodejs websocket, default: ws://localhost:9080");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("jmxhost");
+        opt2.setLongFlag("jmxhost");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("localhost");
+        opt2.setHelp("HostName of the activemq jmxhost, default: localhost");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("queuelimit");
+        opt2.setLongFlag("queuelimit");
+        opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("100");
+        opt2.setHelp("limit before stop submitting new builds to queue, default: 100 enqueued build ids");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("scannermode");
+        opt2.setLongFlag("scannermode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault(PIPELINE_MODE.NOOP.name());
+        opt2.setHelp("Possible string values RTSCANNER and BUILBRAINER . RTSCANNER is the usual RTSCANNER which can be run as KUBERNETES, NOOP or DOCKER mode, BUILDRAINER requires travis-lister to fetch build and submit on activeMQ");
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -243,10 +271,12 @@ public class RTLauncher {
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPRs(arguments.getInt("numberofprs"));
-        this.config.setNumberOfPatchedBuilds(arguments.getInt("numberofpatchedbuilds"));
         this.config.setPipelineMode(arguments.getString("pipelinemode"));
         this.config.setActiveMQUrl(arguments.getString("activemqurl"));
         this.config.setActiveMQSubmitQueueName(arguments.getString("activemqsubmitqueuename"));
+        this.config.setWebSocketUrl(arguments.getString("websocketurl"));
+        this.config.setJmxHostName(arguments.getString("jmxhost"));
+        this.config.setQueueLimit(arguments.getInt("queuelimit"));
     }
 
     private void initSerializerEngines() {
@@ -317,7 +347,10 @@ public class RTLauncher {
 
     public static void main(String[] args) throws JSAPException {
         RTLauncher rtLauncher = new RTLauncher(args);
+        /* If scanner mode is RTSCanner */
         rtLauncher.initAndRunRTScanner();
+        /* If scanner mode is BuildRainer */
+        /* Create and connect BuildRainer */
     }
 
 }
