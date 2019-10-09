@@ -5,6 +5,7 @@
 
 * [Repairnator patches programs automatically](https://ubiquity.acm.org/article.cfm?id=3349589), In Ubiquity, Association for Computing Machinery, vol. July, no. 2, pp. 1-12, 2019. 
 * [Human-competitive Patches in Automatic Program Repair with Repairnator](http://arxiv.org/abs/1810.05806v1) (Martin Monperrus, Simon Urli, Thomas Durieux, Matias Martinez, Benoit Baudry, Lionel Seinturier) arXiv 1810.05806, 2018
+* [Bears: An Extensible Java Bug Benchmark for Automatic Program Repair Studies](https://arxiv.org/pdf/1901.06024) In 26th IEEE International Conference on Software Analysis, Evolution and Reengineering, 2019.
 * [How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.archives-ouvertes.fr/hal-01691496/document) (Simon Urli, Zhongxing Yu, Lionel Seinturier, Martin Monperrus). In Proceedings of 40th International Conference on Software Engineering, Track Software Engineering in Practice (SEIP), 2018. [(bibtex)](https://www.monperrus.net/martin/bibtexbrowser.php?key=urli%3Ahal-01691496&bib=monperrus.bib)
 
 ## Posts
