@@ -11,7 +11,7 @@ The entry point to the documentation is <https://github.com/eclipse/repairnator/
 
 The post ["Repairnator patches programs automatically"](https://ubiquity.acm.org/article.cfm?id=3349589) gives a high-level overview of Repairnator.
 
-## Papers & Articles
+## Posts & Articles
 
 See <https://github.com/eclipse/repairnator/blob/master/doc/media.md>.
 
