@@ -34,12 +34,23 @@ A first way to contribute is to look on the label [good-first-issue](https://git
 
 ## Running Repairnator
 
-### Docker
+### Fixing a build
 
 To fix a specific Travis build:
 
 ```
 docker run -e BUILD_ID=564711868 repairnator/pipeline
+```
+
+### Running the real-time scanner
+
+Prerequisites: Java, Docker
+
+```
+git clone https://github.com/eclipse/repairnator/
+cd repairnator/repairnator/scripts/
+# doc at https://github.com/eclipse/repairnator/blob/master/doc/scripts.md#launch_rtscannersh
+bash launch_rtscanner.sh
 ```
 
 ### Scripts
@@ -66,8 +77,22 @@ For more information about the program repair tools and their strategies impleme
 
 ## Architecture
 
-In order to understand properly Repairnator, have a first a look on [its internal architecture](architecture.md).
+### the pipeline
 
-## Java main classes
+The pipeline is the most interesting part of Repairnator: it takes as input a Travis CI build ID and tries to replicate the bug and to repair it.
+As its name indicates, it's a pipeline of steps, from cloning the repository and building it, to launching the repair tools and pushing a resulting branch.
+It contains plenty of options, for notifying the users, creating a pull requests, etc.
+
+### the realtime scanner
+
+The RTScanner is the newest part of Repairnator: the idea is to have a daemon that constantly inspect Travis CI for newly failing builds to launch as fast as possible the pipeline to fix them.
+The RTScanner then uses some elements from the dockerpool to operate itself the pipeline through its docker image.
+
+### the docker image
+
+The docker image is the pipeline put in docker: 
+the idea is to encapsulate the pipeline in an environment in which it will properly work, with the right dependencies, and to be able to use the pipeline in sandboxed environment.
+
+### Java main classes
 
 The [following documentation](main-classes.md) documents the main classes of Repairnator.

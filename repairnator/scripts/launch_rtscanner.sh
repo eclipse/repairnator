@@ -1,4 +1,6 @@
 #!/bin/bash
+# laucn the Repairnatot/rtscanner
+
 set -e
 
 # Use to create args in the command line for optionnal arguments
@@ -65,4 +67,4 @@ if [ "$CREATE_PR" -eq 1 ]; then
 fi
 
 echo "Supplementary args for realtime scanner $args"
-java $JAVA_OPTS -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR -l $DOCKER_LOG_DIR --runId $RUN_ID --ghOauth $GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args 2> $LOG_DIR/errors_$RUN_ID.log 1> /dev/null
+java $JAVA_OPTS -jar $REPAIRNATOR_REALTIME_DEST_JAR -t $NB_THREADS -n $DOCKER_TAG -o $LOG_DIR --runId $RUN_ID --ghOauth $GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args 2>&1
