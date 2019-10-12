@@ -36,7 +36,8 @@
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>coming</artifactId>
-            <version>0-SNAPSHOT</version>
+            <!-- see https://repo1.maven.org/maven2/com/github/spoonlabs/coming/ -->
+            <version>3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
