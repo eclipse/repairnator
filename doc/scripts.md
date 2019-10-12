@@ -6,6 +6,19 @@ This file is by default in `repairnator/scripts/config` but all values contained
 
 For more details about the configuration, [read this documentation](repairnator-config.md).
 
+## `launch_rtscanner.sh`
+
+You can launch Repairnator to analyze Travis CI builds in realtime and to repair failing ones.
+
+First open your `repairnator.cfg` config file (see above) and edit the values under `Realtime scanner configuration` section:
+  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
+  - `WHITELIST_PATH` and `BLACKLIST_PATH` can be left on the default value, or you can use the files available in `repairnator/repairnator-realtime/src/main/resources`
+  
+Then just run the script `launch_rtscanner.sh`.
+
+* this generates build reproduction info and patches as local files in a folder named `logs/`
+* in this default setup, no MongoDB is used, no email notification is done
+
 ## `repair_buggy_build.sh`
 
 From a Travis URL like this one: https://travis-ci.org/surli/test-repairnator/builds/352395977 you can retrieve a Build ID by taking the last part of the URL.
@@ -26,44 +39,6 @@ cd repairnator/scripts
 # When the docker container is done you can find logs and serialized files in the `$HOME_REPAIR/logs` path.
 ls $HOME_REPAIR/logs
 ```
-
-## `launch_rtscanner.sh`
-
-You can launch Repairnator to analyze Travis CI builds in realtime and to repair failing ones.
-
-First open your `repairnator.cfg` config file (see above) and edit the values under `Realtime scanner configuration` section:
-  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
-  - `WHITELIST_PATH` and `BLACKLIST_PATH` can be left on the default value, or you can use the files available in `repairnator/repairnator-realtime/src/main/resources`
-  
-Then just run the script `launch_rtscanner.sh`.
-
-* this generates build reproduction info and patches as local files in a folder named `logs/`
-* in this default setup, no MongoDB is used, no email notification is done
-
-
-## `launch_scanner.sh`
-
-### Usage and argument
-
-```
-./launch_scanner.sh
-```
-
-### Description
-
-This script is used to retrieve failing builds from Travis CI in the past. 
-
-### How it works
-
-It will use the [REPAIR_PROJECT_LIST_PATH](repairnator-config.md#repair_project_list_path) option
-to get a list of projects to scan.
-
-Once this list has been read, repairnator will run a scanner to find
-failing builds. 
-
-The timespan in which the scanner will look is specified by either [SCANNER_NB_HOURS](repairnator-config.md#scanner_nb_hours) option, 
-or by the two options [LOOK_FROM_DATE](repairnator-config.md#look_from_date) and
-[LOOK_TO_DATE](repairnator-config.md#look_to_date) together.
 
 ## `launch_dockerpool.sh`
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+# laucn the Repairnatot/rtscanner
+
 set -e
 
 # Use to create args in the command line for optionnal arguments
