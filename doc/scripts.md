@@ -40,31 +40,11 @@ cd repairnator/scripts
 ls $HOME_REPAIR/logs
 ```
 
-## `launch_dockerpool.sh`
-
-### Usage and argument
-
-```
-./launch_dockerpool.sh <list_of_builds>
-```
-
-`list_of_builds` is a mandatory argument. 
-It's the path to an existing document which should contain a list of Travis Build IDs, one per line.
-
-### Description
-
-This script is used to repair a list of buggy builds by running them in docker containers.
-
-### How it works
-
-It will start a dockerpool and fill it with the list of build IDs read from the given argument.
-Then it will use the [NB_THREADS](repairnator-config.md#nb_threads) options to launch as many docker containers as possible in parallel to repair the builds.
-
-## `launch_repairnator.sh`
+## `launch_pipeline.sh`
 
 ### Usage and argument
 ```
-./launch_repairnator.sh [list_of_BuildIDs]
+./launch_pipeline.sh [list_of_BuildIDs]
 ```
 
 `list_of_BuildIDs` is an optional argument. 
