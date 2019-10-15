@@ -2,57 +2,70 @@ package fr.inria.spirals.repairnator.realtime;
 
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
 
-import org.eclipse.egit.github.core.Commit;
-import org.eclipse.egit.github.core.CommitFile;
-import org.eclipse.egit.github.core.client.*;
 
-import fr.inria.jtravis.helpers.BuildHelper;
-import fr.inria.jtravis.entities.Build;
+import fr.inria.jtravis.entities.v2.BuildV2;
 import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+
+import org.kohsuke.github.*;
 
 public class SequencerCollector {
 	
 	private Vector<String> data;
-	private BuildHelper buildHelper;
-	private GitHubClient gitHubClient;
+	private BuildHelperV2 buildHelper;
+	GitHub github;
 	
 	public SequencerCollector() {
-		buildHelper = RepairnatorConfig.getInstance().getJTravis().build();
+		buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
 		data = new Vector<String>();
+		try {
+			github = GitHub.connectAnonymously();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void add(JobV2 job) {
-		data.add(getDiff(job));
+		String diff = getDiff(job);
+		data.add(diff);
+		
+		System.out.println(diff);
 	}
 	
 	private String getDiff(JobV2 job) {
 		System.out.println(job.getBuildId());
-		Optional<Build> build = buildHelper.fromId(job.getBuildId());
+		Optional<BuildV2> build = buildHelper.fromIdV2(job.getBuildId());
 		if(!build.isPresent()) {
-			return "no diff"; //TODO: handle this properly.
+			return "no diff - cannot find build"; //TODO: handle this properly.
 		}
 		String sha = build.get().getCommit().getSha();
-		
-		gitHubClient = new GitHubClient();
-		
-		GitHubRequest req = new GitHubRequest();
-		req.setUri("/repos/" + job.getRepositorySlug() + "/commits/" + sha);
-		
-		GitHubResponse resp;
-		
-		 try {
-			resp = gitHubClient.get(req);
+	
+		GHRepository repo;
+		GHCommit commit;
+		try {
+			repo = github.getRepository(job.getRepositorySlug());
+			commit = repo.getCommit(sha);
+			
+			List<GHCommit.File> files = commit.getFiles(); 
+			
+			if(files.size() == 1) {
+				System.out.println("Patch: " + files.get(0).getPatch() );
+				return "single-file diff";	
+			}
+			
+			return "multi-file diff";
 		} catch (IOException e) {
-			return "no diff - error"; //TODO: handle this properly
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "error";
 		}
 		
-		Commit commit = (Commit)resp.getBody();
-		
-		return "the diff";
 	}
 	
 }
