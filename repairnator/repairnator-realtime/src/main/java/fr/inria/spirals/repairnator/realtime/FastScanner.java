@@ -46,7 +46,6 @@ public class FastScanner implements Runnable {
         int nInteresting = 0;
         Set<Long> done = new HashSet<>();
         JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
-        SequencerCollector collector = new SequencerCollector();
         while (true) {
             try {
                 Optional<List<JobV2>> jobListOpt = jobHelperv2.allFromV2();
@@ -70,11 +69,8 @@ public class FastScanner implements Runnable {
                             System.out.println("=====" + job.getId() + " " +job.getBuildId());
                             done.add((long)job.getBuildId());
 
-//                            Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
-//                            FastScanner.this.rtScanner.submitBuildToExecution(optionalBuild.get());
-                        } else if ("java".equals(job.getConfig().getLanguage()) && StateType.PASSED.equals(job.getState()) && ! done.contains(job.getBuildId())) {
-                        	System.out.println("==Job id " +  job.getId() + "====Job Commit ID -> " + job.getCommitId()  + "=== Slug: " + job.getRepositorySlug());
-                        	collector.add(job);                  
+                            Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(job.getBuildId());
+                            FastScanner.this.rtScanner.submitBuildToExecution(optionalBuild.get());
                         }
                     }
                 }

@@ -13,6 +13,10 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
 import org.kohsuke.github.*;
 
+
+/**
+ * Filters and stores data for Sequencer training.
+ * */
 public class SequencerCollector {
 	
 	private Vector<String> data;
@@ -23,7 +27,7 @@ public class SequencerCollector {
 		buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
 		data = new Vector<String>();
 		try {
-			github = GitHub.connectAnonymously();
+			github = GitHub.connect(); //TODO: descriptive documentation about(or link to) .github file
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -31,15 +35,14 @@ public class SequencerCollector {
 		
 	}
 	
-	public void add(JobV2 job) {
+	public void handle(JobV2 job) {
 		String diff = getDiff(job);
 		data.add(diff);
 		
-		System.out.println(diff);
+		//System.out.println(diff);
 	}
 	
 	private String getDiff(JobV2 job) {
-		System.out.println(job.getBuildId());
 		Optional<BuildV2> build = buildHelper.fromIdV2(job.getBuildId());
 		if(!build.isPresent()) {
 			return "no diff - cannot find build"; //TODO: handle this properly.
@@ -54,7 +57,7 @@ public class SequencerCollector {
 			
 			List<GHCommit.File> files = commit.getFiles(); 
 			
-			if(files.size() == 1) {
+			if(files.size() == 1 && files.get(0).getFileName().endsWith(".java")) {
 				System.out.println("Patch: " + files.get(0).getPatch() );
 				return "single-file diff";	
 			}
