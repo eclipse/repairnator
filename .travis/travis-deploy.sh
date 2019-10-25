@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+sudo apt-get update
+sudo apt-get install -y xmlstarlet
 
 ### MAVEN CENTRAL
 if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
@@ -8,6 +10,9 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     cd repairnator
     
     # pushing snapshot to https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/
+    VERSION=`xmlstarlet sel -t -v '//_:project/_:properties/_:revision' pom.xml`
+    sed -i -e 's/\${revision}/'$VERSION'/' pom.xml */pom.xml
+    git diff
     mvn -q deploy -DskipTests -Dcheckstyle.skip
 fi
 
