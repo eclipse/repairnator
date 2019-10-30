@@ -18,9 +18,9 @@ public final class JobV2 {
     private int buildId;
     
     @Expose
-    private int commitId;	
+    private int commitId;
 
-	@Expose
+    @Expose
     private String number;
 
     @Expose
@@ -32,11 +32,11 @@ public final class JobV2 {
     @Expose
     private String repositorySlug;
 
-	public String getRepositorySlug() {
-		return repositorySlug;
-	}
+    public String getRepositorySlug() {
+        return repositorySlug;
+    }
 
-	public int getId() {
+    public int getId() {
         return id;
     }
 
@@ -45,8 +45,8 @@ public final class JobV2 {
     }
     
     public int getCommitId() {
-		return commitId;
-	}
+        return commitId;
+    }
 
     public String getNumber() {
         return number;
@@ -65,8 +65,8 @@ public final class JobV2 {
     }
     
     public void setRepositorySlug(String repositorySlug) {
-		this.repositorySlug = repositorySlug;
-	}
+        this.repositorySlug = repositorySlug;
+    }
     
     protected void setId(int id) {
         this.id = id;
@@ -77,8 +77,8 @@ public final class JobV2 {
     }
     
     public void setCommitId(int commitId) {
-		this.commitId = commitId;
-	}
+        this.commitId = commitId;
+    }
 
     protected void setNumber(String number) {
         this.number = number;

@@ -39,7 +39,6 @@ public class SequencerLearnerScanner implements Runnable {
             		List<JobV2> jobList = jobHelperv2.allSubSequentJobsFrom(latestJobId - (it*jumpSize));
             		for (JobV2 job : jobList) {
                     	if ("java".equals(job.getConfig().getLanguage()) && StateType.PASSED.equals(job.getState())) {
-                        	//System.out.println("==Job id " +  job.getId() + "====Job Commit ID -> " + job.getCommitId()  + "=== Slug: " + job.getRepositorySlug());
                         	collector.handle(job);                  
                         }
                     }
