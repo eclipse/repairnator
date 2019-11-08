@@ -6,14 +6,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import fr.inria.jtravis.entities.v2.BuildV2;
 import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.realtime.utils.PatchFilter;
-import fr.inria.spirals.repairnator.realtime.utils.PatchFilter.PatchLines;
+import fr.inria.spirals.repairnator.realtime.utils.PatchFilter.HunkLines;
 
 import org.kohsuke.github.*;
 
@@ -31,24 +34,45 @@ public class SequencerCollector {
 	private GitHub github;
 	private PatchFilter filter;
 	
-	public SequencerCollector() {
-		buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
-		try {
-			github = GitHub.connect(); //TODO: descriptive documentation about(or link to) .github file
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		filter = new PatchFilter();
+	private boolean filterMultiFile;
+	private boolean filterMultiHunk;
+	private int hunkDistance;
+	private Set<String> done;
+	
+	public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) {
+	    this.filterMultiFile = filterMultiFile;
+        this.filterMultiHunk = filterMultiHunk;
+        this.hunkDistance = hunkDistance;
+        this.done = new HashSet<>();
+        
+        buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
+        try {
+            github = GitHub.connect(); //TODO: descriptive documentation about(or link to) .github file
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        filter = new PatchFilter();
 	}
+
+	public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk) {
+        this(filterMultiFile, filterMultiHunk, 0);
+    }
 	
+	public SequencerCollector() {
+        this(false, false, 0);
+    }
 	
+    
 	public void handle(JobV2 job) {
 		Optional<BuildV2> build = buildHelper.fromIdV2(job.getBuildId());
 		if(!build.isPresent()) {
 			return; // no diff - cannot find build.
 		}
 		String sha = build.get().getCommit().getSha();
+		if(done.contains(sha)) {
+		    return;// already scanned commit
+		}
 	
 		GHRepository repo;
 		GHCommit commit;
@@ -56,36 +80,29 @@ public class SequencerCollector {
 			repo = github.getRepository(job.getRepositorySlug());
 			commit = repo.getCommit(sha);
 			
-			List<GHCommit.File> files = commit.getFiles(); 
-			
-			if(files.size() != 1 || !files.get(0).getFileName().endsWith(".java")) {
-			    return;// multi-file diff
-			}
-			
-			String patch = files.get(0).getPatch();
-				
-			if (!filter.test(patch)) {
-			    return; // multi-hunk or multi-line patch	   
-			}
-			
-			System.out.println("Found:");
-			System.out.println(patch);
-			
-			PatchLines lines = filter.parse(patch);
-			
+			ArrayList<String> patches = getCommitPatches(commit);
+			ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+
 			FileWriter addedFileWriter = new FileWriter(addedFilename, true);
 		    PrintWriter addedPrintWriter = new PrintWriter(addedFileWriter, true);
-		    
-		    addedPrintWriter.println(lines.added);
-		    addedPrintWriter.close();
-		    
 		    FileWriter removedFileWriter = new FileWriter(removedFilename, true);
-            PrintWriter removedPrintWriter = new PrintWriter(removedFileWriter, true);
-            
-            removedPrintWriter.println(lines.removed);
-            removedPrintWriter.close();
+		    PrintWriter removedPrintWriter = new PrintWriter(removedFileWriter, true);
+			
+			for(String hunk : hunks) {
+        		HunkLines lines = filter.parse(hunk);
+			    
+        		addedPrintWriter.println(lines.added);
+        		removedPrintWriter.println(lines.removed);
+        		
+        		System.out.println("===============");
+			    System.out.println(hunk);
+			}
 			
 			
+			removedPrintWriter.close();
+			addedFileWriter.close();
+			
+			done.add(sha);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -93,5 +110,39 @@ public class SequencerCollector {
 		}
 		
 	}
+	
+	/**
+	 * Returns a list of patches.
+	 * 
+	 * if filterMultiFile is true, it will filter out multi-file commits
+	 * */
+	private ArrayList<String> getCommitPatches(GHCommit commit) throws IOException{
+	    ArrayList<String> ret = new ArrayList<String>();
+	    
+	    List<GHCommit.File> files = commit.getFiles(); 
+	    List<GHCommit.File> javaFiles = new ArrayList<GHCommit.File>();
+	    
+        for(GHCommit.File f : files) {
+            if(f.getFileName().endsWith(".java")) {
+                javaFiles.add(f);
+            }
+        }
+        
+        if(filterMultiFile && javaFiles.size() == 1) {
+            if(javaFiles.get(0).getPatch() != null) { //sometimes this call returns null
+                ret.add(javaFiles.get(0).getPatch());                
+            }
+        } else if (!filterMultiFile) {
+            for(GHCommit.File f : javaFiles) { //sometimes this call returns null
+                if(f.getPatch() != null) {
+                    ret.add(f.getPatch());
+                }
+                
+            }
+        }
+	    return ret;
+	}
+	
+	
 	
 }
