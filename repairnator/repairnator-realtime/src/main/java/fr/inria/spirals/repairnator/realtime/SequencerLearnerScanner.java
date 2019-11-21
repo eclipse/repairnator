@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,14 @@ public class SequencerLearnerScanner implements Runnable {
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
         JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
-        SequencerCollector collector = new SequencerCollector();
+        SequencerCollector collector = null;
+        
+        try {
+            collector = new SequencerCollector();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
         
         final int scanBackIterations = 10;
         final int jumpSize = 250;
