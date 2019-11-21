@@ -5,10 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -80,7 +77,7 @@ public class SequencerCollector {
 			repo = github.getRepository(job.getRepositorySlug());
 			commit = repo.getCommit(sha);
 			
-			ArrayList<String> patches = getCommitPatches(commit);
+			ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
 			ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
 
 			FileWriter addedFileWriter = new FileWriter(addedFilename, true);
@@ -110,39 +107,4 @@ public class SequencerCollector {
 		}
 		
 	}
-	
-	/**
-	 * Returns a list of patches.
-	 * 
-	 * if filterMultiFile is true, it will filter out multi-file commits
-	 * */
-	private ArrayList<String> getCommitPatches(GHCommit commit) throws IOException{
-	    ArrayList<String> ret = new ArrayList<String>();
-	    
-	    List<GHCommit.File> files = commit.getFiles(); 
-	    List<GHCommit.File> javaFiles = new ArrayList<GHCommit.File>();
-	    
-        for(GHCommit.File f : files) {
-            if(f.getFileName().endsWith(".java")) {
-                javaFiles.add(f);
-            }
-        }
-        
-        if(filterMultiFile && javaFiles.size() == 1) {
-            if(javaFiles.get(0).getPatch() != null) { //sometimes this call returns null
-                ret.add(javaFiles.get(0).getPatch());                
-            }
-        } else if (!filterMultiFile) {
-            for(GHCommit.File f : javaFiles) { //sometimes this call returns null
-                if(f.getPatch() != null) {
-                    ret.add(f.getPatch());
-                }
-                
-            }
-        }
-	    return ret;
-	}
-	
-	
-	
 }

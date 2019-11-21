@@ -1,16 +1,20 @@
 package fr.inria.spirals.repairnator.realtime.utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.kohsuke.github.GHCommit;
 
 /**
  * Single-line-change filter.
  * */
 public class PatchFilter {
     
-    static final String HUNK_HEADER_REGEX = "^@@ -(\\d+),(\\d+) \\+(\\d+),(\\d+) @@[ \\w{\\(\\)]*$";
-    static final String SPLIT_BY_HUNKS_REGEX = "(?<=\\n)(?=@@ -\\d+,\\d+ \\+\\d+,\\d+ @@[ \\w{\\(\\)]*\\n)";
+    static final String HUNK_HEADER_REGEX = "^@@ -(\\d+),(\\d+) \\+(\\d+),(\\d+) @@ ?.*$";
+    static final String SPLIT_BY_HUNKS_REGEX = "(?<=\\n)(?=@@ -\\d+,\\d+ \\+\\d+,\\d+ @@ ?.*\\n)";
     
     enum State {
         ENTRY,
@@ -184,5 +188,37 @@ public class PatchFilter {
         }
         
         return new HunkLines(removed, added);
+    }
+    
+    /**
+     * Returns a list of patches.
+     * 
+     * if filterMultiFile is true, it will filter out multi-file commits
+     * */
+    public ArrayList<String> getCommitPatches(GHCommit commit, boolean filterMultiFile, boolean filterMultiHunk) throws IOException{
+        ArrayList<String> ret = new ArrayList<String>();
+        
+        List<GHCommit.File> files = commit.getFiles(); 
+        List<GHCommit.File> javaFiles = new ArrayList<GHCommit.File>();
+        
+        for(GHCommit.File f : files) {
+            if(f.getFileName().endsWith(".java")) {
+                javaFiles.add(f);
+            }
+        }
+        
+        if(filterMultiFile && javaFiles.size() == 1) {
+            if(javaFiles.get(0).getPatch() != null) { //sometimes this call returns null
+                ret.add(javaFiles.get(0).getPatch());                
+            }
+        } else if (!filterMultiFile) {
+            for(GHCommit.File f : javaFiles) { //sometimes this call returns null
+                if(f.getPatch() != null) {
+                    ret.add(f.getPatch());
+                }
+                
+            }
+        }
+        return ret;
     }
 }
