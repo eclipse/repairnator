@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.StateType;
+import fr.inria.jtravis.entities.v2.BuildV2;
 import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.slf4j.Logger;
@@ -17,10 +18,15 @@ import java.util.Set;
  */
 public class SequencerLearnerScanner implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SequencerLearnerScanner.class);
-
+    private BuildHelperV2 buildHelper;
+    
     public static void main(String[] args) {
         new SequencerLearnerScanner().run();
         
+    }
+    
+    public SequencerLearnerScanner() {
+        buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
     }
 
     @Override
@@ -32,8 +38,7 @@ public class SequencerLearnerScanner implements Runnable {
         try {
             collector = new SequencerCollector();
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            throw new RuntimeException(e1);
         }
         
         final int scanBackIterations = 10;
@@ -51,7 +56,16 @@ public class SequencerLearnerScanner implements Runnable {
             		List<JobV2> jobList = jobHelperv2.allSubSequentJobsFrom(latestJobId - (it*jumpSize));
             		for (JobV2 job : jobList) {
                     	if (!done.contains(job.getBuildId()) && "java".equals(job.getConfig().getLanguage()) && StateType.PASSED.equals(job.getState())) {
-                        	collector.handle(job);   
+                        	
+                    	    Optional<BuildV2> build = buildHelper.fromIdV2(job.getBuildId());
+                    	    
+                    	    if (!build.isPresent()) {
+                                continue;
+                            }
+                    	    
+                    	    String sha = build.get().getCommit().getSha();
+                    	    
+                    	    collector.handle(job.getRepositorySlug(), sha);   
                         	done.add(job.getBuildId());
                         }
                     }
@@ -59,7 +73,7 @@ public class SequencerLearnerScanner implements Runnable {
                 
 
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         } // end while loop
     }

@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.kohsuke.github.*;
 
 public class PatchFilterTest {
-    //TODO: tests for new PatchFilter implementation
     
     String testRepoSlug = "javierron/continuous-sequencer-test";
     
