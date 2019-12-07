@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -84,6 +85,7 @@ public class ProjectScannerTest {
     }
 
     @Test
+    @Ignore // because too slow, because it iterates over all builds of Spoon which is too much and a little worse every day
     public void testGetBuildToBeInspectedWithFailingFromPR() {
         long buildId = 364156914; // inria/spoon failing from PR with failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -102,6 +104,7 @@ public class ProjectScannerTest {
     }
 
     @Test
+    @Ignore // because too slow, because it iterates over all builds of Spoon which is too much and a little worse every day
     public void testGetBuildToBeInspectedWithPassingWithPreviousFailingFromPR() {
         long buildIdFailing = 324127095; // inria/spoon
         long buildIdNextPassing = 324525330;
@@ -128,6 +131,7 @@ public class ProjectScannerTest {
     }
 
     @Test
+    @Ignore // because too slow, because it iterates over all builds of Spoon which is too much and a little worse every day
     public void testGetBuildToBeInspectedWithPassingWithPreviousPassingFromPR() {
         long buildIdPassing = 210093951; // inria/spoon
         long buildIdNextPassing = 211479830;
@@ -158,6 +162,7 @@ public class ProjectScannerTest {
         because the failing build did not fail in Travis due to test failure.
      */
     @Test
+    @Ignore // because too slow, because it iterates over all builds of Spoon which is too much and a little worse every day
     public void testGetBuildToBeInspectedWithPassingBuildWithPreviousFailingBuildBears() {
         long buildIdFailing = 230022061; // inria/spoon
         long buildIdNextPassing = 230049446;
@@ -186,6 +191,7 @@ public class ProjectScannerTest {
         because there is no java file changed between the two builds (there is only test file).
      */
     @Test
+    @Ignore // because too slow, because it iterates over all builds of Spoon which is too much and a little worse every day
     public void testGetBuildToBeInspectedWithPassingBuildWithPreviousPassingBuildBears() {
         long buildIdPassing = 323802157; // inria/spoon
         long buildIdNextPassing = 323823511;
