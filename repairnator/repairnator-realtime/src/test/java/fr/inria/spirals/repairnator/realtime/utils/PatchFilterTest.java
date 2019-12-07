@@ -18,7 +18,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connect();
+        GitHub github = GitHub.connectAnonymously();
         GHRepository repo;
         GHCommit commit;
         
@@ -40,7 +40,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connect();
+        GitHub github = GitHub.connectAnonymously();
         GHRepository repo;
         GHCommit commit;
         
@@ -62,7 +62,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connect();
+        GitHub github = GitHub.connectAnonymously();
         GHRepository repo;
         GHCommit commit;
         
@@ -84,7 +84,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connect();
+        GitHub github = GitHub.connectAnonymously();
         GHRepository repo;
         GHCommit commit;
         
@@ -106,7 +106,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connect();
+        GitHub github = GitHub.connectAnonymously();
         GHRepository repo;
         GHCommit commit;
         
@@ -128,7 +128,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connect();
+        GitHub github = GitHub.connectAnonymously();
         GHRepository repo;
         GHCommit commit;
         
