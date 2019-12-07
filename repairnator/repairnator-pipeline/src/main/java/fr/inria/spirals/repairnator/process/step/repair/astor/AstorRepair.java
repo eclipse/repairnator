@@ -88,9 +88,6 @@ public abstract class AstorRepair extends AbstractRepairStep {
             astorArgs.add("-seed");
             astorArgs.add("1");
             
-            astorArgs.add("-ingredientstrategy");
-            astorArgs.add("fr.inria.astor.test.repair.evaluation.extensionpoints.ingredients.MaxLcsSimSearchStrategy");
-
             final AstorMain astorMain = new AstorMain();
 
             final String repairToolName = this.getRepairToolName();
