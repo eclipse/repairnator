@@ -89,7 +89,7 @@ public class TestComputeTestDir {
     }
 
     @Test
-    @Ignore // this test is ignored because it depends on an external repo / PR, whose state has changed (no HEAD ref available anymore, probably because the branch has been removed)
+    @Ignore // this test is ignored because it depends on an external repo / PR, whose state has changed (no HEAD ref available anymore, probably because the branch has been removed since then)
     public void testComputeTestDirWithReflexiveReferences() throws IOException {
         // https://api.travis-ci.org/v3/build/345990212
         // https://github.com/vitruv-tools/Vitruv-Applications-ComponentBasedSystems/pull/18
