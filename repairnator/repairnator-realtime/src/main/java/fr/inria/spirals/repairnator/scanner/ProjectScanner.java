@@ -229,6 +229,9 @@ public class ProjectScanner {
         return results;
     }
 
+    /** warning: this method is slow, because method `getBeforeOrAfter()` iterates over all builds of the repo of `build`
+     * which can be very slow for big repos
+     */
     public BuildToBeInspected getBuildToBeInspected(Build build) {
         if (testBuild(build)) {
             if (RepairnatorConfig.getInstance().getLauncherMode() == LauncherMode.REPAIR) {
