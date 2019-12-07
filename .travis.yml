@@ -14,11 +14,13 @@ jobs:
   include:
     - stage: test
       name: "maven-repair"
+      before_install: if [[ $TRAVIS_PULL_REQUEST_SLUG == eclipse/repairnator ]]; then travis_terminate 0; fi
       install: true
       script: ./.travis/travis-maven-repair.sh
 
     - stage: test
       name: "repairnator"
+      before_install: if [[ $TRAVIS_PULL_REQUEST_SLUG == eclipse/repairnator ]]; then travis_terminate 0; fi
       install: ./.travis/travis-before.sh
       script: ./.travis/travis-run.sh
 

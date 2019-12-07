@@ -57,7 +57,7 @@ class JobHelperv2 extends JobHelper {
         String response = this.get(url, API_VERSION.v2, 2);
         JsonObject jsonObj = getJsonFromStringContent(response);
         JsonArray jsonArray = jsonObj.getAsJsonArray("jobs");
-        List<JobV2> result = new ArrayList();
+        List<JobV2> result = new ArrayList<JobV2>();
         Iterator var6 = jsonArray.iterator();
 
         while (var6.hasNext()) {
@@ -84,7 +84,7 @@ class JobHelperv2 extends JobHelper {
         String response = this.get(url, API_VERSION.v2, 2);
         JsonObject jsonObj = getJsonFromStringContent(response);
         JsonArray jsonArray = jsonObj.getAsJsonArray("builds");
-        List<Build> result = new ArrayList();
+        List<Build> result = new ArrayList<Build>();
         Iterator var6 = jsonArray.iterator();
 
         while (var6.hasNext()) {
