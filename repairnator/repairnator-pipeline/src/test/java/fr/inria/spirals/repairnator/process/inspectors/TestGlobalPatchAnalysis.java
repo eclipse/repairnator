@@ -34,6 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+// test the collection of all patches over different repair tools
 public class TestGlobalPatchAnalysis {
 
     private File tmpDir;
