@@ -15,6 +15,8 @@ You're welcome to join the community just to help, we have a number of [open iss
 
 Repairnator is done by a [a nice team](https://github.com/eclipse/repairnator/issues/760) of welcoming engineers and researchers. Say [hello](https://github.com/eclipse/repairnator/issues/798) or create an issue!
 
+Foo bar
+
 ## Documentation
 
 The entry point to the documentation is <https://github.com/eclipse/repairnator/blob/master/doc/README.md>.
