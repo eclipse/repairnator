@@ -18,6 +18,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -88,7 +89,10 @@ public class TestComputeTestDir {
     }
 
     @Test
+    @Ignore // this test is ignored because it depends on an external repo / PR, whose state has changed (no HEAD ref available anymore, probably because the branch has been removed since then)
     public void testComputeTestDirWithReflexiveReferences() throws IOException {
+        // https://api.travis-ci.org/v3/build/345990212
+        // https://github.com/vitruv-tools/Vitruv-Applications-ComponentBasedSystems/pull/18
         long buildId = 345990212;
 
         Build build = this.checkBuildAndReturn(buildId, true);
