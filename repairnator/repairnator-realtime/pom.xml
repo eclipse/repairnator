@@ -53,7 +53,7 @@
             <artifactId>json</artifactId>
             <version>20180813</version>
         </dependency>
-        <dependency>
+        <dependency><!-- for continuous learning -->
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
             <version>4.8.0.201706111038-r</version>
