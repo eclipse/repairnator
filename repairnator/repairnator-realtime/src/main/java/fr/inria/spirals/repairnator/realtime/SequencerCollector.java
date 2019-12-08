@@ -24,8 +24,8 @@ import org.kohsuke.github.*;
  */
 public class SequencerCollector {
 
-    //A function to automatically setup the repository (set path, pull, set branch, etc)
-    //would make setup easier, but this works good for now
+    
+    //This path should be configurable. See initLocalGitRepository method comments.
     private final String diffsPath = System.getProperty("user.home") + "/continuous-learning-data";
     
     private final int diffBatchSize = 100;
@@ -45,15 +45,11 @@ public class SequencerCollector {
 
     public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) throws IOException {
         
-        this.diffsRepo = Git.open(new File(diffsPath));
-                
         this.filterMultiFile = filterMultiFile;
         this.filterMultiHunk = filterMultiHunk;
         this.hunkDistance = hunkDistance;
         this.done = new HashSet<>();
 
-        github = GitHub.connect(); // read credentials from ~/.github file
-    
         filter = new PatchFilter();
     }
 
@@ -70,8 +66,6 @@ public class SequencerCollector {
         if (done.contains(sha)) {
             return;
         }
-        
-       
         
         GHRepository repo;
         GHCommit commit;
@@ -98,6 +92,21 @@ public class SequencerCollector {
             throw new RuntimeException(e);
         }
 
+    }
+    
+    public void initialize() throws IOException {
+        initLocalGitRepository();
+        initGithubConnection();
+    }
+    
+    //this method could automatically setup the repository (set path, pull, set branch, etc.)
+    //it would make a more correct setup, but this works good for now
+    void initLocalGitRepository() throws IOException{
+        this.diffsRepo = Git.open(new File(diffsPath));
+    }
+    
+    void initGithubConnection() throws IOException {
+        this.github = GitHub.connect(); // read credentials from ~/.github file
     }
 
     protected void commitAndPushDiffs() throws NoFilepatternException, GitAPIException {

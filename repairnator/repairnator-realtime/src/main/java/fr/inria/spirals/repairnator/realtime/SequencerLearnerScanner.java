@@ -37,6 +37,7 @@ public class SequencerLearnerScanner implements Runnable {
         
         try {
             collector = new SequencerCollector();
+            collector.initialize();
         } catch (IOException e1) {
             throw new RuntimeException(e1);
         }

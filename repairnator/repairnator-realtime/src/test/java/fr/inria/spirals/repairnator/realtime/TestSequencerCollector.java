@@ -48,6 +48,7 @@ public class TestSequencerCollector {
         Mockito.when(github.getRepository(Mockito.anyString())).thenReturn(mockRepo);
         Mockito.when(mockRepo.getCommit(Mockito.anyString())).thenReturn(mockCommit);
         
+        
         //Mock hunk filter since mock commit is used
         Mockito.when(filter.getCommitPatches(Mockito.any(GHCommit.class), Mockito.anyBoolean(), Mockito.anyBoolean())).thenReturn(emptyList);
         Mockito.when(filter.getHunks( Mockito.any(ArrayList.class) ,Mockito.anyBoolean(), Mockito.anyInt())).thenReturn(mockHunkList);
@@ -57,7 +58,7 @@ public class TestSequencerCollector {
         Mockito.doNothing().when(collector).commitAndPushDiffs();
         
         //this function gets continuously called as long as the SequencerLearningScanner 
-        //is running. Here we test save on single finding, and commit/push on batch completion
+        //is running. Here we test: save on single finding, and commit/push on batch completion
         //batchSize = 100
         for(int sha = 0; sha < 100; ++sha){
             collector.handle("slug/slug" , Integer.toHexString(sha));
