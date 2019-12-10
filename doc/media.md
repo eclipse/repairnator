@@ -18,6 +18,7 @@ See all also <https://github.com/eclipse/repairnator/issues/771>
 
 ## Videos
 
+* ["Repairnator, the automatic bug fixing bot done" (1 minute presentation video on KTH Youtube)](https://www.youtube.com/watch?v=sHkogNGyBSs)
 * [Talk about Repairnator at PapersWeLove London (M. Monperrus)](https://www.youtube.com/watch?v=ixQU22ufZNs)
 * [Talk about Repairnator at Hasso-Plattner-Institut (M. Monperrus)](https://hal.inria.fr/hal-01691496/document), April 19 2018
 
