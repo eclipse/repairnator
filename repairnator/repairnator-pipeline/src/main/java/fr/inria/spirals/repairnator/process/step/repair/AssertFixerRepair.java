@@ -154,7 +154,7 @@ public class AssertFixerRepair extends AbstractRepairStep {
             jobStatus.setHasBeenPatched(true);
             return StepStatus.buildSuccess(this);
         } else {
-            return StepStatus.buildSkipped(this, "No patch found");
+            return StepStatus.buildPatchNotFound(this);
         }
     }
 }

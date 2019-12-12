@@ -117,7 +117,7 @@ public class NPERepairSafe extends AbstractRepairStep {
                     if (effectivelyPatched) {
                         return StepStatus.buildSuccess(this);
                     } else {
-                        return StepStatus.buildSkipped(this,"No patch found.");
+                        return StepStatus.buildPatchNotFound(this);
                     }
 
                 } else {
