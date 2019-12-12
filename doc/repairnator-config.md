@@ -126,7 +126,7 @@ However, for one repair tools, different strategies might be available, and a us
 This attribute allows to select the different repair tools available in Repairnator. For more information about the available repair tools, [take a look at this page](repair-tools.md).
 Several repair tools can be selected, separated by a comma.
 
-Its default value is `NopolAllTests,AstorJMut,NPEFix`.
+Its default value is `NopolAllTests,AstorJMut,NPEFix`. Note that when Repairnator is executed through its Docker image, the default value is `NPEFix`.
 
 #### CREATE_PR
 
