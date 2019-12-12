@@ -44,6 +44,8 @@ docker run -e BUILD_ID=564711868 -e GITHUB_OAUTH=<GITHUB TOKEN> repairnator/pipe
 
 It is possible to create your own GitHub token from [this page](https://github.com/settings/tokens), by selecting `public_repo` referring to the scope that has to be associated with the token.
 
+You can also specify the values associated with these parameters: [REPAIR_TOOLS](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#repair_tools), [MONGODB_HOST](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#mongodb_host), [MONGODB_NAME](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#mongodb_name), [PUSH_URL](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#push_url), [SMTP_SERVER](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#smtp_server), [NOTIFY_TO](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#notify_to), [GITHUB_USERNAME](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#github_username), [GITHUB_USEREMAIL](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#github_useremail), and [CREATE_PR](https://github.com/eclipse/repairnator/blob/a78745d1f6c0cf4d356cfc20485030fc0f18eb79/doc/repairnator-config.md#create_pr). Before every parameter name, it is necessary to put the key `-e`, as in the above example.
+
 ### Running the real-time scanner
 
 Prerequisites: Java, Docker
