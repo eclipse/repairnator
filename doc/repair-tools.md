@@ -1,4 +1,4 @@
-# Program repair tools
+# Program Repair Tools
 
 This page describes the program repair tools that have been implemented in Repairnator and the different strategies that can be used for each of them.
 
