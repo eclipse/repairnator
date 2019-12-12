@@ -1,4 +1,4 @@
-# Scripts to run repairnator
+# Scripts to run Repairnator
 
 
 **About repairnator.cfg**: All the scripts are using configuration given in `repairnator.cfg`.
