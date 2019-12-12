@@ -7,7 +7,7 @@ This page describes the program repair tools that have been implemented in Repai
 [NPEFix](https://github.com/Spirals-Team/npefix) is a program repair tool developed to fix NullPointerException.
 There is no specific strategy for it in Repairnator: if a NPE is detected, NPEFix is called directly to try fixing it.
 
-It can be used [in the option](repairnator-config.md#REPAIR_TOOLS) with this value: `NPEFix`.
+It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NPEFix`.
 
 ## Nopol
 
@@ -29,14 +29,14 @@ This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TO
 
 ### NopolTestExclusionStrategy
 
-In this strategy, we consider that there is more chance to find a patch for a failing test (i.e. a test with an `AssertionError`) than for an erroring test (i.e. a test which fail with any other exception).
-This strategy will launch Nopol for each test class, but will try to ignore erroring test first to find a patch, and then it will look for a patch ignoring failing tests.
+In this strategy, we consider that there is more chance to find a patch for a failing test (i.e., a test with an `AssertionError`) than for an erroring test (i.e., a test which fails with any other exception).
+This strategy will launch Nopol for each test class, but it will try to ignore erroring tests first to find a patch, and then it will look for a patch ignoring failing tests.
 
 This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolTestExclusionStrategy`.
 
 ## Astor
 
-[Astor](https://github.com/SpoonLabs/astor) is a program repair tool that use mutation techniques and genetic programming to obtain patches.
+[Astor](https://github.com/SpoonLabs/astor) is a program repair tool that uses mutation techniques and genetic programming to obtain patches.
 Repairnator supports different strategies to run Astor.
 Astor is currently configured in Repairnator to find a patch in a maximum of 100 minutes.
 
@@ -60,7 +60,7 @@ This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TO
 
 ## AssertFixer
 
-[AssertFixer](https://github.com/STAMP-project/AssertFixer) is a program repair tool developped to fix the tests instead of the program.
+[AssertFixer](https://github.com/STAMP-project/AssertFixer) is a program repair tool developed to fix the tests instead of the program.
 Repairnator currently supports only one strategy for AssertFixer.
 
-It can be used [in the option](repairnator-config.md#REPAIR_TOOLS) with this value: `AssertFixer`.
+It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AssertFixer`.
