@@ -2,7 +2,7 @@
 
 This documentation details the different elements of Repairnator configuration contained in `repairnator.cfg`.
 The standard location of this configuration file is `scripts/config`, however user might create a `repairnator.cfg` file in their `$HOME` directory:
-all values will be then be overridden by those from the `$HOME` directory.
+all values will be then overridden by those from the `$HOME` directory.
 
 ## Standard configuration
 
@@ -10,14 +10,14 @@ All the following is part of the standard configuration.
 
 ### Common attributes
 
-Those attributes are commons for all scripts.
+These attributes are commons for all scripts.
 
 #### GITHUB_OAUTH
 
 This attribute is mandatory. 
 
-It is used to get access to Github API. 
-In order to create the token go to the following page: https://github.com/settings/tokens and create a new token by selecting `public_repo`.
+It is used to get access to GitHub API. 
+In order to create the token, go to the following page: https://github.com/settings/tokens and create a new token by selecting `public_repo`.
 
 #### HOME_REPAIR
 
@@ -29,14 +29,14 @@ Its default value is `$HOME/repairnator` where `$HOME` is the user home director
 
 ### Pipeline attributes
 
-Those attributes are used mainly for the Repairnator pipeline, the main part of Repairnator, but might also be common to other parts.
+Those attributes are used mainly for the Repairnator pipeline, the main part of Repairnator, but it might also be common to other parts.
 
 #### GITHUB_USERNAME
 
 This attribute is optional.
 
 Repairnator might commit information, like the patches it will create, or even information about reproducing bugs (see [#PUSH_URL](#PUSH_URL)).
-This attribute specify the name of the committer. Don't forget to use quotes if you want to put space in its value: `GITHUB_USERNAME="John Doe"`.
+This attribute specifies the name of the committer. Don't forget to use quotes if you want to put space in its value: `GITHUB_USERNAME="John Doe"`.
 
 Its default value is `repairnator`.
 
@@ -46,15 +46,15 @@ This attribute is optional.
 
 As for the previous one, here the information concerns the committer email. 
 
-Its default value is `noreply@github.com` which is the default Github email for hidden emails.
+Its default value is `noreply@github.com` which is the default GitHub email for hidden emails.
 
 #### MONGODB_HOST
 
 This attribute is optional.
 
 Repairnator produces a lot of information. The default behaviour is to serialize all information as CSV and JSON files. 
-However a good practice is to store them in a MongoDB database in order to be able to compute data with them.
-This attribute specify the host where a MongoDB is available for Repairnator. The format of the value is: `mongodb://user:password@domain:port`.
+However, it is a good practice to store them in a MongoDB database in order to be able to compute data with them.
+This attribute specifies the host where a MongoDB is available for Repairnator. The format of the value is: `mongodb://user:password@domain:port`.
 
 Its default value is empty.
 
@@ -62,7 +62,7 @@ Its default value is empty.
 
 This attribute is optional.
 
-As for the previous one, if the user wants to use a MongoDB she also needs to specify the database name with this attribute.
+As for the previous one, if the user wants to use a MongoDB database, she also needs to specify the database name with this attribute.
 
 Its default value is empty.
 
@@ -71,11 +71,11 @@ Its default value is empty.
 This attribute is optional.
 
 Another way to store data, is to automatically push the content of the repository for the reproduced bugs.
-This attribute aims at specifying a Github repository in which Repairnator will push a new branch for each new failing build it manages to reproduce.
-More specifically it will push branches with the following format: `repositoryUser-repositoryName-TravisBuildID-date-hours`. 
-The content of this branch will be content of the repository with the reproducing builds and some Repairnator logs and maybe patches.
+This attribute aims at specifying a GitHub repository in which Repairnator will push a new branch for each new failing build it manages to reproduce.
+More specifically, it will push branches with the following format: `repositoryUser-repositoryName-TravisBuildID-date-hours`. 
+The content of this branch will be the content of the repository with the reproducing builds and some Repairnator logs and maybe patches.
 
-This attribute takes the following format: `https://github.com/user/repo`. It only accepts to push on Github, and the repository must be writable by the owner of the `GITHUB_OAUTH` token.
+This attribute takes the following format: `https://github.com/user/repo`. It only accepts to push on GitHub, and the repository must be writable by the owner of the `GITHUB_OAUTH` token.
 
 Its default value is empty.
 
@@ -84,8 +84,8 @@ Its default value is empty.
 This attribute is optional. 
 
 A Repairnator user might want to receive email notification when a patch is created or an error occured on Repairnator.
-In order to do so, Repairnator should use a SMTP server. This attribute allow to specify which server to use.
-For now Repairnator only supports servers without authentication.
+In order to do so, Repairnator should use a SMTP server. This attribute allows to specify which server to use.
+For now, Repairnator only supports servers without authentication.
 
 Its default value is empty.
 
@@ -94,7 +94,7 @@ Its default value is empty.
 This attribute is optional.
 
 If a user wants to receive notification (see previous attribute), she should specify her email address on this attribute.
-Multiple address can be given separated by a comma: e.g. `NOTIFY_TO=john.doe@mailserver.com,jane.doe@anothersrv.fr`.
+Multiple addresses can be given separated by a comma: e.g., `NOTIFY_TO=john.doe@mailserver.com,jane.doe@anothersrv.fr`.
 
 Its default value is empty.
 
@@ -111,8 +111,8 @@ Its default value is 0 (off).
 
 This attribute is optional.
 
-When running any scripts on Repairnator, a UUID is created which we call the `RUN_ID`. This UUID is used to distinguish between different invocations of Repairnator.
-However, as it is a generated UUID it might be difficult to remember and to look back on a database.
+When running any scripts on Repairnator, a UUID is created (we call it the `RUN_ID`). This UUID is used to distinguish between different invocations of Repairnator.
+However, as it is a generated UUID, it might be difficult to remember and to look back on a database.
 To simplify this job, we provide with this attribute a way to add a suffix to this generated UUID: we guarantee the uniquess of the UUID, but we simplify its usage in the DB.
 
 Its default value is empty.
@@ -123,12 +123,10 @@ This attribute is mandatory for the pipeline.
 
 The main goal of Repairnator is to use various program repair tools to try repairaing failing builds from Travis CI.
 However, for one repair tools, different strategies might be available, and a user do not necessarily wants to run all repair tools and all strategies each time.
-This attribute allows to select the different repair tools available in Repairnator. For more information about the available repair tools, [have a look on this page](repair-tools.md).
+This attribute allows to select the different repair tools available in Repairnator. For more information about the available repair tools, [take a look at this page](repair-tools.md).
 Several repair tools can be selected, separated by a comma.
 
-
 Its default value is `NopolAllTests,AstorJMut,NPEFix`.
-
 
 #### CREATE_PR
 
@@ -157,11 +155,11 @@ This attribute is mandatory if the following ones are left empty or commented.
 
 The Repairnator Scanner works in two different ways:
   1. it might scan a given period of time;
-  2. or it might look X hours before the current time
+  2. or it might look X hours before the current time.
   
 This attribute is used for the second proposal: it takes an integer as value and it will look the given number of hours before the current time to take the failing builds.
 
-Its default value is `1`.  
+Its default value is `1`.
 
 #### LOOK_FROM_DATE
 
@@ -198,25 +196,25 @@ Its default value is `4`.
 
 This attribute is mandatory for dockerpool.
 
-This attribute defines when a running docker container should be forced to stop.
+This attribute defines when a running Docker container should be forced to stop.
 It's an integer which defines the number of days that the container can run at most.
 
 Its default value is `1`.
 
 ### Realtime scanner attributes
 
-Those attributes are used by the Repairnator realtime scanner (or RTScanner)
+Those attributes are used by the Repairnator realtime scanner (or RTScanner).
 
 #### WHITELIST_PATH
 
 This attribute is mandatory for RTScanner.
 
 This attribute defines the path for a whitelist of repositories to scan. 
-This whitelist is composed by Github ID (and not slug) of Github Repositories that are considered usable by Repairnator.
+This whitelist is composed by GitHub ID (and not slug) of GitHub repositories that are considered usable by Repairnator.
 Each ID is on a new line.
 This attribute might point to a missing file: the file will then be created at the given path.
 
-Its default value is `$HOME_REPAIR/whitelist.txt` (for more information about `$HOME_REPAIR` look at the beginning of this page).
+Its default value is `$HOME_REPAIR/whitelist.txt` (for more information about `$HOME_REPAIR`, look at the beginning of this page).
 
 #### BLACKLIST_PATH
 
@@ -226,7 +224,7 @@ This attribute defines the path for a blacklist of repositories to scan.
 This list works the same than for the previous attribute, but to record blacklisted repository that won't be scanned.
 Here again, the attribute might point to a missing file: the file will then be created at the given path.
 
-Its default value is `$HOME_REPAIR/blacklist.txt` (for more information about `$HOME_REPAIR` look at the beginning of this page).
+Its default value is `$HOME_REPAIR/blacklist.txt` (for more information about `$HOME_REPAIR`, look at the beginning of this page).
 
 #### DURATION
 
@@ -234,7 +232,7 @@ This attribute is optional.
 
 This attribute defines the duration of the RTScanner before it stops.
 The duration is given using [the ISO-8601 duration format](https://en.wikipedia.org/wiki/ISO_8601#Durations).
-If no duration is given, the RTScanner never stop: it can be used to launch it in daemon mode.
+If no duration is given, the RTScanner never stops: it can be used to launch it in daemon mode.
 
 Its default value is `PT10m` (10 minutes).
 
@@ -243,7 +241,7 @@ Its default value is `PT10m` (10 minutes).
 This attribute is mandatory for RTScanner.
 
 The RTScanner scans Travis CI regularly to detect newly created jobs from whitelisted repository.
-This attribute defines the duration in second between each request to Travis CI API for getting new jobs.
+This attribute defines the duration in seconds between each request to Travis CI API for getting new jobs.
 It takes as input an integer which defines the number of seconds between each request.
 
 Its default value is `10`.
@@ -284,7 +282,7 @@ This attribute is a switch.
 
 Checkbranch will check that the branches of a repository contain a commit representing a bug.
 It can also check that the branch contains a commit representing a human patch.
-When this attribute is switched on (if it set to 1), it will check this property.
+When this attribute is switched on (if it is set to 1), it will check this property.
 
 Its default value is `0` (off).
 
@@ -341,38 +339,38 @@ Its default value is `LATEST`.
 This attribute is mandatory.
 
 User can indicate here the number of a version to use or `latest` in **lowercase** to use the latest version available.
-Be careful, in contrary with the previous ones, it concerns here a docker image: then the latest version really means the latest, so the version "in development".
+Be careful, in contrary with the previous ones, here it concerns a Docker image: so, the latest version really means the latest one, that is the version "in development".
 To use a release version, one has to specify the number of the specific release to use.
 
 Its default value is `latest`.
 
 ### Docker tags
 
-This sections describes the name of docker images to use in the different scripts.
+This section describes the name of Docker images to use in the different scripts.
 
 #### DOCKER_TAG
 
 This attribute is mandatory.
 
-It defines the name of the docker image to use for Repairnator pipeline, with the associated tag to use (see the previous `PIPELINE_VERSION`).
+It defines the name of the Docker image to use for Repairnator pipeline, with the associated tag to use (see the previous `PIPELINE_VERSION`).
 
 #### DOCKER_TAG_BEARS
 
 This attribute is mandatory for BEARS.
 
-It defines the name of the docker image to use for Repairnator pipeline when using BEARS, and the associated tag to use (see the previous `PIPELINE_VERSION`).
+It defines the name of the Docker image to use for Repairnator pipeline when using BEARS, and the associated tag to use (see the previous `PIPELINE_VERSION`).
 
 #### DOCKER_CHECKBRANCHES_TAG
 
 This attribute is mandatory for using checkbranch.
 
-It defines the name of the docker image to use for Repairnator checkbranch, and the associated tag to use.
+It defines the name of the Docker image to use for Repairnator checkbranch, and the associated tag to use.
 
 #### DOCKER_CHECKBRANCHES_TAG_BEARS
 
 This attribute is mandatory for using BEARS checkbranch.
 
-It defines the name of the docker image to use for Repairnator BEARS checkbranch, and the associated tag to use.
+It defines the name of the Docker image to use for Repairnator BEARS checkbranch, and the associated tag to use.
 
 
 ### Root paths
@@ -424,7 +422,7 @@ Its default value is `$ROOT_BIN_DIR\`date "+%Y-%m-%d_%H%M"\``.
 
 This attribute is mandatory.
 
-It defines the absolute path of the jar used for Repairnator dockerpool.
+It defines the absolute path of the JAR used for Repairnator dockerpool.
 
 Its default value is `$REPAIRNATOR_RUN_DIR/repairnator-dockerpool.jar`.
 
@@ -432,7 +430,7 @@ Its default value is `$REPAIRNATOR_RUN_DIR/repairnator-dockerpool.jar`.
 
 This attribute is mandatory.
 
-It defines the absolute path of the jar used for Repairnator checkbranches.
+It defines the absolute path of the JAR used for Repairnator checkbranches.
 
 Its default value is `$REPAIRNATOR_RUN_DIR/repairnator-checkbranches.jar`.
 
@@ -440,7 +438,7 @@ Its default value is `$REPAIRNATOR_RUN_DIR/repairnator-checkbranches.jar`.
 
 This attribute is mandatory.
 
-It defines the absolute path of the jar used for Repairnator RTScanner.
+It defines the absolute path of the JAR used for Repairnator RTScanner.
 
 Its default value is `$REPAIRNATOR_RUN_DIR/repairnator-realtime.jar`.
 
@@ -468,8 +466,8 @@ Its default value is `$ROOT_LOG_DIR\`date "+%Y-%m-%d_%H%M%S"\``.
 
 This attribute is mandatory.
 
-It defines the log directory for the docker containers exclusively.
-Most of the time, the same directory as `$LOG_DIR` should be used, but for some usage like when containers are running on multiple machines, etc. a specific configuration could be used.
+It defines the log directory for the Docker containers exclusively.
+Most of the time, the same directory as `$LOG_DIR` should be used, but for some usages like when containers are running on multiple machines, etc. a specific configuration could be used.
 
 Its default value is `$LOG_DIR`.
 
@@ -477,13 +475,13 @@ Its default value is `$LOG_DIR`.
 
 This attribute is mandatory when executing repairnator-pipeline outside a docker container.
 
-This attribute defines the path of maven home (and not of M2 repository!). 
+This attribute defines the path of Maven home (and not of M2 repository!). 
 
 Its default value is `$MAVEN_HOME`.
 
 ### Switches
 
-This section defines all the other switches that can be used
+This section defines all the other switches that can be used.
 
 #### BEARS_MODE
 
@@ -503,12 +501,12 @@ This attribute takes as value: `failing_passing`, `passing_passing`, or `both`. 
 
 Its default value is `both`.
 
-#### BEARS_DELIMITER=1 # When set to 1, the scanner writes different files for the different kind of statuses.
+#### BEARS_DELIMITER=1 # When set to 1, the scanner writes different files for the different kinds of statuses.
 
 This attribute is a switch.
 
-If switched on (set to 1), the scanner will write a different file for each kind of pair it has been detected (failing passing or passing passing).
-This allow to treat them differently afterwards.
+If switched on (set to 1), the scanner will write a different file for each kind of pair that has been detected (failing passing or passing passing).
+This allows to treat them differently afterwards.
 
 Its default value is `1` (on).
 
@@ -520,30 +518,30 @@ If switched on (set to 1), the dockerpool will be skipped in some scripts. Note 
 
 Its default value is `0` (off).
 
-#### CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: allow to create a subdirectory to contain logs/serialization of docker containers
+#### CREATE_OUTPUT_DIR=0 # Use specifically for grid5000: it allows to create a subdirectory to contain logs/serialization of Docker containers
 
 This attribute is a switch.
 
-This attribute is specific for using container on multiple machines such as when using Grid 5000.
-When switched on (set to 1), it allows the creation of a subdirectory to contain logs and outputs of docker containers.
+This attribute is specific for using container on multiple machines, such as when using Grid 5000.
+When switched on (set to 1), it allows the creation of a subdirectory to contain logs and outputs of Docker containers.
 
 Its default value is `0` (off).
  
-#### SKIP_DELETE=0 # Set to 1 to skip the deletion of docker containers
+#### SKIP_DELETE=0 # Set to 1 to skip the deletion of Docker containers
 
 This attribute is a switch.
 
-When switched on (set to 1), this attribute allows to skip the deletion of docker containers.
+When switched on (set to 1), this attribute allows to skip the deletion of Docker containers.
 This switch might be useful in case of debugging.
 
 Its default value is `0` (off).
 
-### Optional java arguments
+### Optional Java arguments
 
-#### JAVA_OPTS= # optional arguments for java such as Xmx
+#### JAVA_OPTS= # optional arguments for Java such as Xmx
 
 This attribute is optional.
 
-It allows to gives specify arguments to the JVM such as specifying the memory allocated with `Xmx`. 
+It allows to specify arguments to the JVM, such as the memory allocated with `Xmx`. 
 
 Its default value is empty.
