@@ -4,13 +4,14 @@ import fr.inria.spirals.repairnator.states.PipelineState;
 
 /**
  * This class defines how an AbstractStep has been executed.
- * It gives a status between success, failure or skipped, but also some more information in a diagnostic.
+ * It gives a status between success, failure, skipped or patch not found, but also some more information in a diagnostic.
  */
 public class StepStatus {
     public enum StatusKind {
         SUCCESS,
         FAILURE,
-        SKIPPED
+        SKIPPED,
+        PATCH_NOT_FOUND
     }
 
     private StatusKind status;
@@ -37,6 +38,10 @@ public class StepStatus {
 
     public static StepStatus buildSkipped(AbstractStep step) {
         return new StepStatus(step, StatusKind.SKIPPED, "");
+    }
+    
+    public static StepStatus buildPatchNotFound(AbstractStep step) {
+    	return new StepStatus(step, StatusKind.PATCH_NOT_FOUND, "");
     }
 
     public AbstractStep getStep() {
