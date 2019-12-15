@@ -1,8 +1,8 @@
-# Scripts to run repairnator
+# Scripts to run Repairnator
 
 
 **About repairnator.cfg**: All the scripts are using configuration given in `repairnator.cfg`.
-This file is by default in `repairnator/scripts/config` but all values contained in the `$USER_HOME/repairnator.cfg` will override the default values.
+This file is by default in `repairnator/scripts/config`, but all values contained in the `$USER_HOME/repairnator.cfg` will override the default values.
 
 For more details about the configuration, [read this documentation](repairnator-config.md).
 
@@ -10,14 +10,14 @@ For more details about the configuration, [read this documentation](repairnator-
 
 You can launch Repairnator to analyze Travis CI builds in realtime and to repair failing ones.
 
-First open your `repairnator.cfg` config file (see above) and edit the values under `Realtime scanner configuration` section:
-  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations))
-  - `WHITELIST_PATH` and `BLACKLIST_PATH` can be left on the default value, or you can use the files available in `repairnator/repairnator-realtime/src/main/resources`
+First, open your `repairnator.cfg` config file (see above) and edit the values under `Realtime scanner configuration` section:
+  - `DURATION` is an optional value: if the value is left blank, the process will never stop; else it will last the specified duration (pay attention on the format, see: [https://en.wikipedia.org/wiki/ISO_8601#Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations));
+  - `WHITELIST_PATH` and `BLACKLIST_PATH` can be left on the default value, or you can use the files available in `repairnator/repairnator-realtime/src/main/resources`.
   
-Then just run the script `launch_rtscanner.sh`.
+Then, just run the script `launch_rtscanner.sh`.
 
-* this generates build reproduction info and patches as local files in a folder named `logs/`
-* in this default setup, no MongoDB is used, no email notification is done
+* this generates build reproduction info and patches as local files in a folder named `logs/`;
+* in this default setup, no MongoDB database is used, no email notification is done.
 
 ## `repair_buggy_build.sh`
 
@@ -33,10 +33,10 @@ vi ~/repairnator.cfg
 
 cd repairnator/scripts
 
-# start a docker container and run Repairnator on your specified Build ID.
+# start a Docker container and run Repairnator on your specified Build ID.
 ./repair_buggy_build.sh 352395977
 
-# When the docker container is done you can find logs and serialized files in the `$HOME_REPAIR/logs` path.
+# When the Docker container is done you can find logs and serialized files in the `$HOME_REPAIR/logs` path.
 ls $HOME_REPAIR/logs
 ```
 
@@ -74,15 +74,15 @@ Without an argument, it's a combination of `launch_scanner.sh` and `launch_docke
 
 ### Description
 
-This script will check the given branches to verify they are correct given the following criteria:
+This script will check the given branches to verify if they are correct given the following criteria:
   - they contain the right number of commits,
   - the buggy commit is a failing test,
   - the fixing commit makes a successful build,
-  - the json files respects the schema
+  - the JSON files respect the schema.
   
 ### How it works
 
-It launches a docker container for each branch provided in argument, using a pool of container and the [NB_THREADS](repairnator-config.md#nb_threads) option.
+It launches a Docker container for each branch provided in argument, using a pool of container and the [NB_THREADS](repairnator-config.md#nb_threads) option.
 
 ## `patched_builds.py`
 
@@ -90,11 +90,11 @@ This is a script that fetches data from a specified database that
 follows the document specification described in chore. 
 
 It will create a txt-file for each build in the collection `inspector`
-with the travis-build URL, the github commit URL along with every
+with the travis-build URL, the GitHub commit URL along with every
 patch that was created for this specific build together with the
 toolname that produced each patch.
 
-The text file will have a html format and the following xpath queries
+The text file will have a HTML format and the following xpath queries
 provide some interesting data for each file.
 
 ### Select all patches created by `<tool>`
@@ -117,7 +117,7 @@ provide some interesting data for each file.
 
 # Querying the database
 
-The current database contains a lot of interesting data, and below will be some examples of queries that will extract some of this data. The date is an example and may be replaced with dates you intend to look between.
+The current database contains a lot of interesting data, and below there will be some examples of queries that will extract some of this data. The date is an example and may be replaced with dates you intend to look between.
 
 ## Number of builds with test-failures on travis
 
