@@ -4,8 +4,6 @@ import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MOD
 import java.lang.reflect.Constructor;
 import fr.inria.spirals.repairnator.Listener;
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.BasicConfigurator;
-import ch.qos.logback.classic.LoggerContext;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -506,12 +504,8 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws JSAPException {
-        /*System.out.println("Jar installed locally - HENRY");*/
-        /*Launcher launcher = new Launcher(args);
-        initProcess(launcher);*/
-
-        Launcher launcher = new Launcher();
-        launcher.jenkinsMain(625844453);
+        Launcher launcher = new Launcher(args);
+        initProcess(launcher);
     }
 
     public ProjectInspector getInspector() {
