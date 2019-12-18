@@ -73,6 +73,9 @@ public class Launcher {
     private static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
+    
+    /* just give an empty instance of the launcher for customized execution */
+    public Launcher() {}
 
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");

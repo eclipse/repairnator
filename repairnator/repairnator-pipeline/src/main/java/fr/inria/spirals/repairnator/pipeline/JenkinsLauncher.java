@@ -42,8 +42,4 @@ public class JenkinsLauncher extends Launcher {
         this.mainProcess();
     }
 
-    public static void setOutErrStream(PrintStream ps) {
-        System.setOut(ps);
-        System.setErr(ps);
-    }
 }
