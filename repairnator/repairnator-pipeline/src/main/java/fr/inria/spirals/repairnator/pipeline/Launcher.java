@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import java.io.PrintStream;
 /**
  * This class is the main entry point for the repairnator pipeline.
  */
@@ -74,6 +75,9 @@ public class Launcher {
         return RepairnatorConfig.getInstance();
     }
     
+    /* just give an empty instance of the launcher for custimized execution */
+    public Launcher() {}
+
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
         Properties properties = new Properties();
@@ -471,6 +475,32 @@ public class Launcher {
             throw new RuntimeException(e);
         }
         listener.runListenerServer();
+    }
+
+
+    /* Entry point as Jenkins plugin - skip JSAP */
+    public void jenkinsMain(int buildId) {
+        /* Setting config */
+        this.getConfig().setClean(true);
+        this.getConfig().setRunId("1234");
+        this.getConfig().setGithubToken("");
+        this.getConfig().setLauncherMode(LauncherMode.REPAIR);
+        this.getConfig().setBuildId(buildId);
+        this.getConfig().setZ3solverPath(new File("./z3_for_linux").getPath());
+
+        this.getConfig().setRepairTools(new HashSet<>(Arrays.asList("NPEFix".split(" "))));
+        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
+            LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
+        }
+
+        this.initSerializerEngines();
+        this.initNotifiers();
+        this.mainProcess();
+    }
+
+    public static void setOutErrStream(PrintStream ps) {
+        System.setOut(ps);
+        System.setErr(ps);
     }
 
     public static void main(String[] args) throws JSAPException {
