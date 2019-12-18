@@ -59,6 +59,8 @@ public class PatchNotifierImpl implements PatchNotifier {
                 repoURL = Utils.getCompleteGithubRepoUrl(pullRequest.getOtherRepo().getFullName());
                 branchName = pullRequest.getHeadRef().getRef();
             } else {
+                /* Henry-Changed */
+                System.out.println("Error while getting pull request information for notification.");
                 this.logger.error("Error while getting pull request information for notification.");
             }
         }
