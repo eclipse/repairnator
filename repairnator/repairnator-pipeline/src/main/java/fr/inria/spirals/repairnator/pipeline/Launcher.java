@@ -332,7 +332,7 @@ public class Launcher {
         }
     }
 
-    public void initSerializerEngines() {
+    protected void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
         List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
@@ -344,7 +344,7 @@ public class Launcher {
         }
     }
 
-    public void initNotifiers() {
+    protected void initNotifiers() {
         List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
         ErrorNotifier.getInstance(notifierEngines);
 
