@@ -74,6 +74,9 @@ public class Launcher {
         return RepairnatorConfig.getInstance();
     }
     
+    /* just give an empty instance of the launcher for customized execution */
+    public Launcher() {}
+
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
         Properties properties = new Properties();
@@ -329,7 +332,7 @@ public class Launcher {
         }
     }
 
-    private void initSerializerEngines() {
+    protected void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
         List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
@@ -341,7 +344,7 @@ public class Launcher {
         }
     }
 
-    private void initNotifiers() {
+    protected void initNotifiers() {
         List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
         ErrorNotifier.getInstance(notifierEngines);
 
