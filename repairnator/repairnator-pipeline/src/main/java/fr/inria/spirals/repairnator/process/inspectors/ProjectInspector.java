@@ -47,6 +47,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Map;
+import java.io.File;
+import com.google.common.io.Files;
+
 /**
  * This class initialize the pipelines by creating the steps:
  * it's the backbone of the pipeline.
@@ -71,6 +75,7 @@ public class ProjectInspector {
     private List<AbstractStep> steps;
     private AbstractStep finalStep;
     private boolean pipelineEnding;
+    private File tempDir;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
@@ -87,6 +92,26 @@ public class ProjectInspector {
         this.steps = new ArrayList<>();
         this.initProperties();
     }
+
+    /* if no workspace provided create a tempdir - Meant for Jenkins Plugin to avoid system privilegde issues*/
+    public ProjectInspector(BuildToBeInspected buildToBeInspected, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+        this.buildToBeInspected = buildToBeInspected;
+        this.tempDir = Files.createTempDir();
+        this.workspace = tempDir.getAbsolutePath();
+        this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuggyBuild().getId();
+        System.out.println("Henry - " + repoLocalPath);
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = serializers;
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+        this.initProperties();
+
+    }
+
 
     protected void initProperties() {
         try {
