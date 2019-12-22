@@ -45,6 +45,8 @@ import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,19 +65,27 @@ import java.util.Properties;
  */
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-    private static Listener listener = null;
-    private BuildToBeInspected buildToBeInspected;
-    private List<SerializerEngine> engines;
-    private List<AbstractNotifier> notifiers;
-    private PatchNotifier patchNotifier;
-    private ProjectInspector inspector;
+    protected static Listener listener = null;
+    protected BuildToBeInspected buildToBeInspected;
+    protected List<SerializerEngine> engines;
+    protected List<AbstractNotifier> notifiers;
+    protected PatchNotifier patchNotifier;
+    protected ProjectInspector inspector;
 
     private static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
     
     /* just give an empty instance of the launcher for customized execution */
-    public Launcher() {}
+    public Launcher() {
+        /* Reset fields*/
+        this.listener = null;
+        this.buildToBeInspected = null;
+        this.engines = null;
+        this.notifiers = null;
+        this.patchNotifier = null;
+        this.inspector = null; 
+    }
 
     public Launcher(String[] args) throws JSAPException {
         InputStream propertyStream = getClass().getResourceAsStream("/version.properties");
@@ -369,7 +379,7 @@ public class Launcher {
         return result;
     }
 
-    private boolean getBuildToBeInspected() {
+    protected boolean getBuildToBeInspected() {
         JTravis jTravis = this.getConfig().getJTravis();
         Optional<Build> optionalBuild = jTravis.build().fromId(this.getConfig().getBuildId());
         if (!optionalBuild.isPresent()) {
@@ -440,6 +450,7 @@ public class Launcher {
             inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }
 
+        System.out.println("Finished " + this.inspector.isPipelineEnding());
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             serializers.add(new InspectorSerializer4Bears(this.engines, inspector));
         } else {
@@ -477,6 +488,7 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws JSAPException {
+
         Launcher launcher = new Launcher(args);
         initProcess(launcher);
     }

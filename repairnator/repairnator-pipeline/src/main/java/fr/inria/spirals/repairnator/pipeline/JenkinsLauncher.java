@@ -18,6 +18,7 @@ import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.HashSet;
@@ -25,17 +26,15 @@ import java.util.Arrays;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-/*import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.FileAppender;*/
+
+import java.io.File;
+import java.io.IOException;
+import com.google.common.io.Files;
 
 /* Entry point as Jenkins plugin - skip JSAP */
 public class JenkinsLauncher extends Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(JenkinsLauncher.class);
-
+    private final File tempDir = Files.createTempDir();
     private static RepairnatorConfig getConfig() {
       return RepairnatorConfig.getInstance();
   }
@@ -54,7 +53,8 @@ public class JenkinsLauncher extends Launcher {
     List<AbstractDataSerializer> serializers = new ArrayList<>();
 
     /* instantiate with temp dir instead */
-    inspector = new ProjectInspector(buildToBeInspected,serializers, this.notifiers);
+
+    inspector = new ProjectInspector(buildToBeInspected,this.tempDir.getAbsolutePath(),serializers, this.notifiers);
 
     serializers.add(new InspectorSerializer(this.engines, inspector));
     serializers.add(new PropertiesSerializer(this.engines, inspector));
@@ -65,8 +65,12 @@ public class JenkinsLauncher extends Launcher {
     serializers.add(new PullRequestSerializer(this.engines, inspector));
 
     inspector.setPatchNotifier(this.patchNotifier);
-    System.out.println("Process Start without any problem - HEnry");
     inspector.run();
+    try {
+      FileUtils.deleteDirectory(this.tempDir.getAbsolutePath());
+    } catch (IOException e) {
+      e.printStackTrace(System.out);
+    }
 
     LOGGER.info("Inspector is finished. The process will exit now.");
     return true;

@@ -78,9 +78,6 @@ public class RepairToolsManager {
     }
 
     public static AbstractRepairStep getStepFromName(String name) {
-        for (Map.Entry<String, AbstractRepairStep> entry : RepairToolsManager.getInstance().repairTools.entrySet()) {
-            System.out.println(entry.getKey());
-        }
         return getInstance().repairTools.get(name);
     }
 
