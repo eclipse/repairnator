@@ -144,7 +144,6 @@ public class JenkinsProjectInspector extends ProjectInspector{
 
     public void run() {
         AbstractStep cloneRepo = new JenkinsCloneRepository(this);
-        cloneRepo.switchOnNoTravisStep();
         // If we have experimental plugins, we need to add them here.
         String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
         if(repos != null) {
