@@ -12,6 +12,7 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
 
 public class ProcessDurations {
 
@@ -61,12 +62,13 @@ public class ProcessDurations {
                 step.getInspector().getCheckoutType().equals(CheckoutType.CHECKOUT_BUGGY_BUILD_SOURCE_CODE))) {
             this.building.addStep(stepName, stepDuration);
         } else {
-            if (step.getInspector().getBuildToBeInspected().getStatus() == ScannedBuildStatus.ONLY_FAIL ||
-                    step.getInspector().getBuildToBeInspected().getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
+            BuildToBeInspected build = step.getInspector().getBuildToBeInspected() == null ? new BuildToBeInspected(null,null,null,null) : step.getInspector().getBuildToBeInspected();
+            if (build.getStatus() == ScannedBuildStatus.ONLY_FAIL ||
+                    build.getStatus() == ScannedBuildStatus.FAILING_AND_PASSING) {
                 if (step instanceof CheckoutBuggyBuild) {
                     this.building.addStep(stepName, stepDuration);
                 }
-            } else { // PASSING_AND_PASSING_WITH_TEST_CHANGES
+            } else { 
                 if (step instanceof CheckoutPatchedBuild || step instanceof ComputeSourceDir ||
                         step instanceof ComputeTestDir || step instanceof CheckoutBuggyBuildSourceCode) {
                     this.building.addStep(stepName, stepDuration);

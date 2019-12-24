@@ -73,6 +73,8 @@ public class ProjectInspector {
     private List<AbstractStep> steps;
     private AbstractStep finalStep;
     private boolean pipelineEnding;
+    private String gitUrl;
+    private String gitSlug;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
@@ -88,6 +90,22 @@ public class ProjectInspector {
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
         this.initProperties();
+    }
+
+    public ProjectInspector(String workspace,String gitUrl,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+        this.gitUrl = gitUrl;
+        this.gitSlug = this.gitUrl.split("https://github.com/",2)[1];
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator + getRepoSlug();
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = serializers;
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+        /* Skip initProperties*/
     }
 
     protected void initProperties() {
@@ -178,18 +196,30 @@ public class ProjectInspector {
     }
 
     public BuildToBeInspected getBuildToBeInspected() {
+        if (this.buildToBeInspected == null) {
+            return null;
+        }
         return this.buildToBeInspected;
     }
 
     public Build getPatchedBuild() {
+        if (this.buildToBeInspected == null) {
+            return null;
+        }
         return this.buildToBeInspected.getPatchedBuild();
     }
 
     public Build getBuggyBuild() {
+        if (this.buildToBeInspected == null) {
+            return null;
+        }
         return this.buildToBeInspected.getBuggyBuild();
     }
 
     public String getRepoSlug() {
+        if (this.buildToBeInspected == null) {
+            return null;
+        }
         return this.buildToBeInspected.getBuggyBuild().getRepository().getSlug();
     }
 
