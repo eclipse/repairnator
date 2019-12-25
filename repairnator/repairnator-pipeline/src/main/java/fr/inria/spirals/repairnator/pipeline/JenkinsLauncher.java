@@ -87,12 +87,12 @@ public class JenkinsLauncher extends Launcher {
     inspector.run();
 
     /* Delete the temp dir */
-    /*try {
+    try {
       FileUtils.deleteDirectory(this.tempDir.getAbsolutePath());
     } catch (IOException e) {
       e.printStackTrace(System.out);
     }
-*/
+
     LOGGER.info("Inspector is finished. The process will exit now.");
     return true;
   }
@@ -127,6 +127,6 @@ public class JenkinsLauncher extends Launcher {
 
   public static void main(String[] args) {
       JenkinsLauncher launcher = new JenkinsLauncher();
-      launcher.jenkinsMain(args[0],"94450c6e53901ca87155a79662e8c9b88d7fbc03");
+      launcher.jenkinsMain(args[0],"");
   }
 }
