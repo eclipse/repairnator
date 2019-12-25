@@ -86,9 +86,10 @@ public class CommitFiles extends AbstractStep {
         switch (this.commitType) {
             case COMMIT_BUGGY_BUILD:
                 commitMsg = "Bug commit from " + this.getInspector().getRepoSlug() + "\n";
-
-                commitMsg += "This commit is based on the source code from the following commit: " + commits.getBuggyBuild().getUrl() + "\n";
-                commitMsg += "The mentioned commit triggered the following Travis build: " + builds.getBuggyBuild().getUrl() + ".";
+                if (commits.getBuggyBuild() != null) {
+                    commitMsg += "This commit is based on the source code from the following commit: " + commits.getBuggyBuild().getUrl() + "\n";
+                    commitMsg += "The mentioned commit triggered the following Travis build: " + builds.getBuggyBuild().getUrl() + ".";
+                }
                 break;
 
             case COMMIT_HUMAN_PATCH:

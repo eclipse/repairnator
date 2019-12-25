@@ -41,6 +41,8 @@ import com.google.common.io.Files;
 public class JenkinsLauncher extends Launcher {
   private static Logger LOGGER = LoggerFactory.getLogger(JenkinsLauncher.class);
   private static String gitUrl;
+  private String pushUrl;
+  private String gitToken;
   private final File tempDir = Files.createTempDir();
   private JenkinsProjectInspector inspector;
 
@@ -95,7 +97,8 @@ public class JenkinsLauncher extends Launcher {
     return true;
   }
 
-  public void jenkinsMain() {
+  public void jenkinsMain(String gitUrl,String gitToken) {
+    this.gitUrl = gitUrl;
     /* Setting config */
     this.getConfig().setClean(true);
     this.getConfig().setRunId("1234");
@@ -103,6 +106,13 @@ public class JenkinsLauncher extends Launcher {
     this.getConfig().setLauncherMode(LauncherMode.REPAIR);
     this.getConfig().setBuildId(0);
     this.getConfig().setZ3solverPath(new File("./z3_for_linux").getPath());
+
+    this.getConfig().setGithubToken(gitToken);
+    this.getConfig().setPush(true);
+    this.getConfig().setGithubUserEmail("noreply@github.com");
+    this.getConfig().setGithubUserName("repairnator");
+    this.getConfig().setCreatePR(true);
+    this.getConfig().setFork(true);
 
     this.getConfig().setRepairTools(new HashSet<>(Arrays.asList("NPEFix".split(" "))));
     if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
@@ -114,9 +124,9 @@ public class JenkinsLauncher extends Launcher {
     this.mainProcess();
   }
 
+
   public static void main(String[] args) {
-      gitUrl = args[0];
       JenkinsLauncher launcher = new JenkinsLauncher();
-      launcher.jenkinsMain();
+      launcher.jenkinsMain(args[0],"94450c6e53901ca87155a79662e8c9b88d7fbc03");
   }
 }
