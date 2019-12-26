@@ -60,6 +60,7 @@ public class JenkinsProjectInspector extends ProjectInspector{
     private BuildToBeInspected buildToBeInspected;
     private String gitUrl;
     private String gitSlug;
+    private String gitBranch;
     private String repoLocalPath;
     private String repoToPushLocalPath;
 
@@ -80,9 +81,10 @@ public class JenkinsProjectInspector extends ProjectInspector{
         super(buildToBeInspected,workspace,serializers,notifiers);
     }
 
-    public JenkinsProjectInspector(String workspace,String gitUrl,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-        super(workspace,gitUrl,serializers,notifiers);
+    public JenkinsProjectInspector(String workspace,String gitUrl,String gitBranch,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+        super(workspace,gitUrl,gitBranch,serializers,notifiers);
         this.gitUrl = gitUrl;
+        this.gitBranch = gitBranch;
         /* Format like https://github.com/eclipse/repairnator */
         this.gitSlug = this.gitUrl.split("https://github.com/",2)[1];
         this.workspace = workspace;
@@ -98,9 +100,9 @@ public class JenkinsProjectInspector extends ProjectInspector{
         this.initProperties();
     }
 
-    /* As options in jenkins in the future - untested */
+    /* This is the new branch for end process */
     public String getRemoteBranchName() {
-        return "master";
+        return this.getRepoSlug().replace('/', '-');
     }
 
     public String getRepoSlug() {
@@ -109,6 +111,11 @@ public class JenkinsProjectInspector extends ProjectInspector{
 
     public String getGitUrl() {
         return this.gitUrl;
+    }
+
+    /* This is the branch , which repairnator will repair*/
+    public String getCheckoutBranchName() {
+        return this.gitBranch;
     }
 
     protected void initProperties() {

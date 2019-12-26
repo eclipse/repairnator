@@ -75,6 +75,7 @@ public class ProjectInspector {
     private boolean pipelineEnding;
     private String gitUrl;
     private String gitSlug;
+    private String gitBranch;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
@@ -92,8 +93,9 @@ public class ProjectInspector {
         this.initProperties();
     }
 
-    public ProjectInspector(String workspace,String gitUrl,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+    public ProjectInspector(String workspace,String gitUrl,String gitBranch,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.gitUrl = gitUrl;
+        this.gitBranch = gitBranch;
         this.gitSlug = this.gitUrl.split("https://github.com/",2)[1];
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + getRepoSlug();

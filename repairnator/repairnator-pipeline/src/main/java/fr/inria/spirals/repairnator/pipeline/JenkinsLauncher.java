@@ -43,6 +43,7 @@ public class JenkinsLauncher extends Launcher {
   private static String gitUrl;
   private String pushUrl;
   private String gitToken;
+  private String gitBranch;
   private final File tempDir = Files.createTempDir();
   private JenkinsProjectInspector inspector;
 
@@ -73,7 +74,7 @@ public class JenkinsLauncher extends Launcher {
 
     /* instantiate with temp dir instead */
 
-    this.inspector = new JenkinsProjectInspector(this.tempDir.getAbsolutePath(),this.gitUrl,serializers, this.notifiers);
+    this.inspector = new JenkinsProjectInspector(this.tempDir.getAbsolutePath(),this.gitUrl,this.gitBranch,serializers, this.notifiers);
 
     serializers.add(new InspectorSerializer(this.engines, inspector));
     serializers.add(new PropertiesSerializer(this.engines, inspector));
@@ -97,8 +98,11 @@ public class JenkinsLauncher extends Launcher {
     return true;
   }
 
-  public void jenkinsMain(String gitUrl,String gitToken) {
+  public void jenkinsMain(String gitUrl,String gitToken,String gitBranch) {
+    LOGGER.info("Repairnator will be running for");
+    LOGGER.info("GitUrl: " + gitUrl + " GitBranch: " + gitBranch);
     this.gitUrl = gitUrl;
+    this.gitBranch = gitBranch;
     /* Setting config */
     this.getConfig().setClean(true);
     this.getConfig().setRunId("1234");
@@ -127,6 +131,6 @@ public class JenkinsLauncher extends Launcher {
 
   public static void main(String[] args) {
       JenkinsLauncher launcher = new JenkinsLauncher();
-      launcher.jenkinsMain(args[0],"");
+      launcher.jenkinsMain(args[0],args[1],args[2]);
   }
 }
