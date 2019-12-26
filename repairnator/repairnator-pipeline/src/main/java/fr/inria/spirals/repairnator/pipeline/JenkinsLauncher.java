@@ -99,8 +99,7 @@ public class JenkinsLauncher extends Launcher {
   }
 
   public void jenkinsMain(String gitUrl,String gitToken,String gitBranch) {
-    LOGGER.info("Repairnator will be running for");
-    LOGGER.info("GitUrl: " + gitUrl + " GitBranch: " + gitBranch);
+    LOGGER.info("Repairnator will be running for - GitUrl: " + gitUrl + " --  GitBranch: " + gitBranch);
     this.gitUrl = gitUrl;
     this.gitBranch = gitBranch;
     /* Setting config */
