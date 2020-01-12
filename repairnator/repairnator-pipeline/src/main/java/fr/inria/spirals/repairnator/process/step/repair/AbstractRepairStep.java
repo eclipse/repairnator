@@ -139,7 +139,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
         // fork repo
         String forkedRepo = this.getInspector().getJobStatus().getForkURL();
-
         if (forkedRepo.startsWith("https://api.github.com/repos")) {
             forkedRepo = forkedRepo.replace("https://api.github.com/repos", "https://github.com");
         }
@@ -177,14 +176,11 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
                 GHRepository ghForkedRepo = originalRepository.fork();
 
-                String base = this.getInspector().getBuggyBuild() == null ? ((JenkinsProjectInspector)this.getInspector()).getRemoteBranchName() : this.getInspector().getBuggyBuild().getBranch().getName();
+                String base = this.getInspector().getBuggyBuild() == null ? ((JenkinsProjectInspector)this.getInspector()).getCheckoutBranchName() : this.getInspector().getBuggyBuild().getBranch().getName();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
-
                 String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
                 String baseString = this.getInspector().getBuggyBuild() == null ? "This PR has been created automatically by [repairnator](https://github.com/eclipse/repairnator).\n" : TEXT_PR;
-
                 String prText = String.format(baseString, travisURL, this.getInspector().getRepoSlug(), this.getInspector().getRepoSlug());
-
                 GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", head, base, prText);
                 String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
                 this.getLogger().info("Pull request created on: " + prURL);

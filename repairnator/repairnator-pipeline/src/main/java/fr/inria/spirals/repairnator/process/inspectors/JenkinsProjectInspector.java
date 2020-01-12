@@ -86,9 +86,9 @@ public class JenkinsProjectInspector extends ProjectInspector{
         this.gitUrl = gitUrl;
         this.gitBranch = gitBranch;
         /* Format like https://github.com/eclipse/repairnator */
-        this.gitSlug = this.gitUrl.split("https://github.com/",2)[1];
+        this.gitSlug = this.gitUrl.split("https://github.com/",2)[1].replace(".git","");
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug();
+        this.repoLocalPath = workspace + File.separator + this.getRepoSlug();
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = null;
@@ -101,10 +101,12 @@ public class JenkinsProjectInspector extends ProjectInspector{
     }
 
     /* This is the new branch for end process */
+    @Override
     public String getRemoteBranchName() {
         return this.getRepoSlug().replace('/', '-');
     }
 
+    @Override
     public String getRepoSlug() {
         return this.gitSlug;
     }
@@ -118,6 +120,7 @@ public class JenkinsProjectInspector extends ProjectInspector{
         return this.gitBranch;
     }
 
+    @Override
     protected void initProperties() {
         try {
             Properties properties = this.jobStatus.getProperties();
@@ -126,8 +129,7 @@ public class JenkinsProjectInspector extends ProjectInspector{
 
             fr.inria.spirals.repairnator.process.inspectors.properties.repository.Repository repository = properties.getRepository();
             repository.setName(this.getRepoSlug());
-            repository.setUrl(Utils.getSimpleGithubRepoUrl(this.getRepoSlug()));
-
+            repository.setUrl(this.getGitUrl());
             GitHub gitHub;
             try {
                 gitHub = RepairnatorConfig.getInstance().getGithub();
@@ -148,6 +150,9 @@ public class JenkinsProjectInspector extends ProjectInspector{
         }
     }
 
+    public String getRepoLocalPath() {
+        return this.repoLocalPath;
+    }
 
     public void run() {
         AbstractStep cloneRepo = new JenkinsCloneRepository(this);
@@ -158,7 +163,7 @@ public class JenkinsProjectInspector extends ProjectInspector{
                 cloneRepo.addNextStep(new AddExperimentalPluginRepo(this, repos[i], repos[i+1], repos[i+2]));
             }
         }
-        // Add the next steps
+        
         cloneRepo
                 .addNextStep(new BuildProject(this))
                 .addNextStep(new TestProject(this))

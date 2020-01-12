@@ -79,7 +79,7 @@ public abstract class AbstractStep {
      * If set to true, the failure of the step means a stop of the entire pipeline.
      */
     private boolean blockingStep;
-
+    
     public AbstractStep(ProjectInspector inspector, boolean blockingStep) {
         this(inspector, blockingStep, "");
         this.name = this.getClass().getSimpleName();

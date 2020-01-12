@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.JenkinsProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
@@ -44,8 +45,8 @@ public class JenkinsLauncher extends Launcher {
   private String pushUrl;
   private String gitToken;
   private String gitBranch;
-  private final File tempDir = Files.createTempDir();
-  private JenkinsProjectInspector inspector;
+  private static final File tempDir = Files.createTempDir();
+  private ProjectInspector inspector;
 
   private static RepairnatorConfig getConfig() {
     return RepairnatorConfig.getInstance();
@@ -72,10 +73,7 @@ public class JenkinsLauncher extends Launcher {
 
     List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-    /* instantiate with temp dir instead */
-
-    this.inspector = new JenkinsProjectInspector(this.tempDir.getAbsolutePath(),this.gitUrl,this.gitBranch,serializers, this.notifiers);
-
+    this.inspector = new JenkinsProjectInspector(this.getConfig().getWorkspacePath(),this.gitUrl,this.gitBranch,serializers, this.notifiers);
     serializers.add(new InspectorSerializer(this.engines, inspector));
     serializers.add(new PropertiesSerializer(this.engines, inspector));
     serializers.add(new InspectorTimeSerializer(this.engines, inspector));
@@ -87,7 +85,6 @@ public class JenkinsLauncher extends Launcher {
     inspector.setPatchNotifier(this.patchNotifier);
     inspector.run();
 
-    /* Delete the temp dir */
     try {
       FileUtils.deleteDirectory(this.tempDir.getAbsolutePath());
     } catch (IOException e) {
@@ -98,17 +95,16 @@ public class JenkinsLauncher extends Launcher {
     return true;
   }
 
-  public void jenkinsMain(String gitUrl,String gitToken,String gitBranch) {
+  public void jenkinsMain(String gitUrl,String gitToken,String gitBranch,String toolsName) {
     LOGGER.info("Repairnator will be running for - GitUrl: " + gitUrl + " --  GitBranch: " + gitBranch);
     this.gitUrl = gitUrl;
     this.gitBranch = gitBranch;
-    /* Setting config */
     this.getConfig().setClean(true);
     this.getConfig().setRunId("1234");
-    this.getConfig().setGithubToken("");
     this.getConfig().setLauncherMode(LauncherMode.REPAIR);
-    this.getConfig().setBuildId(0);
+    this.getConfig().setBuildId(0); //dummy 
     this.getConfig().setZ3solverPath(new File("./z3_for_linux").getPath());
+    this.getConfig().setWorkspacePath(this.tempDir.getAbsolutePath());
 
     this.getConfig().setGithubToken(gitToken);
     this.getConfig().setPush(true);
@@ -117,7 +113,7 @@ public class JenkinsLauncher extends Launcher {
     this.getConfig().setCreatePR(true);
     this.getConfig().setFork(true);
 
-    this.getConfig().setRepairTools(new HashSet<>(Arrays.asList("NPEFix".split(" "))));
+    this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(toolsName.split(" "))));
     if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
         LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
     }
@@ -127,9 +123,8 @@ public class JenkinsLauncher extends Launcher {
     this.mainProcess();
   }
 
-
   public static void main(String[] args) {
       JenkinsLauncher launcher = new JenkinsLauncher();
-      launcher.jenkinsMain(args[0],args[1],args[2]);
+      launcher.jenkinsMain(args[0],args[1],args[2],args[3]);
   }
 }

@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.JenkinsCloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.WritePropertyFile;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -81,7 +82,7 @@ public class ProjectInspector {
         this.buildToBeInspected = buildToBeInspected;
 
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug() + File.separator + buildToBeInspected.getBuggyBuild().getId();
+        this.repoLocalPath = workspace + File.separator + getRepoSlug();
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
@@ -96,9 +97,9 @@ public class ProjectInspector {
     public ProjectInspector(String workspace,String gitUrl,String gitBranch,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.gitUrl = gitUrl;
         this.gitBranch = gitBranch;
-        this.gitSlug = this.gitUrl.split("https://github.com/",2)[1];
+        this.gitSlug = this.gitUrl.split("https://github.com/",2)[1].replace(".git","");
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug();
+        this.repoLocalPath = workspace + File.separator + this.gitSlug;
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
@@ -108,6 +109,15 @@ public class ProjectInspector {
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
         /* Skip initProperties*/
+    }
+
+    public void setGitConfig(String gitUrl,String gitBranch) {
+        this.gitUrl = gitUrl;
+        this.gitBranch = gitBranch;
+    }
+
+    public String getCheckoutBranchName() {
+        return this.gitBranch;
     }
 
     protected void initProperties() {
@@ -174,6 +184,14 @@ public class ProjectInspector {
         } catch (Exception e) {
             this.logger.error("Error while initializing metrics.", e);
         }
+    }
+
+    public String getGitUrl() {
+        return this.gitUrl;
+    }
+
+    public String getGitSlug() {
+        return this.gitSlug;
     }
 
     public JobStatus getJobStatus() {
