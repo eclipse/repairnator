@@ -24,8 +24,8 @@
     </licenses>
 
     <organization>
-        <name>Inria</name>
-        <url>http://www.inria.fr</url>
+        <name>The Eclipse Foundation</name>
+        <url>https://projects.eclipse.org/projects/technology.repairnator</url>
     </organization>
 
     <issueManagement>
@@ -35,16 +35,7 @@
 
     <developers>
         <developer>
-            <name>Simon Urli</name>
-            <roles>
-                <role>Contributor</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Fernanda Madeiral</name>
-            <roles>
-                <role>Contributor</role>
-            </roles>
+            <name>Github contributors, see https://github.com/eclipse/repairnator/graphs/contributors</name>
         </developer>
     </developers>
 
