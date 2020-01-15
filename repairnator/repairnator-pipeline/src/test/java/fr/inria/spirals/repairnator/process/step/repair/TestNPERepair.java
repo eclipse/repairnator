@@ -41,10 +41,14 @@ import static org.junit.Assert.assertTrue;
 public class TestNPERepair {
 
     private File tmpDir;
-
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+    private final PrintStream originalErr = System.err;
+    private Logger logger;
     @Before
     public void setup() {
-        Utils.setLoggersLevel(Level.ERROR);
+        /*Utils.setLoggersLevel(Level.ERROR);*/
     }
 
     @After
@@ -73,6 +77,7 @@ public class TestNPERepair {
                 .addNextStep(new TestProject(inspector))
                 .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                 .addNextStep(npeRepair);
+
         cloneStep.execute();
 
         assertThat(npeRepair.isShouldStop(), is(false));

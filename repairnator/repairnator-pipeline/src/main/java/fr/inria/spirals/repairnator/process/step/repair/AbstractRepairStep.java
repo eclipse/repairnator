@@ -19,6 +19,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -179,7 +180,8 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 String base = this.getInspector().getBuggyBuild() == null ? ((JenkinsProjectInspector)this.getInspector()).getCheckoutBranchName() : this.getInspector().getBuggyBuild().getBranch().getName();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
                 String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
-                String baseString = this.getInspector().getBuggyBuild() == null ? "This PR has been created automatically by [repairnator](https://github.com/eclipse/repairnator).\n" : TEXT_PR;
+                String jenkinsCase = "Patches found by repairnator. Tools used: " + String.join(",", this.getConfig().getRepairTools()) + "\n";
+                String baseString = this.getInspector().getBuggyBuild() == null ? jenkinsCase : TEXT_PR;
                 String prText = String.format(baseString, travisURL, this.getInspector().getRepoSlug(), this.getInspector().getRepoSlug());
                 GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", head, base, prText);
                 String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();

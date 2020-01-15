@@ -88,14 +88,14 @@ public class JenkinsLauncher extends Launcher {
     try {
       FileUtils.deleteDirectory(this.tempDir.getAbsolutePath());
     } catch (IOException e) {
-      e.printStackTrace(System.out);
+      throw new RuntimeException(e);
     }
 
     LOGGER.info("Inspector is finished. The process will exit now.");
     return true;
   }
 
-  public void jenkinsMain(String gitUrl,String gitToken,String gitBranch,String toolsName) {
+  public void jenkinsMain(String gitUrl,String gitToken,String gitBranch,String[] tools) {
     LOGGER.info("Repairnator will be running for - GitUrl: " + gitUrl + " --  GitBranch: " + gitBranch);
     this.gitUrl = gitUrl;
     this.gitBranch = gitBranch;
@@ -112,8 +112,7 @@ public class JenkinsLauncher extends Launcher {
     this.getConfig().setGithubUserName("repairnator");
     this.getConfig().setCreatePR(true);
     this.getConfig().setFork(true);
-
-    this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(toolsName.split(" "))));
+    this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(tools)));
     if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
         LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
     }
@@ -125,6 +124,6 @@ public class JenkinsLauncher extends Launcher {
 
   public static void main(String[] args) {
       JenkinsLauncher launcher = new JenkinsLauncher();
-      launcher.jenkinsMain(args[0],args[1],args[2],args[3]);
+      launcher.jenkinsMain(args[0],args[1],args[2],args[3].split(","));
   }
 }
