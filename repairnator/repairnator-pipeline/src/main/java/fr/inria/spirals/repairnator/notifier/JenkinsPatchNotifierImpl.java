@@ -17,31 +17,31 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Created by urli on 30/03/2017.
+ * Skip Buggybuild check
  */
-public class PatchNotifierImpl implements PatchNotifier {
+public class JenkinsPatchNotifierImpl implements PatchNotifier {
     public static final int LIMIT_NB_PATCH = 10;
+    /* Move to Repairnator config later*/
+    /*private static final boolean noTravisStep = true;*/
 
-    private Logger logger = LoggerFactory.getLogger(PatchNotifierImpl.class);
+    private Logger logger = LoggerFactory.getLogger(JenkinsPatchNotifierImpl.class);
     private List<NotifierEngine> engines;
 
-    public PatchNotifierImpl(List<NotifierEngine> engines) {
+    public JenkinsPatchNotifierImpl(List<NotifierEngine> engines) {
         this.engines = engines;
     }
 
     @Override
     public void notify(ProjectInspector inspector, String toolname, List<RepairPatch> patches) {
         JobStatus jobStatus = inspector.getJobStatus();
-        Build buggyBuild = inspector.getBuggyBuild();
-        Repository repository = buggyBuild.getRepository();
 
-        String subject = "[Repairnator] Patched build: "+buggyBuild.getId()+" - "+repository.getSlug();
+        String subject = "[Repairnator] Patched build: " + ((JenkinsProjectInspector)inspector).getRepoSlug();
         String text = "Hurray !\n\n" +
-                toolname + " has found " + patches.size() + " patch(es) for the following build: "+ Utils.getTravisUrl(buggyBuild.getId(), repository.getSlug())+".\n";
+                toolname + " has found " + patches.size() + " patch(es)"+".\n";
 
-        String slug = repository.getSlug();
-        String repoURL = Utils.getCompleteGithubRepoUrl(slug);
-        String branchName = buggyBuild.getBranch().getName();
+        String slug = ((JenkinsProjectInspector)inspector).getRepoSlug();
+        String repoURL = ((JenkinsProjectInspector)inspector).getGitUrl();
+        String branchName = ((JenkinsProjectInspector)inspector).getRemoteBranchName();
 
         String[] divideSlug = slug.split("/");
         String projectName = divideSlug[1];
@@ -51,17 +51,6 @@ public class PatchNotifierImpl implements PatchNotifier {
         text += "mkdir "+projectName+"\n";
         text += "cd "+projectName+"\n";
         text += "git init\n";
-
-        if (buggyBuild.isPullRequest()) {
-            Optional<PullRequest> pullRequestOptional = RepairnatorConfig.getInstance().getJTravis().pullRequest().fromBuild(buggyBuild);
-            if (pullRequestOptional.isPresent()) {
-                PullRequest pullRequest = pullRequestOptional.get();
-                repoURL = Utils.getCompleteGithubRepoUrl(pullRequest.getOtherRepo().getFullName());
-                branchName = pullRequest.getHeadRef().getRef();
-            } else {
-                this.logger.error("Error while getting pull request information for notification.");
-            }
-        }
 
         text += "git fetch "+repoURL+" "+branchName+"\n";
         text += "git checkout -b patch FETCH_HEAD\n";

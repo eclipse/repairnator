@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.JenkinsProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
@@ -18,6 +19,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -122,7 +124,9 @@ public abstract class AbstractRepairStep extends AbstractStep {
             return;
         }
 
-        if (this.getInspector().getBuggyBuild().isPullRequest()) {
+        /* Jenkins case - we handle it at the plugin code if it's a PR */
+        boolean b = this.getInspector().getBuggyBuild() == null ? false : this.getInspector().getBuggyBuild().isPullRequest();
+        if (b) {
             this.getLogger().warn("Skipping creating a PR if it's already a PR, for now. Much more complicated stuff to do there.");
             return;
         }
@@ -136,7 +140,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
         // fork repo
         String forkedRepo = this.getInspector().getJobStatus().getForkURL();
-
         if (forkedRepo.startsWith("https://api.github.com/repos")) {
             forkedRepo = forkedRepo.replace("https://api.github.com/repos", "https://github.com");
         }
@@ -174,13 +177,12 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
                 GHRepository ghForkedRepo = originalRepository.fork();
 
-                String base = this.getInspector().getBuggyBuild().getBranch().getName();
+                String base = this.getInspector().getBuggyBuild() == null ? ((JenkinsProjectInspector)this.getInspector()).getCheckoutBranchName() : this.getInspector().getBuggyBuild().getBranch().getName();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
-
-                String travisURL = Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
-
-                String prText = String.format(TEXT_PR, travisURL, this.getInspector().getRepoSlug(), this.getInspector().getRepoSlug());
-
+                String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
+                String jenkinsCase = "Patches found by repairnator. Tools used: " + String.join(",", this.getConfig().getRepairTools()) + "\n";
+                String baseString = this.getInspector().getBuggyBuild() == null ? jenkinsCase : TEXT_PR;
+                String prText = String.format(baseString, travisURL, this.getInspector().getRepoSlug(), this.getInspector().getRepoSlug());
                 GHPullRequest pullRequest = originalRepository.createPullRequest("Patch proposal", head, base, prText);
                 String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
                 this.getLogger().info("Pull request created on: " + prURL);

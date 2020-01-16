@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
 public class TestNPERepair {
 
     private File tmpDir;
-
+    
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
@@ -73,6 +73,7 @@ public class TestNPERepair {
                 .addNextStep(new TestProject(inspector))
                 .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                 .addNextStep(npeRepair);
+
         cloneStep.execute();
 
         assertThat(npeRepair.isShouldStop(), is(false));

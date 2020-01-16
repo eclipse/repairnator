@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.spirals.repairnator.utils.Utils;
+import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -78,7 +79,7 @@ public abstract class AbstractStep {
      * If set to true, the failure of the step means a stop of the entire pipeline.
      */
     private boolean blockingStep;
-
+    
     public AbstractStep(ProjectInspector inspector, boolean blockingStep) {
         this(inspector, blockingStep, "");
         this.name = this.getClass().getSimpleName();
@@ -196,7 +197,8 @@ public abstract class AbstractStep {
                 this.getLogger().info("Serialize all data for the pair of builds " +
                         this.getInspector().getBuggyBuild().getId() + ", " + this.getInspector().getPatchedBuild().getId());
             } else {
-                this.getLogger().info("Serialize all data for build: " + this.getInspector().getBuggyBuild().getId());
+                String s = this.getInspector().getBuggyBuild() == null ? "" : "Serialize all data for build: " + this.getInspector().getBuggyBuild().getId();
+                this.getLogger().info(s);
             }
             for (AbstractDataSerializer serializer : this.serializers) {
                 serializer.serialize();
