@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.maven.output;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
@@ -8,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 /**
  * Created by urli on 15/02/2017.
@@ -46,11 +46,11 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
     }
 
     private void writeToFile(String s) {
-    	String githubToken = "GITHUB_TOKEN=[a-zA-Z0-9]+";
-    	String confidentialInformation = "GITHUB_TOKEN=CONFIDENTIAL_INFORMATION";
+    	String githubToken = RepairnatorConfig.getInstance().getGithubToken();
+    	String confidentialInformation = "CONFIDENTIAL_INFORMATION";
         if (this.fileWriter != null) {
             try {
-            	if (Pattern.compile(githubToken).matcher(s).find()) {
+            	if (s.contains(githubToken)) {
             		s = s.replaceAll(githubToken, confidentialInformation);
             	}
                 this.fileWriter.write(s);
