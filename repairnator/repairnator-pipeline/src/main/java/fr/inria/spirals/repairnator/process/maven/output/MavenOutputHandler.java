@@ -50,7 +50,7 @@ public abstract class MavenOutputHandler implements InvocationOutputHandler {
     	String confidentialInformation = "CONFIDENTIAL_INFORMATION";
         if (this.fileWriter != null) {
             try {
-            	if (s.contains(githubToken)) {
+            	if (s != null && s.contains(githubToken)) {
             		s = s.replaceAll(githubToken, confidentialInformation);
             	}
                 this.fileWriter.write(s);
