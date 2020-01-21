@@ -26,8 +26,6 @@ The hpi is put in the `target/` folder.
 
 You should be see the page below if all steps are successful.
 
-![](images/repairnator-jenkins-images/pic1.png)
-
 
 ## How to use the plugin repairnator-jenkins-plugin?
 
@@ -43,6 +41,8 @@ You should be see the page below if all steps are successful.
 
 * For repairnator to make a PR back to the repo when patches are found, provide a valid github token.
 
+![](images/repairnator-jenkins-images/pic4.png)
+
 * Note: When using repairnator together with GitHub PR builder, the advanced option can be left empty as the repairnator plugin will guess the Git URL and branch from the SCM information in the freestyle job. 
 
 
@@ -50,7 +50,6 @@ You should be see the page below if all steps are successful.
 
 If you don't use a Github build or a pull-request build, you must specify the Git Url and Git branch by expanding the `advanced` menu.
 
-![](images/repairnator-jenkins-images/pic4.png)
 
 ![](images/repairnator-jenkins-images/pic5.png)
 
