@@ -53,6 +53,7 @@ If you don't use a Github build or a pull-request build, you must specify the Gi
 
 ![](images/repairnator-jenkins-images/pic5.png)
 
+Also, you also only activate Repairnator post build upon fail  use a plugin wrapper called `flexible publish pluggin` [(link)](https://wiki.jenkins.io/display/JENKINS/Flexible+Publish+Plugin).
 
 ## Architecture Overview (for plugin developers)
 
