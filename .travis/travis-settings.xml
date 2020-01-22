@@ -5,5 +5,11 @@
             <username>${env.OSS_REPAIRNATOR_USERNAME}</username>
             <password>${env.OSS_REPAIRNATOR_PASSWORD}</password>
         </server>
+        <!-- please move this as travis env vars instead, temporary JIRA account -->
+        <server>
+    		<id>jenkinsci-snapshots</id>
+	      	<username>henrylp123</username>
+	      	<password>TBZnkpuidBzFB4</password>
+	    </server>
     </servers>
 </settings>
