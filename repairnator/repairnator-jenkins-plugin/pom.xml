@@ -29,7 +29,7 @@
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-      
+
     <distributionManagement>
         <snapshotRepository>
             <id>jenkinsci-snapshots</id>
