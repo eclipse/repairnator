@@ -5,5 +5,12 @@
             <username>${env.OSS_REPAIRNATOR_USERNAME}</username>
             <password>${env.OSS_REPAIRNATOR_PASSWORD}</password>
         </server>
+        <!-- Used for publishing the Jenkins plugins -->
+        <server>
+    		<id>jenkinsci-snapshots</id>
+		<!-- account on https://repo.jenkins-ci.org/ -->
+	      	<username>${env.JENKINS_USERNAME}</username>
+	      	<password>${env.JENKINS_PASSWORD}</password>
+	    </server>
     </servers>
 </settings>
