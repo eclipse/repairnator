@@ -1,46 +1,49 @@
 # Repairnator GitHub App
 
-The Repairnator GitHub App can be used:
+The Repairnator GitHub App provides support to automatically run the Repairnator pipeline on each failing build:
 
-1. to push failing travisCI buildId to ActiveMQ
-2. to run Repairnator pipeline on each failing build
-3. to create pull-requests on Github when valid patches are found by Repairnator's repair tools
+1. Detect failing builds
+2. Search for a patch
+3. If a valid patch is found, create a pull-request on Github
 
-## How to Install?
+It does so by pushing failing travisCI build identifiers to an ActiveMQ server. A worker pulls them for the repair attemtps.
+
+## How to Install the Repairnator GitHub App?
 
 1. visit https://github.com/apps/repairnator-bot
 2. click on the green button "Install"
 
-## How to Use?
 
-1. trigger one travisCI build on GitHub PR, such as create PR, reopen PR, make commits inside PR
-2. if the travisCI build is __failing__ and the language setting in `.travis.yml` is __java__, then a comment will be posted above the info board of current travisCI build
-3. for this failing build, if Repairnator can found one valid patch, it will create one PR for current PR
+__Permissions__ In order to listen on specific events with this app, it is required to enable permissions of `Issues`, `Pull requests` and `Commit statuses`, to `Read & Write` for all of them.
+
+__Webhook URL__ It is using webhook payload delivery service from https://smee.io, learn more [here](https://probot.github.io/docs/development/#manually-configuring-a-github-app). Some alternatives are listed [here](https://probot.github.io/docs/deployment/#deploy-the-app). The webhook  URL is required at `Settings > Developer > settings > GitHub Apps > repairnator-bot`.
+
+__`.env` file__ This GitHub app requires `.env` file. The detailed introducation is [here](https://probot.github.io/docs/development/#manually-configuring-a-github-app). Two pieces of information need to be filled: 
+* one TRAVIS API Token
+* the Webhook Secret field from `Settings > Developer > settings > GitHub Apps > repairnator-bot` .
+
+
+## How to Use the Repairnator GitHub App?
+
+1. trigger a Travis CI build: for example create a PR, reopen a PR, make commits inside a PR
+2. if the travis CI build is __failing__ and the language setting in `.travis.yml` is __java__, then a comment will be posted to the pull request
+3. for this failing build, if Repairnator can find one valid patch, it will create one PR for the current PR
 
 ## Architecture Overview (for developers)
 
-The server listens to several GitHub webhooks, and execute corresponding scripts for different events. The most important script is to request travisCI's Build info via Travis API. For each failing java-language build, the server will push its buildId to Repairnator's ActiveMQ. Repairnator-pipeline will pick up each buildId and invoke repair tools to generate possible patches. If valid patches are found, then corresponding pull-requests will be created on GitHub.
+The server listens to several GitHub webhooks, and execute corresponding scripts based on the events. The most important script is to request travisCI's Build info via Travis API. For each failing java-language build, the server will push its buildId to Repairnator's ActiveMQ. Repairnator-pipeline will pick up each buildId and invoke repair tools to generate possible patches. If valid patches are found, then corresponding pull-requests will be created on GitHub.
 
-### Setup Server
+### Run Server on your own
 
 ```sh
+cd  repairnator/repairnator-github-app/
+
 # Install dependencies
 npm install
 
 # Run the bot
 npm start
 ```
-
-__where to run__ It is required to run this NodeJS server at the same machine where the Repairnator pipeline runs with its ActiveMQ.
-
-### Key Points
-
-__Permissions__ In order to listen on specific events with this app, it is recommended to enable permissions of `Issues`, `Pull requests` and `Commit statuses`, Read & Write for all of them.
-
-__Webhook URL__ It is using webhook payload delivery service from https://smee.io, learn more [here](https://probot.github.io/docs/development/#manually-configuring-a-github-app). Some alternatives are listed [here](https://probot.github.io/docs/deployment/#deploy-the-app). The webhook URL is required at `Settings > Developer > settings > GitHub Apps > repairnator-bot`.
-
-__`.env` file__ This GitHub app is based on Probot, and this framework requires `.env` file. The detailed introducation is [here](https://probot.github.io/docs/development/#manually-configuring-a-github-app). Meanwhile, one TRAVIS API Token needs to be there. In addition, because of requirements of Probot, the Webhook Secret field at `Settings > Developer > settings > GitHub Apps > repairnator-bot` needs to be filled.
-
 ### Reference
 
 - https://probot.github.io/docs/
