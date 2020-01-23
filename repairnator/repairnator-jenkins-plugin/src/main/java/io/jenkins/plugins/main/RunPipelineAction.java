@@ -36,8 +36,10 @@ public class RunPipelineAction {
         while(names.hasMoreElements() ){
             String name = names.nextElement();
             Logger log = LogManager.getLogManager().getLogger(name);
-            /* If already added remove it*/
-            log.removeHandler(handler);
+            try{
+                /* try remove it if it exist */
+                log.removeHandler(handler);
+            } catch(Exception e) {}
             log.addHandler(handler);
             log.setUseParentHandlers(false);
         }

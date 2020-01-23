@@ -35,7 +35,6 @@ public class RepairnatorPostBuild extends Recorder {
     private final String gitOAuthToken;
     private final String gitBranch;
     private boolean useNPEFix;
-    private boolean useAssertFix;
 
     // Fields in config.jelly must match the parameter GitUrl in the "DataBoundConstructor"
     @DataBoundConstructor
@@ -48,11 +47,6 @@ public class RepairnatorPostBuild extends Recorder {
     @DataBoundSetter
     public void setUseNPEFix(boolean useNPEFix) {
         this.useNPEFix = useNPEFix;
-    }
-
-    @DataBoundSetter
-    public void setUseAssertFix(boolean useAssertFix) {
-        this.useAssertFix = useAssertFix;
     }
 
     public String getGitUrl() {
@@ -71,14 +65,10 @@ public class RepairnatorPostBuild extends Recorder {
     public String[] getTools(){
         String dummy = "";
         if (this.useNPEFix) {
-            dummy += "NPEFix";
+            dummy += ",NPEFix";
         }
 
-        if (this.useAssertFix) {
-            dummy += ",AssertFix";
-        }
-
-        return dummy.split(",");
+        return dummy.substring(1,dummy.length()).split(",");
     }
 
     @Override
@@ -128,7 +118,7 @@ public class RepairnatorPostBuild extends Recorder {
                 return false;
             }
 
-            if (!(this.useNPEFix || this.useAssertFix)) {
+            if (!(this.useNPEFix)) {
                 System.out.println("ERROR: NO TOOL SPECIFIED , NO NEED TO REPAIR");
                 return false;
             }
@@ -176,7 +166,7 @@ public class RepairnatorPostBuild extends Recorder {
          * If you don't want fields to be persisted, use <tt>transient</tt>.
          */
         private boolean useNPEFix;
-        private boolean useAssertFix;
+
         /**
          * In order to load the persisted global configuration, you have to
          * call load() in the constructor.
@@ -214,7 +204,7 @@ public class RepairnatorPostBuild extends Recorder {
             return FormValidation.warning("Default should be master or auto detect branch if using together with Jenkins Github plugin");
         }
 
-         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix,@QueryParameter boolean useAssertFix) {
+         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix) {
             return FormValidation.ok();
         }
 
@@ -235,7 +225,6 @@ public class RepairnatorPostBuild extends Recorder {
             // To persist global configuration information,
             // set that to properties and call save().
             useNPEFix = formData.getBoolean("useNPEFix");
-            useAssertFix = formData.getBoolean("useAssertFix");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseNPEFix)
             save();
@@ -250,10 +239,6 @@ public class RepairnatorPostBuild extends Recorder {
          */
         public boolean getUseNPEFix() {
             return useNPEFix;
-        }
-
-        public boolean getUseAssertFix() {
-            return useAssertFix;
         }
     }
 }

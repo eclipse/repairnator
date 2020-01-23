@@ -8,7 +8,7 @@
         <relativePath />
     </parent>
     <groupId>fr.inria.repairnator</groupId>
-    <artifactId>repairnator-plugins</artifactId>
+    <artifactId>repairnator</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
