@@ -1,6 +1,6 @@
 # Documentation of Repairnator
 
-This directory provides a general documentation about Repairnator project.
+This directory provides the official documentation about the Repairnator project.
 
 ## Overview
 
@@ -67,16 +67,10 @@ As part of using Repairnator, you might need to do some chores, like managing a 
 We provided some documentation [about backups](chore/managedb.md) and [about MongoDB collection schema](chore/mongo).
 
 ## Program repair tools used in Repairnator
-
-The list of program repair tools currently supported in Repairnator is as follows:
-  - Nopol;
-  - NPEFix;
-  - Astor;
-  - AssertFixer.
-  
+ 
 For more information about the program repair tools and their strategies implemented in Repairnator, [take a look at this page](repair-tools.md).
 
-**Adding a new tool:** to add a new program repair tool in Repairnator, [here is the guide](contributing/add-repair-tool.md).
+To add a new program repair tool in Repairnator, [here is the guide](contributing/add-repair-tool.md).
 
 ## Architecture
 
@@ -98,3 +92,38 @@ The Docker image is the pipeline put in Docker: the idea is to encapsulate the p
 ### Java main classes
 
 This [page](main-classes.md) documents the main classes of Repairnator.
+
+## Academic bibliographic references
+
+"[Repairnator patches programs automatically](https://ubiquity.acm.org/article.cfm?id=3349589)", In Ubiquity, Association for Computing Machinery, vol. July, no. 2, pp. 1-12, 2019. 
+
+```
+@article{monperrus:hal-02267512,
+ title = {Repairnator patches programs automatically},
+ author = {Monperrus, Martin and Urli, Simon and Durieux, Thomas and Martinez, Martin and Baudry, Benoit and Seinturier, Lionel},
+ url = {https://hal.inria.fr/hal-02267512/file/repairnator.pdf},
+ journal = {{Ubiquity}},
+ publisher = {{Association for Computing Machinery}},
+ volume = {July},
+ number = {2},
+ pages = {1-12},
+ year = {2019},
+ doi = {10.1145/3349589},
+}
+```
+
+"[How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.inria.fr/hal-01691496/file/SEIP_63_Camera-Ready-no-copyright.pdf)", In 40th International Conference on Software Engineering, Track Software Engineering in Practice, pp. 95-104, 2018. 
+
+```
+@inproceedings{urli:hal-01691496,
+ title = {How to Design a Program Repair Bot? Insights from the Repairnator Project},
+ author = {Urli, Simon and Yu, Zhongxing and Seinturier, Lionel and Monperrus, Martin},
+ url = {https://hal.inria.fr/hal-01691496/file/SEIP_63_Camera-Ready-no-copyright.pdf},
+ booktitle = {{40th International Conference on Software Engineering, Track Software Engineering in Practice}},
+ pages = {95-104},
+ year = {2018},
+ doi = {10.1145/3183519.3183540},
+}
+
+```
+
