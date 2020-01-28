@@ -82,7 +82,7 @@ public class ProjectInspector {
         this.buildToBeInspected = buildToBeInspected;
 
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug();
+        this.repoLocalPath = workspace + File.separator + this.buildToBeInspected.getBuggyBuild().getId() + File.separator + getRepoSlug();
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
@@ -99,7 +99,7 @@ public class ProjectInspector {
         this.gitBranch = gitBranch;
         this.gitSlug = this.gitUrl.split("https://github.com/",2)[1].replace(".git","");
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + this.gitSlug;
+        this.repoLocalPath = workspace + File.separator + this.buildToBeInspected.getBuggyBuild().getId() + File.separator + this.gitSlug;
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
