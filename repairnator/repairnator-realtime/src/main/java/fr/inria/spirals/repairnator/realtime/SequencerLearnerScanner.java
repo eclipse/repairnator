@@ -74,7 +74,9 @@ public class SequencerLearnerScanner implements Runnable {
                 
 
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.err.println(e.toString());
+                System.err.println("failed to get commit");
+                //throw new RuntimeException(e);
             }
         } // end while loop
     }

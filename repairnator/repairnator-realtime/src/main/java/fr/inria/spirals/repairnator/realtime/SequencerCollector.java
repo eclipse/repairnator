@@ -1,7 +1,9 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -11,6 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.inria.spirals.repairnator.realtime.utils.PatchFilter;
+import fr.inria.spirals.repairnator.realtime.utils.SequencerCollectorHunk;
+import fr.inria.spirals.repairnator.realtime.utils.SequencerCollectorPatch;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -23,7 +27,6 @@ import org.kohsuke.github.*;
  * Filters and stores data for Sequencer training.
  */
 public class SequencerCollector {
-
     
     //This path should be configurable. See initLocalGitRepository method comments.
     private final String diffsPath = System.getProperty("user.home") + "/continuous-learning-data";
@@ -74,15 +77,33 @@ public class SequencerCollector {
             repo = github.getRepository(repositorySlug);
             commit = repo.getCommit(sha);
 
-            ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
-            ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+            ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+            ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
 
             if (hunks.size() > 0) {
+                
+                //create directory for file
+                
+                String dirPath = diffsPath + "/" + repositorySlug.replace("/", "-") + "-" + sha;
+                File f = new File(dirPath);
+                f.mkdir();
+                
+                hunks.forEach( (hunk) -> {
+                    try {
+                        BufferedWriter writer;
+                            writer = new BufferedWriter(new FileWriter(dirPath + "/" + hunk.getFile() + "-" + hunk.getLine()));
+                        writer.append(hunk.getContent()); 
+                        writer.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                
                 saveFileDiff(repositorySlug, sha);
                 ++currentBatch;
                 
                 if(currentBatch >= diffBatchSize) { 
-                    commitAndPushDiffs();
+                    //commitAndPushDiffs(); // disabled on purpose, we do not need to store this perpetually
                     currentBatch = 0;
                 }
             }
@@ -128,7 +149,7 @@ public class SequencerCollector {
         URL url = new URL("https", "github.com", "/" + slug + "/commit/" + sha + ".diff");
         ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
 
-        File f = new File(diffsPath + "/" + slug.replace("/", "-") + "-" + sha + ".diff");
+        File f = new File(diffsPath + "/" + slug.replace("/", "-") + "-" + sha + "/commit.diff");
         f.createNewFile();
         FileOutputStream fileOutputStream = new FileOutputStream(f, false);
 
