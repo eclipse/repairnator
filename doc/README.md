@@ -76,18 +76,16 @@ To add a new program repair tool in Repairnator, [here is the guide](contributin
 
 ### The pipeline
 
-The pipeline is the most interesting part of Repairnator: it takes as input a Travis CI build ID and tries to replicate the bug and to repair it.
-As its name indicates, it's a pipeline of steps, from cloning the repository and building it, to launching the repair tools and pushing a resulting branch.
-It contains plenty of options, for notifying the users, creating a pull requests, etc.
+The pipeline takes as input a Travis CI build ID and tries to replicate the bug and to repair it with different repair tools. It provides a single abstraction over repair tools. As its name indicates, it's a pipeline of steps, from cloning the repository and building it, to launching the repair tools and pushing a resulting branch. It contains plenty of options, for notifying the users, creating a pull requests, etc.
 
-### The realtime scanner
+The pipeline be used:
+* directly in Java
+* or as a Docker image: it encapsulates the pipeline in an environment in which it will properly work, with the right dependencies, in a sandboxed environment.
 
-The RTScanner is the newest part of Repairnator: the idea is to have a daemon that constantly inspects Travis CI for newly failing builds to launch as fast as possible the pipeline to fix them.
-The RTScanner then uses some elements from the dockerpool to operate itself the pipeline through its Docker image.
+### The scanner
 
-### The Docker image
+The `RTScanner` is a daemon that constantly inspects Travis CI for catching newly failing builds to launch as fast as possible. When failing builds are found, a pipeline is run per build. `FastScanner` is a different implementation of the same idea.
 
-The Docker image is the pipeline put in Docker: the idea is to encapsulate the pipeline in an environment in which it will properly work, with the right dependencies, and to be able to use the pipeline in sandboxed environment.
 
 ### Java main classes
 
