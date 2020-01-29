@@ -13,12 +13,9 @@ The following command line tools must be installed on your machine:
   - z3: a constraint solver (the executables are available in [pipeline test resources](/repairnator/repairnator-pipeline/src/test/resources/z3)).
 
 ```
-# see https://search.maven.org/search?q=repairnator
-PIPELINE_VERSION=3.0
-
-# build repairnator-pipeline.jar
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=fr.inria.repairnator:repairnator-pipeline:$PIPELINE_VERSION:jar:jar-with-dependencies -DremoteRepositories=ossSnapshot::::https://oss.sonatype.org/content/repositories/snapshots,oss::::https://oss.sonatype.org/content/repositories/releases -Ddest=repairnator-pipeline.jar
-
+$ git clone https://github.com/eclipse/repairnator/
+$ cd repairnator/repairnator/repairnator-pipeline/
+$ mvn install -DskipTests
 ```
 
 Run it on Travis CI build [413285802](https://travis-ci.org/surli/failingProject/builds/413285802)
@@ -28,7 +25,7 @@ export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:repairnator-pipeline.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802 
+java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802 
 
 ```
 
