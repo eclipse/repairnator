@@ -25,7 +25,7 @@ export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:target/repairnator-pipeline-*-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802
+java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802
 ```
 
 Options
