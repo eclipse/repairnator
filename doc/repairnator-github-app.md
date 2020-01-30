@@ -43,6 +43,34 @@ For running the app on you own, you need to fill
   * one TRAVIS API Token
   * the Webhook Secret field from `Settings > Developer > settings > GitHub Apps > repairnator-bot` .
 
+### Deployment on VM
+
+* __How to run the NodeJS server for Repairnator-bot?__
+1. clone the repairnator-bot repo
+2. add `.env` and `.private-key.pem`
+3. go to `~/repairnator-bot`
+4. run `nohup npm start &`
+
+* __How to run the ActiveMQ service?__
+1. download and unzip activemq at the home folder
+2. go to `~/apache-activemq-5.15.11/bin`
+3. run `./activemq start`
+
+* __How to reproduce app's demo step by step?__
+1. make sure the NodeJS server is running and the ActiveMQ service is on
+2. fork `https://github.com/jianguda/repairnator-bot-test`
+3. install `repairnator-bot` app on your forked repo
+4. connect travis-ci.org to your forked repo and open the trigger
+5. create one PR from the failure branch to the master branch
+6. wait at the PR page for repairnator-bot's comment
+7. visit the ActiveMQ's web console (http://{ip}:8161/admin/) (check `apache-activemq-5.15.11/conf/jetty-realm.properties` to see admin's password)  
+8. click Queues in the breadcrumbs, then click pipeline and then click the latest message, and check the corresponding buildID at the Message Details
+
+* __What to do when Repairnator GitHub app does not work normally?__
+The only possible cause as Jian<jianguda@gmail.com> knows is the "403 - access denied" issue
+1. edit `~/repairnator-bot/.env`
+2. try other TRAVIS tokens (travis API is not stable)
+3. contact the travis support<support@travis-ci.com>
 
 ### Reference
 
