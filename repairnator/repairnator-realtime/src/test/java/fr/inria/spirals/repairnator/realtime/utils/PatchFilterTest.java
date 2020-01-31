@@ -28,8 +28,8 @@ public class PatchFilterTest {
         boolean filterMultiHunk = true;
         int hunkDistance = 0;
         
-        ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
-        ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+        ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(1, hunks.size());
     }
@@ -50,8 +50,8 @@ public class PatchFilterTest {
         boolean filterMultiHunk = true;
         int hunkDistance = 0;
         
-        ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
-        ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+        ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(0, hunks.size());
     }
@@ -72,8 +72,8 @@ public class PatchFilterTest {
         boolean filterMultiHunk = true;
         int hunkDistance = 0;
         
-        ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
-        ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+        ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(3, hunks.size());
     }
@@ -94,8 +94,8 @@ public class PatchFilterTest {
         boolean filterMultiHunk = false;
         int hunkDistance = 0;
         
-        ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
-        ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+        ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(3, hunks.size());
     }
@@ -116,8 +116,8 @@ public class PatchFilterTest {
         boolean filterMultiHunk = false;
         int hunkDistance = 0;
         
-        ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
-        ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+        ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(10, hunks.size());
     }
@@ -138,8 +138,8 @@ public class PatchFilterTest {
         boolean filterMultiHunk = false;
         int hunkDistance = 0;
         
-        ArrayList<String> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
-        ArrayList<String> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+        ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(0, hunks.size());
     }

@@ -134,12 +134,12 @@ public class PatchFilter {
         return state == State.EXIT_CONTEXT || state == State.ADD;
     }
     
-    public ArrayList<String> getHunks(ArrayList<String> patches, boolean singleHunk, int hunkDistance){
+    public ArrayList<SequencerCollectorHunk> getHunks(ArrayList<SequencerCollectorPatch> patches, boolean singleHunk, int hunkDistance){
         
-        ArrayList<String> ret = new ArrayList<String>();
+        ArrayList<SequencerCollectorHunk> ret = new ArrayList<SequencerCollectorHunk>();
 
-        for(String patch : patches) {
-            String[] hunks = patch.split(SPLIT_BY_HUNKS_REGEX);
+        for(SequencerCollectorPatch patch : patches) {
+            String[] hunks = patch.getContent().split(SPLIT_BY_HUNKS_REGEX);
             
             ArrayList<Boolean> oneLineHunks  = new ArrayList<Boolean>();
             ArrayList<Integer> linePositions  = new ArrayList<Integer>();
@@ -165,7 +165,7 @@ public class PatchFilter {
             
             for(int i = 0; i < oneLineHunks.size(); ++i) {
                 if(oneLineHunks.get(i)){
-                    ret.add(hunks[i]);
+                    ret.add( new SequencerCollectorHunk(linePositions.get(i), patch.getFile(), hunks[i]));
                 }
             }
             
@@ -195,8 +195,8 @@ public class PatchFilter {
      * 
      * if filterMultiFile is true, it will filter out multi-file commits
      * */
-    public ArrayList<String> getCommitPatches(GHCommit commit, boolean filterMultiFile, boolean filterMultiHunk) throws IOException{
-        ArrayList<String> ret = new ArrayList<String>();
+    public ArrayList<SequencerCollectorPatch> getCommitPatches(GHCommit commit, boolean filterMultiFile, boolean filterMultiHunk) throws IOException{
+        ArrayList<SequencerCollectorPatch> ret = new ArrayList<SequencerCollectorPatch>();
         
         List<GHCommit.File> files = commit.getFiles(); 
         List<GHCommit.File> javaFiles = new ArrayList<GHCommit.File>();
@@ -208,15 +208,19 @@ public class PatchFilter {
         }
         
         if(filterMultiFile && javaFiles.size() == 1) {
-            if(javaFiles.get(0).getPatch() != null) { //sometimes this call returns null
-                ret.add(javaFiles.get(0).getPatch());                
+            
+            GHCommit.File currentFile = javaFiles.get(0);
+            
+            if(currentFile.getPatch() != null) { //sometimes this call returns null
+                String fullFilename = currentFile.getFileName();
+                ret.add( new SequencerCollectorPatch(fullFilename.substring(fullFilename.lastIndexOf("/") + 1), javaFiles.get(0).getPatch()));                
             }
         } else if (!filterMultiFile) {
-            for(GHCommit.File f : javaFiles) { //sometimes this call returns null
-                if(f.getPatch() != null) {
-                    ret.add(f.getPatch());
+            for(GHCommit.File f : javaFiles) { 
+                if(f.getPatch() != null) { //sometimes this call returns null
+                    String fullFilename = f.getFileName();
+                    ret.add( new SequencerCollectorPatch(fullFilename.substring(fullFilename.lastIndexOf("/") + 1), f.getPatch()) );
                 }
-                
             }
         }
         return ret;
