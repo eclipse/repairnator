@@ -1,7 +1,7 @@
 package io.jenkins.plugins.main;
 
-import fr.inria.spirals.repairnator.pipeline.JenkinsLauncher;
-import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
+/*import fr.inria.spirals.repairnator.pipeline.JenkinsLauncher;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;*/
 import java.util.Arrays;
 
 
@@ -36,22 +36,24 @@ public class RunPipelineAction {
         while(names.hasMoreElements() ){
             String name = names.nextElement();
             Logger log = LogManager.getLogManager().getLogger(name);
-            /* If already added remove it*/
-            log.removeHandler(handler);
+            try{
+                /* try remove it if it exist */
+                log.removeHandler(handler);
+            } catch(Exception e) {}
             log.addHandler(handler);
             log.setUseParentHandlers(false);
         }
     }
 
     public void run() {
-        try {
+        /*try {
             JenkinsLauncher launcher = new JenkinsLauncher();
             RepairToolsManager.getInstance().manualLoadRepairTools();
             this.pipeAllLoggerToStderr();
             launcher.jenkinsMain(this.gitUrl,this.gitToken,this.gitBranch,this.tools);
         } catch(Exception e) {
             throw new RuntimeException(e);
-        }
+        }*/
     }
 
     public RunPipelineAction(String gitUrl,String gitToken,String gitBranch,String[] tools) {
