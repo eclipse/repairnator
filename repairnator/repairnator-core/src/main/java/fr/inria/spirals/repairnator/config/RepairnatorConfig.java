@@ -68,6 +68,7 @@ public class RepairnatorConfig {
     private boolean fork;
     private boolean createPR;
     private boolean debug;
+    private boolean noTravisRepair;
 
     // Scanner
     private Date lookFromDate;
@@ -88,6 +89,9 @@ public class RepairnatorConfig {
     private String githubUserEmail;
     private String[] experimentalPluginRepoList;
     private LISTENER_MODE listenerMode;
+    private String gitUrl;
+    private String gitBranch;
+    private String gitCommitHash;
 
     // Dockerpool
     private String dockerImageName;
@@ -580,6 +584,31 @@ public class RepairnatorConfig {
         this.bearsDelimiter = bearsDelimiter;
     }
 
+
+    public void setGitUrl(String gitUrl) {
+        this.gitUrl = gitUrl;
+    }
+
+    public void setGitBranch(String gitBranch) {
+        this.gitBranch = gitBranch;
+    }
+
+    public void setGitCommitHash(String gitCommitHash) {
+        this.gitCommitHash = gitCommitHash;
+    }
+
+    public String getGitUrl() {
+        return this.gitUrl;
+    }
+
+    public String getGitBranch() {
+        return this.gitBranch;
+    }
+
+    public String getGitCommitHash() {
+        return this.gitCommitHash;
+    }
+
     public String getGithubUserName() {
         return githubUserName;
     }
@@ -602,6 +631,14 @@ public class RepairnatorConfig {
 
     public void setCreatePR(boolean createPR) {
         this.createPR = createPR;
+    }
+
+    public void setNoTravisRepair(boolean noTravisRepair) {
+        this.noTravisRepair = noTravisRepair;
+    }
+
+    public boolean isNoTravisRepair() {
+        return this.noTravisRepair;
     }
 
     @Override
@@ -668,6 +705,10 @@ public class RepairnatorConfig {
                 ", listenerMode=" + listenerMode +
                 ", activeMQUrl=" + activeMQUrl +
                 ", activeMQSubmitQueueName=" + activeMQSubmitQueueName +
+                ", gitUrl=" + gitUrl +
+                ", gitBranch=" + gitBranch +
+                ", gitCommitHash=" + gitCommitHash +
+                ", noTravisRepair=" + noTravisRepair +
                 '}';
     }
 

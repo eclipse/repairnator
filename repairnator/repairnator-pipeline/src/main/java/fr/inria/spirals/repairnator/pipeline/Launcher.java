@@ -10,6 +10,7 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
+import com.martiansoftware.jsap.Switch;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
@@ -43,6 +44,7 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
@@ -66,6 +68,7 @@ import java.util.Properties;
 public class Launcher {
     private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
     protected static Listener listener = null;
+    private static File tempDir;
     protected BuildToBeInspected buildToBeInspected;
     protected List<SerializerEngine> engines;
     protected List<AbstractNotifier> notifiers;
@@ -172,7 +175,6 @@ public class Launcher {
         opt2.setShortFlag('b');
         opt2.setLongFlag("build");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setRequired(true);
         opt2.setHelp("Specify the build id to use.");
         jsap.registerParameter(opt2);
 
@@ -226,6 +228,25 @@ public class Launcher {
         opt2.setHelp("Just a name, default as 'pipeline'");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("giturl");
+        opt2.setLongFlag("giturl");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Example: https://github.com/surli/failingProject.git");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("gitbranch");
+        opt2.setLongFlag("gitbranch");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("master");
+        opt2.setHelp("Git branch name. Default: master");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("gitcommithash");
+        opt2.setLongFlag("gitcommit");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("the hash of your git commit");
+        jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
@@ -245,6 +266,18 @@ public class Launcher {
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
         jsap.registerParameter(opt2);
+
+        Switch sw = new Switch("tmpDirAsWorkSpace");
+        sw.setLongFlag("tmpDirAsWorkSpace");
+        sw.setDefault("false");
+        sw.setHelp("Create tmp directory as workspace");
+        jsap.registerParameter(sw);
+
+        sw = new Switch("noTravisRepair");
+        sw.setLongFlag("noTravisRepair");
+        sw.setDefault("false");
+        sw.setHelp("repair with git url , branch and commit instead of travis build ids");
+        jsap.registerParameter(sw);
 
         return jsap;
     }
@@ -291,11 +324,23 @@ public class Launcher {
         }
         this.getConfig().setZ3solverPath(new File(arguments.getString("z3")).getPath());
         this.getConfig().setWorkspacePath(arguments.getString("workspace"));
+        if (arguments.getBoolean("tmpDirAsWorkSpace")) {
+            this.tempDir = com.google.common.io.Files.createTempDir();
+            this.getConfig().setWorkspacePath(this.tempDir.getAbsolutePath());
+            this.getConfig().setOutputPath(this.tempDir.getAbsolutePath());
+            this.getConfig().setZ3solverPath(new File(this.tempDir.getAbsolutePath() + File.separator + "z3_for_linux").getPath());
+        }
+
         this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
         this.getConfig().setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
         this.getConfig().setListenerMode(arguments.getString("listenermode"));
         this.getConfig().setActiveMQUrl(arguments.getString("activemqurl"));
         this.getConfig().setActiveMQListenQueueName(arguments.getString("activemqlistenqueuename"));
+
+        this.getConfig().setGitUrl(arguments.getString("giturl"));
+        this.getConfig().setGitBranch(arguments.getString("gitbranch"));
+        this.getConfig().setGitCommitHash(arguments.getString("gitcommithash"));
+        this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
 
         if (arguments.getFile("projectsToIgnore") != null) {
             this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
@@ -467,6 +512,10 @@ public class Launcher {
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
+        if(this.tempDir != null) {
+            this.tempDir.delete();
+        }
+
         LOGGER.info("Inspector is finished. The process will exit now.");
         return true;
     }
@@ -488,7 +537,6 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws JSAPException {
-
         Launcher launcher = new Launcher(args);
         initProcess(launcher);
     }

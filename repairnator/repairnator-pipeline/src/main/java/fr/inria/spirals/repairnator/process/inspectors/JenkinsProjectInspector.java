@@ -61,6 +61,7 @@ public class JenkinsProjectInspector extends ProjectInspector{
     private String gitUrl;
     private String gitSlug;
     private String gitBranch;
+    private String gitCommit;
     private String repoLocalPath;
     private String repoToPushLocalPath;
 
@@ -81,11 +82,11 @@ public class JenkinsProjectInspector extends ProjectInspector{
         super(buildToBeInspected,workspace,serializers,notifiers);
     }
 
-    public JenkinsProjectInspector(String workspace,String gitUrl,String gitBranch,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-        super(workspace,gitUrl,gitBranch,serializers,notifiers);
+    public JenkinsProjectInspector(String workspace,String gitUrl,String gitBranch,String gitCommit,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+        super(workspace,gitUrl,gitBranch,gitCommit,serializers,notifiers);
         this.gitUrl = gitUrl;
         this.gitBranch = gitBranch;
-        /* Format like https://github.com/eclipse/repairnator */
+        this.gitCommit = gitCommit;
         this.gitSlug = this.gitUrl.split("https://github.com/",2)[1].replace(".git","");
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + this.getRepoSlug();
@@ -118,6 +119,10 @@ public class JenkinsProjectInspector extends ProjectInspector{
     /* This is the branch , which repairnator will repair*/
     public String getCheckoutBranchName() {
         return this.gitBranch;
+    }
+
+    public String getGitCommit() {
+        return this.gitCommit;
     }
 
     @Override

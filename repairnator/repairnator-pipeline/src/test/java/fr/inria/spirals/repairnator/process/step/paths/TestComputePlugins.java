@@ -76,7 +76,7 @@ public class TestComputePlugins {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertTrue(jobStatus.getProperties().getProjectMetrics().getNumberPlugins() >= 7);
+        assertThat(jobStatus.getProperties().getProjectMetrics().getNumberPlugins(), is(8));
     }
 
     @Test

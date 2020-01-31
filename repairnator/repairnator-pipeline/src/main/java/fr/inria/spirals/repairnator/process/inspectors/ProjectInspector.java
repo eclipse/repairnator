@@ -77,12 +77,13 @@ public class ProjectInspector {
     private String gitUrl;
     private String gitSlug;
     private String gitBranch;
+    private String gitCommit;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
 
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + this.buildToBeInspected.getBuggyBuild().getId() + File.separator + getRepoSlug();
+        this.repoLocalPath = workspace + File.separator + getRepoSlug();
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
@@ -94,12 +95,13 @@ public class ProjectInspector {
         this.initProperties();
     }
 
-    public ProjectInspector(String workspace,String gitUrl,String gitBranch,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+    public ProjectInspector(String workspace,String gitUrl,String gitBranch,String gitCommit,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.gitUrl = gitUrl;
         this.gitBranch = gitBranch;
+        this.gitCommit = gitCommit;
         this.gitSlug = this.gitUrl.split("https://github.com/",2)[1].replace(".git","");
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + this.buildToBeInspected.getBuggyBuild().getId() + File.separator + this.gitSlug;
+        this.repoLocalPath = workspace + File.separator + this.gitSlug;
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
@@ -110,14 +112,13 @@ public class ProjectInspector {
         this.steps = new ArrayList<>();
         /* Skip initProperties*/
     }
-
-    public void setGitConfig(String gitUrl,String gitBranch) {
-        this.gitUrl = gitUrl;
-        this.gitBranch = gitBranch;
-    }
-
+    
     public String getCheckoutBranchName() {
         return this.gitBranch;
+    }
+
+    public String getGitCommit() {
+        return this.gitCommit;
     }
 
     protected void initProperties() {
