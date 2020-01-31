@@ -25,8 +25,7 @@ export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802 
-
+java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802
 ```
 
 Options
@@ -34,15 +33,15 @@ Options
 ```bash
 Usage: java <repairnator-pipeline name> [option(s)]
 
-Options: 
+Options:
 
   --ghOauth <ghOauth>
         Specify GitHub Token to use.
-        
+
   (-b|--build) <build>
         Specify the Travis build ID to use.
-        
-  --repairTools repairTools1,repairTools2,...,repairToolsN 
+
+  --repairTools repairTools1,repairTools2,...,repairToolsN
         Specify one or several repair tools to use among:
         NopolAllTests,NPEFix,AssertFixer,AstorJGenProg,AstorJKali,NopolSingleTest,AstorJMut,NopolTestExclusionStrategy
         (default:
@@ -104,14 +103,14 @@ Options:
 
 The environment variable M2_HOME should be set and refer to the path of your Maven home installation.
 To use Nopol, you must add tools.jar in your classpath from your installed JDK.
-``` 
+```
 
 ## Realtime Scanner fr.inria.spirals.repairnator.realtime.RTLauncher
 
 ```bash
 Usage: java <repairnator-realtime name> [option(s)]
 
-Options: 
+Options:
 
   --ghOauth <ghOauth>
         Specify GitHub Token to use.
@@ -119,13 +118,13 @@ Options:
   --repairTools <repairTools>
         Specify one or several repair tools to use separated by commas
         (available tools might depend of your Docker image).
-        
+
   (-o|--output) <output>
         Specify where to put serialized files from dockerpool.
-        
+
   (-n|--name) <imageName>
         Specify the Docker image name to use.
-        
+
   (-l|--logDirectory) <logDirectory>
         Specify where to put logs and serialized files created by Docker
         machines.
@@ -194,7 +193,7 @@ Options:
         where W, X, Y, Z respectively represents number of Days, Hours, Minutes
         and Seconds. T is mandatory before the number of hours and P is always
         mandatory.
-        
+
   [--createPR]
           Activate the creation of a Pull Request in case of patch.
 ```
@@ -205,14 +204,14 @@ Options:
 ```bash
 Usage: java <repairnator-checkbranches name> [option(s)]
 
-Options: 
+Options:
 
   (-r|--repository) <repository>
         Specify where to collect branches.
-        
+
   (-n|--name) <imageName>
         Specify the Docker image name to use.
-        
+
   (-i|--input) <input>
         Specify the input file containing the list of branches to reproduce.
 
