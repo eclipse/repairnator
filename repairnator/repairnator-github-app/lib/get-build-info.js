@@ -4,13 +4,13 @@ const request = require('request-promise-native')
  * Retrieves useful information from the Travis /build API
  * @module lib/get-build-info
  * @param {string} buildUrl - A Travis URL provided by the GitHub API
- * @return {object} Helpful API results
+ * @param {boolean} isOrg - Identify whether it is for travis-ci.org
  */
-module.exports = buildUrl => {
+module.exports = (buildUrl, isOrg) => {
   // Extract the build ID from the target_url provided by GitHub
   const buildId = buildUrl.split('/builds/')[1].split('?')[0]
   // Form a URL for the request
-  const requestUrl = `https://api.travis-ci.org/v3/build/${buildId}`
+  const requestUrl = `https://api.travis-ci.` + (isOrg ? `org` : `com`) + `/v3/build/${buildId}`
   /* alternative request urls
   https://api.travis-ci.org/owner/john/repos
   https://api.travis-ci.org/repo/john%2FfailingProject/builds
@@ -23,7 +23,7 @@ module.exports = buildUrl => {
     uri: requestUrl,
     headers: {
       'Travis-API-Version': 3,
-      Authorization: 'token ' + process.env.TRAVIS
+      Authorization: 'token ' + (isOrg ? process.env.TRAVIS_ORG : process.env.TRAVIS_COM)
     },
     json: true
   }

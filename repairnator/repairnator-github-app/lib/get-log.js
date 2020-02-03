@@ -5,10 +5,10 @@ const request = require('request-promise-native')
  * https://developer.travis-ci.com/resource/job
  * @module lib/get-log.js
  * @param {array} jobs - An array of jobs
- * @return {string} The raw contents of the log
+ * @param {boolean} isOrg - Identify whether it is for travis-ci.org
  */
 
-module.exports = jobs => {
+module.exports = (jobs, isOrg) => {
   // If not passed a job ID, throw an error
   if (!jobs[0].id) {
     throw new Error(`No job ID found`)
@@ -19,7 +19,7 @@ module.exports = jobs => {
   const jobId = jobs[0].id
 
   // build the request URL
-  const requestUrl = `https://api.travis-ci.org/v3/job/${jobId}/log`
+  const requestUrl = `https://api.travis-ci.` + (isOrg ? `org` : `com`) + `/v3/job/${jobId}/log`
 
   // Set the parameters for the request to the Travis API
   // https://developer.travis-ci.com/gettingstarted
@@ -27,7 +27,7 @@ module.exports = jobs => {
     uri: requestUrl,
     headers: {
       'Travis-API-Version': 3,
-      Authorization: 'token ' + process.env.TRAVIS
+      Authorization: 'token ' + (isOrg ? process.env.TRAVIS_ORG : process.env.TRAVIS_COM)
     },
     json: true
   }

@@ -20,7 +20,7 @@
     "probot": "^9.9.1",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.8",
-    "rhea": "^1.0.17",
+    "rhea": "^1.0.18",
     "smee-client": "^1.1.0",
     "strip-ansi": "^6.0.0"
   },

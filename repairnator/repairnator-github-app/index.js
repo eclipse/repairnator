@@ -31,11 +31,14 @@ module.exports = app => {
       context.payload.state === 'failure' &&
       context.payload.context === 'continuous-integration/travis-ci/pr'
     ) {
+      // Check it is travis-ci.org or travis-ci.com
+      const isOrg = context.payload.target_url.includes('travis-ci.org')
+
       // get the build info
-      const buildInfo = await getBuildInfo(context.payload.target_url)
+      const buildInfo = await getBuildInfo(context.payload.target_url, isOrg)
 
       // Get the log info
-      const log = await getLog(buildInfo.jobs)
+      const log = await getLog(buildInfo.jobs, isOrg)
 
       // Extract the relevant info & clean up the log
       const logInfo = extractLog(log)
@@ -52,7 +55,7 @@ module.exports = app => {
       )
 
       if (buildInfo.state === 'failed' && logInfo.language === 'java') {
-        touchMQ(buildInfo.id);
+        touchMQ(buildInfo.id, isOrg);
         // Post a comment to the Pull Request
         const params = context.issue({
           body: comment,
