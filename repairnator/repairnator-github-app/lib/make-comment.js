@@ -17,15 +17,8 @@ module.exports = (travisUrl, sha, repoName, pull, buildId, buildState, language)
   const repo = repoName.split('/')[1]
 
   // left outdented to account for template literal whitespace
-  return `## Travis Failure
-:wave: Hi, Travis CI [reports](${travisUrl}) a failure as of [#${shortSha}](${commitUrl}).
+  return `:wave: Hi, Travis CI [reports](${travisUrl}) a failure for commit [${shortSha}](${commitUrl}). :robot: [Luc Esape](https://github.com/lucesape) will have a look at it soon.
 
-- Owner: \`${owner}\`,
-- Repo: \`${repo}\`,
-- Language: \`${language}\`,
-- BuildId: \`${buildId}\`,
-- BuildState: \`${buildState}\`,
-
-:robot: [Repairnator](https://github.com/lucesape) will take care of this case soon.
+--The [repairnator-bot app](https://github.com/apps/repairnator-bot)
 `
 }
