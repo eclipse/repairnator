@@ -13,8 +13,8 @@ import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.Ma
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.CloneCheckoutBranchRepository;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.JenkinsCloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.WritePropertyFile;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -48,8 +48,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import java.util.Map;
-
 /**
  * This class initialize the pipelines by creating the steps:
  * it's the backbone of the pipeline.
@@ -77,6 +75,11 @@ public class ProjectInspector {
     private String gitUrl;
     private String gitSlug;
     private String gitBranch;
+
+    private String gitRepositoryUrl;
+    private String gitRepositoryBranch;
+    private String gitRepositoryIdCommit;
+    private boolean gitRepositoryFirstCommit;
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
@@ -109,6 +112,32 @@ public class ProjectInspector {
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
         /* Skip initProperties*/
+    }
+
+    public ProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
+    		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+        this.gitRepositoryUrl = gitRepoUrl;
+        this.gitRepositoryBranch = gitRepoBranch;
+        this.gitRepositoryIdCommit = gitRepoIdCommit;
+        this.gitRepositoryFirstCommit = isGitRepositoryFirstCommit;
+
+        this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
+
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator + this.gitSlug + "-" +
+        	(this.gitRepositoryBranch != null ? this.gitRepositoryBranch : "master") +
+			(this.gitRepositoryIdCommit != null ? "-" + this.gitRepositoryIdCommit : "") +
+			(this.gitRepositoryFirstCommit ? "-firstCommit" : "");
+
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = serializers;
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+        this.initProperties();
     }
 
     public void setGitConfig(String gitUrl,String gitBranch) {
@@ -257,11 +286,35 @@ public class ProjectInspector {
         return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
     }
 
-    public void run() {
-        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-            AbstractStep cloneRepo = new CloneRepository(this);
-            cloneRepo.addNextStep(new CheckoutBuggyBuild(this, true));
+    public String getGitRepositoryUrl() {
+    	return this.gitRepositoryUrl;
+    }
 
+    public String getGitRepositoryBranch() {
+    	return this.gitRepositoryBranch;
+    }
+
+    public String getGitRepositoryIdCommit() {
+    	return this.gitRepositoryIdCommit;
+    }
+
+    public boolean isGitRepositoryFirstCommit() {
+    	return this.gitRepositoryFirstCommit;
+    }
+
+    public void run() {
+        if ((this.buildToBeInspected != null && this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES)
+        		|| getGitRepositoryUrl() != null) {
+            AbstractStep cloneRepo = null;
+            
+            if (getBuggyBuild() == null && getGitRepositoryUrl() != null) {
+            	cloneRepo = new CloneCheckoutBranchRepository(this);
+            	
+            } else {
+            	cloneRepo = new CloneRepository(this);
+            	cloneRepo.addNextStep(new CheckoutBuggyBuild(this, true));
+            }
+            
             // If we have experimental plugins, we need to add them here.
             String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
             if(repos != null) {

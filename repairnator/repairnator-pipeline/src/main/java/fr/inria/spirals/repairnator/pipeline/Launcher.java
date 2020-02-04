@@ -8,6 +8,7 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.UnspecifiedParameterException;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.jtravis.JTravis;
@@ -45,8 +46,6 @@ import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.util.StatusPrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,11 +70,12 @@ public class Launcher {
     protected List<AbstractNotifier> notifiers;
     protected PatchNotifier patchNotifier;
     protected ProjectInspector inspector;
+    private JSAP jsap;
 
     private static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
-    
+
     /* just give an empty instance of the launcher for customized execution */
     public Launcher() {
         /* Reset fields*/
@@ -101,7 +101,7 @@ public class Launcher {
             LOGGER.info("No information about PIPELINE VERSION has been found.");
         }
 
-        JSAP jsap = this.defineArgs();
+        jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
         this.initConfig(arguments);
@@ -139,6 +139,16 @@ public class Launcher {
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // --checkstyle
         jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
+        // --gitRepo
+        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryMode());
+        // --gitRepoUrl
+        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryUrl());
+        // --gitRepoBranch
+        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryBranch());
+        // --gitRepoIdCommit
+        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryIdCommit());
+        // --gitRepoFirstCommit
+        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryFirstCommit());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
@@ -172,7 +182,6 @@ public class Launcher {
         opt2.setShortFlag('b');
         opt2.setLongFlag("build");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setRequired(true);
         opt2.setHelp("Specify the build id to use.");
         jsap.registerParameter(opt2);
 
@@ -250,7 +259,7 @@ public class Launcher {
     }
 
     private void initConfig(JSAPResult arguments) {
-        if (LauncherUtils.getArgDebug(arguments)) {
+    	if (LauncherUtils.getArgDebug(arguments)) {
             this.getConfig().setDebug(true);
         }
         this.getConfig().setClean(true);
@@ -260,9 +269,24 @@ public class Launcher {
             this.getConfig().setLauncherMode(LauncherMode.BEARS);
         } else if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
             this.getConfig().setLauncherMode(LauncherMode.CHECKSTYLE);
+        } else if (LauncherUtils.getArgGitRepositoryMode(arguments)) {
+            getConfig().setLauncherMode(LauncherMode.GIT_REPOSITORY);
+            if (LauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
+            	getConfig().setGitRepositoryFirstCommit(true);
+            }
         } else {
             this.getConfig().setLauncherMode(LauncherMode.REPAIR);
         }
+
+        try {
+        	if (getConfig().getLauncherMode() != LauncherMode.GIT_REPOSITORY) {
+        		getConfig().setBuildId(arguments.getInt("build"));
+            }
+        } catch(UnspecifiedParameterException e) {
+        	System.err.println("Error: Parameter 'build' is required in REPAIR launcher mode.");
+        	LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        }
+
         if (LauncherUtils.getArgOutput(arguments) != null) {
             this.getConfig().setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
         }
@@ -285,10 +309,27 @@ public class Launcher {
         if (this.getConfig().isCreatePR() || (this.getConfig().getSmtpServer() != null && !this.getConfig().getSmtpServer().isEmpty() && this.getConfig().getNotifyTo() != null && this.getConfig().getNotifyTo().length > 0)) {
             this.getConfig().setFork(true);
         }
-        this.getConfig().setBuildId(arguments.getInt("build"));
+
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             this.getConfig().setNextBuildId(arguments.getInt("nextBuild"));
         }
+
+        if (getConfig().getLauncherMode() == LauncherMode.GIT_REPOSITORY) {
+        	if (arguments.getString("gitRepositoryUrl") == null) {
+        		System.err.println("Error: Parameter 'gitrepourl' is required in GIT_REPOSITORY launcher mode.");
+        		LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        	}
+
+        	if (getConfig().isGitRepositoryFirstCommit() && arguments.getString("gitRepositoryIdCommit") != null) {
+        		System.err.println("Error: Parameters 'gitrepofirstcommit' and 'gitrepoidcommit' cannot be used at the same time.");
+        		LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        	}
+
+        	getConfig().setGitRepositoryUrl(arguments.getString("gitRepositoryUrl"));
+        	getConfig().setGitRepositoryBranch(arguments.getString("gitRepositoryBranch"));
+        	getConfig().setGitRepositoryIdCommit(arguments.getString("gitRepositoryIdCommit"));
+        }
+
         this.getConfig().setZ3solverPath(new File(arguments.getString("z3")).getPath());
         this.getConfig().setWorkspacePath(arguments.getString("workspace"));
         this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
@@ -433,10 +474,9 @@ public class Launcher {
 
     public boolean mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
-        if (!this.getBuildToBeInspected()) {
+        if (buildToBeInspected == null && getConfig().getLauncherMode() != LauncherMode.GIT_REPOSITORY) {
             return false;
         }
-
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.getConfig().getRunId(), this.getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
 
@@ -446,6 +486,16 @@ public class Launcher {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
             inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+        } else if (getConfig().getLauncherMode() == LauncherMode.GIT_REPOSITORY) {
+            inspector = new ProjectInspector(
+            		getConfig().getGitRepositoryUrl(),
+            		getConfig().getGitRepositoryBranch(),
+            		getConfig().getGitRepositoryIdCommit(),
+            		getConfig().isGitRepositoryFirstCommit(),
+            		getConfig().getWorkspacePath(),
+            		serializers,
+            		this.notifiers
+            );
         } else {
             inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }
