@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * Created by urli on 17/08/2017.
  */
 public abstract class AstorRepair extends AbstractRepairStep {
-    private static final int MAX_TIME_EXECUTION = 100; // in minutes
+    private static final int MAX_TIME_EXECUTION = 1; // in minutes
 
     public AstorRepair() {}
 
@@ -91,8 +91,19 @@ public abstract class AstorRepair extends AbstractRepairStep {
             astorArgs.add("-faultlocalization");
             astorArgs.add("CoCoSpoon");
 
+            String id = this.getRepairToolName() + "-";
+
+            if (getInspector().getBuggyBuild() != null) {
+    			id += "-" + String.valueOf(getInspector().getBuggyBuild().getId());
+    		} else {
+    			id += "-" + getInspector().getGitSlug() + "-" +
+    				(getInspector().getGitRepositoryBranch() != null ? getInspector().getGitRepositoryBranch() : "master") +
+    				(getInspector().getGitRepositoryIdCommit() != null ? "-" + getInspector().getGitRepositoryIdCommit() : "") +
+    				(getInspector().isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+    		}
+
             astorArgs.add("-id");
-            astorArgs.add(this.getRepairToolName() + "-" + getInspector().getBuggyBuild().getId());
+            astorArgs.add(id);
 
             final AstorMain astorMain = new AstorMain();
 
