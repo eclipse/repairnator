@@ -10,9 +10,11 @@ It does so by pushing failing travisCI build identifiers to an ActiveMQ server. 
 
 ## How to Install the Repairnator GitHub App?
 
+Required steps:
+
 1. visit https://github.com/apps/repairnator-bot
 2. click on the green button "Install"
-3. Activate Travis CI on your repo (<https://travis-ci.org/account/repositories>) (required)
+3. Activate Travis CI on your repo (<https://travis-ci.org/account/repositories> or <https://travis-ci.com/account/repositories>)
 
 __Permissions__ In order to listen on specific events with this app, it is required to enable permissions of `Issues`, `Pull requests` and `Commit statuses`, to `Read & Write` for all of them at <https://github.com/settings/installations> (click on repairnator-bot).
 
