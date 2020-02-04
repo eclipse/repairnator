@@ -69,6 +69,10 @@ For running the app on you own, you need to fill
 7. visit the ActiveMQ's web console (http://{ip}:8161/admin/) (check `apache-activemq-5.15.11/conf/jetty-realm.properties` to see admin's password)  
 8. click Queues in the breadcrumbs, then click pipeline and then click the latest message, and check the corresponding buildID at the Message Details
 
+* __How to update the app__
+1. make updates inside the project
+2. recommend to restart the server (`ps -ef | grep npm` and `ps -ef | grep node` to kill processes manually, then re-run the server), so have one complete update
+
 * __What to do when Repairnator GitHub app does not work normally?__
 The only possible cause as Jian<jianguda@gmail.com> knows is the "403 - access denied" issue
 1. edit `~/repairnator-bot/.env`
