@@ -92,6 +92,7 @@ public class RepairnatorConfig {
     private String gitUrl;
     private String gitBranch;
     private String gitCommitHash;
+    private String mavenHome;
 
     // Dockerpool
     private String dockerImageName;
@@ -623,6 +624,14 @@ public class RepairnatorConfig {
 
     public void setGithubUserEmail(String githubUserEmail) {
         this.githubUserEmail = githubUserEmail;
+    }
+
+    public void setMavenHome(String mavenHome) {
+        this.mavenHome = mavenHome;
+    }
+
+    public String getMavenHome() {
+        return this.mavenHome;
     }
 
     public boolean isCreatePR() {
