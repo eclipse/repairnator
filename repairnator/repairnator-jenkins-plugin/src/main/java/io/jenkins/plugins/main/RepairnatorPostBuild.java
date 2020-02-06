@@ -75,10 +75,15 @@ public class RepairnatorPostBuild extends Recorder {
 
     // Fields in config.jelly must match the parameter GitUrl in the "DataBoundConstructor"
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,boolean useNPEFix,boolean useNPEFixSafe,boolean useAstorJKali,boolean useAstorJMut,boolean useNopolTestExclusionStrategy) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
+        this.useNPEFix = useNPEFix;
+        this.useNPEFixSafe = useNPEFixSafe;
+        this.useAstorJKali = useAstorJKali;
+        this.useAstorJMut = useAstorJMut;
+        this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;
     }
 
     @DataBoundSetter

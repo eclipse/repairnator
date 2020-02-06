@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 	
 public class RepairnatorPostBuildTest {
-/*	public @Rule JenkinsRule jenkins = new JenkinsRule();
+	public @Rule JenkinsRule jenkins = new JenkinsRule();
 
     final String gitUrl = "https://github.com/surli/failingProject.git";
     final String gitOAuthToken = "";
@@ -20,11 +20,10 @@ public class RepairnatorPostBuildTest {
     @Test
     public void testNPEFIX() throws Exception {
         FreeStyleProject project = jenkins.createFreeStyleProject();
-        RepairnatorPostBuild postBuild = new RepairnatorPostBuild(gitUrl,gitOAuthToken,gitBranch);
+        RepairnatorPostBuild postBuild = new RepairnatorPostBuild(gitUrl,gitOAuthToken,gitBranch,true,false,false,false,false);
         project.getPublishersList().add(postBuild);
-		project = jenkins.configRoundtrip(project);
 
         FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
-        jenkins.assertLogContains("INFO: PIPELINE FINDING: PATCHED", build);
-    }*/
+        jenkins.assertLogContains("PIPELINE FINDING: PATCHED", build);
+    }
 }

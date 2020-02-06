@@ -9,6 +9,8 @@ import hudson.tools.ToolProperty;
 import hudson.tasks.Maven.MavenInstallation;
 import hudson.tasks.Maven.MavenInstaller;
 
+import java.util.ArrayList;
+
 public class MavenCustomInstaller implements Installer{
 	private AbstractBuild build;
 	private BuildListener listener;
