@@ -474,9 +474,11 @@ public class Launcher {
 
     public boolean mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
-        if (buildToBeInspected == null && getConfig().getLauncherMode() != LauncherMode.GIT_REPOSITORY) {
+
+        if (!this.getBuildToBeInspected() && getConfig().getLauncherMode() != LauncherMode.GIT_REPOSITORY) {
             return false;
         }
+
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.getConfig().getRunId(), this.getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
 
