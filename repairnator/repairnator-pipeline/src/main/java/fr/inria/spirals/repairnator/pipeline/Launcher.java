@@ -247,6 +247,13 @@ public class Launcher {
         opt2.setHelp("the hash of your git commit");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("MavenHome");
+        opt2.setLongFlag("MavenHome");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Maven home folder, use in case if enviroment variable M2_HOME is null");
+        opt2.setDefault("/usr/share/maven");
+        jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
@@ -340,6 +347,8 @@ public class Launcher {
         this.getConfig().setGitUrl(arguments.getString("giturl"));
         this.getConfig().setGitBranch(arguments.getString("gitbranch"));
         this.getConfig().setGitCommitHash(arguments.getString("gitcommithash"));
+        this.getConfig().setMavenHome(arguments.getString("MavenHome"));
+
         this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
 
         if (arguments.getFile("projectsToIgnore") != null) {

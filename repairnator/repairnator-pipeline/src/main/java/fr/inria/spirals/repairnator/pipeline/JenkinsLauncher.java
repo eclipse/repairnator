@@ -90,6 +90,14 @@ public class JenkinsLauncher extends Launcher {
     return true;
   }
 
+
+  private void printAllEnv() {
+    Properties properties = System.getProperties();
+    System.out.println("---------------------------------All envVars---------------------------------");
+    properties.forEach((k, v) -> LOGGER.info(k + ":" + v));
+    System.out.println("-----------------------------------------------------------------------------");
+  }
+
   /* used for no travis */
   public void noTravisMain() {
     LOGGER.info("Repairnator will be running for - GitUrl: " + this.getConfig().getGitUrl() + " --  GitBranch: " + this.getConfig().getGitBranch() + " -- GitCommit: " + this.getConfig().getGitCommitHash());
@@ -97,8 +105,7 @@ public class JenkinsLauncher extends Launcher {
     String oldUserDir = System.getProperty("user.dir");
     System.setProperty("java.class.path",f.getAbsolutePath());
     System.setProperty("user.dir",this.getConfig().getWorkspacePath());
-    Properties properties = System.getProperties();
-    properties.forEach((k, v) -> LOGGER.info(k + ":" + v));
+    
     System.out.println("user.dir=" + System.getProperty("user.dir"));
     System.out.println("java.class.path=" + System.getProperty("java.class.path"));
     this.getConfig().setClean(true);
@@ -114,11 +121,7 @@ public class JenkinsLauncher extends Launcher {
     this.initNotifiers();
     this.mainProcess();
 
-    try {
-      FileUtils.deleteDirectory(this.getConfig().getWorkspacePath());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    /* Do not erase workspace dir if jenkins - jenkins will clean this up, otherwise Filesys bug*/
     System.setProperty("user.dir",oldUserDir);
   }
 
@@ -130,10 +133,7 @@ public class JenkinsLauncher extends Launcher {
     String oldUserDir = System.getProperty("user.dir");
     System.setProperty("java.class.path",f.getAbsolutePath());
     System.setProperty("user.dir",this.tempDir.getAbsolutePath());
-    /*Properties properties = System.getProperties();
-    properties.forEach((k, v) -> LOGGER.info(k + ":" + v));*/
-    LOGGER.info("user.dir=" + System.getProperty("user.dir"));
-    LOGGER.info("java.class.path=" + System.getProperty("java.class.path"));
+
     this.gitUrl = gitUrl;
     this.gitBranch = gitBranch;
     this.getConfig().setClean(true);

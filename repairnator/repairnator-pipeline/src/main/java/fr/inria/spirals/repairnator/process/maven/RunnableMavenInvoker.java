@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.maven;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
@@ -37,7 +38,11 @@ public class RunnableMavenInvoker implements Runnable {
         if (System.getenv("M2_HOME") == null) {
             // sensible value
             // https://stackoverflow.com/questions/14793015/programmatically-launch-m2e-maven-command
-            System.setProperty("maven.home", "/usr/share/maven");
+            String mavenHome = RepairnatorConfig.getInstance().getMavenHome();
+            System.out.println("M2_HOME not found, using provided input value instead - " + mavenHome);
+            System.setProperty("maven.home", mavenHome);
+        } else if ( System.getProperty("maven.home") == null ) {
+            System.setProperty("maven.home", System.getenv("M2_HOME"));
         }
         request.setProperties(props);
         request.setBatchMode(true);
