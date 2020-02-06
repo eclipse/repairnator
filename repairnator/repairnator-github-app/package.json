@@ -1,0 +1,30 @@
+{
+  "name": "repairnator-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Software development bot that automatically repairs programs and build failures on Travis Continuous Integration (https://github.com/jianguda/repairnator-bot)",
+  "author": "Jian GU <jianguda@gmail.com>",
+  "license": "ISC",
+  "repository": "https://github.com/jianguda/repairnator-bot.git",
+  "homepage": "https://github.com/jianguda/repairnator-bot",
+  "bugs": "https://github.com/jianguda/repairnator-bot/issues",
+  "keywords": [
+    "probot",
+    "github",
+    "probot-app"
+  ],
+  "scripts": {
+    "start": "probot run ./index.js"
+  },
+  "dependencies": {
+    "probot": "^9.9.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.8",
+    "rhea": "^1.0.18",
+    "smee-client": "^1.1.0",
+    "strip-ansi": "^6.0.0"
+  },
+  "engines": {
+    "node": "12.x"
+  }
+}

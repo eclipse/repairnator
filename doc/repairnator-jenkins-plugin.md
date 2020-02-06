@@ -1,10 +1,9 @@
 # Repairnator Jenkins Plugin
 
-
-The Repairnator Jenkins Plugin i can be used:
+The Repairnator Jenkins Plugin can be used:
 
 1. to run Repairnator on each failing build
-1. to automatically create pull-requests on Github when a patch is found by one of the repair tools.
+2. to automatically create pull-requests on Github when a patch is found by one of the repair tools.
  
 ## How to install repairnator-jenkins-plugin?
 
