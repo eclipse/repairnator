@@ -301,6 +301,12 @@ public class ProjectInspector {
     public boolean isGitRepositoryFirstCommit() {
     	return this.gitRepositoryFirstCommit;
     }
+    
+    public String getGitRepositoryId() {
+    	return getGitSlug() + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
+				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+    }
 
     public void run() {
         if ((this.buildToBeInspected != null && this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES)
