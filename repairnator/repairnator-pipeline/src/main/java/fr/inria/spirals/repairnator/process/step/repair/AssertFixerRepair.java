@@ -105,8 +105,8 @@ public class AssertFixerRepair extends AbstractRepairStep {
         this.getLogger().info("Launcher AssertFixer with the following configuration: "+asJson);
 
 
-        /*final ExecutorService executor = Executors.newSingleThreadExecutor();*/
-        /*final Future<List<AssertFixerResult>> assertFixerExecution = executor.submit(() -> {
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+        final Future<List<AssertFixerResult>> assertFixerExecution = executor.submit(() -> {
             try {
                 Main main = new Main(configuration);
                 return main.runWithResults();
@@ -114,12 +114,9 @@ public class AssertFixerRepair extends AbstractRepairStep {
                 addStepError("Got exception when running AssertFixer: ", throwable);
                 return new ArrayList<>();
             }
-        });*/
-        Main main = new Main(configuration);
-        List<AssertFixerResult> assertFixerResults = new ArrayList<>();
+        });
         try {
-            /*executor.shutdown();*/
-            assertFixerResults.addAll(main.runWithResults());
+            executor.shutdown();
         } catch (Exception e) {
             addStepError("Error while executing AssertFixer", e);
         }

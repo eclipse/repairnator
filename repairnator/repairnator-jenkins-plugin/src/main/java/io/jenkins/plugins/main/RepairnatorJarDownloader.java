@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.io.IOException;
 
+/* Download latest Jar file from snapshot repo */
 public class RepairnatorJarDownloader extends FileDownloader{
 
 	public RepairnatorJarDownloader() {}

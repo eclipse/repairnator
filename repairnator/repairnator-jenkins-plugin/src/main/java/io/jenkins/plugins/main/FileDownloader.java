@@ -5,6 +5,7 @@ import java.nio.channels.Channels;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/* Download file given url and download-to directory */
 public class FileDownloader {
 	public static void downloadFile(String url,String absoluteFilePath) {
         System.out.println("Downloading from [" + url + "] " + " into " + absoluteFilePath + " .........");

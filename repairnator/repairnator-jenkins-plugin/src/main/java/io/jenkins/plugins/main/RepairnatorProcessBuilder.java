@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.lang.IllegalArgumentException;
 import java.lang.ProcessBuilder;
 
+/* Build subprocess to run repairnator Jar */
 public class RepairnatorProcessBuilder {
 	private final ArrayList<String> cmdList = new ArrayList<String>();
 	private static RepairnatorProcessBuilder repairnatorProcessBuilder;

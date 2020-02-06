@@ -11,6 +11,7 @@ import hudson.tasks.Maven.MavenInstaller;
 
 import java.util.ArrayList;
 
+/* Install apache maven 3.6.3 if no maven found on node */
 public class MavenCustomInstaller implements Installer{
 	private AbstractBuild build;
 	private BuildListener listener;
