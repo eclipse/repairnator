@@ -36,12 +36,9 @@ public class ErrorNotifier extends AbstractNotifier {
         JobStatus status = inspector.getJobStatus();
         String subject = "";
         if (RepairnatorConfig.getInstance().getLauncherMode() != LauncherMode.GIT_REPOSITORY) {
-        	subject = "URGENT! Error on buggy build "+inspector.getBuggyBuild().getId()+" on machine "+ Utils.getHostname();
+        	subject = "URGENT! Error on buggy build "+inspector.getBuggyBuild().getId() + " on machine "+ Utils.getHostname();
         } else {
-        	subject = "URGENT! Error on repository " + inspector.getGitSlug() + "-" +
-    				(inspector.getGitRepositoryBranch() != null ? inspector.getGitRepositoryBranch() : "master") +
-    				(inspector.getGitRepositoryIdCommit() != null ? "-" + inspector.getGitRepositoryIdCommit() : "") +
-    				(inspector.isGitRepositoryFirstCommit() ? "-firstCommit" : "")+" on machine "+ Utils.getHostname();
+        	subject = "URGENT! Error on repository " + inspector.getGitRepositoryId() + " on machine "+ Utils.getHostname();
         }
 
         String message = "The following error has been encountered: ";

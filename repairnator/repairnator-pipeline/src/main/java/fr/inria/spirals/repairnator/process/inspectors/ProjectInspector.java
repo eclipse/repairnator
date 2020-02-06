@@ -124,10 +124,7 @@ public class ProjectInspector {
         this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
 
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + this.gitSlug + "-" +
-        	(this.gitRepositoryBranch != null ? this.gitRepositoryBranch : "master") +
-			(this.gitRepositoryIdCommit != null ? "-" + this.gitRepositoryIdCommit : "") +
-			(this.gitRepositoryFirstCommit ? "-firstCommit" : "");
+        this.repoLocalPath = workspace + File.separator + getGitRepositoryId();
 
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
