@@ -33,12 +33,19 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
+import fr.inria.spirals.repairnator.serializer.InspectorSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
+import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
+import fr.inria.spirals.repairnator.serializer.PatchesSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
+import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
+import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
+import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
+import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -503,6 +510,23 @@ public class Launcher {
         }
 
         System.out.println("Finished " + this.inspector.isPipelineEnding());
+        
+        if (getConfig().getLauncherMode() == LauncherMode.GIT_REPOSITORY) {
+        	serializers.add(new InspectorSerializer4GitRepository(this.engines, inspector));
+        	serializers.add(new PropertiesSerializer4GitRepository(this.engines, inspector));
+            serializers.add(new InspectorTimeSerializer4GitRepository(this.engines, inspector));
+            serializers.add(new PipelineErrorSerializer4GitRepository(this.engines, inspector));
+            serializers.add(new PatchesSerializer4GitRepository(this.engines, inspector));
+            serializers.add(new ToolDiagnosticSerializer4GitRepository(this.engines, inspector));
+            serializers.add(new PullRequestSerializer4GitRepository(this.engines, inspector));
+
+            inspector.setPatchNotifier(this.patchNotifier);
+            inspector.run();
+
+            LOGGER.info("Inspector is finished. The process will exit now.");
+            return true;
+        }
+        
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             serializers.add(new InspectorSerializer4Bears(this.engines, inspector));
         } else {
