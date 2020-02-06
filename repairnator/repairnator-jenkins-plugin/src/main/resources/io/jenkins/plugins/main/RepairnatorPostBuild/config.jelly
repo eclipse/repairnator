@@ -8,7 +8,16 @@
     <f:entry title="${%NPEFix}" field="useNPEFix">
         <f:checkbox />
     </f:entry>
-    <f:entry title="${%AssertFix}" field="useAssertFix">
+    <f:entry title="${%NPEFixSafe}" field="useNPEFixSafe">
+        <f:checkbox />
+    </f:entry>
+    <f:entry title="${%AstorJMut}" field="useAstorJMut">
+        <f:checkbox />
+    </f:entry>
+    <f:entry title="${%AstorJKali}" field="useAstorJKali">
+        <f:checkbox />
+    </f:entry>
+    <f:entry title="${%NopolTestExclusionStrategy}" field="useNopolTestExclusionStrategy">
         <f:checkbox />
     </f:entry>
     <f:advanced>

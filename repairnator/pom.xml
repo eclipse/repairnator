@@ -61,7 +61,6 @@
         <module>repairnator-pipeline</module>
         <module>repairnator-core</module>
         <module>repairnator-realtime</module>
-        <module>repairnator-jenkins-plugin</module>
     </modules>
 
     <repositories>

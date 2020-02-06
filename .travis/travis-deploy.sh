@@ -14,6 +14,10 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     sed -i -e 's/\${revision}/'$VERSION'/' pom.xml */pom.xml
     git diff
     mvn -q deploy -DskipTests -Dcheckstyle.skip
+
+    # push jenkins plugin snapshot to https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator
+    cd repairnator-jenkins-plugin
+    mvn -q deploy -DskipTests
 fi
 
 

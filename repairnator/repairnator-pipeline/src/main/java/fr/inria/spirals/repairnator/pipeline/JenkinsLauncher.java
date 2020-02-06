@@ -37,6 +37,7 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import com.google.common.io.Files;
+import java.util.Properties;
 
 /* Entry point as Jenkins plugin - skip JSAP */
 public class JenkinsLauncher extends Launcher {
@@ -45,7 +46,7 @@ public class JenkinsLauncher extends Launcher {
   private String pushUrl;
   private String gitToken;
   private String gitBranch;
-  private static final File tempDir = Files.createTempDir();
+  private static File tempDir;
   private ProjectInspector inspector;
 
   private static RepairnatorConfig getConfig() {
@@ -73,7 +74,7 @@ public class JenkinsLauncher extends Launcher {
 
     List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-    this.inspector = new JenkinsProjectInspector(this.getConfig().getWorkspacePath(),this.gitUrl,this.gitBranch,serializers, this.notifiers);
+    this.inspector = new JenkinsProjectInspector(this.getConfig().getWorkspacePath(),this.getConfig().getGitUrl(),this.getConfig().getGitBranch(),this.getConfig().getGitCommitHash(),serializers, this.notifiers);
     serializers.add(new InspectorSerializer(this.engines, inspector));
     serializers.add(new PropertiesSerializer(this.engines, inspector));
     serializers.add(new InspectorTimeSerializer(this.engines, inspector));
@@ -85,27 +86,63 @@ public class JenkinsLauncher extends Launcher {
     inspector.setPatchNotifier(this.patchNotifier);
     inspector.run();
 
-    try {
-      FileUtils.deleteDirectory(this.tempDir.getAbsolutePath());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
     LOGGER.info("Inspector is finished. The process will exit now.");
     return true;
   }
 
+
+  private void printAllEnv() {
+    Properties properties = System.getProperties();
+    System.out.println("---------------------------------All envVars---------------------------------");
+    properties.forEach((k, v) -> LOGGER.info(k + ":" + v));
+    System.out.println("-----------------------------------------------------------------------------");
+  }
+
+  /* used for no travis */
+  public void noTravisMain() {
+    LOGGER.info("Repairnator will be running for - GitUrl: " + this.getConfig().getGitUrl() + " --  GitBranch: " + this.getConfig().getGitBranch() + " -- GitCommit: " + this.getConfig().getGitCommitHash());
+    File f = new File(System.getProperty("java.class.path"));
+    String oldUserDir = System.getProperty("user.dir");
+    System.setProperty("java.class.path",f.getAbsolutePath());
+    System.setProperty("user.dir",this.getConfig().getWorkspacePath());
+    
+    System.out.println("user.dir=" + System.getProperty("user.dir"));
+    System.out.println("java.class.path=" + System.getProperty("java.class.path"));
+    this.getConfig().setClean(true);
+    this.getConfig().setRunId("1234");
+    this.getConfig().setLauncherMode(LauncherMode.REPAIR);
+    this.getConfig().setBuildId(0);
+    this.getConfig().setGithubUserEmail("noreply@github.com");
+    this.getConfig().setGithubUserName("repairnator");
+    if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
+        LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
+    }
+    this.initSerializerEngines();
+    this.initNotifiers();
+    this.mainProcess();
+
+    /* Do not erase workspace dir if jenkins - jenkins will clean this up, otherwise Filesys bug*/
+    System.setProperty("user.dir",oldUserDir);
+  }
+
+  /* use for jenkins pure */
   public void jenkinsMain(String gitUrl,String gitToken,String gitBranch,String[] tools) {
     LOGGER.info("Repairnator will be running for - GitUrl: " + gitUrl + " --  GitBranch: " + gitBranch);
+    File f = new File(System.getProperty("java.class.path"));
+    this.tempDir = Files.createTempDir();
+    String oldUserDir = System.getProperty("user.dir");
+    System.setProperty("java.class.path",f.getAbsolutePath());
+    System.setProperty("user.dir",this.tempDir.getAbsolutePath());
+
     this.gitUrl = gitUrl;
     this.gitBranch = gitBranch;
     this.getConfig().setClean(true);
     this.getConfig().setRunId("1234");
     this.getConfig().setLauncherMode(LauncherMode.REPAIR);
-    this.getConfig().setBuildId(0); //dummy 
+    this.getConfig().setBuildId(0);
     this.getConfig().setZ3solverPath(new File("./z3_for_linux").getPath());
-    this.getConfig().setWorkspacePath(this.tempDir.getAbsolutePath());
 
+    this.getConfig().setWorkspacePath(this.tempDir.getAbsolutePath());
     this.getConfig().setGithubToken(gitToken);
     this.getConfig().setPush(true);
     this.getConfig().setGithubUserEmail("noreply@github.com");
@@ -116,10 +153,19 @@ public class JenkinsLauncher extends Launcher {
     if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
         LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
     }
-
+    this.getConfig().setOutputPath(this.tempDir.getAbsolutePath());
+    this.getConfig().setZ3solverPath(new File(this.tempDir.getAbsolutePath() + File.separator + "z3_for_linux").getPath());
     this.initSerializerEngines();
     this.initNotifiers();
     this.mainProcess();
+
+    try {
+      FileUtils.deleteDirectory(this.tempDir.getAbsolutePath());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    System.setProperty("user.dir",oldUserDir);
   }
 
   public static void main(String[] args) {
