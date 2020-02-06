@@ -115,8 +115,11 @@ public class AssertFixerRepair extends AbstractRepairStep {
                 return new ArrayList<>();
             }
         });
+
+        List<AssertFixerResult> assertFixerResults = new ArrayList<>();
         try {
             executor.shutdown();
+            assertFixerResults.addAll(assertFixerExecution.get(TOTAL_TIME, TimeUnit.MINUTES));
         } catch (Exception e) {
             addStepError("Error while executing AssertFixer", e);
         }
