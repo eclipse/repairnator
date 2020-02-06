@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * Created by urli on 17/08/2017.
  */
 public abstract class AstorRepair extends AbstractRepairStep {
-    private static final int MAX_TIME_EXECUTION = 1; // in minutes
+    private static final int MAX_TIME_EXECUTION = 100; // in minutes
 
     public AstorRepair() {}
 
