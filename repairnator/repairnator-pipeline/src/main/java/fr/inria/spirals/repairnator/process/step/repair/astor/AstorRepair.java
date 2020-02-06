@@ -96,10 +96,7 @@ public abstract class AstorRepair extends AbstractRepairStep {
             if (getInspector().getBuggyBuild() != null) {
     			id += "-" + String.valueOf(getInspector().getBuggyBuild().getId());
     		} else {
-    			id += "-" + getInspector().getGitSlug() + "-" +
-    				(getInspector().getGitRepositoryBranch() != null ? getInspector().getGitRepositoryBranch() : "master") +
-    				(getInspector().getGitRepositoryIdCommit() != null ? "-" + getInspector().getGitRepositoryIdCommit() : "") +
-    				(getInspector().isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+    			id += "-" + getInspector().getGitRepositoryId();
     		}
 
             astorArgs.add("-id");
