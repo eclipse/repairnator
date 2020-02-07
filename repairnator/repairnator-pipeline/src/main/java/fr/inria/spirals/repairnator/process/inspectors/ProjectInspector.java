@@ -134,7 +134,6 @@ public class ProjectInspector {
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
-        this.initProperties();
     }
 
     public void setGitConfig(String gitUrl,String gitBranch) {

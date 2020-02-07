@@ -482,7 +482,7 @@ public class Launcher {
     public boolean mainProcess() {
         LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
 
-        if (!this.getBuildToBeInspected() && getConfig().getLauncherMode() != LauncherMode.GIT_REPOSITORY) {
+        if (getConfig().getLauncherMode() != LauncherMode.GIT_REPOSITORY && !this.getBuildToBeInspected()) {
             return false;
         }
 
