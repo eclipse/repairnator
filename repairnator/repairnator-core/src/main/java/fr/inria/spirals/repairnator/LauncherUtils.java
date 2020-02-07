@@ -112,7 +112,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("gitRepositoryUrl");
         opt.setLongFlag("gitrepourl");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify a Git repository URL.");
+        opt.setHelp("Specify a Git repository URL (only in GIT_REPOSITORY mode).");
         return opt;
     }
 
@@ -124,7 +124,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("gitRepositoryBranch");
         opt.setLongFlag("gitrepobranch");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify a branch of the given repository.");
+        opt.setHelp("Specify a branch of the given repository (only in GIT_REPOSITORY mode) - (default: master branch).");
         return opt;
     }
 
@@ -136,7 +136,7 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("gitRepositoryIdCommit");
         opt.setLongFlag("gitrepoidcommit");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify the commit id of the given repository.");
+        opt.setHelp("Specify the commit id of the given repository (only in GIT_REPOSITORY mode).");
         return opt;
     }
 
@@ -148,7 +148,7 @@ public class LauncherUtils {
         Switch sw = new Switch("gitRepositoryFirstCommit");
         sw.setLongFlag("gitrepofirstcommit");
         sw.setDefault("false");
-        sw.setHelp("Decides whether to clone the first commit of the specified branch.");
+        sw.setHelp("Decides whether to clone the first commit of the specified branch (only in GIT_REPOSITORY mode).");
         return sw;
     }
 
