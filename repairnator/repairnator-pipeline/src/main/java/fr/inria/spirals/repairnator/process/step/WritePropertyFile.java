@@ -27,7 +27,8 @@ public class WritePropertyFile extends AbstractStep {
         this.getLogger().debug("Writing file with properties...");
 
         String filePath;
-        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
+        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR || 
+        		this.getConfig().getLauncherMode() == LauncherMode.GIT_REPOSITORY) {
             filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME;
         } else {
             filePath = this.getInspector().getRepoLocalPath() + File.separator + PROPERTY_FILENAME_BEARS;
