@@ -50,7 +50,75 @@ public class TestPipeline {
 
 	}
 
-	class Patches implements PatchNotifier {
+    @Test
+    public void testPipelineOnlyGitRepository() throws Exception {
+        Launcher l = new Launcher(new String[]{
+        			"--gitrepo",
+        			"--gitrepourl", "https://github.com/surli/failingProject",
+        		});
+        
+        Patches patchNotifier = new Patches();
+		l.setPatchNotifier(patchNotifier);
+        l.mainProcess();
+        assertEquals("PATCHED", l.getInspector().getFinding());
+		assertEquals(10, patchNotifier.allpatches.size());
+		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
+	}
+
+    @Test
+    public void testPipelineGitRepositoryAndBranch() throws Exception {
+        Launcher l = new Launcher(new String[]{
+	        		"--gitrepo",
+	        		"--gitrepourl", "https://github.com/surli/failingProject",
+	        		"--gitrepobranch", "astor-jkali-failure",
+	        		"--repairTools", "AstorJKali"
+        		});
+        
+        l.mainProcess();
+        assertEquals("TEST FAILURE", l.getInspector().getFinding());
+	}
+
+    @Test
+    public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {
+        Launcher l = new Launcher(new String[]{
+        		"--gitrepo",
+        		"--gitrepourl", "https://github.com/surli/failingProject",
+        		"--gitrepoidcommit", "f1233f8863d45141ae0ff17df897006f07e707bb",
+        		});
+        
+        l.mainProcess();
+        assertEquals("TEST FAILURE", l.getInspector().getFinding());
+	}
+
+    @Test
+    public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {
+        Launcher l = new Launcher(new String[]{
+        		"--gitrepo",
+        		"--gitrepourl", "https://github.com/surli/failingProject",
+        		"--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
+        		});
+        
+        Patches patchNotifier = new Patches();
+		l.setPatchNotifier(patchNotifier);
+        l.mainProcess();
+        assertEquals("PATCHED", l.getInspector().getFinding());
+		assertEquals(10, patchNotifier.allpatches.size());
+		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
+	}
+
+    @Test
+    public void testPipelineGitRepositoryAndFirstCommit() throws Exception {
+        Launcher l = new Launcher(new String[]{
+        		"--gitrepo",
+        		"--gitrepourl", "https://github.com/surli/failingProject",
+        		"--gitrepofirstcommit",
+        		});
+        
+        l.mainProcess();
+        assertEquals("NOTBUILDABLE", l.getInspector().getFinding());
+	}
+
+    class Patches implements PatchNotifier {
     	List<RepairPatch> allpatches = new ArrayList<>();
 		@Override
 		public void notify(ProjectInspector inspector, String toolname, List<RepairPatch> patches) {
