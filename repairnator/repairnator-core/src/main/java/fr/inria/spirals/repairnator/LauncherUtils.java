@@ -100,7 +100,7 @@ public class LauncherUtils {
         Switch sw = new Switch("gitRepo");
         sw.setLongFlag("gitrepo");
         sw.setDefault("false");
-        sw.setHelp("This mode allows to use repairnator to analyze bugs present in a Git repository.");
+        sw.setHelp("This mode allows to use Repairnator to analyze bugs present in a Git repository.");
         return sw;
     }
 
