@@ -14,7 +14,8 @@ The following command line tools must be installed on your machine:
 
 ```
 $ git clone https://github.com/eclipse/repairnator/
-$ cd repairnator/repairnator/repairnator-pipeline/
+$ cd repairnator/
+$ cd src/repairnator-pipeline/
 $ mvn install -DskipTests
 ```
 

@@ -27,11 +27,11 @@ Here it is: `352395977`.
 All you have to do to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
 ```bash
-# set $HOME_REPAIR and $GITHUB_OAUTH in repairnator/scripts/config/repairnator.cfg
-cp repairnator/scripts/config/repairnator.cfg ~
+# set $HOME_REPAIR and $GITHUB_OAUTH in src/scripts/config/repairnator.cfg
+cp src/scripts/config/repairnator.cfg ~
 vi ~/repairnator.cfg
 
-cd repairnator/scripts
+cd src/scripts
 
 # start a Docker container and run Repairnator on your specified Build ID.
 ./repair_buggy_build.sh 352395977
