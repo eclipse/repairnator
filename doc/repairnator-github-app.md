@@ -71,6 +71,10 @@ One cause is the "403 - access denied" issue
 2. try other TRAVIS tokens (the Travis API is not stable)
 3. contact the travis support<support@travis-ci.com>
 
+### Docker Image
+
+The tag of its docker image is `repairnator/github-app:latest`, or check it at [DockerHub](https://hub.docker.com/repository/docker/repairnator/github-app).
+
 ### Reference
 
 - https://probot.github.io/docs/
