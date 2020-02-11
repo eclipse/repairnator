@@ -18,6 +18,7 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     # push jenkins plugin snapshot to https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator
     cd repairnator-jenkins-plugin
     mvn -q deploy -DskipTests
+    cd ..
 fi
 
 
