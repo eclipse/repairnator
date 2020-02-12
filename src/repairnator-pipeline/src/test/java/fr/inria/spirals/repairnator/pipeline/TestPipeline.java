@@ -105,6 +105,19 @@ public class TestPipeline {
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
 	}
+    
+    @Ignore
+    @Test
+    public void testPipelineGitRepositoryFirstCommit() throws Exception {
+        Launcher l = new Launcher(new String[]{
+        		"--gitrepo",
+        		"--gitrepourl", "https://github.com/surli/failingProject",
+        		"--gitrepofirstcommit"
+        		});
+        
+        l.mainProcess();
+        assertEquals("NOTBUILDABLE", l.getInspector().getFinding());
+	}
 
     class Patches implements PatchNotifier {
     	List<RepairPatch> allpatches = new ArrayList<>();
