@@ -52,7 +52,7 @@ Prerequisites: Java, Docker
 
 ```
 git clone https://github.com/eclipse/repairnator/
-cd repairnator/repairnator/scripts/
+cd repairnator/src/scripts/
 # doc at https://github.com/eclipse/repairnator/blob/master/doc/scripts.md#launch_rtscannersh
 bash launch_rtscanner.sh
 ```
