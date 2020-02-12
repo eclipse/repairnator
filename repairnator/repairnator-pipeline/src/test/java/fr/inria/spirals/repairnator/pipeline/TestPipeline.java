@@ -95,7 +95,7 @@ public class TestPipeline {
         Launcher l = new Launcher(new String[]{
         		"--gitrepo",
         		"--gitrepourl", "https://github.com/surli/failingProject",
-        		"--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
+        		"--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9"
         		});
         
         Patches patchNotifier = new Patches();
@@ -104,18 +104,6 @@ public class TestPipeline {
         assertEquals("PATCHED", l.getInspector().getFinding());
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
-	}
-
-    @Test
-    public void testPipelineGitRepositoryAndFirstCommit() throws Exception {
-        Launcher l = new Launcher(new String[]{
-        		"--gitrepo",
-        		"--gitrepourl", "https://github.com/surli/failingProject",
-        		"--gitrepofirstcommit",
-        		});
-        
-        l.mainProcess();
-        assertEquals("NOTBUILDABLE", l.getInspector().getFinding());
 	}
 
     class Patches implements PatchNotifier {
