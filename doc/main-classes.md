@@ -29,6 +29,17 @@ java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnato
 
 ```
 
+It is also possible to run it on a GitHub repository that contains a Java Maven project, e.g., this one: https://github.com/surli/failingProject
+
+```
+export M2_HOME=/usr/share/maven
+export GITHUB_TOKEN=foobar # your Token
+export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
+
+java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl https://github.com/surli/failingProject
+
+```
+
 Options
 
 ```bash
@@ -101,6 +112,22 @@ Options:
         Specify the file containing a list of projects that the pipeline should
         deactivate serialization when processing builds from (default:
         ./projects_to_ignore.txt).
+        
+  [--gitrepo]
+        This mode allows to use Repairnator to analyze bugs present in a Git
+        repository.
+  
+  [--gitrepourl <gitRepositoryUrl>]
+        Specify a Git repository URL (only in GIT_REPOSITORY mode).
+
+  [--gitrepobranch <gitRepositoryBranch>]
+        Specify a branch of the given repository (only in GIT_REPOSITORY mode) - (default: master branch).
+
+  [--gitrepoidcommit <gitRepositoryIdCommit>]
+        Specify the commit id of the given repository (only in GIT_REPOSITORY mode).
+
+  [--gitrepofirstcommit]
+        Decides whether to clone the first commit of the specified branch (only in GIT_REPOSITORY mode).
 
 The environment variable M2_HOME should be set and refer to the path of your Maven home installation.
 To use Nopol, you must add tools.jar in your classpath from your installed JDK.
