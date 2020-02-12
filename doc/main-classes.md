@@ -29,7 +29,7 @@ export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802
 ```
 
-It is also possible to run it on a GitHub repository that contains a Java Maven project, e.g., this one: https://github.com/surli/failingProject (more details are available [here](https://github.com/dginelli/repairnator/blob/add-support-repository-repair/doc/repairnator-git-repository-mode.md)).
+It is also possible to run it on a GitHub repository that contains a Java Maven project, e.g., this one: https://github.com/surli/failingProject (more details are available [here](/doc/repairnator-git-repository-mode.md)).
 
 ```
 export M2_HOME=/usr/share/maven
