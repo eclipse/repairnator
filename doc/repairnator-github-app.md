@@ -33,7 +33,7 @@ The server listens to several GitHub webhooks, and execute corresponding scripts
 ### Run the app on your own
 
 ```sh
-cd  repairnator/repairnator-github-app/
+cd  src/repairnator-github-app/
 
 # Install dependencies
 npm install

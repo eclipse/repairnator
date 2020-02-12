@@ -7,7 +7,7 @@ sudo apt-get install -y xmlstarlet
 ### MAVEN CENTRAL
 if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     cp .travis/travis-settings.xml $HOME/.m2/settings.xml
-    cd repairnator
+    cd src 
     
     # pushing snapshot to https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/
     VERSION=`xmlstarlet sel -t -v '//_:project/_:properties/_:revision' pom.xml`
