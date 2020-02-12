@@ -59,6 +59,10 @@ Regarding the format of queue messages, repairnator pipeline supports the follow
 - a bytes message with a build id only  
 - a bytes message with a JSON string
 
+```json
+{"buildId":"648902893","CI":"travis-ci.org"}
+```
+
 Check the pipeline output by
 
 ```
