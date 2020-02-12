@@ -6,7 +6,7 @@ The `GIT_REPOSITORY` launcher mode offers different options and they are describ
 
 When Repairnator is executed in `GIT_REPOSITORY` launcher mode, it clones the repository associated with the parameter `gitrepourl`, and it is executed on the latest commit pushed on master branch.
 
-Using the parameter `gitrepofirstcommit`, on the contrary, Repairnator will be executed on the first commit (the oldest one) of the specificied repository.
+Using the parameter `gitrepofirstcommit`, on the contrary, Repairnator will be executed on the first commit (the oldest one) of the specified repository.
 
 Example of use:
 
@@ -34,7 +34,7 @@ java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnato
 
 ### gitrepobranch
 
-It is also possible to run Repairnator directly on a specific branch (in this case, Repairnator clones only the specified branch of the Git repository) using the parameter `gitrepobranch` followd by the name of the branch. When a branch name is provided, it is also possible to use the parameters `gitrepoidcommit` or `gitrepofirstcommit` to run Repairnator on a specific commit of the provided branch.
+It is also possible to run Repairnator directly on a specific branch (in this case, Repairnator clones only the specified branch of the Git repository) using the parameter `gitrepobranch` followed by the name of the branch. When a branch name is provided, it is also possible to use the parameters `gitrepoidcommit` or `gitrepofirstcommit` to run Repairnator on a specific commit of the provided branch.
 
 Example of use:
 
