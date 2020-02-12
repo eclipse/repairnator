@@ -1,6 +1,6 @@
 To run Repairnator directly on a Git repository, it is necessary to use the `GIT_REPOSITORY` launcher mode, using the parameter `gitrepo` and specifying a Git repository URL with the parameter `gitrepourl`. The URL has the following format: https://github.com/user/repo (without the final `.git`).
 
-The `GIT_REPOSITORY` launcher mode offers different options and they are described below:
+The `GIT_REPOSITORY` launcher mode offers different options which are the following:
 
 ### gitrepofirstcommit
 
