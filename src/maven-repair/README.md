@@ -1,7 +1,5 @@
 # maven-repair: a Maven plugin for executing automated program repair tools on Maven projects 
 
-[![Build Status](https://travis-ci.org/Spirals-Team/maven-repair.svg?branch=master)](https://travis-ci.org/Spirals-Team/maven-repair)
-
 The goal of this projects is is to simplify automatic repair on Maven projects.
 
 ## Install
@@ -11,8 +9,8 @@ There are released versions on Maven Central, but they may not be up-to-date: ht
 ### Manual install
 
 ```bash
-git clone https://github.com/Spirals-Team/maven-repair
-cd maven-repair
+git clone https://github.com/eclipse/repairnator
+cd src/maven-repair
 mvn install
 ```
 
@@ -158,9 +156,6 @@ cat target/nopol/output.json
   "date": "Wed Jan 27 19:19:37 CET 2016"
 }
 ```
-# History
-
-For history on the project, visit https://github.com/Spirals-Team/maven-repair/
 
 ## Automatic Repair Techniques Supported
 
