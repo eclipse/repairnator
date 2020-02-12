@@ -1,22 +1,14 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.Listener;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.Message;
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.BytesMessage;
-import javax.jms.MessageListener;
-import javax.jms.MessageConsumer;
-import org.apache.activemq.ActiveMQConnectionFactory;
-
-import org.apache.commons.io.FileUtils;
+import javax.jms.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -60,26 +52,15 @@ public class PipelineBuildListener implements Listener,MessageListener {
      * @param message ActiveMQ message object containing a string buildId.
      */
     public void onMessage(Message message) {
-        String messageText = null;
         try {
             message.acknowledge();
-            if (message instanceof TextMessage) {
-                TextMessage textMessage = (TextMessage) message;
-                messageText = textMessage.getText();
-                LOGGER.info("A new buildId has arrived: " + messageText);
-                config.setBuildId(Integer.parseInt(messageText));
-                this.launcher.mainProcess();
-            } else if (message instanceof BytesMessage) {
-                BytesMessage bytesMessage = (BytesMessage) message;
-                byte[] data = new byte[(int) bytesMessage.getBodyLength()];
-                bytesMessage.readBytes(data);
-                messageText = new String(data);
-                LOGGER.info("A new buildId has arrived: " + messageText);
-                config.setBuildId(Integer.parseInt(messageText));
-                this.launcher.mainProcess();
-            }
+            int buildId = this.extractBuiltId(message);
+            LOGGER.info("A new buildId has arrived: " + buildId);
+            config.setBuildId(buildId);
+            this.launcher.mainProcess();
+
             /* Delete the folder when done*/
-            this.deleteDir(messageText);
+            this.deleteDir(String.valueOf(buildId));
             this.deleteDir("workspace");
 
             LOGGER.warn("Done repairning. Awaiting for new build ... ");
@@ -90,6 +71,39 @@ public class PipelineBuildListener implements Listener,MessageListener {
 
 
     /* Helpers */
+
+    /**
+     * extract the build id from a message
+     * check the message in plain text or binary
+     * check the message body is json string or just build id
+     * @param message
+     * @return build id
+     */
+    public int extractBuiltId(Message message) {
+        String messageText = null;
+        try {
+            if (message instanceof TextMessage) {
+                TextMessage textMessage = (TextMessage) message;
+                    messageText = textMessage.getText();
+            } else if (message instanceof BytesMessage) {
+                BytesMessage bytesMessage = (BytesMessage) message;
+                byte[] data = new byte[(int) bytesMessage.getBodyLength()];
+                bytesMessage.readBytes(data);
+                messageText = new String(data);
+            }
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            JSONObject jsonObj = new JSONObject(messageText);
+            messageText = jsonObj.getString("buildId");
+        } catch (JSONException e) {
+            // not json formated, which indicates that the message was pushed by BuildRainer / RepairnatorScanner
+        }
+
+        return Integer.parseInt(messageText);
+    }
 
     public void deleteDir(String dirPath) {
         File directory = new File(dirPath);
