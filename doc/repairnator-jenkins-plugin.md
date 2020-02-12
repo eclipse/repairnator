@@ -12,7 +12,7 @@ The Repairnator Jenkins Plugin can be used:
 **Direct compilation** 
 
 ```
-cd repairnator/repairnator-jenkins-plugin
+cd src/repairnator-jenkins-plugin
 mvn install -DskipTests
 ```
 

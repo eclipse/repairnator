@@ -4,7 +4,7 @@
 set -e
 export M2_HOME=/usr/local/maven
 
-cd repairnator
+cd src
 
 mvn clean test -B
 
