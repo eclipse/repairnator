@@ -117,6 +117,8 @@ public class RepairnatorConfig {
     private PIPELINE_MODE pipelineMode;
     private String activeMQUrl;
     private String activeMQSubmitQueueName;
+    private String activeMQUsername;
+    private String activeMQPassword;
   
     // BuildRainer
     private String webSocketUrl;
@@ -208,6 +210,18 @@ public class RepairnatorConfig {
     public String getActiveMQListenQueueName() {
         return this.activeMQListenQueueName;
     }
+
+    public void setActiveMQUsername(String activeMQUsername) {
+        this.activeMQUsername = activeMQUsername;
+    }
+
+    public String getActiveMQUsername() { return activeMQUsername; }
+
+    public void setActiveMQPassword(String activeMQPassword) {
+        this.activeMQPassword = activeMQPassword;
+    }
+
+    public String getActiveMQPassword() { return activeMQPassword; }
 
     public void setWebSocketUrl(String webSocketUrl) {
         this.webSocketUrl = webSocketUrl;

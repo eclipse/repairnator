@@ -56,6 +56,11 @@ spec:
           value: tcp://activemq:61616
         - name: ACTIVEMQ_LISTEN_QUEUE
           value: pipeline
+        # if your ActiveMQ has access control, you may need to specify the username and password
+        - name: ACTIVEMQ_USERNAME
+          value: ""
+        - name: ACTIVEMQ_PASSWORD
+          value: ""
         # Mandatory 
         - name: RUN_ID
           value: "1"

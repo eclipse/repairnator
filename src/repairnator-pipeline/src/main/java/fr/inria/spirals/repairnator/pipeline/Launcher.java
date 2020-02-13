@@ -228,6 +228,20 @@ public class Launcher {
         opt2.setHelp("Just a name, default as 'pipeline'");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("activemqusername");
+        opt2.setLongFlag("activemqusername");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("");
+        opt2.setHelp("The username to access ActiveMQ, which is blank by default");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("activemqpassword");
+        opt2.setLongFlag("activemqpassword");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("");
+        opt2.setHelp("The password to access ActiveMQ, which is blank by default");
+        jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("giturl");
         opt2.setLongFlag("giturl");
         opt2.setStringParser(JSAP.STRING_PARSER);
@@ -343,6 +357,8 @@ public class Launcher {
         this.getConfig().setListenerMode(arguments.getString("listenermode"));
         this.getConfig().setActiveMQUrl(arguments.getString("activemqurl"));
         this.getConfig().setActiveMQListenQueueName(arguments.getString("activemqlistenqueuename"));
+        this.getConfig().setActiveMQUsername(arguments.getString("activemqusername"));
+        this.getConfig().setActiveMQPassword(arguments.getString("activemqpassword"));
 
         this.getConfig().setGitUrl(arguments.getString("giturl"));
         this.getConfig().setGitBranch(arguments.getString("gitbranch"));
