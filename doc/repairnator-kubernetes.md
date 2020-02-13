@@ -52,6 +52,17 @@ Send a build id to queue
 python /queue-for-buildids/publisher.py -d /queue/pipeline 566070885
 ```
 
+Regarding the format of queue messages, repairnator pipeline supports the following ones:
+
+- a plain text with a build id only  
+- a plain text with a JSON string  
+- a bytes message with a build id only  
+- a bytes message with a JSON string
+
+```json
+{"buildId":"648902893","CI":"travis-ci.org"}
+```
+
 Check the pipeline output by
 
 ```
