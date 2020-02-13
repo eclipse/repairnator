@@ -18,10 +18,13 @@ public class TestPipeline {
 
     @Test
     public void testPipelineArgs() throws Exception {
-
         // the default repair tool
         assertEquals(1, ((FlaggedOption)Launcher.defineArgs().getByLongFlag("repairTools")).getDefault().length);
         assertEquals("NPEFix", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("repairTools")).getDefault()[0]);
+
+        // by default the activemq username and password should be blank
+        assertEquals("", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("activemqusername")).getDefault()[0]);
+        assertEquals("", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("activemqpassword")).getDefault()[0]);
 
         // non default value is accepted
         assertEquals("NopolAllTests", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("repairTools")).getStringParser().parse("NopolAllTests"));
