@@ -5,7 +5,6 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
@@ -28,14 +27,7 @@ public class PushProcessEnd extends AbstractStep {
     public PushProcessEnd(ProjectInspector inspector) {
         super(inspector, false);
         this.remoteRepoUrl = this.getConfig().getPushRemoteRepo();
-        if (getConfig().getLauncherMode() == LauncherMode.GIT_REPOSITORY) {
-        	this.branchName = getInspector().getGitSlug() + "-" +
-    				(getInspector().getGitRepositoryBranch() != null ? getInspector().getGitRepositoryBranch() : "master") +
-    				(getInspector().getGitRepositoryIdCommit() != null ? "-" + getInspector().getGitRepositoryIdCommit() : "") +
-    				(getInspector().isGitRepositoryFirstCommit() ? "-firstCommit" : "");
-        } else {
-        	this.branchName = this.getInspector().getRemoteBranchName();
-        }
+        this.branchName = this.getInspector().getRemoteBranchName();
     }
 
     @Override
