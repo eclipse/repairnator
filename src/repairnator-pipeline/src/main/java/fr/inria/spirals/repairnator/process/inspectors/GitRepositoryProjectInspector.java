@@ -23,6 +23,7 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
 import fr.inria.spirals.repairnator.process.step.push.CommitProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.CommitType;
+import fr.inria.spirals.repairnator.process.step.push.GitRepositoryCommitProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.GitRepositoryPushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
@@ -136,7 +137,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
             this.finalStep.
                     addNextStep(new ComputeModules(this, false)).
                     addNextStep(new WritePropertyFile(this)).
-                    addNextStep(new CommitProcessEnd(this)).
+                    addNextStep(new GitRepositoryCommitProcessEnd(this)).
                     addNextStep(new GitRepositoryPushProcessEnd(this));
 
             cloneRepo.setDataSerializer(this.serializers);
