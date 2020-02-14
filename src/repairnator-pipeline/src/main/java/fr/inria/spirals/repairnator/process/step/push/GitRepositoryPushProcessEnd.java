@@ -34,12 +34,7 @@ public class GitRepositoryPushProcessEnd extends AbstractStep {
     protected StepStatus businessExecute() {
         if (this.getConfig().isPush()) {
             if (this.getInspector().getJobStatus().getLastPushState() != PushState.NONE) {
-                if (this.getInspector() instanceof ProjectInspector4Bears &&
-                        !((ProjectInspector4Bears) this.getInspector()).isBug()) {
-                    this.getLogger().error("The reproduction of the bug and/or the patch failed. Step bypassed.");
-                    this.setPushState(PushState.REPO_NOT_PUSHED);
-                    return StepStatus.buildSkipped(this, "The reproduction of the bug and/or the patch failed. Step bypassed.");
-                }
+                
 
                 if (this.remoteRepoUrl == null || this.remoteRepoUrl.equals("")) {
                     this.getLogger().error("Remote repo URL should be set !");
