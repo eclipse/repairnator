@@ -77,7 +77,7 @@ public class GitRepositoryLauncherUtils {
     public static boolean getArgGitRepositoryFirstCommit(JSAPResult arguments) {
         return arguments.getBoolean("gitRepositoryFirstCommit");
     }
-    
+
     public static List<SerializerEngine> initFileSerializerEngines(Logger logger) {
         List<SerializerEngine> fileSerializerEngines = new ArrayList<>();
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -95,5 +95,4 @@ public class GitRepositoryLauncherUtils {
         }
         return fileSerializerEngines;
     }
-
 }

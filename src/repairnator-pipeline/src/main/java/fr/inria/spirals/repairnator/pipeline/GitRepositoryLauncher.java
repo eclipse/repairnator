@@ -15,6 +15,10 @@ import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
+import fr.inria.spirals.repairnator.notifier.GitRepositoryErrorNotifier;
+import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
+import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
@@ -341,6 +345,17 @@ public class GitRepositoryLauncher extends Launcher {
         if (mongoDBSerializerEngine != null) {
             this.engines.add(mongoDBSerializerEngine);
         }
+    }
+
+    @Override
+    protected void initNotifiers() {
+        List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
+        GitRepositoryErrorNotifier.getInstance(notifierEngines);
+
+        this.notifiers = new ArrayList<>();
+        this.notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
+
+        this.patchNotifier = new PatchNotifierImpl(notifierEngines);
     }
 
     @Override
