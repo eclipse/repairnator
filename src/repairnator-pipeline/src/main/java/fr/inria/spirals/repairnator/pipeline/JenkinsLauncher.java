@@ -49,10 +49,6 @@ public class JenkinsLauncher extends Launcher {
   private static File tempDir;
   private ProjectInspector inspector;
 
-  private static RepairnatorConfig getConfig() {
-    return RepairnatorConfig.getInstance();
-  }
-
   public JenkinsLauncher() {}
 
   @Override
