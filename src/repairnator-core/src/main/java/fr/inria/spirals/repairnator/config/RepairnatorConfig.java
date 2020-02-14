@@ -797,4 +797,10 @@ public class RepairnatorConfig {
 	public void setGitRepositoryFirstCommit(boolean gitRepositoryFirstCommit) {
 		this.gitRepositoryFirstCommit = gitRepositoryFirstCommit;
 	}
+	
+	public String getGitRepositoryId() {
+    	return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","") + "-" +(getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
+				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+    }
 }
