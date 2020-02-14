@@ -11,6 +11,8 @@ import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import ch.qos.logback.classic.Level;
 
 import com.martiansoftware.jsap.Switch;
+
+import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
@@ -23,6 +25,7 @@ import fr.inria.spirals.repairnator.serializer.PatchesSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.utils.Utils;
@@ -100,15 +103,15 @@ public class GitRepositoryLauncher extends Launcher {
         // --runId
         jsap.registerParameter(LauncherUtils.defineArgRunId());
         // --gitRepo
-        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryMode());
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryMode());
         // --gitRepoUrl
-        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryUrl());
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryUrl());
         // --gitRepoBranch
-        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryBranch());
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryBranch());
         // --gitRepoIdCommit
-        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryIdCommit());
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryIdCommit());
         // --gitRepoFirstCommit
-        jsap.registerParameter(LauncherUtils.defineArgGitRepositoryFirstCommit());
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryFirstCommit());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
@@ -243,9 +246,9 @@ public class GitRepositoryLauncher extends Launcher {
         getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         
-        if (LauncherUtils.getArgGitRepositoryMode(arguments)) {
+        if (GitRepositoryLauncherUtils.getArgGitRepositoryMode(arguments)) {
             getConfig().setLauncherMode(LauncherMode.GIT_REPOSITORY);
-            if (LauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
+            if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
             	getConfig().setGitRepositoryFirstCommit(true);
             }
         }
@@ -324,6 +327,19 @@ public class GitRepositoryLauncher extends Launcher {
             getConfig().setExperimentalPluginRepoList(null);
         } else {
             getConfig().setExperimentalPluginRepoList(null);
+        }
+    }
+
+    @Override
+    protected void initSerializerEngines() {
+        this.engines = new ArrayList<>();
+
+        List<SerializerEngine> fileSerializerEngines = GitRepositoryLauncherUtils.initFileSerializerEngines(LOGGER);
+        this.engines.addAll(fileSerializerEngines);
+
+        SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(LOGGER);
+        if (mongoDBSerializerEngine != null) {
+            this.engines.add(mongoDBSerializerEngine);
         }
     }
 
