@@ -16,22 +16,22 @@ import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.states.PipelineState;
 
 public class CloneCheckoutBranchRepository extends AbstractStep {
 
-	public CloneCheckoutBranchRepository(ProjectInspector inspector) {
+	public CloneCheckoutBranchRepository(GitRepositoryProjectInspector inspector) {
         super(inspector, true);
     }
 	
 	@Override
     protected StepStatus businessExecute() {
         
-        String repoUrl = getInspector().getGitRepositoryUrl() + ".git";
+        String repoUrl = ((GitRepositoryProjectInspector) getInspector()).getGitRepositoryUrl() + ".git";
         String branch = null;
-        if (getInspector().getGitRepositoryBranch() != null) {
-        	branch = "refs/heads/" + getInspector().getGitRepositoryBranch();
+        if (((GitRepositoryProjectInspector) getInspector()).getGitRepositoryBranch() != null) {
+        	branch = "refs/heads/" + ((GitRepositoryProjectInspector) getInspector()).getGitRepositoryBranch();
         }
         
         String repoLocalPath = this.getInspector().getRepoLocalPath();
