@@ -14,7 +14,6 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.JenkinsCloneRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.WritePropertyFile;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -48,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import java.util.Map;
 
 /**
  * This class initialize the pipelines by creating the steps:
@@ -56,28 +54,28 @@ import java.util.Map;
  */
 public class ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
-
-    private GitHelper gitHelper;
+    
     private BuildToBeInspected buildToBeInspected;
-    private String repoLocalPath;
-    private String repoToPushLocalPath;
-
-    private String workspace;
-    private String m2LocalPath;
-    private List<AbstractDataSerializer> serializers;
-    private JobStatus jobStatus;
-    private List<AbstractNotifier> notifiers;
     private PatchNotifier patchNotifier;
-
-    private CheckoutType checkoutType;
-
-    private List<AbstractStep> steps;
-    private AbstractStep finalStep;
-    private boolean pipelineEnding;
     private String gitUrl;
-    private String gitSlug;
     private String gitBranch;
     private String gitCommit;
+    private boolean pipelineEnding;
+
+    protected GitHelper gitHelper;
+    protected String repoLocalPath;
+    protected String repoToPushLocalPath;
+    protected String workspace;
+    protected String m2LocalPath;
+    protected List<AbstractDataSerializer> serializers;
+    protected JobStatus jobStatus;
+    protected List<AbstractNotifier> notifiers;
+    protected CheckoutType checkoutType;
+    protected List<AbstractStep> steps;
+    protected AbstractStep finalStep;
+    protected String gitSlug;
+
+    public ProjectInspector() {}
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
@@ -256,6 +254,13 @@ public class ProjectInspector {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
         String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
         return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
+    }
+
+    public String getProjectIdToBeInspected() {
+        if (this.buildToBeInspected == null) {
+            return null;
+        }
+        return String.valueOf(buildToBeInspected.getBuggyBuild().getId());
     }
 
     public void run() {
