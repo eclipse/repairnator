@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -18,9 +17,9 @@ import java.io.IOException;
 
 public class CommitFiles extends AbstractStep {
 
-    private CommitType commitType;
-    private RevCommit commit;
-
+	private RevCommit commit;
+    protected CommitType commitType;
+    
     public CommitFiles(ProjectInspector inspector) {
         super(inspector, false);
     }
@@ -86,12 +85,7 @@ public class CommitFiles extends AbstractStep {
         Builds builds = this.getInspector().getJobStatus().getProperties().getBuilds();
         switch (this.commitType) {
             case COMMIT_BUGGY_BUILD:
-            	if (RepairnatorConfig.getInstance().getLauncherMode() != LauncherMode.GIT_REPOSITORY) {
-            		commitMsg = "Bug commit from " + this.getInspector().getRepoSlug() + "\n";
-            	} else {
-            		commitMsg = "Bug commit from " + getInspector().getGitSlug() + "\n";
-            	}
-    
+                commitMsg = "Bug commit from " + this.getInspector().getRepoSlug() + "\n";
                 if (commits.getBuggyBuild() != null) {
                     commitMsg += "This commit is based on the source code from the following commit: " + commits.getBuggyBuild().getUrl() + "\n";
                     commitMsg += "The mentioned commit triggered the following Travis build: " + builds.getBuggyBuild().getUrl() + ".";
