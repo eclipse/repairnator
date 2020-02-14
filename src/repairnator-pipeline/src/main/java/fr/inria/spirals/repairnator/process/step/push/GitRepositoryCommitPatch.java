@@ -1,18 +1,18 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
-import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.properties.builds.Builds;
 import fr.inria.spirals.repairnator.process.inspectors.properties.commits.Commits;
 
-public class GitRepositoryCommitProcessEnd extends CommitProcessEnd {
+public class GitRepositoryCommitPatch extends CommitPatch {
 
-   public GitRepositoryCommitProcessEnd(GitRepositoryProjectInspector inspector) {
-	   super(inspector);
-    }
-
-   @Override
-   public String createCommitMsg() {
-       String commitMsg = "";
+	public GitRepositoryCommitPatch(ProjectInspector inspector, CommitType commitType) {
+		super(inspector, commitType);
+	}
+	
+	@Override
+	public String createCommitMsg() {
+		String commitMsg = "";
 
        Commits commits = this.getInspector().getJobStatus().getProperties().getCommits();
        Builds builds = this.getInspector().getJobStatus().getProperties().getBuilds();

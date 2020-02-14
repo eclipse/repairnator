@@ -4,21 +4,23 @@ import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspe
 import fr.inria.spirals.repairnator.process.inspectors.properties.builds.Builds;
 import fr.inria.spirals.repairnator.process.inspectors.properties.commits.Commits;
 
-public class GitRepositoryCommitProcessEnd extends CommitProcessEnd {
+public class GitRepositoryInitRepoToPush extends InitRepoToPush {
 
-   public GitRepositoryCommitProcessEnd(GitRepositoryProjectInspector inspector) {
-	   super(inspector);
-    }
-
-   @Override
-   public String createCommitMsg() {
-       String commitMsg = "";
+	public GitRepositoryInitRepoToPush(GitRepositoryProjectInspector inspector) {
+		super(inspector);
+	}
+	
+	@Override
+	public String createCommitMsg() {
+		String commitMsg = "";
 
        Commits commits = this.getInspector().getJobStatus().getProperties().getCommits();
        Builds builds = this.getInspector().getJobStatus().getProperties().getBuilds();
        switch (this.commitType) {
            case COMMIT_BUGGY_BUILD:
-               commitMsg = "Bug commit from " + this.getInspector().getGitSlug();
+               commitMsg = "Bug commit from " + this.getInspector().getGitSlug() + "\n" +
+            		   "This commit is based on the source code from the following commit: " +
+            		   this.getInspector().getProjectIdToBeInspected();
                break;
 
            case COMMIT_HUMAN_PATCH:

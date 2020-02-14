@@ -23,9 +23,12 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
 import fr.inria.spirals.repairnator.process.step.push.CommitProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.CommitType;
+import fr.inria.spirals.repairnator.process.step.push.GitRepositoryCommitPatch;
 import fr.inria.spirals.repairnator.process.step.push.GitRepositoryCommitProcessEnd;
+import fr.inria.spirals.repairnator.process.step.push.GitRepositoryInitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.GitRepositoryPushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
+import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
@@ -56,7 +59,6 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.gitRepositoryFirstCommit = isGitRepositoryFirstCommit;
 
         this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
-
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected();
 
@@ -110,7 +112,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
-                    .addNextStep(new InitRepoToPush(this))
+                    .addNextStep(new GitRepositoryInitRepoToPush(this))
                     .addNextStep(new ComputeClasspath(this, false))
                     .addNextStep(new ComputeSourceDir(this, false, false))
                     .addNextStep(new ComputeTestDir(this, false));
@@ -125,12 +127,12 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
                 }
             }
 
-            cloneRepo.addNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
+            cloneRepo.addNextStep(new GitRepositoryCommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
                     .addNextStep(new CheckoutPatchedBuild(this, true))
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
-                    .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
+                    .addNextStep(new GitRepositoryCommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
 
             this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
             
