@@ -29,17 +29,6 @@ export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802
 ```
 
-It is also possible to run it on a GitHub repository that contains a Java Maven project, e.g., this one: https://github.com/surli/failingProject (more details are available [here](/doc/repairnator-git-repository-mode.md)).
-
-```
-export M2_HOME=/usr/share/maven
-export GITHUB_TOKEN=foobar # your Token
-export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
-
-java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl https://github.com/surli/failingProject
-
-```
-
 Options
 
 ```bash
@@ -132,6 +121,93 @@ Options:
 The environment variable M2_HOME should be set and refer to the path of your Maven home installation.
 To use Nopol, you must add tools.jar in your classpath from your installed JDK.
 ```
+
+## Pipeline fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher
+
+It is also possible to run it on a GitHub repository that contains a Java Maven project, e.g., this one: https://github.com/surli/failingProject.
+
+```
+export M2_HOME=/usr/share/maven
+export GITHUB_TOKEN=foobar # your Token
+export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
+
+java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl https://github.com/surli/failingProject
+
+```
+
+To run Repairnator directly on a Git repository, it is necessary to use the `GIT_REPOSITORY` launcher mode, using the parameter `gitrepo` and specifying a Git repository URL with the parameter `gitrepourl`. The URL has the following format: https://github.com/user/repo (without the final `.git`).
+
+In addition to the Launcher options, the `GIT_REPOSITORY` launcher mode offers other options, which are the following:
+
+Options
+
+```bash
+Usage: java <repairnator-pipeline name> [option(s)]
+
+Options:
+      
+  [--gitrepo]
+        This mode allows to use Repairnator to analyze bugs present in a Git
+        repository.
+  
+  [--gitrepourl <gitRepositoryUrl>]
+        Specify a Git repository URL (only in GIT_REPOSITORY mode).
+
+  [--gitrepobranch <gitRepositoryBranch>]
+        Specify a branch of the given repository (only in GIT_REPOSITORY mode) - (default: master branch).
+
+  [--gitrepoidcommit <gitRepositoryIdCommit>]
+        Specify the commit id of the given repository (only in GIT_REPOSITORY mode).
+
+  [--gitrepofirstcommit]
+        Decides whether to clone the first commit of the specified branch (only in GIT_REPOSITORY mode).
+
+```
+
+### gitrepofirstcommit
+
+When Repairnator is executed in `GIT_REPOSITORY` launcher mode, it clones the repository associated with the parameter `gitrepourl`, and it is executed on the latest commit pushed on master branch.
+
+Using the parameter `gitrepofirstcommit`, on the contrary, Repairnator will be executed on the first commit (the oldest one) of the specified repository.
+
+Example of use:
+
+```
+export M2_HOME=/usr/share/maven
+export GITHUB_TOKEN=foobar # your Token
+export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
+
+java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl <git-repository-url> --gitrepofirstcommit
+```
+
+### gitrepoidcommit
+
+Using the parameter ``gitrepoidcommit`` followed by the commit ID, Repairnator is executed on that specific commit associated with the repository specified with the parameter `gitrepourl`.
+
+Example of use:
+
+```
+export M2_HOME=/usr/share/maven
+export GITHUB_TOKEN=foobar # your Token
+export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
+
+java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl <git-repository-url> --gitrepoidcommit <git-sha>
+```
+
+### gitrepobranch
+
+It is also possible to run Repairnator directly on a specific branch (in this case, Repairnator clones only the specified branch of the Git repository) using the parameter `gitrepobranch` followed by the name of the branch. When a branch name is provided, it is also possible to use the parameters `gitrepoidcommit` or `gitrepofirstcommit` to run Repairnator on a specific commit of the provided branch.
+
+Example of use:
+
+```
+export M2_HOME=/usr/share/maven
+export GITHUB_TOKEN=foobar # your Token
+export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
+
+java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl <git-repository-url> --gitrepobranch <branch-name>
+```
+
 
 ## Realtime Scanner fr.inria.spirals.repairnator.realtime.RTLauncher
 
