@@ -96,66 +96,6 @@ public class LauncherUtils {
         return arguments.getBoolean("bears");
     }
 
-    public static Switch defineArgGitRepositoryMode() {
-        Switch sw = new Switch("gitRepo");
-        sw.setLongFlag("gitrepo");
-        sw.setDefault("false");
-        sw.setHelp("This mode allows to use Repairnator to analyze bugs present in a Git repository.");
-        return sw;
-    }
-
-    public static boolean getArgGitRepositoryMode(JSAPResult arguments) {
-        return arguments.getBoolean("gitRepo");
-    }
-
-    public static FlaggedOption defineArgGitRepositoryUrl() {
-        FlaggedOption opt = new FlaggedOption("gitRepositoryUrl");
-        opt.setLongFlag("gitrepourl");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify a Git repository URL (only in GIT_REPOSITORY mode).");
-        return opt;
-    }
-
-    public static String getArgGitRepositoryUrl(JSAPResult arguments) {
-        return arguments.getString("gitRepositoryUrl");
-    }
-
-    public static FlaggedOption defineArgGitRepositoryBranch() {
-        FlaggedOption opt = new FlaggedOption("gitRepositoryBranch");
-        opt.setLongFlag("gitrepobranch");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify a branch of the given repository (only in GIT_REPOSITORY mode) - (default: master branch).");
-        return opt;
-    }
-
-    public static String getArgGitRepositoryBranch(JSAPResult arguments) {
-        return arguments.getString("gitRepositoryBranch");
-    }
-
-    public static FlaggedOption defineArgGitRepositoryIdCommit() {
-        FlaggedOption opt = new FlaggedOption("gitRepositoryIdCommit");
-        opt.setLongFlag("gitrepoidcommit");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setHelp("Specify the commit id of the given repository (only in GIT_REPOSITORY mode).");
-        return opt;
-    }
-
-    public static String getArgGitRepositoryIdCommit(JSAPResult arguments) {
-        return arguments.getString("gitRepositoryIdCommit");
-    }
-
-    public static Switch defineArgGitRepositoryFirstCommit() {
-        Switch sw = new Switch("gitRepositoryFirstCommit");
-        sw.setLongFlag("gitrepofirstcommit");
-        sw.setDefault("false");
-        sw.setHelp("Decides whether to clone the first commit of the specified branch (only in GIT_REPOSITORY mode).");
-        return sw;
-    }
-
-    public static boolean getArgGitRepositoryFirstCommit(JSAPResult arguments) {
-        return arguments.getBoolean("gitRepositoryFirstCommit");
-    }
-
     public static FlaggedOption defineArgRunId() {
         FlaggedOption opt = new FlaggedOption("runId");
         opt.setLongFlag("runId");
@@ -569,12 +509,7 @@ public class LauncherUtils {
             logger.info("Initialize file serializer engines.");
 
             String path = config.getOutputPath();
-
-            path += config.getBuildId() > 0 ? "/"+config.getBuildId() :
-            	File.separator + config.getGitRepositoryUrl().split("https://github.com/",2)[1].replace("/", "-") + "-" +
-            	(config.getGitRepositoryBranch() != null ? config.getGitRepositoryBranch() : "master") +
-				(config.getGitRepositoryIdCommit() != null ? "-" + config.getGitRepositoryIdCommit() : "") +
-				(config.isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+            path += config.getBuildId() > 0 ? "/"+config.getBuildId() : "";
 
             fileSerializerEngines.add(new CSVSerializerEngine(path));
             fileSerializerEngines.add(new JSONFileSerializerEngine(path));
