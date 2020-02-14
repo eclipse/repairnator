@@ -24,7 +24,7 @@ public class PatchesSerializer4GitRepository extends AbstractDataSerializer {
         
     	List<Object> result = new ArrayList<>();
         result.add(DateUtils.formatCompleteDate(new Date()));
-        result.add(inspector.getGitRepositoryId());
+        result.add(inspector.getProjectIdToBeInspected());
         result.add(patch.getToolname());
         result.add(patch.getDiff());
         result.add(patch.getFilePath());
@@ -38,7 +38,7 @@ public class PatchesSerializer4GitRepository extends AbstractDataSerializer {
         JsonObject data = new JsonObject();
         data.addProperty("dateStr", DateUtils.formatCompleteDate(new Date()));
         this.addDate(data, "date", new Date());
-        data.addProperty("repositoryId", inspector.getGitRepositoryId());
+        data.addProperty("repositoryId", inspector.getProjectIdToBeInspected());
         data.addProperty("toolname", patch.getToolname());
         data.addProperty("diff", patch.getDiff());
         data.addProperty("filepath", patch.getFilePath());

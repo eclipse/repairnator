@@ -21,7 +21,7 @@ public class ToolDiagnosticSerializer4GitRepository extends AbstractDataSerializ
     private List<Object> serializeAsList(ProjectInspector inspector, String toolName, JsonElement jsonElement) {
     	List<Object> result = new ArrayList<>();
         result.add(DateUtils.formatCompleteDate(new Date()));
-        result.add(inspector.getGitRepositoryId());
+        result.add(inspector.getProjectIdToBeInspected());
         result.add(toolName);
         result.add(jsonElement.toString());
         return result;
@@ -32,7 +32,7 @@ public class ToolDiagnosticSerializer4GitRepository extends AbstractDataSerializ
         JsonObject data = new JsonObject();
         data.addProperty("dateStr", DateUtils.formatCompleteDate(new Date()));
         this.addDate(data, "date", new Date());
-        data.addProperty("repositoryId", inspector.getGitRepositoryId());
+        data.addProperty("repositoryId", inspector.getProjectIdToBeInspected());
         data.addProperty("toolname", toolName);
         data.add("diagnostic", jsonElement);
         return data;
@@ -53,5 +53,4 @@ public class ToolDiagnosticSerializer4GitRepository extends AbstractDataSerializ
             }
         }
     }
-
 }

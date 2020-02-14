@@ -34,7 +34,7 @@ public class PropertiesSerializer4GitRepository extends AbstractDataSerializer {
         Date reproductionDateBeginning = inspector.getJobStatus().getProperties().getReproductionBuggyBuild().getReproductionDateBeginning();
         reproductionDateBeginning = reproductionDateBeginning == null ? new Date() : reproductionDateBeginning;
         this.addDate(element, "reproductionDate", reproductionDateBeginning);
-        element.addProperty("buggyId", inspector.getGitRepositoryId());
+        element.addProperty("buggyId", inspector.getProjectIdToBeInspected());
         if (inspector.getPatchedBuild() != null) {
             element.addProperty("patchedBuildId", inspector.getPatchedBuild().getId());
         }

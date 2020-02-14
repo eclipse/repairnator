@@ -20,7 +20,7 @@ public class PullRequestSerializer4GitRepository extends AbstractDataSerializer 
     
     private List<Object> serializeAsList(ProjectInspector inspector, String prUrl) {
     	List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(inspector.getGitRepositoryId());
+        dataCol.add(inspector.getProjectIdToBeInspected());
         dataCol.add(inspector.getGitSlug());
         dataCol.add(DateUtils.formatCompleteDate(new Date()));
         dataCol.add(prUrl);
@@ -30,7 +30,7 @@ public class PullRequestSerializer4GitRepository extends AbstractDataSerializer 
     
     private JsonElement serializeAsJson(ProjectInspector inspector, String prUrl) {
         JsonObject result = new JsonObject();
-        result.addProperty("buildId", inspector.getGitRepositoryId());
+        result.addProperty("buildId", inspector.getProjectIdToBeInspected());
         result.addProperty("repositoryName", inspector.getGitSlug());
         result.addProperty("dateOfPRStr", DateUtils.formatCompleteDate(new Date()));
         this.addDate(result, "dateOfPR", new Date());

@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,9 +17,8 @@ import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 
 public class InspectorSerializer4GitRepository extends AbstractDataSerializer {
-	private Logger logger = LoggerFactory.getLogger(InspectorSerializer.class);
 
-    public InspectorSerializer4GitRepository(List<SerializerEngine> engines, ProjectInspector inspector) {
+	public InspectorSerializer4GitRepository(List<SerializerEngine> engines, ProjectInspector inspector) {
         super(engines, SerializerType.INSPECTOR, inspector);
     }
 
@@ -32,7 +29,7 @@ public class InspectorSerializer4GitRepository extends AbstractDataSerializer {
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",") + "";
 
         List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(inspector.getGitRepositoryId());
+        dataCol.add(inspector.getProjectIdToBeInspected());
         dataCol.add(inspector.getGitSlug());
         dataCol.add(state);
         dataCol.add(realState);
@@ -50,7 +47,7 @@ public class InspectorSerializer4GitRepository extends AbstractDataSerializer {
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",");
 
         JsonObject result = new JsonObject();
-        result.addProperty("repositoryId", inspector.getGitRepositoryId());
+        result.addProperty("repositoryId", inspector.getProjectIdToBeInspected());
         result.addProperty("repositoryName", inspector.getGitSlug());
         result.addProperty("status", state);
         result.addProperty("realStatus", realState);

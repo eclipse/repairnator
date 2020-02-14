@@ -29,7 +29,7 @@ public class PipelineErrorSerializer4GitRepository extends AbstractDataSerialize
         dataAsList.add(DateUtils.formatCompleteDate(new Date()));
         dataAsList.add(DateUtils.formatOnlyDay(new Date()));
         dataAsList.add(inspector.getGitSlug());
-        dataAsList.add(inspector.getGitRepositoryId());
+        dataAsList.add(inspector.getProjectIdToBeInspected());
 
         for (List<String> strings : inspector.getJobStatus().getStepErrors().values()) {
             dataAsList.add(StringUtils.join(strings, "       "));
@@ -37,7 +37,7 @@ public class PipelineErrorSerializer4GitRepository extends AbstractDataSerialize
 
         JsonObject dataAsJson = new JsonObject();
         dataAsJson.addProperty("hostname", Utils.getHostname());
-        dataAsJson.addProperty("repositoryId", inspector.getGitRepositoryId());
+        dataAsJson.addProperty("repositoryId", inspector.getProjectIdToBeInspected());
         dataAsJson.addProperty("repositoryName", inspector.getGitSlug());
         this.addDate(dataAsJson, "computedDate", new Date());
         dataAsJson.addProperty("computedDateStr", DateUtils.formatCompleteDate(new Date()));
