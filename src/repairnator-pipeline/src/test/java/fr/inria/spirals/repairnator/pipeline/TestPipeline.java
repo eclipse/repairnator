@@ -67,7 +67,7 @@ public class TestPipeline {
 
     @Test
     public void testPipelineGitRepositoryAndBranch() throws Exception {
-        Launcher l = new Launcher(new String[]{
+    	GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
 	        		"--gitrepo",
 	        		"--gitrepourl", "https://github.com/surli/failingProject",
 	        		"--gitrepobranch", "astor-jkali-failure",
