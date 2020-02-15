@@ -799,7 +799,7 @@ public class RepairnatorConfig {
 	}
 	
 	public String getGitRepositoryId() {
-    	return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","") + "-" +(getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+    	return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
 				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
 				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
     }
