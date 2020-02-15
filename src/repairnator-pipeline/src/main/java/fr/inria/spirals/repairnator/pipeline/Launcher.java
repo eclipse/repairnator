@@ -532,7 +532,7 @@ public class Launcher {
      *
      * @param launcher , launch depending on listenerMode 
      */
-    private static void initProcess(Launcher launcher) {
+    protected static void initProcess(Launcher launcher) {
         try {
             Constructor c = Class.forName(getConfig().getListenerMode().getKlass()).getConstructor(Launcher.class);
             listener = (Listener) c.newInstance(launcher);

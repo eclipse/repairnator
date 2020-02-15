@@ -395,6 +395,7 @@ public class GitRepositoryLauncher extends Launcher {
     }
 
     public static void main(String[] args) throws JSAPException {
-        new GitRepositoryLauncher(args);
+    	GitRepositoryLauncher launcher = new GitRepositoryLauncher(args);
+    	initProcess(launcher);
     }
 }
