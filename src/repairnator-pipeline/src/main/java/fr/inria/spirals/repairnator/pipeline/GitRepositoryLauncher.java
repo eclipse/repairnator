@@ -18,7 +18,6 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.GitRepositoryErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.GitRepositoryPatchNotifierImpl;
-import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
