@@ -17,6 +17,7 @@ import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.GitRepositoryErrorNotifier;
+import fr.inria.spirals.repairnator.notifier.GitRepositoryPatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
@@ -355,7 +356,7 @@ public class GitRepositoryLauncher extends Launcher {
         this.notifiers = new ArrayList<>();
         this.notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
 
-        this.patchNotifier = new PatchNotifierImpl(notifierEngines);
+        this.patchNotifier = new GitRepositoryPatchNotifierImpl(notifierEngines);
     }
 
     @Override
