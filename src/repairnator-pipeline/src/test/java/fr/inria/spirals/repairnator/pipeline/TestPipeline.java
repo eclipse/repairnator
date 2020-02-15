@@ -52,7 +52,7 @@ public class TestPipeline {
 
     @Test
     public void testPipelineOnlyGitRepository() throws Exception {
-        Launcher l = new Launcher(new String[]{
+        GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         			"--gitrepo",
         			"--gitrepourl", "https://github.com/surli/failingProject",
         		});
@@ -80,7 +80,7 @@ public class TestPipeline {
 
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {
-        Launcher l = new Launcher(new String[]{
+    	GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         		"--gitrepo",
         		"--gitrepourl", "https://github.com/surli/failingProject",
         		"--gitrepoidcommit", "f1233f8863d45141ae0ff17df897006f07e707bb",
@@ -92,7 +92,7 @@ public class TestPipeline {
 
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {
-        Launcher l = new Launcher(new String[]{
+    	GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         		"--gitrepo",
         		"--gitrepourl", "https://github.com/surli/failingProject",
         		"--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9"
@@ -109,7 +109,7 @@ public class TestPipeline {
     @Ignore
     @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
-        Launcher l = new Launcher(new String[]{
+    	GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         		"--gitrepo",
         		"--gitrepourl", "https://github.com/surli/failingProject",
         		"--gitrepofirstcommit"
