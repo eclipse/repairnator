@@ -390,6 +390,10 @@ public class GitRepositoryLauncher extends Launcher {
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
+        if(tempDir != null) {
+            tempDir.delete();
+        }
+
         LOGGER.info("Inspector is finished. The process will exit now.");
         return true;
     }
