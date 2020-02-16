@@ -101,22 +101,6 @@ Options:
         Specify the file containing a list of projects that the pipeline should
         deactivate serialization when processing builds from (default:
         ./projects_to_ignore.txt).
-        
-  [--gitrepo]
-        This mode allows to use Repairnator to analyze bugs present in a Git
-        repository.
-  
-  [--gitrepourl <gitRepositoryUrl>]
-        Specify a Git repository URL (only in GIT_REPOSITORY mode).
-
-  [--gitrepobranch <gitRepositoryBranch>]
-        Specify a branch of the given repository (only in GIT_REPOSITORY mode) - (default: master branch).
-
-  [--gitrepoidcommit <gitRepositoryIdCommit>]
-        Specify the commit id of the given repository (only in GIT_REPOSITORY mode).
-
-  [--gitrepofirstcommit]
-        Decides whether to clone the first commit of the specified branch (only in GIT_REPOSITORY mode).
 
 The environment variable M2_HOME should be set and refer to the path of your Maven home installation.
 To use Nopol, you must add tools.jar in your classpath from your installed JDK.
@@ -145,11 +129,11 @@ Options
 Usage: java <repairnator-pipeline name> [option(s)]
 
 Options:
-      
+
   [--gitrepo]
         This mode allows to use Repairnator to analyze bugs present in a Git
         repository.
-  
+
   [--gitrepourl <gitRepositoryUrl>]
         Specify a Git repository URL (only in GIT_REPOSITORY mode).
 
