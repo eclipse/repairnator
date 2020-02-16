@@ -19,7 +19,7 @@ public class CommitFiles extends AbstractStep {
 
 	private RevCommit commit;
     protected CommitType commitType;
-    
+
     public CommitFiles(ProjectInspector inspector) {
         super(inspector, false);
     }
