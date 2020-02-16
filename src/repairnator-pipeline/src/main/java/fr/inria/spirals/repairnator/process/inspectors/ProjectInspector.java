@@ -54,7 +54,7 @@ import java.util.List;
  */
 public class ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(ProjectInspector.class);
-    
+
     private BuildToBeInspected buildToBeInspected;
     private PatchNotifier patchNotifier;
     private String gitUrl;

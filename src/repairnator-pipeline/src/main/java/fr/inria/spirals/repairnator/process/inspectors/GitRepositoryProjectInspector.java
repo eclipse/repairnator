@@ -20,15 +20,11 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
-import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
-import fr.inria.spirals.repairnator.process.step.push.CommitProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.CommitType;
 import fr.inria.spirals.repairnator.process.step.push.GitRepositoryCommitPatch;
 import fr.inria.spirals.repairnator.process.step.push.GitRepositoryCommitProcessEnd;
 import fr.inria.spirals.repairnator.process.step.push.GitRepositoryInitRepoToPush;
 import fr.inria.spirals.repairnator.process.step.push.GitRepositoryPushProcessEnd;
-import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
-import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
@@ -52,7 +48,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
     
     public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-    	
+
     	this.gitRepositoryUrl = gitRepoUrl;
         this.gitRepositoryBranch = gitRepoBranch;
         this.gitRepositoryIdCommit = gitRepoIdCommit;
