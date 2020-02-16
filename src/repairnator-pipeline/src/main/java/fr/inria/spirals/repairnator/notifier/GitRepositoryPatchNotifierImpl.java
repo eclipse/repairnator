@@ -2,22 +2,29 @@ package fr.inria.spirals.repairnator.notifier;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 
-public class GitRepositoryPatchNotifierImpl extends PatchNotifierImpl {
+public class GitRepositoryPatchNotifierImpl implements PatchNotifier {
 
-	public GitRepositoryPatchNotifierImpl(List<NotifierEngine> engines) {
-		super(engines);
-	}
-	
+	public static final int LIMIT_NB_PATCH = 10;
+
+    private Logger logger = LoggerFactory.getLogger(GitRepositoryPatchNotifierImpl.class);
+    private List<NotifierEngine> engines;
+
+    public GitRepositoryPatchNotifierImpl(List<NotifierEngine> engines) {
+        this.engines = engines;
+    }
+
 	@Override
     public void notify(ProjectInspector inspector, String toolname, List<RepairPatch> patches) {
         JobStatus jobStatus = inspector.getJobStatus();
         
-
         String subject = "[Repairnator] Patched repository: " + inspector.getProjectIdToBeInspected();
         String text = "Hurray !\n\n" +
                 toolname + " has found " + patches.size() + " patch(es) for the following repository: " + inspector.getProjectIdToBeInspected() +".\n";

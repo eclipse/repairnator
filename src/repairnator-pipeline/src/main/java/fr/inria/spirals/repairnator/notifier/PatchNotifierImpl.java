@@ -22,7 +22,7 @@ public class PatchNotifierImpl implements PatchNotifier {
     public static final int LIMIT_NB_PATCH = 10;
 
     private Logger logger = LoggerFactory.getLogger(PatchNotifierImpl.class);
-    protected List<NotifierEngine> engines;
+    private List<NotifierEngine> engines;
 
     public PatchNotifierImpl(List<NotifierEngine> engines) {
         this.engines = engines;
