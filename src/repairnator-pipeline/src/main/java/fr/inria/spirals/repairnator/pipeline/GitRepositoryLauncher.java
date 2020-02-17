@@ -85,7 +85,6 @@ public class GitRepositoryLauncher extends Launcher {
         this.checkNopolSolverPath(jsap);
         LOGGER.info("The pipeline will try to repair the following repository id: " + getConfig().getGitRepositoryId());
         
-
         if (getConfig().isDebug()) {
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
@@ -255,6 +254,9 @@ public class GitRepositoryLauncher extends Launcher {
             if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
             	getConfig().setGitRepositoryFirstCommit(true);
             }
+        } else {
+        	System.err.println("Error: Parameter 'gitrepo' is required in GIT_REPOSITORY launcher mode.");
+    		LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
         
         if (LauncherUtils.getArgOutput(arguments) != null) {
