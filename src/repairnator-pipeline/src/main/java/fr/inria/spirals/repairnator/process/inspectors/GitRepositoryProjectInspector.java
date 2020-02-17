@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class initialize the pipelines by creating the steps:
- * it's the backbone of the pipeline.
+ * This class initialize the pipelines by creating the steps when Repairnator
+ * is executed in GIT_REPOSITORY launcher mode: it's the backbone of the pipeline.
  */
 public class GitRepositoryProjectInspector extends ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(GitRepositoryProjectInspector.class);
