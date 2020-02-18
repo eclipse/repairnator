@@ -16,9 +16,7 @@ import java.io.IOException;
  */
 public class CommitPatch extends CommitFiles {
 
-    private CommitType commitType;
-
-    public CommitPatch(ProjectInspector inspector, CommitType commitType) {
+	public CommitPatch(ProjectInspector inspector, CommitType commitType) {
         super(inspector);
         this.commitType = commitType;
     }

@@ -94,6 +94,11 @@ public class RepairnatorConfig {
     private String gitCommitHash;
     private String mavenHome;
 
+    private String gitRepositoryUrl;
+    private String gitRepositoryBranch;
+    private String gitRepositoryIdCommit;
+    private boolean gitRepositoryFirstCommit;
+
     // Dockerpool
     private String dockerImageName;
     private boolean skipDelete;
@@ -773,5 +778,43 @@ public class RepairnatorConfig {
 
     public void setNumberOfPatchedBuilds(int numberOfPatchedBuilds) {
         this.numberOfPatchedBuilds = numberOfPatchedBuilds;
+    }
+
+	public String getGitRepositoryUrl() {
+		return gitRepositoryUrl;
+	}
+
+	public void setGitRepositoryUrl(String gitRepositoryUrl) {
+		this.gitRepositoryUrl = gitRepositoryUrl;
+	}
+
+	public String getGitRepositoryBranch() {
+		return gitRepositoryBranch;
+	}
+
+	public void setGitRepositoryBranch(String gitRepositoryBranch) {
+		this.gitRepositoryBranch = gitRepositoryBranch;
+	}
+
+	public String getGitRepositoryIdCommit() {
+		return this.gitRepositoryIdCommit;
+	}
+
+	public void setGitRepositoryIdCommit(String gitRepositoryIdCommit) {
+		this.gitRepositoryIdCommit = gitRepositoryIdCommit;
+	}
+
+	public boolean isGitRepositoryFirstCommit() {
+		return gitRepositoryFirstCommit;
+	}
+
+	public void setGitRepositoryFirstCommit(boolean gitRepositoryFirstCommit) {
+		this.gitRepositoryFirstCommit = gitRepositoryFirstCommit;
+	}
+
+	public String getGitRepositoryId() {
+		return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
+				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
     }
 }

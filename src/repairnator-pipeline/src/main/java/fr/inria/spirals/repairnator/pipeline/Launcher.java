@@ -44,11 +44,8 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.util.StatusPrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +72,7 @@ public class Launcher {
     protected PatchNotifier patchNotifier;
     protected ProjectInspector inspector;
 
-    private static RepairnatorConfig getConfig() {
+    protected static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
     
@@ -303,7 +300,7 @@ public class Launcher {
         return jsap;
     }
 
-    private void initConfig(JSAPResult arguments) {
+    protected void initConfig(JSAPResult arguments) {
         if (LauncherUtils.getArgDebug(arguments)) {
             this.getConfig().setDebug(true);
         }
@@ -389,7 +386,7 @@ public class Launcher {
         }
     }
 
-    private void checkToolsLoaded(JSAP jsap) {
+    protected void checkToolsLoaded(JSAP jsap) {
         URLClassLoader loader;
 
         try {
@@ -400,7 +397,7 @@ public class Launcher {
         }
     }
 
-    private void checkNopolSolverPath(JSAP jsap) {
+    protected void checkNopolSolverPath(JSAP jsap) {
         String solverPath = this.getConfig().getZ3solverPath();
         // by default Nopol run in Dynamoth mode
         // so no solver is mandatory
@@ -551,7 +548,7 @@ public class Launcher {
      *
      * @param launcher , launch depending on listenerMode 
      */
-    private static void initProcess(Launcher launcher) {
+    protected static void initProcess(Launcher launcher) {
         try {
             Constructor c = Class.forName(getConfig().getListenerMode().getKlass()).getConstructor(Launcher.class);
             listener = (Listener) c.newInstance(launcher);

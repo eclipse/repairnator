@@ -19,7 +19,6 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
 import java.io.BufferedWriter;
 import java.io.File;
