@@ -123,13 +123,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
             return;
         }
 
-        /* Jenkins case - we handle it at the plugin code if it's a PR */
-        boolean b = this.getInspector().getBuggyBuild() == null ? false : this.getInspector().getBuggyBuild().isPullRequest();
-        if (b) {
-            this.getLogger().warn("Skipping creating a PR if it's already a PR, for now. Much more complicated stuff to do there.");
-            return;
-        }
-
         this.forkRepository();
 
         if (!this.getInspector().getJobStatus().isHasBeenForked()) {
