@@ -71,3 +71,9 @@ Check the pipeline output by
 kubectl get pods 
 kubectl logs -f repairnator-pipeline-XXXXXXXXX-XXXXX
 ```
+
+Upgrade the pipeline to use the latest Docker image: we could simply delete the pods. K8s will pull the latest image and recreate new pipeline pods.
+
+```
+kubectl delete repairnator-pipeline-XXXXXXXXX-XXXXX
+```
