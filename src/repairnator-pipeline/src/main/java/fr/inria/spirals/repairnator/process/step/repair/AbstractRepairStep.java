@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -27,14 +28,16 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
-    public static final String TEXT_PR = "This patch fixes failing Travis build %s \n\n" +
-                                        "It uses the program repair tools %s \n\n" +
-                                        "If you don't want to receive those PRs in the future, [open an issue on Repairnator](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%%20%s)" ;
+    public static final String TEXT_PR = "This patch fixes failing Travis build %(travisURL) \n\n" +
+                                        "It uses the program repair tools %(tools) \n\n" +
+                                        "If you don't want to receive those PRs in the future, [open an issue on Repairnator](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%%20%(slug))" ;
 
     public static final int MAX_PATCH_PER_TOOL = 1;
 
@@ -172,7 +175,12 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 String base = this.getInspector().getBuggyBuild() == null ? ((JenkinsProjectInspector)this.getInspector()).getCheckoutBranchName() : this.getInspector().getBuggyBuild().getBranch().getName();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
                 String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
-                String prText = String.format(TEXT_PR, travisURL, String.join(",", this.getConfig().getRepairTools()), this.getInspector().getRepoSlug());
+                Map<String, String> values = new HashMap<String, String>();
+                values.put("travisURL", travisURL);
+                values.put("tools", String.join(",", this.getConfig().getRepairTools()));
+                values.put("slug", this.getInspector().getRepoSlug());
+                StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
+                String prText = sub.replace(TEXT_PR);
                 GHPullRequest pullRequest = originalRepository.createPullRequest("Automatic patch found by Repairnator!", head, base, prText);
                 String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
                 this.getLogger().info("Pull request created on: " + prURL);
