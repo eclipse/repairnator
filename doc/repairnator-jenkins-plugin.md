@@ -16,7 +16,7 @@ The Repairnator Jenkins Plugin can be used:
 
 ## How to use the plugin repairnator-jenkins-plugin?
 
-### Freestyle jobs.
+### Case 1: Github + Jenkins + Freestyle jobs.
 
 * Install plugin `Github Pull Request builder`,[link](https://wiki.jenkins.io/display/JENKINS/GitHub+pull+request+builder+plugin) and activate build upon git pull request. 
 
@@ -30,9 +30,16 @@ The Repairnator Jenkins Plugin can be used:
 
 ![](images/repairnator-jenkins-images/pic4.png)
 
-* Note: When using repairnator together with GitHub PR builder, the advanced option panel can be left empty (the repairnator plugin guesses the Git URL and branch from the SCM information in the freestyle job). 
+Notes: 
+
+* This should work with public and private repos as well with proper secrets set in Jenkins. Little changes may be required for enterprise hosted Github.
+* When using repairnator together with GitHub PR builder, the advanced option panel can be left empty (the repairnator plugin guesses the Git URL and branch from the SCM information in the freestyle job). 
 
 That's it, if you have a failing build for which Repairnator is able to find a patch (approx. 1/1000 builds), you'll have a pull request for it.
+
+### Case 2: Jenkins + Freestyle jobs.
+
+This is the same as Case 1, but patches are not pushed as pull-request to Github, they only appear in the build log
 
 ### Advanced config
 
