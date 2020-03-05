@@ -53,6 +53,8 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
 
         ### KUBERNETES
         echo "Restart the repairnator pipelines hosted in the k8s"
+        # back to the root folder of the project
+        cd ..
         # build the .kube directory and setup the config
         mkdir ${HOME}/.kube
         cp .travis/kubeconfig.skeleton ${HOME}/.kube/config
