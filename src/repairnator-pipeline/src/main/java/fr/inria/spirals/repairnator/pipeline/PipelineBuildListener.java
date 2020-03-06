@@ -29,8 +29,14 @@ public class PipelineBuildListener implements Listener,MessageListener {
      * Run this as a listener server and fetch one message as a time
      */
     public void runListenerServer() {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(config.getActiveMQUrl() + "?jms.prefetchPolicy.all=1");
-        Connection connection;
+        ActiveMQConnectionFactory connectionFactory = null;
+        if (config.getActiveMQUsername() == null || config.getActiveMQUsername().isEmpty()) {
+            connectionFactory = new ActiveMQConnectionFactory(config.getActiveMQUrl() + "?jms.prefetchPolicy.all=1");
+        } else {
+            connectionFactory = new ActiveMQConnectionFactory(config.getActiveMQUsername(), config.getActiveMQPassword(), config.getActiveMQUrl() + "?jms.prefetchPolicy.all=1");
+        }
+
+        Connection connection = null;
         try {
             connection = connectionFactory.createConnection();
             connection.start();

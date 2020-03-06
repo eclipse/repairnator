@@ -49,23 +49,25 @@ For running the app on you own, you need to fill
   * the Webhook Secret field from `Settings > Developer > settings > GitHub Apps > repairnator-bot` .
 
 ### Commands
-How to run the NodeJS server for Repairnator-bot?
+#### How to run the NodeJS server for Repairnator-bot?
 1. clone the repairnator-bot repo
 2. add `.env` and `.private-key.pem`
 3. go to `~/repairnator-bot`
 4. run `nohup npm start &`
 
-How to run the ActiveMQ service?
+#### How to run the ActiveMQ service?
 1. download and unzip activemq at the home folder
-2. go to `~/apache-activemq-5.15.11/bin` (check `apache-activemq-5.15.11/conf/jetty-realm.properties` to see admin's password)  
-3. run `./activemq start`
-4. visit the ActiveMQ's web console (http://{ip}:8161/admin/)
+2. check `apache-activemq-5.15.11/conf/jetty-realm.properties` to modify admin's password (recommended)
+3. check `apache-activemq-5.15.11/conf/activemq.xml` to switch the conversion strategy (recommended):
+> change item likes `<transportConnector name="amqp" uri="amqp://localhost:5672?maximumConnections=1000"/>` to `<transportConnector name="amqp" uri="amqp://localhost:5672?maximumConnections=1000&amp;transport.transformer=jms"/>`. check [document](https://activemq.apache.org/amqp) if interested.
+4. go to `~/apache-activemq-5.15.11/bin` and run `./activemq start`
+5. visit the ActiveMQ's web console (http://{ip}:8161/admin/)
 
-How to update the app?
+#### How to update the app?
 1. make updates inside the project (`git pull origin`)
 2. stop the server (`ps -ef | grep npm` and `ps -ef | grep node` to kill processes manually, then re-run the server
 
-What to do when Repairnator GitHub app does not work normally?
+#### What to do when Repairnator GitHub app does not work normally?
 One cause is the "403 - access denied" issue
 1. edit `~/repairnator-bot/.env`
 2. try other TRAVIS tokens (the Travis API is not stable)

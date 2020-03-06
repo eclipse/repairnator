@@ -422,7 +422,6 @@ public class LauncherUtils {
             for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
                 System.err.println("Error: " + errs.next());
             }
-            printUsage(jsap, launcherType);
         }
 
         if (getArgHelp(arguments)) {

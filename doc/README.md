@@ -61,10 +61,11 @@ bash launch_rtscanner.sh
 
 The documentation about the scripts is [available here](scripts.md). More details about the Repairnator configuration file can be found [here](repairnator-config.md).
 
-## Chores
+## Integration
 
-As part of using Repairnator, you might need to do some chores, like managing a MongoDB database.
-We provided some documentation [about backups](chore/managedb.md) and [about MongoDB collection schema](chore/mongo).
+* [Jenkins integration](https://github.com/eclipse/repairnator/blob/master/doc/repairnator-jenkins-plugin.md)
+* [Github app integration](https://github.com/eclipse/repairnator/blob/master/doc/repairnator-github-app.md)
+* [Deployment in Kubernetes](https://github.com/eclipse/repairnator/blob/master/doc/repairnator-kubernetes.md)
 
 ## Program repair tools used in Repairnator
  
@@ -90,6 +91,11 @@ The `RTScanner` is a daemon that constantly inspects Travis CI for catching newl
 ### Java main classes
 
 This [page](main-classes.md) documents the main classes of Repairnator.
+
+### Chores
+
+As part of using Repairnator, you might need to do some chores, like managing a MongoDB database.
+We provided some documentation [about backups](chore/managedb.md) and [about MongoDB collection schema](chore/mongo).
 
 ## Academic bibliographic references
 

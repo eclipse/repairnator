@@ -91,6 +91,11 @@ public abstract class AstorRepair extends AbstractRepairStep {
             astorArgs.add("-faultlocalization");
             astorArgs.add("CoCoSpoon");
 
+            String id = this.getRepairToolName() + "-" + getInspector().getProjectIdToBeInspected();
+
+            astorArgs.add("-id");
+            astorArgs.add(id);
+
             final AstorMain astorMain = new AstorMain();
 
             final String repairToolName = this.getRepairToolName();

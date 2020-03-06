@@ -19,7 +19,6 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -121,13 +120,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
     protected void createPullRequest(List<File> patchList, int nbPatch) throws IOException, GitAPIException, URISyntaxException {
         if (patchList.isEmpty()) {
-            return;
-        }
-
-        /* Jenkins case - we handle it at the plugin code if it's a PR */
-        boolean b = this.getInspector().getBuggyBuild() == null ? false : this.getInspector().getBuggyBuild().isPullRequest();
-        if (b) {
-            this.getLogger().warn("Skipping creating a PR if it's already a PR, for now. Much more complicated stuff to do there.");
             return;
         }
 

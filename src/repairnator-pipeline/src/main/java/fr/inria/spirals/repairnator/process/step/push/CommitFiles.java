@@ -17,8 +17,8 @@ import java.io.IOException;
 
 public class CommitFiles extends AbstractStep {
 
-    private CommitType commitType;
-    private RevCommit commit;
+	private RevCommit commit;
+    protected CommitType commitType;
 
     public CommitFiles(ProjectInspector inspector) {
         super(inspector, false);

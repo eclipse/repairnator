@@ -8,7 +8,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.JenkinsProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

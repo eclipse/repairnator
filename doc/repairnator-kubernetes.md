@@ -31,6 +31,8 @@ build rainer should now be running and submitting builds to `pipeline` queue on 
 
 Worker: to deploy a pipeline worker which pulls build ids from ActiveMQ, run repair attempts and creates PRs if patches are found:
 
+Note that you may define some of the env values in `repairnator-pipeline.yaml` before running the following command.  
+
 ```
 kubectl create -f ./repairnator/kubernetes-support/repairnator-deployment-yamlfiles/repairnator-pipeline.yaml
 ```
@@ -68,4 +70,10 @@ Check the pipeline output by
 ```
 kubectl get pods 
 kubectl logs -f repairnator-pipeline-XXXXXXXXX-XXXXX
+```
+
+Upgrade the pipeline to use the latest Docker image: we could simply delete the pods. K8s will pull the latest image and recreate new pipeline pods.
+
+```
+kubectl delete repairnator-pipeline-XXXXXXXXX-XXXXX
 ```
