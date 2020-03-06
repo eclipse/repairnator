@@ -37,7 +37,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
     public static final String TEXT_PR = "This patch fixes failing Travis build %(travisURL) \n\n" +
                                         "It uses the program repair tools %(tools) \n\n" +
-                                        "If you don't want to receive those PRs in the future, [open an issue on Repairnator](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%%20%(slug))" ;
+                                        "If you don't want to receive those PRs in the future, [open an issue on Repairnator](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%(slug))" ;
 
     public static final int MAX_PATCH_PER_TOOL = 1;
 
