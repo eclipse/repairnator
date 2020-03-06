@@ -16,7 +16,7 @@ public class MavenFilterOutputHandler extends MavenOutputHandler {
     public void consumeLine(String s) {
         super.consumeLine(s);
 
-        if (s.contains("ERROR") || s.contains("error")) {
+        if (s.contains("[ERROR]") || s.contains("[error]")) {
             this.getLogger().error(s);
             this.inspector.getJobStatus().addStepError(name, s);
         }
