@@ -54,19 +54,17 @@ import hudson.FilePath;
 
 import org.apache.commons.io.FileUtils;
 
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.FileVisitResult;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.Path;
-
-
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
 
     private final String gitUrl;
     private final String gitOAuthToken;
     private final String gitBranch;
+    private final String smtpUsername;
+    private final String smtpPassword;
+    private final String smtpServer;
+    private final String smtpPort;
+    private final String notifyTo;
     private boolean useNPEFix;
     private boolean useAstorJKali;
     private boolean useAstorJMut;
@@ -74,10 +72,15 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useNopolTestExclusionStrategy;
     
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,boolean useNPEFix,boolean useNPEFixSafe,boolean useAstorJKali,boolean useAstorJMut,boolean useNopolTestExclusionStrategy) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String smtpUsername,String smtpPassword,String smtpServer,String smtpPort,String notifyTo,boolean useNPEFix,boolean useNPEFixSafe,boolean useAstorJKali,boolean useAstorJMut,boolean useNopolTestExclusionStrategy) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
+        this.smtpUsername = smtpUsername;
+        this.smtpPassword = smtpPassword;
+        this.smtpPort = smtpPort;
+        this.smtpServer = smtpServer;
+        this.notifyTo = notifyTo;
         this.useNPEFix = useNPEFix;
         this.useNPEFixSafe = useNPEFixSafe;
         this.useAstorJKali = useAstorJKali;
@@ -122,6 +125,25 @@ public class RepairnatorPostBuild extends Recorder {
         return this.gitBranch;
     }
 
+    public String getSmtpUsername() {
+        return this.smtpUsername;
+    }
+
+    public String getSmtpPassword() {
+        return this.smtpPassword;
+    }
+
+    public String getSmtpServer() {
+        return this.smtpServer;
+    }
+
+    public String getSmtpPort() {
+        return this.smtpPort;
+    }
+
+    public String getNotifyTo() {
+        return this.notifyTo;
+    }
 
     public String[] getTools(){
         String dummy = "";
@@ -173,10 +195,14 @@ public class RepairnatorPostBuild extends Recorder {
                                         .onGitUrl(config.getGitUrl())
                                         .onGitBranch(config.getGitBranch())
                                         .onGitOAuth(config.getGitOAuth())
+                                        .withSmtpUsername(config.getSmtpUsername())
+                                        .withSmtpPassword(config.getSmtpPassword())
+                                        .withSmtpServer(config.getSmtpServer())
+                                        .withSmtpPort(config.getSmtpPort())
+                                        .shouldNotifyTo(config.getNotifyTo())
                                         .withRepairTools(config.getTools())
                                         .asNoTravisRepair()
                                         .alsoCreatePR();
-
         ProcessBuilder builder = repProcBuilder.build();
         builder.redirectErrorStream(true);
         builder.inheritIO().redirectOutput(ProcessBuilder.Redirect.PIPE);
@@ -274,11 +300,16 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitBranch(branch);
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
+        config.setSmtpUsername(this.smtpUsername);
+        config.setSmtpPassword(this.smtpPassword);
+        config.setSmtpServer(this.smtpServer);
+        config.setSmtpPort(this.smtpPort);
+        config.setNotifyTo(this.notifyTo);
     }
 
     public void cleanUp(){
         try {
-            Config.getInstance().getTempDir().delete();
+            FileUtils.cleanDirectory(Config.getInstance().getTempDir());
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -313,7 +344,7 @@ public class RepairnatorPostBuild extends Recorder {
             }
 
             this.runRepairnator(env);
-            /*this.cleanUp();*/
+            this.cleanUp();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -383,13 +414,48 @@ public class RepairnatorPostBuild extends Recorder {
         public FormValidation doCheckGitOAuthToken(@QueryParameter String value )
                 throws IOException, ServletException {
             if (value.length() == 0)
-                return FormValidation.error("Provide a Git Token for Repairnator to make a pull request if patch is found");
+                return FormValidation.warning("Provide a Git Token for Repairnator to make a pull request if patch is found");
             return FormValidation.ok();
         }
 
         public FormValidation doCheckGitBranch(@QueryParameter String value )
                 throws IOException, ServletException {
             return FormValidation.warning("Default should be master or auto detect branch if using together with Jenkins Github plugin");
+        }
+
+        public FormValidation doCheckSmtpUsername(@QueryParameter String value )
+                throws IOException, ServletException {
+            if (value.length() == 0)
+                return FormValidation.warning("A valid email username. Note: if your email is repairnator@email.com, repairnator should be provided");
+            return FormValidation.ok();
+        }
+
+        public FormValidation doCheckSmtpPassword(@QueryParameter String value )
+                throws IOException, ServletException {
+            if (value.length() == 0)
+                return FormValidation.warning("Password to the provided username");
+            return FormValidation.ok();
+        }
+
+        public FormValidation doCheckSmtpServer(@QueryParameter String value )
+                throws IOException, ServletException {
+            if (value.length() == 0)
+                return FormValidation.warning("Your email provider server .Example: smtp.gmail.com");
+            return FormValidation.ok();
+        }
+
+        public FormValidation doCheckSmtpPort(@QueryParameter String value )
+                throws IOException, ServletException {
+            if (value.length() == 0)
+                return FormValidation.warning("Your email provider port . Default: 25");
+            return FormValidation.ok();
+        }
+
+        public FormValidation doCheckNotifyTo(@QueryParameter String value )
+                throws IOException, ServletException {
+            if (value.length() == 0)
+                return FormValidation.warning("Email addresses to send patches to. Example: repairnator-1@email.com,repairnator-2@gmail.com");
+            return FormValidation.ok();
         }
 
          public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy) {

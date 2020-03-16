@@ -11,6 +11,7 @@ public class RepairnatorJarDownloader extends FileDownloader{
 
 	public RepairnatorJarDownloader() {}
 
+    /* does not work if maven repo has more than 9 jar uploaded*/
 	public String getLatestJarUrl(String snapshotUrl) throws IOException{
         Document doc = Jsoup.connect(snapshotUrl).get();
         String latestSnapshot = "";
@@ -25,11 +26,15 @@ public class RepairnatorJarDownloader extends FileDownloader{
             latestJar = file.attr("href");
         }
 
-        return jarUrl + "/" +  latestJar;
+        System.out.println(doc);
+        System.out.println("LatestJarUrl: " + jarUrl  + latestJar);
+        return jarUrl +  latestJar;
     }
 
     public void downloadJar(String snapshotUrl) throws IOException{
-        String latestJarUrl = this.getLatestJarUrl(snapshotUrl);
+        /*String latestJarUrl = this.getLatestJarUrl(snapshotUrl);*/
+
+        String latestJarUrl = "https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-pipeline/3.3-SNAPSHOT/repairnator-pipeline-3.3-20200316.204020-11-jar-with-dependencies.jar";
         String absoluteJarFilePath = Config.getInstance().getTempDir().getAbsolutePath() + File.separator + "repairnator.jar";
         this.downloadFile(latestJarUrl,absoluteJarFilePath);
     }

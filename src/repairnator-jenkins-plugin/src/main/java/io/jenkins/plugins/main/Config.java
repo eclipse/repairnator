@@ -10,6 +10,7 @@ public class Config {
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
 
+
 	private Config(){
 		this.stringConfig = new HashMap<String,String>();
 	}
@@ -91,6 +92,48 @@ public class Config {
 	public String[] getTools(){
 		return this.tools;
 	}
+
+	public void setSmtpUsername(String smtpUsername) {
+		stringConfig.put("smtpUsername",smtpUsername);
+	}
+
+	public String getSmtpUsername() {
+		return stringConfig.get("smtpUsername");
+	}
+
+	public void setSmtpPassword(String smtpPassword) {
+		stringConfig.put("smtpPassword",smtpPassword);
+	}
+
+	public String getSmtpPassword() {
+		return stringConfig.get("smtpPassword");
+	}
+
+	public void setSmtpServer(String smtpServer) {
+		stringConfig.put("smtpServer",smtpServer);
+	}
+
+	public String getSmtpServer() {
+		return stringConfig.get("smtpServer");
+	}
+
+	public void setSmtpPort(String smtpPort) {
+		stringConfig.put("smtpPort",smtpPort);
+	}
+
+	public String getSmtpPort() {
+		return stringConfig.get("smtpPort");
+	}
+
+	/* format: person1,person2,person3.. */
+	public void setNotifyTo(String notifyTo) {
+		stringConfig.put("notifyTo",notifyTo);
+	}
+
+	public String getNotifyTo() {
+		return stringConfig.get("notifyTo");
+	}
+
 
 	public boolean isQuiet() {
 		return this.quiet;
