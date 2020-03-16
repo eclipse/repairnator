@@ -26,8 +26,8 @@ public class NoopListener implements Listener{
     public void runListenerServer() {
         if (this.getConfig().isNoTravisRepair()) {
             LOGGER.info("No travis repair mode for reparinator");
-            JenkinsLauncher noTravisLauncher = new JenkinsLauncher();
-            noTravisLauncher.noTravisMain();
+            JenkinsLauncher jenkinsLauncher = new JenkinsLauncher();
+            jenkinsLauncher.jenkinsMain();
         }else {
             this.launcher.mainProcess();
         }
