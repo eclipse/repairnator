@@ -95,7 +95,7 @@ public class JenkinsLauncher extends Launcher {
   }
 
   /* used for no travis */
-  public void noTravisMain() {
+  public void jenkinsMain() {
     LOGGER.info("Repairnator will be running for - GitUrl: " + this.getConfig().getGitUrl() + " --  GitBranch: " + this.getConfig().getGitBranch() + " -- GitCommit: " + this.getConfig().getGitCommitHash());
     File f = new File(System.getProperty("java.class.path"));
     String oldUserDir = System.getProperty("user.dir");
@@ -121,51 +121,4 @@ public class JenkinsLauncher extends Launcher {
     System.setProperty("user.dir",oldUserDir);
   }
 
-  /* use for jenkins pure */
-  public void jenkinsMain(String gitUrl,String gitToken,String gitBranch,String[] tools) {
-    LOGGER.info("Repairnator will be running for - GitUrl: " + gitUrl + " --  GitBranch: " + gitBranch);
-    File f = new File(System.getProperty("java.class.path"));
-    this.tempDir = Files.createTempDir();
-    String oldUserDir = System.getProperty("user.dir");
-    System.setProperty("java.class.path",f.getAbsolutePath());
-    System.setProperty("user.dir",this.tempDir.getAbsolutePath());
-
-    this.gitUrl = gitUrl;
-    this.gitBranch = gitBranch;
-    this.getConfig().setClean(true);
-    this.getConfig().setRunId("1234");
-    this.getConfig().setLauncherMode(LauncherMode.REPAIR);
-    this.getConfig().setBuildId(0);
-    this.getConfig().setZ3solverPath(new File("./z3_for_linux").getPath());
-
-    this.getConfig().setWorkspacePath(this.tempDir.getAbsolutePath());
-    this.getConfig().setGithubToken(gitToken);
-    this.getConfig().setPush(true);
-    this.getConfig().setGithubUserEmail("noreply@github.com");
-    this.getConfig().setGithubUserName("repairnator");
-    this.getConfig().setCreatePR(true);
-    this.getConfig().setFork(true);
-    this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(tools)));
-    if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
-        LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
-    }
-    this.getConfig().setOutputPath(this.tempDir.getAbsolutePath());
-    this.getConfig().setZ3solverPath(new File(this.tempDir.getAbsolutePath() + File.separator + "z3_for_linux").getPath());
-    this.initSerializerEngines();
-    this.initNotifiers();
-    this.mainProcess();
-
-    try {
-      FileUtils.deleteDirectory(this.tempDir.getAbsolutePath());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-    System.setProperty("user.dir",oldUserDir);
-  }
-
-  public static void main(String[] args) {
-      JenkinsLauncher launcher = new JenkinsLauncher();
-      launcher.jenkinsMain(args[0],args[1],args[2],args[3].split(","));
-  }
 }
