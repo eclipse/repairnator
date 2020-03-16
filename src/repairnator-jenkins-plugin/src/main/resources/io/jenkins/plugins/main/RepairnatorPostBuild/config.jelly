@@ -3,6 +3,21 @@
     <f:entry title="${%GitOAuthToken}" field="gitOAuthToken">
         <f:textbox />
     </f:entry>
+    <f:entry title="${%SmtpUsername}" field="smtpUsername">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%SmtpPassword}" field="smtpPassword">
+        <f:password />
+    </f:entry>
+    <f:entry title="${%SmtpServer}" field="smtpServer">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%SmtpPort}" field="smtpPort">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%NotifyTo}" field="notifyTo">
+        <f:textbox />
+    </f:entry>
     <f:entry title="Repairtools">
     </f:entry>
     <f:entry title="${%NPEFix}" field="useNPEFix">

@@ -14,8 +14,14 @@ public class RepairnatorProcessBuilder {
 	private String gitUrl;
 	private String gitBranch;
 	private String gitOAuth;
+	private String smtpUsername;
+	private String smtpPassword;
+	private String smtpServer;
+	private String smtpPort;
+	private String notifyTo;
 	private String[] repairTools;
 	private boolean createPR;
+	private boolean useSmtpTLS;
 	private boolean noTravisRepair;
 
 	public RepairnatorProcessBuilder(){}
@@ -56,25 +62,50 @@ public class RepairnatorProcessBuilder {
 	}
 
 	public RepairnatorProcessBuilder alsoCreatePR() {
-		this.createPR = true;
+		/* only createPR if git token is provided*/
+		this.createPR = (this.gitOAuth != null || !this.gitOAuth.equals(""));
 		return this;
 	}
 
+	public RepairnatorProcessBuilder withSmtpUsername(String smtpUsername) {
+		this.smtpUsername = smtpUsername;
+		return this;
+	}
+
+	public RepairnatorProcessBuilder withSmtpPassword(String smtpPassword) {
+		this.smtpPassword = smtpPassword;
+		return this;
+	}
+
+	public RepairnatorProcessBuilder withSmtpServer(String smtpServer) {
+		this.smtpServer = smtpServer;
+		return this;
+	}
+
+	public RepairnatorProcessBuilder withSmtpPort(String smtpPort) {
+		this.smtpPort = smtpPort;
+		return this;
+	}
+
+	public RepairnatorProcessBuilder shouldNotifyTo(String notifyTo) {
+		this.notifyTo = notifyTo;
+		return this;
+	}
 
 	public void checkValid() {
-		if (this.javaExec == null || this.repairTools.equals("")) {
+		if (this.javaExec == null || this.javaExec.equals("")) {
 			throw new IllegalArgumentException("Repairnator Process building failed: java executable location is null");
 		}
 
-		if (this.jarLocation == null || this.repairTools.equals("")) {
+		if (this.jarLocation == null || this.jarLocation.equals("")) {
 			throw new IllegalArgumentException("Repairnator Process building failed: repairnator JAR location is null");
 		}
 
-		if (this.gitUrl== null || this.repairTools.equals("")) {
+		if (this.gitUrl == null || this.gitUrl.equals("")) {
 			throw new IllegalArgumentException("Repairnator Process building failed: no git url provided");
 		}
 
-		if (this.gitBranch == null || this.repairTools.equals("")) {
+		if (this.gitBranch == null || this.gitBranch.equals("")) {
 			throw new IllegalArgumentException("Repairnator Process building failed: no git branch provided");
 		}
 
@@ -109,7 +140,35 @@ public class RepairnatorProcessBuilder {
 		cmdList.add(this.gitBranch);
 		cmdList.add("--repairTools");
 		cmdList.add(String.join(",",this.repairTools));
+
+		if (this.smtpUsername != null && !this.smtpUsername.equals("")) {
+			cmdList.add("--smtpUsername");
+			cmdList.add(this.smtpUsername);
+		}
+
+		if (this.smtpPassword != null && !this.smtpPassword.equals("")) {
+			cmdList.add("--smtpPassword");
+			cmdList.add(this.smtpPassword);
+		}
+
+		if (this.smtpServer != null && !this.smtpServer.equals("")) {
+			cmdList.add("--smtpServer");
+			cmdList.add(this.smtpServer);
+		}
+
+		if (this.smtpPort != null && !this.smtpPort.equals("")) {
+			cmdList.add("--smtpPort");
+			cmdList.add(this.smtpPort);
+		}
+
+		if (this.notifyTo != null && !this.notifyTo.equals("")) {
+			cmdList.add("--notifyto");
+			cmdList.add(String.join(",",this.notifyTo));
+		}
+
 		cmdList.add("--noTravisRepair");
+		cmdList.add("--smtpTLS");
+
 		if(!(config.getGitOAuth().equals("") || config.getGitOAuth() == null)) {
 			cmdList.add("--ghOauth");
 			cmdList.add(config.getGitOAuth());
