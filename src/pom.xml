@@ -62,6 +62,7 @@
         <module>repairnator-core</module>
         <module>repairnator-realtime</module>
 				<module>repairnator-jenkins-plugin</module>
+				<module>maven-repair</module>
 			</modules>
 
     <repositories>

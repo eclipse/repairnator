@@ -8,4 +8,4 @@ mvn clean test -B
 
 cd ..
 # printing timing results to identify slow tests
-grep -h time= */target/surefire-reports/*xml
+grep -h time= src/*/target/surefire-reports/*xml
