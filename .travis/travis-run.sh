@@ -6,6 +6,3 @@ export M2_HOME=/usr/local/maven
 
 mvn clean test -B
 
-cd ..
-# printing timing results to identify slow tests
-grep -h time= src/*/target/surefire-reports/*xml
