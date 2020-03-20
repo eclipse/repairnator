@@ -4,7 +4,7 @@
 
 		<groupId>fr.inria.repairnator</groupId>
 		<artifactId>repairnator-superroot</artifactId>
-		<version>1</version>
+		<version>1-SNAPSHOT</version>
 		<packaging>pom</packaging>
 		
     <modules>
