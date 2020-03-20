@@ -1,12 +1,19 @@
 package fr.inria.spirals.repairnator.process.files;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,5 +189,41 @@ public class FileHelper {
                 }
             }
         }
+    }
+
+    public static void removeTargetFolderFromFilesToPush(File directory) {
+    	boolean isGitignoreFilePresent = false;
+    	File[] fileList = directory.listFiles();
+    	String targetFolder = "target/";
+
+    	for (int i = 0; i < fileList.length && !isGitignoreFilePresent; i++) {
+            if (fileList[i].isFile() && fileList[i].getName().equals(".gitignore")) {
+            	isGitignoreFilePresent = true;
+            	try {
+					List<String> fileContent = Files.readAllLines(Paths.get(fileList[i].getAbsolutePath()));
+
+					if (!fileContent.contains(targetFolder)) {
+						try {
+							Writer output = new BufferedWriter(new FileWriter(fileList[i].getAbsolutePath(), true));
+							output.append("\n# Added by Repairnator\n" + targetFolder);
+							output.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            }
+        }
+    	if (!isGitignoreFilePresent) {
+    		Path path = Paths.get(directory + File.separator + ".gitignore");
+    		try {
+    			String text = "# Added by Repairnator\n" + targetFolder;
+				Files.write(path, text.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
     }
 }
