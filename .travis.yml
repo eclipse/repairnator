@@ -13,12 +13,6 @@ services:
 jobs:
   include:
     - stage: test
-      name: "maven-repair"
-      before_install: if [[ $TRAVIS_BRANCH != master ]]; then travis_terminate 0; fi
-      install: true
-      script: ./.travis/travis-maven-repair.sh
-
-    - stage: test
       name: "repairnator"
       # the PR build is responsible for the tests, no need to have the branch/push build (Eclipse's Travis account is very busy)
       before_install: if [[ $TRAVIS_BRANCH != master ]]; then travis_terminate 0; fi
