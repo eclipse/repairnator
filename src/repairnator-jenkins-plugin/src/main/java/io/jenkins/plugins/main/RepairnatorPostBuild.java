@@ -89,11 +89,6 @@ public class RepairnatorPostBuild extends Recorder {
         this.notifyTo = notifyTo;
         this.useTLS = useTLS;
         this.useEmailNotification = useEmailNotification;
-        /*this.useNPEFix = useNPEFix;
-        this.useNPEFixSafe = useNPEFixSafe;
-        this.useAstorJKali = useAstorJKali;
-        this.useAstorJMut = useAstorJMut;
-        this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;*/
     }
 
     public RepairnatorPostBuild() {}

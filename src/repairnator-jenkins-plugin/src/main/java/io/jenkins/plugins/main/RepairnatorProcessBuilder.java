@@ -141,8 +141,6 @@ public class RepairnatorProcessBuilder {
 		cmdList.add("--repairTools");
 		cmdList.add(String.join(",",this.repairTools));
 
-		System.out.println(this.smtpUsername + " " + this.smtpPassword + " " + this.smtpServer + " " + this.smtpPort + " " + this.notifyTo);
-
 		if (this.notifyTo != null && !this.notifyTo.equals("")) {
 			if (this.smtpUsername != null && !this.smtpUsername.equals("")) {
 			cmdList.add("--smtpUsername");
