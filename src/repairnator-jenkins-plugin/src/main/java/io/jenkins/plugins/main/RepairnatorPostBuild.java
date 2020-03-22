@@ -82,7 +82,7 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useNopolTestExclusionStrategy;
     
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,boolean useEmailNotification,boolean useTLS) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,boolean useTLS) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
@@ -97,7 +97,6 @@ public class RepairnatorPostBuild extends Recorder {
     public void setUseTLS(boolean useTLS) {
         this.useTLS = useTLS;
     }
-
 
     @DataBoundSetter
     public void setUseNPEFix(boolean useNPEFix) {
@@ -321,13 +320,13 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitBranch(branch);
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
-        config.setSmtpUsername(Mailer.descriptor().getAuthentication().getUsername());
-        config.setSmtpPassword(Mailer.descriptor().getAuthentication().getPassword().getPlainText());
+        if (Mailer.descriptor().getAuthentication() != null) {
+            config.setSmtpUsername(Mailer.descriptor().getAuthentication().getUsername());
+            config.setSmtpPassword(Mailer.descriptor().getAuthentication().getPassword().getPlainText());
+        }
         config.setSmtpServer(Mailer.descriptor().getSmtpHost());
         config.setSmtpPort(Mailer.descriptor().getSmtpPort());
-        if (this.useTLS) {
-            config.switchUseTLS();
-        }
+        config.setUseTLS(this.useTLS);
         config.setNotifyTo(this.notifyTo);
     }
 
@@ -490,7 +489,6 @@ public class RepairnatorPostBuild extends Recorder {
             useAstorJMut = formData.getBoolean("useAstorJMut");
             useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
             useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
-            useEmailNotification = formData.getBoolean("useEmailNotification");
             useTLS = formData.getBoolean("useTLS");
             notifyTo = formData.getString("notifyTo");
             // ^Can also use req.bindJSON(this, formData);
@@ -521,10 +519,6 @@ public class RepairnatorPostBuild extends Recorder {
 
         public boolean useTLS() {
             return useTLS;
-        }
-
-        public boolean useEmailNotification() {
-            return useEmailNotification;
         }
 
         public String getNotifyTo() {
