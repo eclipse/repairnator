@@ -7,9 +7,10 @@ public class Config {
 	private static Config config;
 	private File tempDir;
 	private boolean quiet = false;
+	private boolean useTLS = false;
+	private boolean useEmailNotification = false;
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
-
 
 	private Config(){
 		this.stringConfig = new HashMap<String,String>();
@@ -134,6 +135,21 @@ public class Config {
 		return stringConfig.get("notifyTo");
 	}
 
+	public void switchUseTLS() {
+		this.useTLS = !this.useTLS;
+	}
+
+	public void switchUseEmailNotification() {
+		this.useEmailNotification = !this.useEmailNotification;
+	}
+
+	public boolean useTLS() {
+		return this.useTLS;
+	}
+
+	public boolean useEmailNotification() {
+		return this.useEmailNotification;
+	}
 
 	public boolean isQuiet() {
 		return this.quiet;

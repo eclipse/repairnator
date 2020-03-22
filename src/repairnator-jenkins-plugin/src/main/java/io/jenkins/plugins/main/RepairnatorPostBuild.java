@@ -54,17 +54,27 @@ import hudson.FilePath;
 
 import org.apache.commons.io.FileUtils;
 
+import hudson.slaves.EnvironmentVariablesNodeProperty;
+import hudson.slaves.NodeProperty;
+import hudson.slaves.NodePropertyDescriptor;
+import hudson.util.DescribableList;
+import jenkins.model.Jenkins;
+
+import java.util.List;
+
+
+import hudson.tasks.Mailer;
+import hudson.model.Descriptor;
+import hudson.tasks.Mailer.DescriptorImpl;
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
 
-    private final String gitUrl;
-    private final String gitOAuthToken;
-    private final String gitBranch;
-    private final String smtpUsername;
-    private final String smtpPassword;
-    private final String smtpServer;
-    private final String smtpPort;
-    private final String notifyTo;
+    private String gitUrl;
+    private String gitOAuthToken;
+    private String gitBranch;
+    private String notifyTo;
+    private boolean useTLS;
+    private boolean useEmailNotification;
     private boolean useNPEFix;
     private boolean useAstorJKali;
     private boolean useAstorJMut;
@@ -72,21 +82,27 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useNopolTestExclusionStrategy;
     
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String smtpUsername,String smtpPassword,String smtpServer,String smtpPort,String notifyTo,boolean useNPEFix,boolean useNPEFixSafe,boolean useAstorJKali,boolean useAstorJMut,boolean useNopolTestExclusionStrategy) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,boolean useEmailNotification,boolean useTLS) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
-        this.smtpUsername = smtpUsername;
-        this.smtpPassword = smtpPassword;
-        this.smtpPort = smtpPort;
-        this.smtpServer = smtpServer;
         this.notifyTo = notifyTo;
-        this.useNPEFix = useNPEFix;
+        this.useTLS = useTLS;
+        this.useEmailNotification = useEmailNotification;
+        /*this.useNPEFix = useNPEFix;
         this.useNPEFixSafe = useNPEFixSafe;
         this.useAstorJKali = useAstorJKali;
         this.useAstorJMut = useAstorJMut;
-        this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;
+        this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;*/
     }
+
+    public RepairnatorPostBuild() {}
+
+    @DataBoundSetter
+    public void setUseTLS(boolean useTLS) {
+        this.useTLS = useTLS;
+    }
+
 
     @DataBoundSetter
     public void setUseNPEFix(boolean useNPEFix) {
@@ -113,6 +129,23 @@ public class RepairnatorPostBuild extends Recorder {
         this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;
     }
 
+    public void setGitUrl(String gitUrl) {
+        this.gitUrl = gitUrl;
+    }
+
+    public void setGitOAuthToken(String gitOAuthToken) {
+        this.gitOAuthToken = gitOAuthToken;
+    }
+
+    public void setGitBranch(String gitBranch) {
+        this.gitBranch = gitBranch;
+    }
+
+    public void setNotifyTo(String notifyTo) {
+        this.notifyTo = notifyTo;
+    }
+
+
     public String getGitUrl() {
         return gitUrl;
     }
@@ -125,24 +158,16 @@ public class RepairnatorPostBuild extends Recorder {
         return this.gitBranch;
     }
 
-    public String getSmtpUsername() {
-        return this.smtpUsername;
-    }
-
-    public String getSmtpPassword() {
-        return this.smtpPassword;
-    }
-
-    public String getSmtpServer() {
-        return this.smtpServer;
-    }
-
-    public String getSmtpPort() {
-        return this.smtpPort;
-    }
-
     public String getNotifyTo() {
         return this.notifyTo;
+    }
+
+    public boolean useTLS() {
+        return this.useTLS;
+    }
+
+    public boolean getUseEmailNofication() {
+        return this.useEmailNotification;
     }
 
     public String[] getTools(){
@@ -290,6 +315,7 @@ public class RepairnatorPostBuild extends Recorder {
 
     public void configure(String url,String branch, EnvVars env) {
         Config config = Config.getInstance();
+
         String javaHome = env.get("JAVA_HOME");
         String javaExec = javaHome + File.separator + "bin" + File.separator + "java";
         String jarLocation =  Config.getInstance().getTempDir().getAbsolutePath() + File.separator +"repairnator.jar";
@@ -300,10 +326,13 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitBranch(branch);
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
-        config.setSmtpUsername(this.smtpUsername);
-        config.setSmtpPassword(this.smtpPassword);
-        config.setSmtpServer(this.smtpServer);
-        config.setSmtpPort(this.smtpPort);
+        config.setSmtpUsername(Mailer.descriptor().getAuthentication().getUsername());
+        config.setSmtpPassword(Mailer.descriptor().getAuthentication().getPassword().getPlainText());
+        config.setSmtpServer(Mailer.descriptor().getSmtpHost());
+        config.setSmtpPort(Mailer.descriptor().getSmtpPort());
+        if (this.useTLS) {
+            config.switchUseTLS();
+        }
         config.setNotifyTo(this.notifyTo);
     }
 
@@ -313,6 +342,38 @@ public class RepairnatorPostBuild extends Recorder {
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void createGlobalEnvironmentVariables(String key, String value){
+
+        Jenkins instance = Jenkins.getInstance();
+
+        DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = instance.getGlobalNodeProperties();
+        List<EnvironmentVariablesNodeProperty> envVarsNodePropertyList = globalNodeProperties.getAll(EnvironmentVariablesNodeProperty.class);
+
+        EnvironmentVariablesNodeProperty newEnvVarsNodeProperty = null;
+        EnvVars envVars = null;
+
+        if ( envVarsNodePropertyList == null || envVarsNodePropertyList.size() == 0 ) {
+            newEnvVarsNodeProperty = new hudson.slaves.EnvironmentVariablesNodeProperty();
+            globalNodeProperties.add(newEnvVarsNodeProperty);
+            envVars = newEnvVarsNodeProperty.getEnvVars();
+        } else {
+            envVars = envVarsNodePropertyList.get(0).getEnvVars();
+        }
+        envVars.put(key, value);
+        try {
+            instance.save();
+        } catch(Exception e) {
+            System.out.println("Failed to create env variable");
+        }
+    }
+
+    public void extractInfo() {
+        System.out.println(Mailer.descriptor().getSmtpHost());
+        System.out.println(Mailer.descriptor().getSmtpPort());
+        System.out.println(Mailer.descriptor().getAuthentication().getUsername());
+        System.out.println(Mailer.descriptor().getAuthentication().getPassword().getPlainText());
     }
 
     @Override
@@ -351,10 +412,6 @@ public class RepairnatorPostBuild extends Recorder {
         return true;
     }
 
-
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) super.getDescriptor();
@@ -371,20 +428,27 @@ public class RepairnatorPostBuild extends Recorder {
     }
 
 
+    public static class EmailNotification {
+        private String notifyTo;
+        private boolean useTLS;
+
+        @DataBoundConstructor
+        public EmailNotification(String notifyTo,boolean useTLS) {
+            this.notifyTo = notifyTo;
+            this.useTLS = useTLS;
+        }
+    }
+
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-        /**
-         * To persist global configuration information,
-         * simply store it in a field and call save().
-         * <p/>
-         * <p/>
-         * If you don't want fields to be persisted, use <tt>transient</tt>.
-         */
+        private boolean useEmailNotification;
+        private boolean useTLS;
         private boolean useNPEFix;
         private boolean useAstorJMut;
         private boolean useAstorJKali;
         private boolean useNPEFixSafe;
         private boolean useNopolTestExclusionStrategy;
+        private String notifyTo;
 
         /**
          * In order to load the persisted global configuration, you have to
@@ -404,59 +468,6 @@ public class RepairnatorPostBuild extends Recorder {
          * prevent the form from being saved. It just means that a message
          * will be displayed to the user.
          */
-        public FormValidation doCheckGitUrl(@QueryParameter String value)
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.error("Example: https://github.com/surli/failingProject.git");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckGitOAuthToken(@QueryParameter String value )
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.warning("Provide a Git Token for Repairnator to make a pull request if patch is found");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckGitBranch(@QueryParameter String value )
-                throws IOException, ServletException {
-            return FormValidation.warning("Default should be master or auto detect branch if using together with Jenkins Github plugin");
-        }
-
-        public FormValidation doCheckSmtpUsername(@QueryParameter String value )
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.warning("A valid email username. Note: if your email is repairnator@email.com, repairnator should be provided");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckSmtpPassword(@QueryParameter String value )
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.warning("Password to the provided username");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckSmtpServer(@QueryParameter String value )
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.warning("Your email provider server .Example: smtp.gmail.com");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckSmtpPort(@QueryParameter String value )
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.warning("Your email provider port . Default: 25");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckNotifyTo(@QueryParameter String value )
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.warning("Email addresses to send patches to. Example: repairnator-1@email.com,repairnator-2@gmail.com");
-            return FormValidation.ok();
-        }
 
          public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy) {
             return FormValidation.ok();
@@ -478,41 +489,51 @@ public class RepairnatorPostBuild extends Recorder {
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             // To persist global configuration information,
             // set that to properties and call save().
+            req.bindJSON(this, formData);
             useNPEFix = formData.getBoolean("useNPEFix");
             useAstorJKali = formData.getBoolean("useAstorJKali");
             useAstorJMut = formData.getBoolean("useAstorJMut");
             useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
             useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
+            useEmailNotification = formData.getBoolean("useEmailNotification");
+            useTLS = formData.getBoolean("useTLS");
+            notifyTo = formData.getString("notifyTo");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseNPEFix)
             save();
-            return super.configure(req, formData);
+            return true;
         }
 
-        /**
-         * This method returns true if the global configuration says we should speak French.
-         * <p/>
-         * The method name is bit awkward because global.jelly calls this method to determine
-         * the initial state of the checkbox by the naming convention.
-         */
-        public boolean getUseNPEFix() {
+        public boolean useNPEFix() {
             return useNPEFix;
         }
 
-        public boolean getUseAstorJKali() {
+        public boolean useAstorJKali() {
             return useAstorJKali;
         }
 
-        public boolean getUseAstorJMut() {
+        public boolean useAstorJMut() {
             return useAstorJMut;
         }
 
-        public boolean getUseNPEFixSafe() {
+        public boolean useNPEFixSafe() {
             return useNPEFixSafe;
         }
 
-        public boolean getUseNopolTestExclusionStrategy() {
+        public boolean useNopolTestExclusionStrategy() {
             return useNopolTestExclusionStrategy;
+        }
+
+        public boolean useTLS() {
+            return useTLS;
+        }
+
+        public boolean useEmailNotification() {
+            return useEmailNotification;
+        }
+
+        public String getNotifyTo() {
+            return notifyTo;
         }
     }
 }
