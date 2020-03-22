@@ -135,8 +135,8 @@ public class Config {
 		return stringConfig.get("notifyTo");
 	}
 
-	public void switchUseTLS() {
-		this.useTLS = !this.useTLS;
+	public void setUseTLS(boolean useTLS) {
+		this.useTLS = useTLS;
 	}
 
 	public void switchUseEmailNotification() {
