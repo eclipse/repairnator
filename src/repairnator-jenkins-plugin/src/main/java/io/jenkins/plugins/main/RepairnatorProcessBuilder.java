@@ -141,33 +141,37 @@ public class RepairnatorProcessBuilder {
 		cmdList.add("--repairTools");
 		cmdList.add(String.join(",",this.repairTools));
 
-		if (this.smtpUsername != null && !this.smtpUsername.equals("")) {
-			cmdList.add("--smtpUsername");
-			cmdList.add(this.smtpUsername);
-		}
-
-		if (this.smtpPassword != null && !this.smtpPassword.equals("")) {
-			cmdList.add("--smtpPassword");
-			cmdList.add(this.smtpPassword);
-		}
-
-		if (this.smtpServer != null && !this.smtpServer.equals("")) {
-			cmdList.add("--smtpServer");
-			cmdList.add(this.smtpServer);
-		}
-
-		if (this.smtpPort != null && !this.smtpPort.equals("")) {
-			cmdList.add("--smtpPort");
-			cmdList.add(this.smtpPort);
-		}
+		System.out.println(this.smtpUsername + " " + this.smtpPassword + " " + this.smtpServer + " " + this.smtpPort + " " + this.notifyTo);
 
 		if (this.notifyTo != null && !this.notifyTo.equals("")) {
+			if (this.smtpUsername != null && !this.smtpUsername.equals("")) {
+			cmdList.add("--smtpUsername");
+			cmdList.add(this.smtpUsername);
+			}
+
+			if (this.smtpPassword != null && !this.smtpPassword.equals("")) {
+				cmdList.add("--smtpPassword");
+				cmdList.add(this.smtpPassword);
+			}
+
+			if (this.smtpServer != null && !this.smtpServer.equals("")) {
+				cmdList.add("--smtpServer");
+				cmdList.add(this.smtpServer);
+			}
+
+			if (this.smtpPort != null && !this.smtpPort.equals("")) {
+				cmdList.add("--smtpPort");
+				cmdList.add(this.smtpPort);
+			}
+
 			cmdList.add("--notifyto");
 			cmdList.add(String.join(",",this.notifyTo));
 		}
-		
+
 		cmdList.add("--noTravisRepair");
-		cmdList.add("--smtpTLS");
+		if (config.useTLS()) {
+			cmdList.add("--smtpTLS");
+		}
 
 		if(!(config.getGitOAuth().equals("") || config.getGitOAuth() == null)) {
 			cmdList.add("--ghOauth");
