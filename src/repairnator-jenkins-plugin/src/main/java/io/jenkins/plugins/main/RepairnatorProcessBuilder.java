@@ -167,7 +167,7 @@ public class RepairnatorProcessBuilder {
 		}
 
 		cmdList.add("--noTravisRepair");
-		if (config.useTLS()) {
+		if (config.useTLSOrSSL()) {
 			cmdList.add("--smtpTLS");
 		}
 
