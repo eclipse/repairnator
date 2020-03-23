@@ -69,7 +69,6 @@ public class RepairnatorPostBuild extends Recorder {
     private String gitOAuthToken;
     private String gitBranch;
     private String notifyTo;
-    private boolean useTLS;
     private boolean useEmailNotification;
     private boolean useNPEFix;
     private boolean useAstorJKali;
@@ -78,21 +77,15 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useNopolTestExclusionStrategy;
     
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,boolean useTLS) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
         this.notifyTo = notifyTo;
-        this.useTLS = useTLS;
         this.useEmailNotification = useEmailNotification;
     }
 
     public RepairnatorPostBuild() {}
-
-    @DataBoundSetter
-    public void setUseTLS(boolean useTLS) {
-        this.useTLS = useTLS;
-    }
 
     @DataBoundSetter
     public void setUseNPEFix(boolean useNPEFix) {
@@ -153,7 +146,7 @@ public class RepairnatorPostBuild extends Recorder {
     }
 
     public boolean useTLS() {
-        return this.useTLS;
+        return Config.getInstance().useTLSOrSSL();
     }
 
     public boolean getUseEmailNofication() {
@@ -317,7 +310,6 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitBranch(branch);
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
-        config.setUseTLS(this.useTLS);
         config.setNotifyTo(this.notifyTo);
     }
 
@@ -405,22 +397,9 @@ public class RepairnatorPostBuild extends Recorder {
         return null;
     }
 
-
-    public static class EmailNotification {
-        private String notifyTo;
-        private boolean useTLS;
-
-        @DataBoundConstructor
-        public EmailNotification(String notifyTo,boolean useTLS) {
-            this.notifyTo = notifyTo;
-            this.useTLS = useTLS;
-        }
-    }
-
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         private boolean useEmailNotification;
-        private boolean useTLS;
         private boolean useNPEFix;
         private boolean useAstorJMut;
         private boolean useAstorJKali;
@@ -473,7 +452,6 @@ public class RepairnatorPostBuild extends Recorder {
             useAstorJMut = formData.getBoolean("useAstorJMut");
             useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
             useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
-            useTLS = formData.getBoolean("useTLS");
             notifyTo = formData.getString("notifyTo");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseNPEFix)
@@ -499,10 +477,6 @@ public class RepairnatorPostBuild extends Recorder {
 
         public boolean useNopolTestExclusionStrategy() {
             return useNopolTestExclusionStrategy;
-        }
-
-        public boolean useTLS() {
-            return useTLS;
         }
 
         public String getNotifyTo() {

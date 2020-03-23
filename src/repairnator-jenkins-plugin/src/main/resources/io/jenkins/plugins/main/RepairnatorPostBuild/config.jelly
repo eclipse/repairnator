@@ -7,9 +7,6 @@
         <f:entry title="${%Emails for notification}" field="notifyTo">
             <f:textbox />
         </f:entry>
-        <f:entry title="${%Use TLS}" field="useTLS">
-            <f:checkbox />
-        </f:entry>
     </f:section>
     <f:section title="Repairtools">
         <f:entry name="useNPEFix" title="${%NPEFix}" field="useNPEFix">
