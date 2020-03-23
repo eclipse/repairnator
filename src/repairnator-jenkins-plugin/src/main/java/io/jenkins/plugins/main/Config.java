@@ -1,7 +1,9 @@
 package io.jenkins.plugins.main;
 import java.io.File;
-import com.google.common.io.Files;
+import java.nio.file.Files;
+/*import com.google.common.io.Files;*/
 import java.util.HashMap;
+import hudson.tasks.Mailer;
 
 public class Config {
 	private static Config config;
@@ -26,7 +28,7 @@ public class Config {
 	public File getTempDir() {
 		if (this.tempDir == null) {
 			try {
-				this.tempDir = Files.createTempDir();
+				this.tempDir = Files.createTempDirectory(Long.toString(System.nanoTime())).toFile();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -94,36 +96,21 @@ public class Config {
 		return this.tools;
 	}
 
-	public void setSmtpUsername(String smtpUsername) {
-		stringConfig.put("smtpUsername",smtpUsername);
-	}
-
 	public String getSmtpUsername() {
-		return stringConfig.get("smtpUsername");
-	}
-
-	public void setSmtpPassword(String smtpPassword) {
-		stringConfig.put("smtpPassword",smtpPassword);
+		return Mailer.descriptor().getAuthentication().getUsername();
 	}
 
 	public String getSmtpPassword() {
-		return stringConfig.get("smtpPassword");
-	}
-
-	public void setSmtpServer(String smtpServer) {
-		stringConfig.put("smtpServer",smtpServer);
+		return Mailer.descriptor().getAuthentication().getPassword().getPlainText();
 	}
 
 	public String getSmtpServer() {
-		return stringConfig.get("smtpServer");
+		return Mailer.descriptor().getSmtpHost();
 	}
 
-	public void setSmtpPort(String smtpPort) {
-		stringConfig.put("smtpPort",smtpPort);
-	}
 
 	public String getSmtpPort() {
-		return stringConfig.get("smtpPort");
+		return Mailer.descriptor().getSmtpPort();
 	}
 
 	/* format: person1,person2,person3.. */

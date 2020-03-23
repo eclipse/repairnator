@@ -62,10 +62,6 @@ import jenkins.model.Jenkins;
 
 import java.util.List;
 
-
-import hudson.tasks.Mailer;
-import hudson.model.Descriptor;
-import hudson.tasks.Mailer.DescriptorImpl;
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
 
@@ -222,6 +218,7 @@ public class RepairnatorPostBuild extends Recorder {
                                         .withRepairTools(config.getTools())
                                         .asNoTravisRepair()
                                         .alsoCreatePR();
+
         ProcessBuilder builder = repProcBuilder.build();
         builder.redirectErrorStream(true);
         builder.inheritIO().redirectOutput(ProcessBuilder.Redirect.PIPE);
@@ -320,12 +317,6 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitBranch(branch);
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
-        if (Mailer.descriptor().getAuthentication() != null) {
-            config.setSmtpUsername(Mailer.descriptor().getAuthentication().getUsername());
-            config.setSmtpPassword(Mailer.descriptor().getAuthentication().getPassword().getPlainText());
-        }
-        config.setSmtpServer(Mailer.descriptor().getSmtpHost());
-        config.setSmtpPort(Mailer.descriptor().getSmtpPort());
         config.setUseTLS(this.useTLS);
         config.setNotifyTo(this.notifyTo);
     }
@@ -361,13 +352,6 @@ public class RepairnatorPostBuild extends Recorder {
         } catch(Exception e) {
             System.out.println("Failed to create env variable");
         }
-    }
-
-    public void extractInfo() {
-        System.out.println(Mailer.descriptor().getSmtpHost());
-        System.out.println(Mailer.descriptor().getSmtpPort());
-        System.out.println(Mailer.descriptor().getAuthentication().getUsername());
-        System.out.println(Mailer.descriptor().getAuthentication().getPassword().getPlainText());
     }
 
     @Override

@@ -7,10 +7,18 @@ import java.io.File;
 import java.io.IOException;
 
 /* Download latest Jar file from snapshot repo */
-public class RepairnatorJarDownloader extends FileDownloader{
+public class RepairnatorJarDownloader implements Downloader{
+    private String snapshotUrl;
 
 	public RepairnatorJarDownloader() {}
 
+    public RepairnatorJarDownloader(String snapshotUrl) {
+        this.snapshotUrl = snapshotUrl;
+    }
+
+    public void setSnapshotUrl(String snapshotUrl) {
+        this.snapshotUrl = snapshotUrl;
+    }
     /* does not work if maven repo has more than 9 jar uploaded*/
 	public String getLatestJarUrl(String snapshotUrl) throws IOException{
         Document doc = Jsoup.connect(snapshotUrl).get();
@@ -21,21 +29,32 @@ public class RepairnatorJarDownloader extends FileDownloader{
         }
 
         String jarUrl = snapshotUrl + "/" + latestSnapshot;
-        doc = Jsoup.connect(jarUrl).get();
+
+        HTMLPageDownloader htmlDownloader = new HTMLPageDownloader(jarUrl);
+        String docStr = htmlDownloader.downloadAndGetHTML();
+        doc = Jsoup.parse(docStr);
         for (Element file : doc.select("a[href*=jar-with-dependencies]")) {
             latestJar = file.attr("href");
         }
 
-        System.out.println(doc);
         System.out.println("LatestJarUrl: " + jarUrl  + latestJar);
         return jarUrl +  latestJar;
     }
 
     public void downloadJar(String snapshotUrl) throws IOException{
-        /*String latestJarUrl = this.getLatestJarUrl(snapshotUrl);*/
-
-        String latestJarUrl = "https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-pipeline/3.3-SNAPSHOT/repairnator-pipeline-3.3-20200316.204020-11-jar-with-dependencies.jar";
+        String latestJarUrl = this.getLatestJarUrl(snapshotUrl);
         String absoluteJarFilePath = Config.getInstance().getTempDir().getAbsolutePath() + File.separator + "repairnator.jar";
-        this.downloadFile(latestJarUrl,absoluteJarFilePath);
+
+        FileDownloader fileDownloader = new FileDownloader(latestJarUrl,absoluteJarFilePath);
+        fileDownloader.download();
+    }
+
+    @Override
+    public void download() {
+        try {
+            this.downloadJar(this.snapshotUrl);
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
