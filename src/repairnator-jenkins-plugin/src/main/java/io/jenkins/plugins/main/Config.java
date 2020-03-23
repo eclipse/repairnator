@@ -9,8 +9,6 @@ public class Config {
 	private static Config config;
 	private File tempDir;
 	private boolean quiet = false;
-	private boolean useTLS = false;
-	private boolean useEmailNotification = false;
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
 
