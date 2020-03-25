@@ -67,6 +67,10 @@ The documentation about the scripts is [available here](scripts.md). More detail
 * [Github app integration](https://github.com/eclipse/repairnator/blob/master/doc/repairnator-github-app.md)
 * [Deployment in Kubernetes](https://github.com/eclipse/repairnator/blob/master/doc/repairnator-kubernetes.md)
 
+### Pull-requests
+
+When Repairnator is configured to create a pull-request automatically, it uses the text of `TEXT_PR` from [AbstractRepairStep](https://github.com/eclipse/repairnator/blob/master/src/repairnator-pipeline/src/main/java/fr/inria/spirals/repairnator/process/step/repair/AbstractRepairStep.java). In the future, it is planned to generate a specific piece of text to explain the patch (see [Explainable Software Bot Contributions: Case Study of Automated Bug Fixes](http://arxiv.org/pdf/1905.02597) ([doi:10.1109/BotSE.2019.00010](https://doi.org/10.1109/BotSE.2019.00010)))
+
 ## Program repair tools used in Repairnator
  
 For more information about the program repair tools and their strategies implemented in Repairnator, [take a look at this page](repair-tools.md).
