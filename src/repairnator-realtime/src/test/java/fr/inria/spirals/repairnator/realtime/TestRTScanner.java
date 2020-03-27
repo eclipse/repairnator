@@ -28,20 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TestRTScanner {
-
-    // a failing build from tailp/Travisplay , branch failForRepairnator
-    public final int easyFailingBuild = 569514744;
-
-    @Test
-    public void testDockerPipelineRunner() throws Exception {
-        RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"NPEFix"})));
-        DockerPipelineRunner d = new DockerPipelineRunner();
-        d.initRunner();
-        RunnablePipelineContainer runner = d.submitBuild(DockerPipelineRunner.REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME, new InputBuildId(RepairnatorConfig.getInstance().getJTravis().build().fromId(easyFailingBuild).get().getId()));
-        runner.run();
-        assertEquals(0, runner.getExitStatus().statusCode().longValue());
-    }
-
+    
     @Test
     public void testRepositoryWithoutSuccessfulBuildIsNotInteresting() {
         String slug = "surli/failingProject";
@@ -100,37 +87,6 @@ public class TestRTScanner {
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
         assertFalse(result);
-    }
-
-    /**
-     * Note this test might fail locally if you don't have activeMQ
-     * In that case this test can be temporarily be commented out
-     * Also this build is taken from Tailp/travisplay, so if
-     * fetch another fail build from there or from another repo
-     * if 560996872 disappears in the future.
-     */
-    /*
-    // for some obscure reasons @Ignore is ignored
-    @Ignore
-    @Test
-     */
-    @Test
-    public void tactiveMQRunnerConnection()
-    {
-        int buildId = 560996872;
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setLauncherMode(LauncherMode.REPAIR);
-        config.setPipelineMode(PIPELINE_MODE.KUBERNETES.name());
-        config.setActiveMQUrl("tcp://localhost:61616");
-        config.setActiveMQSubmitQueueName("testing");
-
-        Optional<Build> optionalBuild = config.getJTravis().build().fromId(buildId);
-        assertTrue(optionalBuild.isPresent());
-
-        ActiveMQPipelineRunner runner = new ActiveMQPipelineRunner();
-        RTScanner rtScanner = new RTScanner("test", new ArrayList<>(), runner);
-        rtScanner.submitBuildToExecution(optionalBuild.get());
-        assertEquals("560996872",runner.receiveBuildFromQueue());
     }
 
     @Test
