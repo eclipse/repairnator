@@ -27,24 +27,4 @@ public class BuildRainerTest {
 
         assertEquals(receivedMsg,"Test");
     }
-
-    @Test
-    /**
-     * Test if ActiveMQSubmitter can successfully submit to queue
-     */
-    public void testActiveMQSubmitter()
-    {
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setActiveMQUrl("tcp://localhost:61616");
-        config.setActiveMQSubmitQueueName("testQueue");
-        config.setJmxHostName("localhost");
-        config.setQueueLimit(1);
-
-        ActiveMQBuildSubmitter submitter = new ActiveMQBuildSubmitter();
-        submitter.initBroker();
-        submitter.submitBuild(config.getInstance().getJTravis().build().fromId(589911671).get());
-
-        String received = submitter.receiveFromQueue();
-        assertEquals(received,"589911671");
-    }
 }
