@@ -203,16 +203,12 @@ public class FileHelper {
 					List<String> fileContent = Files.readAllLines(Paths.get(fileList[i].getAbsolutePath()));
 
 					if (!fileContent.contains(targetFolder)) {
-						try {
-							Writer output = new BufferedWriter(new FileWriter(fileList[i].getAbsolutePath(), true));
-							output.append("\n# Added by Repairnator\n" + targetFolder);
-							output.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						Writer output = new BufferedWriter(new FileWriter(fileList[i].getAbsolutePath(), true));
+						output.append("\n# Added by Repairnator\n" + targetFolder);
+						output.close();
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					getLogger().warn("removeTargetFolderFromFilesToPush", e);
 				}
             }
         }
