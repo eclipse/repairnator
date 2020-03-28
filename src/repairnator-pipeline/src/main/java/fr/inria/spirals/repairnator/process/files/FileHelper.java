@@ -188,6 +188,13 @@ public class FileHelper {
         }
     }
 
+    /**
+     * It allows to avoid that the "target" folder of the project under repair is pushed.
+     * To do this, it updates the existing .gitignore file (or it creates it from scratch
+     * if it does not exist), adding a rule to ignore the "target" folder.
+     *
+     * @param directory the root of the project under repair.
+     */
     public static void removeTargetFolderFromFilesToPush(File directory) {
     	boolean isGitignoreFilePresent = false;
     	File[] fileList = directory.listFiles();
