@@ -25,7 +25,7 @@ public class HTMLPageDownloader implements Downloader{
         docSb = new StringBuilder();
         try {
             realUrl = new URL(this.url);
-            is = realUrl.openStream();
+            is = realUrl.openStream(); 
             br = new BufferedReader(new InputStreamReader(is));
 
             while ((line = br.readLine()) != null) {
