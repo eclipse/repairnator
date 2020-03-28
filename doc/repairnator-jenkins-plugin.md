@@ -39,7 +39,13 @@ That's it, if you have a failing build for which Repairnator is able to find a p
 
 ### Case 2: Jenkins + Freestyle jobs.
 
-This is the same as Case 1, but patches are not pushed as pull-request to Github, they only appear in the build log
+This is the same as Case 1, but patches are not pushed as pull-request to Github, they only appear in the build log.
+
+You can choose to get a notification by email. The email server is the one of Jenkins' built-in configured server (Jenkins Home -> Manage Jenkins -> Configure System -> Email Notification).
+
+![](images/repairnator-jenkins-images/EmailNotificationPic.png)
+
+![](images/repairnator-jenkins-images/Emails4Notification.png)
 
 ### Advanced config
 
