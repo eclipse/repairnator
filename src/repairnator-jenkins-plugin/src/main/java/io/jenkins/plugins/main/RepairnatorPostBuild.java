@@ -69,7 +69,6 @@ public class RepairnatorPostBuild extends Recorder {
     private String gitOAuthToken;
     private String gitBranch;
     private String notifyTo;
-    private boolean useEmailNotification;
     private boolean useNPEFix;
     private boolean useAstorJKali;
     private boolean useAstorJMut;
@@ -82,7 +81,6 @@ public class RepairnatorPostBuild extends Recorder {
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
         this.notifyTo = notifyTo;
-        this.useEmailNotification = useEmailNotification;
     }
 
     public RepairnatorPostBuild() {}
@@ -147,10 +145,6 @@ public class RepairnatorPostBuild extends Recorder {
 
     public boolean useTLS() {
         return Config.getInstance().useTLSOrSSL();
-    }
-
-    public boolean getUseEmailNofication() {
-        return this.useEmailNotification;
     }
 
     public String[] getTools(){
@@ -399,7 +393,6 @@ public class RepairnatorPostBuild extends Recorder {
 
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-        private boolean useEmailNotification;
         private boolean useNPEFix;
         private boolean useAstorJMut;
         private boolean useAstorJKali;

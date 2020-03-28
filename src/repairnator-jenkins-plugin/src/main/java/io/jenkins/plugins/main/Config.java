@@ -95,11 +95,17 @@ public class Config {
 	}
 
 	public String getSmtpUsername() {
-		return Mailer.descriptor().getAuthentication().getUsername();
+		if (Mailer.descriptor().getAuthentication() != null) {
+			return Mailer.descriptor().getAuthentication().getUsername();
+		}
+		return null;
 	}
 
 	public String getSmtpPassword() {
-		return Mailer.descriptor().getAuthentication().getPassword().getPlainText();
+		if (Mailer.descriptor().getAuthentication() != null) {
+			return Mailer.descriptor().getAuthentication().getPassword().getPlainText();
+		}
+		return null;
 	}
 
 	public String getSmtpServer() {
@@ -122,10 +128,6 @@ public class Config {
 
 	public boolean useTLSOrSSL() {
 		return Mailer.descriptor().getUseSsl();
-	}
-
-	public boolean useEmailNotification() {
-		return this.useEmailNotification;
 	}
 
 	public boolean isQuiet() {
