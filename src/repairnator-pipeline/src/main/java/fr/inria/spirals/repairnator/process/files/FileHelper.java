@@ -1,11 +1,8 @@
 package fr.inria.spirals.repairnator.process.files;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -208,7 +205,7 @@ public class FileHelper {
 						output.close();
 					}
 				} catch (IOException e) {
-					getLogger().warn("removeTargetFolderFromFilesToPush", e);
+					getLogger().warn("Error with removeTargetFolderFromFilesToPush method when .gitignore file exists", e);
 				}
             }
         }
@@ -218,7 +215,7 @@ public class FileHelper {
     			String text = "# Added by Repairnator\n" + targetFolder;
 				Files.write(path, text.getBytes());
 			} catch (IOException e) {
-				e.printStackTrace();
+				getLogger().warn("Error with removeTargetFolderFromFilesToPush method when .gitignore file does not exist", e);
 			}
     	}
     }
