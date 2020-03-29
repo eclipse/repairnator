@@ -1,7 +1,9 @@
 package io.jenkins.plugins.main;
 import java.io.File;
-import com.google.common.io.Files;
+import java.nio.file.Files;
+/*import com.google.common.io.Files;*/
 import java.util.HashMap;
+import hudson.tasks.Mailer;
 
 public class Config {
 	private static Config config;
@@ -24,7 +26,7 @@ public class Config {
 	public File getTempDir() {
 		if (this.tempDir == null) {
 			try {
-				this.tempDir = Files.createTempDir();
+				this.tempDir = Files.createTempDirectory(Long.toString(System.nanoTime())).toFile();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -90,6 +92,42 @@ public class Config {
 
 	public String[] getTools(){
 		return this.tools;
+	}
+
+	public String getSmtpUsername() {
+		if (Mailer.descriptor().getAuthentication() != null) {
+			return Mailer.descriptor().getAuthentication().getUsername();
+		}
+		return null;
+	}
+
+	public String getSmtpPassword() {
+		if (Mailer.descriptor().getAuthentication() != null) {
+			return Mailer.descriptor().getAuthentication().getPassword().getPlainText();
+		}
+		return null;
+	}
+
+	public String getSmtpServer() {
+		return Mailer.descriptor().getSmtpHost();
+	}
+
+
+	public String getSmtpPort() {
+		return Mailer.descriptor().getSmtpPort();
+	}
+
+	/* format: person1,person2,person3.. */
+	public void setNotifyTo(String notifyTo) {
+		stringConfig.put("notifyTo",notifyTo);
+	}
+
+	public String getNotifyTo() {
+		return stringConfig.get("notifyTo");
+	}
+
+	public boolean useTLSOrSSL() {
+		return Mailer.descriptor().getUseSsl();
 	}
 
 	public boolean isQuiet() {

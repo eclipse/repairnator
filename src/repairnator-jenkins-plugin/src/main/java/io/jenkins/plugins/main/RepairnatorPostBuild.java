@@ -54,19 +54,21 @@ import hudson.FilePath;
 
 import org.apache.commons.io.FileUtils;
 
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.FileVisitResult;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.Path;
+import hudson.slaves.EnvironmentVariablesNodeProperty;
+import hudson.slaves.NodeProperty;
+import hudson.slaves.NodePropertyDescriptor;
+import hudson.util.DescribableList;
+import jenkins.model.Jenkins;
 
+import java.util.List;
 
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
 
-    private final String gitUrl;
-    private final String gitOAuthToken;
-    private final String gitBranch;
+    private String gitUrl;
+    private String gitOAuthToken;
+    private String gitBranch;
+    private String notifyTo;
     private boolean useNPEFix;
     private boolean useAstorJKali;
     private boolean useAstorJMut;
@@ -74,16 +76,14 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useNopolTestExclusionStrategy;
     
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,boolean useNPEFix,boolean useNPEFixSafe,boolean useAstorJKali,boolean useAstorJMut,boolean useNopolTestExclusionStrategy) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
-        this.useNPEFix = useNPEFix;
-        this.useNPEFixSafe = useNPEFixSafe;
-        this.useAstorJKali = useAstorJKali;
-        this.useAstorJMut = useAstorJMut;
-        this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;
+        this.notifyTo = notifyTo;
     }
+
+    public RepairnatorPostBuild() {}
 
     @DataBoundSetter
     public void setUseNPEFix(boolean useNPEFix) {
@@ -110,6 +110,23 @@ public class RepairnatorPostBuild extends Recorder {
         this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;
     }
 
+    public void setGitUrl(String gitUrl) {
+        this.gitUrl = gitUrl;
+    }
+
+    public void setGitOAuthToken(String gitOAuthToken) {
+        this.gitOAuthToken = gitOAuthToken;
+    }
+
+    public void setGitBranch(String gitBranch) {
+        this.gitBranch = gitBranch;
+    }
+
+    public void setNotifyTo(String notifyTo) {
+        this.notifyTo = notifyTo;
+    }
+
+
     public String getGitUrl() {
         return gitUrl;
     }
@@ -122,6 +139,13 @@ public class RepairnatorPostBuild extends Recorder {
         return this.gitBranch;
     }
 
+    public String getNotifyTo() {
+        return this.notifyTo;
+    }
+
+    public boolean useTLS() {
+        return Config.getInstance().useTLSOrSSL();
+    }
 
     public String[] getTools(){
         String dummy = "";
@@ -173,6 +197,11 @@ public class RepairnatorPostBuild extends Recorder {
                                         .onGitUrl(config.getGitUrl())
                                         .onGitBranch(config.getGitBranch())
                                         .onGitOAuth(config.getGitOAuth())
+                                        .withSmtpUsername(config.getSmtpUsername())
+                                        .withSmtpPassword(config.getSmtpPassword())
+                                        .withSmtpServer(config.getSmtpServer())
+                                        .withSmtpPort(config.getSmtpPort())
+                                        .shouldNotifyTo(config.getNotifyTo())
                                         .withRepairTools(config.getTools())
                                         .asNoTravisRepair()
                                         .alsoCreatePR();
@@ -264,6 +293,7 @@ public class RepairnatorPostBuild extends Recorder {
 
     public void configure(String url,String branch, EnvVars env) {
         Config config = Config.getInstance();
+
         String javaHome = env.get("JAVA_HOME");
         String javaExec = javaHome + File.separator + "bin" + File.separator + "java";
         String jarLocation =  Config.getInstance().getTempDir().getAbsolutePath() + File.separator +"repairnator.jar";
@@ -274,13 +304,39 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitBranch(branch);
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
+        config.setNotifyTo(this.notifyTo);
     }
 
     public void cleanUp(){
         try {
-            Config.getInstance().getTempDir().delete();
+            FileUtils.cleanDirectory(Config.getInstance().getTempDir());
         } catch(Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void createGlobalEnvironmentVariables(String key, String value){
+
+        Jenkins instance = Jenkins.getInstance();
+
+        DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = instance.getGlobalNodeProperties();
+        List<EnvironmentVariablesNodeProperty> envVarsNodePropertyList = globalNodeProperties.getAll(EnvironmentVariablesNodeProperty.class);
+
+        EnvironmentVariablesNodeProperty newEnvVarsNodeProperty = null;
+        EnvVars envVars = null;
+
+        if ( envVarsNodePropertyList == null || envVarsNodePropertyList.size() == 0 ) {
+            newEnvVarsNodeProperty = new hudson.slaves.EnvironmentVariablesNodeProperty();
+            globalNodeProperties.add(newEnvVarsNodeProperty);
+            envVars = newEnvVarsNodeProperty.getEnvVars();
+        } else {
+            envVars = envVarsNodePropertyList.get(0).getEnvVars();
+        }
+        envVars.put(key, value);
+        try {
+            instance.save();
+        } catch(Exception e) {
+            System.out.println("Failed to create env variable");
         }
     }
 
@@ -313,17 +369,13 @@ public class RepairnatorPostBuild extends Recorder {
             }
 
             this.runRepairnator(env);
-            /*this.cleanUp();*/
+            this.cleanUp();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return true;
     }
 
-
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) super.getDescriptor();
@@ -339,21 +391,14 @@ public class RepairnatorPostBuild extends Recorder {
         return null;
     }
 
-
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-        /**
-         * To persist global configuration information,
-         * simply store it in a field and call save().
-         * <p/>
-         * <p/>
-         * If you don't want fields to be persisted, use <tt>transient</tt>.
-         */
         private boolean useNPEFix;
         private boolean useAstorJMut;
         private boolean useAstorJKali;
         private boolean useNPEFixSafe;
         private boolean useNopolTestExclusionStrategy;
+        private String notifyTo;
 
         /**
          * In order to load the persisted global configuration, you have to
@@ -373,24 +418,6 @@ public class RepairnatorPostBuild extends Recorder {
          * prevent the form from being saved. It just means that a message
          * will be displayed to the user.
          */
-        public FormValidation doCheckGitUrl(@QueryParameter String value)
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.error("Example: https://github.com/surli/failingProject.git");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckGitOAuthToken(@QueryParameter String value )
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.error("Provide a Git Token for Repairnator to make a pull request if patch is found");
-            return FormValidation.ok();
-        }
-
-        public FormValidation doCheckGitBranch(@QueryParameter String value )
-                throws IOException, ServletException {
-            return FormValidation.warning("Default should be master or auto detect branch if using together with Jenkins Github plugin");
-        }
 
          public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy) {
             return FormValidation.ok();
@@ -412,41 +439,41 @@ public class RepairnatorPostBuild extends Recorder {
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             // To persist global configuration information,
             // set that to properties and call save().
+            req.bindJSON(this, formData);
             useNPEFix = formData.getBoolean("useNPEFix");
             useAstorJKali = formData.getBoolean("useAstorJKali");
             useAstorJMut = formData.getBoolean("useAstorJMut");
             useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
             useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
+            notifyTo = formData.getString("notifyTo");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseNPEFix)
             save();
-            return super.configure(req, formData);
+            return true;
         }
 
-        /**
-         * This method returns true if the global configuration says we should speak French.
-         * <p/>
-         * The method name is bit awkward because global.jelly calls this method to determine
-         * the initial state of the checkbox by the naming convention.
-         */
-        public boolean getUseNPEFix() {
+        public boolean useNPEFix() {
             return useNPEFix;
         }
 
-        public boolean getUseAstorJKali() {
+        public boolean useAstorJKali() {
             return useAstorJKali;
         }
 
-        public boolean getUseAstorJMut() {
+        public boolean useAstorJMut() {
             return useAstorJMut;
         }
 
-        public boolean getUseNPEFixSafe() {
+        public boolean useNPEFixSafe() {
             return useNPEFixSafe;
         }
 
-        public boolean getUseNopolTestExclusionStrategy() {
+        public boolean useNopolTestExclusionStrategy() {
             return useNopolTestExclusionStrategy;
+        }
+
+        public String getNotifyTo() {
+            return notifyTo;
         }
     }
 }

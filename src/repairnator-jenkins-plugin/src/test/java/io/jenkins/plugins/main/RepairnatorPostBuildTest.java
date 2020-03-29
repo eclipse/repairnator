@@ -20,7 +20,12 @@ public class RepairnatorPostBuildTest {
     @Test
     public void testNPEFIX() throws Exception {
         FreeStyleProject project = jenkins.createFreeStyleProject();
-        RepairnatorPostBuild postBuild = new RepairnatorPostBuild(gitUrl,gitOAuthToken,gitBranch,true,false,false,false,false);
+        RepairnatorPostBuild postBuild = new RepairnatorPostBuild();
+        postBuild.setGitUrl(gitUrl);
+        postBuild.setGitOAuthToken(gitOAuthToken);
+        postBuild.setGitBranch(gitBranch);
+        postBuild.setUseNPEFix(true);
+
         project.getPublishersList().add(postBuild);
 
         FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);

@@ -332,8 +332,8 @@ public class Launcher {
         }
         this.getConfig().setCreatePR(LauncherUtils.getArgCreatePR(arguments));
 
-        // we fork if we need to create a PR or if we need to notify
-        if (this.getConfig().isCreatePR() || (this.getConfig().getSmtpServer() != null && !this.getConfig().getSmtpServer().isEmpty() && this.getConfig().getNotifyTo() != null && this.getConfig().getNotifyTo().length > 0)) {
+        // we fork if we need to create a PR or if we need to notify (but only when we have a git token)
+        if (this.getConfig().isCreatePR() || (this.getConfig().getSmtpServer() != null && !this.getConfig().getSmtpServer().isEmpty() && this.getConfig().getNotifyTo() != null && this.getConfig().getNotifyTo().length > 0 && this.getConfig().getGithubToken() != null)) {
             this.getConfig().setFork(true);
         }
         this.getConfig().setBuildId(arguments.getInt("build"));
