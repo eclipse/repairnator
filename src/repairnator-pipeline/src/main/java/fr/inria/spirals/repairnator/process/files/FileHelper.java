@@ -1,12 +1,16 @@
 package fr.inria.spirals.repairnator.process.files;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,5 +186,44 @@ public class FileHelper {
                 }
             }
         }
+    }
+
+    /**
+     * It allows to avoid that the "target" folder of the project under repair is pushed.
+     * To do this, it updates the existing .gitignore file (or it creates it from scratch
+     * if it does not exist), adding a rule to ignore the "target" folder.
+     *
+     * @param directory the root of the project under repair.
+     */
+    public static void removeTargetFolderFromFilesToPush(File directory) {
+    	boolean isGitignoreFilePresent = false;
+    	File[] fileList = directory.listFiles();
+    	String targetFolder = "target/";
+
+    	for (int i = 0; i < fileList.length && !isGitignoreFilePresent; i++) {
+            if (fileList[i].isFile() && fileList[i].getName().equals(".gitignore")) {
+            	isGitignoreFilePresent = true;
+            	try {
+					List<String> fileContent = Files.readAllLines(Paths.get(fileList[i].getAbsolutePath()));
+
+					if (!fileContent.contains(targetFolder)) {
+						Writer output = new BufferedWriter(new FileWriter(fileList[i].getAbsolutePath(), true));
+						output.append("\n# Added by Repairnator\n" + targetFolder);
+						output.close();
+					}
+				} catch (IOException e) {
+					getLogger().warn("Error with removeTargetFolderFromFilesToPush method when .gitignore file exists", e);
+				}
+            }
+        }
+    	if (!isGitignoreFilePresent) {
+    		Path path = Paths.get(directory + File.separator + ".gitignore");
+    		try {
+    			String text = "# Added by Repairnator\n" + targetFolder;
+				Files.write(path, text.getBytes());
+			} catch (IOException e) {
+				getLogger().warn("Error with removeTargetFolderFromFilesToPush method when .gitignore file does not exist", e);
+			}
+    	}
     }
 }
