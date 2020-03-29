@@ -243,7 +243,7 @@ public class GitRepositoryLauncher extends LegacyLauncher {
 
     @Override
     protected void initConfig(JSAPResult arguments) {
-    	if (LauncherUtils.getArgDebug(arguments)) {
+        if (LauncherUtils.getArgDebug(arguments)) {
             getConfig().setDebug(true);
         }
         getConfig().setClean(true);
@@ -253,11 +253,11 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         if (GitRepositoryLauncherUtils.getArgGitRepositoryMode(arguments)) {
             getConfig().setLauncherMode(LauncherMode.GIT_REPOSITORY);
             if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
-            	getConfig().setGitRepositoryFirstCommit(true);
+                getConfig().setGitRepositoryFirstCommit(true);
             }
         } else {
-        	System.err.println("Error: Parameter 'gitrepo' is required in GIT_REPOSITORY launcher mode.");
-    		LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+            System.err.println("Error: Parameter 'gitrepo' is required in GIT_REPOSITORY launcher mode.");
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
         }
         
         if (LauncherUtils.getArgOutput(arguments) != null) {
@@ -284,18 +284,18 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         }
 
         if (arguments.getString("gitRepositoryUrl") == null) {
-    		System.err.println("Error: Parameter 'gitrepourl' is required in GIT_REPOSITORY launcher mode.");
-    		LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
-    	}
+            System.err.println("Error: Parameter 'gitrepourl' is required in GIT_REPOSITORY launcher mode.");
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        }
 
-    	if (getConfig().isGitRepositoryFirstCommit() && arguments.getString("gitRepositoryIdCommit") != null) {
-    		System.err.println("Error: Parameters 'gitrepofirstcommit' and 'gitrepoidcommit' cannot be used at the same time.");
-    		LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
-    	}
+        if (getConfig().isGitRepositoryFirstCommit() && arguments.getString("gitRepositoryIdCommit") != null) {
+            System.err.println("Error: Parameters 'gitrepofirstcommit' and 'gitrepoidcommit' cannot be used at the same time.");
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        }
 
-    	getConfig().setGitRepositoryUrl(arguments.getString("gitRepositoryUrl"));
-    	getConfig().setGitRepositoryBranch(arguments.getString("gitRepositoryBranch"));
-    	getConfig().setGitRepositoryIdCommit(arguments.getString("gitRepositoryIdCommit"));
+        getConfig().setGitRepositoryUrl(arguments.getString("gitRepositoryUrl"));
+        getConfig().setGitRepositoryBranch(arguments.getString("gitRepositoryBranch"));
+        getConfig().setGitRepositoryIdCommit(arguments.getString("gitRepositoryIdCommit"));
         
 
         getConfig().setZ3solverPath(new File(arguments.getString("z3")).getPath());
@@ -371,19 +371,19 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         inspector = new GitRepositoryProjectInspector(
-        		getConfig().getGitRepositoryUrl(),
-        		getConfig().getGitRepositoryBranch(),
-        		getConfig().getGitRepositoryIdCommit(),
-        		getConfig().isGitRepositoryFirstCommit(),
-        		getConfig().getWorkspacePath(),
-        		serializers,
-        		this.notifiers
+                getConfig().getGitRepositoryUrl(),
+                getConfig().getGitRepositoryBranch(),
+                getConfig().getGitRepositoryIdCommit(),
+                getConfig().isGitRepositoryFirstCommit(),
+                getConfig().getWorkspacePath(),
+                serializers,
+                this.notifiers
         );
         
         System.out.println("Finished " + this.inspector.isPipelineEnding());
         
         serializers.add(new InspectorSerializer4GitRepository(this.engines, inspector));
-    	serializers.add(new PropertiesSerializer4GitRepository(this.engines, inspector));
+        serializers.add(new PropertiesSerializer4GitRepository(this.engines, inspector));
         serializers.add(new InspectorTimeSerializer4GitRepository(this.engines, inspector));
         serializers.add(new PipelineErrorSerializer4GitRepository(this.engines, inspector));
         serializers.add(new PatchesSerializer4GitRepository(this.engines, inspector));
@@ -402,8 +402,13 @@ public class GitRepositoryLauncher extends LegacyLauncher {
     }
 
     public static void main(String[] args) throws JSAPException {
+<<<<<<< HEAD
     	GitRepositoryLauncher launcher = new GitRepositoryLauncher(args);
     	launcher.initProcess(launcher);
+=======
+        GitRepositoryLauncher launcher = new GitRepositoryLauncher(args);
+        initProcess(launcher);
+>>>>>>> Fix: fix ci
     }
 
 
