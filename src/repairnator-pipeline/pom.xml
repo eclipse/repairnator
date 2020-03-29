@@ -146,7 +146,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.inria.spirals.repairnator.pipeline.Launcher</mainClass>
+                            <mainClass>fr.inria.spirals.repairnator.pipelineb.Launcher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
