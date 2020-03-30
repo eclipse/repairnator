@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
  */
 public class NoopListener implements Listener{
     private static final Logger LOGGER = LoggerFactory.getLogger(NoopListener.class);
-    private Launcher launcher;
+    private LauncherAPI launcher;
 
     private static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
 
-    public NoopListener(Launcher launcher){
+    public NoopListener(LauncherAPI launcher){
         this.launcher = launcher;
         LOGGER.warn("NOOP MODE");
     }

@@ -18,9 +18,9 @@ import java.io.IOException;
 public class PipelineBuildListener implements Listener,MessageListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(PipelineBuildListener.class);
     private static final RepairnatorConfig config = RepairnatorConfig.getInstance();
-    private Launcher launcher;
+    private LauncherAPI launcher;
 
-    public PipelineBuildListener(Launcher launcher){
+    public PipelineBuildListener(LauncherAPI launcher){
         this.launcher = launcher;
         LOGGER.warn("KUBERNETES MODE");
     }
