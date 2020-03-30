@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 
 public class TestPipeline {
 
-/*    @Test
+    @Test
     public void testPipelineArgs() throws Exception {
         Launcher launcher = new Launcher();
         // the default repair tool
@@ -92,7 +92,7 @@ public class TestPipeline {
         
         l.mainProcess();
         assertEquals("TEST FAILURE", l.getInspector().getFinding());
-    }*/
+    }
 
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {

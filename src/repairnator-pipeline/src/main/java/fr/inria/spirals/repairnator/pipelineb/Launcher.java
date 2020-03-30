@@ -30,6 +30,15 @@ public class Launcher {
         opt2.setHelp("specify launcherMode. REPAIR: standard repairnator repair with Travis build ids. BEARS: analyze pairs of bugs and human-produced patches. CHECKSTYLE: analyze build failing because of checkstyle. GIT_REPOSITORY: repairnator repair with Git instead of standard Travis. KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids");
         jsap.registerParameter(opt2);
 
+        /* Should be removed later once this Launcher is stable*/
+
+        opt2 = new FlaggedOption("launcherChoice");
+        opt2.setLongFlag("launcherChoice");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("OLD");
+        opt2.setHelp("OLD: Original Launcher. NEW: new launcher.");
+        jsap.registerParameter(opt2);
+
         return jsap;
 	}
 
@@ -74,7 +83,14 @@ public class Launcher {
 
 	public static void main(String[] args) throws JSAPException {
 		JSAP jsap = defineBasicArgs();
-		MainProcess mainProcess = getMainProcess(jsap,args);
-		mainProcess.run();
+
+		JSAPResult jsapResult = jsap.parse(args); // remove later once Launcher is stable
+		String choice = jsapResult.getString("launcherChoice");
+		if (choice.equals("OLD") ) {
+			fr.inria.spirals.repairnator.pipeline.Launcher.main(args);
+		} else {
+			MainProcess mainProcess = getMainProcess(jsap,args);
+			mainProcess.run();
+		}
 	}
 }

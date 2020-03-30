@@ -48,7 +48,9 @@ public class TestPipelineb {
         // (set in Travis config)
         // eg export M2_HOME=/usr/share/maven
         // from surli/failingBuild
-        DefaultMainProcess mainProc = (DefaultMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "564711868", "--repairTools", "NPEFix"});
+        DefaultMainProcess mainProc = (DefaultMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "564711868",
+            "--repairTools", "NPEFix",
+            "--workspace","./workspace-pipelinep"});
 		Patches patchNotifier = new Patches();
 		mainProc.setPatchNotifier(patchNotifier);
 		mainProc.run();
@@ -63,6 +65,7 @@ public class TestPipelineb {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/surli/failingProject",
+                    "--workspace","./workspace-pipelinep"
                 });
 
         Patches patchNotifier = new Patches();
@@ -79,7 +82,8 @@ public class TestPipelineb {
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/surli/failingProject",
                     "--gitrepobranch", "astor-jkali-failure",
-                    "--repairTools", "AstorJKali"
+                    "--repairTools", "AstorJKali",
+                    "--workspace","./workspace-pipelinep"
                 });
 
         mainProc.run();
@@ -91,7 +95,8 @@ public class TestPipelineb {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/surli/failingProject",
-                    "--gitrepoidcommit", "f1233f8863d45141ae0ff17df897006f07e707bb"
+                    "--gitrepoidcommit", "f1233f8863d45141ae0ff17df897006f07e707bb",
+                    "--workspace","./workspace-pipelinep"
                 });
 
         mainProc.run();
@@ -103,7 +108,8 @@ public class TestPipelineb {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/surli/failingProject",
-                    "--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9"
+                    "--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
+                    "--workspace","./workspace-pipelinep"
                 });
 
         Patches patchNotifier = new Patches();
@@ -120,6 +126,7 @@ public class TestPipelineb {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/surli/failingProject",
+                    "--workspace","./workspace-pipelinep",
                     "--gitrepofirstcommit"
                 });
 
@@ -133,7 +140,7 @@ public class TestPipelineb {
     	// reproducing the 12th PR of Luc
 		// see https://github.com/eclipse/repairnator/issues/758
 
-        DefaultMainProcess mainProc = (DefaultMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "395891390", "--repairTools", "NPEFix" });
+        DefaultMainProcess mainProc = (DefaultMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "395891390", "--repairTools", "NPEFix", "--workspace","./workspace-pipelinep" });
 		Patches patchNotifier = new Patches();
 		mainProc.setPatchNotifier(patchNotifier);
 		mainProc.run();
