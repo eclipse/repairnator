@@ -12,7 +12,7 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 
-public class Launcher {
+public class Launcher implements LauncherAPI {
     private static LauncherAPI launcher;
 
     public Launcher(String[] args) throws JSAPException{
@@ -44,26 +44,36 @@ public class Launcher {
     }
 
     public static void main(String[] args) throws JSAPException{
-        init(args);
-        launcher.launch();
+        Launcher main = new Launcher(args);
+        main.launch();
     }
 
-    protected static RepairnatorConfig getConfig() {
-        return launcher.getConfig();
-    }
-
-    public static boolean mainProcess() {
+    public boolean mainProcess() {
         return launcher.mainProcess();
     }
 
-    public static ProjectInspector getInspector() {
-        return launcher.getInspector();
-    }
+    @Override
+    public void launch() {}
 
-    public static JSAP defineArgs() throws JSAPException{
+    @Override
+    public void mainProcess() {}
+
+    @Override
+    public JSAP defineArgs() throws JSAPException{
         return launcher.defineArgs();
     }
 
+    @Override
+    protected RepairnatorConfig getConfig() {
+        return launcher.getConfig();
+    }
+
+    @Override
+    public ProjectInspector getInspector() {
+        return launcher.getInspector();
+    }
+
+    @Override
     public static void setPatchNotifier(PatchNotifier patchNotifier) {
         launcher.setPatchNotifier(patchNotifier);
     }
