@@ -18,20 +18,21 @@ public class TestPipeline {
 
     @Test
     public void testPipelineArgs() throws Exception {
+        Launcher launcher = new Launcher();
         // the default repair tool
-        assertEquals(1, ((FlaggedOption)Launcher.defineArgs().getByLongFlag("repairTools")).getDefault().length);
-        assertEquals("NPEFix", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("repairTools")).getDefault()[0]);
+        assertEquals(1, ((FlaggedOption)launcher.defineArgs().getByLongFlag("repairTools")).getDefault().length);
+        assertEquals("NPEFix", ((FlaggedOption)launcher.defineArgs().getByLongFlag("repairTools")).getDefault()[0]);
 
         // by default the activemq username and password should be blank
-        assertEquals("", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("activemqusername")).getDefault()[0]);
-        assertEquals("", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("activemqpassword")).getDefault()[0]);
+        assertEquals("", ((FlaggedOption)launcher.defineArgs().getByLongFlag("activemqusername")).getDefault()[0]);
+        assertEquals("", ((FlaggedOption)launcher.defineArgs().getByLongFlag("activemqpassword")).getDefault()[0]);
 
         // non default value is accepted
-        assertEquals("NopolAllTests", ((FlaggedOption)Launcher.defineArgs().getByLongFlag("repairTools")).getStringParser().parse("NopolAllTests"));
+        assertEquals("NopolAllTests", ((FlaggedOption)launcher.defineArgs().getByLongFlag("repairTools")).getStringParser().parse("NopolAllTests"));
 
         // incorrect values are rejected
         try {
-            ((FlaggedOption)Launcher.defineArgs().getByLongFlag("repairTools")).getStringParser().parse("garbage");
+            ((FlaggedOption)launcher.defineArgs().getByLongFlag("repairTools")).getStringParser().parse("garbage");
             fail();
         } catch (Exception expected) {}
 
