@@ -7,10 +7,10 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 
 import com.martiansoftware.jsap.JSAP;
 
-public class Launcher implements LauncherAPI{
+public class BranchLauncher implements LauncherAPI{
 	private String[] args;
 
-	public Launcher(String[] args) {
+	public BranchLauncher(String[] args) {
 		this.args = args;
 	}
 

@@ -26,7 +26,7 @@ public class Launcher implements LauncherAPI {
         if (choice.equals("OLD")) {
             launcher = new LegacyLauncher(args);
         } else {
-            launcher = new fr.inria.spirals.repairnator.pipelineb.Launcher(args);
+            launcher = new BranchLauncher(args);
         }
     }
 
@@ -48,6 +48,7 @@ public class Launcher implements LauncherAPI {
         main.launch();
     }
 
+    @Override
     public boolean mainProcess() {
         return launcher.mainProcess();
     }
@@ -56,15 +57,12 @@ public class Launcher implements LauncherAPI {
     public void launch() {}
 
     @Override
-    public void mainProcess() {}
-
-    @Override
     public JSAP defineArgs() throws JSAPException{
         return launcher.defineArgs();
     }
 
     @Override
-    protected RepairnatorConfig getConfig() {
+    public RepairnatorConfig getConfig() {
         return launcher.getConfig();
     }
 
@@ -74,7 +72,7 @@ public class Launcher implements LauncherAPI {
     }
 
     @Override
-    public static void setPatchNotifier(PatchNotifier patchNotifier) {
+    public void setPatchNotifier(PatchNotifier patchNotifier) {
         launcher.setPatchNotifier(patchNotifier);
     }
 }
