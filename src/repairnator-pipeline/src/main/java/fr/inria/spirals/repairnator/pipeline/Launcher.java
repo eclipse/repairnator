@@ -15,6 +15,8 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 public class Launcher implements LauncherAPI {
     private static LauncherAPI launcher;
 
+    public Launcher() {}
+    
     public Launcher(String[] args) throws JSAPException{
         init(args);
     }
