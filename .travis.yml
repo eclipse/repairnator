@@ -8,7 +8,7 @@ jdk: openjdk8
 services:
  - docker
 
-
+install: true
 
 jobs:
   include:
@@ -22,5 +22,5 @@ jobs:
     - stage: deploy
       name: "deploy to Sonatype and Dockerhub"
       script: ./.travis/travis-deploy.sh
-      if: branch = master
+      if: TRAVIS_PULL_REQUEST = false AND branch = master
 
