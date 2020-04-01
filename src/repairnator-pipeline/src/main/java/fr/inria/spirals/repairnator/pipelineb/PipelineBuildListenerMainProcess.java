@@ -19,12 +19,14 @@ import java.io.IOException;
 public class PipelineBuildListenerMainProcess implements MainProcess,MessageListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(PipelineBuildListenerMainProcess.class);
     private static final RepairnatorConfig config = RepairnatorConfig.getInstance();
-    private MainProcess mainProcess;
+    private MainProcess onMessageMainProcess;
 
-    public PipelineBuildListenerMainProcess(MainProcess mainProcess){
-        this.mainProcess = mainProcess;
+    public PipelineBuildListenerMainProcess(MainProcess onMessageMainProcess){
+        this.onMessageMainProcess = onMessageMainProcess;
         LOGGER.warn("KUBERNETES MODE");
     }
+
+
 
     /**
      * Run this as a listener server and fetch one message as a time, 
@@ -69,11 +71,11 @@ public class PipelineBuildListenerMainProcess implements MainProcess,MessageList
             int buildId = this.extractBuiltId(message);
             LOGGER.info("A new buildId has arrived: " + buildId);
             config.setBuildId(buildId);
-            this.mainProcess.run();
+            this.onMessageMainProcess.run();
 
             /* Delete the folder when done*/
             this.deleteDir(String.valueOf(buildId));
-            this.deleteDir("workspace");
+            this.deleteDir(config.getWorkspacePath());
 
             LOGGER.warn("Done repairning. Awaiting for new build ... ");
         } catch (JMSException e) {

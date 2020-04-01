@@ -68,6 +68,7 @@ public class DefaultDefineJSAPArgs implements IDefineJSAPArgs{
         opt2.setShortFlag('b');
         opt2.setLongFlag("build");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
+        opt2.setDefault("0");
         opt2.setHelp("Specify the build id to use.");
         jsap.registerParameter(opt2);
 

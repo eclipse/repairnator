@@ -63,8 +63,10 @@ public class MainProcessFactory {
 		return githubMainProcess;
 	}
 
-	public static void getPipelineListenerMainProcess() {
-		/* todo */
+	/* */
+	public static MainProcess getPipelineListenerMainProcess(String[] inputArgs) {
+		MainProcess defaultMainProcess = getDefaultMainProcess(inputArgs);
+		return new PipelineBuildListenerMainProcess(defaultMainProcess);
 	}
 
 	public static void getJenkinsMainProcess() {
