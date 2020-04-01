@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;

@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;

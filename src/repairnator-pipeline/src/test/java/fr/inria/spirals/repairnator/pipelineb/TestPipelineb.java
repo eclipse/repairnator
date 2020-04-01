@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
 import com.martiansoftware.jsap.FlaggedOption;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;

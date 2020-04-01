@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
 
@@ -12,7 +12,6 @@ import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
 

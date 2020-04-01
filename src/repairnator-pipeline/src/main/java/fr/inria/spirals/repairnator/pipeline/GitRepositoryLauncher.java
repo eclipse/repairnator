@@ -402,13 +402,8 @@ public class GitRepositoryLauncher extends LegacyLauncher {
     }
 
     public static void main(String[] args) throws JSAPException {
-<<<<<<< HEAD
     	GitRepositoryLauncher launcher = new GitRepositoryLauncher(args);
     	launcher.initProcess(launcher);
-=======
-        GitRepositoryLauncher launcher = new GitRepositoryLauncher(args);
-        initProcess(launcher);
->>>>>>> Fix: fix ci
     }
 
 

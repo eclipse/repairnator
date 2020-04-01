@@ -1,5 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb;
-
+package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
