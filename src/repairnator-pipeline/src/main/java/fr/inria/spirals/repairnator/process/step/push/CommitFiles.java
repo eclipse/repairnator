@@ -48,6 +48,8 @@ public class CommitFiles extends AbstractStep {
 
             FileHelper.removeGhOauthFromCreatedFilesToPush(targetDir, this.getInspector().getJobStatus().getCreatedFilesToPush());
 
+            FileHelper.removeTargetFolderFromFilesToPush(targetDir);
+
             try {
                 Git git;
 

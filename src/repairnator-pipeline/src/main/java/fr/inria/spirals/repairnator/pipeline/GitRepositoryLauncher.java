@@ -51,7 +51,7 @@ import java.util.Properties;
  * This class is the main entry point for the Repairnator pipeline
  * when Repairnator is executed with the GIT_REPOSITORY launcher mode.
  */
-public class GitRepositoryLauncher extends Launcher {
+public class GitRepositoryLauncher extends LegacyLauncher {
     private static Logger LOGGER = LoggerFactory.getLogger(GitRepositoryLauncher.class);
    
     private static File tempDir;
@@ -76,7 +76,7 @@ public class GitRepositoryLauncher extends Launcher {
             LOGGER.info("No information about PIPELINE VERSION has been found.");
         }
 
-        jsap = defineArgs();
+        jsap = this.defineArgs();
         JSAPResult arguments = jsap.parse(args);
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
         this.initConfig(arguments);
@@ -95,7 +95,8 @@ public class GitRepositoryLauncher extends Launcher {
         this.initNotifiers();
     }
 
-    public static JSAP defineArgs() throws JSAPException {
+    @Override
+    public JSAP defineArgs() throws JSAPException {
         // Verbose output
         JSAP jsap = new JSAP();
 
@@ -402,6 +403,8 @@ public class GitRepositoryLauncher extends Launcher {
 
     public static void main(String[] args) throws JSAPException {
     	GitRepositoryLauncher launcher = new GitRepositoryLauncher(args);
-    	initProcess(launcher);
+    	launcher.initProcess(launcher);
     }
+
+
 }
