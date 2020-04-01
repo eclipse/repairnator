@@ -40,7 +40,7 @@ import com.google.common.io.Files;
 import java.util.Properties;
 
 /* Entry point as Jenkins plugin - skip JSAP */
-public class JenkinsLauncher extends Launcher {
+public class JenkinsLauncher extends LegacyLauncher {
   private static Logger LOGGER = LoggerFactory.getLogger(JenkinsLauncher.class);
   private static String gitUrl;
   private String pushUrl;
