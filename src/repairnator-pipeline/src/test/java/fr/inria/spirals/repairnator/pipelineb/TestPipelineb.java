@@ -120,6 +120,23 @@ public class TestPipelineb {
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
 	}
     
+    @Test
+    public void testJenkinsGitRepositoryAndBranchWithSucess() throws Exception {
+        JenkinsMainProcess mainProc = (JenkinsMainProcess) MainProcessFactory.getJenkinsPluginMainProcess(new String[]{
+                    "--gitrepo",
+                    "--gitrepourl", "https://github.com/surli/failingProject",
+                    "--gitrepobranch", "astor-jkali-failure",
+                    "--workspace","./workspace-pipelinep"
+                });
+
+        Patches patchNotifier = new Patches();
+        mainProc.setPatchNotifier(patchNotifier);
+        mainProc.run();
+        assertEquals("PATCHED", mainProc.getInspector().getFinding());
+        assertEquals(10, patchNotifier.allpatches.size());
+        assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
+    }
+
     @Ignore
     @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {

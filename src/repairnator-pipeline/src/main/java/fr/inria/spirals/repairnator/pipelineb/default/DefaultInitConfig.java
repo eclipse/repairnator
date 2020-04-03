@@ -41,6 +41,8 @@ public class DefaultInitConfig implements IInitConfig {
         this.getConfig().setClean(true);
         this.getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         this.getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
+
+        /* Remove later - already set at basic args at the launcher */
         if (LauncherUtils.gerArgBearsMode(arguments)) {
             this.getConfig().setLauncherMode(LauncherMode.BEARS);
         } else if (LauncherUtils.gerArgCheckstyleMode(arguments)) {

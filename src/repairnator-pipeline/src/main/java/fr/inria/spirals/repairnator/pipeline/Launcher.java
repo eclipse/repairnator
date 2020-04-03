@@ -46,8 +46,16 @@ public class Launcher implements LauncherAPI {
     }
 
     public static void main(String[] args) throws JSAPException{
-        Launcher main = new Launcher(args);
-        main.launch();
+        JSAP jsap = defineBasicArgs();
+        JSAPResult jsapResult = jsap.parse(args); 
+        String choice = jsapResult.getString("launcherChoice");
+
+        if (choice.equals("OLD") ) {
+            launcher = new LegacyLauncher(args);
+        } else {
+            launcher = new BranchLauncher(args);
+        }
+        launcher.launch();
     }
 
     @Override

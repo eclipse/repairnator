@@ -35,12 +35,12 @@ public class GithubInitConfig implements IInitConfig {
 		if (LauncherUtils.getArgDebug(arguments)) {
             getConfig().setDebug(true);
         }
-        getConfig().setClean(true);
+        getConfig().setClean(false);
         getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         
         if (GitRepositoryLauncherUtils.getArgGitRepositoryMode(arguments)) {
-            getConfig().setLauncherMode(LauncherMode.GIT_REPOSITORY);
+            /*getConfig().setLauncherMode(LauncherMode.GIT_REPOSITORY);*/ // remove later
             if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
                 getConfig().setGitRepositoryFirstCommit(true);
             }

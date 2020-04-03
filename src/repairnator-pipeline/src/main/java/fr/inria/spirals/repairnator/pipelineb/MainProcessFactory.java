@@ -63,13 +63,28 @@ public class MainProcessFactory {
 		return githubMainProcess;
 	}
 
-	/* */
 	public static MainProcess getPipelineListenerMainProcess(String[] inputArgs) {
 		MainProcess defaultMainProcess = getDefaultMainProcess(inputArgs);
 		return new PipelineBuildListenerMainProcess(defaultMainProcess);
 	}
 
-	public static void getJenkinsMainProcess() {
-		/* todo */
+	public static MainProcess getJenkinsPluginMainProcess(String[] inputArgs) {
+		GithubDefineJSAPArgs githubDefineJSAPArgs = new GithubDefineJSAPArgs();
+		JenkinsPluginInitConfig jenkinsInitConfig = new JenkinsPluginInitConfig();
+		GithubInitNotifiers githubInitNotifiers = new GithubInitNotifiers();
+		GithubInitSerializerEngines githubInitSerializerEngines = new GithubInitSerializerEngines();
+
+		JSAP jsap;
+		try {
+			jsap = githubDefineJSAPArgs.defineArgs();
+		} catch (JSAPException e) {
+			throw new RuntimeException("Failed to parse JSAP");
+		}
+		jenkinsInitConfig.initConfigWithJSAP(jsap,inputArgs);
+		githubInitSerializerEngines.initSerializerEngines();
+		githubInitNotifiers.initNotifiers();
+
+		JenkinsMainProcess jenkinsMainProcess = new JenkinsMainProcess(githubDefineJSAPArgs,jenkinsInitConfig,githubInitSerializerEngines,githubInitNotifiers);
+		return jenkinsMainProcess;
 	}
 }

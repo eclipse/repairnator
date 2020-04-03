@@ -12,9 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jgit.api.Git;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 
-/**
- * Created by urli on 03/01/2017.
- */
+
 public class JenkinsCloneRepository extends AbstractStep {
 
     protected Build build;

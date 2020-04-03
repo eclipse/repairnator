@@ -3,7 +3,7 @@
     <parent>
         <artifactId>repairnator-root</artifactId>
         <groupId>fr.inria.repairnator</groupId>
-        <version>${revision}</version>
+        <version>%{revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -114,7 +114,11 @@
             <artifactId>activemq-core</artifactId>
             <version>5.7.0</version>
         </dependency>
-
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-compress</artifactId>
+          <version>1.19</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -146,7 +150,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.inria.spirals.repairnator.pipelineb.Launcher</mainClass>
+                            <mainClass>fr.inria.spirals.repairnator.pipeline.Launcher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
