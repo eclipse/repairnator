@@ -21,7 +21,7 @@
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
     </repositories>
-
+    
     <dependencies>
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>fr.inria.repairnator</groupId>
             <artifactId>repairnator-core</artifactId>
-            <version>${revision}</version>
+            <version>%{revision}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>

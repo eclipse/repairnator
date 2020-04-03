@@ -74,7 +74,8 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useAstorJMut;
     private boolean useNPEFixSafe;
     private boolean useNopolTestExclusionStrategy;
-    
+    private final Config config = new Config();
+
     @DataBoundConstructor
     public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo) {
         this.gitUrl = gitUrl;
@@ -144,7 +145,7 @@ public class RepairnatorPostBuild extends Recorder {
     }
 
     public boolean useTLS() {
-        return Config.getInstance().useTLSOrSSL();
+        return this.config.useTLSOrSSL();
     }
 
     public String[] getTools(){
@@ -172,6 +173,10 @@ public class RepairnatorPostBuild extends Recorder {
         return dummy.substring(1,dummy.length()).split(",");
     }
 
+    public Config getConfig() {
+        return this.config;
+    }
+
     public void printProcessOutPut(Process process) throws IOException{
         try (BufferedReader reader = new BufferedReader(
             new InputStreamReader(process.getInputStream()))) {
@@ -189,7 +194,7 @@ public class RepairnatorPostBuild extends Recorder {
     }
 
     public void runRepairnator(EnvVars env) throws IOException,InterruptedException{
-        Config config = Config.getInstance();
+        Config config = this.config;
         System.out.println("jar location " + config.getJarLocation());
         RepairnatorProcessBuilder repProcBuilder = new RepairnatorProcessBuilder()
                                         .useJavaExec(config.getJavaExec())
@@ -203,8 +208,12 @@ public class RepairnatorPostBuild extends Recorder {
                                         .withSmtpPort(config.getSmtpPort())
                                         .shouldNotifyTo(config.getNotifyTo())
                                         .withRepairTools(config.getTools())
+                                        .useSmtpTls(config.useTLSOrSSL())
                                         .asNoTravisRepair()
-                                        .alsoCreatePR();
+                                        .alsoCreatePR()
+                                        .withMavenHome(config.getMavenHome())
+                                        .atWorkSpace(config.getTempDir().getAbsolutePath())
+                                        .withOutputDir(config.getTempDir().getAbsolutePath());
 
         ProcessBuilder builder = repProcBuilder.build();
         builder.redirectErrorStream(true);
@@ -285,18 +294,18 @@ public class RepairnatorPostBuild extends Recorder {
     public boolean shouldInstallMaven(EnvVars env) {
         String m2Home = env.get("M2_HOME");
         if (m2Home != null) {
-            Config.getInstance().setMavenHome(m2Home);
+            this.config.setMavenHome(m2Home);
             return false;
         } 
         return true;
     }
 
     public void configure(String url,String branch, EnvVars env) {
-        Config config = Config.getInstance();
+        Config config = this.config;
 
         String javaHome = env.get("JAVA_HOME");
         String javaExec = javaHome + File.separator + "bin" + File.separator + "java";
-        String jarLocation =  Config.getInstance().getTempDir().getAbsolutePath() + File.separator +"repairnator.jar";
+        String jarLocation =  this.config.getTempDir().getAbsolutePath() + File.separator +"repairnator.jar";
 
         config.setJavaExec(javaExec);
         config.setJarLocation(jarLocation);
@@ -309,7 +318,7 @@ public class RepairnatorPostBuild extends Recorder {
 
     public void cleanUp(){
         try {
-            FileUtils.cleanDirectory(Config.getInstance().getTempDir());
+            FileUtils.cleanDirectory(this.config.getTempDir());
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -355,16 +364,16 @@ public class RepairnatorPostBuild extends Recorder {
 
             this.configure(url,branch,env);
 
-            System.out.println("The following tools will be used : " + Arrays.toString(Config.getInstance().getTools()));
-            System.out.println("workspace for repairnator: " + Config.getInstance().getTempDir().getAbsolutePath());
+            System.out.println("The following tools will be used : " + Arrays.toString(this.config.getTools()));
+            System.out.println("workspace for repairnator: " + this.config.getTempDir().getAbsolutePath());
 
             String snapShotUrl = "https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-pipeline";
-            RepairnatorJarDownloader repJarDownloader = new RepairnatorJarDownloader();
-            repJarDownloader.downloadJar(snapShotUrl);
+            RepairnatorJarDownloader repJarDownloader = new RepairnatorJarDownloader(snapShotUrl,this.getConfig().getTempDir().getAbsolutePath() + File.separator + "repairnator.jar");
+            repJarDownloader.download();
 
             if (this.shouldInstallMaven(env)) {
                 System.out.println("M2_HOME is null, proceed installing default maven version 3.6.3");
-                MavenCustomInstaller mvn = new MavenCustomInstaller(build,listener);
+                MavenCustomInstaller mvn = new MavenCustomInstaller(build,listener,config.getMavenHome());
                 mvn.install();
             }
 

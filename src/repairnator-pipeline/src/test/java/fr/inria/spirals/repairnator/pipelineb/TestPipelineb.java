@@ -122,7 +122,7 @@ public class TestPipelineb {
     
     @Test
     public void testJenkinsGitRepositoryAndBranchWithSucess() throws Exception {
-        JenkinsMainProcess mainProc = (JenkinsMainProcess) MainProcessFactory.getJenkinsPluginMainProcess(new String[]{
+        GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getJenkinsPluginMainProcess(new String[]{
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/surli/failingProject",
                     "--gitrepobranch", "astor-jkali-failure",

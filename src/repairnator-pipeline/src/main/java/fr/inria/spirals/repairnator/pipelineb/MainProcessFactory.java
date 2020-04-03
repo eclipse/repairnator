@@ -72,7 +72,7 @@ public class MainProcessFactory {
 		GithubDefineJSAPArgs githubDefineJSAPArgs = new GithubDefineJSAPArgs();
 		JenkinsPluginInitConfig jenkinsInitConfig = new JenkinsPluginInitConfig();
 		GithubInitNotifiers githubInitNotifiers = new GithubInitNotifiers();
-		GithubInitSerializerEngines githubInitSerializerEngines = new GithubInitSerializerEngines();
+		DefaultInitSerializerEngines githubInitSerializerEngines = new DefaultInitSerializerEngines();
 
 		JSAP jsap;
 		try {
@@ -84,7 +84,7 @@ public class MainProcessFactory {
 		githubInitSerializerEngines.initSerializerEngines();
 		githubInitNotifiers.initNotifiers();
 
-		JenkinsMainProcess jenkinsMainProcess = new JenkinsMainProcess(githubDefineJSAPArgs,jenkinsInitConfig,githubInitSerializerEngines,githubInitNotifiers);
+		GithubMainProcess jenkinsMainProcess = new GithubMainProcess(githubDefineJSAPArgs,jenkinsInitConfig,githubInitSerializerEngines,githubInitNotifiers);
 		return jenkinsMainProcess;
 	}
 }

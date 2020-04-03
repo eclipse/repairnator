@@ -12,7 +12,7 @@ public class Config {
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
 
-	private Config(){
+	public Config(){
 		this.stringConfig = new HashMap<String,String>();
 	}
 
@@ -23,6 +23,10 @@ public class Config {
 		return config;
 	}
 
+	public static void resetConfig() {
+		config = new Config();
+	}
+	
 	public File getTempDir() {
 		if (this.tempDir == null) {
 			try {

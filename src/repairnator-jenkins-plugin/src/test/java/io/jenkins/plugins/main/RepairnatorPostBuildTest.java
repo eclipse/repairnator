@@ -13,7 +13,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 public class RepairnatorPostBuildTest {
 	public @Rule JenkinsRule jenkins = new JenkinsRule();
 
-    final String gitUrl = "https://github.com/surli/failingProject.git";
+    final String gitUrl = "https://github.com/surli/failingProject";
     final String gitOAuthToken = "";
     final String gitBranch = "master";
 

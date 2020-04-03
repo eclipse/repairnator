@@ -9,11 +9,13 @@ import java.io.IOException;
 /* Download latest Jar file from snapshot repo */
 public class RepairnatorJarDownloader implements Downloader{
     private String snapshotUrl;
+    private String absoluteJarFilePath;
 
 	public RepairnatorJarDownloader() {}
 
-    public RepairnatorJarDownloader(String snapshotUrl) {
+    public RepairnatorJarDownloader(String snapshotUrl,String absoluteJarFilePath) {
         this.snapshotUrl = snapshotUrl;
+        this.absoluteJarFilePath = absoluteJarFilePath;
     }
 
     public void setSnapshotUrl(String snapshotUrl) {
@@ -41,18 +43,17 @@ public class RepairnatorJarDownloader implements Downloader{
         return jarUrl +  latestJar;
     }
 
-    public void downloadJar(String snapshotUrl) throws IOException{
-        String latestJarUrl = this.getLatestJarUrl(snapshotUrl);
-        String absoluteJarFilePath = Config.getInstance().getTempDir().getAbsolutePath() + File.separator + "repairnator.jar";
+    public void downloadJar(String snapshotUrl_in,String absoluteJarFilePath_in) throws IOException{
+        String latestJarUrl = this.getLatestJarUrl(snapshotUrl_in);
 
-        FileDownloader fileDownloader = new FileDownloader(latestJarUrl,absoluteJarFilePath);
+        FileDownloader fileDownloader = new FileDownloader(latestJarUrl,absoluteJarFilePath_in);
         fileDownloader.download();
     }
 
     @Override
     public void download() {
         try {
-            this.downloadJar(this.snapshotUrl);
+            this.downloadJar(this.snapshotUrl,this.absoluteJarFilePath);
         } catch(IOException e) {
             throw new RuntimeException(e);
         }
