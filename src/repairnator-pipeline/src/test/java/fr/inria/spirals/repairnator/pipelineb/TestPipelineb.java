@@ -126,7 +126,7 @@ public class TestPipelineb {
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/surli/failingProject",
                     "--gitrepobranch", "astor-jkali-failure",
-                    "--workspace","./workspace-pipelinep"
+                    "--workspace","./workspace-jenkins-pipelinep"
                 });
 
         Patches patchNotifier = new Patches();
