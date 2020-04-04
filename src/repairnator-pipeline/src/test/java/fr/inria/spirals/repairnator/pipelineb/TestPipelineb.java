@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 import com.martiansoftware.jsap.JSAP;
 
 public class TestPipelineb {
-/*
+
     @Test
     public void testPipelineArgs() throws Exception {
         JSAP defaultJsap = (new DefaultDefineJSAPArgs()).defineArgs();
@@ -118,7 +118,7 @@ public class TestPipelineb {
         assertEquals("PATCHED", mainProc.getInspector().getFinding());
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
-	}*/
+	}
     
     @Test
     public void testJenkinsOnlyGitRepositorys() throws Exception {
