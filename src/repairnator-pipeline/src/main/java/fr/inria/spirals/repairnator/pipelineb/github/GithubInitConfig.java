@@ -35,7 +35,7 @@ public class GithubInitConfig implements IInitConfig {
 		if (LauncherUtils.getArgDebug(arguments)) {
             getConfig().setDebug(true);
         }
-        getConfig().setClean(false);
+        getConfig().setClean(true);
         getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         
