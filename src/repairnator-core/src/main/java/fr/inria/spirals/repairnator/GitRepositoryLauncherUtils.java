@@ -86,7 +86,9 @@ public class GitRepositoryLauncherUtils {
 
             String path = config.getOutputPath();
 
-            path += File.separator + config.getGitRepositoryId();
+            if (config.getGitRepositoryId() != null) {
+                path += File.separator + config.getGitRepositoryId();
+            }
             
             fileSerializerEngines.add(new CSVSerializerEngine(path));
             fileSerializerEngines.add(new JSONFileSerializerEngine(path));
