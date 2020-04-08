@@ -20,8 +20,12 @@
             <name>tdurieux.github.io maven-repository</name>
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
     </repositories>
-    
+
     <dependencies>
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
@@ -115,10 +119,11 @@
             <version>5.7.0</version>
         </dependency>
         <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-compress</artifactId>
-          <version>1.19</version>
+            <groupId>se.kth</groupId>
+            <artifactId>sonarqube-repair</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
+        
     </dependencies>
 
     <properties>
