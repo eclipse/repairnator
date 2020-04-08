@@ -20,6 +20,9 @@ public class RepairnatorProcessBuilder {
 	private String smtpPort;
 	private String notifyTo;
 	private String[] repairTools;
+	private String workspace;
+	private String mavenHome;
+	private String outputDir;
 	private boolean createPR;
 	private boolean useSmtpTLS;
 	private boolean noTravisRepair;
@@ -92,6 +95,27 @@ public class RepairnatorProcessBuilder {
 		return this;
 	}
 
+	public RepairnatorProcessBuilder withMavenHome(String mavenHome) {
+		this.mavenHome = mavenHome;
+		return this;
+	}
+
+	public RepairnatorProcessBuilder withOutputDir(String outputDir) {
+		this.outputDir = outputDir;
+		return this;
+	}
+
+	public RepairnatorProcessBuilder atWorkSpace(String workspace) {
+		this.workspace = workspace;
+		return this;
+	}
+
+	public RepairnatorProcessBuilder useSmtpTls(boolean smtpTLS) {
+		this.useSmtpTLS = smtpTLS;
+		return this;
+	}
+
+
 	public void checkValid() {
 		if (this.javaExec == null || this.javaExec.equals("")) {
 			throw new IllegalArgumentException("Repairnator Process building failed: java executable location is null");
@@ -117,26 +141,23 @@ public class RepairnatorProcessBuilder {
 	public ProcessBuilder build() {
 		this.checkValid();
 
-		Config config = Config.getInstance();
-		String mavenHome = config.getMavenHome();
-		String workSpace = config.getTempDir().getAbsolutePath();
-		String outputDir = config.getTempDir().getAbsolutePath();
-
 		cmdList.add(this.javaExec);
 		cmdList.add("-jar");
-		cmdList.add("-Dlogs_dir=" + outputDir);
+		cmdList.add("-Dlogs_dir=" + this.outputDir);
 		cmdList.add(this.jarLocation);
+		cmdList.add("--launcherChoice");
+		cmdList.add("NEW");
+		cmdList.add("--launcherMode");
+		cmdList.add("JENKINS_PLUGIN");
 		cmdList.add("--output");
-		cmdList.add(outputDir);
+		cmdList.add(this.outputDir);
 		cmdList.add("--MavenHome");
-		cmdList.add(mavenHome);
+		cmdList.add(this.mavenHome);
 		cmdList.add("--workspace");
-		cmdList.add(workSpace);
-		cmdList.add("-b");
-		cmdList.add("0");
-		cmdList.add("--giturl");
+		cmdList.add(this.workspace);
+		cmdList.add("--gitrepourl");
 		cmdList.add(this.gitUrl);
-		cmdList.add("--gitbranch");
+		cmdList.add("--gitrepobranch");
 		cmdList.add(this.gitBranch);
 		cmdList.add("--repairTools");
 		cmdList.add(String.join(",",this.repairTools));
@@ -166,14 +187,14 @@ public class RepairnatorProcessBuilder {
 			cmdList.add(String.join(",",this.notifyTo));
 		}
 
-		cmdList.add("--noTravisRepair");
-		if (config.useTLSOrSSL()) {
+		cmdList.add("--gitrepo");
+		if (this.useSmtpTLS) {
 			cmdList.add("--smtpTLS");
 		}
-
-		if(!(config.getGitOAuth().equals("") || config.getGitOAuth() == null)) {
+		
+		if(!(this.gitOAuth.equals("") || this.gitOAuth == null)) {
 			cmdList.add("--ghOauth");
-			cmdList.add(config.getGitOAuth());
+			cmdList.add(this.gitOAuth);
 			cmdList.add("--createPR");
 		}
 

@@ -25,5 +25,15 @@ public enum LauncherMode {
     /**
      * GIT_REPOSITORY: This mode allows to use Repairnator to analyze bugs present in a Git repository.
      */
-    GIT_REPOSITORY
+    GIT_REPOSITORY,
+
+    /**
+     * KUBERNETES_LISTENER: this mode allows to use Repairnator to run as an ActiveMQ Listener listening for travis build ids.
+     */
+    KUBERNETES_LISTENER,
+
+    /**
+      * JENKINS_PLUGIN: this mode allows to use Repairnator to repair post builds as a Jenkins Plugin
+      */
+    JENKINS_PLUGIN
 }

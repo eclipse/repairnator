@@ -50,10 +50,10 @@ public class CloneCheckoutBranchRepository extends AbstractStep {
             	cloneRepositoryCommand.setBranchesToClone(branchList).setBranch(branch);
             }
             
-            Repository repository = cloneRepositoryCommand.call().getRepository();
+            Git git = cloneRepositoryCommand.call();
+            Repository repository = git.getRepository();
             
             List<RevCommit> commits = getBranchCommits(repository, repoLocalPath);
-            Git git = Git.open(new File(repoLocalPath));
             
             if (getConfig().isGitRepositoryFirstCommit()) {
             	git.checkout().setName(commits.get(commits.size()-1).getName()).call();
