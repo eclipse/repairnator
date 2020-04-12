@@ -150,12 +150,11 @@ public abstract class AbstractRepairStep extends AbstractStep {
         // we will work directly in the
         Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
 
+        String branchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
+        int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
 
         for (int i = 0; i < nbPatch && i < patchList.size(); i++) {
             File patch = patchList.get(i);
-
-            String branchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date()) + "-" + i;
-            int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
             if (status == 0) {
                 ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", patch.getAbsolutePath())
                         .directory(new File(this.getInspector().getRepoLocalPath())).inheritIO();
@@ -175,32 +174,34 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
                 git.push().add(branchName).setRemote("fork-patch").setCredentialsProvider(new UsernamePasswordCredentialsProvider(RepairnatorConfig.getInstance().getGithubToken(), "")).call();
 
-                GitHub github = RepairnatorConfig.getInstance().getGithub();
-
-                GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
-                GHRepository ghForkedRepo = originalRepository.fork();
-
-                String base = this.getInspector().getGitRepositoryBranch();
-                String head = ghForkedRepo.getOwnerName() + ":" + branchName;
-                String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
-                Map<String, String> values = new HashMap<String, String>();
-                values.put("travisURL", travisURL);
-                values.put("tools", String.join(",", this.getConfig().getRepairTools()));
-                values.put("slug", this.getInspector().getRepoSlug());
-
-                if (prText == null) {
-                    StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
-                    this.prText = sub.replace(DEFAULT_TEXT_PR);
-                }
-
-                GHPullRequest pullRequest = originalRepository.createPullRequest("Automatic patch found by Repairnator!", head, base, this.prText);
-                String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
-                this.getLogger().info("Pull request created on: " + prURL);
-                this.getInspector().getJobStatus().addPRCreated(prURL);
             } else {
                 this.addStepError("Error while creating a dedicated branch for the patch.");
             }
+
         }
+
+        GitHub github = RepairnatorConfig.getInstance().getGithub();
+
+        GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
+        GHRepository ghForkedRepo = originalRepository.fork();
+
+        String base = this.getInspector().getGitRepositoryBranch();
+        String head = ghForkedRepo.getOwnerName() + ":" + branchName;
+        String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
+        Map<String, String> values = new HashMap<String, String>();
+        values.put("travisURL", travisURL);
+        values.put("tools", String.join(",", this.getConfig().getRepairTools()));
+        values.put("slug", this.getInspector().getRepoSlug());
+
+        if (prText == null) {
+            StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
+            this.prText = sub.replace(DEFAULT_TEXT_PR);
+        }
+
+        GHPullRequest pullRequest = originalRepository.createPullRequest("Automatic patch found by Repairnator!", head, base, this.prText);
+        String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
+        this.getLogger().info("Pull request created on: " + prURL);
+        this.getInspector().getJobStatus().addPRCreated(prURL);
     }
 
     protected void recordToolDiagnostic(JsonElement element) {

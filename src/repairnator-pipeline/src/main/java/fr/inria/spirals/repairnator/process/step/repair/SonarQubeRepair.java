@@ -28,7 +28,7 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 import sonarquberepair.Main;
 
 public class SonarQubeRepair extends AbstractRepairStep {
-    public static final String TOOL_NAME = "SonarQube";
+    public static final String TOOL_NAME = "SonarQubeRepair";
     public static final String RULE_LINK_TEMPLATE = "https://rules.sonarsource.com/java/RSPEC-";
 
     @Override
