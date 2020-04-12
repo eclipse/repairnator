@@ -105,6 +105,11 @@ public class DefaultInitConfig implements IInitConfig {
         }
 
         this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+
+        if (this.getConfig().getRepairTools().contains("SonarQube") && this.getConfig().getRepairTools().size() == 1) {
+            this.getConfig().setIsStaticAnalysis(true);
+        }
+
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
         }

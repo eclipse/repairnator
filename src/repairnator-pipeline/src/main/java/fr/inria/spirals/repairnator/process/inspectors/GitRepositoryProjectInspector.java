@@ -67,11 +67,18 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
     }
-    
+        
+
+    @Override
+    public String getRepoSlug() {
+        return this.gitRepositoryUrl.split("https://github.com/",2)[1];
+    }
+
     public String getGitRepositoryUrl() {
     	return this.gitRepositoryUrl;
     }
 
+    @Override
     public String getGitRepositoryBranch() {
     	return this.gitRepositoryBranch;
     }
@@ -104,14 +111,20 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
                 }
             }
             // Add the next steps
-            cloneRepo
+
+            if (!RepairnatorConfig.getInstance().isStaticAnalysis()) {
+                cloneRepo
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
-                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
+                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))                    
                     .addNextStep(new GitRepositoryInitRepoToPush(this))
                     .addNextStep(new ComputeClasspath(this, false))
                     .addNextStep(new ComputeSourceDir(this, false, false))
                     .addNextStep(new ComputeTestDir(this, false));
+            } else {
+                logger.info("Static analysis mode initiated ... ");
+                cloneRepo.addNextStep(new GitRepositoryInitRepoToPush(this));
+            }
 
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);

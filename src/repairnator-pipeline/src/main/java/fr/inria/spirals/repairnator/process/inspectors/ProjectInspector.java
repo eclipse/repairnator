@@ -110,13 +110,18 @@ public class ProjectInspector {
         this.steps = new ArrayList<>();
         /* Skip initProperties*/
     }
-    
+
+
     public String getCheckoutBranchName() {
         return this.gitBranch;
     }
 
     public String getGitCommit() {
         return this.gitCommit;
+    }
+
+    public String getGitRepositoryBranch() {
+        return this.getBuggyBuild().getBranch().getName();
     }
 
     protected void initProperties() {
@@ -276,7 +281,10 @@ public class ProjectInspector {
                 }
             }
             // Add the next steps
-            cloneRepo
+           
+
+            if (RepairnatorConfig.getInstance().isStaticAnalysis()) {
+                 cloneRepo
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
                     .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
@@ -284,6 +292,10 @@ public class ProjectInspector {
                     .addNextStep(new ComputeClasspath(this, false))
                     .addNextStep(new ComputeSourceDir(this, false, false))
                     .addNextStep(new ComputeTestDir(this, false));
+            } else {
+                logger.info("Static analysis mode initiated ... ");
+                cloneRepo.addNextStep(new InitRepoToPush(this));
+            }
 
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);

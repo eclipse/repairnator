@@ -44,6 +44,12 @@ public class BranchLauncher implements LauncherAPI{
         	+ "JENKINS_PLUGIN: run repairnator as a Jenkins plugin to repair after each build in Jenkins CI");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("sonarRules");
+        opt2.setLongFlag("sonarRules");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("2116");
+        opt2.setHelp("Required if SonarQube is specified in the repairtools as argument. Format: 1948,1854,RuleNumber.. . Supported rules: https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md");
+        jsap.registerParameter(opt2);
 
         return jsap;
 	}
@@ -93,6 +99,8 @@ public class BranchLauncher implements LauncherAPI{
 	public static void main(String[] args) throws JSAPException {
 		JSAP jsap = defineBasicArgs();
 		JSAPResult jsapResult = jsap.parse(args);
+		RepairnatorConfig.getInstance().setSonarRules(jsapResult.getString("sonarRules"));
+		
 		MainProcess mainProcess = getMainProcess(jsap,args);
 		mainProcess.run();
 	}

@@ -108,7 +108,7 @@ public class NPERepairSafe extends AbstractRepairStep {
                                 }
                             }
 
-                            this.recordPatches(repairPatches);
+                            this.recordPatches(repairPatches,MAX_PATCH_PER_TOOL);
                         }
                     } catch (IOException e) {
                         this.addStepError("Error while parsing JSON patch files");

@@ -35,11 +35,15 @@ import java.util.Map;
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
-    public static final String TEXT_PR = "This patch fixes failing Travis build %(travisURL) \n\n" +
+    public static final String DEFAULT_TEXT_PR = "This patch fixes failing Travis build %(travisURL) \n\n" +
                                         "It uses the program repair tools %(tools) \n\n" +
                                         "If you don't want to receive those PRs in the future, [open an issue on Repairnator](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%(slug))" ;
 
+    public static final String GITHUB_TEXT_PR = "This patch uses the program repair tools %(tools) \n\n";
+
     public static final int MAX_PATCH_PER_TOOL = 1;
+
+    private String prText;
 
     public AbstractRepairStep() {
         super(null, false);
@@ -95,7 +99,11 @@ public abstract class AbstractRepairStep extends AbstractStep {
         }
     }
 
-    protected void recordPatches(List<RepairPatch> patchList) {
+    public void setPrText(String prText) {
+        this.prText = prText;
+    }
+
+    protected void recordPatches(List<RepairPatch> patchList,int patchNbsLimit) {
         this.getInspector().getJobStatus().addPatches(this.getRepairToolName(), patchList);
 
         if (!patchList.isEmpty()) {
@@ -109,7 +117,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
             if (this.getConfig().isCreatePR()) {
                 if (serializedPatches != null) {
                     try {
-                        this.createPullRequest(serializedPatches, MAX_PATCH_PER_TOOL);
+                        this.createPullRequest(serializedPatches, patchNbsLimit);
                     } catch (IOException | GitAPIException | URISyntaxException e) {
                         this.addStepError("Error while creating the PR", e);
                     }
@@ -172,16 +180,20 @@ public abstract class AbstractRepairStep extends AbstractStep {
                 GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
                 GHRepository ghForkedRepo = originalRepository.fork();
 
-                String base = this.getInspector().getBuggyBuild() == null ? ((JenkinsProjectInspector)this.getInspector()).getCheckoutBranchName() : this.getInspector().getBuggyBuild().getBranch().getName();
+                String base = this.getInspector().getGitRepositoryBranch();
                 String head = ghForkedRepo.getOwnerName() + ":" + branchName;
                 String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
                 Map<String, String> values = new HashMap<String, String>();
                 values.put("travisURL", travisURL);
                 values.put("tools", String.join(",", this.getConfig().getRepairTools()));
                 values.put("slug", this.getInspector().getRepoSlug());
-                StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
-                String prText = sub.replace(TEXT_PR);
-                GHPullRequest pullRequest = originalRepository.createPullRequest("Automatic patch found by Repairnator!", head, base, prText);
+
+                if (prText == null) {
+                    StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
+                    this.prText = sub.replace(DEFAULT_TEXT_PR);
+                }
+
+                GHPullRequest pullRequest = originalRepository.createPullRequest("Automatic patch found by Repairnator!", head, base, this.prText);
                 String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
                 this.getLogger().info("Pull request created on: " + prURL);
                 this.getInspector().getJobStatus().addPRCreated(prURL);

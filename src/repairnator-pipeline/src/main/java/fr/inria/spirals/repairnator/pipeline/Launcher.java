@@ -21,6 +21,19 @@ public class Launcher implements LauncherAPI {
         init(args);
     }
 
+    public static JSAP defineBasicArgs() throws JSAPException {
+        JSAP jsap = new JSAP();
+
+        FlaggedOption opt2 = new FlaggedOption("launcherChoice");
+        opt2.setLongFlag("launcherChoice");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("NEW");
+        opt2.setHelp("OLD: Original Launcher. NEW: new launcher.");
+        jsap.registerParameter(opt2);
+
+        return jsap;
+    }
+
     public static void init(String[] args) throws JSAPException{
         JSAP jsap = defineBasicArgs();
         JSAPResult res = jsap.parse(args);
@@ -30,19 +43,6 @@ public class Launcher implements LauncherAPI {
         } else {
             launcher = new BranchLauncher(args);
         }
-    }
-
-    public static JSAP defineBasicArgs() throws JSAPException {
-        JSAP jsap = new JSAP();
-
-        FlaggedOption opt2 = new FlaggedOption("launcherChoice");
-        opt2.setLongFlag("launcherChoice");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("OLD");
-        opt2.setHelp("OLD: Original Launcher. NEW: new launcher.");
-        jsap.registerParameter(opt2);
-
-        return jsap;
     }
 
     public static void main(String[] args) throws JSAPException{

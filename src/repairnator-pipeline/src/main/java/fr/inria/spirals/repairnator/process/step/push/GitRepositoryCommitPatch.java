@@ -16,6 +16,7 @@ public class GitRepositoryCommitPatch extends CommitPatch {
 
        Commits commits = this.getInspector().getJobStatus().getProperties().getCommits();
        Builds builds = this.getInspector().getJobStatus().getProperties().getBuilds();
+        
        switch (this.commitType) {
            case COMMIT_BUGGY_BUILD:
                commitMsg = "Bug commit from " + this.getInspector().getGitSlug();

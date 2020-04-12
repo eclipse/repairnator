@@ -35,7 +35,7 @@ public class GithubInitConfig implements IInitConfig {
 		if (LauncherUtils.getArgDebug(arguments)) {
             getConfig().setDebug(true);
         }
-        getConfig().setClean(true);
+        getConfig().setClean(false);
         getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         
@@ -108,8 +108,13 @@ public class GithubInitConfig implements IInitConfig {
             getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
 
+        System.out.println(Arrays.toString(arguments.getStringArray("repairTools")));
         getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
 
+        if (this.getConfig().getRepairTools().contains("SonarQube") && this.getConfig().getRepairTools().size() == 1) {
+            this.getConfig().setIsStaticAnalysis(true);
+        }
+        
         // Make sure that it is a multiple of three in the list
         if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
             getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));

@@ -255,7 +255,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
             }
         }
 
-        this.recordPatches(repairPatches);
+        this.recordPatches(repairPatches,MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiag);
 
         try {
