@@ -28,6 +28,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>fr.inria.gforge.spoon</groupId>
+            <artifactId>spoon-core</artifactId>
+            <version>8.2.0-beta-2</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>coming</artifactId>
             <!-- see https://repo1.maven.org/maven2/com/github/spoonlabs/coming/ -->
