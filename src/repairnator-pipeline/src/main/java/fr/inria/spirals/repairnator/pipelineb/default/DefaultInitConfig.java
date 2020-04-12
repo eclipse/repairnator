@@ -114,6 +114,8 @@ public class DefaultInitConfig implements IInitConfig {
             LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
         }
 
+        getConfig().setSonarRules(arguments.getString("sonarRules"));
+        
         // Make sure that it is a multiple of three in the list
         if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
             this.getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));

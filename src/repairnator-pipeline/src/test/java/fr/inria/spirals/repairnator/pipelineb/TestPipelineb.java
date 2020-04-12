@@ -136,6 +136,25 @@ public class TestPipelineb {
         assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
     }
 
+    @Test
+    public void testSonarQubeRepairWithSuccess() throws Exception {
+        GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
+                    "--gitrepo",
+                    "--gitrepourl", "https://github.com/henry-lp/SonarQubeRepairTests",
+                    "--gitrepobranch", "master",
+                    "--repairTools","SonarQube",
+                    "--sonarRules","2116",
+                    "--workspace","./workspace-pipelinep"
+                });
+
+        Patches patchNotifier = new Patches();
+        mainProc.setPatchNotifier(patchNotifier);
+        mainProc.run();
+        assertEquals("PATCHED", mainProc.getInspector().getFinding());
+        assertEquals(2, patchNotifier.allpatches.size());
+    }
+
+
     @Ignore
     @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
@@ -149,6 +168,7 @@ public class TestPipelineb {
         mainProc.run();
         assertEquals("NOTBUILDABLE", mainProc.getInspector().getFinding());
 	}
+
 
 	@Ignore
 	@Test
