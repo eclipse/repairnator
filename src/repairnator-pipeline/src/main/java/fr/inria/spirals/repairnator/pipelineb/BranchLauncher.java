@@ -92,7 +92,6 @@ public class BranchLauncher implements LauncherAPI{
 	public static void main(String[] args) throws JSAPException {
 		JSAP jsap = defineBasicArgs();
 		JSAPResult jsapResult = jsap.parse(args);
-		RepairnatorConfig.getInstance().setSonarRules(jsapResult.getString("sonarRules"));
 		
 		MainProcess mainProcess = getMainProcess(jsap,args);
 		mainProcess.run();

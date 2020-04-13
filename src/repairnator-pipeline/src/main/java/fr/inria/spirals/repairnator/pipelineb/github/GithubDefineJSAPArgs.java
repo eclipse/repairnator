@@ -139,7 +139,6 @@ public class GithubDefineJSAPArgs implements IDefineJSAPArgs{
         opt = new FlaggedOption("repairTools");
         opt.setLongFlag("repairTools");
 
-        System.out.println(StringUtils.join(RepairToolsManager.getRepairToolsName(), ","));
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
 
         opt.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',',';'), true));
@@ -147,13 +146,6 @@ public class GithubDefineJSAPArgs implements IDefineJSAPArgs{
         opt.setListSeparator(',');
         opt.setHelp("Specify one or several repair tools to use among: "+availablerepairTools);
         opt.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
-        jsap.registerParameter(opt);
-
-        opt = new FlaggedOption("sonarRules");
-        opt.setLongFlag("sonarRules");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("2116");
-        opt.setHelp("Required if SonarQube is specified in the repairtools as argument. Format: 1948,1854,RuleNumber.. . Supported rules: https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md");
         jsap.registerParameter(opt);
 
         // This option will have a list and must have n*3 elements, otherwise the last will be ignored.

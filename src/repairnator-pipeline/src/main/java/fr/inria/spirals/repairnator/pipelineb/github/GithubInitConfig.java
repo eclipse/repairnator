@@ -36,7 +36,7 @@ public class GithubInitConfig implements IInitConfig {
 		if (LauncherUtils.getArgDebug(arguments)) {
             getConfig().setDebug(true);
         }
-        getConfig().setClean(false);
+        getConfig().setClean(true);
         getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         
@@ -115,7 +115,6 @@ public class GithubInitConfig implements IInitConfig {
             this.getConfig().setIsStaticAnalysis(true);
         }
         
-        getConfig().setSonarRules(arguments.getString("sonarRules"));
 
         // Make sure that it is a multiple of three in the list
         if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
