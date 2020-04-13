@@ -27,7 +27,7 @@ public class Launcher implements LauncherAPI {
         FlaggedOption opt2 = new FlaggedOption("launcherChoice");
         opt2.setLongFlag("launcherChoice");
         opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("NEW");
+        opt2.setDefault("OLD");
         opt2.setHelp("OLD: Original Launcher. NEW: new launcher.");
         jsap.registerParameter(opt2);
 
@@ -55,6 +55,7 @@ public class Launcher implements LauncherAPI {
         } else {
             launcher = new BranchLauncher(args);
         }
+
         launcher.launch();
     }
 
@@ -64,7 +65,9 @@ public class Launcher implements LauncherAPI {
     }
 
     @Override
-    public void launch() {}
+    public void launch() {
+        this.launcher.launch();
+    }
 
     @Override
     public JSAP defineArgs() throws JSAPException{

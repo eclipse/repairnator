@@ -138,12 +138,12 @@ public class TestPipelineb {
 
     @Test
     public void testSonarQubeRepairWithSuccess() throws Exception {
+        RepairnatorConfig.getInstance().setSonarRules("2116");
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/henry-lp/SonarQubeRepairTests",
                     "--gitrepobranch", "master",
-                    "--repairTools","SonarQube",
-                    "--sonarRules","2116",
+                    "--repairTools","SonarQubeRepair",
                     "--workspace","./workspace-pipelinep"
                 });
 

@@ -553,7 +553,7 @@ public class LegacyLauncher implements LauncherAPI {
      */
     protected void initProcess(LegacyLauncher launcher) {
         try {
-            Constructor c = Class.forName(this.getConfig().getListenerMode().getKlass()).getConstructor(LegacyLauncher.class);
+            Constructor c = Class.forName(this.getConfig().getListenerMode().getKlass()).getConstructor(LauncherAPI.class);
             listener = (Listener) c.newInstance(launcher);
         } catch (Exception e) {
             throw new RuntimeException(e);

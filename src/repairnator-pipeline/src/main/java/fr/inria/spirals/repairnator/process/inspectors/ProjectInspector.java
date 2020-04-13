@@ -283,7 +283,7 @@ public class ProjectInspector {
             // Add the next steps
            
 
-            if (RepairnatorConfig.getInstance().isStaticAnalysis()) {
+            if (!RepairnatorConfig.getInstance().isStaticAnalysis()) {
                  cloneRepo
                     .addNextStep(new BuildProject(this))
                     .addNextStep(new TestProject(this))
