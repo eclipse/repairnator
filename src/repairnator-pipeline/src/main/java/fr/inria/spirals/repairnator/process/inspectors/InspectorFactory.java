@@ -20,5 +20,5 @@ public class InspectorFactory {
     		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
 		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultGit());
 	}
-
+	
 }
