@@ -35,6 +35,8 @@ import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
+import fr.inria.spirals.repairnator.process.inspectors.components.IRunInspector;
+
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
@@ -61,6 +63,7 @@ public class ProjectInspector {
     private String gitBranch;
     private String gitCommit;
     private boolean pipelineEnding;
+    private IRunInspector iRunInspector;
 
     protected GitHelper gitHelper;
     protected String repoLocalPath;
@@ -111,6 +114,14 @@ public class ProjectInspector {
         /* Skip initProperties*/
     }
 
+    public ProjectInspector setIRunInspector(IRunInspector iRunInspector) {
+        this.iRunInspector = iRunInspector;
+        return this;
+    }
+
+    public Logger getLogger() {
+        return this.logger;
+    }
 
     public String getCheckoutBranchName() {
         return this.gitBranch;
@@ -269,84 +280,7 @@ public class ProjectInspector {
     }
 
     public void run() {
-        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-            AbstractStep cloneRepo = new CloneRepository(this);
-            cloneRepo.addNextStep(new CheckoutBuggyBuild(this, true));
-
-            // If we have experimental plugins, we need to add them here.
-            String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
-            if(repos != null) {
-                for(int i = 0; i < repos.length-1; i =+ 2) {
-                    cloneRepo.addNextStep(new AddExperimentalPluginRepo(this, repos[i], repos[i+1], repos[i+2]));
-                }
-            }
-            // Add the next steps
-           
-
-            if (!RepairnatorConfig.getInstance().isStaticAnalysis()) {
-                 cloneRepo
-                    .addNextStep(new BuildProject(this))
-                    .addNextStep(new TestProject(this))
-                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
-                    .addNextStep(new InitRepoToPush(this))
-                    .addNextStep(new ComputeClasspath(this, false))
-                    .addNextStep(new ComputeSourceDir(this, false, false))
-                    .addNextStep(new ComputeTestDir(this, false));
-            } else {
-                logger.info("Static analysis mode initiated ... ");
-                cloneRepo.addNextStep(new InitRepoToPush(this));
-            }
-
-            for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
-                AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
-                if (repairStep != null) {
-                    repairStep.setProjectInspector(this);
-                    cloneRepo.addNextStep(repairStep);
-                } else {
-                    logger.error("Error while getting repair step class for following name: " + repairToolName);
-                }
-            }
-
-            cloneRepo.addNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
-                    .addNextStep(new CheckoutPatchedBuild(this, true))
-                    .addNextStep(new BuildProject(this))
-                    .addNextStep(new TestProject(this))
-                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
-                    .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
-
-            this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
-
-
-            this.finalStep.
-                    addNextStep(new ComputeModules(this, false)).
-                    addNextStep(new WritePropertyFile(this)).
-                    addNextStep(new CommitProcessEnd(this)).
-                    addNextStep(new PushProcessEnd(this));
-
-            cloneRepo.setDataSerializer(this.serializers);
-            cloneRepo.setNotifiers(this.notifiers);
-
-            this.printPipeline();
-
-            try {
-                cloneRepo.execute();
-            } catch (Exception e) {
-                this.jobStatus.addStepError("Unknown", e.getMessage());
-                this.logger.error("Exception catch while executing steps: ", e);
-                this.jobStatus.setFatalError(e);
-
-                ErrorNotifier errorNotifier = ErrorNotifier.getInstance();
-                if (errorNotifier != null) {
-                    errorNotifier.observe(this);
-                }
-
-                for (AbstractDataSerializer serializer : this.serializers) {
-                    serializer.serialize();
-                }
-            }
-        } else {
-            this.logger.debug("Build " + this.getBuggyBuild().getId() + " is not a failing build.");
-        }
+        this.iRunInspector.run(this);
     }
 
     public CheckoutType getCheckoutType() {
