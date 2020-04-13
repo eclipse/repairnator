@@ -25,6 +25,7 @@ import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
+import fr.inria.spirals.repairnator.process.step.repair.SonarQubeRepair;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +75,10 @@ public class DefaultMainProcess implements MainProcess {
     public ProjectInspector getInspector() {
         return this.inspector;
     }
+
+    public void setInspector(ProjectInspector inspector) {
+        this.inspector = inspector;
+    } 
 
 	protected boolean getBuildToBeInspected() {
         JTravis jTravis = this.getConfig().getJTravis();
@@ -184,12 +189,16 @@ public class DefaultMainProcess implements MainProcess {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
+        boolean shouldStaticAnalysis = this.getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && this.getConfig().getRepairTools().size() == 1;
+
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
             inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
-        } else {
+        } else if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR && !shouldStaticAnalysis){
             inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+        } else {
+            inspector = InspectorFactory.getStaticAnalysisTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }
 
         System.out.println("Finished " + this.inspector.isPipelineEnding());

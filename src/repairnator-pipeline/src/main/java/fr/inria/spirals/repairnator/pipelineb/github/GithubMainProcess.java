@@ -22,6 +22,7 @@ import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepositor
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
 import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
+import fr.inria.spirals.repairnator.process.step.repair.SonarQubeRepair;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +113,19 @@ public class GithubMainProcess implements MainProcess {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        inspector = InspectorFactory.getDefaultGithubInspector(
+        boolean shouldStaticAnalysis = this.getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && this.getConfig().getRepairTools().size() == 1;
+
+        if (!shouldStaticAnalysis) {
+            inspector = InspectorFactory.getDefaultGithubInspector(
+                getConfig().getGitRepositoryUrl(),
+                getConfig().getGitRepositoryBranch(),
+                getConfig().getGitRepositoryIdCommit(),
+                getConfig().isGitRepositoryFirstCommit(),
+                getConfig().getWorkspacePath(),
+                serializers,
+                this.notifiers);
+        } else {
+            inspector = InspectorFactory.getStaticAnalysisGithubInspector(
                 getConfig().getGitRepositoryUrl(),
                 getConfig().getGitRepositoryBranch(),
                 getConfig().getGitRepositoryIdCommit(),
@@ -120,7 +133,8 @@ public class GithubMainProcess implements MainProcess {
                 getConfig().getWorkspacePath(),
                 serializers,
                 this.notifiers
-        );
+            );
+        }
         
         System.out.println("Finished " + this.inspector.isPipelineEnding());
         

@@ -7,7 +7,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.process.step.repair.SonarQubeRepair;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -110,12 +109,7 @@ public class GithubInitConfig implements IInitConfig {
         }
 
         getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
-
-        if (this.getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && this.getConfig().getRepairTools().size() == 1) {
-            this.getConfig().setIsStaticAnalysis(true);
-        }
         
-
         // Make sure that it is a multiple of three in the list
         if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
             getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));
