@@ -43,6 +43,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -517,7 +518,7 @@ public class LegacyLauncher implements LauncherAPI {
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
             inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else {
-            inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }
 
         System.out.println("Finished " + this.inspector.isPipelineEnding());

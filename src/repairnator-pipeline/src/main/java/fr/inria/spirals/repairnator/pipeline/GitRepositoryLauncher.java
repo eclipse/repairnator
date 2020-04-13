@@ -31,6 +31,7 @@ import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepositor
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.utils.Utils;
 
@@ -370,7 +371,7 @@ public class GitRepositoryLauncher extends LegacyLauncher {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        inspector = new GitRepositoryProjectInspector(
+        inspector = InspectorFactory.getDefaultGithubInspector(
         		getConfig().getGitRepositoryUrl(),
         		getConfig().getGitRepositoryBranch(),
         		getConfig().getGitRepositoryIdCommit(),
