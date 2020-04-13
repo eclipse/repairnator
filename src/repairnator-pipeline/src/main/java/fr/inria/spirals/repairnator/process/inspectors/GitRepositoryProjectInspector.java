@@ -125,7 +125,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
                 logger.info("Static analysis mode initiated ... ");
                 cloneRepo.addNextStep(new GitRepositoryInitRepoToPush(this));
             }
-
+            
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
                 if (repairStep != null) {

@@ -54,7 +54,7 @@ public class TestPipeline {
 
 	}
 
-/*    @Test
+    @Test
     public void testPipelineOnlyGitRepository() throws Exception {
         GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         			"--gitrepo",
@@ -108,7 +108,7 @@ public class TestPipeline {
         assertEquals("PATCHED", l.getInspector().getFinding());
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
-	}*/
+	}
     
     @Ignore
     @Test

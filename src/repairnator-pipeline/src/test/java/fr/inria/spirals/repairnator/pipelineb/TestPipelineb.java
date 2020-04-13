@@ -136,7 +136,7 @@ public class TestPipelineb {
         assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
     }
 
-    @Test
+    /*@Test
     public void testSonarQubeRepairWithSuccess() throws Exception {
         RepairnatorConfig.getInstance().setSonarRules("2116");
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
@@ -144,7 +144,7 @@ public class TestPipelineb {
                     "--gitrepourl", "https://github.com/henry-lp/SonarQubeRepairTests",
                     "--gitrepobranch", "master",
                     "--repairTools","SonarQubeRepair",
-                    "--workspace","./workspace-pipelinep"
+                    "--workspace","./workspace-sonar-pipeline"
                 });
 
         Patches patchNotifier = new Patches();
@@ -152,7 +152,7 @@ public class TestPipelineb {
         mainProc.run();
         assertEquals("PATCHED", mainProc.getInspector().getFinding());
         assertEquals(2, patchNotifier.allpatches.size());
-    }
+    }*/
 
 
     @Ignore
