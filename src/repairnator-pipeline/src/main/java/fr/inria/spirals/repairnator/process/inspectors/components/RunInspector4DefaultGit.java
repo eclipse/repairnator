@@ -38,6 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RunInspector4DefaultGit implements IRunInspector{
+    private boolean skipPreSteps;
+
+    public RunInspector4DefaultGit() {}
+    
+    public RunInspector4DefaultGit(boolean skipPreSteps) {
+        this.skipPreSteps = skipPreSteps;
+    }
 
 	@Override
 	public void run(ProjectInspector inspector_in) {
@@ -54,19 +61,17 @@ public class RunInspector4DefaultGit implements IRunInspector{
             }
             // Add the next steps
 
-            if (!RepairnatorConfig.getInstance().isStaticAnalysis()) {
+            if (!this.skipPreSteps) {
                 cloneRepo
                     .addNextStep(new BuildProject(inspector))
                     .addNextStep(new TestProject(inspector))
                     .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))                    
-                    .addNextStep(new GitRepositoryInitRepoToPush(inspector))
                     .addNextStep(new ComputeClasspath(inspector, false))
                     .addNextStep(new ComputeSourceDir(inspector, false, false))
                     .addNextStep(new ComputeTestDir(inspector, false));
-            } else {
-                inspector.getLogger().info("Static analysis mode initiated ... ");
-                cloneRepo.addNextStep(new GitRepositoryInitRepoToPush(inspector));
             }
+            
+            cloneRepo.addNextStep(new GitRepositoryInitRepoToPush(inspector));
             
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);

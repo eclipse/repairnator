@@ -33,6 +33,13 @@ import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
 
 public class RunInspector4DefaultTravis implements IRunInspector{
+    private boolean skipPreSteps;
+
+    public RunInspector4DefaultTravis() {}
+    
+    public RunInspector4DefaultTravis(boolean skipPreSteps) {
+        this.skipPreSteps = skipPreSteps;
+    }
 
 	@Override
 	public void run(ProjectInspector inspector) {
@@ -50,14 +57,17 @@ public class RunInspector4DefaultTravis implements IRunInspector{
             // Add the next steps
            
 
-            cloneRepo
+            if (!this.skipPreSteps) {
+                cloneRepo
                     .addNextStep(new BuildProject(inspector))
                     .addNextStep(new TestProject(inspector))
                     .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-                    .addNextStep(new InitRepoToPush(inspector))
                     .addNextStep(new ComputeClasspath(inspector, false))
                     .addNextStep(new ComputeSourceDir(inspector, false, false))
                     .addNextStep(new ComputeTestDir(inspector, false));
+            }
+           
+            cloneRepo.addNextStep(new InitRepoToPush(inspector));
 
             for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
                 AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);

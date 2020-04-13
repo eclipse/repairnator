@@ -16,9 +16,20 @@ public class InspectorFactory {
 	}
 
 
+	public static ProjectInspector getStaticAnalysisTravisInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+		return new ProjectInspector(buildToBeInspected,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultTravis(true));
+	}
+
 	public static ProjectInspector getDefaultGithubInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
 		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultGit());
 	}
 	
+
+	public static ProjectInspector getStaticAnalysisGithubInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
+    		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultGit(true));
+	}
+
+
 }
