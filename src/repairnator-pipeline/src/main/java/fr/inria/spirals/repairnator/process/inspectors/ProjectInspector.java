@@ -63,7 +63,6 @@ public class ProjectInspector {
     private String gitBranch;
     private String gitCommit;
     private boolean pipelineEnding;
-    private IRunInspector iRunInspector;
 
     protected GitHelper gitHelper;
     protected String repoLocalPath;
@@ -77,6 +76,7 @@ public class ProjectInspector {
     protected List<AbstractStep> steps;
     protected AbstractStep finalStep;
     protected String gitSlug;
+    protected IRunInspector iRunInspector;
 
     public ProjectInspector() {}
 

@@ -21,6 +21,7 @@ import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer4GitReposi
 import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +112,7 @@ public class GithubMainProcess implements MainProcess {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        inspector = new GitRepositoryProjectInspector(
+        inspector = InspectorFactory.getDefaultGithubInspector(
                 getConfig().getGitRepositoryUrl(),
                 getConfig().getGitRepositoryBranch(),
                 getConfig().getGitRepositoryIdCommit(),
