@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.pipeline;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import java.lang.reflect.Constructor;
 import fr.inria.spirals.repairnator.Listener;
 import ch.qos.logback.classic.Level;
@@ -514,9 +515,9 @@ public class LegacyLauncher implements LauncherAPI {
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else {
             inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         }

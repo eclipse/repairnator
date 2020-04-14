@@ -5,6 +5,8 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4DefaultTravis;
 import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4DefaultGit;
+import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4Bears;
+import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4CheckStyle;
 
 import java.util.List;
 
@@ -32,4 +34,11 @@ public class InspectorFactory {
 	}
 
 
+	public static ProjectInspector getDefaultBearsInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+		return new ProjectInspector4Bears(buildToBeInspected,workspace,serializers,notifiers).setIRunInspector(new RunInspector4Bears());
+	}
+
+	public static ProjectInspector getDefaultCheckStyleInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
+		return new ProjectInspector4Checkstyle(buildToBeInspected,workspace,serializers,notifiers).setIRunInspector(new RunInspector4CheckStyle());
+	}
 }

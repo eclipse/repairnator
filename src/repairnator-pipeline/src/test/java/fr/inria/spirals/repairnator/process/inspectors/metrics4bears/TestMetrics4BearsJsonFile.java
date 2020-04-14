@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.inspectors.metrics4bears;
 
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -112,7 +113,7 @@ public class TestMetrics4BearsJsonFile {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
 
-        ProjectInspector4Bears inspector = new ProjectInspector4Bears(buildToBeInspected, tmpDir.getAbsolutePath(), null, null);
+        ProjectInspector4Bears inspector = (ProjectInspector4Bears)InspectorFactory.getDefaultBearsInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null, null);
         inspector.run();
 
         // check bears.json against schema

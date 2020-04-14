@@ -192,9 +192,9 @@ public class DefaultMainProcess implements MainProcess {
         boolean shouldStaticAnalysis = this.getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && this.getConfig().getRepairTools().size() == 1;
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR && !shouldStaticAnalysis){
             inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
         } else {
