@@ -128,6 +128,10 @@ Several repair tools can be selected, separated by a comma.
 
 Its default value is `NopolAllTests,AstorJMut,NPEFix`. Note that when Repairnator is executed through its Docker image, the default value is `NPEFix`.
 
+#### RULE_NUMBERS
+
+This specify the rule number for SonarQube to fix . Possible Rule number , please check [here](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md) 
+
 #### CREATE_PR
 
 This attribute is a switch. 
