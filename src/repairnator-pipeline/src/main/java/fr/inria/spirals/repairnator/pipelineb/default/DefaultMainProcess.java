@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Checkstyle;
+
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
@@ -17,6 +18,8 @@ import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+
+
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
@@ -24,8 +27,6 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
-import fr.inria.spirals.repairnator.process.step.repair.SonarQubeRepair;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,22 +77,42 @@ public class DefaultMainProcess implements MainProcess {
         return this.inspector;
     }
 
-    public void setInspector(ProjectInspector inspector) {
+    public DefaultMainProcess setInspector(ProjectInspector inspector) {
         this.inspector = inspector;
-    } 
+        return this;
+    }
 
-	protected boolean getBuildToBeInspected() {
+    public List<AbstractNotifier> getNotifiers() {
+        return this.notifiers;
+    }
+
+    public DefaultMainProcess setNotifiers(List<AbstractNotifier> notifiers) {
+        this.notifiers = notifiers;
+        return this;
+    }
+
+    public List<SerializerEngine> getEngines() {
+        return this.engines;
+    }
+
+    public DefaultMainProcess setEngines(List<SerializerEngine> engines) {
+        this.engines = engines;
+        return this;
+    }
+
+    /* change build to be inspected to be provided*/
+	protected BuildToBeInspected getBuildToBeInspected() {
         JTravis jTravis = this.getConfig().getJTravis();
         Optional<Build> optionalBuild = jTravis.build().fromId(this.getConfig().getBuildId());
         if (!optionalBuild.isPresent()) {
             LOGGER.error("Error while retrieving the buggy build. The process will exit now.");
-            return false;
+            return null;
         }
 
         Build buggyBuild = optionalBuild.get();
         if (buggyBuild.getFinishedAt() == null) {
             LOGGER.error("Apparently the buggy build is not yet finished (maybe it has been restarted?). The process will exit now.");
-            return false;
+            return null;
         }
         String runId = this.getConfig().getRunId();
 
@@ -99,7 +120,7 @@ public class DefaultMainProcess implements MainProcess {
             Optional<Build> optionalBuildPatch = jTravis.build().fromId(this.getConfig().getNextBuildId());
             if (!optionalBuildPatch.isPresent()) {
                 LOGGER.error("Error while getting patched build: null value was obtained. The process will exit now.");
-                return false;
+                return null;
             }
 
             Build patchedBuild = optionalBuildPatch.get();
@@ -129,7 +150,7 @@ public class DefaultMainProcess implements MainProcess {
                 LOGGER.info("The build "+this.getConfig().getBuildId()+" is from a project to be ignored ("+project+"), thus the pipeline deactivated serialization for that build.");
             }
         }
-        return true;
+        return this.buildToBeInspected;
     }
 
     private List<String> getListOfProjectsToIgnore() {
@@ -180,40 +201,9 @@ public class DefaultMainProcess implements MainProcess {
     @Override
 	public boolean run() {
 		LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
-        if (!this.getBuildToBeInspected()) {
+        if (this.getBuildToBeInspected() == null) {
             return false;
         }
-
-        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.getConfig().getRunId(), this.getConfig().getBuildId()+"");
-        hardwareInfoSerializer.serialize();
-
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-
-        boolean shouldStaticAnalysis = this.getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && this.getConfig().getRepairTools().size() == 1;
-
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
-        } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
-        } else if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR && !shouldStaticAnalysis){
-            inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
-        } else {
-            inspector = InspectorFactory.getStaticAnalysisTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
-        }
-
-        System.out.println("Finished " + this.inspector.isPipelineEnding());
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            serializers.add(new InspectorSerializer4Bears(this.engines, inspector));
-        } else {
-            serializers.add(new InspectorSerializer(this.engines, inspector));
-        }
-
-        serializers.add(new PropertiesSerializer(this.engines, inspector));
-        serializers.add(new InspectorTimeSerializer(this.engines, inspector));
-        serializers.add(new PipelineErrorSerializer(this.engines, inspector));
-        serializers.add(new PatchesSerializer(this.engines, inspector));
-        serializers.add(new ToolDiagnosticSerializer(this.engines, inspector));
-        serializers.add(new PullRequestSerializer(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();

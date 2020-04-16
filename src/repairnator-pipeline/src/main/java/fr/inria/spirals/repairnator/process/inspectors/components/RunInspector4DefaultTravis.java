@@ -54,9 +54,8 @@ public class RunInspector4DefaultTravis implements IRunInspector{
                     cloneRepo.addNextStep(new AddExperimentalPluginRepo(inspector, repos[i], repos[i+1], repos[i+2]));
                 }
             }
-            // Add the next steps
-           
 
+            // Add the next steps
             if (!this.skipPreSteps) {
                 cloneRepo
                     .addNextStep(new BuildProject(inspector))
