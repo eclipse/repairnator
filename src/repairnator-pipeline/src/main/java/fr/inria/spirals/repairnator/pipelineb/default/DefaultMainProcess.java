@@ -52,12 +52,6 @@ public class DefaultMainProcess implements MainProcess {
     private IInitSerializerEngines iInitSerializerEngines;
     private IInitNotifiers iInitNotifiers;
 
-	public DefaultMainProcess(List<SerializerEngine> engines,List<AbstractNotifier> notifiers,PatchNotifier patchNotifier) {
-		this.engines = engines;
-		this.notifiers = notifiers;
-		this.patchNotifier = patchNotifier;
-	}
-
     public DefaultMainProcess(IDefineJSAPArgs iDefineJSAPArgs, IInitConfig iInitConfig, IInitSerializerEngines iInitSerializerEngines, IInitNotifiers iInitNotifiers) {
         this.iDefineJSAPArgs = iDefineJSAPArgs;
         this.iInitConfig = iInitConfig;

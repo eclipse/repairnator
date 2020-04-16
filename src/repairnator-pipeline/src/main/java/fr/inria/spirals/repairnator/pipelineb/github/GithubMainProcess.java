@@ -48,13 +48,6 @@ public class GithubMainProcess implements MainProcess {
     private IInitSerializerEngines iInitSerializerEngines;
     private IInitNotifiers iInitNotifiers;
 
-    public GithubMainProcess(List<SerializerEngine> engines,List<AbstractNotifier> notifiers,PatchNotifier patchNotifier) {
-        this.engines = engines;
-        this.notifiers = notifiers;
-        this.patchNotifier = patchNotifier;
-    }
-
-
     public GithubMainProcess(IDefineJSAPArgs iDefineJSAPArgs, IInitConfig iInitConfig, IInitSerializerEngines iInitSerializerEngines, IInitNotifiers iInitNotifiers) {
         this.iDefineJSAPArgs = iDefineJSAPArgs;
         this.iInitConfig = iInitConfig;
@@ -131,7 +124,7 @@ public class GithubMainProcess implements MainProcess {
 	public boolean run() {
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
-        
+
 
         LOGGER.info("Inspector is finished. The process will exit now.");
         return true;
