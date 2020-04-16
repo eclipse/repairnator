@@ -369,27 +369,24 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, getConfig().getRunId(), getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
 
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-
         inspector = InspectorFactory.getDefaultGithubInspector(
         		getConfig().getGitRepositoryUrl(),
         		getConfig().getGitRepositoryBranch(),
         		getConfig().getGitRepositoryIdCommit(),
         		getConfig().isGitRepositoryFirstCommit(),
         		getConfig().getWorkspacePath(),
-        		serializers,
         		this.notifiers
         );
         
         System.out.println("Finished " + this.inspector.isPipelineEnding());
         
-        serializers.add(new InspectorSerializer4GitRepository(this.engines, inspector));
-    	serializers.add(new PropertiesSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new InspectorTimeSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new PipelineErrorSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new PatchesSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new ToolDiagnosticSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new PullRequestSerializer4GitRepository(this.engines, inspector));
+        inspector.getSerializers().add(new InspectorSerializer4GitRepository(this.engines, inspector));
+    	inspector.getSerializers().add(new PropertiesSerializer4GitRepository(this.engines, inspector));
+        inspector.getSerializers().add(new InspectorTimeSerializer4GitRepository(this.engines, inspector));
+        inspector.getSerializers().add(new PipelineErrorSerializer4GitRepository(this.engines, inspector));
+        inspector.getSerializers().add(new PatchesSerializer4GitRepository(this.engines, inspector));
+        inspector.getSerializers().add(new ToolDiagnosticSerializer4GitRepository(this.engines, inspector));
+        inspector.getSerializers().add(new PullRequestSerializer4GitRepository(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();

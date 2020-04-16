@@ -36,6 +36,11 @@ public class ProjectInspector4Bears extends ProjectInspector {
         this.bug = false;
     }
 
+    public ProjectInspector4Bears(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+        super(buildToBeInspected, workspace, notifiers);
+        this.bug = false;
+    }
+
     protected void initProperties() {
         this.getJobStatus().getProperties().setVersion("Bears 1.0");
         super.initProperties();

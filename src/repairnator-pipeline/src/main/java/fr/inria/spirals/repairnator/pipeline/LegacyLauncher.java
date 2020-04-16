@@ -515,26 +515,26 @@ public class LegacyLauncher implements LauncherAPI {
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         } else {
-            inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         }
 
         System.out.println("Finished " + this.inspector.isPipelineEnding());
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            serializers.add(new InspectorSerializer4Bears(this.engines, inspector));
+            inspector.getSerializers().add(new InspectorSerializer4Bears(this.engines, inspector));
         } else {
-            serializers.add(new InspectorSerializer(this.engines, inspector));
+            inspector.getSerializers().add(new InspectorSerializer(this.engines, inspector));
         }
 
-        serializers.add(new PropertiesSerializer(this.engines, inspector));
-        serializers.add(new InspectorTimeSerializer(this.engines, inspector));
-        serializers.add(new PipelineErrorSerializer(this.engines, inspector));
-        serializers.add(new PatchesSerializer(this.engines, inspector));
-        serializers.add(new ToolDiagnosticSerializer(this.engines, inspector));
-        serializers.add(new PullRequestSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PropertiesSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new InspectorTimeSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PipelineErrorSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PatchesSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new ToolDiagnosticSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PullRequestSerializer(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();

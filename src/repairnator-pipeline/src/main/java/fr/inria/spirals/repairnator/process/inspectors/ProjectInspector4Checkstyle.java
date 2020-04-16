@@ -24,6 +24,12 @@ public class ProjectInspector4Checkstyle extends ProjectInspector {
         super(buildToBeInspected, workspace, serializers, notifiers);
     }
 
+ 	public ProjectInspector4Checkstyle(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+        super(buildToBeInspected, workspace, notifiers);
+    }
+
+
+
     protected void initProperties() {
         this.getJobStatus().getProperties().setVersion("Checkstyle 0.1");
         super.initProperties();

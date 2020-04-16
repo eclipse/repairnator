@@ -114,6 +114,21 @@ public class ProjectInspector {
         /* Skip initProperties*/
     }
 
+    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+        this.buildToBeInspected = buildToBeInspected;
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator + getRepoSlug();
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = new ArrayList<AbstractDataSerializer>();
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+        this.initProperties();
+    }
+
     public ProjectInspector setIRunInspector(IRunInspector iRunInspector) {
         this.iRunInspector = iRunInspector;
         return this;
@@ -221,6 +236,9 @@ public class ProjectInspector {
         return serializers;
     }
 
+    public void setSerializers(List<AbstractDataSerializer> serializers) {
+        this.serializers = serializers;
+    }
 
     public String getWorkspace() {
         return workspace;

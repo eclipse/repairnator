@@ -13,32 +13,32 @@ import java.util.List;
 public class InspectorFactory {
 	
 
-	public static ProjectInspector getDefaultTravisInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-		return new ProjectInspector(buildToBeInspected,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultTravis());
+	public static ProjectInspector getDefaultTravisInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4DefaultTravis());
 	}
 
 
-	public static ProjectInspector getStaticAnalysisTravisInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-		return new ProjectInspector(buildToBeInspected,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultTravis(true));
+	public static ProjectInspector getStaticAnalysisTravisInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4DefaultTravis(true));
 	}
 
 	public static ProjectInspector getDefaultGithubInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
-    		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultGit());
+    		String workspace, List<AbstractNotifier> notifiers) {
+		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,notifiers).setIRunInspector(new RunInspector4DefaultGit());
 	}
 	
 
 	public static ProjectInspector getStaticAnalysisGithubInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
-    		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,serializers,notifiers).setIRunInspector(new RunInspector4DefaultGit(true));
+    		String workspace, List<AbstractNotifier> notifiers) {
+		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,notifiers).setIRunInspector(new RunInspector4DefaultGit(true));
 	}
 
 
-	public static ProjectInspector getDefaultBearsInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-		return new ProjectInspector4Bears(buildToBeInspected,workspace,serializers,notifiers).setIRunInspector(new RunInspector4Bears());
+	public static ProjectInspector getDefaultBearsInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+		return new ProjectInspector4Bears(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4Bears());
 	}
 
-	public static ProjectInspector getDefaultCheckStyleInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
-		return new ProjectInspector4Checkstyle(buildToBeInspected,workspace,serializers,notifiers).setIRunInspector(new RunInspector4CheckStyle());
+	public static ProjectInspector getDefaultCheckStyleInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+		return new ProjectInspector4Checkstyle(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4CheckStyle());
 	}
 }

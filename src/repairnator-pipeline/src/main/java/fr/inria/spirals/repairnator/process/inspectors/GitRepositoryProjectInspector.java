@@ -46,6 +46,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
     private String gitRepositoryIdCommit;
     private boolean gitRepositoryFirstCommit;
     
+    /*  HENRY -  remove later to use other constructor */
     public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
 
@@ -67,7 +68,29 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
     }
-        
+    
+    public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
+            String workspace, List<AbstractNotifier> notifiers) {
+
+        this.gitRepositoryUrl = gitRepoUrl;
+        this.gitRepositoryBranch = gitRepoBranch;
+        this.gitRepositoryIdCommit = gitRepoIdCommit;
+        this.gitRepositoryFirstCommit = isGitRepositoryFirstCommit;
+
+        this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected();
+
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = new ArrayList<AbstractDataSerializer>();
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+    }
+
 
     @Override
     public String getRepoSlug() {
