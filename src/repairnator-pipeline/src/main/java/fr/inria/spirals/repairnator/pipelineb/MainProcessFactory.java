@@ -42,7 +42,10 @@ import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepositor
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
 
+import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 
+/*  HENRY -  make packages correct later */
 
 /* This will manufacture different kind of repairnator type */
 public class MainProcessFactory {
@@ -74,11 +77,9 @@ public class MainProcessFactory {
 																		defaultInitSerializerEngines,
 																			defaultInitNotifiers);
 
-		/* HENRY - put this in the getHardwareInforSerilizer later*/
-		HardwareInfoSerializer hardwareInfoSerializer = getHardwareInfoSerializer(defaultInitSerializerEngines.getEngines());
-		hardwareInfoSerializer.serialize();
+		serializeHardwareInfoSerializer(defaultInitSerializerEngines.getEngines());
 
-		ProjectInspector inspector = constructInspector4Default(defaultMainProcess,defaultInitSerializerEngines.getEngines());
+		ProjectInspector inspector = constructInspector4Default(defaultMainProcess.getBuildToBeInspected(),defaultInitSerializerEngines.getEngines(),defaultInitNotifiers.getNotifiers());
 
 		/* HENRY - lift the other non relevant function to here */
 		defaultMainProcess.setInspector(inspector)
@@ -111,11 +112,9 @@ public class MainProcessFactory {
 																	githubInitSerializerEngines,
 																	githubInitNotifiers);
 
-		HardwareInfoSerializer hardwareInfoSerializer = getHardwareInfoSerializer(githubInitSerializerEngines.getEngines());
-		hardwareInfoSerializer.serialize();
+		serializeHardwareInfoSerializer(githubInitSerializerEngines.getEngines());
 
-		/*  HENRY - paramenters instead of github mainprocess*/
-		ProjectInspector inspector =  constructInspector4Github(githubMainProcess, githubInitSerializerEngines.getEngines());
+		ProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
 
 		githubMainProcess.setInspector(inspector)
 						.setNotifiers(githubInitNotifiers.getNotifiers())
@@ -146,18 +145,14 @@ public class MainProcessFactory {
 		return jenkinsMainProcess;
 	}
 
-
-
-	private static HardwareInfoSerializer getHardwareInfoSerializer(List<SerializerEngine> engines) {
+	private static void serializeHardwareInfoSerializer(List<SerializerEngine> engines) {
 		HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(engines, getConfig().getRunId(), getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
-
-        return hardwareInfoSerializer;
 	}
 
 	/* These methods below should be called after all other inits */
 	/* move serializer into project inspector and get to construct */
-	private static ProjectInspector constructInspector4Github(GithubMainProcess githubMainProcess,List<SerializerEngine> engines) {
+	private static ProjectInspector constructInspector4Github(List<SerializerEngine> engines,List<AbstractNotifier> notifiers) {
 		List<AbstractDataSerializer> serializers = new ArrayList<>();
 		ProjectInspector inspector;
 
@@ -171,7 +166,7 @@ public class MainProcessFactory {
                 getConfig().isGitRepositoryFirstCommit(),
                 getConfig().getWorkspacePath(),
                 serializers,
-                githubMainProcess.getNotifiers()
+                notifiers
             );
         } else {
             inspector = InspectorFactory.getDefaultGithubInspector(
@@ -181,7 +176,7 @@ public class MainProcessFactory {
                 getConfig().isGitRepositoryFirstCommit(),
                 getConfig().getWorkspacePath(),
                 serializers,
-                githubMainProcess.getNotifiers());
+                notifiers);
         }
 
 		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
@@ -201,20 +196,20 @@ public class MainProcessFactory {
         return inspector;
 	}
 
-	private static ProjectInspector constructInspector4Default(DefaultMainProcess defaultMainProcess,List<SerializerEngine> engines) {
+	private static ProjectInspector constructInspector4Default(BuildToBeInspected buildToBeInspected, List<SerializerEngine> engines, List<AbstractNotifier> notifiers) {
 		List<AbstractDataSerializer> serializers = new ArrayList<>();
 		ProjectInspector inspector;
 
 		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
 		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = InspectorFactory.getDefaultBearsInspector(defaultMainProcess.getBuildToBeInspected(), getConfig().getWorkspacePath(), serializers, defaultMainProcess.getNotifiers());
+            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, getConfig().getWorkspacePath(), serializers, notifiers);
         } else if (getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = InspectorFactory.getDefaultCheckStyleInspector(defaultMainProcess.getBuildToBeInspected(), getConfig().getWorkspacePath(), serializers, defaultMainProcess.getNotifiers());
+            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, getConfig().getWorkspacePath(), serializers, notifiers);
         } else if (getConfig().getLauncherMode() == LauncherMode.REPAIR && !shouldStaticAnalysis){
-            inspector = InspectorFactory.getDefaultTravisInspector(defaultMainProcess.getBuildToBeInspected(), getConfig().getWorkspacePath(), serializers, defaultMainProcess.getNotifiers());
+            inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, getConfig().getWorkspacePath(), serializers, notifiers);
         } else {
-            inspector = InspectorFactory.getStaticAnalysisTravisInspector(defaultMainProcess.getBuildToBeInspected(), getConfig().getWorkspacePath(), serializers, defaultMainProcess.getNotifiers());
+            inspector = InspectorFactory.getStaticAnalysisTravisInspector(buildToBeInspected, getConfig().getWorkspacePath(), serializers, notifiers);
         }
 
 		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
