@@ -18,6 +18,7 @@ import com.martiansoftware.jsap.JSAPException;
 
 import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.step.repair.SonarQubeRepair;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
@@ -82,9 +83,9 @@ public class MainProcessFactory {
 		ProjectInspector inspector = constructInspector4Default(defaultMainProcess.getBuildToBeInspected(),defaultInitSerializerEngines.getEngines(),defaultInitNotifiers.getNotifiers());
 
 		/* HENRY - lift the other non relevant function to here */
-		defaultMainProcess.setInspector(inspector)
-							.setEngines(defaultInitSerializerEngines.getEngines())
-							.setNotifiers(defaultInitNotifiers.getNotifiers());
+		defaultMainProcess = defaultMainProcess.setInspector(inspector)
+												.setEngines(defaultInitSerializerEngines.getEngines())
+												.setNotifiers(defaultInitNotifiers.getNotifiers());
 
 		return defaultMainProcess;
 	}
@@ -114,11 +115,11 @@ public class MainProcessFactory {
 
 		serializeHardwareInfoSerializer(githubInitSerializerEngines.getEngines());
 
-		ProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
+		GitRepositoryProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
 
-		githubMainProcess.setInspector(inspector)
-						.setNotifiers(githubInitNotifiers.getNotifiers())
-						.setEngines(githubInitSerializerEngines.getEngines());
+		githubMainProcess = githubMainProcess.setInspector(inspector)
+												.setNotifiers(githubInitNotifiers.getNotifiers())
+												.setEngines(githubInitSerializerEngines.getEngines());
 
 		return githubMainProcess;
 	}
@@ -152,13 +153,13 @@ public class MainProcessFactory {
 
 	/* These methods below should be called after all other inits */
 	/* move serializer into project inspector and get to construct */
-	private static ProjectInspector constructInspector4Github(List<SerializerEngine> engines,List<AbstractNotifier> notifiers) {
-		ProjectInspector inspector;
+	private static GitRepositoryProjectInspector constructInspector4Github(List<SerializerEngine> engines,List<AbstractNotifier> notifiers) {
+		GitRepositoryProjectInspector inspector;
 
 		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
 		if (shouldStaticAnalysis) {
-            inspector = InspectorFactory.getStaticAnalysisGithubInspector(
+            inspector = (GitRepositoryProjectInspector) InspectorFactory.getStaticAnalysisGithubInspector(
                 getConfig().getGitRepositoryUrl(),
                 getConfig().getGitRepositoryBranch(),
                 getConfig().getGitRepositoryIdCommit(),
@@ -167,19 +168,13 @@ public class MainProcessFactory {
                 notifiers
             );
         } else {
-            inspector = InspectorFactory.getDefaultGithubInspector(
+            inspector = (GitRepositoryProjectInspector) InspectorFactory.getDefaultGithubInspector(
                 getConfig().getGitRepositoryUrl(),
                 getConfig().getGitRepositoryBranch(),
                 getConfig().getGitRepositoryIdCommit(),
                 getConfig().isGitRepositoryFirstCommit(),
                 getConfig().getWorkspacePath(),
                 notifiers);
-        }
-
-		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector.getSerializers().add(new InspectorSerializer4Bears(engines, inspector));
-        } else {
-            inspector.getSerializers().add(new InspectorSerializer(engines, inspector));
         }
 
         inspector.getSerializers().add(new InspectorSerializer4GitRepository(engines, inspector));

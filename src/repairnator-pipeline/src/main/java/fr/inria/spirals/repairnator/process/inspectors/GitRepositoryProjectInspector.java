@@ -84,6 +84,8 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = new ArrayList<AbstractDataSerializer>();
+
+        System.out.println("Henry - " + ((ProjectInspector)this).serializers == null);
         this.gitHelper = new GitHelper();
         this.jobStatus = new JobStatus(repoLocalPath);
         this.notifiers = notifiers;

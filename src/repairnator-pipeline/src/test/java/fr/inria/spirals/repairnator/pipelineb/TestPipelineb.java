@@ -42,7 +42,7 @@ public class TestPipelineb {
 
     }
 
-    @Test
+/*    @Test
     public void testPipeline() throws Exception {
         // requires env variable M2_HOME and GITHUB_OAUTH
         // (set in Travis config)
@@ -58,9 +58,9 @@ public class TestPipelineb {
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
 
-	}
+	}*/
 
-    @Test
+/*    @Test
     public void testPipelineOnlyGitRepository() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
@@ -74,7 +74,7 @@ public class TestPipelineb {
         assertEquals("PATCHED", mainProc.getInspector().getFinding());
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
-	}
+	}*/
 
     @Test
     public void testPipelineGitRepositoryAndBranch() throws Exception {
@@ -90,7 +90,7 @@ public class TestPipelineb {
         assertEquals("TEST FAILURE", mainProc.getInspector().getFinding());
 	}
 
-    @Test
+/*    @Test
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {        
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
@@ -101,9 +101,9 @@ public class TestPipelineb {
 
         mainProc.run();
         assertEquals("TEST FAILURE", mainProc.getInspector().getFinding());
-	}
+	}*/
 
-    @Test
+/*    @Test
     public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
@@ -118,7 +118,7 @@ public class TestPipelineb {
         assertEquals("PATCHED", mainProc.getInspector().getFinding());
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
-	}
+	}*/
     
     @Test
     public void testJenkinsOnlyGitRepositorys() throws Exception {

@@ -132,6 +132,7 @@ public class GithubMainProcess implements MainProcess {
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
         
+
         LOGGER.info("Inspector is finished. The process will exit now.");
         return true;
 	}
