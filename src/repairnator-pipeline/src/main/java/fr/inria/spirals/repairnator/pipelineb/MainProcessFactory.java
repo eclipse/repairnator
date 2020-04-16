@@ -129,11 +129,11 @@ public class MainProcessFactory {
 		return new PipelineBuildListenerMainProcess(defaultMainProcess);
 	}
 
-	/*  HENRY - manual test again later */
 	public static MainProcess getJenkinsPluginMainProcess(String[] inputArgs) {
-		GithubMainProcess jenkinsMainProcess = (GithubMainProcess)getGithubMainProcess(inputArgs);
 		GithubDefineJSAPArgs githubDefineJSAPArgs = new GithubDefineJSAPArgs();
 		JenkinsPluginInitConfig jenkinsInitConfig = new JenkinsPluginInitConfig();
+		GithubInitNotifiers githubInitNotifiers = new GithubInitNotifiers();
+		DefaultInitSerializerEngines githubInitSerializerEngines = new DefaultInitSerializerEngines();
 
 		JSAP jsap;
 		try {
@@ -142,6 +142,18 @@ public class MainProcessFactory {
 			throw new RuntimeException("Failed to parse JSAP");
 		}
 		jenkinsInitConfig.initConfigWithJSAP(jsap,inputArgs);
+		githubInitSerializerEngines.initSerializerEngines();
+		githubInitNotifiers.initNotifiers();
+
+		GithubMainProcess jenkinsMainProcess = new GithubMainProcess(githubDefineJSAPArgs,jenkinsInitConfig,githubInitSerializerEngines,githubInitNotifiers);
+		
+		serializeHardwareInfoSerializer(githubInitSerializerEngines.getEngines());
+
+		ProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
+
+		jenkinsMainProcess = jenkinsMainProcess.setInspector(inspector)
+												.setNotifiers(githubInitNotifiers.getNotifiers())
+												.setEngines(githubInitSerializerEngines.getEngines());
 
 		return jenkinsMainProcess;
 	}
