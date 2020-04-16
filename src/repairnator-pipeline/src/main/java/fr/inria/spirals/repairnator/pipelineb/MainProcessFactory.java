@@ -115,7 +115,7 @@ public class MainProcessFactory {
 
 		serializeHardwareInfoSerializer(githubInitSerializerEngines.getEngines());
 
-		GitRepositoryProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
+		ProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
 
 		githubMainProcess = githubMainProcess.setInspector(inspector)
 												.setNotifiers(githubInitNotifiers.getNotifiers())
