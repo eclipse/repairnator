@@ -21,14 +21,14 @@
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
         <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>se.kth</groupId>
+            <groupId>se.kth.castor</groupId>
             <artifactId>sonarqube-repair</artifactId>
             <version>1.1-SNAPSHOT</version>
         </dependency>

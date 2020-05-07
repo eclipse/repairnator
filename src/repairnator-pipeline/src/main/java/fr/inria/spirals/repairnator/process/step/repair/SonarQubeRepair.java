@@ -46,8 +46,8 @@ public class SonarQubeRepair extends AbstractRepairStep {
 
         try {
             Main.main(new String[]{
-                        "--repairPath",pathToRepoDir,
-                        "--ruleNumbers",RepairnatorConfig.getInstance().getSonarRules(),
+                        "--originalFilesPath",pathToRepoDir,
+                        "--ruleKeys",RepairnatorConfig.getInstance().getSonarRules(),
                         "--workspace",RepairnatorConfig.getInstance().getWorkspacePath(),
                         "--gitRepoPath",pathToRepoDir});
         } catch(Exception e) {
