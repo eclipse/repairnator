@@ -1,1 +1,0 @@
-henry-lp-SonarQubeRepairTests-master,henry-lp-SonarQubeRepairTests,PATCHED,[ CloneCheckoutBranchRepository : SUCCESS ] -> [ GitRepositoryInitRepoToPush : SKIPPED ] -> [ SonarQubeRepair : SUCCESS ] -> [ GitRepositoryCommitPatch : SKIPPED ] -> [ CheckoutPatchedBuild : FAILURE ( BUILDNOTCHECKEDOUT ) ],tailp-Surface-Laptop,07/05/20 21:43,
