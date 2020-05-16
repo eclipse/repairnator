@@ -98,7 +98,7 @@ public class TestProjectInspector4Bears {
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, passingBuild, ScannedBuildStatus.FAILING_AND_PASSING, "test");
 
-        ProjectInspector4Bears inspector = (ProjectInspector4Bears)InspectorFactory.getDefaultBearsInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
+        ProjectInspector4Bears inspector = (ProjectInspector4Bears)InspectorFactory.getBearsInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
         inspector.setSerializers(this.serializers);
         inspector.run();
 
@@ -152,7 +152,7 @@ public class TestProjectInspector4Bears {
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(previousPassingBuild, passingBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "test");
 
-        ProjectInspector4Bears inspector = (ProjectInspector4Bears)InspectorFactory.getDefaultBearsInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
+        ProjectInspector4Bears inspector = (ProjectInspector4Bears)InspectorFactory.getBearsInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
         inspector.setSerializers(this.serializers);
         inspector.run();
 

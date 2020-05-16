@@ -113,7 +113,7 @@ public class TestMetrics4BearsJsonFile {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
 
-        ProjectInspector4Bears inspector = (ProjectInspector4Bears)InspectorFactory.getDefaultBearsInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null);
+        ProjectInspector4Bears inspector = (ProjectInspector4Bears)InspectorFactory.getBearsInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null);
         inspector.run();
 
         // check bears.json against schema

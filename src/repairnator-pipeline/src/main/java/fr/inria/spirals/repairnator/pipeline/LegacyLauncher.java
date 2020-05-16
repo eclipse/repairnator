@@ -515,11 +515,11 @@ public class LegacyLauncher implements LauncherAPI {
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
+            inspector = InspectorFactory.getBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
+            inspector = InspectorFactory.getCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         } else {
-            inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
+            inspector = InspectorFactory.getTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         }
 
         System.out.println("Finished " + this.inspector.isPipelineEnding());

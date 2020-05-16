@@ -93,7 +93,7 @@ public class TestProjectInspector {
         NotifierEngine notifierEngine = mock(NotifierEngine.class);
         notifierEngines.add(notifierEngine);
 
-        ProjectInspector inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
+        ProjectInspector inspector = InspectorFactory.getTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
 
         inspector.getSerializers().add(new InspectorSerializer(serializerEngines, inspector));
         inspector.getSerializers().add(new PatchesSerializer(serializerEngines, inspector));
@@ -162,7 +162,7 @@ public class TestProjectInspector {
         SerializerEngine serializerEngine = mock(SerializerEngine.class);
         serializerEngines.add(serializerEngine);
 
-        ProjectInspector inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
+        ProjectInspector inspector = InspectorFactory.getTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
 
         inspector.getSerializers().add(new InspectorSerializer(serializerEngines, inspector));
 

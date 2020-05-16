@@ -35,12 +35,11 @@ public class GithubInitConfig implements IInitConfig {
 		if (LauncherUtils.getArgDebug(arguments)) {
             getConfig().setDebug(true);
         }
-        getConfig().setClean(true);
+        getConfig().setClean(false);
         getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
         
         if (GitRepositoryLauncherUtils.getArgGitRepositoryMode(arguments)) {
-            /*getConfig().setLauncherMode(LauncherMode.GIT_REPOSITORY);*/ // remove later
             if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
                 getConfig().setGitRepositoryFirstCommit(true);
             }
@@ -67,7 +66,8 @@ public class GithubInitConfig implements IInitConfig {
         getConfig().setCreatePR(LauncherUtils.getArgCreatePR(arguments));
 
         // we fork if we need to create a PR or if we need to notify
-        if (getConfig().isCreatePR() || (getConfig().getSmtpServer() != null && !getConfig().getSmtpServer().isEmpty() && getConfig().getNotifyTo() != null && getConfig().getNotifyTo().length > 0 && getConfig().getGithubToken() != null)) {
+        getConfig().setFork(true);
+        if ((getConfig().isCreatePR() || (getConfig().getSmtpServer() != null && !getConfig().getSmtpServer().isEmpty() && getConfig().getNotifyTo() != null && getConfig().getNotifyTo().length > 0)) && getConfig().getGithubToken() != null) {
             getConfig().setFork(true);
         }
 

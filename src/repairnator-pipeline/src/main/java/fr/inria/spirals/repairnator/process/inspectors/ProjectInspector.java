@@ -134,6 +134,10 @@ public class ProjectInspector {
         return this;
     }
 
+    public void setSkipPreSteps(boolean skipPreSteps) {
+        this.iRunInspector.setSkipPreSteps(skipPreSteps);
+    }
+
     public Logger getLogger() {
         return this.logger;
     }

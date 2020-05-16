@@ -65,9 +65,8 @@ public abstract class AbstractRepairStep extends AbstractStep {
         }
     }
 
-    private List<File> serializePatches(List<RepairPatch> patchList) throws IOException {
+    protected List<File> serializePatches(List<RepairPatch> patchList) throws IOException {
         File parentDirectory = new File(this.getInspector().getRepoToPushLocalPath(), DEFAULT_DIR_PATCHES);
-
         if (!parentDirectory.exists()) {
             parentDirectory.mkdirs();
         }
@@ -90,7 +89,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
         return serializedPatches;
     }
 
-    private void notify(List<RepairPatch> patches) {
+    protected void notify(List<RepairPatch> patches) {
         this.forkRepository();
 
         PatchNotifier patchNotifier = this.getInspector().getPatchNotifier();
@@ -99,7 +98,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
         }
     }
 
-    public void setPrText(String prText) {
+    protected void setPrText(String prText) {
         this.prText = prText;
     }
 
@@ -117,7 +116,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
             if (this.getConfig().isCreatePR()) {
                 if (serializedPatches != null) {
                     try {
-                        this.createPullRequest(serializedPatches, patchNbsLimit);
+                        this.performStandardPRCreation(serializedPatches,patchNbsLimit);
                     } catch (IOException | GitAPIException | URISyntaxException e) {
                         this.addStepError("Error while creating the PR", e);
                     }
@@ -129,16 +128,56 @@ public abstract class AbstractRepairStep extends AbstractStep {
         }
     }
 
-    protected void createPullRequest(List<File> patchList, int nbPatch) throws IOException, GitAPIException, URISyntaxException {
-        if (patchList.isEmpty()) {
-            return;
-        }
+    protected void performStandardPRCreation(List<File> patchList,int nbPatch) throws IOException, GitAPIException, URISyntaxException {
+        String newBranch = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
+        Git branchedGit = this.createGitBranch4Push(newBranch);
+        String forkedRepo = this.getForkedRepoName();
+        this.applyPatches(branchedGit,patchList,nbPatch);
+        this.pushPatches(branchedGit,forkedRepo,newBranch);
+        this.createPullRequest(this.getInspector().getGitRepositoryBranch(),newBranch);
+    }
 
+    protected void applyPatches(Git git,List<File> patchList,int nbPatch) throws IOException, GitAPIException, URISyntaxException {
+        for (int i = 0; i < nbPatch && i < patchList.size(); i++) {
+            File patch = patchList.get(i);
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", patch.getAbsolutePath())
+                        .directory(new File(this.getInspector().getRepoLocalPath())).inheritIO();
+
+            try {
+                Process p = processBuilder.start();
+                p.waitFor();
+            } catch (InterruptedException|IOException e) {
+                this.addStepError("Error while executing git command to apply patch " + patch.getPath(), e);
+            }
+            git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for a patch").call();
+        }
+    }
+
+    protected void pushPatches(Git git, String forkedRepo,String branchName) throws IOException, GitAPIException, URISyntaxException {
+        RemoteAddCommand remoteAddCommand = git.remoteAdd();
+        remoteAddCommand.setUri(new URIish(forkedRepo));
+        remoteAddCommand.setName("fork-patch");
+        remoteAddCommand.call();
+
+        git.push().add(branchName).setRemote("fork-patch").setCredentialsProvider(new UsernamePasswordCredentialsProvider(RepairnatorConfig.getInstance().getGithubToken(), "")).call();
+    }
+
+    protected Git createGitBranch4Push(String branchName) throws IOException{
+        Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
+        int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
+
+        if (status != 0)  {
+            return null;
+        }
+        return git;
+    }
+
+    protected String getForkedRepoName() {
         this.forkRepository();
 
         if (!this.getInspector().getJobStatus().isHasBeenForked()) {
             this.getLogger().info("The project has not been forked. The PR won't be created.");
-            return;
+            return null;
         }
 
         // fork repo
@@ -147,46 +186,21 @@ public abstract class AbstractRepairStep extends AbstractStep {
             forkedRepo = forkedRepo.replace("https://api.github.com/repos", "https://github.com");
         }
 
-        // we will work directly in the
-        Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
+        return forkedRepo;
+    }
 
-        String branchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
-        int status = GitHelper.gitCreateNewBranchAndCheckoutIt(this.getInspector().getRepoLocalPath(), branchName);
 
-        for (int i = 0; i < nbPatch && i < patchList.size(); i++) {
-            File patch = patchList.get(i);
-            if (status == 0) {
-                ProcessBuilder processBuilder = new ProcessBuilder("git", "apply", patch.getAbsolutePath())
-                        .directory(new File(this.getInspector().getRepoLocalPath())).inheritIO();
-
-                try {
-                    Process p = processBuilder.start();
-                    p.waitFor();
-                } catch (InterruptedException|IOException e) {
-                    this.addStepError("Error while executing git command to apply patch " + patch.getPath(), e);
-                }
-                git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for a patch").call();
-
-                RemoteAddCommand remoteAddCommand = git.remoteAdd();
-                remoteAddCommand.setUri(new URIish(forkedRepo));
-                remoteAddCommand.setName("fork-patch");
-                remoteAddCommand.call();
-
-                git.push().add(branchName).setRemote("fork-patch").setCredentialsProvider(new UsernamePasswordCredentialsProvider(RepairnatorConfig.getInstance().getGithubToken(), "")).call();
-
-            } else {
-                this.addStepError("Error while creating a dedicated branch for the patch.");
-            }
-
-        }
-
+    protected void createPullRequest(String baseBranch,String newBranch) throws IOException, GitAPIException, URISyntaxException {
         GitHub github = RepairnatorConfig.getInstance().getGithub();
 
         GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
         GHRepository ghForkedRepo = originalRepository.fork();
 
-        String base = this.getInspector().getGitRepositoryBranch();
-        String head = ghForkedRepo.getOwnerName() + ":" + branchName;
+        System.out.println("Failed here ?");
+        String base = baseBranch;
+        String head = ghForkedRepo.getOwnerName() + ":" + newBranch;
+
+        System.out.println("base: " + base + " head:" + head);
         String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
         Map<String, String> values = new HashMap<String, String>();
         values.put("travisURL", travisURL);

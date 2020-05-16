@@ -63,7 +63,7 @@ public class Launcher implements LauncherAPI {
             launcher = new BranchLauncher(args);
         }
 
-        RepairnatorConfig.getInstance().setSonarRules(jsapResult.getString("sonarRules"));
+        RepairnatorConfig.getInstance().setSonarRules(jsapResult.getString("sonarRules").split(","));
         launcher.launch();
     }
 

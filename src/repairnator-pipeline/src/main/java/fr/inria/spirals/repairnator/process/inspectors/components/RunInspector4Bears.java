@@ -19,7 +19,7 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 
-public class RunInspector4Bears implements IRunInspector {
+public class RunInspector4Bears extends IRunInspector {
 	
 	@Override
 	public void run (ProjectInspector inspector) {

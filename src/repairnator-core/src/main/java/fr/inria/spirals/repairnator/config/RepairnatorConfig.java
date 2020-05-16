@@ -99,7 +99,7 @@ public class RepairnatorConfig {
     private String gitRepositoryIdCommit;
     private boolean gitRepositoryFirstCommit;
 
-    private String sonarRules;
+    private String[] sonarRules;
     private boolean isStaticAnalysis;
 
     // Dockerpool
@@ -672,11 +672,11 @@ public class RepairnatorConfig {
         return this.noTravisRepair;
     }
 
-    public void setSonarRules(String sonarRules) {
+    public void setSonarRules(String[] sonarRules) {
         this.sonarRules = sonarRules;
     }
 
-    public String getSonarRules() {
+    public String[] getSonarRules() {
         return this.sonarRules;
     }
         

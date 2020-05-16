@@ -11,8 +11,8 @@ import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBugg
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 
-public class RunInspector4CheckStyle implements IRunInspector {
-	
+public class RunInspector4CheckStyle extends IRunInspector {
+
 	@Override
 	public void run (ProjectInspector inspector) {
 		if (inspector.getBuildToBeInspected().getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {

@@ -82,7 +82,6 @@ public class MainProcessFactory {
 
 		ProjectInspector inspector = constructInspector4Default(defaultMainProcess.getBuildToBeInspected(),defaultInitSerializerEngines.getEngines(),defaultInitNotifiers.getNotifiers());
 
-		/* HENRY - lift the other non relevant function to here */
 		defaultMainProcess = defaultMainProcess.setInspector(inspector)
 												.setEngines(defaultInitSerializerEngines.getEngines())
 												.setNotifiers(defaultInitNotifiers.getNotifiers());
@@ -166,12 +165,10 @@ public class MainProcessFactory {
 	/* These methods below should be called after all other inits */
 	/* move serializer into project inspector and get to construct */
 	private static GitRepositoryProjectInspector constructInspector4Github(List<SerializerEngine> engines,List<AbstractNotifier> notifiers) {
-		GitRepositoryProjectInspector inspector;
-
 		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
-		if (shouldStaticAnalysis) {
-            inspector = (GitRepositoryProjectInspector) InspectorFactory.getStaticAnalysisGithubInspector(
+		System.out.println("Gitbranch " + getConfig().getGitRepositoryBranch());
+		GitRepositoryProjectInspector inspector = (GitRepositoryProjectInspector) InspectorFactory.getGithubInspector(
                 getConfig().getGitRepositoryUrl(),
                 getConfig().getGitRepositoryBranch(),
                 getConfig().getGitRepositoryIdCommit(),
@@ -179,16 +176,8 @@ public class MainProcessFactory {
                 getConfig().getWorkspacePath(),
                 notifiers
             );
-        } else {
-            inspector = (GitRepositoryProjectInspector) InspectorFactory.getDefaultGithubInspector(
-                getConfig().getGitRepositoryUrl(),
-                getConfig().getGitRepositoryBranch(),
-                getConfig().getGitRepositoryIdCommit(),
-                getConfig().isGitRepositoryFirstCommit(),
-                getConfig().getWorkspacePath(),
-                notifiers);
-        }
 
+		inspector.setSkipPreSteps(shouldStaticAnalysis);
         inspector.getSerializers().add(new InspectorSerializer4GitRepository(engines, inspector));
         inspector.getSerializers().add(new PropertiesSerializer4GitRepository(engines, inspector));
         inspector.getSerializers().add(new InspectorTimeSerializer4GitRepository(engines, inspector));
@@ -206,13 +195,11 @@ public class MainProcessFactory {
 		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
 		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = InspectorFactory.getDefaultBearsInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
+            inspector = InspectorFactory.getBearsInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
         } else if (getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = InspectorFactory.getDefaultCheckStyleInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
-        } else if (getConfig().getLauncherMode() == LauncherMode.REPAIR && !shouldStaticAnalysis){
-            inspector = InspectorFactory.getDefaultTravisInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
+            inspector = InspectorFactory.getCheckStyleInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
         } else {
-            inspector = InspectorFactory.getStaticAnalysisTravisInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
+            inspector = InspectorFactory.getTravisInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
         }
 
 		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
@@ -221,6 +208,7 @@ public class MainProcessFactory {
             inspector.getSerializers().add(new InspectorSerializer(engines, inspector));
         }
 
+        inspector.setSkipPreSteps(shouldStaticAnalysis);
         inspector.getSerializers().add(new PropertiesSerializer(engines, inspector));
         inspector.getSerializers().add(new InspectorTimeSerializer(engines, inspector));
         inspector.getSerializers().add(new PipelineErrorSerializer(engines, inspector));

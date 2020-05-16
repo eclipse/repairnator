@@ -369,7 +369,7 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, getConfig().getRunId(), getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
 
-        inspector = InspectorFactory.getDefaultGithubInspector(
+        inspector = InspectorFactory.getGithubInspector(
         		getConfig().getGitRepositoryUrl(),
         		getConfig().getGitRepositoryBranch(),
         		getConfig().getGitRepositoryIdCommit(),

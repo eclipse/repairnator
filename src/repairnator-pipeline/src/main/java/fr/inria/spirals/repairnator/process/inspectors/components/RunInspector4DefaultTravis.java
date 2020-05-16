@@ -32,14 +32,11 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
 
-public class RunInspector4DefaultTravis implements IRunInspector{
+public class RunInspector4DefaultTravis extends IRunInspector{
     private boolean skipPreSteps;
 
     public RunInspector4DefaultTravis() {}
-    
-    public RunInspector4DefaultTravis(boolean skipPreSteps) {
-        this.skipPreSteps = skipPreSteps;
-    }
+
 
 	@Override
 	public void run(ProjectInspector inspector) {

@@ -37,14 +37,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RunInspector4DefaultGit implements IRunInspector{
+public class RunInspector4DefaultGit extends IRunInspector{
     private boolean skipPreSteps;
 
     public RunInspector4DefaultGit() {}
-    
-    public RunInspector4DefaultGit(boolean skipPreSteps) {
-        this.skipPreSteps = skipPreSteps;
-    }
 
 	@Override
 	public void run(ProjectInspector inspector_in) {
