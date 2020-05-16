@@ -46,8 +46,6 @@ import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitReposito
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 
-/*  HENRY -  make packages correct later */
-
 /* This will manufacture different kind of repairnator type */
 public class MainProcessFactory {
 

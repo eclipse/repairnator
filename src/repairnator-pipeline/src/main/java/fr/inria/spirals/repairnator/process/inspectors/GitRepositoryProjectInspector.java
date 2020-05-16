@@ -46,7 +46,6 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
     private String gitRepositoryIdCommit;
     private boolean gitRepositoryFirstCommit;
     
-    /*  HENRY -  remove later to use other constructor */
     public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
 
