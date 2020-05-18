@@ -43,6 +43,8 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final int MAX_PATCH_PER_TOOL = 1;
 
+    public static String prTitle = "Automatic patch found by Repairnator!";
+
     private String prText;
 
     public AbstractRepairStep() {
@@ -100,6 +102,10 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
     protected void setPrText(String prText) {
         this.prText = prText;
+    }
+
+    protected void setPRTitle(String prTitle) {
+        this.prTitle = prTitle;
     }
 
     protected void recordPatches(List<RepairPatch> patchList,int patchNbsLimit) {
@@ -196,7 +202,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
         GHRepository originalRepository = github.getRepository(this.getInspector().getRepoSlug());
         GHRepository ghForkedRepo = originalRepository.fork();
 
-        System.out.println("Failed here ?");
         String base = baseBranch;
         String head = ghForkedRepo.getOwnerName() + ":" + newBranch;
 
@@ -212,7 +217,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
             this.prText = sub.replace(DEFAULT_TEXT_PR);
         }
 
-        GHPullRequest pullRequest = originalRepository.createPullRequest("Automatic patch found by Repairnator!", head, base, this.prText);
+        GHPullRequest pullRequest = originalRepository.createPullRequest(prTitle, head, base, this.prText);
         String prURL = "https://github.com/" + this.getInspector().getRepoSlug() + "/pull/" + pullRequest.getNumber();
         this.getLogger().info("Pull request created on: " + prURL);
         this.getInspector().getJobStatus().addPRCreated(prURL);

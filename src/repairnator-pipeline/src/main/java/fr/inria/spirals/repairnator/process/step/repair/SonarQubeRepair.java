@@ -56,7 +56,7 @@ public class SonarQubeRepair extends AbstractRepairStep {
         Map<String, String> values = new HashMap<String, String>();
                 values.put("tools", String.join(",", this.getConfig().getRepairTools()));
                 StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
-        StringBuilder prTextBuilder = new StringBuilder(sub.replace(GITHUB_TEXT_PR)).append("The following PR aims to suggest fix for the following SonarQube rules: \n");
+        StringBuilder prTextBuilder = new StringBuilder().append("This PR fixes the violations for the following SonarQube rules: \n");
         String newBranchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
 
         for (String rule : RepairnatorConfig.getInstance().getSonarRules()) {
@@ -103,6 +103,7 @@ public class SonarQubeRepair extends AbstractRepairStep {
             }
         }
 
+        prTextBuilder.append("If you do no want to receive automated PRs for Sonarqube warnings, reply to this PR with 'STOP'");
         if (!patchFound) {
             return StepStatus.buildPatchNotFound(this);
         }
@@ -112,6 +113,7 @@ public class SonarQubeRepair extends AbstractRepairStep {
             this.setPrText(prTextBuilder.toString());
             try {
                 this.pushPatches(this.forkedGit,this.forkedRepo,newBranchName);
+                this.setPRTitle("Fix Sonarqube violations");
                 this.createPullRequest(this.getInspector().getGitRepositoryBranch(),newBranchName);
             } catch(IOException | GitAPIException | URISyntaxException e) {
                 e.printStackTrace();
