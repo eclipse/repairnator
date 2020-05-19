@@ -14,6 +14,8 @@ import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
+
+
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PatchesSerializer4GitRepository;
@@ -46,13 +48,6 @@ public class GithubMainProcess implements MainProcess {
     private IInitSerializerEngines iInitSerializerEngines;
     private IInitNotifiers iInitNotifiers;
 
-    public GithubMainProcess(List<SerializerEngine> engines,List<AbstractNotifier> notifiers,PatchNotifier patchNotifier) {
-        this.engines = engines;
-        this.notifiers = notifiers;
-        this.patchNotifier = patchNotifier;
-    }
-
-
     public GithubMainProcess(IDefineJSAPArgs iDefineJSAPArgs, IInitConfig iInitConfig, IInitSerializerEngines iInitSerializerEngines, IInitNotifiers iInitNotifiers) {
         this.iDefineJSAPArgs = iDefineJSAPArgs;
         this.iInitConfig = iInitConfig;
@@ -70,6 +65,29 @@ public class GithubMainProcess implements MainProcess {
 
     public ProjectInspector getInspector() {
         return this.inspector;
+    }
+
+    public GithubMainProcess setInspector(ProjectInspector inspector) {
+        this.inspector = inspector;
+        return this;
+    }
+
+    public List<AbstractNotifier> getNotifiers() {
+        return this.notifiers;
+    }
+
+    public GithubMainProcess setNotifiers(List<AbstractNotifier> notifiers) {
+        this.notifiers = notifiers;
+        return this;
+    }
+    
+    public List<SerializerEngine> getEngines() {
+        return this.engines;
+    }
+
+    public GithubMainProcess setEngines(List<SerializerEngine> engines) {
+        this.engines = engines;
+        return this;
     }
 
     @Override
@@ -104,35 +122,9 @@ public class GithubMainProcess implements MainProcess {
 
     @Override
 	public boolean run() {
-		LOGGER.info("Start by getting the repository (repositoryId: " + getConfig().getGitRepositoryId()+") with the following config: " + getConfig());
-
-        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, getConfig().getRunId(), getConfig().getBuildId()+"");
-        hardwareInfoSerializer.serialize();
-
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
-
-        inspector = new GitRepositoryProjectInspector(
-                getConfig().getGitRepositoryUrl(),
-                getConfig().getGitRepositoryBranch(),
-                getConfig().getGitRepositoryIdCommit(),
-                getConfig().isGitRepositoryFirstCommit(),
-                getConfig().getWorkspacePath(),
-                serializers,
-                this.notifiers
-        );
-        
-        System.out.println("Finished " + this.inspector.isPipelineEnding());
-        
-        serializers.add(new InspectorSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new PropertiesSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new InspectorTimeSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new PipelineErrorSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new PatchesSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new ToolDiagnosticSerializer4GitRepository(this.engines, inspector));
-        serializers.add(new PullRequestSerializer4GitRepository(this.engines, inspector));
-
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
+
 
         LOGGER.info("Inspector is finished. The process will exit now.");
         return true;

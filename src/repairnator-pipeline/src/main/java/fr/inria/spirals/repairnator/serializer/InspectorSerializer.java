@@ -39,6 +39,7 @@ public class InspectorSerializer extends AbstractDataSerializer {
         String typeOfFailures = StringUtils.join(jobStatus.getFailureNames(), ",") + "";
 
         List<Object> dataCol = new ArrayList<Object>();
+
         dataCol.add(build.getId() + "");
         dataCol.add(build.getRepository().getSlug());
         dataCol.add(state);

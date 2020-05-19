@@ -198,7 +198,7 @@ public class SequencerRepair extends AbstractRepairStep {
             }
         }
 
-        this.recordPatches(listPatches);
+        this.recordPatches(listPatches,MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiagnostic);
 
         try {

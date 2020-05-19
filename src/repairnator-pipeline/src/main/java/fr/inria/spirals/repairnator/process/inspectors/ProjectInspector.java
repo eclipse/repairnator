@@ -35,6 +35,8 @@ import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
+import fr.inria.spirals.repairnator.process.inspectors.components.IRunInspector;
+
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
@@ -74,6 +76,7 @@ public class ProjectInspector {
     protected List<AbstractStep> steps;
     protected AbstractStep finalStep;
     protected String gitSlug;
+    protected IRunInspector iRunInspector;
 
     public ProjectInspector() {}
 
@@ -110,13 +113,45 @@ public class ProjectInspector {
         this.steps = new ArrayList<>();
         /* Skip initProperties*/
     }
-    
+
+    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+        this.buildToBeInspected = buildToBeInspected;
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator + getRepoSlug();
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = new ArrayList<AbstractDataSerializer>();
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+        this.initProperties();
+    }
+
+    public ProjectInspector setIRunInspector(IRunInspector iRunInspector) {
+        this.iRunInspector = iRunInspector;
+        return this;
+    }
+
+    public void setSkipPreSteps(boolean skipPreSteps) {
+        this.iRunInspector.setSkipPreSteps(skipPreSteps);
+    }
+
+    public Logger getLogger() {
+        return this.logger;
+    }
+
     public String getCheckoutBranchName() {
         return this.gitBranch;
     }
 
     public String getGitCommit() {
         return this.gitCommit;
+    }
+
+    public String getGitRepositoryBranch() {
+        return this.getBuggyBuild().getBranch().getName();
     }
 
     protected void initProperties() {
@@ -205,6 +240,9 @@ public class ProjectInspector {
         return serializers;
     }
 
+    public void setSerializers(List<AbstractDataSerializer> serializers) {
+        this.serializers = serializers;
+    }
 
     public String getWorkspace() {
         return workspace;
@@ -264,77 +302,7 @@ public class ProjectInspector {
     }
 
     public void run() {
-        if (this.buildToBeInspected.getStatus() != ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES) {
-            AbstractStep cloneRepo = new CloneRepository(this);
-            cloneRepo.addNextStep(new CheckoutBuggyBuild(this, true));
-
-            // If we have experimental plugins, we need to add them here.
-            String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
-            if(repos != null) {
-                for(int i = 0; i < repos.length-1; i =+ 2) {
-                    cloneRepo.addNextStep(new AddExperimentalPluginRepo(this, repos[i], repos[i+1], repos[i+2]));
-                }
-            }
-            // Add the next steps
-            cloneRepo
-                    .addNextStep(new BuildProject(this))
-                    .addNextStep(new TestProject(this))
-                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
-                    .addNextStep(new InitRepoToPush(this))
-                    .addNextStep(new ComputeClasspath(this, false))
-                    .addNextStep(new ComputeSourceDir(this, false, false))
-                    .addNextStep(new ComputeTestDir(this, false));
-
-            for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
-                AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
-                if (repairStep != null) {
-                    repairStep.setProjectInspector(this);
-                    cloneRepo.addNextStep(repairStep);
-                } else {
-                    logger.error("Error while getting repair step class for following name: " + repairToolName);
-                }
-            }
-
-            cloneRepo.addNextStep(new CommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
-                    .addNextStep(new CheckoutPatchedBuild(this, true))
-                    .addNextStep(new BuildProject(this))
-                    .addNextStep(new TestProject(this))
-                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
-                    .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
-
-            this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
-
-
-            this.finalStep.
-                    addNextStep(new ComputeModules(this, false)).
-                    addNextStep(new WritePropertyFile(this)).
-                    addNextStep(new CommitProcessEnd(this)).
-                    addNextStep(new PushProcessEnd(this));
-
-            cloneRepo.setDataSerializer(this.serializers);
-            cloneRepo.setNotifiers(this.notifiers);
-
-            this.printPipeline();
-
-            try {
-                cloneRepo.execute();
-            } catch (Exception e) {
-                this.jobStatus.addStepError("Unknown", e.getMessage());
-                this.logger.error("Exception catch while executing steps: ", e);
-                this.jobStatus.setFatalError(e);
-
-                ErrorNotifier errorNotifier = ErrorNotifier.getInstance();
-                if (errorNotifier != null) {
-                    errorNotifier.observe(this);
-                }
-
-                for (AbstractDataSerializer serializer : this.serializers) {
-                    serializer.serialize();
-                }
-            }
-        } else {
-            this.logger.debug("Build " + this.getBuggyBuild().getId() + " is not a failing build.");
-        }
+        this.iRunInspector.run(this);
     }
 
     public CheckoutType getCheckoutType() {

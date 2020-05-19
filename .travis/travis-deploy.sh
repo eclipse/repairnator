@@ -20,10 +20,6 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     git diff
     mvn -q deploy -DskipTests -Dcheckstyle.skip
 
-    # push jenkins plugin snapshot to https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator
-    cd repairnator-jenkins-plugin
-    mvn -q deploy -DskipTests
-    cd ..
 fi
 
 

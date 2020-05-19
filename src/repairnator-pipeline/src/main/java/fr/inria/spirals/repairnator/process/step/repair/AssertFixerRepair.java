@@ -145,7 +145,7 @@ public class AssertFixerRepair extends AbstractRepairStep {
             }
         }
 
-        this.recordPatches(listPatches);
+        this.recordPatches(listPatches,MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiagnostic);
 
         outDir.delete();

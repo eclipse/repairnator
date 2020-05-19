@@ -99,6 +99,9 @@ public class RepairnatorConfig {
     private String gitRepositoryIdCommit;
     private boolean gitRepositoryFirstCommit;
 
+    private String[] sonarRules;
+    private boolean isStaticAnalysis;
+
     // Dockerpool
     private String dockerImageName;
     private boolean skipDelete;
@@ -667,6 +670,22 @@ public class RepairnatorConfig {
 
     public boolean isNoTravisRepair() {
         return this.noTravisRepair;
+    }
+
+    public void setSonarRules(String[] sonarRules) {
+        this.sonarRules = sonarRules;
+    }
+
+    public String[] getSonarRules() {
+        return this.sonarRules;
+    }
+        
+    public void setIsStaticAnalysis(boolean isStaticAnalysis) {
+        this.isStaticAnalysis = isStaticAnalysis;
+    }
+
+    public boolean isStaticAnalysis() {
+        return this.isStaticAnalysis;
     }
 
     @Override

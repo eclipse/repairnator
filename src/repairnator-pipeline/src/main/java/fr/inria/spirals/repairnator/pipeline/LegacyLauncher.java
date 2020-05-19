@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.pipeline;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import java.lang.reflect.Constructor;
 import fr.inria.spirals.repairnator.Listener;
 import ch.qos.logback.classic.Level;
@@ -43,6 +44,7 @@ import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -513,26 +515,26 @@ public class LegacyLauncher implements LauncherAPI {
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = new ProjectInspector4Bears(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = new ProjectInspector4Checkstyle(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         } else {
-            inspector = new ProjectInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), serializers, this.notifiers);
+            inspector = InspectorFactory.getTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
         }
 
         System.out.println("Finished " + this.inspector.isPipelineEnding());
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            serializers.add(new InspectorSerializer4Bears(this.engines, inspector));
+            inspector.getSerializers().add(new InspectorSerializer4Bears(this.engines, inspector));
         } else {
-            serializers.add(new InspectorSerializer(this.engines, inspector));
+            inspector.getSerializers().add(new InspectorSerializer(this.engines, inspector));
         }
 
-        serializers.add(new PropertiesSerializer(this.engines, inspector));
-        serializers.add(new InspectorTimeSerializer(this.engines, inspector));
-        serializers.add(new PipelineErrorSerializer(this.engines, inspector));
-        serializers.add(new PatchesSerializer(this.engines, inspector));
-        serializers.add(new ToolDiagnosticSerializer(this.engines, inspector));
-        serializers.add(new PullRequestSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PropertiesSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new InspectorTimeSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PipelineErrorSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PatchesSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new ToolDiagnosticSerializer(this.engines, inspector));
+        inspector.getSerializers().add(new PullRequestSerializer(this.engines, inspector));
 
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
@@ -553,7 +555,7 @@ public class LegacyLauncher implements LauncherAPI {
      */
     protected void initProcess(LegacyLauncher launcher) {
         try {
-            Constructor c = Class.forName(this.getConfig().getListenerMode().getKlass()).getConstructor(LegacyLauncher.class);
+            Constructor c = Class.forName(this.getConfig().getListenerMode().getKlass()).getConstructor(LauncherAPI.class);
             listener = (Listener) c.newInstance(launcher);
         } catch (Exception e) {
             throw new RuntimeException(e);

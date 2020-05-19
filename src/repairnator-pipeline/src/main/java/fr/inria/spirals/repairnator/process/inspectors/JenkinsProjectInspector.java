@@ -180,7 +180,7 @@ public class JenkinsProjectInspector extends ProjectInspector{
 
         for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
             AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
-            if (repairStep != null) {
+            if (repairStep != null) { 
                 repairStep.setProjectInspector(this);
                 cloneRepo.addNextStep(repairStep);
             } else {
@@ -194,6 +194,7 @@ public class JenkinsProjectInspector extends ProjectInspector{
                 .addNextStep(new TestProject(this))
                 .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
                 .addNextStep(new CommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
+
 
         this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
 

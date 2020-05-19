@@ -64,6 +64,7 @@ public class NPERepair extends AbstractRepairStep {
                 this.addStepError("Error while running NPE fix: maybe the project does not contain a NPE?");
                 return StepStatus.buildSkipped(this,"Error while running maven goal for NPEFix.");
             } else {
+                System.out.println(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix");
                 Collection<File> files = FileUtils.listFiles(new File(this.getInspector().getJobStatus().getPomDirPath()+"/target/npefix"), new String[] { "json"}, false);
                 if (!files.isEmpty()) {
 
@@ -106,7 +107,7 @@ public class NPERepair extends AbstractRepairStep {
                                 }
                             }
 
-                            this.recordPatches(repairPatches);
+                            this.recordPatches(repairPatches,MAX_PATCH_PER_TOOL);
                         }
                     } catch (IOException e) {
                         this.addStepError("Error while parsing JSON patch files");
