@@ -31,14 +31,6 @@
         </license>
     </licenses>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>jenkinsci-snapshots</id>
-            <name>jenkinsci-snapshots</name>
-            <url>https://repo.jenkins-ci.org/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <dependencyManagement>
         <dependencies>
             <dependency>

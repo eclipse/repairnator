@@ -68,10 +68,40 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.steps = new ArrayList<>();
     }
     
+    public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
+            String workspace, List<AbstractNotifier> notifiers) {
+
+        this.gitRepositoryUrl = gitRepoUrl;
+        this.gitRepositoryBranch = gitRepoBranch;
+        this.gitRepositoryIdCommit = gitRepoIdCommit;
+        this.gitRepositoryFirstCommit = isGitRepositoryFirstCommit;
+
+        this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected();
+
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = new ArrayList<AbstractDataSerializer>();
+
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+    }
+
+
+    @Override
+    public String getRepoSlug() {
+        return this.gitRepositoryUrl.split("https://github.com/",2)[1];
+    }
+
     public String getGitRepositoryUrl() {
     	return this.gitRepositoryUrl;
     }
 
+    @Override
     public String getGitRepositoryBranch() {
     	return this.gitRepositoryBranch;
     }
@@ -91,76 +121,4 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
 				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
     }
 
-    @Override
-    public void run() {
-        if (getGitRepositoryUrl() != null) {
-            AbstractStep cloneRepo = new CloneCheckoutBranchRepository(this);
-            
-            // If we have experimental plugins, we need to add them here.
-            String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
-            if(repos != null) {
-                for(int i = 0; i < repos.length-1; i =+ 2) {
-                    cloneRepo.addNextStep(new AddExperimentalPluginRepo(this, repos[i], repos[i+1], repos[i+2]));
-                }
-            }
-            // Add the next steps
-            cloneRepo
-                    .addNextStep(new BuildProject(this))
-                    .addNextStep(new TestProject(this))
-                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldFail(), false))
-                    .addNextStep(new GitRepositoryInitRepoToPush(this))
-                    .addNextStep(new ComputeClasspath(this, false))
-                    .addNextStep(new ComputeSourceDir(this, false, false))
-                    .addNextStep(new ComputeTestDir(this, false));
-
-            for (String repairToolName : RepairnatorConfig.getInstance().getRepairTools()) {
-                AbstractRepairStep repairStep = RepairToolsManager.getStepFromName(repairToolName);
-                if (repairStep != null) {
-                    repairStep.setProjectInspector(this);
-                    cloneRepo.addNextStep(repairStep);
-                } else {
-                    logger.error("Error while getting repair step class for following name: " + repairToolName);
-                }
-            }
-
-            cloneRepo.addNextStep(new GitRepositoryCommitPatch(this, CommitType.COMMIT_REPAIR_INFO))
-                    .addNextStep(new CheckoutPatchedBuild(this, true))
-                    .addNextStep(new BuildProject(this))
-                    .addNextStep(new TestProject(this))
-                    .addNextStep(new GatherTestInformation(this, true, new BuildShouldPass(), true))
-                    .addNextStep(new GitRepositoryCommitPatch(this, CommitType.COMMIT_HUMAN_PATCH));
-
-            this.finalStep = new ComputeSourceDir(this, false, true); // this step is used to compute code metrics on the project
-            
-            this.finalStep.
-                    addNextStep(new ComputeModules(this, false)).
-                    addNextStep(new WritePropertyFile(this)).
-                    addNextStep(new GitRepositoryCommitProcessEnd(this)).
-                    addNextStep(new GitRepositoryPushProcessEnd(this));
-
-            cloneRepo.setDataSerializer(this.serializers);
-            cloneRepo.setNotifiers(this.notifiers);
-
-            this.printPipeline();
-
-            try {
-                cloneRepo.execute();
-            } catch (Exception e) {
-                this.jobStatus.addStepError("Unknown", e.getMessage());
-                this.logger.error("Exception catch while executing steps: ", e);
-                this.jobStatus.setFatalError(e);
-
-                ErrorNotifier errorNotifier = ErrorNotifier.getInstance();
-                if (errorNotifier != null) {
-                    errorNotifier.observe(this);
-                }
-
-                for (AbstractDataSerializer serializer : this.serializers) {
-                    serializer.serialize();
-                }
-            }
-        } else {
-            this.logger.debug("Build " + this.getBuggyBuild().getId() + " is not a failing build.");
-        }
-    }
 }

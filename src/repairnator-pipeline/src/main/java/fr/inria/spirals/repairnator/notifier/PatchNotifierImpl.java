@@ -45,7 +45,7 @@ public class PatchNotifierImpl implements PatchNotifier {
         String[] divideSlug = slug.split("/");
         String projectName = divideSlug[1];
 
-        text += "Data about patches has been pushed on the following branch: "+ jobStatus.getGitBranchUrl()+".\n\n";
+        text += "Data about patches has been pushed on the following branch: "+ inspector.getGitRepositoryBranch()+".\n\n";
         text += "Follow those instruction to create a pull request:\n";
         text += "mkdir "+projectName+"\n";
         text += "cd "+projectName+"\n";
@@ -86,6 +86,7 @@ public class PatchNotifierImpl implements PatchNotifier {
         for (int i = 0; i < limit; i++) {
             text += "\t Patch n°" + i + ": \n";
             text += "\t" + patches.get(i).getDiff() + "\n\n";
+            System.out.println(patches.get(i).getDiff());
         }
 
         for (NotifierEngine engine : this.engines) {

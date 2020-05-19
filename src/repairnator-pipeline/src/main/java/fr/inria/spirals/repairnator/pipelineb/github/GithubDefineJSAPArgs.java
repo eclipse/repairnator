@@ -138,6 +138,7 @@ public class GithubDefineJSAPArgs implements IDefineJSAPArgs{
 
         opt = new FlaggedOption("repairTools");
         opt.setLongFlag("repairTools");
+
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
 
         opt.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',',';'), true));

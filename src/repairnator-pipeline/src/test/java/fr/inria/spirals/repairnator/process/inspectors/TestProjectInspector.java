@@ -83,7 +83,6 @@ public class TestProjectInspector {
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
         List<AbstractNotifier> notifiers = new ArrayList<>();
 
         List<SerializerEngine> serializerEngines = new ArrayList<>();
@@ -94,11 +93,11 @@ public class TestProjectInspector {
         NotifierEngine notifierEngine = mock(NotifierEngine.class);
         notifierEngines.add(notifierEngine);
 
-        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        ProjectInspector inspector = InspectorFactory.getTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
 
-        serializers.add(new InspectorSerializer(serializerEngines, inspector));
-        serializers.add(new PatchesSerializer(serializerEngines, inspector));
-        serializers.add(new ToolDiagnosticSerializer(serializerEngines, inspector));
+        inspector.getSerializers().add(new InspectorSerializer(serializerEngines, inspector));
+        inspector.getSerializers().add(new PatchesSerializer(serializerEngines, inspector));
+        inspector.getSerializers().add(new ToolDiagnosticSerializer(serializerEngines, inspector));
 
         inspector.setPatchNotifier(new PatchNotifierImpl(notifierEngines));
         inspector.run();
@@ -157,16 +156,15 @@ public class TestProjectInspector {
 
         BuildToBeInspected buildToBeInspected = new BuildToBeInspected(failingBuild, null, ScannedBuildStatus.ONLY_FAIL, "test");
 
-        List<AbstractDataSerializer> serializers = new ArrayList<>();
         List<AbstractNotifier> notifiers = new ArrayList<>();
 
         List<SerializerEngine> serializerEngines = new ArrayList<>();
         SerializerEngine serializerEngine = mock(SerializerEngine.class);
         serializerEngines.add(serializerEngine);
 
-        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), serializers, notifiers);
+        ProjectInspector inspector = InspectorFactory.getTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), notifiers);
 
-        serializers.add(new InspectorSerializer(serializerEngines, inspector));
+        inspector.getSerializers().add(new InspectorSerializer(serializerEngines, inspector));
 
         inspector.run();
 

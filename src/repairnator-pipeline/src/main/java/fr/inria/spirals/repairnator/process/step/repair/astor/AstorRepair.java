@@ -182,7 +182,7 @@ public abstract class AstorRepair extends AbstractRepairStep {
                 return StepStatus.buildPatchNotFound(this);
             } else {
                 this.getInspector().getJobStatus().setHasBeenPatched(true);
-                this.recordPatches(astorPatches);
+                this.recordPatches(astorPatches,MAX_PATCH_PER_TOOL);
                 return StepStatus.buildSuccess(this);
             }
         }

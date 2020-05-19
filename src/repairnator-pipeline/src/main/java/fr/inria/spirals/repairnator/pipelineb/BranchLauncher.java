@@ -44,7 +44,6 @@ public class BranchLauncher implements LauncherAPI{
         	+ "JENKINS_PLUGIN: run repairnator as a Jenkins plugin to repair after each build in Jenkins CI");
         jsap.registerParameter(opt2);
 
-
         return jsap;
 	}
 
@@ -93,6 +92,7 @@ public class BranchLauncher implements LauncherAPI{
 	public static void main(String[] args) throws JSAPException {
 		JSAP jsap = defineBasicArgs();
 		JSAPResult jsapResult = jsap.parse(args);
+		
 		MainProcess mainProcess = getMainProcess(jsap,args);
 		mainProcess.run();
 	}

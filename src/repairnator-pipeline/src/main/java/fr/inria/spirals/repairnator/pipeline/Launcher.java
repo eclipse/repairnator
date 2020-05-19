@@ -21,17 +21,6 @@ public class Launcher implements LauncherAPI {
         init(args);
     }
 
-    public static void init(String[] args) throws JSAPException{
-        JSAP jsap = defineBasicArgs();
-        JSAPResult res = jsap.parse(args);
-        String choice = res.getString("launcherChoice");
-        if (choice.equals("OLD")) {
-            launcher = new LegacyLauncher(args);
-        } else {
-            launcher = new BranchLauncher(args);
-        }
-    }
-
     public static JSAP defineBasicArgs() throws JSAPException {
         JSAP jsap = new JSAP();
 
@@ -42,7 +31,25 @@ public class Launcher implements LauncherAPI {
         opt2.setHelp("OLD: Original Launcher. NEW: new launcher.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("sonarRules");
+        opt2.setLongFlag("sonarRules");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("2116");
+        opt2.setHelp("Required if SonarQube is specified in the repairtools as argument. Format: 1948,1854,RuleNumber.. . Supported rules: https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md");
+        jsap.registerParameter(opt2);
+
         return jsap;
+    }
+
+    public static void init(String[] args) throws JSAPException{
+        JSAP jsap = defineBasicArgs();
+        JSAPResult res = jsap.parse(args);
+        String choice = res.getString("launcherChoice");
+        if (choice.equals("OLD")) {
+            launcher = new LegacyLauncher(args);
+        } else {
+            launcher = new BranchLauncher(args);
+        }
     }
 
     public static void main(String[] args) throws JSAPException{
@@ -55,6 +62,8 @@ public class Launcher implements LauncherAPI {
         } else {
             launcher = new BranchLauncher(args);
         }
+
+        RepairnatorConfig.getInstance().setSonarRules(jsapResult.getString("sonarRules").split(","));
         launcher.launch();
     }
 
@@ -64,7 +73,9 @@ public class Launcher implements LauncherAPI {
     }
 
     @Override
-    public void launch() {}
+    public void launch() {
+        this.launcher.launch();
+    }
 
     @Override
     public JSAP defineArgs() throws JSAPException{
