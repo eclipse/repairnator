@@ -69,19 +69,22 @@ public class RepairnatorPostBuild extends Recorder {
     private String gitOAuthToken;
     private String gitBranch;
     private String notifyTo;
+    private String sonarRules;
     private boolean useNPEFix;
     private boolean useAstorJKali;
     private boolean useAstorJMut;
     private boolean useNPEFixSafe;
     private boolean useNopolTestExclusionStrategy;
+    private boolean useSonarQubeRepair;
     private final Config config = new Config();
 
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,String sonarRules) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
         this.notifyTo = notifyTo;
+        this.sonarRules = sonarRules;
     }
 
     public RepairnatorPostBuild() {}
@@ -109,6 +112,11 @@ public class RepairnatorPostBuild extends Recorder {
     @DataBoundSetter
     public void setUseNopolTestExclusionStrategy(boolean useNopolTestExclusionStrategy) {
         this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;
+    }
+
+    @DataBoundSetter
+    public void setUseSonarQubeRepair(boolean useSonarQubeRepair) {
+        this.useSonarQubeRepair = useSonarQubeRepair;
     }
 
     public void setGitUrl(String gitUrl) {
@@ -148,6 +156,30 @@ public class RepairnatorPostBuild extends Recorder {
         return this.config.useTLSOrSSL();
     }
 
+    public boolean getUseNPEFix() {
+        return useNPEFix;
+    }
+
+    public boolean getUseAstorJKali() {
+        return useAstorJKali;
+    }
+
+    public boolean getUseAstorJMut() {
+        return useAstorJMut;
+    }
+
+    public boolean getUseNPEFixSafe() {
+        return useNPEFixSafe;
+    }
+
+    public boolean getUseNopolTestExclusionStrategy() {
+        return useNopolTestExclusionStrategy;
+    }  
+
+    public boolean getUseSonarQubeRepair() {
+        return useSonarQubeRepair;
+    }
+        
     public String[] getTools(){
         String dummy = "";
         if (this.useNPEFix) {
@@ -172,6 +204,8 @@ public class RepairnatorPostBuild extends Recorder {
 
         return dummy.substring(1,dummy.length()).split(",");
     }
+
+
 
     public Config getConfig() {
         return this.config;
@@ -314,6 +348,7 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
         config.setNotifyTo(this.notifyTo);
+        config.setSonarRules(this.sonarRules);
     }
 
     public void cleanUp(){
@@ -369,7 +404,7 @@ public class RepairnatorPostBuild extends Recorder {
 
             String snapShotUrl = "https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-pipeline";
             RepairnatorJarDownloader repJarDownloader = new RepairnatorJarDownloader(snapShotUrl,this.getConfig().getTempDir().getAbsolutePath() + File.separator + "repairnator.jar");
-            repJarDownloader.download();
+            repJarDownloader.downloadJarHardCoded("https://github.com/henry-lp/mvn-repo/raw/master/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar");
 
             if (this.shouldInstallMaven(env)) {
                 System.out.println("M2_HOME is null, proceed installing default maven version 3.6.3");
@@ -407,6 +442,7 @@ public class RepairnatorPostBuild extends Recorder {
         private boolean useAstorJKali;
         private boolean useNPEFixSafe;
         private boolean useNopolTestExclusionStrategy;
+        private boolean useSonarQubeRepair;
         private String notifyTo;
 
         /**
@@ -454,6 +490,7 @@ public class RepairnatorPostBuild extends Recorder {
             useAstorJMut = formData.getBoolean("useAstorJMut");
             useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
             useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
+            useSonarQubeRepair = formData.getBoolean("useSonarQubeRepair");
             notifyTo = formData.getString("notifyTo");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseNPEFix)
@@ -461,24 +498,28 @@ public class RepairnatorPostBuild extends Recorder {
             return true;
         }
 
-        public boolean useNPEFix() {
+        public boolean getUseNPEFix() {
             return useNPEFix;
         }
 
-        public boolean useAstorJKali() {
+        public boolean getUseAstorJKali() {
             return useAstorJKali;
         }
 
-        public boolean useAstorJMut() {
+        public boolean getUseAstorJMut() {
             return useAstorJMut;
         }
 
-        public boolean useNPEFixSafe() {
+        public boolean getUseNPEFixSafe() {
             return useNPEFixSafe;
         }
 
-        public boolean useNopolTestExclusionStrategy() {
+        public boolean getUseNopolTestExclusionStrategy() {
             return useNopolTestExclusionStrategy;
+        }  
+
+        public boolean getUseSonarQubeRepair() {
+            return useSonarQubeRepair;
         }
 
         public String getNotifyTo() {

@@ -11,6 +11,7 @@ public class Config {
 	private boolean quiet = false;
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
+	private String sonarRules;
 
 	public Config(){
 		this.stringConfig = new HashMap<String,String>();
@@ -132,6 +133,14 @@ public class Config {
 
 	public boolean useTLSOrSSL() {
 		return Mailer.descriptor().getUseSsl();
+	}
+
+	public void setSonarRules(String sonarRules) {
+		this.sonarRules = sonarRules;
+	}
+
+	public String getSonarRules() {
+		return this.sonarRules;
 	}
 
 	public boolean isQuiet() {
