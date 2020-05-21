@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RunInspector4DefaultGit extends IRunInspector{
-    private boolean skipPreSteps;
 
     public RunInspector4DefaultGit() {}
 
@@ -56,7 +55,7 @@ public class RunInspector4DefaultGit extends IRunInspector{
                 }
             }
             // Add the next steps
-
+            System.out.println("skipPreSteps: " + this.skipPreSteps);
             if (!this.skipPreSteps) {
                 cloneRepo
                     .addNextStep(new BuildProject(inspector))

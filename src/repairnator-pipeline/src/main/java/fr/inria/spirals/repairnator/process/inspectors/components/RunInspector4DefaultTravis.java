@@ -33,7 +33,6 @@ import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
 
 public class RunInspector4DefaultTravis extends IRunInspector{
-    private boolean skipPreSteps;
 
     public RunInspector4DefaultTravis() {}
 
