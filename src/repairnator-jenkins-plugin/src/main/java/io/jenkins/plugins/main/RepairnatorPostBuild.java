@@ -38,8 +38,6 @@ import java.lang.Process;
 import java.io.FileNotFoundException;
 import java.lang.InterruptedException;
 
-import java.util.Arrays;
-
 import hudson.tasks.Maven;
 import hudson.tools.ToolProperty;
 import hudson.tasks.Maven.MavenInstallation;
@@ -61,6 +59,8 @@ import hudson.util.DescribableList;
 import jenkins.model.Jenkins;
 
 import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
@@ -69,7 +69,6 @@ public class RepairnatorPostBuild extends Recorder {
     private String gitOAuthToken;
     private String gitBranch;
     private String notifyTo;
-    private String sonarRules;
     private boolean useNPEFix;
     private boolean useAstorJKali;
     private boolean useAstorJMut;
@@ -78,17 +77,41 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useSonarQubeRepair;
     private final Config config = new Config();
 
+    private boolean sonarRulesGiven;
+    /* Rules */
+    private boolean rule1656;
+    private boolean rule1860;
+    private boolean rule1948;
+    private boolean rule2095;
+    private boolean rule2111;
+    private boolean rule2116;
+    private boolean rule2164;
+    private boolean rule2167;
+    private boolean rule2184;
+    private boolean rule2204;
+    private boolean rule2272;
+    private boolean rule3032;
+    private boolean rule3067;
+    private boolean rule3984;
+    private boolean rule4973;
+
+    private SonarRulesBlock sonarRulesBlock;
+
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,String sonarRules) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,SonarRulesBlock sonarRulesBlock) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
         this.notifyTo = notifyTo;
-        this.sonarRules = sonarRules;
+        this.sonarRulesBlock = sonarRulesBlock;
+        if (sonarRulesBlock != null) {
+            sonarRulesBlock.rulesProvided = true;
+        } 
     }
 
     public RepairnatorPostBuild() {}
 
+    /* Repair Tools*/
     @DataBoundSetter
     public void setUseNPEFix(boolean useNPEFix) {
         this.useNPEFix = useNPEFix;
@@ -119,6 +142,74 @@ public class RepairnatorPostBuild extends Recorder {
         this.useSonarQubeRepair = useSonarQubeRepair;
     }
 
+    public boolean getSonarRulesBlock() {
+        return this.sonarRulesBlock != null;
+    }
+
+    public boolean getRule1656() {
+        return SonarRulesBlock.rule1656;
+    }
+
+    public boolean getRule1854() {
+        return SonarRulesBlock.rule1854;
+    }
+
+    public boolean getRule1860() {
+        return SonarRulesBlock.rule1860;
+    }
+
+    public boolean getRule1948() {
+        return SonarRulesBlock.rule1948;
+    }
+
+    public boolean getRule2095() {
+        return SonarRulesBlock.rule2095;
+    }
+
+    public boolean getRule2111() {
+        return SonarRulesBlock.rule2111;
+    }
+
+    public boolean getRule2116() {
+        return SonarRulesBlock.rule2116;
+    }
+
+    public boolean getRule2164() {
+        return SonarRulesBlock.rule2164;
+    }
+
+    public boolean getRule2167() {
+        return SonarRulesBlock.rule2167;
+    }
+
+    public boolean getRule2184() {
+        return SonarRulesBlock.rule2184;
+    }
+
+    public boolean getRule2204() {
+        return SonarRulesBlock.rule2204;
+    }
+
+    public boolean getRule2272() {
+        return SonarRulesBlock.rule2272;
+    }
+
+    public boolean getRule3032() {
+        return SonarRulesBlock.rule3032;
+    }
+
+    public boolean getRule3067() {
+        return SonarRulesBlock.rule3067;
+    }
+
+    public boolean getRule3984() {
+        return SonarRulesBlock.rule3984;
+    }
+
+    public boolean getRule4973() {
+        return SonarRulesBlock.rule4973;
+    }
+
     public void setGitUrl(String gitUrl) {
         this.gitUrl = gitUrl;
     }
@@ -134,7 +225,6 @@ public class RepairnatorPostBuild extends Recorder {
     public void setNotifyTo(String notifyTo) {
         this.notifyTo = notifyTo;
     }
-
 
     public String getGitUrl() {
         return gitUrl;
@@ -179,7 +269,7 @@ public class RepairnatorPostBuild extends Recorder {
     public boolean getUseSonarQubeRepair() {
         return useSonarQubeRepair;
     }
-        
+
     public String[] getTools(){
         String dummy = "";
         if (this.useNPEFix) {
@@ -202,6 +292,9 @@ public class RepairnatorPostBuild extends Recorder {
             dummy += ",NopolTestExclusionStrategy";
         }
 
+        if (this.useSonarQubeRepair) {
+            dummy += ",SonarQubeRepair";
+        }
         return dummy.substring(1,dummy.length()).split(",");
     }
 
@@ -242,6 +335,7 @@ public class RepairnatorPostBuild extends Recorder {
                                         .withSmtpPort(config.getSmtpPort())
                                         .shouldNotifyTo(config.getNotifyTo())
                                         .withRepairTools(config.getTools())
+                                        .withSonarRules(config.getSonarRules())
                                         .useSmtpTls(config.useTLSOrSSL())
                                         .asNoTravisRepair()
                                         .alsoCreatePR()
@@ -317,7 +411,7 @@ public class RepairnatorPostBuild extends Recorder {
             return false;
         }
 
-        if (!(this.useNPEFix || this.useAstorJKali || this.useAstorJMut || this.useNPEFixSafe || this.useNopolTestExclusionStrategy)) {
+        if (!(this.useNPEFix || this.useAstorJKali || this.useAstorJMut || this.useNPEFixSafe || this.useNopolTestExclusionStrategy || this.useSonarQubeRepair)) {
             System.out.println("ERROR: NO TOOL SPECIFIED , NO NEED TO REPAIR");
             return false;
         }
@@ -348,7 +442,8 @@ public class RepairnatorPostBuild extends Recorder {
         config.setGitOAuth(this.gitOAuthToken);
         config.setTools(this.getTools());
         config.setNotifyTo(this.notifyTo);
-        config.setSonarRules(this.sonarRules);
+        config.setSonarRules(SonarRulesBlock.constructCmdStr4Rules());
+        System.out.println("HENRY - " + config.getSonarRules());
     }
 
     public void cleanUp(){
@@ -443,7 +538,25 @@ public class RepairnatorPostBuild extends Recorder {
         private boolean useNPEFixSafe;
         private boolean useNopolTestExclusionStrategy;
         private boolean useSonarQubeRepair;
+        private boolean rulesProvided;
         private String notifyTo;
+
+        /* Rules */
+        /*private boolean rule1656;
+        private boolean rule1860;
+        private boolean rule1948;
+        private boolean rule2095;
+        private boolean rule2111;
+        private boolean rule2116;
+        private boolean rule2164;
+        private boolean rule2167;
+        private boolean rule2184;
+        private boolean rule2204;
+        private boolean rule2272;
+        private boolean rule3032;
+        private boolean rule3067;
+        private boolean rule3984;
+        private boolean rule4973;*/
 
         /**
          * In order to load the persisted global configuration, you have to
@@ -464,7 +577,10 @@ public class RepairnatorPostBuild extends Recorder {
          * will be displayed to the user.
          */
 
-         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy) {
+         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy,@QueryParameter boolean useSonarQubeRepair) {
+            if(useSonarQubeRepair) {
+                FormValidation.warning("Please also provide sonarRules in the textfield below");
+            }
             return FormValidation.ok();
         }
 
@@ -482,18 +598,15 @@ public class RepairnatorPostBuild extends Recorder {
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            // To persist global configuration information,
-            // set that to properties and call save().
             req.bindJSON(this, formData);
-            useNPEFix = formData.getBoolean("useNPEFix");
-            useAstorJKali = formData.getBoolean("useAstorJKali");
-            useAstorJMut = formData.getBoolean("useAstorJMut");
-            useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
-            useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
-            useSonarQubeRepair = formData.getBoolean("useSonarQubeRepair");
-            notifyTo = formData.getString("notifyTo");
-            // ^Can also use req.bindJSON(this, formData);
-            //  (easier when there are many fields; need set* methods for this, like setUseNPEFix)
+            this.useNPEFix = formData.getBoolean("useNPEFix");
+            this.useAstorJKali = formData.getBoolean("useAstorJKali");
+            this.useAstorJMut = formData.getBoolean("useAstorJMut");
+            this.useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
+            this.useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
+            this.useSonarQubeRepair = formData.getBoolean("useSonarQubeRepair");
+            this.notifyTo = formData.getString("notifyTo");
+
             save();
             return true;
         }
@@ -524,6 +637,145 @@ public class RepairnatorPostBuild extends Recorder {
 
         public String getNotifyTo() {
             return notifyTo;
+        }
+
+        public boolean getRulesProvided() {
+            return SonarRulesBlock.rulesProvided;
+        }
+    }
+
+    public static final class SonarRulesBlock {
+        public static boolean rulesProvided;
+
+        /* Rules */
+        private static boolean rule1656;
+        private static boolean rule1854;
+        private static boolean rule1860;
+        private static boolean rule1948;
+        private static boolean rule2095;
+        private static boolean rule2111;
+        private static boolean rule2116;
+        private static boolean rule2164;
+        private static boolean rule2167;
+        private static boolean rule2184;
+        private static boolean rule2204;
+        private static boolean rule2272;
+        private static boolean rule3032;
+        private static boolean rule3067;
+        private static boolean rule3984;
+        private static boolean rule4973;
+
+        @DataBoundConstructor
+        public SonarRulesBlock() {}
+
+        @DataBoundSetter
+        public static void setRule1656(boolean rule1656_in) {
+            rule1656 = rule1656_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule1854(boolean rule1854_in) {
+            rule1854 = rule1854_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule1860(boolean rule1860_in) {
+            rule1860 = rule1860_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule1948(boolean rule1948_in) {
+            rule1948 = rule1948_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2095(boolean rule2095_in) {
+            rule2095 = rule2095_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2111(boolean rule2111_in) {
+            rule2111 = rule2111_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2116(boolean rule2116_in) {
+            rule2116 = rule2116_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2164(boolean rule2164_in) {
+            rule2164 = rule2164_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2167(boolean rule2167_in) {
+            rule2167 = rule2167_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2184(boolean rule2184_in) {
+            rule2184 = rule2184_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2204(boolean rule2204_in) {
+            rule2204 = rule2204_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule2272(boolean rule2272_in) {
+            rule2272 = rule2272_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule3032(boolean rule3032_in) {
+            rule3032 = rule3032_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule3067(boolean rule3067_in) {
+            rule3067 = rule3067_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule3984(boolean rule3984_in) {
+            rule3984 = rule3984_in;
+        }
+
+        @DataBoundSetter
+        public static void setRule4973(boolean rule4973_in) {
+            rule4973 = rule4973_in;
+        }
+
+        private static String ruleStringOrEmpty(boolean rule,String ruleNumber) {
+            if (rule) {
+                return ruleNumber + ",";
+            }
+            return "";
+        }
+
+        public static String constructCmdStr4Rules() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(ruleStringOrEmpty(rule1656,"1656"))
+                .append(ruleStringOrEmpty(rule1854,"1854"))
+                .append(ruleStringOrEmpty(rule1860,"1860"))
+                .append(ruleStringOrEmpty(rule1948,"1948"))
+                .append(ruleStringOrEmpty(rule2095,"2095"))
+                .append(ruleStringOrEmpty(rule2111,"2111"))
+                .append(ruleStringOrEmpty(rule2116,"2116"))
+                .append(ruleStringOrEmpty(rule2164,"2164"))
+                .append(ruleStringOrEmpty(rule2167,"2167"))
+                .append(ruleStringOrEmpty(rule2184,"2184"))
+                .append(ruleStringOrEmpty(rule2204,"2204"))
+                .append(ruleStringOrEmpty(rule2272,"2272"))
+                .append(ruleStringOrEmpty(rule3032,"3032"))
+                .append(ruleStringOrEmpty(rule3067,"3067"))
+                .append(ruleStringOrEmpty(rule3984,"3984"))
+                .append(ruleStringOrEmpty(rule4973,"4973"));
+
+            String res = sb.toString();
+            return res.substring(0,res.length() - 1); // remove last character ','  
         }
     }
 }
