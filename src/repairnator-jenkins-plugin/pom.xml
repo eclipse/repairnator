@@ -12,24 +12,28 @@
     <version>2.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
-        <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
         <jenkins.version>2.164.3</jenkins.version>
         <java.level>8</java.level>
         <enforcer.skip>true</enforcer.skip>
-        <!-- Other properties you may want to use:
-          ~ jenkins-test-harness.version: Jenkins Test Harness version you use to test the plugin. For Jenkins version >= 1.580.1 use JTH 2.0 or higher.
-          ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
-          ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
-     -->
+        <github.global.server>github</github.global.server>
     </properties>
+    
     <name>repairnator-jenkins-plugin</name>
-    <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
     <licenses>
         <license>
             <name>MIT License</name>
             <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
+
+
+    <distributionManagement>
+        <snapshotRepository>
+          <id>internal-snapshot.repo</id>
+          <name>Temporary Staging Snapshot Repository</name>
+          <url>file://${project.build.directory}/mvn-repo/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -143,6 +147,27 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+              <groupId>com.github.github</groupId>
+              <artifactId>site-maven-plugin</artifactId>
+              <version>0.11</version>
+              <configuration>
+                  <message>Maven artifacts for ${project.version}</message>
+                  <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+                  <branch>refs/heads/mvn-repo</branch>
+                  <includes><include>**/*</include></includes>
+                  <repositoryName>mvn-repo</repositoryName>
+                  <repositoryOwner>henry-lp</repositoryOwner> 
+              </configuration>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>site</goal>
+                  </goals>
+                  <phase>deploy</phase>
+                </execution>
+              </executions>
+            </plugin>
       </plugins>
     </build>
     

@@ -7,10 +7,8 @@
         </server>
         <!-- Used for publishing the Jenkins plugins -->
         <server>
-    		<id>jenkinsci-snapshots</id>
-		<!-- account on https://repo.jenkins-ci.org/ -->
-	      	<username>${env.JENKINS_USERNAME}</username>
-	      	<password>${env.JENKINS_PASSWORD}</password>
-	    </server>
+          <id>github</id>
+          <password>${env.JENKINS_GITHUB_TOKEN}</password>
+        </server>
     </servers>
 </settings>

@@ -7,7 +7,7 @@ The Repairnator Jenkins Plugin can be used:
  
 ## How to install repairnator-jenkins-plugin?
 
-**Download** You can download the Jenkins `hpi` file from our snapshot repo at <https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-jenkins-plugin/> 
+**Download** You can download the Jenkins `hpi` file from our snapshot repo at <https://github.com/henry-lp/mvn-repo/tree/mvn-repo> 
 
 
 * On Jenkins, go to `Manage Jenkins -> Manage Plugins -> Advanced`.
