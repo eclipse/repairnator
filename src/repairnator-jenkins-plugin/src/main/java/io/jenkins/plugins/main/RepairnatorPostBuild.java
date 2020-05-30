@@ -443,7 +443,6 @@ public class RepairnatorPostBuild extends Recorder {
         config.setTools(this.getTools());
         config.setNotifyTo(this.notifyTo);
         config.setSonarRules(SonarRulesBlock.constructCmdStr4Rules());
-        System.out.println("HENRY - " + config.getSonarRules());
     }
 
     public void cleanUp(){
@@ -539,43 +538,10 @@ public class RepairnatorPostBuild extends Recorder {
         private boolean useNopolTestExclusionStrategy;
         private boolean useSonarQubeRepair;
         private boolean rulesProvided;
-        private String notifyTo;
 
-        /* Rules */
-        /*private boolean rule1656;
-        private boolean rule1860;
-        private boolean rule1948;
-        private boolean rule2095;
-        private boolean rule2111;
-        private boolean rule2116;
-        private boolean rule2164;
-        private boolean rule2167;
-        private boolean rule2184;
-        private boolean rule2204;
-        private boolean rule2272;
-        private boolean rule3032;
-        private boolean rule3067;
-        private boolean rule3984;
-        private boolean rule4973;*/
-
-        /**
-         * In order to load the persisted global configuration, you have to
-         * call load() in the constructor.
-         */
         public DescriptorImpl() {
             load();
         }
-
-        /**
-         * Performs on-the-fly validation of the form field 'name'.
-         *
-         * @param value This parameter receives the value that the user has typed.
-         * @return Indicates the outcome of the validation. This is sent to the browser.
-         * <p/>
-         * Note that returning {@link FormValidation#error(String)} does not
-         * prevent the form from being saved. It just means that a message
-         * will be displayed to the user.
-         */
 
          public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy,@QueryParameter boolean useSonarQubeRepair) {
             if(useSonarQubeRepair) {
@@ -585,13 +551,9 @@ public class RepairnatorPostBuild extends Recorder {
         }
 
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-            // Indicates that this builder can be used with all kinds of project types 
             return true;
         }
 
-        /**
-         * This human readable name is used in the configuration screen.
-         */
         public String getDisplayName() {
             return "Run repairnator";
         }
@@ -605,7 +567,6 @@ public class RepairnatorPostBuild extends Recorder {
             this.useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
             this.useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
             this.useSonarQubeRepair = formData.getBoolean("useSonarQubeRepair");
-            this.notifyTo = formData.getString("notifyTo");
 
             save();
             return true;
@@ -633,14 +594,6 @@ public class RepairnatorPostBuild extends Recorder {
 
         public boolean getUseSonarQubeRepair() {
             return useSonarQubeRepair;
-        }
-
-        public String getNotifyTo() {
-            return notifyTo;
-        }
-
-        public boolean getRulesProvided() {
-            return SonarRulesBlock.rulesProvided;
         }
     }
 

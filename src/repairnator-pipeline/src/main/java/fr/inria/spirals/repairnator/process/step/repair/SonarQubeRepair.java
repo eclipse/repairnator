@@ -75,30 +75,28 @@ public class SonarQubeRepair extends AbstractRepairStep {
 
             File patchDir = new File(RepairnatorConfig.getInstance().getWorkspacePath() + File.separator + "SonarGitPatches");
 
-            if (!patchDir.exists()) {
-                return StepStatus.buildPatchNotFound(this);
-            }
-
-            File[] patchFiles = patchDir.listFiles();
-
-            this.getLogger().info("Number of patches found: " + patchFiles.length);
-            if (patchFiles.length != 0) {
-                List<RepairPatch> repairPatches = new ArrayList<RepairPatch>();
-                for (File patchFile : patchFiles) {
-                    try {
-                        String content = new String(Files.readAllBytes(patchFile.toPath()), StandardCharsets.UTF_8);
-                        RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", content);
-                        repairPatches.add(repairPatch);
-                    } catch (Exception e) {
-                        return StepStatus.buildSkipped(this,"Error while retrieving patches");
+            
+            if (patchDir.exists()) {
+                File[] patchFiles = patchDir.listFiles();
+                this.getLogger().info("Number of patches found: " + patchFiles.length);
+                if (patchFiles.length != 0) {
+                    List<RepairPatch> repairPatches = new ArrayList<RepairPatch>();
+                    for (File patchFile : patchFiles) {
+                        try {
+                            String content = new String(Files.readAllBytes(patchFile.toPath()), StandardCharsets.UTF_8);
+                            RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", content);
+                            repairPatches.add(repairPatch);
+                        } catch (Exception e) {
+                            return StepStatus.buildSkipped(this,"Error while retrieving patches");
+                        }
+                        patchFile.delete();
                     }
-                    patchFile.delete();
-                }
-                prTextBuilder.append(RULE_LINK_TEMPLATE).append(rule + "\n");
-                this.performApplyPatch(repairPatches,repairPatches.size(),rule,newBranchName);
-                if (!patchFound) {
-                    patchFound = true;
-                    this.allPatches.addAll(repairPatches); // Only mailing patches will only support single rule repair - FIXME
+                    prTextBuilder.append(RULE_LINK_TEMPLATE).append(rule + "\n");
+                    this.performApplyPatch(repairPatches,repairPatches.size(),rule,newBranchName);
+                    if (!patchFound) {
+                        patchFound = true;
+                        this.allPatches.addAll(repairPatches); // Only mailing patches will only support single rule repair - FIXME
+                    }
                 }
             }
         }

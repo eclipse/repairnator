@@ -12,6 +12,9 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 
+import java.util.HashSet;
+import java.util.Arrays;
+
 public class Launcher implements LauncherAPI {
     private static LauncherAPI launcher;
 
@@ -62,8 +65,7 @@ public class Launcher implements LauncherAPI {
         } else {
             launcher = new BranchLauncher(args);
         }
-
-        RepairnatorConfig.getInstance().setSonarRules(jsapResult.getString("sonarRules").split(","));
+        RepairnatorConfig.getInstance().setSonarRules(String.join(",",new HashSet<String>(Arrays.asList(jsapResult.getString("sonarRules").split(",")))).split(","));
         launcher.launch();
     }
 
