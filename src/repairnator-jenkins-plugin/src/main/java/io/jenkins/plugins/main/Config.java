@@ -8,6 +8,7 @@ import hudson.tasks.Mailer;
 public class Config {
 	private static Config config;
 	private File tempDir;
+	private String setupHomePath;
 	private boolean quiet = false;
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
@@ -27,7 +28,7 @@ public class Config {
 	public static void resetConfig() {
 		config = new Config();
 	}
-	
+
 	public File getTempDir() {
 		if (this.tempDir == null) {
 			try {
@@ -39,9 +40,17 @@ public class Config {
 		return this.tempDir;
 	}
 
+	public void setSetupHomePath(String setupHomePath) {
+		this.setupHomePath = setupHomePath;
+	}
+
+	public String getSetupHomePath() {
+		return this.setupHomePath;
+	}
+
 	public String getMavenHome() {
 		if (!stringConfig.containsKey("mavenHome")) {
-			stringConfig.put("mavenHome",this.getTempDir().getAbsolutePath() + File.separator + "maven");
+			stringConfig.put("mavenHome",this.getSetupHomePath() + File.separator + "maven");
 		}
 		return stringConfig.get("mavenHome");
 	}

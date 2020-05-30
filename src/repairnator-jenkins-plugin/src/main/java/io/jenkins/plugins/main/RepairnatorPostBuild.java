@@ -61,6 +61,15 @@ import jenkins.model.Jenkins;
 import java.util.List;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Date;
+
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.concurrent.TimeUnit;
 
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
@@ -421,20 +430,30 @@ public class RepairnatorPostBuild extends Recorder {
 
     public boolean shouldInstallMaven(EnvVars env) {
         String m2Home = env.get("M2_HOME");
+        File maven = new File(config.getMavenHome());
         if (m2Home != null) {
             this.config.setMavenHome(m2Home);
             return false;
         } 
+        if (maven.exists()) {
+            return false;
+        }
         return true;
     }
 
     public void configure(String url,String branch, EnvVars env) {
         Config config = this.config;
 
+        String setupHome = env.get("JENKINS_HOME") + File.separator + "userContent" + File.separator + "RepairnatorSetup";
         String javaHome = env.get("JAVA_HOME");
         String javaExec = javaHome + File.separator + "bin" + File.separator + "java";
-        String jarLocation =  this.config.getTempDir().getAbsolutePath() + File.separator +"repairnator.jar";
+        String jarLocation =  setupHome + File.separator + "repairnator.jar";
 
+        File setupDir = new File(setupHome);
+        if (!setupDir.exists()) {
+            setupDir.mkdirs();
+        }
+        config.setSetupHomePath(setupHome);
         config.setJavaExec(javaExec);
         config.setJarLocation(jarLocation);
         config.setGitUrl(url);
@@ -448,6 +467,7 @@ public class RepairnatorPostBuild extends Recorder {
     public void cleanUp(){
         try {
             FileUtils.cleanDirectory(this.config.getTempDir());
+            this.config.getTempDir().delete();
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -478,6 +498,31 @@ public class RepairnatorPostBuild extends Recorder {
         }
     }
 
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+    }
+
+
+    private boolean shouldDownloadJar() throws IOException{
+        File jar = new File(this.getConfig().getJarLocation());
+        if (jar.exists()) {
+            BasicFileAttributes attr = Files.readAttributes(jar.toPath(), BasicFileAttributes.class);
+            Date creationTime = Date.from(attr.creationTime().toInstant());
+            Date today = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+            if (getDateDiff(creationTime,today,TimeUnit.DAYS) >= 30) { // redownload jar after a month
+                System.out.println("Jar will be updated");
+                jar.delete();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            System.out.println("Jar does not exist, will proceed downloading Jar ...");
+            return true;
+        }
+    }
+
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
         System.setOut(listener.getLogger());
@@ -497,8 +542,12 @@ public class RepairnatorPostBuild extends Recorder {
             System.out.println("workspace for repairnator: " + this.config.getTempDir().getAbsolutePath());
 
             String snapShotUrl = "https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-pipeline";
-            RepairnatorJarDownloader repJarDownloader = new RepairnatorJarDownloader(snapShotUrl,this.getConfig().getTempDir().getAbsolutePath() + File.separator + "repairnator.jar");
-            repJarDownloader.downloadJarHardCoded("https://github.com/henry-lp/mvn-repo/raw/master/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar");
+
+            File jar = new File(this.getConfig().getJarLocation());
+            if (this.shouldDownloadJar()) {
+                RepairnatorJarDownloader repJarDownloader = new RepairnatorJarDownloader(snapShotUrl,this.getConfig().getJarLocation());
+                repJarDownloader.downloadJarHardCoded("https://github.com/henry-lp/mvn-repo/raw/master/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar");
+            }
 
             if (this.shouldInstallMaven(env)) {
                 System.out.println("M2_HOME is null, proceed installing default maven version 3.6.3");
@@ -728,7 +777,10 @@ public class RepairnatorPostBuild extends Recorder {
                 .append(ruleStringOrEmpty(rule4973,"4973"));
 
             String res = sb.toString();
-            return res.substring(0,res.length() - 1); // remove last character ','  
+            if (!res.equals("")) {
+                return res.substring(0,res.length() - 1); // remove last character ','  
+            }
+            return "";
         }
     }
 }
