@@ -46,8 +46,7 @@ public class GitRepositoryLauncherUtils {
         FlaggedOption opt = new FlaggedOption("gitRepositoryBranch");
         opt.setLongFlag("gitrepobranch");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("master");
-        opt.setHelp("Specify a branch of the given repository (only in GIT_REPOSITORY mode) - (default: master branch).");
+        opt.setHelp("Specify a branch of the given repository (only in GIT_REPOSITORY mode)");
         return opt;
     }
 
