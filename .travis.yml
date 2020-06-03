@@ -22,5 +22,5 @@ jobs:
     - stage: deploy
       name: "deploy to Sonatype and Dockerhub"
       script: ./.travis/travis-deploy.sh
-      if: TRAVIS_PULL_REQUEST = false AND branch = master
+      if: type = push AND branch = master
 
