@@ -53,8 +53,9 @@ public class TestPipelinebGithubMode {
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {        
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
-                    "--gitrepourl", "https://github.com/surli/failingProject",
-                    "--gitrepoidcommit", "f1233f8863d45141ae0ff17df897006f07e707bb",
+                    "--gitrepourl", "https://github.com/javierron/failingProject",
+                    "--gitrepoidcommit", "883bc40f01902654b1b1df094b2badb28e192097",
+                    "--gitrepobranch", "nofixes",
                     "--workspace","./workspace-pipelinep"
                 });
 

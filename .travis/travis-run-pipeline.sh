@@ -4,5 +4,4 @@
 set -e
 export M2_HOME=/usr/local/maven
 
-mvn clean test -B -f $TEST_PATH
-
+mvn clean install -B -f src/repairnator-core/ && mvn -Dtest=$TEST_LIST clean test -B -f $TEST_PATH

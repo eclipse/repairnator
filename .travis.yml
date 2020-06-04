@@ -1,26 +1,62 @@
 
 language: java
 
-sudo: true
-
 jdk: openjdk8
 
 services:
  - docker
 
+os: linux
+dist: bionic
+
 install: true
+
+cache:
+  directories:
+    - $HOME/.m2
 
 jobs:
   include:
     - stage: test
-      name: "repairnator"
-      # the PR build is responsible for the tests, no need to have the branch/push build (Eclipse's Travis account is very busy)
-      before_install: if [[ $TRAVIS_BRANCH != master ]]; then travis_terminate 0; fi
+      name: "repairnator-core"
+      env:
+        - TEST_PATH="src/repairnator-core/"
       install: ./.travis/travis-before.sh
       script: ./.travis/travis-run.sh
-
+      if: branch = master
+    - name: "repairnator-pipeline"
+      env:
+        - TEST_PATH="src/repairnator-pipeline/"
+        - TEST_LIST="!TestPipelineb*"
+      install: ./.travis/travis-before.sh
+      script: travis_wait 50 ./.travis/travis-run-pipeline.sh
+      if: branch = master
+    - name: "repairnator-pipeline-b"
+      env:
+        - TEST_PATH="src/repairnator-pipeline/"
+        - TEST_LIST="TestPipelineb*"
+      install: ./.travis/travis-before.sh
+      script: travis_wait 50 ./.travis/travis-run-pipeline.sh
+      if: branch = master
+    - name: "repairnator-realtime"
+      env:
+        - TEST_PATH="src/repairnator-realtime/"
+      install: ./.travis/travis-before.sh
+      script: ./.travis/travis-run.sh
+      if: branch = master
+    - name: "repairnator-jenkins-plugin"
+      env:
+        - TEST_PATH="src/repairnator-jenkins-plugin/"
+      install: ./.travis/travis-before.sh
+      script: ./.travis/travis-run.sh
+      if: branch = master
+    - name: "maven-repair"
+      env:
+        - TEST_PATH="src/maven-repair/"
+      install: ./.travis/travis-before.sh
+      script: ./.travis/travis-run.sh
+      if: branch = master
     - stage: deploy
       name: "deploy to Sonatype and Dockerhub"
       script: ./.travis/travis-deploy.sh
       if: type = push AND branch = master
-
