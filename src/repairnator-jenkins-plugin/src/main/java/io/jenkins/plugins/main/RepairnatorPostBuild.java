@@ -355,7 +355,7 @@ public class RepairnatorPostBuild extends Recorder {
                                         .atWorkSpace(config.getTempDir().getAbsolutePath())
                                         .withOutputDir(config.getTempDir().getAbsolutePath());
 
-        ProcessBuilder builder = repProcBuilder.build();
+        ProcessBuilder builder = repProcBuilder.build().directory(config.getTempDir());
         builder.redirectErrorStream(true);
         builder.inheritIO().redirectOutput(ProcessBuilder.Redirect.PIPE);
         Process process = builder.start();

@@ -210,6 +210,6 @@ public class RepairnatorProcessBuilder {
 			cmdList.add(this.gitOAuth);
 			cmdList.add("--createPR");
 		}
-		return new ProcessBuilder(this.cmdList).directory(new File(this.workspace)).inheritIO();
+		return new ProcessBuilder(this.cmdList).inheritIO();
 	}
 }
