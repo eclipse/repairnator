@@ -24,12 +24,12 @@
         <f:entry name="useNopolTestExclusionStrategy" title="${%NopolTestExclusionStrategy}" field="useNopolTestExclusionStrategy">
             <f:checkbox />
         </f:entry>
-        <f:entry name="useSonarQubeRepair" title="${%SonarQubeRepair}" field="useSonarQubeRepair">
+        <f:entry name="useSorald" title="${%Sorald}" field="useSorald">
             <f:checkbox />
         </f:entry>
     </f:section>
     <f:section title="Repairtools Extension">
-        <f:optionalBlock name="sonarRulesBlock" title="Choose sonar rules for SonarQubeRepair" field="sonarRulesBlock">
+        <f:optionalBlock name="sonarRulesBlock" title="Choose sonar rules for Sorald" field="sonarRulesBlock">
             <f:entry title="1656 - Variables should not be self-assigned" field="rule1656">
                 <f:checkbox />
             </f:entry>
@@ -83,7 +83,6 @@
         </f:optionalBlock>
     </f:section>
     <f:advanced>
-
         <f:entry title="${%GitUrl}" field="gitUrl">
             <f:textbox />
         </f:entry>

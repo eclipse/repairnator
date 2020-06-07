@@ -70,6 +70,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
 
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
@@ -83,7 +84,7 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useAstorJMut;
     private boolean useNPEFixSafe;
     private boolean useNopolTestExclusionStrategy;
-    private boolean useSonarQubeRepair;
+    private boolean useSorald;
     private final Config config = new Config();
 
     private boolean sonarRulesGiven;
@@ -118,7 +119,8 @@ public class RepairnatorPostBuild extends Recorder {
         } 
     }
 
-    public RepairnatorPostBuild() {}
+    public RepairnatorPostBuild() {
+    }
 
     /* Repair Tools*/
     @DataBoundSetter
@@ -147,8 +149,8 @@ public class RepairnatorPostBuild extends Recorder {
     }
 
     @DataBoundSetter
-    public void setUseSonarQubeRepair(boolean useSonarQubeRepair) {
-        this.useSonarQubeRepair = useSonarQubeRepair;
+    public void setUseSorald(boolean useSorald) {
+        this.useSorald = useSorald;
     }
 
     public boolean getSonarRulesBlock() {
@@ -275,8 +277,8 @@ public class RepairnatorPostBuild extends Recorder {
         return useNopolTestExclusionStrategy;
     }  
 
-    public boolean getUseSonarQubeRepair() {
-        return useSonarQubeRepair;
+    public boolean getUseSorald() {
+        return useSorald;
     }
 
     public String[] getTools(){
@@ -301,8 +303,8 @@ public class RepairnatorPostBuild extends Recorder {
             dummy += ",NopolTestExclusionStrategy";
         }
 
-        if (this.useSonarQubeRepair) {
-            dummy += ",SonarQubeRepair";
+        if (this.useSorald) {
+            dummy += ",Sorald";
         }
         return dummy.substring(1,dummy.length()).split(",");
     }
@@ -420,7 +422,7 @@ public class RepairnatorPostBuild extends Recorder {
             return false;
         }
 
-        if (!(this.useNPEFix || this.useAstorJKali || this.useAstorJMut || this.useNPEFixSafe || this.useNopolTestExclusionStrategy || this.useSonarQubeRepair)) {
+        if (!(this.useNPEFix || this.useAstorJKali || this.useAstorJMut || this.useNPEFixSafe || this.useNopolTestExclusionStrategy || this.useSorald)) {
             System.out.println("ERROR: NO TOOL SPECIFIED , NO NEED TO REPAIR");
             return false;
         }
@@ -585,15 +587,15 @@ public class RepairnatorPostBuild extends Recorder {
         private boolean useAstorJKali;
         private boolean useNPEFixSafe;
         private boolean useNopolTestExclusionStrategy;
-        private boolean useSonarQubeRepair;
+        private boolean useSorald;
         private boolean rulesProvided;
 
         public DescriptorImpl() {
             load();
         }
 
-         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy,@QueryParameter boolean useSonarQubeRepair) {
-            if(useSonarQubeRepair) {
+         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy,@QueryParameter boolean useSorald) {
+            if(useSorald) {
                 FormValidation.warning("Please also provide sonarRules in the textfield below");
             }
             return FormValidation.ok();
@@ -615,7 +617,7 @@ public class RepairnatorPostBuild extends Recorder {
             this.useAstorJMut = formData.getBoolean("useAstorJMut");
             this.useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
             this.useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
-            this.useSonarQubeRepair = formData.getBoolean("useSonarQubeRepair");
+            this.useSorald = formData.getBoolean("useSorald");
 
             save();
             return true;
@@ -641,8 +643,8 @@ public class RepairnatorPostBuild extends Recorder {
             return useNopolTestExclusionStrategy;
         }  
 
-        public boolean getUseSonarQubeRepair() {
-            return useSonarQubeRepair;
+        public boolean getUseSorald() {
+            return useSorald;
         }
     }
 

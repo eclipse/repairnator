@@ -19,7 +19,7 @@ import com.martiansoftware.jsap.JSAPException;
 import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
-import fr.inria.spirals.repairnator.process.step.repair.SonarQubeRepair;
+import fr.inria.spirals.repairnator.process.step.repair.Sorald;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 
@@ -126,35 +126,6 @@ public class MainProcessFactory {
 		return new PipelineBuildListenerMainProcess(defaultMainProcess);
 	}
 
-	public static MainProcess getJenkinsPluginMainProcess(String[] inputArgs) {
-		GithubDefineJSAPArgs githubDefineJSAPArgs = new GithubDefineJSAPArgs();
-		JenkinsPluginInitConfig jenkinsInitConfig = new JenkinsPluginInitConfig();
-		GithubInitNotifiers githubInitNotifiers = new GithubInitNotifiers();
-		DefaultInitSerializerEngines githubInitSerializerEngines = new DefaultInitSerializerEngines();
-
-		JSAP jsap;
-		try {
-			jsap = githubDefineJSAPArgs.defineArgs();
-		} catch (JSAPException e) {
-			throw new RuntimeException("Failed to parse JSAP");
-		}
-		jenkinsInitConfig.initConfigWithJSAP(jsap,inputArgs);
-		githubInitSerializerEngines.initSerializerEngines();
-		githubInitNotifiers.initNotifiers();
-
-		GithubMainProcess jenkinsMainProcess = new GithubMainProcess(githubDefineJSAPArgs,jenkinsInitConfig,githubInitSerializerEngines,githubInitNotifiers);
-		
-		serializeHardwareInfoSerializer(githubInitSerializerEngines.getEngines());
-
-		ProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
-
-		jenkinsMainProcess = jenkinsMainProcess.setInspector(inspector)
-												.setNotifiers(githubInitNotifiers.getNotifiers())
-												.setEngines(githubInitSerializerEngines.getEngines());
-
-		return jenkinsMainProcess;
-	}
-
 	private static void serializeHardwareInfoSerializer(List<SerializerEngine> engines) {
 		HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(engines, getConfig().getRunId(), getConfig().getBuildId()+"");
         hardwareInfoSerializer.serialize();
@@ -163,7 +134,7 @@ public class MainProcessFactory {
 	/* These methods below should be called after all other inits */
 	/* move serializer into project inspector and get to construct */
 	private static GitRepositoryProjectInspector constructInspector4Github(List<SerializerEngine> engines,List<AbstractNotifier> notifiers) {
-		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
+		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(Sorald.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
 		System.out.println("Gitbranch " + getConfig().getGitRepositoryBranch());
 		GitRepositoryProjectInspector inspector = (GitRepositoryProjectInspector) InspectorFactory.getGithubInspector(
@@ -190,7 +161,7 @@ public class MainProcessFactory {
 	private static ProjectInspector constructInspector4Default(BuildToBeInspected buildToBeInspected, List<SerializerEngine> engines, List<AbstractNotifier> notifiers) {
 		ProjectInspector inspector;
 
-		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SonarQubeRepair.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
+		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(Sorald.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
 		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
             inspector = InspectorFactory.getBearsInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);

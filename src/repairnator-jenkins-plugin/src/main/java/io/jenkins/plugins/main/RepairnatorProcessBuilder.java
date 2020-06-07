@@ -2,6 +2,7 @@ package io.jenkins.plugins.main;
 
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.lang.IllegalArgumentException;
 import java.lang.ProcessBuilder;
 import java.io.File;
@@ -155,7 +156,7 @@ public class RepairnatorProcessBuilder {
 		cmdList.add("--launcherChoice");
 		cmdList.add("NEW");
 		cmdList.add("--launcherMode");
-		cmdList.add("JENKINS_PLUGIN");
+		cmdList.add("GIT_REPOSITORY");
 		cmdList.add("--output");
 		cmdList.add(this.outputDir);
 		cmdList.add("--MavenHome");
@@ -209,7 +210,6 @@ public class RepairnatorProcessBuilder {
 			cmdList.add(this.gitOAuth);
 			cmdList.add("--createPR");
 		}
-
-		return new ProcessBuilder(this.cmdList);
+		return new ProcessBuilder(this.cmdList).directory(new File(this.workspace)).inheritIO();
 	}
 }

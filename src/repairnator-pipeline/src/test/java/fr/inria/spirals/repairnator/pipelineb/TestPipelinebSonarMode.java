@@ -20,13 +20,13 @@ import com.martiansoftware.jsap.JSAP;
 public class TestPipelinebSonarMode {
 
     @Test
-    public void testSonarQubeRepairWithSuccess() throws Exception {
+    public void testSoraldWithSuccess() throws Exception {
         RepairnatorConfig.getInstance().setSonarRules(new String[]{"2116"});
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
                     "--gitrepourl", "https://github.com/henry-lp/SonarQubeRepairTests",
                     "--gitrepobranch", "master",
-                    "--repairTools","SonarQubeRepair",
+                    "--repairTools","Sorald",
                     "--workspace","./workspace-sonar-pipeline"
                 });
 

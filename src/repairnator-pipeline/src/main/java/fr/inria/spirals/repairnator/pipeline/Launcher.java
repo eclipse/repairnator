@@ -14,6 +14,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 
 import java.util.HashSet;
 import java.util.Arrays;
+import java.util.Set;
 
 public class Launcher implements LauncherAPI {
     private static LauncherAPI launcher;
@@ -65,9 +66,17 @@ public class Launcher implements LauncherAPI {
         } else {
             launcher = new BranchLauncher(args);
         }
-        RepairnatorConfig.getInstance().setSonarRules(String.join(",",new HashSet<String>(Arrays.asList(jsapResult.getString("sonarRules").split(",")))).split(","));
+        RepairnatorConfig.getInstance().setSonarRules(removeDuplicatesInArray(jsapResult.getString("sonarRules").split(",")));
         launcher.launch();
     }
+
+    private static String[] removeDuplicatesInArray(String[] arr) {
+        Set<String> set = new HashSet<String>();
+        for(int i = 0; i < arr.length; i++){
+          set.add(arr[i]);
+        }
+        return set.stream().toArray(String[]::new);
+    } 
 
     @Override
     public boolean mainProcess() {
