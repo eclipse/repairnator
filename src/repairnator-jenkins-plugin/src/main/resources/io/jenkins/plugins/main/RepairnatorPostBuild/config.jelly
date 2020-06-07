@@ -39,10 +39,6 @@
             <f:entry title="1860 - Synchronization should not be based on Strings or boxed primitives" field="rule1860">
                 <f:checkbox />
             </f:entry>
-            <f:entry title="1948 - Fields in a Serializable class should either be transient or
-        serializable" field="rule1948">
-                <f:checkbox />
-            </f:entry>
             <f:entry title="2095 - Resources should be closed" field="rule2095">
                 <f:checkbox />
             </f:entry>

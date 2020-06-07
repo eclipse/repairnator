@@ -90,6 +90,7 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean sonarRulesGiven;
     /* Rules */
     private boolean rule1656;
+    private boolean rule1854;
     private boolean rule1860;
     private boolean rule1948;
     private boolean rule2095;
