@@ -86,8 +86,9 @@ public class TestPipeline {
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {
     	GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         		"--gitrepo",
-        		"--gitrepourl", "https://github.com/surli/failingProject",
-        		"--gitrepoidcommit", "f1233f8863d45141ae0ff17df897006f07e707bb",
+        		"--gitrepourl", "https://github.com/javierron/failingProject",
+				"--gitrepoidcommit", "883bc40f01902654b1b1df094b2badb28e192097",
+				"--gitrepobranch", "nofixes",
         		});
         
         l.mainProcess();
