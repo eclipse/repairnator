@@ -79,6 +79,24 @@ public class TestPipelinebGithubMode {
         assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
     }
 
+    @Test
+    public void testSoraldWithSuccess() throws Exception {
+        RepairnatorConfig.getInstance().setSonarRules(new String[]{"2116"});
+        GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
+                    "--gitrepo",
+                    "--gitrepourl", "https://github.com/henry-lp/SonarQubeRepairTests",
+                    "--gitrepobranch", "master",
+                    "--sonarRules","2116",
+                    "--repairTools","Sorald",
+                    "--workspace","./workspace-sonar-pipeline"
+                });
+
+        Patches patchNotifier = new Patches();
+        mainProc.setPatchNotifier(patchNotifier);
+        mainProc.run();
+        assertEquals("PATCHED", mainProc.getInspector().getFinding());
+        assertEquals(1, patchNotifier.allpatches.size());
+    }
 
     @Ignore
     @Test
