@@ -18,8 +18,8 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
     VERSION=`xmlstarlet sel -t -v '//_:project/_:properties/_:revision' pom.xml`
     sed -i -e 's/\${revision}/'$VERSION'/' pom.xml */pom.xml
     git diff
-    mvn -q deploy -DskipTests -Dcheckstyle.skip
-
+    mvn deploy -DskipTests -Dcheckstyle.skip
+    echo Deployment to Maven Central done
 fi
 
 
@@ -58,7 +58,7 @@ if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
         sed -i 's/K8S_CLIENT_KEY_DATA/'"$K8S_CLIENT_KEY_DATA"'/g' ${HOME}/.kube/config
         sed -i 's/K8S_TOKEN/'"$K8S_TOKEN"'/g' ${HOME}/.kube/config
         # remove the current pipeline pods, k8s will automatically recreate them using the latest image
-        kubectl delete pod $(kubectl get pods -n repairnator -l app=repairnator-pipeline -o custom-columns=NAME:.metadata.name --no-headers=true) -n repairnator
+        timeout 20s kubectl delete pod $(kubectl get pods -n repairnator -l app=repairnator-pipeline -o custom-columns=NAME:.metadata.name --no-headers=true) -n repairnator || true
     fi
 fi
 

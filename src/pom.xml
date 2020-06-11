@@ -169,6 +169,8 @@
                     <serverId>ossrh-repairnator</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <!-- some Jar go to OSS, other to custom repos, we upload them one by one -->
+                    <skipLocalStaging>true</skipLocalStaging>
                 </configuration>
                 <dependencies>
                     <dependency>
