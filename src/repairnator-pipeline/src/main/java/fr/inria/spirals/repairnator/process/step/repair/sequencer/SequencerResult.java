@@ -38,10 +38,11 @@ public class SequencerResult {
             diffs = new ArrayList<>();
             if (success) {
                 for (File patchDir : patchDirs) {
-                    for (File patchFile : patchDir.listFiles()) {
+                    File[] patchFiles = patchDir.listFiles(file -> file.getName().equals("diff"));
+                    for (File patchFile : patchFiles) {
                         try {
                             List<String> diffList = Files.readLines(patchFile, Charsets.UTF_8);
-                            String diff = diffList.stream().collect(Collectors.joining());
+                            String diff = String.join("\n", diffList);
                             diffs.add(diff);
                         } catch (IOException e) {
                             e.printStackTrace();

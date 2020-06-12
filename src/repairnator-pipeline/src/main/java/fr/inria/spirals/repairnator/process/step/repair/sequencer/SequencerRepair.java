@@ -7,7 +7,6 @@ import fr.inria.astor.approaches._3sfix.ZmEngine;
 import fr.inria.astor.core.entities.SuspiciousModificationPoint;
 import fr.inria.main.CommandSummary;
 import fr.inria.main.evolution.AstorMain;
-import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
@@ -18,6 +17,9 @@ import java.io.*;
 import java.lang.Runtime;
 import java.lang.Process;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -44,7 +46,7 @@ public class SequencerRepair extends AbstractRepairStep {
     protected static final String TOOL_NAME = "SequencerRepair";
     private static final int TOTAL_TIME = 120; // 120 minutes
 
-    private File patchDir;
+    public SequencerRepair(){}
 
     @Override
     public String getRepairToolName() {
@@ -55,12 +57,16 @@ public class SequencerRepair extends AbstractRepairStep {
     protected StepStatus businessExecute() {
         this.getLogger().info("Start SequencerRepair");
         String pathPrefix = ""; // for macOS: "/private";
-        String imageTag = "repairnator/sequencer:1.0";
+        String imageTag = "javierron/sequencer:2.0";
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
-        this.patchDir = new File(pathPrefix + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
-        this.patchDir.mkdirs();
+        Path patchDir = Paths.get(pathPrefix + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
+        try {
+            Files.createDirectory(patchDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // check ...
         List<URL> classPath = this.getInspector().getJobStatus().getRepairClassPath();
@@ -109,16 +115,19 @@ public class SequencerRepair extends AbstractRepairStep {
                 int smpId = 0;
                 for (SuspiciousModificationPoint smp : susp) {
                     try {
-                        File suspiciousFile = smp.getCodeElement().getPosition().getFile();
-                        String buggyFilePath = suspiciousFile.getAbsolutePath();
+                        Path suspiciousFile = smp.getCodeElement().getPosition().getFile().toPath();
+                        Path buggyFilePath = suspiciousFile.toAbsolutePath();
+                        Path buggyParentPath = suspiciousFile.getParent();
+                        Path repoPath = Paths.get(getInspector().getRepoLocalPath()).toRealPath();
+                        Path relativePath = repoPath.relativize(suspiciousFile);
                         int buggyLineNumber = new SuspiciousFile(smp).getSuspiciousLineNumber();
                         int beamSize = 50; // Sequencer paper https://arxiv.org/abs/1901.01808
-                        String buggyFileName = suspiciousFile.getName();
-                        String outputDirPath = patchDir.getAbsolutePath() + File.separator + buggyFileName + smpId++;
-                        File outputDir = new File(outputDirPath);
-                        if (!outputDir.exists() || !outputDir.isDirectory()) {
-                            outputDir.mkdirs();
+                        String buggyFileName = suspiciousFile.getFileName().toString();
+                        Path outputDirPath = patchDir.toAbsolutePath().resolve(buggyFileName + smpId++);
+                        if ( !Files.exists(outputDirPath) || !Files.isDirectory(outputDirPath)) {
+                            Files.createDirectory(outputDirPath);
                         }
+
 
                         // make sure that "privileged: true" in running container
                         StringJoiner commandStringJoiner = new StringJoiner(";");
@@ -129,14 +138,16 @@ public class SequencerRepair extends AbstractRepairStep {
                         commandStringJoiner.add("docker run --rm "
 //                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
 //                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/docker "
-                            + "-v " + pathPrefix + "/tmp:" + pathPrefix + "/tmp "
+                            + "-v " + pathPrefix + buggyParentPath + pathPrefix + ":/tmp" + " "
+                            + "-v " + pathPrefix + outputDirPath + pathPrefix + ":/out" + " "
                             + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
                             + imageTag + " "
-                            + "bash ./src/sequencer-predict.sh "
-                            + "--buggy_file=" + buggyFilePath + " "
+                            + "bash ./sequencer-predict.sh "
+                            + "--buggy_file=" + "/tmp/" + buggyFileName + " "
                             + "--buggy_line=" + buggyLineNumber + " "
                             + "--beam_size=" + beamSize + " "
-                            + "--output=" + outputDirPath);
+                            + "--real_file_path=" + relativePath + " "
+                            + "--output=" + "/out");
 //                        commandStringJoiner.add("docker stop $(docker ps -aq)");
 //                        commandStringJoiner.add("docker rm $(docker ps -aq)");
 
@@ -153,7 +164,7 @@ public class SequencerRepair extends AbstractRepairStep {
                         String errorStr = errorStringJoiner.toString();
                         System.err.println(">>> errorStr: \n" + errorStr);
                         process.waitFor();
-                        sequencerResults.add(new SequencerResult(buggyFilePath, outputDirPath, outputStr, errorStr));
+                        sequencerResults.add(new SequencerResult(buggyFilePath.toString(), outputDirPath.toString(), outputStr, errorStr));
 //                        process.destroy();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -202,7 +213,7 @@ public class SequencerRepair extends AbstractRepairStep {
         this.recordToolDiagnostic(toolDiagnostic);
 
         try {
-            FileHelper.deleteFile(patchDir);
+            Files.delete(patchDir);
         } catch (IOException e) {
             e.printStackTrace();
         }
