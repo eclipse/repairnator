@@ -4,13 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import fr.inria.astor.approaches._3sfix.SuspiciousFile;
 import fr.inria.astor.approaches._3sfix.ZmEngine;
-import fr.inria.astor.core.entities.SuspiciousModificationPoint;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
 import fr.inria.main.CommandSummary;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.AstorDetectionStrategy;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DetectionStrategy;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
@@ -21,12 +23,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
 * SequencerRepair is one builtin repair tool. It generates
@@ -44,7 +45,8 @@ import java.util.concurrent.TimeUnit;
 */
 public class SequencerRepair extends AbstractRepairStep {
     protected static final String TOOL_NAME = "SequencerRepair";
-    private static final int TOTAL_TIME = 120; // 120 minutes
+    private static final int TOTAL_TIME = 120; // 120 minutes //MAKE CONFIGURABLE
+    private static final int SEQUENCER_THREADS = 4; // MAKE CONFIGURABLE
 
     public SequencerRepair(){}
 
@@ -57,15 +59,16 @@ public class SequencerRepair extends AbstractRepairStep {
     protected StepStatus businessExecute() {
         this.getLogger().info("Start SequencerRepair");
         String pathPrefix = ""; // for macOS: "/private";
-        String imageTag = "javierron/sequencer:2.0";
+        String imageTag = "repairnator/sequencer:2.0"; // MAKE CONFIGURABLE
         // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
         // initPatchDir
-        Path patchDir = Paths.get(pathPrefix + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".results");
+        Path patchDir = Paths.get(pathPrefix + this.getInspector().getRepoLocalPath() +
+                "/repairnator." + TOOL_NAME + ".results");
         try {
             Files.createDirectory(patchDir);
         } catch (IOException e) {
-            e.printStackTrace();
+            addStepError("Got exception when running SequencerRepair: ", e);
         }
 
         // check ...
@@ -74,116 +77,91 @@ public class SequencerRepair extends AbstractRepairStep {
         if (classPath == null || sources == null) {
             return StepStatus.buildSkipped(this,"Classpath or Sources not computed.");
         }
-        // prepare CommandSummary
-        CommandSummary cs = new CommandSummary();
-        List<String> dependencies = new ArrayList<>();
-        for (URL url : jobStatus.getRepairClassPath()) {
-            if (url.getFile().endsWith(".jar")) {
-                dependencies.add(url.getPath());
-            }
-        }
-//        cs.command.put("-loglevel", "DEBUG");
-        cs.command.put("-mode", "custom");
-        cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
-        cs.command.put("-location", jobStatus.getFailingModulePath());
-//        cs.command.put("-ingredientstrategy", "fr.inria.astor.test.repair.evaluation.extensionpoints.ingredients.MaxLcsSimSearchStrategy");
-        cs.command.put("-flthreshold", "0.5");
-        cs.command.put("-maxgen", "0");
-//        cs.command.put("-population", "1");
-//        cs.command.put("-seed", "1");
-        cs.command.put("-javacompliancelevel", "8");
-        cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
-        cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"+ pathPrefix + this.getInspector().getRepoLocalPath()+"/repairnator." + this.getRepairToolName().toLowerCase() + ".log");
 
-        // construct AstorMain
-        AstorMain astorMain = new AstorMain();
-        try {
-            astorMain.execute(cs.flat());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // construct ZmEngine
-        ZmEngine zmengine = (ZmEngine) astorMain.getEngine();
-        List<SuspiciousModificationPoint> susp = zmengine.getSuspicious();
+        DetectionStrategy detectionStrategy = new AstorDetectionStrategy();
+        List<ModificationPoint> suspiciousPoints = detectionStrategy.detect(this);
 
         /// run Sequencer
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        final Future<List<SequencerResult>> sequencerExecution = executor.submit(() -> {
 
+        StringJoiner pullStringJoiner = new StringJoiner(";");
+        pullStringJoiner
+                .add("if [ -z `docker images " + imageTag + " -q` ]")
+                .add("then docker pull " + imageTag)
+                .add("fi");
+        String pullCmd = pullStringJoiner.toString();
+
+        try {
+            Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", pullCmd});
+            process.waitFor();
+        } catch (Exception e) {
+            addStepError("Got exception when running SequencerRepair: ", e);
+        }
+
+        final ExecutorService executor = Executors.newFixedThreadPool(SEQUENCER_THREADS);
+        List<Future<SequencerResult>> allResults = new ArrayList<>();
+
+        suspiciousPoints.forEach( smp -> allResults.add(executor.submit(() -> {
             try {
-                List<SequencerResult> sequencerResults = new ArrayList<>();
-                int smpId = 0;
-                for (SuspiciousModificationPoint smp : susp) {
-                    try {
-                        Path suspiciousFile = smp.getCodeElement().getPosition().getFile().toPath();
-                        Path buggyFilePath = suspiciousFile.toAbsolutePath();
-                        Path buggyParentPath = suspiciousFile.getParent();
-                        Path repoPath = Paths.get(getInspector().getRepoLocalPath()).toRealPath();
-                        Path relativePath = repoPath.relativize(suspiciousFile);
-                        int buggyLineNumber = new SuspiciousFile(smp).getSuspiciousLineNumber();
-                        int beamSize = 50; // Sequencer paper https://arxiv.org/abs/1901.01808
-                        String buggyFileName = suspiciousFile.getFileName().toString();
-                        Path outputDirPath = patchDir.toAbsolutePath().resolve(buggyFileName + smpId++);
-                        if ( !Files.exists(outputDirPath) || !Files.isDirectory(outputDirPath)) {
-                            Files.createDirectory(outputDirPath);
-                        }
+                int smpId = smp.hashCode();
+                Path suspiciousFile = smp.getFilePath();
+                Path buggyFilePath = suspiciousFile.toAbsolutePath();
+                Path buggyParentPath = suspiciousFile.getParent();
+                Path repoPath = Paths.get(getInspector().getRepoLocalPath()).toRealPath();
+                Path relativePath = repoPath.relativize(suspiciousFile);
+                int buggyLineNumber = smp.getSuspiciousLine();
+                int beamSize = 50; // Sequencer paper https://arxiv.org/abs/1901.01808
+                String buggyFileName = suspiciousFile.getFileName().toString();
+                Path outputDirPath = patchDir.toAbsolutePath().resolve(buggyFileName + smpId);
+                if ( !Files.exists(outputDirPath) || !Files.isDirectory(outputDirPath)) {
+                    Files.createDirectory(outputDirPath);
+                }
 
 
-                        // make sure that "privileged: true" in running container
-                        StringJoiner commandStringJoiner = new StringJoiner(";");
-                        commandStringJoiner
-                            .add("if [ -z `docker images " + imageTag + " -q` ]")
-                            .add("then docker pull " + imageTag)
-                            .add("fi");
-                        commandStringJoiner.add("docker run --rm "
-//                            + "-v " + pathPrefix + "/sys:" + pathPrefix + "/sys "
-//                            + "-v " + pathPrefix + "/usr/bin/docker:" + pathPrefix + "/usr/bin/docker "
-                            + "-v " + pathPrefix + buggyParentPath + pathPrefix + ":/tmp" + " "
-                            + "-v " + pathPrefix + outputDirPath + pathPrefix + ":/out" + " "
-                            + "-v " + pathPrefix + "/var/folders:" + pathPrefix + "/var/folders "
-                            + imageTag + " "
-                            + "bash ./sequencer-predict.sh "
-                            + "--buggy_file=" + "/tmp/" + buggyFileName + " "
-                            + "--buggy_line=" + buggyLineNumber + " "
-                            + "--beam_size=" + beamSize + " "
-                            + "--real_file_path=" + relativePath + " "
-                            + "--output=" + "/out");
+                // make sure that "privileged: true" in running container
+                StringJoiner commandStringJoiner = new StringJoiner(";");
+
+                commandStringJoiner.add("docker run --rm "
+                    + "-v " + pathPrefix + buggyParentPath + pathPrefix + ":/tmp" + " "
+                    + "-v " + pathPrefix + outputDirPath + pathPrefix + ":/out" + " "
+                    + imageTag + " "
+                    + "bash ./sequencer-predict.sh "
+                    + "--buggy_file=" + "/tmp/" + buggyFileName + " "
+                    + "--buggy_line=" + buggyLineNumber + " "
+                    + "--beam_size=" + beamSize + " "
+                    + "--real_file_path=" + relativePath + " "
+                    + "--output=" + "/out");
 //                        commandStringJoiner.add("docker stop $(docker ps -aq)");
 //                        commandStringJoiner.add("docker rm $(docker ps -aq)");
 
-                        String commandStr = commandStringJoiner.toString();
-                        Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandStr});
-                        BufferedReader outputBufferReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        StringJoiner outputStringJoiner = new StringJoiner("\n");
-                        outputBufferReader.lines().forEach(outputStringJoiner::add);
-                        String outputStr = outputStringJoiner.toString();
-                        System.out.println(">>> outputStr: \n" + outputStr);
-                        BufferedReader errorBufferReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        StringJoiner errorStringJoiner = new StringJoiner("\n");
-                        errorBufferReader.lines().forEach(errorStringJoiner::add);
-                        String errorStr = errorStringJoiner.toString();
-                        System.err.println(">>> errorStr: \n" + errorStr);
-                        process.waitFor();
-                        sequencerResults.add(new SequencerResult(buggyFilePath.toString(), outputDirPath.toString(), outputStr, errorStr));
-//                        process.destroy();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                String commandStr = commandStringJoiner.toString();
+                Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandStr});
+                process.waitFor();
 
-                return sequencerResults;
+                String stdOut = HandleOutput(process.getInputStream());
+                String stdErr = HandleOutput(process.getErrorStream());
+
+                this.getLogger().debug("stdOut: \n" + stdOut);
+                this.getLogger().debug("stdErr: \n" + stdErr);
+
+                return new SequencerResult(buggyFilePath.toString(), outputDirPath.toString(),
+                        stdOut, stdErr);
+                  //       process.destroy();
+
             } catch (Throwable throwable) {
                 addStepError("Got exception when running SequencerRepair: ", throwable);
-                return new ArrayList<>();
+                return null;
             }
-        });
+        })));
 
         List<SequencerResult> sequencerResults = new ArrayList<>();
         try {
             executor.shutdown();
-            sequencerResults.addAll(sequencerExecution.get(TOTAL_TIME, TimeUnit.MINUTES));
+            executor.awaitTermination(TOTAL_TIME, TimeUnit.MINUTES);
+            for (Future<SequencerResult> result : allResults){
+                sequencerResults.add(result.get());
+            }
         } catch (Exception e) {
-            addStepError("Error while executing AssertFixer", e);
+            addStepError("Got exception when running SequencerRepair: ", e);
         }
 
         /// prepare results
@@ -213,9 +191,12 @@ public class SequencerRepair extends AbstractRepairStep {
         this.recordToolDiagnostic(toolDiagnostic);
 
         try {
-            Files.delete(patchDir);
+            Files.walk(patchDir)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
         } catch (IOException e) {
-            e.printStackTrace();
+            addStepError("Got exception when running SequencerRepair: ", e);
         }
 
         if (success) {
@@ -224,5 +205,13 @@ public class SequencerRepair extends AbstractRepairStep {
         } else {
             return StepStatus.buildPatchNotFound(this);
         }
+    }
+
+    private String HandleOutput(InputStream iStream){
+        BufferedReader outputBufferReader = new BufferedReader(new InputStreamReader(iStream));
+        StringJoiner outputStringJoiner = new StringJoiner("\n");
+        outputBufferReader.lines().forEach(outputStringJoiner::add);
+        String outputStr = outputStringJoiner.toString();
+        return outputStr;
     }
 }
