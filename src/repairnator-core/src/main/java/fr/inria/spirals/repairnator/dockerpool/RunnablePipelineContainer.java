@@ -7,6 +7,7 @@ import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerExit;
 import com.spotify.docker.client.messages.HostConfig;
 import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -105,6 +106,14 @@ public class RunnablePipelineContainer implements Runnable {
 
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR || this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE) {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
+        }
+
+        if (this.repairnatorConfig.getRepairTools().contains("SequencerRepair")) {
+            SequencerConfig sequencerConfig = SequencerConfig.getInstance();
+            this.envValues.add("SEQUENCER_DOCKER_TAG=" + sequencerConfig.dockerTag);
+            this.envValues.add("SEQUENCER_THREADS=" + sequencerConfig.threads);
+            this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beam_size);
+            this.envValues.add("SEQUENCER_TIMEOUT=" + sequencerConfig.timeout);
         }
     }
 

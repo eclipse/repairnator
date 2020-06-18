@@ -2,22 +2,22 @@ package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import fr.inria.astor.approaches._3sfix.SuspiciousFile;
-import fr.inria.astor.approaches._3sfix.ZmEngine;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.messages.ContainerConfig;
+import com.spotify.docker.client.messages.ContainerCreation;
+import com.spotify.docker.client.messages.HostConfig;
+import com.spotify.docker.client.messages.Image;
+import fr.inria.spirals.repairnator.docker.DockerHelper;
+import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
-import fr.inria.main.CommandSummary;
-import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.AstorDetectionStrategy;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DetectionStrategy;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
-import java.lang.Runtime;
-import java.lang.Process;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,9 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 /**
 * SequencerRepair is one builtin repair tool. It generates
@@ -40,15 +38,19 @@ import java.util.stream.Collectors;
 * SequenceR is one seq2seq model designed to predict source
 * code change on line level. Check its paper for more info:
 * https://arxiv.org/abs/1901.01808
-* 
-* @author Jian GU
+*
+ * @author Jian GU
+ * @author Javier Ron
 */
 public class SequencerRepair extends AbstractRepairStep {
     protected static final String TOOL_NAME = "SequencerRepair";
-    private static final int TOTAL_TIME = 120; // 120 minutes //MAKE CONFIGURABLE
-    private static final int SEQUENCER_THREADS = 4; // MAKE CONFIGURABLE
+    private final SequencerConfig config;
+    private final DockerClient docker;
 
-    public SequencerRepair(){}
+    public SequencerRepair(){
+        config = SequencerConfig.getInstance();
+        docker = DockerHelper.initDockerClient();
+    }
 
     @Override
     public String getRepairToolName() {
@@ -58,11 +60,9 @@ public class SequencerRepair extends AbstractRepairStep {
     @Override
     protected StepStatus businessExecute() {
         this.getLogger().info("Start SequencerRepair");
+
         String pathPrefix = ""; // for macOS: "/private";
-        String imageTag = "repairnator/sequencer:2.0"; // MAKE CONFIGURABLE
-        // initJobStatus
         JobStatus jobStatus = this.getInspector().getJobStatus();
-        // initPatchDir
         Path patchDir = Paths.get(pathPrefix + this.getInspector().getRepoLocalPath() +
                 "/repairnator." + TOOL_NAME + ".results");
         try {
@@ -81,23 +81,16 @@ public class SequencerRepair extends AbstractRepairStep {
         DetectionStrategy detectionStrategy = new AstorDetectionStrategy();
         List<ModificationPoint> suspiciousPoints = detectionStrategy.detect(this);
 
-        /// run Sequencer
-
-        StringJoiner pullStringJoiner = new StringJoiner(";");
-        pullStringJoiner
-                .add("if [ -z `docker images " + imageTag + " -q` ]")
-                .add("then docker pull " + imageTag)
-                .add("fi");
-        String pullCmd = pullStringJoiner.toString();
+        /// pull Sequencer if image not present
 
         try {
-            Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", pullCmd});
-            process.waitFor();
+            List<Image> images = docker.listImages(DockerClient.ListImagesParam.byName(config.dockerTag));
+            if(images.size() <= 0) docker.pull(config.dockerTag);
         } catch (Exception e) {
-            addStepError("Got exception when running SequencerRepair: ", e);
+            return StepStatus.buildSkipped(this,"Error while retrieving sequencer docker image");
         }
 
-        final ExecutorService executor = Executors.newFixedThreadPool(SEQUENCER_THREADS);
+        final ExecutorService executor = Executors.newFixedThreadPool(config.threads);
         List<Future<SequencerResult>> allResults = new ArrayList<>();
 
         suspiciousPoints.forEach( smp -> allResults.add(executor.submit(() -> {
@@ -109,36 +102,54 @@ public class SequencerRepair extends AbstractRepairStep {
                 Path repoPath = Paths.get(getInspector().getRepoLocalPath()).toRealPath();
                 Path relativePath = repoPath.relativize(suspiciousFile);
                 int buggyLineNumber = smp.getSuspiciousLine();
-                int beamSize = 50; // Sequencer paper https://arxiv.org/abs/1901.01808
+                int beamSize = config.beam_size;
                 String buggyFileName = suspiciousFile.getFileName().toString();
                 Path outputDirPath = patchDir.toAbsolutePath().resolve(buggyFileName + smpId);
                 if ( !Files.exists(outputDirPath) || !Files.isDirectory(outputDirPath)) {
                     Files.createDirectory(outputDirPath);
                 }
 
+                String sequencerCommand = "./sequencer-predict.sh "
+                                            + "--buggy_file=" + "/tmp/" + buggyFileName + " "
+                                            + "--buggy_line=" + buggyLineNumber + " "
+                                            + "--beam_size=" + beamSize + " "
+                                            + "--real_file_path=" + relativePath + " "
+                                            + "--output=" + "/out";
 
-                // make sure that "privileged: true" in running container
-                StringJoiner commandStringJoiner = new StringJoiner(";");
+                HostConfig hostConfig = HostConfig.builder()
+                        .appendBinds(HostConfig.Bind
+                                .from(buggyParentPath.toString())
+                                .to("/tmp")
+                                .build())
+                        .appendBinds(HostConfig.Bind
+                                .from(outputDirPath.toString())
+                                .to("/out")
+                                .build())
+                        .build();
 
-                commandStringJoiner.add("docker run --rm "
-                    + "-v " + pathPrefix + buggyParentPath + pathPrefix + ":/tmp" + " "
-                    + "-v " + pathPrefix + outputDirPath + pathPrefix + ":/out" + " "
-                    + imageTag + " "
-                    + "bash ./sequencer-predict.sh "
-                    + "--buggy_file=" + "/tmp/" + buggyFileName + " "
-                    + "--buggy_line=" + buggyLineNumber + " "
-                    + "--beam_size=" + beamSize + " "
-                    + "--real_file_path=" + relativePath + " "
-                    + "--output=" + "/out");
-//                        commandStringJoiner.add("docker stop $(docker ps -aq)");
-//                        commandStringJoiner.add("docker rm $(docker ps -aq)");
+                ContainerConfig containerConfig = ContainerConfig.builder()
+                        .image(config.dockerTag)
+                        .hostConfig(hostConfig)
+                        .cmd("bash", "-c", sequencerCommand)
+                        .attachStdout(true)
+                        .attachStderr(true)
+                        .build();
 
-                String commandStr = commandStringJoiner.toString();
-                Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", commandStr});
-                process.waitFor();
+                 ContainerCreation container = docker.createContainer(containerConfig);
+                 docker.startContainer(container.id());
+                 docker.waitContainer(container.id());
 
-                String stdOut = HandleOutput(process.getInputStream());
-                String stdErr = HandleOutput(process.getErrorStream());
+                 String stdOut = docker.logs(
+                         container.id(),
+                         DockerClient.LogsParam.stdout()
+                 ).readFully();
+
+                String stdErr = docker.logs(
+                        container.id(),
+                        DockerClient.LogsParam.stderr()
+                ).readFully();
+
+                docker.removeContainer(container.id());
 
                 this.getLogger().debug("stdOut: \n" + stdOut);
                 this.getLogger().debug("stdErr: \n" + stdErr);
@@ -156,7 +167,7 @@ public class SequencerRepair extends AbstractRepairStep {
         List<SequencerResult> sequencerResults = new ArrayList<>();
         try {
             executor.shutdown();
-            executor.awaitTermination(TOTAL_TIME, TimeUnit.MINUTES);
+            executor.awaitTermination(config.timeout, TimeUnit.MINUTES);
             for (Future<SequencerResult> result : allResults){
                 sequencerResults.add(result.get());
             }
@@ -205,13 +216,5 @@ public class SequencerRepair extends AbstractRepairStep {
         } else {
             return StepStatus.buildPatchNotFound(this);
         }
-    }
-
-    private String HandleOutput(InputStream iStream){
-        BufferedReader outputBufferReader = new BufferedReader(new InputStreamReader(iStream));
-        StringJoiner outputStringJoiner = new StringJoiner("\n");
-        outputBufferReader.lines().forEach(outputStringJoiner::add);
-        String outputStr = outputStringJoiner.toString();
-        return outputStr;
     }
 }

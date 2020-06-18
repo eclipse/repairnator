@@ -28,9 +28,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.12</version>
+        </dependency>
+        <dependency>
             <groupId>se.kth.castor</groupId>
             <artifactId>sonarqube-repair</artifactId>
             <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.inria.repairnator</groupId>
+            <artifactId>repairnator-core</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
@@ -54,11 +64,6 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>fr.inria.repairnator</groupId>
-            <artifactId>repairnator-core</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>

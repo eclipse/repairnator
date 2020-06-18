@@ -3,7 +3,6 @@ package fr.inria.spirals.repairnator.process.step.repair.sequencer.detection;
 import fr.inria.astor.core.entities.SuspiciousModificationPoint;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class ModificationPoint {
     private Path filePath;
