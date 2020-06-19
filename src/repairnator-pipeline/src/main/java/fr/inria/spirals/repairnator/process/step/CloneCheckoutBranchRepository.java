@@ -35,7 +35,6 @@ public class CloneCheckoutBranchRepository extends AbstractStep {
         }
         
         String repoLocalPath = this.getInspector().getRepoLocalPath();
-        
         try {
             this.getLogger().info("Cloning repository " + repoUrl + " in the following directory: " + repoLocalPath);
 
@@ -46,7 +45,6 @@ public class CloneCheckoutBranchRepository extends AbstractStep {
             		.setCloneSubmodules(true)
             		.setURI( repoUrl )
             		.setDirectory(new File(repoLocalPath));
-                    
             if (branch != null) {
             	cloneRepositoryCommand.setBranchesToClone(branchList).setBranch(branch);
             }
