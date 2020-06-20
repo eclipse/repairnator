@@ -196,8 +196,6 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         opt = new FlaggedOption("gitbranch");
         opt.setLongFlag("gitbranch");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("master");
-        opt.setHelp("Git branch name. Default: master");
         jsap.registerParameter(opt);
 
         opt = new FlaggedOption("gitcommithash");

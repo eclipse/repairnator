@@ -66,7 +66,6 @@ public class GithubInitConfig implements IInitConfig {
         getConfig().setCreatePR(LauncherUtils.getArgCreatePR(arguments));
 
         // we fork if we need to create a PR or if we need to notify
-        getConfig().setFork(true);
         if ((getConfig().isCreatePR() || (getConfig().getSmtpServer() != null && !getConfig().getSmtpServer().isEmpty() && getConfig().getNotifyTo() != null && getConfig().getNotifyTo().length > 0)) && getConfig().getGithubToken() != null) {
             getConfig().setFork(true);
         }

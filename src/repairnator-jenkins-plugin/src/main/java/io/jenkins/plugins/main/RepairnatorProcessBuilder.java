@@ -2,8 +2,10 @@ package io.jenkins.plugins.main;
 
 import java.lang.StringBuilder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.lang.IllegalArgumentException;
 import java.lang.ProcessBuilder;
+import java.io.File;
 
 /* Build subprocess to run repairnator Jar */
 public class RepairnatorProcessBuilder {
@@ -23,6 +25,7 @@ public class RepairnatorProcessBuilder {
 	private String workspace;
 	private String mavenHome;
 	private String outputDir;
+	private String sonarRules;
 	private boolean createPR;
 	private boolean useSmtpTLS;
 	private boolean noTravisRepair;
@@ -115,6 +118,10 @@ public class RepairnatorProcessBuilder {
 		return this;
 	}
 
+	public RepairnatorProcessBuilder withSonarRules(String sonarRules) {
+		this.sonarRules = sonarRules;
+		return this;
+	}
 
 	public void checkValid() {
 		if (this.javaExec == null || this.javaExec.equals("")) {
@@ -143,12 +150,13 @@ public class RepairnatorProcessBuilder {
 
 		cmdList.add(this.javaExec);
 		cmdList.add("-jar");
+		cmdList.add("-Dspoon.log.path=" + this.outputDir + File.separator + "spoon-log.log");
 		cmdList.add("-Dlogs_dir=" + this.outputDir);
 		cmdList.add(this.jarLocation);
 		cmdList.add("--launcherChoice");
 		cmdList.add("NEW");
 		cmdList.add("--launcherMode");
-		cmdList.add("JENKINS_PLUGIN");
+		cmdList.add("GIT_REPOSITORY");
 		cmdList.add("--output");
 		cmdList.add(this.outputDir);
 		cmdList.add("--MavenHome");
@@ -161,6 +169,11 @@ public class RepairnatorProcessBuilder {
 		cmdList.add(this.gitBranch);
 		cmdList.add("--repairTools");
 		cmdList.add(String.join(",",this.repairTools));
+
+		if (!sonarRules.equals("") || sonarRules != null) {
+			cmdList.add("--sonarRules");
+			cmdList.add(this.sonarRules);
+		}
 
 		if (this.notifyTo != null && !this.notifyTo.equals("")) {
 			if (this.smtpUsername != null && !this.smtpUsername.equals("")) {
@@ -197,7 +210,6 @@ public class RepairnatorProcessBuilder {
 			cmdList.add(this.gitOAuth);
 			cmdList.add("--createPR");
 		}
-
-		return new ProcessBuilder(this.cmdList);
+		return new ProcessBuilder(this.cmdList).inheritIO();
 	}
 }

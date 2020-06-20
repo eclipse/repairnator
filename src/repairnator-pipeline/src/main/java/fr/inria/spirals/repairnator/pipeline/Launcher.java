@@ -12,6 +12,10 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Set;
+
 public class Launcher implements LauncherAPI {
     private static LauncherAPI launcher;
 
@@ -62,10 +66,17 @@ public class Launcher implements LauncherAPI {
         } else {
             launcher = new BranchLauncher(args);
         }
-
-        RepairnatorConfig.getInstance().setSonarRules(jsapResult.getString("sonarRules").split(","));
+        RepairnatorConfig.getInstance().setSonarRules(removeDuplicatesInArray(jsapResult.getString("sonarRules").split(",")));
         launcher.launch();
     }
+
+    private static String[] removeDuplicatesInArray(String[] arr) {
+        Set<String> set = new HashSet<String>();
+        for(int i = 0; i < arr.length; i++){
+          set.add(arr[i]);
+        }
+        return set.stream().toArray(String[]::new);
+    } 
 
     @Override
     public boolean mainProcess() {

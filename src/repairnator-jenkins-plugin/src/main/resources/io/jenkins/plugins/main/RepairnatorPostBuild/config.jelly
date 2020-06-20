@@ -24,6 +24,59 @@
         <f:entry name="useNopolTestExclusionStrategy" title="${%NopolTestExclusionStrategy}" field="useNopolTestExclusionStrategy">
             <f:checkbox />
         </f:entry>
+        <f:entry name="useSorald" title="${%Sorald}" field="useSorald">
+            <f:checkbox />
+        </f:entry>
+    </f:section>
+    <f:section title="Repairtools Extension">
+        <f:optionalBlock name="sonarRulesBlock" title="Choose sonar rules for Sorald" field="sonarRulesBlock">
+            <f:entry title="1656 - Variables should not be self-assigned" field="rule1656">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="1854 - Unused assignments should be removed" field="rule1854">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="1860 - Synchronization should not be based on Strings or boxed primitives" field="rule1860">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2095 - Resources should be closed" field="rule2095">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2111 - BigDecimal(double) should not be used" field="rule2111">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2116 - hashCode and toString should not be called on array instances" field="rule2116">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2164 - Math should not be performed on floats" field="rule2164">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2167 - compareTo should not return Integer.MIN_VALUE" field="rule2167">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2184 - Math operands should be cast before assignment" field="rule2184">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2204 - .equals() should not be used to test the values of Atomic
+        classes" field="rule2204">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="2272 - Iterator.next() methods should throw NoSuchElementException" field="rule2272">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="3032 - JEE applications should not getClassLoader" field="rule3032">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="3067 - getClass should not be used for synchronization" field="rule3067">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="3984 - Exception should not be created without being thrown" field="rule3984">
+                <f:checkbox />
+            </f:entry>
+            <f:entry title="4973 - Strings and Boxed types should be compared using equals()" field="rule4973">
+                <f:checkbox />
+            </f:entry>
+        </f:optionalBlock>
     </f:section>
     <f:advanced>
         <f:entry title="${%GitUrl}" field="gitUrl">

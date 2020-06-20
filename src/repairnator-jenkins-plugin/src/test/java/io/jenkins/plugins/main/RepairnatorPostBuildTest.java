@@ -8,8 +8,10 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.jvnet.hudson.test.JenkinsRule;
-	
+
+@Ignore("Only run manually, to avoid using up limitied bandwidth on Git")
 public class RepairnatorPostBuildTest {
 	public @Rule JenkinsRule jenkins = new JenkinsRule();
 

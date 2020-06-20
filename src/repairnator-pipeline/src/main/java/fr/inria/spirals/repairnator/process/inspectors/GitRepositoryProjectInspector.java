@@ -56,7 +56,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
 
         this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected();
+        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected() + "_repo";
 
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
@@ -78,7 +78,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
 
         this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected();
+        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected() + "_repo";
 
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();

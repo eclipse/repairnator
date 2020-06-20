@@ -50,6 +50,11 @@ public class RepairnatorJarDownloader implements Downloader{
         fileDownloader.download();
     }
 
+    public void downloadJarHardCoded(String latestJarUrl) throws IOException { 
+        FileDownloader fileDownloader = new FileDownloader(latestJarUrl,this.absoluteJarFilePath);
+        fileDownloader.download();
+    }
+
     @Override
     public void download() {
         try {

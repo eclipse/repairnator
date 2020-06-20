@@ -40,8 +40,7 @@ public class BranchLauncher implements LauncherAPI{
         	+ "REPAIR: standard repairnator repair with Travis build ids. BEARS: analyze pairs of bugs and human-produced patches. "
         	+ "CHECKSTYLE: analyze build failing because of checkstyle. "
         	+ "GIT_REPOSITORY: repairnator repair with Git instead of standard Travis. "
-        	+ "KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids. "
-        	+ "JENKINS_PLUGIN: run repairnator as a Jenkins plugin to repair after each build in Jenkins CI");
+        	+ "KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids. ");
         jsap.registerParameter(opt2);
 
         return jsap;
@@ -79,9 +78,6 @@ public class BranchLauncher implements LauncherAPI{
 		} else if (launcherMode.equals(LauncherMode.KUBERNETES_LISTENER.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.KUBERNETES_LISTENER);
 			return MainProcessFactory.getPipelineListenerMainProcess(args);
-		} else if (launcherMode.equals(LauncherMode.JENKINS_PLUGIN.name())) {
-			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.JENKINS_PLUGIN);
-			return MainProcessFactory.getJenkinsPluginMainProcess(args);
 		} else {
 			LOGGER.warn("Unknown launcher mode. Please choose the following: REPAIR, BEARS, CHECKSTYLE, GIT_REPOSITORY, KUBERNETES_LISTENER, JENKINS_PLUGIN");
 			return null;
