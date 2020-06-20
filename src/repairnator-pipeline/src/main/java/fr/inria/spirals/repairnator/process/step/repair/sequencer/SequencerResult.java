@@ -1,12 +1,10 @@
 package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,32 +21,30 @@ public class SequencerResult {
     private String outputDirPath;
     private String message;
     private String warning;
-    private boolean success;
     private List<String> diffs;
 
-    public SequencerResult(String buggyFilePath, String outputDirPath, String message, String warning) {
+    public SequencerResult(String buggyFilePath, String outputDirPath, String message, String warning)
+            throws Exception {
+
         this.buggyFilePath = buggyFilePath;
         this.outputDirPath = outputDirPath;
         this.message = message;
         this.warning = warning;
-        File outputDir = new File(outputDirPath);
-        if (outputDir.exists() && outputDir.isDirectory()) {
-            List<File> patchDirs = Arrays.asList(outputDir.listFiles());
-            success = patchDirs.size() > 0;
-            diffs = new ArrayList<>();
-            if (success) {
-                for (File patchDir : patchDirs) {
-                    for (File patchFile : patchDir.listFiles()) {
-                        try {
-                            List<String> diffList = Files.readLines(patchFile, Charsets.UTF_8);
-                            String diff = diffList.stream().collect(Collectors.joining());
-                            diffs.add(diff);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
+        Path outputDir = Paths.get(outputDirPath);
+
+        if (!Files.exists(outputDir) || !Files.isDirectory(outputDir))
+            throw new Exception("Error while reading sequencer result files: " +
+                    "Output path does not exist or is not a directory");
+
+        List<Path> patchDirs = Files.walk(outputDir)
+                .filter(file -> Files.isRegularFile(file) && file.getFileName().toString().equals("diff"))
+                .collect(Collectors.toList());
+
+        this.diffs = new ArrayList<>();
+        for (Path file : patchDirs){
+            List<String> diffLines = Files.readAllLines(file, Charset.forName("UTF-8"));
+            String diff = String.join("\n", diffLines);
+            diffs.add(diff);
         }
     }
 
@@ -69,7 +65,7 @@ public class SequencerResult {
     }
 
     public boolean isSuccess() {
-        return this.success;
+        return diffs.size() > 0;
     }
 
     public List<String> getDiffs() {

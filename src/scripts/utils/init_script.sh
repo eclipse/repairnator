@@ -14,6 +14,9 @@ command -v uuidgen >/dev/null 2>&1 || { echo >&2 "Repairnator requires uuidgen t
 echo "Read global configuration"
 . $INIT_SCRIPT_DIR/../config/repairnator.cfg
 
+echo "Read sequencer configuration"
+. $INIT_SCRIPT_DIR/../config/sequencer.cfg
+
 echo "Read user configuration"
 if [ -r ~/repairnator.cfg ]; then
     . ~/repairnator.cfg
