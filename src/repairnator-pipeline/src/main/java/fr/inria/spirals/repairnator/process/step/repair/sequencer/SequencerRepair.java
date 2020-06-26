@@ -3,10 +3,7 @@ package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.ContainerCreation;
-import com.spotify.docker.client.messages.HostConfig;
-import com.spotify.docker.client.messages.Image;
+import com.spotify.docker.client.messages.*;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
@@ -16,8 +13,10 @@ import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.AstorDetectionStrategy;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DetectionStrategy;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -96,7 +95,7 @@ public class SequencerRepair extends AbstractRepairStep {
         suspiciousPoints.forEach( smp -> allResults.add(executor.submit(() -> {
             try {
                 int smpId = smp.hashCode();
-                Path suspiciousFile = smp.getFilePath();
+                Path suspiciousFile = smp.getFilePath().toRealPath();
                 Path buggyFilePath = suspiciousFile.toAbsolutePath();
                 Path buggyParentPath = suspiciousFile.getParent();
                 Path repoPath = Paths.get(getInspector().getRepoLocalPath()).toRealPath();
@@ -107,6 +106,7 @@ public class SequencerRepair extends AbstractRepairStep {
                 Path outputDirPath = patchDir.toAbsolutePath().resolve(buggyFileName + smpId);
                 if ( !Files.exists(outputDirPath) || !Files.isDirectory(outputDirPath)) {
                     Files.createDirectory(outputDirPath);
+                    outputDirPath = outputDirPath.toRealPath();
                 }
 
                 String sequencerCommand = "./sequencer-predict.sh "
@@ -116,16 +116,52 @@ public class SequencerRepair extends AbstractRepairStep {
                                             + "--real_file_path=" + relativePath + " "
                                             + "--output=" + "/out";
 
-                HostConfig hostConfig = HostConfig.builder()
-                        .appendBinds(HostConfig.Bind
-                                .from(buggyParentPath.toString())
+                HostConfig.Builder hostConfigBuilder = HostConfig.builder();
+
+                /*
+                 * note: the following code block provides a way to
+                 * mount directories from one docker container
+                 * into a sibling container.
+                 *
+                 * Otherwise, the docker daemon will try to mount from its own filesystem.
+                 *
+                 * This solution may be _too_ ad hoc.
+                 */
+
+                String parentPathStr = buggyParentPath.toString();
+                String outputPathStr = outputDirPath.toString();
+
+                if( Files.exists(Paths.get("/.dockerenv"))){
+                    ProcessBuilder processBuilder = new ProcessBuilder();
+                    processBuilder.command("bash", "-c", "basename `cat /proc/1/cpuset`");
+                    Process proc = processBuilder.start();
+
+                    StringWriter writer = new StringWriter();
+                    IOUtils.copy(proc.getInputStream(), writer);
+                    String containerId = writer.toString().trim();
+
+                    ContainerInfo info = docker.inspectContainer(containerId);
+
+                    String workspaceDir = Paths.get(getInspector().getWorkspace()).toRealPath().toString();
+
+                    String mountPointSrt = info.mounts().stream()
+                            .filter(item -> item.destination().equals(workspaceDir))
+                            .findFirst().get().source();
+
+                    parentPathStr = parentPathStr.replaceFirst(workspaceDir, mountPointSrt);
+                    outputPathStr = outputPathStr.replaceFirst(workspaceDir, mountPointSrt);
+                }
+
+                hostConfigBuilder.appendBinds(HostConfig.Bind
+                                .from(parentPathStr)
                                 .to("/tmp")
                                 .build())
                         .appendBinds(HostConfig.Bind
-                                .from(outputDirPath.toString())
+                                .from(outputPathStr)
                                 .to("/out")
-                                .build())
-                        .build();
+                                .build());
+
+                HostConfig hostConfig = hostConfigBuilder.build();
 
                 ContainerConfig containerConfig = ContainerConfig.builder()
                         .image(config.dockerTag)
@@ -136,6 +172,7 @@ public class SequencerRepair extends AbstractRepairStep {
                         .build();
 
                  ContainerCreation container = docker.createContainer(containerConfig);
+
                  docker.startContainer(container.id());
                  docker.waitContainer(container.id());
 
@@ -156,7 +193,6 @@ public class SequencerRepair extends AbstractRepairStep {
 
                 return new SequencerResult(buggyFilePath.toString(), outputDirPath.toString(),
                         stdOut, stdErr);
-                  //       process.destroy();
 
             } catch (Throwable throwable) {
                 addStepError("Got exception when running SequencerRepair: ", throwable);

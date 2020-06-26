@@ -137,9 +137,15 @@ public class RunnablePipelineContainer implements Runnable {
             Map<String,String> labels = new HashMap<>();
             labels.put("name",this.containerName);
 
-            HostConfig hostConfig = HostConfig.builder().build();
+            HostConfig hostConfig = HostConfig.builder()
+                    .appendBinds(HostConfig.Bind
+                            .builder()
+                            .from("/var/run/docker.sock")
+                            .to("/var/run/docker.sock")
+                            .build())
+                    .build();
 
-            // we soecify the complete configuration of the container
+            // we specify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
                     .env(envValues)

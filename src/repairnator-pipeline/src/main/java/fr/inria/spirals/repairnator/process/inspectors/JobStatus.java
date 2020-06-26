@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.tests.FailureDetail;
@@ -280,17 +281,20 @@ public class JobStatus {
 
     public List<RepairPatch> getRankedPatches(Features features) {
         List<RepairPatch> allPatches = getAllPatches();
-        allPatches.sort((patch1, patch2) -> { // ascending
-            double score1 = patch1.getOverfittingScore(features);
-            double score2 = patch2.getOverfittingScore(features);
-            double diff = score1 - score2;
-            if (diff < 0) {
-                return -1;
-            } else if (diff > 0) {
-                return 1;
-            }
-            return 0;
-        });
+
+        if(RepairnatorConfig.getInstance().isRankPatches()) {
+            allPatches.sort((patch1, patch2) -> { // ascending
+                double score1 = patch1.getOverfittingScore(features);
+                double score2 = patch2.getOverfittingScore(features);
+                double diff = score1 - score2;
+                if (diff < 0) {
+                    return -1;
+                } else if (diff > 0) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
         return allPatches;
     }
 

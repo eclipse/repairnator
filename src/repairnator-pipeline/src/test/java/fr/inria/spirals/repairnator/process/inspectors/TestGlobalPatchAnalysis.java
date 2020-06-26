@@ -127,6 +127,7 @@ public class TestGlobalPatchAnalysis {
         npeRepair.setProjectInspector(inspector);
 
         RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(nopolRepair.getRepairToolName(), npeRepair.getRepairToolName())));
+        RepairnatorConfig.getInstance().setRankPatches(true);
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
             .addNextStep(new TestProject(inspector))

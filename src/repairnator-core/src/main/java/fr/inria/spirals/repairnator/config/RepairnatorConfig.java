@@ -102,6 +102,8 @@ public class RepairnatorConfig {
     private String[] sonarRules;
     private boolean isStaticAnalysis;
 
+    private boolean rankPatches;
+
     // Dockerpool
     private String dockerImageName;
     private boolean skipDelete;
@@ -688,6 +690,14 @@ public class RepairnatorConfig {
         return this.isStaticAnalysis;
     }
 
+    public boolean isRankPatches() {
+        return rankPatches;
+    }
+
+    public void setRankPatches(boolean rankPatches) {
+        this.rankPatches = rankPatches;
+    }
+
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
@@ -756,6 +766,7 @@ public class RepairnatorConfig {
                 ", gitBranch=" + gitBranch +
                 ", gitCommitHash=" + gitCommitHash +
                 ", noTravisRepair=" + noTravisRepair +
+                ", rankPatches=" + rankPatches +
                 '}';
     }
 

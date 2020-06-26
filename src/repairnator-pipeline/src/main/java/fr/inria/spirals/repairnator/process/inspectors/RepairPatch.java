@@ -4,6 +4,7 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
 
@@ -39,7 +40,8 @@ public class RepairPatch {
         this.toolname = toolname;
         this.filePath = filePath;
         this.diff = diff;
-        this.overfittingScores = computeOverfittingScores();
+        this.overfittingScores =
+                RepairnatorConfig.getInstance().isRankPatches() ? computeOverfittingScores() : null;
     }
 
     private Map<Features, Double> computeOverfittingScores() {
