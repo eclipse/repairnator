@@ -4,8 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.messages.*;
+import fr.inria.astor.core.setup.FinderTestCases;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
+import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DummyDetectionStrategy;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
@@ -14,17 +19,22 @@ import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.AstorDetectionStrategy;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DetectionStrategy;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jgit.api.ApplyCommand;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.GitCommand;
+import org.eclipse.jgit.api.ResetCommand;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.patch.Patch;
+import scala.App;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
 * SequencerRepair is one builtin repair tool. It generates
@@ -77,7 +87,7 @@ public class SequencerRepair extends AbstractRepairStep {
             return StepStatus.buildSkipped(this,"Classpath or Sources not computed.");
         }
 
-        DetectionStrategy detectionStrategy = new AstorDetectionStrategy();
+        DetectionStrategy detectionStrategy = new DummyDetectionStrategy();
         List<ModificationPoint> suspiciousPoints = detectionStrategy.detect(this);
 
         /// pull Sequencer if image not present
@@ -215,23 +225,26 @@ public class SequencerRepair extends AbstractRepairStep {
         List<RepairPatch> listPatches = new ArrayList<>();
         JsonArray toolDiagnostic = new JsonArray();
 
-        boolean success = false;
-        for (SequencerResult result : sequencerResults) {
-            JsonObject diag = new JsonObject();
+        listPatches = sequencerResults.stream().flatMap( result -> {
+            JsonObject diagnostic = new JsonObject();
 
-            diag.addProperty("success", result.isSuccess());
-            diag.addProperty("message", result.getMessage());
-            diag.addProperty("warning", result.getWarning());
-            toolDiagnostic.add(diag);
+            diagnostic.addProperty("success", result.isSuccess());
+            diagnostic.addProperty("message", result.getMessage());
+            diagnostic.addProperty("warning", result.getWarning());
+            toolDiagnostic.add(diagnostic);
 
-            if (result.isSuccess()) {
-                success = true;
-                List<String> diffs = result.getDiffs();
-                for (String diff : diffs) {
-                    RepairPatch patch = new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff);
-                    listPatches.add(patch);
-                }
-            }
+            List<String> diffs = result.getDiffs();
+
+            Stream<RepairPatch> patches = diffs.stream()
+                .map(diff -> new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff))
+                .filter(this::testPatchBuildable);
+
+            return patches;
+
+        }).collect(Collectors.toList());
+
+        if(listPatches.isEmpty()){
+            return StepStatus.buildPatchNotFound(this);
         }
 
         this.recordPatches(listPatches,MAX_PATCH_PER_TOOL);
@@ -246,11 +259,47 @@ public class SequencerRepair extends AbstractRepairStep {
             addStepError("Got exception when running SequencerRepair: ", e);
         }
 
-        if (success) {
-            jobStatus.setHasBeenPatched(true);
-            return StepStatus.buildSuccess(this);
-        } else {
-            return StepStatus.buildPatchNotFound(this);
+        jobStatus.setHasBeenPatched(true);
+
+        return StepStatus.buildSuccess(this);
+
+    }
+
+    private boolean testPatchBuildable( RepairPatch patch ){
+
+        //CREATE REPLICA AS GIT BRANCH AND APPLY PATCH
+        String patchName = Paths.get(patch.getFilePath()).getFileName().toString() + "-" + UUID.randomUUID();
+        boolean success = false;
+        try {
+            Git git = Git.open(new File(getInspector().getRepoLocalPath()));
+            String defaultBranch = git.getRepository().getBranch();
+
+            git.branchCreate().setStartPoint(defaultBranch).setName(patchName).call();
+            git.checkout().setName(patchName).call();
+
+            InputStream is = new ByteArrayInputStream(patch.getDiff().getBytes());
+            git.apply().setPatch(is).call();
+
+            //BUILD W/ PATCH
+            Properties properties = new Properties();
+            properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
+
+            MavenHelper maven = new MavenHelper(getPom(), "package", properties, "sequencer-builder", getInspector(), true);
+
+            int result  = maven.run();
+
+
+            git.reset().setMode(ResetCommand.ResetType.HARD).call();
+
+            git.checkout().setName(defaultBranch).call();
+            git.branchDelete().setBranchNames(patchName).call();
+
+            // System.out.println("BUILD: " + success);
+            return result == MavenHelper.MAVEN_SUCCESS;
+
+        } catch (Exception e) {
+            getLogger().error("error while testing if patch is buildable");
+            throw new RuntimeException(e);
         }
     }
 }

@@ -194,6 +194,12 @@ public class DefaultDefineJSAPArgs implements IDefineJSAPArgs{
         sw.setHelp("repair with git url , branch and commit instead of travis build ids");
         jsap.registerParameter(sw);
 
+        sw = new Switch("rankPatches");
+        sw.setLongFlag("rankPatches");
+        sw.setDefault("false");
+        sw.setHelp("If true, patches produced by repair tools will be ranked by an overfitting model");
+        jsap.registerParameter(sw);
+
         return jsap;
 	}
 }
