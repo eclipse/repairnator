@@ -46,7 +46,7 @@ public class SequencerCollector {
     private int currentBatch;
     
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) throws IOException {
+    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) {
         
         this.filterMultiFile = filterMultiFile;
         this.filterMultiHunk = filterMultiHunk;
@@ -56,15 +56,15 @@ public class SequencerCollector {
         filter = new PatchFilter();
     }
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk) throws IOException {
+    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk) {
         this(filterMultiFile, filterMultiHunk, 0);
     }
 
-    public SequencerCollector() throws IOException {
+    public SequencerCollector() {
         this(false, false, 0);
     }
 
-    public void handle(String repositorySlug, String sha) throws NoFilepatternException, GitAPIException {
+    public void handle(String repositorySlug, String sha) {
         
         if (done.contains(sha)) {
             return;
@@ -102,8 +102,7 @@ public class SequencerCollector {
                 saveFileDiff(repositorySlug, sha);
                 ++currentBatch;
                 
-                if(currentBatch >= diffBatchSize) { 
-                    //commitAndPushDiffs(); // disabled on purpose, we do not need to store this perpetually
+                if(currentBatch >= diffBatchSize) {
                     currentBatch = 0;
                 }
             }
@@ -116,15 +115,9 @@ public class SequencerCollector {
     }
     
     public void initialize() throws IOException {
-        initLocalGitRepository();
         initGithubConnection();
     }
-    
-    //this method could automatically setup the repository (set path, pull, set branch, etc.)
-    //it would make a more correct setup, but this works good for now
-    void initLocalGitRepository() throws IOException{
-        this.diffsRepo = Git.open(new File(diffsPath));
-    }
+
     
     void initGithubConnection() throws IOException {
         this.github = GitHub.connect(); // read credentials from ~/.github file

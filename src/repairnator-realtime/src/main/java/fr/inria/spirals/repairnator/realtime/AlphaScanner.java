@@ -89,7 +89,7 @@ public class AlphaScanner implements Runnable {
                                     continue;
                                 }
 
-                                collectJob(job.getBuildId());
+                                collectJob(collector, job.getBuildId(), job.getRepositorySlug());
                             }
                             break;
                             case FAILED: { //try to fix it
@@ -115,7 +115,7 @@ public class AlphaScanner implements Runnable {
     }
 
 
-    protected void collectJob(int id){
+    protected void collectJob(SequencerCollector collector, int id, String slug){
         LOGGER.info("===== COLLECTING FOR DATA: " + id);
 
         Optional<BuildV2> build = buildHelper.fromIdV2(id);
@@ -123,7 +123,7 @@ public class AlphaScanner implements Runnable {
 
         String sha = build.get().getCommit().getSha();
 
-        // collector.handle(job.getRepositorySlug(), sha);
+        collector.handle(slug, sha);
         collected.add(id);
     }
 

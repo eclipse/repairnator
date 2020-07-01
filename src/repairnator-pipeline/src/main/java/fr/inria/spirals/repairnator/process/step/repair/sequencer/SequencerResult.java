@@ -41,6 +41,7 @@ public class SequencerResult {
                 .collect(Collectors.toList());
 
         this.diffs = new ArrayList<>();
+
         for (Path file : patchDirs){
             List<String> diffLines = Files.readAllLines(file, Charset.forName("UTF-8"));
             String diff = String.join("\n", diffLines) + "\n";

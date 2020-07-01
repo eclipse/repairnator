@@ -4,13 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.messages.*;
-import fr.inria.astor.core.setup.FinderTestCases;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
-import fr.inria.spirals.repairnator.process.git.GitHelper;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DummyDetectionStrategy;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
@@ -19,16 +15,10 @@ import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.AstorDetectionStrategy;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DetectionStrategy;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jgit.api.ApplyCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.GitCommand;
 import org.eclipse.jgit.api.ResetCommand;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.patch.Patch;
-import scala.App;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.*;
@@ -87,7 +77,7 @@ public class SequencerRepair extends AbstractRepairStep {
             return StepStatus.buildSkipped(this,"Classpath or Sources not computed.");
         }
 
-        DetectionStrategy detectionStrategy = new DummyDetectionStrategy();
+        DetectionStrategy detectionStrategy = new AstorDetectionStrategy();
         List<ModificationPoint> suspiciousPoints = detectionStrategy.detect(this);
 
         /// pull Sequencer if image not present
@@ -237,7 +227,14 @@ public class SequencerRepair extends AbstractRepairStep {
 
             Stream<RepairPatch> patches = diffs.stream()
                 .map(diff -> new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff))
-                .filter(this::testPatchBuildable);
+//                .filter(patch -> {
+//                    Properties properties = new Properties();
+//                    properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
+//                    return testMavenGoal(patch, "package", properties); })
+                .filter(patch -> {
+                    Properties properties = new Properties();
+                    return testMavenGoal(patch, "test", properties);
+                });
 
             return patches;
 
@@ -265,7 +262,7 @@ public class SequencerRepair extends AbstractRepairStep {
 
     }
 
-    private boolean testPatchBuildable( RepairPatch patch ){
+    private boolean testMavenGoal( RepairPatch patch, String goal, Properties properties ){
 
         //CREATE REPLICA AS GIT BRANCH AND APPLY PATCH
         String patchName = Paths.get(patch.getFilePath()).getFileName().toString() + "-" + UUID.randomUUID();
@@ -281,10 +278,7 @@ public class SequencerRepair extends AbstractRepairStep {
             git.apply().setPatch(is).call();
 
             //BUILD W/ PATCH
-            Properties properties = new Properties();
-            properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
-
-            MavenHelper maven = new MavenHelper(getPom(), "package", properties, "sequencer-builder", getInspector(), true);
+            MavenHelper maven = new MavenHelper(getPom(), goal, properties, "sequencer-builder", getInspector(), true);
 
             int result  = maven.run();
 
