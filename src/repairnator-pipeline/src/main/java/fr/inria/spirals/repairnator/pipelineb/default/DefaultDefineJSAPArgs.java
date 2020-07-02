@@ -12,6 +12,7 @@ import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 
@@ -182,6 +183,13 @@ public class DefaultDefineJSAPArgs implements IDefineJSAPArgs{
         opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("patchRankingMode");
+        opt2.setLongFlag("patchRankingMode");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault(RepairnatorConfig.PATCH_RANKING_MODE.NONE.name());
+        opt2.setHelp("Possible string values NONE, OVERFITTING.");
+        jsap.registerParameter(opt2);
+
         Switch sw = new Switch("tmpDirAsWorkSpace");
         sw.setLongFlag("tmpDirAsWorkSpace");
         sw.setDefault("false");
@@ -194,11 +202,6 @@ public class DefaultDefineJSAPArgs implements IDefineJSAPArgs{
         sw.setHelp("repair with git url , branch and commit instead of travis build ids");
         jsap.registerParameter(sw);
 
-        sw = new Switch("rankPatches");
-        sw.setLongFlag("rankPatches");
-        sw.setDefault("false");
-        sw.setHelp("If true, patches produced by repair tools will be ranked by an overfitting model");
-        jsap.registerParameter(sw);
 
         return jsap;
 	}

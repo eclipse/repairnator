@@ -49,6 +49,11 @@ public class RepairnatorConfig {
         }
     }
 
+    public enum PATCH_RANKING_MODE {
+        NONE,
+        OVERFITTING
+    }
+
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -102,7 +107,7 @@ public class RepairnatorConfig {
     private String[] sonarRules;
     private boolean isStaticAnalysis;
 
-    private boolean rankPatches;
+    private PATCH_RANKING_MODE patchRankingMode;
 
     // Dockerpool
     private String dockerImageName;
@@ -690,12 +695,18 @@ public class RepairnatorConfig {
         return this.isStaticAnalysis;
     }
 
-    public boolean isRankPatches() {
-        return rankPatches;
+    public PATCH_RANKING_MODE getPatchRankingMode() {
+        return patchRankingMode;
     }
 
-    public void setRankPatches(boolean rankPatches) {
-        this.rankPatches = rankPatches;
+    public void setPatchRankingMode(String patchRankingMode) {
+        for (PATCH_RANKING_MODE mode: PATCH_RANKING_MODE.values()) {
+            if (patchRankingMode.equals(mode.name())) {
+                this.patchRankingMode = PATCH_RANKING_MODE.valueOf(patchRankingMode);
+                return;
+            }
+        }
+        throw new RuntimeException("unknown patch ranking mode: " + patchRankingMode);
     }
 
     @Override
@@ -766,7 +777,7 @@ public class RepairnatorConfig {
                 ", gitBranch=" + gitBranch +
                 ", gitCommitHash=" + gitCommitHash +
                 ", noTravisRepair=" + noTravisRepair +
-                ", rankPatches=" + rankPatches +
+                ", rankPatches=" + patchRankingMode +
                 '}';
     }
 

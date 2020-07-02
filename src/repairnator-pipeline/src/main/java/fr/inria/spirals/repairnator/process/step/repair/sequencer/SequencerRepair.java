@@ -12,8 +12,7 @@ import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.AstorDetectionStrategy;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DetectionStrategy;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.*;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand;
@@ -101,7 +100,7 @@ public class SequencerRepair extends AbstractRepairStep {
                 Path repoPath = Paths.get(getInspector().getRepoLocalPath()).toRealPath();
                 Path relativePath = repoPath.relativize(suspiciousFile);
                 int buggyLineNumber = smp.getSuspiciousLine();
-                int beamSize = config.beam_size;
+                int beamSize = config.beamSize;
                 String buggyFileName = suspiciousFile.getFileName().toString();
                 Path outputDirPath = patchDir.toAbsolutePath().resolve(buggyFileName + smpId);
                 if ( !Files.exists(outputDirPath) || !Files.isDirectory(outputDirPath)) {
@@ -264,7 +263,7 @@ public class SequencerRepair extends AbstractRepairStep {
 
     private boolean testMavenGoal( RepairPatch patch, String goal, Properties properties ){
 
-        //CREATE REPLICA AS GIT BRANCH AND APPLY PATCH
+        //Create replica as git branch and apply patch
         String patchName = Paths.get(patch.getFilePath()).getFileName().toString() + "-" + UUID.randomUUID();
         boolean success = false;
         try {
@@ -277,18 +276,16 @@ public class SequencerRepair extends AbstractRepairStep {
             InputStream is = new ByteArrayInputStream(patch.getDiff().getBytes());
             git.apply().setPatch(is).call();
 
-            //BUILD W/ PATCH
+            //Build and test with applied patch
             MavenHelper maven = new MavenHelper(getPom(), goal, properties, "sequencer-builder", getInspector(), true);
 
             int result  = maven.run();
-
 
             git.reset().setMode(ResetCommand.ResetType.HARD).call();
 
             git.checkout().setName(defaultBranch).call();
             git.branchDelete().setBranchNames(patchName).call();
 
-            // System.out.println("BUILD: " + success);
             return result == MavenHelper.MAVEN_SUCCESS;
 
         } catch (Exception e) {

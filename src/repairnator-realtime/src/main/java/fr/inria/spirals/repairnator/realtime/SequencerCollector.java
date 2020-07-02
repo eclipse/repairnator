@@ -12,15 +12,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.realtime.utils.PatchFilter;
 import fr.inria.spirals.repairnator.realtime.utils.SequencerCollectorHunk;
 import fr.inria.spirals.repairnator.realtime.utils.SequencerCollectorPatch;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kohsuke.github.*;
 
 /**
@@ -28,13 +24,9 @@ import org.kohsuke.github.*;
  */
 public class SequencerCollector {
     
-    //This path should be configurable. See initLocalGitRepository method comments.
-    private final String diffsPath = System.getProperty("user.home") + "/continuous-learning-data";
+    private final String diffsPath = SequencerConfig.getInstance().collectorPath;
     
     private final int diffBatchSize = 100;
-    
-    private Git diffsRepo;
-
     
     private GitHub github;
     private PatchFilter filter;
@@ -121,20 +113,6 @@ public class SequencerCollector {
     
     void initGithubConnection() throws IOException {
         this.github = GitHub.connect(); // read credentials from ~/.github file
-    }
-
-    protected void commitAndPushDiffs() throws NoFilepatternException, GitAPIException {
-        diffsRepo.add().addFilepattern(".").call();
-        diffsRepo.commit().setMessage("diff files").call();
-        
-        String OAUTH_TOKEN = System.getenv("OAUTH_TOKEN");
-        
-        RefSpec spec = new RefSpec("master:master");
-        diffsRepo.push()
-            .setRemote("origin")
-            .setRefSpecs(spec)
-            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(OAUTH_TOKEN, ""))
-            .call();
     }
 
     protected void saveFileDiff(String slug, String sha) throws IOException {

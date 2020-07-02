@@ -4,7 +4,6 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
 
@@ -40,47 +39,56 @@ public class RepairPatch {
         this.toolname = toolname;
         this.filePath = filePath;
         this.diff = diff;
-        this.overfittingScores =
-                RepairnatorConfig.getInstance().isRankPatches() ? computeOverfittingScores() : null;
+        this.overfittingScores = new HashMap<>();
     }
 
-    private Map<Features, Double> computeOverfittingScores() {
-        Map<Features, Double> overfittingScores = new HashMap<>();
-        for (Features features: Features.values()) {
-            overfittingScores.put(features, Double.POSITIVE_INFINITY);
-        }
-
+    private Double computeOverfittingScores(Features feature) {
         File buggyFile = new File(filePath);
-        if (buggyFile.isFile()) {
-            // read from buggyFile
-            List<String> buggyLines = new ArrayList<>();
-            try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-                stream.forEach(buggyLines::add);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // prepare patches
-            List<String> diffLines = Arrays.asList(diff.split("\n"));
-            Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
-
-            try {
-                // create patchedFile
-                String tmpName = buggyFile.getName();
-                File patchedFile = Files.createTempFile(tmpName, ".java").toFile();
-                // generate content of patchedFile by applying patches
-                List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
-                // write to patchedFile
-                Files.write(Paths.get(patchedFile.getPath()), patchedLines);
-                for (Features features: Features.values()) {
-                    Overfitting overfitting = new Overfitting(features);
-                    double overfittingScore = overfitting.computeScore(buggyFile, patchedFile);
-                    overfittingScores.put(features, overfittingScore);
-                }
-            } catch (PatchFailedException | IOException e) {
-                e.printStackTrace();
-            }
+        double score = Double.POSITIVE_INFINITY;
+        if (!buggyFile.isFile()) {
+            return score;
         }
-        return overfittingScores;
+
+        // read from buggyFile
+        List<String> buggyLines = new ArrayList<>();
+        try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+            stream.forEach(buggyLines::add);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // prepare patches
+        List<String> diffLines = Arrays.asList(diff.split("\n"));
+        Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
+
+        try {
+            // create patchedFile
+            String tmpName = buggyFile.getName();
+            File patchedFile = Files.createTempFile(tmpName, ".java").toFile();
+            // generate content of patchedFile by applying patches
+            List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
+            // write to patchedFile
+            Files.write(Paths.get(patchedFile.getPath()), patchedLines);
+
+            Overfitting overfitting = new Overfitting(feature);
+            score = overfitting.computeScore(buggyFile, patchedFile);
+
+        } catch (PatchFailedException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return score;
+    }
+
+    public Double getOverfittingScore(Features features) {
+        if(overfittingScores.containsKey(features)){
+            return overfittingScores.get(features);
+        }
+
+        double score = computeOverfittingScores(features);
+        overfittingScores.put(features, score);
+
+        return score;
     }
 
     public String getToolname() {
@@ -93,10 +101,6 @@ public class RepairPatch {
 
     public String getDiff() {
         return diff;
-    }
-
-    public double getOverfittingScore(Features features) {
-        return overfittingScores.get(features);
     }
 
     @Override
@@ -113,5 +117,22 @@ public class RepairPatch {
     public int hashCode() {
 
         return Objects.hash(toolname, filePath, diff);
+    }
+
+    //ranking algorithms
+    public static Comparator<RepairPatch> rankByOverfittingWithFeatures(Features features){
+        return (x, y) -> overfittingSort(x, y, features);
+    }
+
+    private static int overfittingSort(RepairPatch patch1, RepairPatch patch2, Features features) { // ascending
+        double score1 = patch1.getOverfittingScore(features);
+        double score2 = patch2.getOverfittingScore(features);
+        double diff = score1 - score2;
+        if (diff < 0) {
+            return -1;
+        } else if (diff > 0) {
+            return 1;
+        }
+        return 0;
     }
 }

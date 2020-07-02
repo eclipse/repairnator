@@ -11,11 +11,20 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ *  Scanner based on FastScanner.java and SequencerLearnerScanner.java
+ *  The purpose is to both collect one-line changes from passing builds
+ *  and try to repair failing builds.
+ *
+ *  @author Javier Ron
+ */
+
 public class AlphaScanner implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AlphaScanner.class);
     private BuildHelperV2 buildHelper;
     private RTScanner rtScanner;
+    private SequencerCollector collector;
 
     private Set<Integer> collected = new HashSet<>();
     private Set<Integer> attempted = new HashSet<>();
@@ -41,19 +50,11 @@ public class AlphaScanner implements Runnable {
 
         //github oauth
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
-
     }
 
     public AlphaScanner() {
         this.rtScanner = new RTScanner(UUID.randomUUID().toString());
         this.buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
-    }
-
-    @Override
-    public void run() {
-        LOGGER.info("Starting alpha scanner...");
-        JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
-        SequencerCollector collector = null;
 
         try {
             collector = new SequencerCollector();
@@ -61,10 +62,15 @@ public class AlphaScanner implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void run() {
+        LOGGER.info("Starting alpha scanner...");
+        JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
 
         final int scanBackIterations = 10;
         final int jumpSize = 250;
-
 
         while (true) {
             LOGGER.info("New scanning iteration");
@@ -89,7 +95,7 @@ public class AlphaScanner implements Runnable {
                                     continue;
                                 }
 
-                                collectJob(collector, job.getBuildId(), job.getRepositorySlug());
+                                collectJob(job.getBuildId(), job.getRepositorySlug());
                             }
                             break;
                             case FAILED: { //try to fix it
@@ -97,6 +103,7 @@ public class AlphaScanner implements Runnable {
                                     LOGGER.debug("Job fix already attempted, skipping");
                                     continue;
                                 }
+
                                 attemptJob(job.getBuildId());
                             }
                             break;
@@ -115,7 +122,7 @@ public class AlphaScanner implements Runnable {
     }
 
 
-    protected void collectJob(SequencerCollector collector, int id, String slug){
+    protected void collectJob(int id, String slug){
         LOGGER.info("===== COLLECTING FOR DATA: " + id);
 
         Optional<BuildV2> build = buildHelper.fromIdV2(id);

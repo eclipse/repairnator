@@ -99,7 +99,7 @@ public class DefaultInitConfig implements IInitConfig {
         this.getConfig().setMavenHome(arguments.getString("MavenHome"));
 
         this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
-        this.getConfig().setRankPatches(arguments.getBoolean("rankPatches"));
+        this.getConfig().setPatchRankingMode(arguments.getString("patchRankingMode"));
 
         if (arguments.getFile("projectsToIgnore") != null) {
             this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());

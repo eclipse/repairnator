@@ -112,7 +112,7 @@ public class RunnablePipelineContainer implements Runnable {
             SequencerConfig sequencerConfig = SequencerConfig.getInstance();
             this.envValues.add("SEQUENCER_DOCKER_TAG=" + sequencerConfig.dockerTag);
             this.envValues.add("SEQUENCER_THREADS=" + sequencerConfig.threads);
-            this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beam_size);
+            this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beamSize);
             this.envValues.add("SEQUENCER_TIMEOUT=" + sequencerConfig.timeout);
         }
     }

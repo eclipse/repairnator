@@ -127,7 +127,7 @@ public class TestGlobalPatchAnalysis {
         npeRepair.setProjectInspector(inspector);
 
         RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(nopolRepair.getRepairToolName(), npeRepair.getRepairToolName())));
-        RepairnatorConfig.getInstance().setRankPatches(true);
+        RepairnatorConfig.getInstance().setPatchRankingMode("OVERFITTING");
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
             .addNextStep(new TestProject(inspector))
@@ -138,7 +138,7 @@ public class TestGlobalPatchAnalysis {
             .addNextStep(npeRepair);
         cloneStep.execute();
 
-        List<RepairPatch> rankedPatchesP4J = inspector.getJobStatus().getRankedPatches();
+        List<RepairPatch> rankedPatchesP4J = inspector.getJobStatus().getRankedPatches(Features.P4J);
         List<RepairPatch> rankedPatchesS4R = inspector.getJobStatus().getRankedPatches(Features.S4R);
 
         // test ranking by P4J overfitting-scores
