@@ -55,18 +55,19 @@ public class AlphaScanner implements Runnable {
     public AlphaScanner() {
         this.rtScanner = new RTScanner(UUID.randomUUID().toString());
         this.buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
-
-        try {
-            collector = new SequencerCollector();
-            collector.initialize();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.collector = new SequencerCollector();
     }
 
     @Override
     public void run() {
         LOGGER.info("Starting alpha scanner...");
+
+        try {
+            collector.initialize();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
 
         final int scanBackIterations = 10;

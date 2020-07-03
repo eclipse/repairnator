@@ -29,20 +29,21 @@ jobs:
         - TEST_PATH="src/repairnator-pipeline/"
         - TEST_LIST="!TestPipelineb*"
       install: ./.travis/travis-before.sh
-      script: travis_wait 50 ./.travis/travis-run-pipeline.sh
+      script: travis_wait 50 ./.travis/travis-run-with-core.sh
       if: branch = master
     - name: "repairnator-pipeline-b"
       env:
         - TEST_PATH="src/repairnator-pipeline/"
         - TEST_LIST="TestPipelineb*"
       install: ./.travis/travis-before.sh
-      script: travis_wait 50 ./.travis/travis-run-pipeline.sh
+      script: travis_wait 50 ./.travis/travis-run-with-core.sh
       if: branch = master
     - name: "repairnator-realtime"
       env:
         - TEST_PATH="src/repairnator-realtime/"
+        - TEST_LIST="**"
       install: ./.travis/travis-before.sh
-      script: ./.travis/travis-run.sh
+      script: ./.travis/travis-run-with-core.sh
       if: branch = master
     - name: "repairnator-jenkins-plugin"
       env:
