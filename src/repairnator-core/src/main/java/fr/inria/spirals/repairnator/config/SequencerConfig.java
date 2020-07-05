@@ -10,16 +10,19 @@ public final class SequencerConfig {
 
     public final String dockerTag;
     public final int threads;
-    public final int beam_size;
+    public final int beamSize;
     public final int timeout;
+    public final String collectorPath;
 
     private static SequencerConfig instance;
 
     private SequencerConfig(){
         this.dockerTag = getEnvOrDefault("SEQUENCER_DOCKER_TAG", "repairnator/sequencer:2.0");
         this.threads = Integer.parseInt(getEnvOrDefault("SEQUENCER_THREADS", "4"));
-        this.beam_size = Integer.parseInt(getEnvOrDefault("SEQUENCER_BEAM_SIZE", "50"));
+        this.beamSize = Integer.parseInt(getEnvOrDefault("SEQUENCER_BEAM_SIZE", "50"));
         this.timeout = Integer.parseInt(getEnvOrDefault("SEQUENCER_TIMEOUT", "120"));
+        this.collectorPath = getEnvOrDefault("SEQUENCER_COLLECTOR_PATH",
+                System.getProperty("user.home") + "/continuous-learning-data");
     }
 
     private String getEnvOrDefault(String name, String dfault){

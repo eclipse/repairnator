@@ -12,15 +12,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.realtime.utils.PatchFilter;
 import fr.inria.spirals.repairnator.realtime.utils.SequencerCollectorHunk;
 import fr.inria.spirals.repairnator.realtime.utils.SequencerCollectorPatch;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kohsuke.github.*;
 
 /**
@@ -28,13 +24,9 @@ import org.kohsuke.github.*;
  */
 public class SequencerCollector {
     
-    //This path should be configurable. See initLocalGitRepository method comments.
-    private final String diffsPath = System.getProperty("user.home") + "/continuous-learning-data";
+    private final String diffsPath = SequencerConfig.getInstance().collectorPath;
     
     private final int diffBatchSize = 100;
-    
-    private Git diffsRepo;
-
     
     private GitHub github;
     private PatchFilter filter;
@@ -46,7 +38,7 @@ public class SequencerCollector {
     private int currentBatch;
     
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) throws IOException {
+    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) {
         
         this.filterMultiFile = filterMultiFile;
         this.filterMultiHunk = filterMultiHunk;
@@ -56,15 +48,15 @@ public class SequencerCollector {
         filter = new PatchFilter();
     }
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk) throws IOException {
+    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk) {
         this(filterMultiFile, filterMultiHunk, 0);
     }
 
-    public SequencerCollector() throws IOException {
+    public SequencerCollector() {
         this(false, false, 0);
     }
 
-    public void handle(String repositorySlug, String sha) throws NoFilepatternException, GitAPIException {
+    public void handle(String repositorySlug, String sha) {
         
         if (done.contains(sha)) {
             return;
@@ -102,8 +94,7 @@ public class SequencerCollector {
                 saveFileDiff(repositorySlug, sha);
                 ++currentBatch;
                 
-                if(currentBatch >= diffBatchSize) { 
-                    //commitAndPushDiffs(); // disabled on purpose, we do not need to store this perpetually
+                if(currentBatch >= diffBatchSize) {
                     currentBatch = 0;
                 }
             }
@@ -116,32 +107,12 @@ public class SequencerCollector {
     }
     
     public void initialize() throws IOException {
-        initLocalGitRepository();
         initGithubConnection();
     }
-    
-    //this method could automatically setup the repository (set path, pull, set branch, etc.)
-    //it would make a more correct setup, but this works good for now
-    void initLocalGitRepository() throws IOException{
-        this.diffsRepo = Git.open(new File(diffsPath));
-    }
+
     
     void initGithubConnection() throws IOException {
         this.github = GitHub.connect(); // read credentials from ~/.github file
-    }
-
-    protected void commitAndPushDiffs() throws NoFilepatternException, GitAPIException {
-        diffsRepo.add().addFilepattern(".").call();
-        diffsRepo.commit().setMessage("diff files").call();
-        
-        String OAUTH_TOKEN = System.getenv("OAUTH_TOKEN");
-        
-        RefSpec spec = new RefSpec("master:master");
-        diffsRepo.push()
-            .setRemote("origin")
-            .setRefSpecs(spec)
-            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(OAUTH_TOKEN, ""))
-            .call();
     }
 
     protected void saveFileDiff(String slug, String sha) throws IOException {

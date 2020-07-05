@@ -112,7 +112,7 @@ public class RunnablePipelineContainer implements Runnable {
             SequencerConfig sequencerConfig = SequencerConfig.getInstance();
             this.envValues.add("SEQUENCER_DOCKER_TAG=" + sequencerConfig.dockerTag);
             this.envValues.add("SEQUENCER_THREADS=" + sequencerConfig.threads);
-            this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beam_size);
+            this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beamSize);
             this.envValues.add("SEQUENCER_TIMEOUT=" + sequencerConfig.timeout);
         }
     }
@@ -137,9 +137,15 @@ public class RunnablePipelineContainer implements Runnable {
             Map<String,String> labels = new HashMap<>();
             labels.put("name",this.containerName);
 
-            HostConfig hostConfig = HostConfig.builder().build();
+            HostConfig hostConfig = HostConfig.builder()
+                    .appendBinds(HostConfig.Bind
+                            .builder()
+                            .from("/var/run/docker.sock")
+                            .to("/var/run/docker.sock")
+                            .build())
+                    .build();
 
-            // we soecify the complete configuration of the container
+            // we specify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageId)
                     .env(envValues)

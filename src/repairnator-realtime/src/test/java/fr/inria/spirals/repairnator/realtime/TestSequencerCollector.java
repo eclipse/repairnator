@@ -59,18 +59,6 @@ public class TestSequencerCollector {
         
         //Mock save/commit/push methods
         Mockito.doNothing().when(collector).saveFileDiff(Mockito.anyString(), Mockito.anyString());
-        Mockito.doNothing().when(collector).commitAndPushDiffs();
-        
-        //this function gets continuously called as long as the SequencerLearningScanner 
-        //is running. Here we test: save on single finding, and commit/push on batch completion
-        //batchSize = 100
-        for(int sha = 0; sha < 100; ++sha){
-            collector.handle("slug/slug" , Integer.toHexString(sha));
-        }
-        
-        Mockito.verify(collector, Mockito.times(100)).saveFileDiff(Mockito.anyString(), Mockito.anyString());
-        Mockito.verify(collector, Mockito.times(1)).commitAndPushDiffs();
-        
     }
     
 }

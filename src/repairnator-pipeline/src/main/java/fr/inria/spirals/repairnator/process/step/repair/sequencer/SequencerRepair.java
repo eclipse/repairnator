@@ -3,29 +3,27 @@ package fr.inria.spirals.repairnator.process.step.repair.sequencer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.ContainerCreation;
-import com.spotify.docker.client.messages.HostConfig;
-import com.spotify.docker.client.messages.Image;
+import com.spotify.docker.client.messages.*;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.AstorDetectionStrategy;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.DetectionStrategy;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.*;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
 * SequencerRepair is one builtin repair tool. It generates
@@ -96,17 +94,18 @@ public class SequencerRepair extends AbstractRepairStep {
         suspiciousPoints.forEach( smp -> allResults.add(executor.submit(() -> {
             try {
                 int smpId = smp.hashCode();
-                Path suspiciousFile = smp.getFilePath();
+                Path suspiciousFile = smp.getFilePath().toRealPath();
                 Path buggyFilePath = suspiciousFile.toAbsolutePath();
                 Path buggyParentPath = suspiciousFile.getParent();
                 Path repoPath = Paths.get(getInspector().getRepoLocalPath()).toRealPath();
                 Path relativePath = repoPath.relativize(suspiciousFile);
                 int buggyLineNumber = smp.getSuspiciousLine();
-                int beamSize = config.beam_size;
+                int beamSize = config.beamSize;
                 String buggyFileName = suspiciousFile.getFileName().toString();
                 Path outputDirPath = patchDir.toAbsolutePath().resolve(buggyFileName + smpId);
                 if ( !Files.exists(outputDirPath) || !Files.isDirectory(outputDirPath)) {
                     Files.createDirectory(outputDirPath);
+                    outputDirPath = outputDirPath.toRealPath();
                 }
 
                 String sequencerCommand = "./sequencer-predict.sh "
@@ -116,16 +115,52 @@ public class SequencerRepair extends AbstractRepairStep {
                                             + "--real_file_path=" + relativePath + " "
                                             + "--output=" + "/out";
 
-                HostConfig hostConfig = HostConfig.builder()
-                        .appendBinds(HostConfig.Bind
-                                .from(buggyParentPath.toString())
+                HostConfig.Builder hostConfigBuilder = HostConfig.builder();
+
+                /*
+                 * note: the following code block provides a way to
+                 * mount directories from one docker container
+                 * into a sibling container.
+                 *
+                 * Otherwise, the docker daemon will try to mount from its own filesystem.
+                 *
+                 * This solution may be _too_ ad hoc.
+                 */
+
+                String parentPathStr = buggyParentPath.toString();
+                String outputPathStr = outputDirPath.toString();
+
+                if( Files.exists(Paths.get("/.dockerenv"))){
+                    ProcessBuilder processBuilder = new ProcessBuilder();
+                    processBuilder.command("bash", "-c", "basename `cat /proc/1/cpuset`");
+                    Process proc = processBuilder.start();
+
+                    StringWriter writer = new StringWriter();
+                    IOUtils.copy(proc.getInputStream(), writer);
+                    String containerId = writer.toString().trim();
+
+                    ContainerInfo info = docker.inspectContainer(containerId);
+
+                    String workspaceDir = Paths.get(getInspector().getWorkspace()).toRealPath().toString();
+
+                    String mountPointSrt = info.mounts().stream()
+                            .filter(item -> item.destination().equals(workspaceDir))
+                            .findFirst().get().source();
+
+                    parentPathStr = parentPathStr.replaceFirst(workspaceDir, mountPointSrt);
+                    outputPathStr = outputPathStr.replaceFirst(workspaceDir, mountPointSrt);
+                }
+
+                hostConfigBuilder.appendBinds(HostConfig.Bind
+                                .from(parentPathStr)
                                 .to("/tmp")
                                 .build())
                         .appendBinds(HostConfig.Bind
-                                .from(outputDirPath.toString())
+                                .from(outputPathStr)
                                 .to("/out")
-                                .build())
-                        .build();
+                                .build());
+
+                HostConfig hostConfig = hostConfigBuilder.build();
 
                 ContainerConfig containerConfig = ContainerConfig.builder()
                         .image(config.dockerTag)
@@ -136,6 +171,7 @@ public class SequencerRepair extends AbstractRepairStep {
                         .build();
 
                  ContainerCreation container = docker.createContainer(containerConfig);
+
                  docker.startContainer(container.id());
                  docker.waitContainer(container.id());
 
@@ -156,7 +192,6 @@ public class SequencerRepair extends AbstractRepairStep {
 
                 return new SequencerResult(buggyFilePath.toString(), outputDirPath.toString(),
                         stdOut, stdErr);
-                  //       process.destroy();
 
             } catch (Throwable throwable) {
                 addStepError("Got exception when running SequencerRepair: ", throwable);
@@ -179,23 +214,33 @@ public class SequencerRepair extends AbstractRepairStep {
         List<RepairPatch> listPatches = new ArrayList<>();
         JsonArray toolDiagnostic = new JsonArray();
 
-        boolean success = false;
-        for (SequencerResult result : sequencerResults) {
-            JsonObject diag = new JsonObject();
+        listPatches = sequencerResults.stream().flatMap( result -> {
+            JsonObject diagnostic = new JsonObject();
 
-            diag.addProperty("success", result.isSuccess());
-            diag.addProperty("message", result.getMessage());
-            diag.addProperty("warning", result.getWarning());
-            toolDiagnostic.add(diag);
+            diagnostic.addProperty("success", result.isSuccess());
+            diagnostic.addProperty("message", result.getMessage());
+            diagnostic.addProperty("warning", result.getWarning());
+            toolDiagnostic.add(diagnostic);
 
-            if (result.isSuccess()) {
-                success = true;
-                List<String> diffs = result.getDiffs();
-                for (String diff : diffs) {
-                    RepairPatch patch = new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff);
-                    listPatches.add(patch);
-                }
-            }
+            List<String> diffs = result.getDiffs();
+
+            Stream<RepairPatch> patches = diffs.stream()
+                .map(diff -> new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff))
+//                .filter(patch -> {
+//                    Properties properties = new Properties();
+//                    properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
+//                    return testMavenGoal(patch, "package", properties); })
+                .filter(patch -> {
+                    Properties properties = new Properties();
+                    return testMavenGoal(patch, "test", properties);
+                });
+
+            return patches;
+
+        }).collect(Collectors.toList());
+
+        if(listPatches.isEmpty()){
+            return StepStatus.buildPatchNotFound(this);
         }
 
         this.recordPatches(listPatches,MAX_PATCH_PER_TOOL);
@@ -210,11 +255,42 @@ public class SequencerRepair extends AbstractRepairStep {
             addStepError("Got exception when running SequencerRepair: ", e);
         }
 
-        if (success) {
-            jobStatus.setHasBeenPatched(true);
-            return StepStatus.buildSuccess(this);
-        } else {
-            return StepStatus.buildPatchNotFound(this);
+        jobStatus.setHasBeenPatched(true);
+
+        return StepStatus.buildSuccess(this);
+
+    }
+
+    private boolean testMavenGoal( RepairPatch patch, String goal, Properties properties ){
+
+        //Create replica as git branch and apply patch
+        String patchName = Paths.get(patch.getFilePath()).getFileName().toString() + "-" + UUID.randomUUID();
+        boolean success = false;
+        try {
+            Git git = Git.open(new File(getInspector().getRepoLocalPath()));
+            String defaultBranch = git.getRepository().getBranch();
+
+            git.branchCreate().setStartPoint(defaultBranch).setName(patchName).call();
+            git.checkout().setName(patchName).call();
+
+            InputStream is = new ByteArrayInputStream(patch.getDiff().getBytes());
+            git.apply().setPatch(is).call();
+
+            //Build and test with applied patch
+            MavenHelper maven = new MavenHelper(getPom(), goal, properties, "sequencer-builder", getInspector(), true);
+
+            int result  = maven.run();
+
+            git.reset().setMode(ResetCommand.ResetType.HARD).call();
+
+            git.checkout().setName(defaultBranch).call();
+            git.branchDelete().setBranchNames(patchName).call();
+
+            return result == MavenHelper.MAVEN_SUCCESS;
+
+        } catch (Exception e) {
+            getLogger().error("error while testing if patch is buildable");
+            throw new RuntimeException(e);
         }
     }
 }
