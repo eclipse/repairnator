@@ -38,4 +38,13 @@ If not changed in configuration file, repairnator will use the default
 docker image, `spirals/repairnator:latest`. So any changes that have
 been made locally will not be used.
 
-If you do not upload  your image to docker hub you should also remove the ` docker pull $DOCKER_TAG` from the scripts. 
+If you do not upload  your image to docker hub you should also remove the ` docker pull $DOCKER_TAG` from the scripts.
+
+# Sequencer docker image
+
+When using the SequencerRepair repair tool, the repairnator/sequencer
+image will be downloaded from Docker Hub, however, for development purposes
+a different image can be specified in the [sequencer config file](https://github.com/eclipse/repairnator/blob/master/src/scripts/config/sequencer.cfg)
+
+In order to build a different image, refer to Sequencer's [repository](https://github.com/KTH/chai)
+and its [related](https://github.com/KTH/chai/blob/master/src/Docker_Images/Sequencer_Repair/create-docker-image.sh) [scritps](https://github.com/KTH/chai/blob/master/src/Docker_Images/Sequencer_Repair/Dockerfile)
