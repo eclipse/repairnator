@@ -85,7 +85,7 @@ public class SequencerRepair extends AbstractRepairStep {
             List<Image> images = docker.listImages(DockerClient.ListImagesParam.byName(config.dockerTag));
             if(images.size() <= 0) docker.pull(config.dockerTag);
         } catch (Exception e) {
-            return StepStatus.buildSkipped(this,"Error while retrieving sequencer docker image");
+            return StepStatus.buildSkipped(this,"Error while retrieving sequencer docker image: " + e);
         }
 
         final ExecutorService executor = Executors.newFixedThreadPool(config.threads);

@@ -2,10 +2,7 @@ package fr.inria.spirals.repairnator.dockerpool;
 
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.ContainerCreation;
-import com.spotify.docker.client.messages.ContainerExit;
-import com.spotify.docker.client.messages.HostConfig;
+import com.spotify.docker.client.messages.*;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.utils.DateUtils;
@@ -137,11 +134,26 @@ public class RunnablePipelineContainer implements Runnable {
             Map<String,String> labels = new HashMap<>();
             labels.put("name",this.containerName);
 
+
+            //to avoid creating new unnamed volumes
+            Volume workspaceVolume = docker.inspectVolume("repairnator_workspace");
+            Volume logsVolume = docker.inspectVolume("repairnator_logs");
+
             HostConfig hostConfig = HostConfig.builder()
                     .appendBinds(HostConfig.Bind
                             .builder()
                             .from("/var/run/docker.sock")
                             .to("/var/run/docker.sock")
+                            .build())
+                    .appendBinds(HostConfig.Bind
+                            .builder()
+                            .from(workspaceVolume)
+                            .to("/root/workspace/")
+                            .build())
+                    .appendBinds(HostConfig.Bind
+                            .builder()
+                            .from(logsVolume)
+                            .to("/var/log/")
                             .build())
                     .build();
 
@@ -171,6 +183,20 @@ public class RunnablePipelineContainer implements Runnable {
 
             // and now we wait until it's finished
             exitStatus = docker.waitContainer(this.containerId);
+
+            String stdOut = docker.logs(
+                    container.id(),
+                    DockerClient.LogsParam.stdout()
+            ).readFully();
+
+            String stdErr = docker.logs(
+                    container.id(),
+                    DockerClient.LogsParam.stderr()
+            ).readFully();
+
+
+            LOGGER.info("stdOut: \n" + stdOut);
+            LOGGER.info("stdErr: \n" + stdErr);
 
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+ exitStatus.statusCode());
 
