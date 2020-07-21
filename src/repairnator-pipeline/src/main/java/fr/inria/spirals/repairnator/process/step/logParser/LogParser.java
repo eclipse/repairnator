@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.process.step.repair;
+package fr.inria.spirals.repairnator.process.step.logParser;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 /**
  * Maven/Java log parser
  * Reproduced from tdurieux/Travis-Listener implementation
+ *
+ * Author: Javier Ron
  */
 public class LogParser {
 
@@ -20,30 +22,12 @@ public class LogParser {
 
 
     public LogParser(){
-        independents = new ArrayList<Independent>();
-        independents.add(new Independent(Pattern.compile("\\[(?<name>[^]]+)]: (?<status>[A-Z]+) in (?<class>.*)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("(?<nbTest>[0-9]+) tests completed, (?<failed>[0-9]+) failed, ((?<skipped>[0-9]+) skipped)?"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile(" (?<name>[a-zA-Z0-9\\-_]+)\\(\\) (?<status>↷|■|✔)( (?<message>.*))?"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("Running test:( test)? (?<name>.+)\\((?<class>.+)\\)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("(?<status>Failed) test (?<name>.+) \\[(?<class>.+)] with exception: "), "test", "Test"));
+        independents = new ArrayList<>();
         independents.add(new Independent(Pattern.compile("\\[javac] (?<file>[^:]+):(?<line>[0-9]+): error: (?<message>.*)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("Error: Could not find or load main class (?<file>.+)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("\\[WARNING] Missing header in: (?<file>.+)"), "test", "Test"));
         independents.add(new Independent(Pattern.compile("\\[ERROR] (?<file>[^:]+):\\[(?<line>[0-9]+)(,(?<column>[0-9]+))?] (?<message>\\((.+)\\) (.+))\\."), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("\\[checkstyle]( \\[ERROR])? (?<file>[^:]+):(?<line>[0-9]+):((?<column>[0-9]+):)? (?<message>.+)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("Could not find (?<group>[^: ]+):(?<artifact>[^: ]+)(:(pom|jar))?:(?<version>[^ ]+)\\."), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("Could not transfer artifact (?<group>[^: ]+):(?<artifact>[^: ]+)(:(pom|jar))?:(?<version>[^ ]+)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("Failure to find (?<group>[^: ]+):(?<artifact>[^: ]+)(:(pom|jar))?:(?<version>[^ ]+)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("PMD Failure: (?<file>[^:]+):(?<line>[0-9]+) Rule:(?<rule>.+) Priority:(?<priority>[0-9]+) (?<message>.+)"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("(?<nbTest>[0-9]+) tests? completed, (?<failure>[0-9]+) failed"), "test", "Test"));
-        independents.add(new Independent(Pattern.compile("Tests run: (?<nbTest>[0-9]+), Failures: (?<failure>[0-9]+), Errors: (?<error>[0-9]+), Skipped: (?<skipped>[0-9]+)(, Time elapsed: (?<time>[0-9.]+) ?s)?"), "test", "Test"));
 
         groups = new ArrayList<>();
-        groups.add(new Group("audit", "Checkstyle", "Chore",
-                Pattern.compile("\\[INFO] Starting audit\\.+"),
-                Pattern.compile("Audit done\\.+"),
-                Pattern.compile("(?<file>[^:]+):(?<line>[0-9]+):((?<column>[0-9]+):)? (?<message>.+)")
-                ));
+
 
         groups.add(new Group("checkstyle", "Checkstyle", "Chore",
                 Pattern.compile("\\[INFO] There (is|are) (.+) errors? reported by Checkstyle .+ with (.+) ruleset\\."),
@@ -52,54 +36,30 @@ public class LogParser {
         ));
 
         groups.add(new Group("compile", "Compilation", "Compilation",
-                Pattern.compile("\\[ERROR] COMPILATION ERROR.*"),
-                Pattern.compile("\\[INFO] ([0-9]+) errors?"),
+                Pattern.compile(".*\\[ERROR] COMPILATION ERROR.*"),
+                Pattern.compile(".*\\[INFO] ([0-9]+) errors?"),
                 Pattern.compile("\\[ERROR] (?<file>[^:]+):\\[(?<line>[0-9]+)(,(?<column>[0-9]+))?] (?<message>.+)")
         ));
 
         groups.add(new Group("compile", "Compilation", "Compilation",
-                Pattern.compile("\\[ERROR] COMPILATION ERROR.*"),
-                Pattern.compile("location: +(.+)"),
-                Pattern.compile("\\[ERROR] (?<file>[^:]+):\\[(?<line>[0-9]+)(,(?<column>[0-9]+))?] (?<message>.+)")
+                Pattern.compile(".*\\[ERROR] COMPILATION ERROR.*"),
+                Pattern.compile(".*location: +(.+)"),
+                Pattern.compile(".*\\[ERROR] (?<file>[^:]+):\\[(?<line>[0-9]+)(,(?<column>[0-9]+))?] (?<message>.+)")
         ));
 
         groups.add(new Group("compile", "Compilation", "Compilation",
-                Pattern.compile("\\[ERROR] COMPILATION ERROR.*"),
-                Pattern.compile("location: +(.+)"),
+                Pattern.compile(".*\\[ERROR] COMPILATION ERROR.*"),
+                Pattern.compile(".*location: +(.+)"),
                 Pattern.compile("(?<file>[^:]+):\\[(?<line>[0-9]+)(,(?<column>[0-9]+))?] error: (?<message>.+)")
         ));
 
         groups.add(new Group("compile", "Compilation", "Compilation",
                 Pattern.compile("\\[ERROR] COMPILATION ERROR.*"),
-                Pattern.compile("location: +(.+)"),
+                Pattern.compile(".*location: +(.+)"),
                 Pattern.compile("(?<file>.+):(?<line>[0-9]+): error: (?<message>.+)")
         ));
 
-        groups.add(new Group("test", "test", "Test",
-                Pattern.compile("Running (?<name>.*Tests?.*)$"),
-                Pattern.compile("Tests run: (?<nbTest>[0-9]+), Failures: (?<failure>[0-9]+), Errors: (?<error>[0-9]+), Skipped: (?<skipped>[0-9]+)(, Time elapsed: (?<time>[0-9.]+) ?s)?"),
-                Pattern.compile("(?<allLine>.+)")
-        ));
 
-        groups.add(new Group("graddle", "test", "Test",
-                Pattern.compile("([0-9]+)\\) (?<name>.+) \\((?<class>.+)\\)"),
-                Pattern.compile("Tests run: (?<nbTest>[0-9]+),  Failures: (?<failure>[0-9]+)"),
-                Pattern.compile("(?<allLine>.+)")
-        ));
-
-        Group graddle2 = new Group("graddle2", "test", "Test",
-                Pattern.compile("Executing test (?<name>.+) \\[(?<class>.+)]"),
-                Pattern.compile("(((?<nbTest>[0-9]+) tests completed, (?<failure>[0-9]+) failed)|(Executing test (?<name>.+) \\[(?<class>.+)]))"),
-                Pattern.compile("(?<allLine>.+)")
-        );
-        graddle2.startIsEnd = true;
-        groups.add(graddle2);
-
-        groups.add(new Group("compare", "Compare version", "Chore",
-                Pattern.compile("\\\\[INFO\\\\] Comparing to version: "),
-                Pattern.compile("\\[INFO] -+"),
-                Pattern.compile("\\[ERROR] (?<id>[0-9]+): (?<file>.+): ")
-        ));
 
         inGroup = null;
         currentElement = null;
@@ -115,11 +75,15 @@ public class LogParser {
         return tests;
     }
 
-    public void parse(String log){
-        String[] lines = log.split("\n");
-        for(String line : lines){
+    public void parse(List<String> log){
+        for(String line : log){
             parseLine(line);
         }
+    }
+
+    public void parse(String log){
+        String[] lines = log.split("\n");
+        parse(Arrays.asList(lines));
     }
 
     public void parseLine(String line){
@@ -155,29 +119,6 @@ public class LogParser {
                         this.currentElement.put("nbError", parseIntOrNull(matcher.group("error")));
                         this.currentElement.put("nbSkipped", parseIntOrNull(matcher.group("skipped")));
                         this.currentElement.put("time", parseFloatOrNull(matcher.group("time")));
-                    }
-                    if (group.name.equals("graddle2") && this.currentElement.<String>get("body") != null && !this.currentElement.get("body").equals("")) {
-                        if (this.currentElement.<String>get("body").contains("FAIL")) {
-                            this.currentElement.put("nbFailure", this.currentElement.<Integer>get("nbFailure") + 1);
-                        } else if (this.currentElement.<String>get("body").contains("ERROR")) {
-                            this.currentElement.put("nbError", this.currentElement.<Integer>get("nbError") + 1);
-                        }
-                    }
-                    //this.currentElement == null;
-                    if (group.startIsEnd && group.type.equals("test") && matcher.group("nbTest") != null) {
-                        this.currentElement = new Element()
-                                .put("name", matcher.group("name"))
-                                .put("class", matcher.group("class"))
-                                .put("body", "")
-                                .put("nbTest", 1)
-                                .put("nbFailure", 0)
-                                .put("nbError", 0)
-                                .put("nbSkip", 0)
-                                .put("time", 0f);
-
-                        this.tests.add(this.currentElement);
-                    } else {
-                        this.inGroup = null;
                     }
                     return;
                 }
@@ -273,7 +214,6 @@ public class LogParser {
         Pattern start;
         Pattern end;
         Pattern element;
-        Boolean startIsEnd;
 
         Group(String name, String type, String failureGroup, Pattern start, Pattern end, Pattern element){
             this.name = name;
@@ -282,42 +222,6 @@ public class LogParser {
             this.start = start;
             this.end = end;
             this.element = element;
-            this.startIsEnd = false;
-        }
-    }
-
-    class Element {
-
-        HashMap<String, Object> dict;
-
-        Element(){
-            dict = new HashMap<String, Object>();
-        }
-
-        Element put(String k, Object v){
-            dict.put(k, v);
-            return this;
-        }
-
-        Element remove(String k){
-            dict.remove(k);
-            return this;
-        }
-
-        <T> T get (String k){
-            return (T)dict.get(k);
-        }
-
-        @Override
-        public String toString() {
-
-            StringBuilder sb = new StringBuilder();
-
-            for(String key : dict.keySet()){
-                sb.append(key + "=" + dict.get(key) + " ");
-            }
-
-            return sb.toString();
         }
     }
 
