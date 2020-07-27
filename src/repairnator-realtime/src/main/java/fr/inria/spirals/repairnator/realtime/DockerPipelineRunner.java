@@ -25,14 +25,13 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class DockerPipelineRunner extends DockerPoolManager implements PipelineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(DockerPipelineRunner.class);
     private static final int DELAY_BETWEEN_DOCKER_IMAGE_REFRESH = 60; // in minutes
-    public static final String REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME = "repairnator/pipeline";
 
     public ExecutorService getExecutorService() {
         return executorService;
     }
 
     private ExecutorService executorService;
-    private String dockerImageId= REPAIRNATOR_PIPELINE_DOCKER_IMAGE_NAME;
+    private String dockerImageId;
     private String dockerImageName;
     private Date limitDateNextRetrieveDockerImage;
 
@@ -41,6 +40,7 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         super.setDockerOutputDir(RepairnatorConfig.getInstance().getLogDirectory());
         super.setRunId(RepairnatorConfig.getInstance().getRunId());
         super.setEngines(rtScanner.getEngines());
+        dockerImageId = RepairnatorConfig.getInstance().getDockerImageName();
     }
 
     public DockerPipelineRunner() {
@@ -50,6 +50,7 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         ArrayList<SerializerEngine> engines = new ArrayList<>();
         engines.add(new JSONFileSerializerEngine("."));
         super.setEngines(engines);
+        dockerImageId = RepairnatorConfig.getInstance().getDockerImageName();
     }
 
     public void initRunner() {
