@@ -109,7 +109,7 @@ public class LegacyLauncher implements LauncherAPI {
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
         this.initConfig(arguments);
 
-        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
+        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR || this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR) {
             this.checkToolsLoaded(jsap);
             this.checkNopolSolverPath(jsap);
             LOGGER.info("The pipeline will try to repair the following build id: "+this.getConfig().getBuildId());
@@ -143,6 +143,8 @@ public class LegacyLauncher implements LauncherAPI {
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // --checkstyle
         jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
+        // --sequencerRepair
+        jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
         // -o or --output
         jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
         // --dbhost
@@ -311,10 +313,12 @@ public class LegacyLauncher implements LauncherAPI {
         this.getConfig().setClean(true);
         this.getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
         this.getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
-        if (LauncherUtils.gerArgBearsMode(arguments)) {
+        if (LauncherUtils.getArgBearsMode(arguments)) {
             this.getConfig().setLauncherMode(LauncherMode.BEARS);
-        } else if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
+        } else if (LauncherUtils.getArgCheckstyleMode(arguments)) {
             this.getConfig().setLauncherMode(LauncherMode.CHECKSTYLE);
+        } else if (LauncherUtils.getArgSequencerRepairMode(arguments)) {
+            this.getConfig().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
         } else {
             this.getConfig().setLauncherMode(LauncherMode.REPAIR);
         }
@@ -372,7 +376,11 @@ public class LegacyLauncher implements LauncherAPI {
             this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
         }
 
-        this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        if(this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR){
+            this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"SequencerRepair"})));
+        } else{
+            this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        }
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
             LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
         }
@@ -514,16 +522,25 @@ public class LegacyLauncher implements LauncherAPI {
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = InspectorFactory.getBearsInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
-        } else if (this.getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = InspectorFactory.getCheckStyleInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
-        } else {
-            inspector = InspectorFactory.getTravisInspector(buildToBeInspected, this.getConfig().getWorkspacePath(), this.notifiers);
+        LauncherMode launcherMode = this.getConfig().getLauncherMode();
+        String workspacePath = this.getConfig().getWorkspacePath();
+        switch (launcherMode){
+            case BEARS:
+                inspector = InspectorFactory.getBearsInspector(buildToBeInspected, workspacePath, this.notifiers);
+                break;
+            case CHECKSTYLE:
+                inspector = InspectorFactory.getCheckStyleInspector(buildToBeInspected, workspacePath, this.notifiers);
+                break;
+            case SEQUENCER_REPAIR:
+                inspector = InspectorFactory.getSequencerRepairInspector(buildToBeInspected, workspacePath, this.notifiers);
+                break;
+            default:
+                inspector = InspectorFactory.getTravisInspector(buildToBeInspected, workspacePath, this.notifiers);
+                break;
         }
 
         System.out.println("Finished " + this.inspector.isPipelineEnding());
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
+        if (launcherMode == LauncherMode.BEARS) {
             inspector.getSerializers().add(new InspectorSerializer4Bears(this.engines, inspector));
         } else {
             inspector.getSerializers().add(new InspectorSerializer(this.engines, inspector));

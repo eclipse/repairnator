@@ -186,7 +186,7 @@ public class Launcher {
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
 
-        if (LauncherUtils.gerArgBearsMode(arguments)) {
+        if (LauncherUtils.getArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
         } else {
             this.config.setLauncherMode(LauncherMode.REPAIR);

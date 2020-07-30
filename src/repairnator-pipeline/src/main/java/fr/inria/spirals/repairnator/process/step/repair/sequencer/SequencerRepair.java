@@ -45,9 +45,18 @@ public class SequencerRepair extends AbstractRepairStep {
     private final SequencerConfig config;
     private final DockerClient docker;
 
+    private DetectionStrategy detectionStrategy;
+
     public SequencerRepair(){
-        config = SequencerConfig.getInstance();
-        docker = DockerHelper.initDockerClient();
+        this.config = SequencerConfig.getInstance();
+        this.docker = DockerHelper.initDockerClient();
+        this.detectionStrategy = new AstorDetectionStrategy();
+    }
+
+    public SequencerRepair(DetectionStrategy detectionStrategy){
+        this.config = SequencerConfig.getInstance();
+        this.docker = DockerHelper.initDockerClient();
+        this.detectionStrategy = detectionStrategy;
     }
 
     @Override
@@ -76,7 +85,6 @@ public class SequencerRepair extends AbstractRepairStep {
             return StepStatus.buildSkipped(this,"Classpath or Sources not computed.");
         }
 
-        DetectionStrategy detectionStrategy = new AstorDetectionStrategy();
         List<ModificationPoint> suspiciousPoints = detectionStrategy.detect(this);
 
         /// pull Sequencer if image not present

@@ -163,15 +163,25 @@ public class MainProcessFactory {
 
 		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(Sorald.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
-		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            inspector = InspectorFactory.getBearsInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
-        } else if (getConfig().getLauncherMode() == LauncherMode.CHECKSTYLE) {
-            inspector = InspectorFactory.getCheckStyleInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
-        } else {
-            inspector = InspectorFactory.getTravisInspector(buildToBeInspected, getConfig().getWorkspacePath(), notifiers);
-        }
+		LauncherMode launcherMode = getConfig().getLauncherMode();
+		String workspacePath = getConfig().getWorkspacePath();
 
-		if (getConfig().getLauncherMode() == LauncherMode.BEARS) {
+		switch (launcherMode){
+			case BEARS:
+				inspector = InspectorFactory.getBearsInspector(buildToBeInspected, workspacePath, notifiers);
+				break;
+			case CHECKSTYLE:
+				inspector = InspectorFactory.getCheckStyleInspector(buildToBeInspected, workspacePath, notifiers);
+				break;
+			case SEQUENCER_REPAIR:
+				inspector = InspectorFactory.getSequencerRepairInspector(buildToBeInspected, workspacePath, notifiers);
+				break;
+			default:
+				inspector = InspectorFactory.getTravisInspector(buildToBeInspected, workspacePath, notifiers);
+				break;
+		}
+
+		if (launcherMode == LauncherMode.BEARS) {
             inspector.getSerializers().add(new InspectorSerializer4Bears(engines, inspector));
         } else {
             inspector.getSerializers().add(new InspectorSerializer(engines, inspector));

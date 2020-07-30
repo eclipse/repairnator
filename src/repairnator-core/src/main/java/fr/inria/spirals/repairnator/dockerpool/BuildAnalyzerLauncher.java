@@ -128,9 +128,9 @@ public class BuildAnalyzerLauncher {
         }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
         this.config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
-        if (LauncherUtils.gerArgBearsMode(arguments)) {
+        if (LauncherUtils.getArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
-        } else if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
+        } else if (LauncherUtils.getArgCheckstyleMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.CHECKSTYLE);
         } else {
             this.config.setLauncherMode(LauncherMode.REPAIR);
