@@ -77,6 +77,7 @@ public class ProjectInspector {
     protected AbstractStep finalStep;
     protected String gitSlug;
     protected IRunInspector iRunInspector;
+    protected List<String> buildLog;
 
     public ProjectInspector() {}
 
@@ -93,6 +94,7 @@ public class ProjectInspector {
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
+        this.buildLog = new ArrayList<>();
         this.initProperties();
     }
 
@@ -111,6 +113,7 @@ public class ProjectInspector {
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
+        this.buildLog = new ArrayList<>();
         /* Skip initProperties*/
     }
 
@@ -126,6 +129,7 @@ public class ProjectInspector {
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
+        this.buildLog = new ArrayList<>();
         this.initProperties();
     }
 
@@ -406,6 +410,14 @@ public class ProjectInspector {
 
     public String getFinding() {
         return AbstractDataSerializer.getPrettyPrintState(this).toUpperCase();
+    }
+
+    public List<String> getBuildLog() {
+        return buildLog;
+    }
+
+    public void printToBuildLog(String s){
+        buildLog.add(s);
     }
 
 }

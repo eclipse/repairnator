@@ -35,5 +35,10 @@ public enum LauncherMode {
     /**
       * JENKINS_PLUGIN: this mode allows to use Repairnator to repair post builds as a Jenkins Plugin
       */
-    JENKINS_PLUGIN
+    JENKINS_PLUGIN,
+
+	/**
+	 * SEQUENCER_REPAIR: specific pipeline for SequencerRepair repair tool
+	 */
+	SEQUENCER_REPAIR,
 }

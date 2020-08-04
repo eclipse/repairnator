@@ -1,14 +1,9 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.process.inspectors.components.*;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4DefaultTravis;
-import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4DefaultGit;
-import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4CheckStyle;
 
-import java.util.Optional;
 import java.util.List;
 
 public class InspectorFactory {
@@ -16,7 +11,11 @@ public class InspectorFactory {
 	public static ProjectInspector getTravisInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
 		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4DefaultTravis());
 	}
-	
+
+	public static ProjectInspector getSequencerRepairInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers){
+		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4SequencerRepair());
+	}
+
 	public static GitRepositoryProjectInspector getGithubInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractNotifier> notifiers) {
 		GitRepositoryProjectInspector inspector = new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,notifiers);

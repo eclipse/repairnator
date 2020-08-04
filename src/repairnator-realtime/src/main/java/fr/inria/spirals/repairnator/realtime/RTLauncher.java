@@ -228,7 +228,7 @@ public class RTLauncher {
         if (LauncherUtils.getArgDebug(arguments)) {
             this.config.setDebug(true);
         }
-        if (LauncherUtils.gerArgCheckstyleMode(arguments)) {
+        if (LauncherUtils.getArgCheckstyleMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.CHECKSTYLE);
         } else {
             this.config.setLauncherMode(LauncherMode.REPAIR);
@@ -271,7 +271,9 @@ public class RTLauncher {
         this.config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         this.config.setNumberOfPRs(arguments.getInt("numberofprs"));
-        this.config.setPipelineMode(arguments.getString("pipelinemode"));
+        //this.config.setPipelineMode(arguments.getString("pipelinemode"));
+        this.config.setPipelineMode("DOCKER");
+
         this.config.setActiveMQUrl(arguments.getString("activemqurl"));
         this.config.setActiveMQSubmitQueueName(arguments.getString("activemqsubmitqueuename"));
         this.config.setWebSocketUrl(arguments.getString("websocketurl"));

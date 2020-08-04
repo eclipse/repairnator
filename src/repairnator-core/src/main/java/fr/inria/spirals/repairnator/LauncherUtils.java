@@ -80,8 +80,20 @@ public class LauncherUtils {
         return sw;
     }
 
-    public static boolean gerArgCheckstyleMode(JSAPResult arguments) {
+    public static boolean getArgCheckstyleMode(JSAPResult arguments) {
         return arguments.getBoolean("checkstyle");
+    }
+
+    public static Switch defineArgSequencerRepairMode() {
+        Switch sw = new Switch("sequencerRepair");
+        sw.setLongFlag("sequencerRepair");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator to run a SequencerRepair specific pipeline.");
+        return sw;
+    }
+
+    public static boolean getArgSequencerRepairMode(JSAPResult arguments) {
+        return arguments.getBoolean("sequencerRepair");
     }
 
     public static Switch defineArgBearsMode() {
@@ -92,7 +104,7 @@ public class LauncherUtils {
         return sw;
     }
 
-    public static boolean gerArgBearsMode(JSAPResult arguments) {
+    public static boolean getArgBearsMode(JSAPResult arguments) {
         return arguments.getBoolean("bears");
     }
 

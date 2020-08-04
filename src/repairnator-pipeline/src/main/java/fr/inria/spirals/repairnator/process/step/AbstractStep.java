@@ -159,6 +159,18 @@ public abstract class AbstractStep {
         return this;
     }
 
+    public AbstractStep addBranchingStep(BranchingStep nextStep) {
+        if (this.nextStep != null) {
+            this.nextStep.addBranchingStep(nextStep);
+        } else {
+            this.nextStep = nextStep;
+            nextStep.branchAfter(this);
+            nextStep.setDataSerializer(this.serializers);
+            nextStep.setNotifiers(this.notifiers);
+        }
+        return this;
+    }
+
     protected void setPushState(PushState pushState) {
         if (pushState != null) {
             this.inspector.getJobStatus().addPushState(pushState);
@@ -415,4 +427,8 @@ public abstract class AbstractStep {
     }
 
     protected abstract StepStatus businessExecute();
+
+    protected void setNextStep(AbstractStep nextStep) {
+        this.nextStep = nextStep;
+    }
 }

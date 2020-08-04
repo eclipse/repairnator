@@ -110,7 +110,7 @@ public class CheckBranchLauncher {
             this.config.setDebug(true);
         }
         this.config.setRunId(LauncherUtils.getArgRunId(arguments));
-        if (LauncherUtils.gerArgBearsMode(arguments)) {
+        if (LauncherUtils.getArgBearsMode(arguments)) {
             this.config.setLauncherMode(LauncherMode.BEARS);
         } else {
             this.config.setLauncherMode(LauncherMode.REPAIR);

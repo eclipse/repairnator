@@ -66,6 +66,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
+        this.buildLog = new ArrayList<>();
     }
     
     public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
@@ -89,6 +90,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.notifiers = notifiers;
         this.checkoutType = CheckoutType.NO_CHECKOUT;
         this.steps = new ArrayList<>();
+        this.buildLog = new ArrayList<>();
     }
 
 
