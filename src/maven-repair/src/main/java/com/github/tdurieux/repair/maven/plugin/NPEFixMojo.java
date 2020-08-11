@@ -82,6 +82,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
     private NPEOutput result;
 
     public void execute() throws MojoExecutionException {
+           
+        // get the failing NPE tests
         List<Pair<String, Set<File>>> npeTests = getNPETest();
 
         try {
@@ -103,6 +105,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
         classpath(dependencies);
 
+        // stop if we don't have at least one NPE
         if (npeTests.isEmpty()) {
             throw new RuntimeException("No failing test with NullPointerException or the NPE occurred outside the source.");
         }
@@ -115,6 +118,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
             sources[indexSource] = s;
             System.out.println("Test: " + s);
         }*/
+            
+        // collecting the source and bin folders
         for (File sourceFolder : sourceFolders) {
             sources[indexSource] = sourceFolder.getAbsolutePath();
             System.out.println("Source: " + sourceFolder);
@@ -122,6 +127,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         }
         File binFolder = new File(outputDirectory.getAbsolutePath() + "/npefix-bin");
 
+        // setting up dependencies
         try {
             dependencies.add(binFolder.toURI().toURL());
         } catch (MalformedURLException e) {
@@ -136,6 +142,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
         Date initDate = new Date();
 
+        // configuring NPEFix
         DefaultRepairStrategy strategy = new DefaultRepairStrategy(sources);
         if (repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
             strategy = new TryCatchRepairStrategy(sources);
@@ -144,6 +151,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
         //npefix.getSpoon().getEnvironment().setAutoImports(false);
 
+        // NPEfix is based on metaprogramming, this is where it happens
         npefix.instrument();
 
 
@@ -153,6 +161,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
                 tests.add(npeTest.getKey());
             }
         }
+        
+        // getting the patch if any (an object of type NPEOutput), see method run below
         this.result = run(npefix, tests);
 
 
@@ -164,6 +174,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         spoon.getModelBuilder().setSourceClasspath(classpath(dependencies).split(File.pathSeparatorChar + ""));
         spoon.buildModel();
 
+        // write a JSON file with the result and the patch
         JSONObject jsonObject = result.toJSON(spoon);
         jsonObject.put("endInit", initDate.getTime());
         System.out.println(resultDirectory.getAbsolutePath());
@@ -297,7 +308,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
         String buildDir = subProject.getBuild().getDirectory();
         return new File( buildDir + "/surefire-reports" );
     }
-
+        
+    /** gets the failing tests due to a NullPointerException by parsing the Surefire XML files */
     private List<Pair<String, Set<File>>> getNPETest() {
         List<Pair<String, Set<File>>> output = new ArrayList<>();
 
