@@ -1,10 +1,10 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
-import fr.inria.jtravis.entities.StateType;
 import fr.inria.jtravis.entities.v2.BuildV2;
 import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +19,9 @@ import java.util.*;
  *  @author Javier Ron
  */
 
-public class AlphaScanner implements Runnable {
+public class ZeroScanner implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AlphaScanner.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZeroScanner.class);
     private BuildHelperV2 buildHelper;
     private RTScanner rtScanner;
     private SequencerCollector collector;
@@ -30,12 +30,12 @@ public class AlphaScanner implements Runnable {
     private Set<Integer> attempted = new HashSet<>();
 
     public static void main(String[] args) {
-        AlphaScanner scanner = new AlphaScanner();
-        scanner.setup();
+        setup();
+        ZeroScanner scanner = new ZeroScanner();
         scanner.run();
     }
 
-    void setup(){
+    static void setup(){
         //Setup repairnator config
         //repair tools
         Set<String> repairTools = new HashSet();
@@ -43,16 +43,23 @@ public class AlphaScanner implements Runnable {
         RepairnatorConfig.getInstance().setRepairTools(repairTools);
 
         //concurrent repair job
-        RepairnatorConfig.getInstance().setNbThreads(4);
+        RepairnatorConfig.getInstance().setNbThreads(16);
 
         //pipeline mode
         RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
 
         //github oauth
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
+
+        //pipeline image tag
+        RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:latest");
+
+        //launcher mode
+        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+
     }
 
-    public AlphaScanner() {
+    public ZeroScanner() {
         this.rtScanner = new RTScanner(UUID.randomUUID().toString());
         this.buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
         this.collector = new SequencerCollector();
@@ -114,8 +121,10 @@ public class AlphaScanner implements Runnable {
                         }
                     }
                 }
-
-
+            } catch (OutOfMemoryError oom){
+                LOGGER.error("Out of memory error: "  + oom.toString());
+                rtScanner.stopDockerJobs();
+                System.exit(-1);
             } catch (Exception e) {
                 LOGGER.error("failed to get commit: "  + e.toString());
             }

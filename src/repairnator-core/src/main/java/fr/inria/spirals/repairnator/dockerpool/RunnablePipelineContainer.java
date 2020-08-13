@@ -201,10 +201,10 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+ exitStatus.statusCode());
 
             // standard bash: if it's 0 everything's fine.
+
             if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
                 LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Container will be removed.");
-                docker.removeContainer(this.containerId);
-                this.removeVolumes(docker);
+                removeDockerContainer(docker);
             }
 
             if (exitStatus.statusCode() == 0) {
@@ -226,7 +226,6 @@ public class RunnablePipelineContainer implements Runnable {
         for (String volume : this.volumes) {
             docker.removeVolume(volume);
         }
-
     }
 
     /**
@@ -236,21 +235,29 @@ public class RunnablePipelineContainer implements Runnable {
     public void killDockerContainer(DockerClient docker, boolean remove) {
         if (this.containerId == null) {
             LOGGER.error("Error while trying to kill docker container: the container id is not available. Maybe the container is not started yet.");
-        } else {
-            LOGGER.info("Killing the docker container with id "+containerId+". Forced killing date: "+this.limitDateBeforeKilling);
-            try {
-                docker.killContainer(containerId);
-                if (remove) {
-                    docker.removeContainer(containerId);
-                    this.removeVolumes(docker);
-                }
-                this.poolManager.removeSubmittedRunnablePipelineContainer(this);
-                serialize("INTERRUPTED");
-            } catch (DockerException|InterruptedException e) {
-                LOGGER.error("Error while killing docker container "+containerId, e);
-            }
+            return;
         }
 
+        LOGGER.info("Killing the docker container with id "+containerId+". Forced killing date: "+this.limitDateBeforeKilling);
+        try {
+            docker.killContainer(containerId);
+            if (remove) {
+                removeDockerContainer(docker);
+            }
+            this.poolManager.removeSubmittedRunnablePipelineContainer(this);
+            serialize("INTERRUPTED");
+        } catch (DockerException | InterruptedException e) {
+            LOGGER.error("Error while killing docker container "+containerId, e);
+        }
+    }
+
+    public void removeDockerContainer(DockerClient docker){
+        try {
+            docker.removeContainer(containerId);
+            this.removeVolumes(docker);
+        } catch (DockerException | InterruptedException e){
+            LOGGER.error("Error while removing docker container: " + containerId, e);
+        }
     }
 
     public void serialize(String msg) {

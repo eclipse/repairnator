@@ -350,4 +350,10 @@ public class RTScanner {
         blacklistedSerializer.serialize();;
     }
 
+    public void stopDockerJobs(){
+        if(this.pipelineRunner instanceof DockerPipelineRunner){
+            ((DockerPipelineRunner)pipelineRunner).switchOff();
+        }
+    }
+
 }

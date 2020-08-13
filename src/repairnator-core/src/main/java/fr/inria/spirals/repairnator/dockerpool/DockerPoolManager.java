@@ -89,7 +89,7 @@ public class DockerPoolManager {
         int nbKilled = 0;
         for (RunnablePipelineContainer runnablePipelineContainer : this.submittedRunnablePipelineContainers) {
             if (runnablePipelineContainer.getLimitDateBeforeKilling() != null && runnablePipelineContainer.getLimitDateBeforeKilling().toInstant().isBefore(now)) {
-                runnablePipelineContainer.killDockerContainer(this.docker, false);
+                runnablePipelineContainer.killDockerContainer(this.docker, true);
                 nbKilled++;
             }
         }

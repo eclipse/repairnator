@@ -76,8 +76,7 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
 
     public void initExecutorService(int nbThreads) {
         this.executorService = Executors.newFixedThreadPool(nbThreads);
-
-        LOGGER.debug("Executor service initialized for "+nbThreads+" threads.");
+        LOGGER.info("Executor service initialized with "+nbThreads+" threads.");
     }
 
     public int getRunning() {
@@ -95,16 +94,9 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         LOGGER.warn("The process will now stop. "+this.getRunning()+" docker containers will be stopped.");
         for (RunnablePipelineContainer container : this.submittedRunnablePipelineContainers) {
             container.serialize("ABORT");
-            container.killDockerContainer(this.getDockerClient(), false);
+            container.killDockerContainer(this.getDockerClient(), true);
         }
 
         this.executorService.shutdownNow();
-    }
-
-    @Override
-    public void removeSubmittedRunnablePipelineContainer(RunnablePipelineContainer pipelineContainer) {
-        LOGGER.info("Build (id: "+pipelineContainer.getInputBuildId().getBuggyBuildId()+") has finished.");
-        pipelineContainer.killDockerContainer(this.getDockerClient(), false);
-        super.removeSubmittedRunnablePipelineContainer(pipelineContainer);
     }
 }
