@@ -3,6 +3,8 @@ package fr.inria.spirals.repairnator.realtime;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.Commit;
 import fr.inria.jtravis.entities.v2.BuildV2;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
@@ -14,7 +16,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class TestAlphaScanner {
+public class TestZeroScanner {
 
     Build build;
     BuildV2 buildV2;
@@ -28,7 +30,7 @@ public class TestAlphaScanner {
 
     @Spy
     @InjectMocks
-    AlphaScanner scanner = new AlphaScanner();
+    ZeroScanner scanner = new ZeroScanner();
 
     @Before
     public void setup() {
@@ -42,6 +44,13 @@ public class TestAlphaScanner {
         when(buildHelper.fromIdV2(anyLong())).thenReturn(Optional.of(buildV2));
 
         scanner.setup();
+    }
+
+    @After
+    public void cleanup(){
+        //config singleton is not reset between tests and
+        //this setting causes some interference
+        RepairnatorConfig.getInstance().setDockerImageName(null);
     }
 
     @Test
