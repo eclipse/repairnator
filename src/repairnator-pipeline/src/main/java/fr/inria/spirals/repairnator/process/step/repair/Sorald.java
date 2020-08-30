@@ -55,7 +55,7 @@ public class Sorald extends AbstractRepairStep {
         Map<String, String> values = new HashMap<String, String>();
                 values.put("tools", String.join(",", this.getConfig().getRepairTools()));
                 StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
-        StringBuilder prTextBuilder = new StringBuilder().append("This PR fixes the violations for the following SonarQube rules: \n");
+        StringBuilder prTextBuilder = new StringBuilder().append("This PR fixes the violations for the following SonarSource rules: \n");
         String newBranchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
 
         for (String rule : RepairnatorConfig.getInstance().getSonarRules()) {
@@ -100,7 +100,7 @@ public class Sorald extends AbstractRepairStep {
             }
         }
 
-        prTextBuilder.append("If you do no want to receive automated PRs for SonarQube warnings, reply to this PR with 'STOP'");
+        prTextBuilder.append("If you do no want to receive automated PRs for SonarSource warnings, reply to this PR with 'STOP'");
         if (!patchFound) {
             return StepStatus.buildPatchNotFound(this);
         }
@@ -110,7 +110,7 @@ public class Sorald extends AbstractRepairStep {
             this.setPrText(prTextBuilder.toString());
             try {
                 this.pushPatches(this.forkedGit,this.forkedRepo,newBranchName);
-                this.setPRTitle("Fix SonarQube violations");
+                this.setPRTitle("Fix SonarSource violations");
                 this.createPullRequest(this.getInspector().getGitRepositoryBranch(),newBranchName);
             } catch(IOException | GitAPIException | URISyntaxException e) {
                 e.printStackTrace();
@@ -164,6 +164,6 @@ public class Sorald extends AbstractRepairStep {
                 this.addStepError("Error while executing git command to apply patch " + patch.getPath(), e);
             }
         }
-        git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for patching SonarQube rule " + ruleNumber).call();
+        git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for patching SonarSource rule " + ruleNumber).call();
     }
 }

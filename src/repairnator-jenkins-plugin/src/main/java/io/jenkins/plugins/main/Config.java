@@ -12,9 +12,9 @@ public class Config {
 	private String[] tools;
 	private String sonarRules;
 	private String soraldRepairMode;
-    private int soraldMaxFixesPerRule;
-    private int segmentSize;
-    private File workspaceDir;
+	private int soraldMaxFixesPerRule;
+	private int segmentSize;
+	private File workspaceDir;
 
 	public Config(){
 		this.stringConfig = new HashMap<String,String>();
@@ -152,34 +152,34 @@ public class Config {
 	}
 
 	public void setSoraldRepairMode(String soraldRepairMode) {
-        this.soraldRepairMode = soraldRepairMode;
-    }
+		this.soraldRepairMode = soraldRepairMode;
+	}
 
-    public String getSoraldRepairMode() {
-        return this.soraldRepairMode;
-    }
+	public String getSoraldRepairMode() {
+		return this.soraldRepairMode;
+	}
 
-    public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
-        this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
-    }
+	public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
+		this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
+	}
 
-    public int getSoraldMaxFixesPerRule() {
-        return this.soraldMaxFixesPerRule;
-    }
+	public int getSoraldMaxFixesPerRule() {
+		return this.soraldMaxFixesPerRule;
+	}
 
-    public void setSegmentSize(int segmentSize) {
-        this.segmentSize = segmentSize;
-    }
+	public void setSegmentSize(int segmentSize) {
+		this.segmentSize = segmentSize;
+	}
 
-    public int getSegmentSize() {
-        return this.segmentSize;
-    }
+	public int getSegmentSize() {
+		return this.segmentSize;
+	}
 
-    public void setWorkspaceDir(File workspaceDir) {
-    	this.workspaceDir = workspaceDir;
-    }
+	public void setWorkspaceDir(File workspaceDir) {
+		this.workspaceDir = workspaceDir;
+	}
 
-    public File getWorkspaceDir() {
-    	return this.workspaceDir;
-    }
+	public File getWorkspaceDir() {
+		return this.workspaceDir;
+	}
 }
