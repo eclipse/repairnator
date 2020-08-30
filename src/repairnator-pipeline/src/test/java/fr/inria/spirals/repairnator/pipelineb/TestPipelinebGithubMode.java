@@ -96,7 +96,7 @@ public class TestPipelinebGithubMode {
         mainProc.setPatchNotifier(patchNotifier);
         mainProc.run();
         assertEquals("PATCHED", mainProc.getInspector().getFinding());
-        assertEquals(1, patchNotifier.allpatches.size());
+        assertEquals(2, patchNotifier.allpatches.size());
     }
 
     @Ignore
