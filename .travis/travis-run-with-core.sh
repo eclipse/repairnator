@@ -10,4 +10,4 @@ sudo apt-get install -y xmlstarlet
 VERSION=`xmlstarlet sel -t -v '//_:project/_:properties/_:revision' src/pom.xml`
 sed -i -e 's/\${revision}/'$VERSION'/' src/repairnator-core/pom.xml
 
-mvn clean install -B -f src/repairnator-core/ && mvn -Dtest=$TEST_LIST clean test -B -f $TEST_PATH
+mvn clean install -B -f src/repairnator-core/ && mvn -Dtest=TestPipelinebGithubMode clean test -B -f $TEST_PATH

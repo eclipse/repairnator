@@ -1,7 +1,7 @@
 
 language: java
 
-jdk: openjdk8
+jdk: openjdk10
 
 services:
  - docker
@@ -17,6 +17,14 @@ cache:
 
 jobs:
   include:
+    - stage: test-extension
+      name: "repairnator-pipeline-b"
+      env:
+        - TEST_PATH="src/repairnator-pipeline/"
+        - TEST_LIST="TestPipelineb*"
+      install: ./.travis/travis-before.sh
+      script: travis_wait 50 ./.travis/travis-run-with-core.sh
+      if: branch = master
     - stage: test
       name: "repairnator-core"
       env:
@@ -28,13 +36,6 @@ jobs:
       env:
         - TEST_PATH="src/repairnator-pipeline/"
         - TEST_LIST="!TestPipelineb*"
-      install: ./.travis/travis-before.sh
-      script: travis_wait 50 ./.travis/travis-run-with-core.sh
-      if: branch = master
-    - name: "repairnator-pipeline-b"
-      env:
-        - TEST_PATH="src/repairnator-pipeline/"
-        - TEST_LIST="TestPipelineb*"
       install: ./.travis/travis-before.sh
       script: travis_wait 50 ./.travis/travis-run-with-core.sh
       if: branch = master

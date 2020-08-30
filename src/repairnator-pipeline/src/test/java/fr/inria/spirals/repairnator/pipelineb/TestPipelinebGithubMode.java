@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 import com.martiansoftware.jsap.JSAP;
 
 public class TestPipelinebGithubMode {
-    
+/*    
     @Test
     public void testPipelineOnlyGitRepository() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
@@ -78,10 +78,10 @@ public class TestPipelinebGithubMode {
         assertEquals("PATCHED", mainProc.getInspector().getFinding());
         assertEquals(10, patchNotifier.allpatches.size());
         assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
-    }
+    }*/
 
     @Test
-    public void testSoraldWithSuccess() throws Exception {
+    public void testSoraldWithSuccess() {
         RepairnatorConfig.getInstance().setSonarRules(new String[]{"2116"});
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                     "--gitrepo",
