@@ -6,9 +6,7 @@
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>repairnator-pipeline</artifactId>
-
     <repositories>
         <repository>
             <id>tdurieux-maven-repository-snapshot</id>
@@ -25,22 +23,11 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
-
     <dependencies>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.12</version>
-        </dependency>
         <dependency>
             <groupId>se.kth.castor</groupId>
             <artifactId>sorald</artifactId>
             <version>1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.inria.repairnator</groupId>
-            <artifactId>repairnator-core</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
@@ -64,6 +51,11 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>fr.inria.repairnator</groupId>
+            <artifactId>repairnator-core</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -128,14 +120,24 @@
             <artifactId>activemq-core</artifactId>
             <version>5.7.0</version>
         </dependency>
-        
     </dependencies>
-
+    <distributionManagement>
+        <repository>
+            <id>internal-repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/mvn-repo/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>internal-snapshot-repo</id>
+            <name>Temporary Staging Snapshot Repository</name>
+            <url>file://${project.build.directory}/mvn-repo/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+        <github.global.server>github</github.global.server>
     </properties>
-
     <build>
         <resources>
             <!-- Filter resource files -->
@@ -145,6 +147,36 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <repositoryOwner>fermadeiral</repositoryOwner> <!-- organization or user name  -->
+                    <repositoryName>maven-repository</repositoryName> <!-- github repo name -->
+                    <branch>refs/heads/master</branch> <!-- remote branch name -->
+                    <message>Maven artifacts for ${project.artifactId}-${project.version}</message> <!-- git commit message -->
+                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                    <merge>true</merge>
+                    <noJekyll>true</noJekyll> <!-- disable webpage processing -->
+                </configuration>
+                <executions>
+                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -162,6 +194,9 @@
                         <manifest>
                             <mainClass>fr.inria.spirals.repairnator.pipeline.Launcher</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
                     </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

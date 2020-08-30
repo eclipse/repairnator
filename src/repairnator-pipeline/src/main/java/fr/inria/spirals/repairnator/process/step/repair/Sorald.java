@@ -46,7 +46,6 @@ public class Sorald extends AbstractRepairStep {
         return TOOL_NAME;
     }
 
-
     @Override
     protected StepStatus businessExecute() {
         boolean patchFound = false;
@@ -56,25 +55,22 @@ public class Sorald extends AbstractRepairStep {
         Map<String, String> values = new HashMap<String, String>();
                 values.put("tools", String.join(",", this.getConfig().getRepairTools()));
                 StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
-        StringBuilder prTextBuilder = new StringBuilder().append("This PR fixes the violations for the following Sorald rules: \n");
+        StringBuilder prTextBuilder = new StringBuilder().append("This PR fixes the violations for the following SonarQube rules: \n");
         String newBranchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
 
         for (String rule : RepairnatorConfig.getInstance().getSonarRules()) {
             this.getLogger().info("Repo: " + pathToRepoDir);
             this.getLogger().info("Try to repair rule " + rule);
 
-            try {
-                Main.main(new String[]{
+            Main.main(new String[]{
                             "--originalFilesPath",pathToRepoDir,
                             "--ruleKeys",rule,
                             "--workspace",RepairnatorConfig.getInstance().getWorkspacePath(),
                             "--gitRepoPath",pathToRepoDir,
-                            "--prettyPrintingStrategy","SNIPER",
-                            "--maxFixesPerRule","1"});
-            } catch(Exception e) {
-                e.printStackTrace();
-                return StepStatus.buildSkipped(this,"Error while repairing with Sorald");
-            }
+                            "--repairStrategy",RepairnatorConfig.getInstance().getSoraldRepairMode().name(),
+                            "--maxFilesPerSegment","" + RepairnatorConfig.getInstance().getSegmentSize(),
+                            "--maxFixesPerRule","" + RepairnatorConfig.getInstance().getSoraldMaxFixesPerRule(),
+                            "--measureTime"});
 
             File patchDir = new File(RepairnatorConfig.getInstance().getWorkspacePath() + File.separator + "SoraldGitPatches");
 
@@ -104,7 +100,7 @@ public class Sorald extends AbstractRepairStep {
             }
         }
 
-        prTextBuilder.append("If you do no want to receive automated PRs for Sorald warnings, reply to this PR with 'STOP'");
+        prTextBuilder.append("If you do no want to receive automated PRs for SonarQube warnings, reply to this PR with 'STOP'");
         if (!patchFound) {
             return StepStatus.buildPatchNotFound(this);
         }
@@ -114,7 +110,7 @@ public class Sorald extends AbstractRepairStep {
             this.setPrText(prTextBuilder.toString());
             try {
                 this.pushPatches(this.forkedGit,this.forkedRepo,newBranchName);
-                this.setPRTitle("Fix Sorald violations");
+                this.setPRTitle("Fix SonarQube violations");
                 this.createPullRequest(this.getInspector().getGitRepositoryBranch(),newBranchName);
             } catch(IOException | GitAPIException | URISyntaxException e) {
                 e.printStackTrace();
@@ -168,6 +164,6 @@ public class Sorald extends AbstractRepairStep {
                 this.addStepError("Error while executing git command to apply patch " + patch.getPath(), e);
             }
         }
-        git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for patching Sorald rule " + ruleNumber).call();
+        git.commit().setAll(true).setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent()).setMessage("Proposal for patching SonarQube rule " + ruleNumber).call();
     }
 }

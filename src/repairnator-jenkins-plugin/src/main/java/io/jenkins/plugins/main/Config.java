@@ -1,18 +1,20 @@
 package io.jenkins.plugins.main;
 import java.io.File;
 import java.nio.file.Files;
-/*import com.google.common.io.Files;*/
 import java.util.HashMap;
 import hudson.tasks.Mailer;
 
 public class Config {
 	private static Config config;
-	private File tempDir;
 	private String setupHomePath;
 	private boolean quiet = false;
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
 	private String sonarRules;
+	private String soraldRepairMode;
+    private int soraldMaxFixesPerRule;
+    private int segmentSize;
+    private File workspaceDir;
 
 	public Config(){
 		this.stringConfig = new HashMap<String,String>();
@@ -27,17 +29,6 @@ public class Config {
 
 	public static void resetConfig() {
 		config = new Config();
-	}
-
-	public File getTempDir() {
-		if (this.tempDir == null) {
-			try {
-				this.tempDir = Files.createTempDirectory(Long.toString(System.nanoTime())).toFile();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return this.tempDir;
 	}
 
 	public void setSetupHomePath(String setupHomePath) {
@@ -159,4 +150,36 @@ public class Config {
 	public void switchQuiet() {
 		this.quiet = !this.quiet;
 	}
+
+	public void setSoraldRepairMode(String soraldRepairMode) {
+        this.soraldRepairMode = soraldRepairMode;
+    }
+
+    public String getSoraldRepairMode() {
+        return this.soraldRepairMode;
+    }
+
+    public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
+        this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
+    }
+
+    public int getSoraldMaxFixesPerRule() {
+        return this.soraldMaxFixesPerRule;
+    }
+
+    public void setSegmentSize(int segmentSize) {
+        this.segmentSize = segmentSize;
+    }
+
+    public int getSegmentSize() {
+        return this.segmentSize;
+    }
+
+    public void setWorkspaceDir(File workspaceDir) {
+    	this.workspaceDir = workspaceDir;
+    }
+
+    public File getWorkspaceDir() {
+    	return this.workspaceDir;
+    }
 }

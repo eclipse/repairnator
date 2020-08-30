@@ -54,6 +54,11 @@ public class RepairnatorConfig {
         OVERFITTING
     }
 
+    public enum SORALD_REPAIR_MODE {
+        DEFAULT,
+        SEGMENT
+    }
+
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -106,6 +111,10 @@ public class RepairnatorConfig {
 
     private String[] sonarRules;
     private boolean isStaticAnalysis;
+    private int soraldMaxFixesPerRule;
+    private int segmentSize;
+    private SORALD_REPAIR_MODE soraldRepairMode;
+    private boolean measureSoraldTime;
 
     private PATCH_RANKING_MODE patchRankingMode;
 
@@ -695,6 +704,37 @@ public class RepairnatorConfig {
         return this.isStaticAnalysis;
     }
 
+    public void setSegmentSize(int segmentSize) {
+        this.segmentSize = segmentSize;
+    }
+
+    public int getSegmentSize() {
+        return this.segmentSize;
+    }
+
+    public void setSoraldRepairMode(SORALD_REPAIR_MODE soraldRepairMode) {
+        this.soraldRepairMode = soraldRepairMode;
+    }
+
+    public SORALD_REPAIR_MODE getSoraldRepairMode() {
+        return this.soraldRepairMode;
+    }
+
+    public void setMeasureSoraldTime(boolean measureSoraldTime) {
+        this.measureSoraldTime = measureSoraldTime;
+    }
+
+    public boolean getMeasureSoraldTime() {
+        return this.measureSoraldTime;
+    }
+
+    public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
+        this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
+    }
+
+    public int getSoraldMaxFixesPerRule() {
+        return this.soraldMaxFixesPerRule;
+    }
     public PATCH_RANKING_MODE getPatchRankingMode() {
         return patchRankingMode;
     }
