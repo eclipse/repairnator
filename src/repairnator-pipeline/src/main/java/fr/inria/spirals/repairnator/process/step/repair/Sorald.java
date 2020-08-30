@@ -62,7 +62,8 @@ public class Sorald extends AbstractRepairStep {
             this.getLogger().info("Repo: " + pathToRepoDir);
             this.getLogger().info("Try to repair rule " + rule);
 
-            Main.main(new String[]{
+            try {
+                Main.main(new String[]{
                             "--originalFilesPath",pathToRepoDir,
                             "--ruleKeys",rule,
                             "--workspace",RepairnatorConfig.getInstance().getWorkspacePath(),
@@ -71,6 +72,9 @@ public class Sorald extends AbstractRepairStep {
                             "--maxFilesPerSegment","" + RepairnatorConfig.getInstance().getSegmentSize(),
                             "--maxFixesPerRule","" + RepairnatorConfig.getInstance().getSoraldMaxFixesPerRule(),
                             "--measureTime"});
+            } catch(Exception e) {
+                return StepStatus.buildSkipped(this,"Error while executing Sorald");
+            }
 
             File patchDir = new File(RepairnatorConfig.getInstance().getWorkspacePath() + File.separator + "SoraldGitPatches");
 
