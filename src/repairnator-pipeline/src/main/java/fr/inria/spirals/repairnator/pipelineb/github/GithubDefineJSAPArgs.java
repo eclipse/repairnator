@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.pipeline;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
+import static fr.inria.spirals.repairnator.config.RepairnatorConfig.SORALD_REPAIR_MODE;
 
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.FlaggedOption;
@@ -154,6 +155,35 @@ public class GithubDefineJSAPArgs implements IDefineJSAPArgs{
         opt.setListSeparator(',');
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
+        jsap.registerParameter(opt);
+
+        // Sorald config
+        opt = new FlaggedOption("sonarRules");
+        opt.setLongFlag("sonarRules");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("2116");
+        opt.setHelp("Required if SonarQube is specified in the repairtools as argument. Format: 1948,1854,RuleNumber.. . Supported rules: https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md");
+        jsap.registerParameter(opt);
+
+        opt = new FlaggedOption("soraldRepairMode");
+        opt.setLongFlag("soraldRepairMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault(SORALD_REPAIR_MODE.DEFAULT.name());
+        opt.setHelp("DEFAULT - default mode , load everything in at once into Sorald. SEGMENT - repair segments of the projects instead, segmentsize can be specified.");
+        jsap.registerParameter(opt);
+
+        opt = new FlaggedOption("segmentSize");
+        opt.setLongFlag("segmentSize");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("200");
+        opt.setHelp("Segment size for the segment repair.");
+        jsap.registerParameter(opt);
+
+        opt = new FlaggedOption("soraldMaxFixesPerRule");
+        opt.setLongFlag("soraldMaxFixesPerRule");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("2000");
+        opt.setHelp("Number of fixes per SonarQube rule.");
         jsap.registerParameter(opt);
 
         Switch sw = new Switch("tmpDirAsWorkSpace");
