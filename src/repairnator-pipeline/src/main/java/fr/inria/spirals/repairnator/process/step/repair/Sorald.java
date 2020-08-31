@@ -70,8 +70,7 @@ public class Sorald extends AbstractRepairStep {
                             "--workspace",RepairnatorConfig.getInstance().getWorkspacePath(),
                             "--gitRepoPath",pathToRepoDir,
                             "--prettyPrintingStrategy","SNIPER",
-                            "--maxFixesPerRule","1",
-                            "--maxFilesPerSegment","" + RepairnatorConfig.getInstance().getSegmentSize()});
+                            "--maxFixesPerRule","1"});
             } catch(Exception e) {
                 return StepStatus.buildSkipped(this,"Error while repairing with Sorald");
             }
