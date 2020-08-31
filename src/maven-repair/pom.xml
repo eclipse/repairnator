@@ -7,7 +7,7 @@
         <version>7</version>
     </parent>
 
-    <groupId>fr.inria.repairnator</groupId>
+    <groupId>fr.inria.gforge.spirals</groupId>
     <artifactId>repair-maven-plugin</artifactId>
     <version>1.6-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
