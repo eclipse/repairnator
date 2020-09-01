@@ -704,7 +704,7 @@ public class RepairnatorConfig {
         return this.isStaticAnalysis;
     }
 
-       public void setSegmentSize(int segmentSize) {
+    public void setSegmentSize(int segmentSize) {
         this.segmentSize = segmentSize;
     }
 
@@ -718,14 +718,6 @@ public class RepairnatorConfig {
 
     public SORALD_REPAIR_MODE getSoraldRepairMode() {
         return this.soraldRepairMode;
-    }
-
-    public void setMeasureSoraldTime(boolean measureSoraldTime) {
-        this.measureSoraldTime = measureSoraldTime;
-    }
-
-    public boolean getMeasureSoraldTime() {
-        return this.measureSoraldTime;
     }
 
     public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {

@@ -17,7 +17,6 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class BranchLauncher implements LauncherAPI{
 	private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
 	private String[] args;

@@ -62,15 +62,15 @@ public class Sorald extends AbstractRepairStep {
         for (String rule : RepairnatorConfig.getInstance().getSonarRules()) {
             this.getLogger().info("Repo: " + pathToRepoDir);
             this.getLogger().info("Try to repair rule " + rule);
-
-            try {
-                Main.main(new String[]{
+            String[] args = new String[]{
                             "--originalFilesPath",pathToRepoDir,
                             "--ruleKeys",rule,
-                            "--workspace",RepairnatorConfig.getInstance().getWorkspacePath(),
+                            "--workspace", this.getConfig().getWorkspacePath(),
                             "--gitRepoPath",pathToRepoDir,
                             "--prettyPrintingStrategy","SNIPER",
-                            "--maxFixesPerRule","1"});
+                            "--maxFixesPerRule","" + getConfig().getSoraldMaxFixesPerRule()};
+            try {
+                Main.main(args);
             } catch(Exception e) {
                 return StepStatus.buildSkipped(this,"Error while repairing with Sorald");
             }
