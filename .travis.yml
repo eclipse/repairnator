@@ -36,6 +36,9 @@ jobs:
         - TEST_PATH="src/repairnator-pipeline/"
         - TEST_LIST="TestPipelineb*"
       install: ./.travis/travis-before.sh
+      before-script:
+        - git clone https://github.com/SpoonLabs/sorald.git
+        - mvn install -DskipTests -f sorald
       script: travis_wait 50 ./.travis/travis-run-with-core.sh
       if: branch = master
     - name: "repairnator-realtime"
