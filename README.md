@@ -7,6 +7,8 @@ Eclipse/repairnator is a welcoming community :-) You're welcome to join the comm
 
 Repairnator is done by a [a nice team](https://github.com/eclipse/repairnator/contributors) of welcoming engineers and researchers. 
 
+[![youtube video about Repairnator](https://user-images.githubusercontent.com/803666/92466891-4ca33280-f1c0-11ea-89b1-bb7d43d93d03.png)](https://www.youtube.com/watch?v=sHkogNGyBSs)
+
 ## Documentation
 
 The entry point to the documentation is <https://github.com/eclipse/repairnator/blob/master/doc/README.md>. The post ["Repairnator patches programs automatically"](https://ubiquity.acm.org/article.cfm?id=3349589) gives a high-level overview of Repairnator.
