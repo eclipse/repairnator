@@ -6,7 +6,6 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.messages.*;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
-import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
@@ -14,8 +13,6 @@ import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.*;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ResetCommand;
 
 import java.io.*;
 import java.net.URL;
@@ -85,7 +82,12 @@ public class SequencerRepair extends AbstractRepairStep {
             return StepStatus.buildSkipped(this,"Classpath or Sources not computed.");
         }
 
+        detectionStrategy.setup(getInspector(), getPom(), getLogger());
         List<ModificationPoint> suspiciousPoints = detectionStrategy.detect(this);
+
+        if(suspiciousPoints.isEmpty()){
+            return StepStatus.buildPatchNotFound(this);
+        }
 
         /// pull Sequencer if image not present
 
@@ -232,16 +234,10 @@ public class SequencerRepair extends AbstractRepairStep {
 
             List<String> diffs = result.getDiffs();
 
+
             Stream<RepairPatch> patches = diffs.stream()
                 .map(diff -> new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff))
-//                .filter(patch -> {
-//                    Properties properties = new Properties();
-//                    properties.setProperty(MavenHelper.SKIP_TEST_PROPERTY, "true");
-//                    return testMavenGoal(patch, "package", properties); })
-                .filter(patch -> {
-                    Properties properties = new Properties();
-                    return testMavenGoal(patch, "test", properties);
-                });
+                .filter(detectionStrategy::validate);
 
             return patches;
 
@@ -250,6 +246,8 @@ public class SequencerRepair extends AbstractRepairStep {
         if(listPatches.isEmpty()){
             return StepStatus.buildPatchNotFound(this);
         }
+
+        notify(listPatches);
 
         this.recordPatches(listPatches,MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiagnostic);
@@ -267,38 +265,5 @@ public class SequencerRepair extends AbstractRepairStep {
 
         return StepStatus.buildSuccess(this);
 
-    }
-
-    private boolean testMavenGoal( RepairPatch patch, String goal, Properties properties ){
-
-        //Create replica as git branch and apply patch
-        String patchName = Paths.get(patch.getFilePath()).getFileName().toString() + "-" + UUID.randomUUID();
-        boolean success = false;
-        try {
-            Git git = Git.open(new File(getInspector().getRepoLocalPath()));
-            String defaultBranch = git.getRepository().getBranch();
-
-            git.branchCreate().setStartPoint(defaultBranch).setName(patchName).call();
-            git.checkout().setName(patchName).call();
-
-            InputStream is = new ByteArrayInputStream(patch.getDiff().getBytes());
-            git.apply().setPatch(is).call();
-
-            //Build and test with applied patch
-            MavenHelper maven = new MavenHelper(getPom(), goal, properties, "sequencer-builder", getInspector(), true);
-
-            int result  = maven.run();
-
-            git.reset().setMode(ResetCommand.ResetType.HARD).call();
-
-            git.checkout().setName(defaultBranch).call();
-            git.branchDelete().setBranchNames(patchName).call();
-
-            return result == MavenHelper.MAVEN_SUCCESS;
-
-        } catch (Exception e) {
-            getLogger().error("error while testing if patch is buildable");
-            throw new RuntimeException(e);
-        }
     }
 }

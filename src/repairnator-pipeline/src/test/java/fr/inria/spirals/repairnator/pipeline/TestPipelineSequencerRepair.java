@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import com.martiansoftware.jsap.FlaggedOption;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class TestPipelineSequencerRepair {
 
     @Test
     public void TestPipelineBuildFailBranch() throws Exception{
-        // 703887431 -> javierron/faining project -> syntax error
+        // 713361530 -> javierron/faining project -> syntax error
         Launcher launcher = new Launcher(new String[]{"--build", "713361530", "--sequencerRepair" });
         // config is forced to use SequencerRepair as the only repair tool.
         assertEquals(1, launcher.getConfig().getRepairTools().size());
