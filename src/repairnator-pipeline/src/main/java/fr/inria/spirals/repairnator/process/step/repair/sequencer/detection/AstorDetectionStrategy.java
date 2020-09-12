@@ -6,15 +6,24 @@ import fr.inria.main.CommandSummary;
 import fr.inria.main.evolution.AstorMain;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class AstorDetectionStrategy implements DetectionStrategy {
+
+    MavenPatchTester mavenTester;
+
+    void setMavenTester(MavenPatchTester tester){
+        this.mavenTester = tester;
+    }
 
     @Override
     public List<ModificationPoint> detect(SequencerRepair repairStep) {
@@ -36,11 +45,8 @@ public class AstorDetectionStrategy implements DetectionStrategy {
         cs.command.put("-mode", "custom");
         cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
         cs.command.put("-location", jobStatus.getFailingModulePath());
-//        cs.command.put("-ingredientstrategy", "fr.inria.astor.test.repair.evaluation.extensionpoints.ingredients.MaxLcsSimSearchStrategy");
         cs.command.put("-flthreshold", "0.5");
         cs.command.put("-maxgen", "0");
-//        cs.command.put("-population", "1");
-//        cs.command.put("-seed", "1");
         cs.command.put("-javacompliancelevel", "8");
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
         cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"
@@ -52,6 +58,8 @@ public class AstorDetectionStrategy implements DetectionStrategy {
             astorMain.execute(cs.flat());
         } catch (Exception e) {
             repairStep.addStepError("Got exception when running SequencerRepair: ", e);
+            //ignore Astor/GZoltar error, return empty list and exit.
+            return new ArrayList<>();
         }
         // construct ZmEngine
         ZmEngine zmengine = (ZmEngine) astorMain.getEngine();
@@ -61,5 +69,16 @@ public class AstorDetectionStrategy implements DetectionStrategy {
                 .map(ModificationPoint::CreateFrom)
                 .collect(Collectors.toList()
         );
+    }
+
+    @Override
+    public boolean validate(RepairPatch patch) {
+        Properties properties = new Properties();
+        return mavenTester.apply(patch, "test", properties);
+    }
+
+    @Override
+    public void setup(ProjectInspector inspector, String pom, Logger logger) {
+        setMavenTester(new MavenPatchTester(inspector, pom, logger));
     }
 }
