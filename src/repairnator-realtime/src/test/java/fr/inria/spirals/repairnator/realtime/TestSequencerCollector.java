@@ -42,10 +42,10 @@ public class TestSequencerCollector {
     }
     
     @Test
-    public void testDiffSaveAndPush() throws GitAPIException, IOException{
+    public void testDiffSaveAndPush() throws IOException{
         
-        ArrayList<SequencerCollectorPatch> emptyList = new ArrayList<SequencerCollectorPatch>();
-        ArrayList<SequencerCollectorHunk> mockHunkList = new ArrayList<SequencerCollectorHunk>(); mockHunkList.add(
+        ArrayList<SequencerCollectorPatch> emptyList = new ArrayList<>();
+        ArrayList<SequencerCollectorHunk> mockHunkList = new ArrayList<>(); mockHunkList.add(
                 new SequencerCollectorHunk(1, "file.java", "hunk1")); 
 
         //Mock external calls
@@ -54,7 +54,7 @@ public class TestSequencerCollector {
         
         
         //Mock hunk filter since mock commit is used
-        Mockito.when(filter.getCommitPatches(Mockito.any(GHCommit.class), Mockito.anyBoolean(), Mockito.anyBoolean())).thenReturn(emptyList);
+        Mockito.when(filter.getCommitPatches(Mockito.any(GHCommit.class), Mockito.anyBoolean(), Mockito.anyInt())).thenReturn(emptyList);
         Mockito.when(filter.getHunks(Mockito.any(ArrayList.class), Mockito.anyBoolean(), Mockito.anyInt())).thenReturn(mockHunkList);
         
         //Mock save/commit/push methods

@@ -36,24 +36,27 @@ public class SequencerCollector {
     private int hunkDistance;
     private Set<String> done;
     private int currentBatch;
-    
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) {
+    private int contextSize;
+
+
+    public SequencerCollector(int contextSize, boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) {
         
         this.filterMultiFile = filterMultiFile;
         this.filterMultiHunk = filterMultiHunk;
         this.hunkDistance = hunkDistance;
         this.done = new HashSet<>();
+        this.contextSize = contextSize;
 
         filter = new PatchFilter();
     }
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk) {
-        this(filterMultiFile, filterMultiHunk, 0);
+    public SequencerCollector(int contextSize, boolean filterMultiFile, boolean filterMultiHunk) {
+        this(3, filterMultiFile, filterMultiHunk, 0);
     }
 
-    public SequencerCollector() {
-        this(false, false, 0);
+    public SequencerCollector(int contextSize) {
+        this(3, false, false, 0);
     }
 
     public void handle(String repositorySlug, String sha) {
@@ -69,7 +72,7 @@ public class SequencerCollector {
             repo = github.getRepository(repositorySlug);
             commit = repo.getCommit(sha);
 
-            ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+            ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, contextSize);
             ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
 
             if (hunks.size() > 0) {

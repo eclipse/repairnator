@@ -4,6 +4,7 @@ import fr.inria.jtravis.entities.StateType;
 import fr.inria.jtravis.entities.v2.BuildV2;
 import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.SequencerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +34,10 @@ public class SequencerLearnerScanner implements Runnable {
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
         JobHelperv2 jobHelperv2 = new JobHelperv2(RepairnatorConfig.getInstance().getJTravis());
-        SequencerCollector collector = null;
+        SequencerCollector collector;
         
         try {
-            collector = new SequencerCollector();
+            collector = new SequencerCollector(SequencerConfig.getInstance().contextSize);
             collector.initialize();
         } catch (IOException e1) {
             throw new RuntimeException(e1);

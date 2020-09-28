@@ -13,6 +13,7 @@ public final class SequencerConfig {
     public final int beamSize;
     public final int timeout;
     public final String collectorPath;
+    public final int contextSize;
 
     private static SequencerConfig instance;
 
@@ -23,6 +24,8 @@ public final class SequencerConfig {
         this.timeout = Integer.parseInt(getEnvOrDefault("SEQUENCER_TIMEOUT", "120"));
         this.collectorPath = getEnvOrDefault("SEQUENCER_COLLECTOR_PATH",
                 System.getProperty("user.home") + "/continuous-learning-data");
+        this.contextSize = Integer.parseInt(getEnvOrDefault("SEQUENCER_CONTEXT_SIZE", "3"));
+
     }
 
     private String getEnvOrDefault(String name, String dfault){

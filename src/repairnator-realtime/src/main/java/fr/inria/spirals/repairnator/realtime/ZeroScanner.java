@@ -62,7 +62,7 @@ public class ZeroScanner implements Runnable {
     public ZeroScanner() {
         this.rtScanner = new RTScanner(UUID.randomUUID().toString());
         this.buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
-        this.collector = new SequencerCollector();
+        this.collector = new SequencerCollector(SequencerConfig.getInstance().contextSize);
     }
 
     @Override
