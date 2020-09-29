@@ -11,7 +11,7 @@
     <repositories>
         <repository>
           <id>jmx.management</id>
-          <url>http://www.datanucleus.org:15080/downloads/maven2/</url>
+          <url>https://www.datanucleus.org/downloads/maven2/</url>
         </repository>
       </repositories>
     <dependencies>
