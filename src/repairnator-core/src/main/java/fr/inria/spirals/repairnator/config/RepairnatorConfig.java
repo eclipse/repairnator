@@ -53,7 +53,11 @@ public class RepairnatorConfig {
         NONE,
         OVERFITTING
     }
-
+   
+    /** 
+      * DEFAULT - the project files is scanned by Sorald as a single unit. If the repair fails then it fails completely and no fixes are produced if there could have been any
+      * SEGMENT - the project is sliced into fix-sized segments to be scanned one by one. If the repair fails for a segment, it will salvage the situation by continuing on with other segments
+      */
     public enum SORALD_REPAIR_MODE {
         DEFAULT,
         SEGMENT
