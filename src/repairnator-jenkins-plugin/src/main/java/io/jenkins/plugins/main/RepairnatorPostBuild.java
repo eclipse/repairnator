@@ -56,6 +56,7 @@ import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
+import hudson.Util;
 import jenkins.model.Jenkins;
 
 import java.util.List;
@@ -69,8 +70,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
+import java.util.Locale;
 
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
@@ -107,9 +111,12 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean rule4973;
 
     private SonarRulesBlock sonarRulesBlock;
+    private String soraldRepairMode;
+    private int soraldMaxFixesPerRule;
+    private int segmentSize;
 
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,SonarRulesBlock sonarRulesBlock) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo, String soraldRepairMode, int segmentSize, int soraldMaxFixesPerRule,SonarRulesBlock sonarRulesBlock) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
@@ -118,6 +125,24 @@ public class RepairnatorPostBuild extends Recorder {
         if (sonarRulesBlock != null) {
             sonarRulesBlock.rulesProvided = true;
         } 
+
+        if (soraldRepairMode == null) {
+            this.soraldRepairMode = "DEFAULT";
+        } else {
+            this.soraldRepairMode = soraldRepairMode;
+        }
+
+        if (soraldMaxFixesPerRule <= 0) {
+            this.soraldMaxFixesPerRule = 2000;
+        } else {
+            this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
+        }
+
+        if (segmentSize <= 0) {
+            this.segmentSize = 200;
+        } else {
+            this.segmentSize = segmentSize;
+        }
     }
 
     public RepairnatorPostBuild() {
@@ -220,6 +245,30 @@ public class RepairnatorPostBuild extends Recorder {
 
     public boolean getRule4973() {
         return SonarRulesBlock.rule4973;
+    }
+
+    public void setSoraldRepairMode(String soraldRepairMode) {
+        this.soraldRepairMode = soraldRepairMode;
+    }
+
+    public String getSoraldRepairMode() {
+        return this.soraldRepairMode;
+    }
+
+    public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
+        this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
+    }
+
+    public int getSoraldMaxFixesPerRule() {
+        return this.soraldMaxFixesPerRule;
+    }
+
+    public void setSegmentSize(int segmentSize) {
+        this.segmentSize = segmentSize;
+    }
+
+    public int getSegmentSize() {
+        return this.segmentSize;
     }
 
     public void setGitUrl(String gitUrl) {
@@ -352,10 +401,13 @@ public class RepairnatorPostBuild extends Recorder {
                                         .asNoTravisRepair()
                                         .alsoCreatePR()
                                         .withMavenHome(config.getMavenHome())
-                                        .atWorkSpace(config.getTempDir().getAbsolutePath())
-                                        .withOutputDir(config.getTempDir().getAbsolutePath());
+                                        .atWorkSpace(config.getWorkspaceDir().getAbsolutePath())
+                                        .withOutputDir(config.getWorkspaceDir().getAbsolutePath())
+                                        .withSegmentSize(config.getSegmentSize())
+                                        .withSoraldRepairMode(config.getSoraldRepairMode())
+                                        .withSoraldMaxFixesPerRule(config.getSoraldMaxFixesPerRule());
 
-        ProcessBuilder builder = repProcBuilder.build().directory(config.getTempDir());
+        ProcessBuilder builder = repProcBuilder.build().directory(config.getWorkspaceDir());
         builder.redirectErrorStream(true);
         builder.inheritIO().redirectOutput(ProcessBuilder.Redirect.PIPE);
         Process process = builder.start();
@@ -367,9 +419,8 @@ public class RepairnatorPostBuild extends Recorder {
     public String decideGitBranch(EnvVars env) {
         String branch = "";
         if (this.gitBranch.equals("")) {
-            String branchEnv = env.get("GIT_BRANCH");
-            branch = branchEnv == null || branchEnv.equals("") ? "master" : env.get("GIT_BRANCH");
-            if (branch.split("/").length >= 2) {
+            branch = env.get("GIT_BRANCH");
+            if (branch != null && branch.split("/").length >= 2) {
                 branch = branch.split("/")[1];
             }
         } else {
@@ -451,10 +502,16 @@ public class RepairnatorPostBuild extends Recorder {
         String javaHome = env.get("JAVA_HOME");
         String javaExec = javaHome + File.separator + "bin" + File.separator + "java";
         String jarLocation =  setupHome + File.separator + "repairnator.jar";
+        String workspace = env.get("JENKINS_HOME") + File.separator + "userContent" + File.separator + "RepairnatorWorkspace";
 
         File setupDir = new File(setupHome);
         if (!setupDir.exists()) {
             setupDir.mkdirs();
+        }
+
+        File workspaceDir = new File(workspace);
+        if (!workspaceDir.exists()) {
+            workspaceDir.mkdirs();
         }
         config.setSetupHomePath(setupHome);
         config.setJavaExec(javaExec);
@@ -465,12 +522,15 @@ public class RepairnatorPostBuild extends Recorder {
         config.setTools(this.getTools());
         config.setNotifyTo(this.notifyTo);
         config.setSonarRules(SonarRulesBlock.constructCmdStr4Rules());
+        config.setSoraldRepairMode(this.soraldRepairMode);
+        config.setSoraldMaxFixesPerRule(this.soraldMaxFixesPerRule);
+        config.setSegmentSize(this.segmentSize);
+        config.setWorkspaceDir(workspaceDir);
     }
 
     public void cleanUp(){
         try {
-            FileUtils.cleanDirectory(this.config.getTempDir());
-            this.config.getTempDir().delete();
+            FileUtils.cleanDirectory(this.config.getWorkspaceDir());
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -501,19 +561,13 @@ public class RepairnatorPostBuild extends Recorder {
         }
     }
 
-    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
-        long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
-    }
-
-
     private boolean shouldDownloadJar() throws IOException{
         File jar = new File(this.getConfig().getJarLocation());
         if (jar.exists()) {
             BasicFileAttributes attr = Files.readAttributes(jar.toPath(), BasicFileAttributes.class);
             Date creationTime = Date.from(attr.creationTime().toInstant());
             Date today = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-            if (getDateDiff(creationTime,today,TimeUnit.DAYS) >= 30) { // redownload jar after a month
+            if (Helpers.getDateDiff(creationTime,today,TimeUnit.DAYS) >= 30) { // redownload jar after a month
                 System.out.println("Jar will be updated");
                 jar.delete();
                 return true;
@@ -530,6 +584,7 @@ public class RepairnatorPostBuild extends Recorder {
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
         System.setOut(listener.getLogger());
         System.setErr(listener.getLogger());
+        long startTime = System.currentTimeMillis();
         try {
             EnvVars env = build.getEnvironment(listener);
             String branch = this.decideGitBranch(env);
@@ -542,7 +597,7 @@ public class RepairnatorPostBuild extends Recorder {
             this.configure(url,branch,env);
 
             System.out.println("The following tools will be used : " + Arrays.toString(this.config.getTools()));
-            System.out.println("workspace for repairnator: " + this.config.getTempDir().getAbsolutePath());
+            System.out.println("workspace for repairnator: " + this.config.getWorkspaceDir().getAbsolutePath());
 
             String snapShotUrl = "https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-pipeline";
 
@@ -557,12 +612,14 @@ public class RepairnatorPostBuild extends Recorder {
                 MavenCustomInstaller mvn = new MavenCustomInstaller(build,listener,config.getMavenHome());
                 mvn.install();
             }
-
             this.runRepairnator(env);
-            this.cleanUp();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        
+        this.cleanUp();
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println("[Total Repair Duration]: " + Util.getTimeSpanString(estimatedTime));
         return true;
     }
 
@@ -647,6 +704,8 @@ public class RepairnatorPostBuild extends Recorder {
         public boolean getUseSorald() {
             return useSorald;
         }
+
+
     }
 
     public static final class SonarRulesBlock {
