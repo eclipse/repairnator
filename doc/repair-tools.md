@@ -65,9 +65,9 @@ Repairnator currently supports only one strategy for AssertFixer.
 
 It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AssertFixer`.
 
-### SonarQube Repair
-[SonarQube Repair](https://github.com/kth-tcs/sonarqube-repair) is a repair tool dedicted to fix static bugs by analyzing source codes with [Spoon](https://github.com/INRIA/spoon) 
+### Sorald
+[Sorald](https://github.com/kth-tcs/sonarqube-repair) is a repair tool dedicted to fix static bugs by analyzing source codes with [Spoon](https://github.com/INRIA/spoon) 
 
 Currently this tool supports the following [rules](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md) on SonarQube 
 
-It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `SonarQubeRepair` with the corresponding handled rulenumber [in the configuration](repairnator-config.md#REPAIR_TOOLS). [Current supported ruleNumbers](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md)
+It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `Sorald` with the corresponding handled rulenumber [in the configuration](repairnator-config.md#REPAIR_TOOLS). [Current supported ruleNumbers](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md)
