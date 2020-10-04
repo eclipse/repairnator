@@ -59,7 +59,7 @@ public class Launcher implements LauncherAPI {
         } else {
             launcher = new BranchLauncher(args);
         }
-        RepairnatorConfig.getInstance().setSonarRules(removeDuplicatesInArray(jsapResult.getString("sonarRules").split(",")));
+
         launcher.launch();
     }
 

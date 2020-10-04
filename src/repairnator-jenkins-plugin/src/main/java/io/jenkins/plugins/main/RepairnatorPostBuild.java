@@ -599,12 +599,13 @@ public class RepairnatorPostBuild extends Recorder {
             System.out.println("The following tools will be used : " + Arrays.toString(this.config.getTools()));
             System.out.println("workspace for repairnator: " + this.config.getWorkspaceDir().getAbsolutePath());
 
-            String snapShotUrl = "https://repo.jenkins-ci.org/snapshots/fr/inria/repairnator/repairnator-pipeline";
+            String snapShotUrl = "https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/repairnator-pipeline/";
 
             File jar = new File(this.getConfig().getJarLocation());
             if (this.shouldDownloadJar()) {
                 RepairnatorJarDownloader repJarDownloader = new RepairnatorJarDownloader(snapShotUrl,this.getConfig().getJarLocation());
-                repJarDownloader.downloadJarHardCoded("https://github.com/henry-lp/mvn-repo/raw/master/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar");
+                repJarDownloader.download();
+                // repJarDownloader.downloadJarHardCoded("https://github.com/henry-lp/mvn-repo/raw/master/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar");
             }
 
             if (this.shouldInstallMaven(env)) {

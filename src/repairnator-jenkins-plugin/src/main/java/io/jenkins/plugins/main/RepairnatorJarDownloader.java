@@ -27,25 +27,27 @@ public class RepairnatorJarDownloader implements Downloader{
         String latestSnapshot = "";
         String latestJar = "";
         for (Element file : doc.select("a[href*=SNAPSHOT]")) {
-            latestSnapshot = file.attr("href");
+            if (file.attr("href").contains("SNAPSHOT")) {
+                latestSnapshot = file.attr("href");
+            }
         }
 
-        String jarUrl = snapshotUrl + "/" + latestSnapshot;
+        System.out.println(latestSnapshot);
 
-        HTMLPageDownloader htmlDownloader = new HTMLPageDownloader(jarUrl);
+        HTMLPageDownloader htmlDownloader = new HTMLPageDownloader(latestSnapshot);
         String docStr = htmlDownloader.downloadAndGetHTML();
         doc = Jsoup.parse(docStr);
         for (Element file : doc.select("a[href*=jar-with-dependencies]")) {
-            latestJar = file.attr("href");
+            if (file.attr("href").endsWith("jar-with-dependencies.jar")) {
+                latestJar = file.attr("href");
+            }
         }
-
-        System.out.println("LatestJarUrl: " + jarUrl  + latestJar);
-        return jarUrl +  latestJar;
+        return latestJar;
     }
 
     public void downloadJar(String snapshotUrl_in,String absoluteJarFilePath_in) throws IOException{
         String latestJarUrl = this.getLatestJarUrl(snapshotUrl_in);
-
+        System.out.println(absoluteJarFilePath_in);
         FileDownloader fileDownloader = new FileDownloader(latestJarUrl,absoluteJarFilePath_in);
         fileDownloader.download();
     }
