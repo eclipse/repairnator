@@ -605,7 +605,6 @@ public class RepairnatorPostBuild extends Recorder {
             if (this.shouldDownloadJar()) {
                 RepairnatorJarDownloader repJarDownloader = new RepairnatorJarDownloader(snapShotUrl,this.getConfig().getJarLocation());
                 repJarDownloader.download();
-                // repJarDownloader.downloadJarHardCoded("https://github.com/henry-lp/mvn-repo/raw/master/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar");
             }
 
             if (this.shouldInstallMaven(env)) {

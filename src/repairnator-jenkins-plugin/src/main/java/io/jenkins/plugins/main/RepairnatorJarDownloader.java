@@ -32,8 +32,6 @@ public class RepairnatorJarDownloader implements Downloader{
             }
         }
 
-        System.out.println(latestSnapshot);
-
         HTMLPageDownloader htmlDownloader = new HTMLPageDownloader(latestSnapshot);
         String docStr = htmlDownloader.downloadAndGetHTML();
         doc = Jsoup.parse(docStr);
@@ -47,7 +45,6 @@ public class RepairnatorJarDownloader implements Downloader{
 
     public void downloadJar(String snapshotUrl_in,String absoluteJarFilePath_in) throws IOException{
         String latestJarUrl = this.getLatestJarUrl(snapshotUrl_in);
-        System.out.println(absoluteJarFilePath_in);
         FileDownloader fileDownloader = new FileDownloader(latestJarUrl,absoluteJarFilePath_in);
         fileDownloader.download();
     }
