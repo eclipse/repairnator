@@ -4,6 +4,7 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.v2.BuildV2;
 import fr.inria.jtravis.entities.v2.JobV2;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,7 @@ public class ZeroScanner implements Runnable {
         this.rtScanner = new RTScanner(UUID.randomUUID().toString());
         this.buildHelper = new BuildHelperV2(RepairnatorConfig.getInstance().getJTravis());
         this.collector = new SequencerCollector(SequencerConfig.getInstance().contextSize);
+        
     }
 
     @Override

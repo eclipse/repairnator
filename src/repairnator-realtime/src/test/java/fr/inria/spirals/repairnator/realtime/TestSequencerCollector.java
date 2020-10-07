@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Before;
@@ -54,7 +55,8 @@ public class TestSequencerCollector {
         
         
         //Mock hunk filter since mock commit is used
-        Mockito.when(filter.getCommitPatches(Mockito.any(GHCommit.class), Mockito.anyBoolean(), Mockito.anyInt())).thenReturn(emptyList);
+        Mockito.when(filter.getCommitPatches(Mockito.any(GHCommit.class), Mockito.anyBoolean(), Mockito.anyInt(), Mockito.any(Map.class)))
+                .thenReturn(emptyList);
         Mockito.when(filter.getHunks(Mockito.any(ArrayList.class), Mockito.anyBoolean(), Mockito.anyInt())).thenReturn(mockHunkList);
         
         //Mock save/commit/push methods
