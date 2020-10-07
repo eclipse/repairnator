@@ -10,7 +10,7 @@ The following command line tools must be installed on your machine:
   - Oracle Java: some dependencies need tools.jar in the classpath;
   - cloc: we compute some metrics with cloc;
   - git: to apply some git commands;
-  - z3: a constraint solver (the executables are available in [pipeline test resources](/repairnator/repairnator-pipeline/src/test/resources/z3)).
+  - z3: a constraint solver (the executables are available in [pipeline test resources](/src/repairnator-pipeline/src/test/resources/z3)).
 
 ```
 $ git clone https://github.com/eclipse/repairnator/
