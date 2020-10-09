@@ -15,21 +15,11 @@ It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with t
 Repairnator supports different strategies to run Nopol.
 Nopol is currently configured in Repairnator to find a patch in a maximum of 4 hours.
 
-### NopolAllTests
+**NopolAllTests**  With this strategy, Nopol will try to find a patch that fix all the failing tests, from all tests classes of the project. This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolAllTests`.
 
-With this strategy, Nopol will try to find a patch that fix all the failing tests, from all tests classes of the project.
+**NopolSingleTest** With this strategy, Nopol will be launched back for each test class with a failing test: it will try to find a patch for each test class in failure. This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolSingleTest`.
 
-This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolAllTests`.
-
-### NopolSingleTest
-
-With this strategy, Nopol will be launched back for each test class with a failing test: it will try to find a patch for each test class in failure.
-
-This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolSingleTest`.
-
-### NopolTestExclusionStrategy
-
-In this strategy, we consider that there is more chance to find a patch for a failing test (i.e., a test with an `AssertionError`) than for an erroring test (i.e., a test which fails with any other exception).
+**NopolTestExclusionStrategy** In this strategy, we consider that there is more chance to find a patch for a failing test (i.e., a test with an `AssertionError`) than for an erroring test (i.e., a test which fails with any other exception).
 This strategy will launch Nopol for each test class, but it will try to ignore erroring tests first to find a patch, and then it will look for a patch ignoring failing tests.
 
 This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolTestExclusionStrategy`.
@@ -40,23 +30,11 @@ This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TO
 Repairnator supports different strategies to run Astor.
 Astor is currently configured in Repairnator to find a patch in a maximum of 100 minutes.
 
-### AstorJGenProg
+**AstorJGenProg** In this strategy, we are using Astor [with the mode JGenProg](https://github.com/SpoonLabs/astor#jgenprog), an implementation of GenProg. This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AstorJGenProg`.
 
-In this strategy, we are using Astor [with the mode JGenProg](https://github.com/SpoonLabs/astor#jgenprog), an implementation of GenProg.
+**AstorJKali** In this strategy, we are using Astor [with the mode JKali](https://github.com/SpoonLabs/astor#jkali), an implementation of Kali. This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AstorJKali`.
 
-This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AstorJGenProg`.
-
-### AstorJKali
-
-In this strategy, we are using Astor [with the mode JKali](https://github.com/SpoonLabs/astor#jkali), an implementation of Kali.
-
-This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AstorJKali`.
-
-### AstorJMut
-
-In this strategy, we are using Astor [with the mode JMutRepair](https://github.com/SpoonLabs/astor#jmutrepair), an implementation of mutation-based repair.
-
-This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AstorJMut`.
+**AstorJMut** In this strategy, we are using Astor [with the mode JMutRepair](https://github.com/SpoonLabs/astor#jmutrepair), an implementation of mutation-based repair. This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AstorJMut`.
 
 ## AssertFixer
 
@@ -65,7 +43,7 @@ Repairnator currently supports only one strategy for AssertFixer.
 
 It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `AssertFixer`.
 
-### Sorald
+## Sorald
 [Sorald](https://github.com/kth-tcs/sonarqube-repair) is a repair tool dedicted to fix static bugs by analyzing source codes with [Spoon](https://github.com/INRIA/spoon) 
 
 Currently this tool supports the following [rules](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md) on SonarQube 
@@ -80,3 +58,10 @@ Additional parameters:
 * `--soraldMaxFixesPerRule`: specify the upper bound of the number of warning fixes.
 * `--segmentSize`: the number of files per segment if Sorald runs in Segment mode.
 
+## Sequencer
+
+[Sequencer](http://arxiv.org/pdf/1901.01808) is a repair tool based on machine learning with sequence-to-sequence. You run it as follows:
+
+    docker run -e BUILD_ID=<TRAVIS_BUILD_ID> -e REPAIR_TOOLS=SequencerRepair repairnator/pipeline
+
+The main class is [SequencerRepair](https://github.com/eclipse/repairnator/blob/master/src/repairnator-pipeline/src/main/java/fr/inria/spirals/repairnator/process/step/repair/sequencer/SequencerRepair.java)
