@@ -67,37 +67,37 @@ public class MainProcessFactory {
 	}
 
 	/* Standard repair with Travis build id */
-	public static MainProcess getDefaultMainProcess(String[] inputArgs) {
+	public static MainProcess getTravisMainProcess(String[] inputArgs) {
 
-		TravisDefineJSAPArgs defaultDefineJSAPArgs = new TravisDefineJSAPArgs();
-		TravisInitConfig defaultInitConfig = new TravisInitConfig();
-		TravisInitNotifiers defaultInitNotifiers = new TravisInitNotifiers();
-		TravisInitSerializerEngines defaultInitSerializerEngines = new TravisInitSerializerEngines();
+		TravisDefineJSAPArgs travisDefineJSAPArgs = new TravisDefineJSAPArgs();
+		TravisInitConfig travisInitConfig = new TravisInitConfig();
+		TravisInitNotifiers travisInitNotifiers = new TravisInitNotifiers();
+		TravisInitSerializerEngines travisInitSerializerEngines = new TravisInitSerializerEngines();
 		
 		JSAP jsap;
 		try {
-			jsap = defaultDefineJSAPArgs.defineArgs();
+			jsap = travisDefineJSAPArgs.defineArgs();
 		} catch (JSAPException e) {
 			throw new RuntimeException("Failed to parse JSAP");
 		}
-		defaultInitConfig.initConfigWithJSAP(jsap,inputArgs);
-		defaultInitSerializerEngines.initSerializerEngines();
-		defaultInitNotifiers.initNotifiers();
+		travisInitConfig.initConfigWithJSAP(jsap,inputArgs);
+		travisInitSerializerEngines.initSerializerEngines();
+		travisInitNotifiers.initNotifiers();
 
-		TravisMainProcess defaultMainProcess = new TravisMainProcess(defaultDefineJSAPArgs,
-																		defaultInitConfig,
-																		defaultInitSerializerEngines,
-																			defaultInitNotifiers);
+		TravisMainProcess travisMainProcess = new TravisMainProcess(travisDefineJSAPArgs,
+																		travisInitConfig,
+																		travisInitSerializerEngines,
+																			travisInitNotifiers);
 
-		serializeHardwareInfoSerializer(defaultInitSerializerEngines.getEngines());
+		serializeHardwareInfoSerializer(travisInitSerializerEngines.getEngines());
 
-		ProjectInspector inspector = constructInspector4Default(defaultMainProcess.getBuildToBeInspected(),defaultInitSerializerEngines.getEngines(),defaultInitNotifiers.getNotifiers());
+		ProjectInspector inspector = constructInspector4Default(travisMainProcess.getBuildToBeInspected(),travisInitSerializerEngines.getEngines(),travisInitNotifiers.getNotifiers());
 
-		defaultMainProcess = defaultMainProcess.setInspector(inspector)
-												.setEngines(defaultInitSerializerEngines.getEngines())
-												.setNotifiers(defaultInitNotifiers.getNotifiers());
+		travisMainProcess = travisMainProcess.setInspector(inspector)
+												.setEngines(travisInitSerializerEngines.getEngines())
+												.setNotifiers(travisInitNotifiers.getNotifiers());
 
-		return defaultMainProcess;
+		return travisMainProcess;
 	}
 
 	/* Repair with git Url instead of travis */
@@ -135,8 +135,8 @@ public class MainProcessFactory {
 	}
 
 	public static MainProcess getPipelineListenerMainProcess(String[] inputArgs) {
-		MainProcess defaultMainProcess = getDefaultMainProcess(inputArgs);
-		return new PipelineBuildListenerMainProcess(defaultMainProcess);
+		MainProcess travisMainProcess = getTravisMainProcess(inputArgs);
+		return new PipelineBuildListenerMainProcess(travisMainProcess);
 	}
 
 	private static void serializeHardwareInfoSerializer(List<SerializerEngine> engines) {

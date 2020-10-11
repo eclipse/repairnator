@@ -56,19 +56,19 @@ public class BranchLauncher implements LauncherAPI{
 
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
 
-			return MainProcessFactory.getDefaultMainProcess(args);
+			return MainProcessFactory.getTravisMainProcess(args);
 
 		} else if (launcherMode.equals(LauncherMode.BEARS.name())) {
 
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.BEARS);
 
-			return MainProcessFactory.getDefaultMainProcess(args);
+			return MainProcessFactory.getTravisMainProcess(args);
 
 		} else if (launcherMode.equals(LauncherMode.CHECKSTYLE.name())) {
 
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
 
-			return MainProcessFactory.getDefaultMainProcess(args);
+			return MainProcessFactory.getTravisMainProcess(args);
 
 		} else if (launcherMode.equals(LauncherMode.GIT_REPOSITORY.name())) {
 

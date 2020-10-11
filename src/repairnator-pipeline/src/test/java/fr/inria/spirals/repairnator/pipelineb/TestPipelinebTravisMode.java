@@ -49,7 +49,7 @@ public class TestPipelinebTravisMode {
         // (set in Travis config)
         // eg export M2_HOME=/usr/share/maven
         // from surli/failingBuild
-        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "564711868",
+        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{"--build", "564711868",
             "--repairTools", "NPEFix",
             "--workspace","./workspace-pipelinep"});
 		Patches patchNotifier = new Patches();
@@ -68,7 +68,7 @@ public class TestPipelinebTravisMode {
     	// reproducing the 12th PR of Luc
 		// see https://github.com/eclipse/repairnator/issues/758
 
-        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "395891390", "--repairTools", "NPEFix", "--workspace","./workspace-pipelinep" });
+        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{"--build", "395891390", "--repairTools", "NPEFix", "--workspace","./workspace-pipelinep" });
 		Patches patchNotifier = new Patches();
 		mainProc.setPatchNotifier(patchNotifier);
 		mainProc.run();
