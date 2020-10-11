@@ -15,6 +15,8 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
+import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 
 import org.apache.commons.lang3.StringUtils;
 

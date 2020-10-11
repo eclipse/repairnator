@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ import com.martiansoftware.jsap.JSAP;
 
 /* Config init behavior for repairing with Github instead of Travis */
 public class GithubInitConfig implements IInitConfig {
-    private static Logger LOGGER = LoggerFactory.getLogger(TravisInitConfig.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(GithubInitConfig.class);
     private static File tempDir;
 
 	protected static RepairnatorConfig getConfig() {

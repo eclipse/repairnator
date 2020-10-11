@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.pipelineb.travis;
 
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.pipelineb.IInitSerializerEngines;
 
 import java.util.ArrayList;
 import java.util.List;

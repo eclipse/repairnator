@@ -14,11 +14,13 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.LauncherUtils;
 
+import fr.inria.spirals.repairnator.pipeline.LauncherAPI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BranchLauncher implements LauncherAPI{
-	private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(BranchLauncher.class);
 	private String[] args;
 
 	public BranchLauncher(String[] args) {

@@ -10,11 +10,11 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.jtravis.entities.StateType;
+
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
-
 
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4GitRepository;
@@ -23,6 +23,12 @@ import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer4GitReposi
 import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
+
+import fr.inria.spirals.repairnator.pipelineb.MainProcess;
+import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipelineb.IInitNotifiers;
+import fr.inria.spirals.repairnator.pipelineb.IInitSerializerEngines;
+import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +42,7 @@ import java.io.File;
 
 /* Main repair process for repairing with Github instead of Travis */
 public class GithubMainProcess implements MainProcess {
-	private static Logger LOGGER = LoggerFactory.getLogger(TravisMainProcess.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(GithubMainProcess.class);
 	protected ProjectInspector inspector;
 	protected List<SerializerEngine> engines;
 	protected List<AbstractNotifier> notifiers;

@@ -15,11 +15,12 @@ import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
 
 import org.apache.commons.lang3.StringUtils;
 
 /* Args definition behavior for the default use case of Repairnator */
-public class DefaultDefineJSAPArgs implements IDefineJSAPArgs{
+public class TravisDefineJSAPArgs implements IDefineJSAPArgs{
 
 	@Override
 	public JSAP defineArgs() throws JSAPException{

@@ -6,6 +6,8 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.utils.Utils;
+import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
+import fr.inria.spirals.repairnator.pipelineb.LauncherHelpers;
 
 import java.util.Arrays;
 import java.util.HashSet;

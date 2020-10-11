@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.GitRepositoryPatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.GitRepositoryErrorNotifier;
+import fr.inria.spirals.repairnator.pipelineb.IInitNotifiers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 /* Notifiers init behavior for repairing with Github instead of Travis */
 public class GithubInitNotifiers implements IInitNotifiers {
-	private static Logger LOGGER = LoggerFactory.getLogger(TravisInitNotifiers.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(GithubInitNotifiers.class);
 	protected List<AbstractNotifier> notifiers;
 	protected PatchNotifier patchNotifier;
 

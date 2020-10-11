@@ -19,7 +19,6 @@ import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
-
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
@@ -27,6 +26,12 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+
+import fr.inria.spirals.repairnator.pipelineb.MainProcess;
+import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipelineb.IInitNotifiers;
+import fr.inria.spirals.repairnator.pipelineb.IInitSerializerEngines;
+import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +100,7 @@ public class TravisMainProcess implements MainProcess {
     }
 
     /* change build to be inspected to be provided*/
-	protected BuildToBeInspected getBuildToBeInspected() {
+	public BuildToBeInspected getBuildToBeInspected() {
         JTravis jTravis = this.getConfig().getJTravis();
         Optional<Build> optionalBuild = jTravis.build().fromId(this.getConfig().getBuildId());
         if (!optionalBuild.isPresent()) {
