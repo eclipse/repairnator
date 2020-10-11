@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb.default;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
 

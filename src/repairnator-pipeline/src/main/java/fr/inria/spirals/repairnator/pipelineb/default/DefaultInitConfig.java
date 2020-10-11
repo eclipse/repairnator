@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb.default;
 
 import com.martiansoftware.jsap.JSAPResult;
 

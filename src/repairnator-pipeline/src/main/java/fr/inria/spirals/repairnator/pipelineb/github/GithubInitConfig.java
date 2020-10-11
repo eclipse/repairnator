@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb.github;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.SORALD_REPAIR_MODE;
 
