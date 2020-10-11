@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 /* Notifiers init behavior for repairing with Github instead of Travis */
 public class GithubInitNotifiers implements IInitNotifiers {
-	private static Logger LOGGER = LoggerFactory.getLogger(DefaultInitNotifiers.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(TravisInitNotifiers.class);
 	protected List<AbstractNotifier> notifiers;
 	protected PatchNotifier patchNotifier;
 

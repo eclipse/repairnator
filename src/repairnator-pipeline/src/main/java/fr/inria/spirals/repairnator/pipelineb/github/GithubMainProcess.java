@@ -36,7 +36,7 @@ import java.io.File;
 
 /* Main repair process for repairing with Github instead of Travis */
 public class GithubMainProcess implements MainProcess {
-	private static Logger LOGGER = LoggerFactory.getLogger(DefaultMainProcess.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(TravisMainProcess.class);
 	protected ProjectInspector inspector;
 	protected List<SerializerEngine> engines;
 	protected List<AbstractNotifier> notifiers;

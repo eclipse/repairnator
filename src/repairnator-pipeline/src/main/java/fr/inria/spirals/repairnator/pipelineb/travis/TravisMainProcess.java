@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb.default;
+package fr.inria.spirals.repairnator.pipelineb.travis;
 
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
@@ -39,8 +39,8 @@ import java.io.IOException;
 import java.io.File;
 
 /* Main repair process for the default use case of Repairnator after defining args, init notifiers, config and serializersEngines */
-public class DefaultMainProcess implements MainProcess {
-	private static Logger LOGGER = LoggerFactory.getLogger(DefaultMainProcess.class);
+public class TravisMainProcess implements MainProcess {
+	private static Logger LOGGER = LoggerFactory.getLogger(TravisMainProcess.class);
 	protected ProjectInspector inspector;
 	protected List<SerializerEngine> engines;
 	protected List<AbstractNotifier> notifiers;
@@ -52,7 +52,7 @@ public class DefaultMainProcess implements MainProcess {
     private IInitSerializerEngines iInitSerializerEngines;
     private IInitNotifiers iInitNotifiers;
 
-    public DefaultMainProcess(IDefineJSAPArgs iDefineJSAPArgs, IInitConfig iInitConfig, IInitSerializerEngines iInitSerializerEngines, IInitNotifiers iInitNotifiers) {
+    public TravisMainProcess(IDefineJSAPArgs iDefineJSAPArgs, IInitConfig iInitConfig, IInitSerializerEngines iInitSerializerEngines, IInitNotifiers iInitNotifiers) {
         this.iDefineJSAPArgs = iDefineJSAPArgs;
         this.iInitConfig = iInitConfig;
         this.iInitNotifiers = iInitNotifiers;
@@ -71,7 +71,7 @@ public class DefaultMainProcess implements MainProcess {
         return this.inspector;
     }
 
-    public DefaultMainProcess setInspector(ProjectInspector inspector) {
+    public TravisMainProcess setInspector(ProjectInspector inspector) {
         this.inspector = inspector;
         return this;
     }
@@ -80,7 +80,7 @@ public class DefaultMainProcess implements MainProcess {
         return this.notifiers;
     }
 
-    public DefaultMainProcess setNotifiers(List<AbstractNotifier> notifiers) {
+    public TravisMainProcess setNotifiers(List<AbstractNotifier> notifiers) {
         this.notifiers = notifiers;
         return this;
     }
@@ -89,7 +89,7 @@ public class DefaultMainProcess implements MainProcess {
         return this.engines;
     }
 
-    public DefaultMainProcess setEngines(List<SerializerEngine> engines) {
+    public TravisMainProcess setEngines(List<SerializerEngine> engines) {
         this.engines = engines;
         return this;
     }

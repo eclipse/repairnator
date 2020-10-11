@@ -56,10 +56,10 @@ public class MainProcessFactory {
 	/* Standard repair with Travis build id */
 	public static MainProcess getDefaultMainProcess(String[] inputArgs) {
 
-		DefaultDefineJSAPArgs defaultDefineJSAPArgs = new DefaultDefineJSAPArgs();
-		DefaultInitConfig defaultInitConfig = new DefaultInitConfig();
-		DefaultInitNotifiers defaultInitNotifiers = new DefaultInitNotifiers();
-		DefaultInitSerializerEngines defaultInitSerializerEngines = new DefaultInitSerializerEngines();
+		TravisDefineJSAPArgs defaultDefineJSAPArgs = new TravisDefineJSAPArgs();
+		TravisInitConfig defaultInitConfig = new TravisInitConfig();
+		TravisInitNotifiers defaultInitNotifiers = new TravisInitNotifiers();
+		TravisInitSerializerEngines defaultInitSerializerEngines = new TravisInitSerializerEngines();
 		
 		JSAP jsap;
 		try {
@@ -71,7 +71,7 @@ public class MainProcessFactory {
 		defaultInitSerializerEngines.initSerializerEngines();
 		defaultInitNotifiers.initNotifiers();
 
-		DefaultMainProcess defaultMainProcess = new DefaultMainProcess(defaultDefineJSAPArgs,
+		TravisMainProcess defaultMainProcess = new TravisMainProcess(defaultDefineJSAPArgs,
 																		defaultInitConfig,
 																		defaultInitSerializerEngines,
 																			defaultInitNotifiers);

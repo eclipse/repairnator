@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb.default;
+package fr.inria.spirals.repairnator.pipelineb.travis;
 
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /* serializerEngines init behavior for the default use case of Repairnator */
-public class DefaultInitSerializerEngines implements IInitSerializerEngines {
-	private static Logger LOGGER = LoggerFactory.getLogger(DefaultInitSerializerEngines.class);
+public class TravisInitSerializerEngines implements IInitSerializerEngines {
+	private static Logger LOGGER = LoggerFactory.getLogger(TravisInitSerializerEngines.class);
     protected List<SerializerEngine> engines;
 
 	@Override

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /* SerializerEngines init behavior for repairing with Github instead of Travis */
 public class GithubInitSerializerEngines implements IInitSerializerEngines {
-	private static Logger LOGGER = LoggerFactory.getLogger(DefaultInitSerializerEngines.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(TravisInitSerializerEngines.class);
     protected List<SerializerEngine> engines;
 
 	@Override

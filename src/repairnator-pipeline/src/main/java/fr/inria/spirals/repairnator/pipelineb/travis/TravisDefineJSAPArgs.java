@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb.default;
+package fr.inria.spirals.repairnator.pipelineb.travis;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
 

@@ -25,7 +25,7 @@ import com.martiansoftware.jsap.JSAP;
 
 /* Config init behavior for repairing with Github instead of Travis */
 public class GithubInitConfig implements IInitConfig {
-    private static Logger LOGGER = LoggerFactory.getLogger(DefaultInitConfig.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(TravisInitConfig.class);
     private static File tempDir;
 
 	protected static RepairnatorConfig getConfig() {
