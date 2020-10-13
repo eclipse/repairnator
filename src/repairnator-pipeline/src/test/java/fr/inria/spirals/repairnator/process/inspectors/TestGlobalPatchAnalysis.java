@@ -1,10 +1,14 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
+import fr.inria.coming.changeminer.entity.FinalResult;
+import fr.inria.coming.main.ComingMain;
+import fr.inria.coming.utils.CommandSummary;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
@@ -113,7 +117,7 @@ public class TestGlobalPatchAnalysis {
 
     @Test
     public void testRankingPatches() throws IOException {
-        long buildId = 564711868; // surli/failingProject build
+        long buildId = 564711868; // surli/failingProject build 564711868
         Build build = this.checkBuildAndReturn(buildId, false);
 
         tmpDir = Files.createTempDirectory("test_ranking").toFile();
@@ -141,7 +145,7 @@ public class TestGlobalPatchAnalysis {
         List<RepairPatch> rankedPatchesP4J = inspector.getJobStatus().getRankedPatches(Features.P4J);
         List<RepairPatch> rankedPatchesS4R = inspector.getJobStatus().getRankedPatches(Features.S4R);
 
-        // test ranking by P4J overfitting-scores
+       //  test ranking by P4J overfitting-scores
         assertThat(rankedPatchesP4J.get(0).getToolname(), is("NopolSingleTest"));
         assertEquals(rankedPatchesP4J.get(0).getOverfittingScore(Features.P4J), -2590,1);
         assertThat(rankedPatchesP4J.get(4).getToolname(), is("NopolSingleTest"));
@@ -153,4 +157,40 @@ public class TestGlobalPatchAnalysis {
         assertThat(rankedPatchesS4R.get(1).getToolname(), is("NopolSingleTest"));
         assertEquals(rankedPatchesS4R.get(1).getOverfittingScore(Features.S4R), -0.05, 0.001);
     }
+    
+    
+    @Test
+    public void testODSPatchClassification() throws IOException {
+        long buildId = 203797975; // surli/failingProject build
+        Build build = this.checkBuildAndReturn(buildId, false);
+
+        tmpDir = Files.createTempDirectory("patch_classification").toFile();
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
+        
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        NopolSingleTestRepair nopolRepair = new NopolSingleTestRepair();
+        nopolRepair.setProjectInspector(inspector);
+     
+
+        RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(nopolRepair.getRepairToolName())));       
+
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+            .addNextStep(new TestProject(inspector))
+            .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+            .addNextStep(new ComputeClasspath(inspector, true))
+            .addNextStep(new ComputeSourceDir(inspector, true, false))
+            .addNextStep(nopolRepair);
+        cloneStep.execute();
+
+        List<RepairPatch> classifyPatcheswithODS = inspector.getJobStatus().getCorrectbessLabeledPatches(Features.ODS,buildId);
+        
+        // There are 10 patches are generated for this failing build
+        assertThat(classifyPatcheswithODS.size(), is(10));
+
+      
+    }
+    
+    
 }

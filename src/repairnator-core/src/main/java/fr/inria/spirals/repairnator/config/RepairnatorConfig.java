@@ -53,6 +53,11 @@ public class RepairnatorConfig {
         NONE,
         OVERFITTING
     }
+
+    public enum PATCH_CLASSIFICATION_MODE {
+        NONE,
+        ODS
+    }
    
     /** 
       * DEFAULT - the project files is scanned by Sorald as a single unit. If the repair fails then it fails completely and no fixes are produced if there could have been any
@@ -121,6 +126,9 @@ public class RepairnatorConfig {
     private boolean measureSoraldTime;
 
     private PATCH_RANKING_MODE patchRankingMode;
+    
+    private PATCH_CLASSIFICATION_MODE patchClassificationMode;
+
 
     // Dockerpool
     private String dockerImageName;
@@ -735,6 +743,7 @@ public class RepairnatorConfig {
     public PATCH_RANKING_MODE getPatchRankingMode() {
         return patchRankingMode;
     }
+    
 
     public void setPatchRankingMode(String patchRankingMode) {
         for (PATCH_RANKING_MODE mode: PATCH_RANKING_MODE.values()) {
@@ -744,6 +753,20 @@ public class RepairnatorConfig {
             }
         }
         throw new RuntimeException("unknown patch ranking mode: " + patchRankingMode);
+    }
+
+    public PATCH_CLASSIFICATION_MODE getPatchClassificationMode() {
+        return patchClassificationMode;
+    }
+
+    public void setPatchClassificationMode(String patchClassificationMode) {
+        for (PATCH_CLASSIFICATION_MODE mode: PATCH_CLASSIFICATION_MODE.values()) {
+            if (patchClassificationMode.equals(mode.name())) {
+                this.patchClassificationMode = PATCH_CLASSIFICATION_MODE.valueOf(patchClassificationMode);
+                return;
+            }
+        }
+        throw new RuntimeException("unknown patch classification mode: " + patchClassificationMode);
     }
 
     @Override
