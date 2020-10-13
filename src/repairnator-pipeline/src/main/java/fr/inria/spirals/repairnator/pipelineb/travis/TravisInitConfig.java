@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb.travis;
 
 import com.martiansoftware.jsap.JSAPResult;
 
@@ -6,6 +6,8 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.utils.Utils;
+import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
+import fr.inria.spirals.repairnator.pipelineb.LauncherHelpers;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,8 +24,8 @@ import com.martiansoftware.jsap.JSAP;
 import ch.qos.logback.classic.Level;
 
 /* Config init behavior for the default use case of Repairnator */
-public class DefaultInitConfig implements IInitConfig {
-    private static Logger LOGGER = LoggerFactory.getLogger(DefaultInitConfig.class);
+public class TravisInitConfig implements IInitConfig {
+    private static Logger LOGGER = LoggerFactory.getLogger(TravisInitConfig.class);
     private static File tempDir;
 
 	protected static RepairnatorConfig getConfig() {

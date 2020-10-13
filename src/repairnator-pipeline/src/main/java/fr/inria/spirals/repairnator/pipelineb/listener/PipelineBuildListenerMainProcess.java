@@ -1,7 +1,13 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb.listener;
 
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+
+import fr.inria.spirals.repairnator.pipelineb.MainProcess;
+import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipelineb.IInitNotifiers;
+import fr.inria.spirals.repairnator.pipelineb.IInitSerializerEngines;
+import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.json.JSONException;

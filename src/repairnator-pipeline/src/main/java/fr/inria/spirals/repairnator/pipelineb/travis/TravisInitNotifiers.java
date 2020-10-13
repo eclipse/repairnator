@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb.travis;
 
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.pipelineb.IInitNotifiers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /* Notifiers init behavior for the default use case of Repairnator */
-public class DefaultInitNotifiers implements IInitNotifiers {
-	private static Logger LOGGER = LoggerFactory.getLogger(DefaultInitNotifiers.class);
+public class TravisInitNotifiers implements IInitNotifiers {
+	private static Logger LOGGER = LoggerFactory.getLogger(TravisInitNotifiers.class);
 	protected List<AbstractNotifier> notifiers;
 	protected PatchNotifier patchNotifier;
 

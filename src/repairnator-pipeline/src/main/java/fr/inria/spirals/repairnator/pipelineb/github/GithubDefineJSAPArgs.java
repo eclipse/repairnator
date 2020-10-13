@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb.github;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.SORALD_REPAIR_MODE;
@@ -15,6 +15,8 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
+import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 
 import org.apache.commons.lang3.StringUtils;
 

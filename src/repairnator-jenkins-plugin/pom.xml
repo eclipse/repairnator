@@ -148,7 +148,7 @@
             </executions>
           </plugin>
           <!-- pushing jenkins WAR to Henry's Github repo, disabled because of lack of authentification secrets on https://travis-ci.com/ (https://travis-ci.com/github/eclipse/repairnator/settings) -->
-          <!--<plugin>
+          <plugin>
               <groupId>com.github.github</groupId>
               <artifactId>site-maven-plugin</artifactId>
               <version>0.11</version>
@@ -168,7 +168,7 @@
                   <phase>deploy</phase>
                 </execution>
               </executions>
-          </plugin>-->
+          </plugin>
       </plugins>
     </build>
     

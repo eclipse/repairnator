@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb;
 
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
@@ -14,11 +14,13 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.LauncherUtils;
 
+import fr.inria.spirals.repairnator.pipeline.LauncherAPI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BranchLauncher implements LauncherAPI{
-	private static Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(BranchLauncher.class);
 	private String[] args;
 
 	public BranchLauncher(String[] args) {
@@ -54,19 +56,19 @@ public class BranchLauncher implements LauncherAPI{
 
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
 
-			return MainProcessFactory.getDefaultMainProcess(args);
+			return MainProcessFactory.getTravisMainProcess(args);
 
 		} else if (launcherMode.equals(LauncherMode.BEARS.name())) {
 
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.BEARS);
 
-			return MainProcessFactory.getDefaultMainProcess(args);
+			return MainProcessFactory.getTravisMainProcess(args);
 
 		} else if (launcherMode.equals(LauncherMode.CHECKSTYLE.name())) {
 
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
 
-			return MainProcessFactory.getDefaultMainProcess(args);
+			return MainProcessFactory.getTravisMainProcess(args);
 
 		} else if (launcherMode.equals(LauncherMode.GIT_REPOSITORY.name())) {
 

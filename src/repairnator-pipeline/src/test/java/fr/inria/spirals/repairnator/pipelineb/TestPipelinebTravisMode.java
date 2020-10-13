@@ -1,10 +1,13 @@
-package fr.inria.spirals.repairnator.pipeline;
+package fr.inria.spirals.repairnator.pipelineb;
 
 import com.martiansoftware.jsap.FlaggedOption;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.pipelineb.travis.TravisMainProcess;
+import fr.inria.spirals.repairnator.pipelineb.travis.TravisDefineJSAPArgs;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -21,7 +24,7 @@ public class TestPipelinebTravisMode {
 
     @Test
     public void testPipelineArgs() throws Exception {
-        JSAP defaultJsap = (new DefaultDefineJSAPArgs()).defineArgs();
+        JSAP defaultJsap = (new TravisDefineJSAPArgs()).defineArgs();
 
         // the default repair tool
         assertEquals(1, ((FlaggedOption)defaultJsap.getByLongFlag("repairTools")).getDefault().length);
@@ -48,7 +51,7 @@ public class TestPipelinebTravisMode {
         // (set in Travis config)
         // eg export M2_HOME=/usr/share/maven
         // from surli/failingBuild
-        DefaultMainProcess mainProc = (DefaultMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "564711868",
+        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{"--build", "564711868",
             "--repairTools", "NPEFix",
             "--workspace","./workspace-pipelinep"});
 		Patches patchNotifier = new Patches();
@@ -67,7 +70,7 @@ public class TestPipelinebTravisMode {
     	// reproducing the 12th PR of Luc
 		// see https://github.com/eclipse/repairnator/issues/758
 
-        DefaultMainProcess mainProc = (DefaultMainProcess) MainProcessFactory.getDefaultMainProcess(new String[]{"--build", "395891390", "--repairTools", "NPEFix", "--workspace","./workspace-pipelinep" });
+        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{"--build", "395891390", "--repairTools", "NPEFix", "--workspace","./workspace-pipelinep" });
 		Patches patchNotifier = new Patches();
 		mainProc.setPatchNotifier(patchNotifier);
 		mainProc.run();

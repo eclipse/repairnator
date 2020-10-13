@@ -11,6 +11,7 @@ import com.martiansoftware.jsap.Switch;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.pipelineb.BranchLauncher;
 
 import java.util.HashSet;
 import java.util.Arrays;
