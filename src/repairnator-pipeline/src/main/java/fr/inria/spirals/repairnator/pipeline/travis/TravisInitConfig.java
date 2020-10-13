@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb.travis;
+package fr.inria.spirals.repairnator.pipeline.travis;
 
 import com.martiansoftware.jsap.JSAPResult;
 
@@ -6,8 +6,8 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.utils.Utils;
-import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
-import fr.inria.spirals.repairnator.pipelineb.LauncherHelpers;
+import fr.inria.spirals.repairnator.pipeline.IInitConfig;
+import fr.inria.spirals.repairnator.pipeline.LauncherHelpers;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,8 +1,9 @@
-package fr.inria.spirals.repairnator.pipelineb.travis;
+package fr.inria.spirals.repairnator.pipeline.github;
 
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.pipelineb.IInitSerializerEngines;
+import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
+import fr.inria.spirals.repairnator.pipeline.IInitSerializerEngines;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +11,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/* serializerEngines init behavior for the default use case of Repairnator */
-public class TravisInitSerializerEngines implements IInitSerializerEngines {
-	private static Logger LOGGER = LoggerFactory.getLogger(TravisInitSerializerEngines.class);
+/* SerializerEngines init behavior for repairing with Github instead of Travis */
+public class GithubInitSerializerEngines implements IInitSerializerEngines {
+	private static Logger LOGGER = LoggerFactory.getLogger(GithubInitSerializerEngines.class);
     protected List<SerializerEngine> engines;
 
 	@Override
 	public void initSerializerEngines() {
         this.engines = new ArrayList<>();
 
-        List<SerializerEngine> fileSerializerEngines = LauncherUtils.initFileSerializerEngines(LOGGER);
+        List<SerializerEngine> fileSerializerEngines = GitRepositoryLauncherUtils.initFileSerializerEngines(LOGGER);
         this.engines.addAll(fileSerializerEngines);
 
         SerializerEngine mongoDBSerializerEngine = LauncherUtils.initMongoDBSerializerEngine(LOGGER);
@@ -27,7 +28,6 @@ public class TravisInitSerializerEngines implements IInitSerializerEngines {
             this.engines.add(mongoDBSerializerEngine);
         }
     }
-
 
     @Override
     public List<SerializerEngine> getEngines() {

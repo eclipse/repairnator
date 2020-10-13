@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb.github;
+package fr.inria.spirals.repairnator.pipeline.github;
 
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
@@ -24,11 +24,11 @@ import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepositor
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
 
-import fr.inria.spirals.repairnator.pipelineb.MainProcess;
-import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
-import fr.inria.spirals.repairnator.pipelineb.IInitNotifiers;
-import fr.inria.spirals.repairnator.pipelineb.IInitSerializerEngines;
-import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
+import fr.inria.spirals.repairnator.pipeline.MainProcess;
+import fr.inria.spirals.repairnator.pipeline.IDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.IInitNotifiers;
+import fr.inria.spirals.repairnator.pipeline.IInitSerializerEngines;
+import fr.inria.spirals.repairnator.pipeline.IInitConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

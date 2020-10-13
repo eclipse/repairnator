@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
