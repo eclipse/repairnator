@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
@@ -24,7 +25,9 @@ import org.kohsuke.github.GitHub;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +38,7 @@ import java.util.Map;
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
-    public static final String DEFAULT_TEXT_PR = "This patch fixes failing Travis build %(travisURL) \n\n" +
-                                        "It uses the program repair tools %(tools) \n\n" +
-                                        "If you don't want to receive those PRs in the future, [open an issue on Repairnator](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%(slug))" ;
+    public static final InputStream DEFAULT_TEXT_FILE = AbstractRepairStep.class.getClassLoader().getResourceAsStream("R-Hero-PR-text.MD");
 
     public static final String GITHUB_TEXT_PR = "This patch uses the program repair tools %(tools) \n\n";
 
@@ -214,7 +215,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
         if (prText == null) {
             StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
-            this.prText = sub.replace(DEFAULT_TEXT_PR);
+            this.prText = sub.replace(IOUtils.toString(DEFAULT_TEXT_FILE, StandardCharsets.UTF_8));
         }
 
         GHPullRequest pullRequest = originalRepository.createPullRequest(prTitle, head, base, this.prText);
