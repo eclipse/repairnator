@@ -121,7 +121,8 @@ public class ProjectInspector {
         this.buildToBeInspected = buildToBeInspected;
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + getRepoSlug();
-        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        long buildId = buildToBeInspected != null ? buildToBeInspected.getBuggyBuild().getId() : 0;
+        this.repoToPushLocalPath = repoLocalPath+"_topush_" + buildId;
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = new ArrayList<AbstractDataSerializer>();
         this.gitHelper = new GitHelper();

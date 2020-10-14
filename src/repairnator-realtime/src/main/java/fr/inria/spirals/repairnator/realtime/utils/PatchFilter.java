@@ -2,10 +2,19 @@ package fr.inria.spirals.repairnator.realtime.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.net.*;
+import java.util.stream.Collectors;
+
+import com.github.difflib.DiffUtils;
+import com.github.difflib.UnifiedDiffUtils;
+import com.github.difflib.patch.Patch;
+import org.apache.commons.io.IOUtils;
 import org.kohsuke.github.GHCommit;
 
 /**
@@ -15,7 +24,7 @@ public class PatchFilter {
     
     static final String HUNK_HEADER_REGEX = "^@@ -(\\d+),(\\d+) \\+(\\d+),(\\d+) @@ ?.*$";
     static final String SPLIT_BY_HUNKS_REGEX = "(?<=\\n)(?=@@ -\\d+,\\d+ \\+\\d+,\\d+ @@ ?.*\\n)";
-    
+
     enum State {
         ENTRY,
         HEADER,
@@ -71,62 +80,53 @@ public class PatchFilter {
         for(String line : hunkLines) {
             switch(state) {
             
-            //assuming first line is hunk header.
-            case ENTRY:{
-                state = State.HEADER;
-                break;
-            }
-            
-            case HEADER:{
-                char first = line.charAt(0);
-                if(first == '-') {
-                    state = State.REMOVE;
-                } else if(first == ' ') {
-                    state = State.ENTRY_CONTEXT;
-                } else if(first == '+') {
-                    return false;
+                //assuming first line is hunk header.
+                case ENTRY:{
+                    state = State.HEADER;
+                    break;
                 }
-                
-            }break;
-            
-            case ENTRY_CONTEXT:{
-                char first = line.charAt(0);
-                if(first == '-') {
-                    state = State.REMOVE;
-                } else if(first == ' ') {
-                    state = State.ENTRY_CONTEXT;
-                } else {
-                    return false;
-                }
-            }break;
-            
-            case REMOVE:{
-                char first = line.charAt(0);
-                if(first == '+') {
-                    state = State.ADD;
-                }else{
-                    return false;
-                }
-            }break;
-            
-            case ADD:{
-                char first = line.charAt(0);
-                if(first == ' ') {
-                    state = State.EXIT_CONTEXT;
-                }else{
-                    return false;
-                }
-            }break;
-            
-            case EXIT_CONTEXT:{
-                char first = line.charAt(0);
-                if(first == ' ') {
-                    state = State.EXIT_CONTEXT;
-                }else{
-                    return false;
-                }
-            }break;
-            
+
+                case HEADER:{
+                    char first = line.charAt(0);
+                    if(first == '-') {
+                        state = State.REMOVE;
+                    } else if(first == ' ') {
+                        state = State.ENTRY_CONTEXT;
+                    } else if(first == '+') {
+                        return false;
+                    }
+
+                }break;
+
+                case ENTRY_CONTEXT:{
+                    char first = line.charAt(0);
+                    if(first == '-') {
+                        state = State.REMOVE;
+                    } else if(first == ' ') {
+                        state = State.ENTRY_CONTEXT;
+                    } else {
+                        return false;
+                    }
+                }break;
+
+                case REMOVE:{
+                    char first = line.charAt(0);
+                    if(first == '+') {
+                        state = State.ADD;
+                    }else{
+                        return false;
+                    }
+                }break;
+
+                case ADD:
+                case EXIT_CONTEXT: {
+                    char first = line.charAt(0);
+                    if(first == ' ') {
+                        state = State.EXIT_CONTEXT;
+                    }else{
+                        return false;
+                    }
+                }break;
             }
         }
         
@@ -136,15 +136,16 @@ public class PatchFilter {
     
     public ArrayList<SequencerCollectorHunk> getHunks(ArrayList<SequencerCollectorPatch> patches, boolean singleHunk, int hunkDistance){
         
-        ArrayList<SequencerCollectorHunk> ret = new ArrayList<SequencerCollectorHunk>();
+        ArrayList<SequencerCollectorHunk> ret = new ArrayList<>();
 
         for(SequencerCollectorPatch patch : patches) {
-            String[] hunks = patch.getContent().split(SPLIT_BY_HUNKS_REGEX);
+            String[] split = patch.getContent().split(SPLIT_BY_HUNKS_REGEX);
+            String[] hunks = Arrays.copyOfRange(split, 1, split.length); //drop file header
             
-            ArrayList<Boolean> oneLineHunks  = new ArrayList<Boolean>();
-            ArrayList<Integer> linePositions  = new ArrayList<Integer>();
+            ArrayList<Boolean> oneLineHunks  = new ArrayList<>();
+            ArrayList<Integer> linePositions  = new ArrayList<>();
             
-            if(singleHunk && hunks.length > 1) continue;
+            if(singleHunk && hunks.length != 1) continue;
             
             for(String hunk: hunks) {
                 String[] lines = splitByLines(hunk);
@@ -172,57 +173,74 @@ public class PatchFilter {
         }
         return ret;
     }
-    
-        
-    
-    public HunkLines parse(String hunk) {
-        String[] lines = splitByLines(hunk);
-        
-        String removed= "";
-        String added = "";
-        
-        for(String line : lines) {
-            char first = line.charAt(0);
-            if(first == '-') removed = line.substring(1).trim();
-            if(first == '+') added = line.substring(1).trim();
-        }
-        
-        return new HunkLines(removed, added);
-    }
-    
+
     /**
      * Returns a list of patches.
-     * 
+     *
      * if filterMultiFile is true, it will filter out multi-file commits
      * */
-    public ArrayList<SequencerCollectorPatch> getCommitPatches(GHCommit commit, boolean filterMultiFile, boolean filterMultiHunk) throws IOException{
-        ArrayList<SequencerCollectorPatch> ret = new ArrayList<SequencerCollectorPatch>();
-        
-        List<GHCommit.File> files = commit.getFiles(); 
-        List<GHCommit.File> javaFiles = new ArrayList<GHCommit.File>();
-        
-        for(GHCommit.File f : files) {
-            if(f.getFileName().endsWith(".java")) {
-                javaFiles.add(f);
-            }
+    public ArrayList<SequencerCollectorPatch>
+    getCommitPatches(GHCommit commit, boolean filterMultiFile, int contextSize, Map<String, String> rawFilesStore) throws IOException{
+
+        ArrayList<SequencerCollectorPatch> ret = new ArrayList<>();
+
+        List<GHCommit.File> javaFiles = commit
+                .getFiles().stream()
+                .filter(file -> file.getFileName().endsWith(".java"))
+                .filter(file -> file.getLinesAdded() != 0) //filter deletion only changes
+                .filter(file -> file.getLinesDeleted() != 0) // filter addition only changes
+                .collect(Collectors.toList());
+
+        if(filterMultiFile && javaFiles.size() != 1) {
+            return ret;
         }
-        
-        if(filterMultiFile && javaFiles.size() == 1) {
-            
-            GHCommit.File currentFile = javaFiles.get(0);
-            
-            if(currentFile.getPatch() != null) { //sometimes this call returns null
-                String fullFilename = currentFile.getFileName();
-                ret.add( new SequencerCollectorPatch(fullFilename.substring(fullFilename.lastIndexOf("/") + 1), javaFiles.get(0).getPatch()));                
-            }
-        } else if (!filterMultiFile) {
-            for(GHCommit.File f : javaFiles) { 
-                if(f.getPatch() != null) { //sometimes this call returns null
-                    String fullFilename = f.getFileName();
-                    ret.add( new SequencerCollectorPatch(fullFilename.substring(fullFilename.lastIndexOf("/") + 1), f.getPatch()) );
+
+        javaFiles.forEach(f -> {
+            if(f.getPatch() != null) { //sometimes this call returns null
+                String fullFilename = f.getFileName();
+                try {
+                    // don't use github client since we may need to change target urls
+                    // to a mirror in case rate limits are exceeded
+
+                    // read from url, //raw.githubusercontent.com/{owner}/{repo}/{sha}/{path}
+                    String fileURL = RawURLGenerator.Generate(commit.getOwner().getFullName(), commit.getSHA1(), fullFilename);
+
+                    // read from url, //raw.githubusercontent.com/{owner}/{repo}/{parent_sha}/{path}
+                    String parentFileURL = RawURLGenerator.Generate(commit.getOwner().getFullName(), commit.getParents().get(0).getSHA1(), fullFilename);
+
+                    String changes = readFromURL(fileURL);
+                    String past = readFromURL(parentFileURL);
+
+                    rawFilesStore.put(fullFilename, past);
+
+                    List<String> changesAsList = Arrays.asList(changes.split("\n").clone());
+                    List<String> pastAsList = Arrays.asList(past.split("\n").clone());
+
+                    Patch<String> diff = DiffUtils.diff(pastAsList, changesAsList);
+
+                    List<String> uDiff = UnifiedDiffUtils.generateUnifiedDiff(fullFilename, fullFilename, pastAsList, diff, contextSize);
+                    String patch = String.join("\n", uDiff);
+
+                    ret.add( new SequencerCollectorPatch(fullFilename, patch));
+
+                }catch(Exception e){
+                    System.out.println("Exception while getting raw files, skipping patch: " + e);
                 }
             }
-        }
+        });
+
+
         return ret;
+    }
+
+    String readFromURL(String urlStr){
+        String data;
+        try {
+            URL u = new URL(urlStr);
+            data = IOUtils.toString(u,"UTF-8");
+        }catch (Exception e){
+            throw new RuntimeException("Error while reading file from URL:" + urlStr);
+        }
+        return data;
     }
 }

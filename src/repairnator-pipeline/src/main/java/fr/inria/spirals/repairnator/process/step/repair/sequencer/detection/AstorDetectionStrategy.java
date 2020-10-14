@@ -21,6 +21,9 @@ public class AstorDetectionStrategy implements DetectionStrategy {
 
     MavenPatchTester mavenTester;
 
+    String suspicionThreshold = "0.5";
+    String suspiciousCandidates = "100";
+
     void setMavenTester(MavenPatchTester tester){
         this.mavenTester = tester;
     }
@@ -45,13 +48,14 @@ public class AstorDetectionStrategy implements DetectionStrategy {
         cs.command.put("-mode", "custom");
         cs.command.put("-dependencies", StringUtils.join(dependencies,":"));
         cs.command.put("-location", jobStatus.getFailingModulePath());
-        cs.command.put("-flthreshold", "0.5");
+        cs.command.put("-flthreshold", suspicionThreshold);
         cs.command.put("-maxgen", "0");
         cs.command.put("-javacompliancelevel", "8");
         cs.command.put("-customengine", ZmEngine.class.getCanonicalName());
         cs.command.put("-parameters", "disablelog:false:logtestexecution:true:logfilepath:"
                 + inspector.getRepoLocalPath()
                 + "/repairnator." + "sequencerRepair" + ".log");
+        cs.command.put("-maxsuspcandidates", suspiciousCandidates);
 
         AstorMain astorMain = new AstorMain();
         try {
