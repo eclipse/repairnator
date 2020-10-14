@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb.github;
+package fr.inria.spirals.repairnator.pipeline.github;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.SORALD_REPAIR_MODE;
 
@@ -9,7 +9,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
 import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.pipelineb.IInitConfig;
+import fr.inria.spirals.repairnator.pipeline.IInitConfig;
 
 import java.util.Arrays;
 import java.util.HashSet;

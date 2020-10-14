@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -45,19 +45,19 @@ import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitReposito
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 
-import fr.inria.spirals.repairnator.pipelineb.travis.TravisMainProcess;
-import fr.inria.spirals.repairnator.pipelineb.travis.TravisDefineJSAPArgs;
-import fr.inria.spirals.repairnator.pipelineb.travis.TravisInitNotifiers;
-import fr.inria.spirals.repairnator.pipelineb.travis.TravisInitSerializerEngines;
-import fr.inria.spirals.repairnator.pipelineb.travis.TravisInitConfig;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisMainProcess;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisInitNotifiers;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisInitSerializerEngines;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisInitConfig;
 
-import fr.inria.spirals.repairnator.pipelineb.github.GithubMainProcess;
-import fr.inria.spirals.repairnator.pipelineb.github.GithubDefineJSAPArgs;
-import fr.inria.spirals.repairnator.pipelineb.github.GithubInitNotifiers;
-import fr.inria.spirals.repairnator.pipelineb.github.GithubInitSerializerEngines;
-import fr.inria.spirals.repairnator.pipelineb.github.GithubInitConfig;
+import fr.inria.spirals.repairnator.pipeline.github.GithubMainProcess;
+import fr.inria.spirals.repairnator.pipeline.github.GithubDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.github.GithubInitNotifiers;
+import fr.inria.spirals.repairnator.pipeline.github.GithubInitSerializerEngines;
+import fr.inria.spirals.repairnator.pipeline.github.GithubInitConfig;
 
-import fr.inria.spirals.repairnator.pipelineb.listener.PipelineBuildListenerMainProcess;
+import fr.inria.spirals.repairnator.pipeline.listener.PipelineBuildListenerMainProcess;
 
 /* This will manufacture different kind of repairnator type */
 public class MainProcessFactory {

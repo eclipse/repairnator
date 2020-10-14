@@ -1,4 +1,4 @@
-package fr.inria.spirals.repairnator.pipelineb.travis;
+package fr.inria.spirals.repairnator.pipeline.travis;
 
 import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
 
@@ -15,7 +15,7 @@ import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.pipelineb.IDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.IDefineJSAPArgs;
 
 import org.apache.commons.lang3.StringUtils;
 
