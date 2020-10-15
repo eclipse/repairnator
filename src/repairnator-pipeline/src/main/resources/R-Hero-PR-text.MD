@@ -1,19 +1,16 @@
-## An automatic patch has been found by R-Hero! :rocket:
+### An automatic patch for you by R-Hero! :rocket:
 
-R-Hero has found a patch for [this](%(travisURL)) failing travis-ci build
+R-Hero has found a patch for [this](%(travisURL)) failing Travis CI build. [R-Hero is a bot for automatic bug fixing](https://github.com/eclipse/repairnator).
 
 ----------------
 
-R-Hero is an Automatic Program Repair bot, and your feedback is very important to improve its patch generation skills. 
-If you would like to contribute, please use the links below:
+Your feedback is very valuable to improve its patch generation skills. 
+If you would like to contribute, simply use the links below:
 
 Do you think this patch is correct? [ [Yes](/path/to/correct) / [No](/path/to/incorrect) ]
 
 Do you think this patch is helpful? [ [Yes](/path/to/helpful) / [No](/path/to/unhelpful) ]
 
+If you would like to provide more detailed feedback:heart: to the R-Hero team, please [tell us your thoughts in a Github  issue](https://github.com/eclipse/repairnator/issues/new?title=[FEEDBACK]%(slug))
 
------------------------------------------------------------------------------
-
-If you would like to provide more detailed feedback:heart: to the R-Hero team, please [tell us your thoughts in an issue](https://github.com/eclipse/repairnator/issues/new?title=[FEEDBACK]%(slug)) on Repairnator
-
-If you don't want to receive more of these PRs in the future:broken_heart:, [let us know in an issue](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%(slug)) on Repairnator
+If you don't want to receive more of these PRs in the future:broken_heart:, [let us know and we'll stop sending you patches](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%(slug))
