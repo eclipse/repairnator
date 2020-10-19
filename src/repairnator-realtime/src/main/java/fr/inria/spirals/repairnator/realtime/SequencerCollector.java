@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.realtime.utils.PatchFilter;
@@ -25,9 +25,7 @@ import org.kohsuke.github.*;
 public class SequencerCollector {
     
     private final String diffsPath = SequencerConfig.getInstance().collectorPath;
-    
-    private final int diffBatchSize = 100;
-    
+
     private GitHub github;
     private PatchFilter filter;
 
@@ -35,25 +33,27 @@ public class SequencerCollector {
     private boolean filterMultiHunk;
     private int hunkDistance;
     private Set<String> done;
-    private int currentBatch;
-    
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) {
+    private int contextSize;
+
+
+    public SequencerCollector(int contextSize, boolean filterMultiFile, boolean filterMultiHunk, int hunkDistance) {
         
         this.filterMultiFile = filterMultiFile;
         this.filterMultiHunk = filterMultiHunk;
         this.hunkDistance = hunkDistance;
         this.done = new HashSet<>();
+        this.contextSize = contextSize;
 
         filter = new PatchFilter();
     }
 
-    public SequencerCollector(boolean filterMultiFile, boolean filterMultiHunk) {
-        this(filterMultiFile, filterMultiHunk, 0);
+    public SequencerCollector(int contextSize, boolean filterMultiFile, boolean filterMultiHunk) {
+        this(contextSize, filterMultiFile, filterMultiHunk, 0);
     }
 
-    public SequencerCollector() {
-        this(false, false, 0);
+    public SequencerCollector(int contextSize) {
+        this(contextSize, false, false, 0);
     }
 
     public void handle(String repositorySlug, String sha) {
@@ -69,34 +69,56 @@ public class SequencerCollector {
             repo = github.getRepository(repositorySlug);
             commit = repo.getCommit(sha);
 
-            ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, filterMultiHunk);
+            Map<String, String> allRawFiles = new HashMap<>();
+
+            ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, contextSize, allRawFiles);
             ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
 
             if (hunks.size() > 0) {
                 
                 //create directory for file
-                
+
                 String dirPath = diffsPath + "/" + repositorySlug.replace("/", "-") + "-" + sha;
                 File f = new File(dirPath);
                 f.mkdir();
-                
+
+                // save hunks
                 hunks.forEach( (hunk) -> {
                     try {
+                        String filename = hunk.getFile();
                         BufferedWriter writer;
-                            writer = new BufferedWriter(new FileWriter(dirPath + "/" + hunk.getFile() + "-" + hunk.getLine()));
-                        writer.append(hunk.getContent()); 
+                        writer = new BufferedWriter(
+                                new FileWriter(dirPath + "/" + filename.substring(filename.lastIndexOf("/") + 1) + "-" + hunk.getLine()));
+                        writer.append(Integer.toUnsignedLong(filename.hashCode()) + "\n");
+                        writer.append(hunk.getContent());
                         writer.close();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 });
-                
+
+
+                // save parent files
+                Set<String> neededFiles = hunks.stream().map(SequencerCollectorHunk::getFile).collect(Collectors.toSet());
+                Map<String, String> purgedRawFiles = neededFiles.stream()
+                        .collect(Collectors.toMap(Function.identity(), allRawFiles::get));
+
+                purgedRawFiles.forEach((file, content) -> {
+                    try {
+
+                        BufferedWriter writer;
+                        writer = new BufferedWriter(
+                                new FileWriter(dirPath + "/" + Integer.toUnsignedLong(file.hashCode())));
+                        writer.append(content);
+                        writer.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                // save diff
                 saveFileDiff(repositorySlug, sha);
-                ++currentBatch;
-                
-                if(currentBatch >= diffBatchSize) {
-                    currentBatch = 0;
-                }
+
             }
 
             done.add(sha);

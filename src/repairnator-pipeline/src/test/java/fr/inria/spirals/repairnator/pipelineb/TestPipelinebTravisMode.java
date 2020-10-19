@@ -1,12 +1,12 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
 import com.martiansoftware.jsap.FlaggedOption;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.pipelineb.travis.TravisMainProcess;
-import fr.inria.spirals.repairnator.pipelineb.travis.TravisDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisMainProcess;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisDefineJSAPArgs;
 
 import org.junit.Ignore;
 import org.junit.Test;

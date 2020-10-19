@@ -1,6 +1,6 @@
-package fr.inria.spirals.repairnator.pipelineb;
+package fr.inria.spirals.repairnator.pipeline;
 
-import fr.inria.spirals.repairnator.pipelineb.listener.PipelineBuildListenerMainProcess;
+import fr.inria.spirals.repairnator.pipeline.listener.PipelineBuildListenerMainProcess;
 
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
