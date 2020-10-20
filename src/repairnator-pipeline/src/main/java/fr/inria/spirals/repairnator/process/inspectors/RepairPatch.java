@@ -6,6 +6,7 @@ import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
 
 import fr.inria.coming.changeminer.entity.FinalResult;
+import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.coming.main.ComingMain;
 import fr.inria.coming.utils.CommandSummary;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
@@ -152,6 +153,10 @@ public class RepairPatch {
 	public void setODSLabel(String label) {
 		this.ODSLabel  = label;
 	}
+	
+	public String getODSLabel() {
+		return ODSLabel;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -222,8 +227,9 @@ public class RepairPatch {
 			// create a directory to store the patch: "patches/"+buildId+patchId
 			String buggyClassName = buggyFile.getName().split(".java")[0];
 			String rootfile = filePath.split("patch")[0] + "/patches";
+			String patchpath=rootfile+"/"+ buildId + "-" + patchId;
 			Path path = Paths
-					.get(filePath.split("patch")[0] + "/patches/" + buildId + "-" + patchId + '/' + buggyClassName);
+					.get(patchpath + '/' + buggyClassName);
 			Files.createDirectories(path);
 
 			// create buggy file and patchedFile that follows Coming structure
@@ -237,30 +243,19 @@ public class RepairPatch {
 			Files.write(Paths.get(patchedFile.getPath()), patchedLines);
 
 			
-			label = extractODSFeatures(rootfile);
+			 label = new RepairnatorFeatures().getLabel(new File(patchpath));
 						
 
 		} catch (PatchFailedException | IOException e) {
 			throw new RuntimeException(e);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return label;
 
 	}
 
-	private String extractODSFeatures(String rootfile) {
-//		try {
-//		ComingMain main = new ComingMain();
-//		CommandSummary cs = new CommandSummary();
-//		cs.append("-input", "files");
-//		cs.append("-location", (new File(rootfile)).getAbsolutePath());
-//		cs.append("-mode", "features");
-//		cs.append("-output", "./tmp");
-//		cs.append("-parameters", "outputperrevision:true");
-//		main.run(cs.flat());
-//		}
-		
-		//extract features from outputFile
-		return "";
-	}
+	
 }
