@@ -147,53 +147,66 @@ public class NPEFixMojo extends AbstractRepairMojo {
         if (repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
             strategy = new TryCatchRepairStrategy(sources);
         }
-        Launcher  npefix = new Launcher(sources, outputDirectory.getAbsolutePath() + "/npefix-output", binFolder.getAbsolutePath(), classpath(dependencies), complianceLevel, strategy);
 
         //npefix.getSpoon().getEnvironment().setAutoImports(false);
 
         // NPEfix is based on metaprogramming, this is where it happens
-        npefix.instrument();
+        try {
 
+            Launcher  npefix = new Launcher(sources, outputDirectory.getAbsolutePath() + "/npefix-output", binFolder.getAbsolutePath(), classpath(dependencies), complianceLevel, strategy);
 
-        List<String> tests = new ArrayList<>();
-        for (Pair<String, Set<File>> npeTest : npeTests) {
-            if (!tests.contains(npeTest.getKey())) {
-                tests.add(npeTest.getKey());
+            npefix.instrument();
+
+            List<String> tests = new ArrayList<>();
+            for (Pair<String, Set<File>> npeTest : npeTests) {
+                if (!tests.contains(npeTest.getKey())) {
+                    tests.add(npeTest.getKey());
+                }
             }
-        }
-        
-        // getting the patch if any (an object of type NPEOutput), see method run below
-        this.result = run(npefix, tests);
 
+            // getting the patch if any (an object of type NPEOutput), see method run below
+            this.result = run(npefix, tests);
 
-        spoon.Launcher spoon = new spoon.Launcher();
-        for (File s : sourceFolders) {
-            spoon.addInputResource(s.getAbsolutePath());
-        }
+            spoon.Launcher spoon = new spoon.Launcher();
+            for (File s : sourceFolders) {
+                spoon.addInputResource(s.getAbsolutePath());
+            }
 
-        spoon.getModelBuilder().setSourceClasspath(classpath(dependencies).split(File.pathSeparatorChar + ""));
-        spoon.buildModel();
+            spoon.getModelBuilder().setSourceClasspath(classpath(dependencies).split(File.pathSeparatorChar + ""));
+            spoon.buildModel();
 
-        // write a JSON file with the result and the patch
-        JSONObject jsonObject = result.toJSON(spoon);
-        jsonObject.put("endInit", initDate.getTime());
-        System.out.println(resultDirectory.getAbsolutePath());
-        System.out.println(jsonObject.getJSONArray("executions"));
-        for(Object ob : jsonObject.getJSONArray("executions"))
-        {
+            // write a JSON file with the result and the patch
+            JSONObject jsonObject = result.toJSON(spoon);
+            jsonObject.put("endInit", initDate.getTime());
+            System.out.println(resultDirectory.getAbsolutePath());
+            System.out.println(jsonObject.getJSONArray("executions"));
+            for(Object ob : jsonObject.getJSONArray("executions"))
+            {
                 // the patch in the json file
                 System.out.println(((JSONObject)ob).getString("diff"));
-        }
-        try {
+            }
+
             for (Decision decision : CallChecker.strategySelector.getSearchSpace()) {
                 jsonObject.append("searchSpace", decision.toJSON());
             }
             FileWriter writer = new FileWriter(resultDirectory.getAbsolutePath() + "/patches_" + new Date().getTime() + ".json");
             jsonObject.write(writer);
             writer.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
         }
+        catch (Exception e) {
+            System.out.println(e.toString() +
+                    "Since we have surefire plugin configure to <testFailureIgnore>true</testFailureIgnore>, " +
+                    "to automatically trigger NPEFix" +
+                    "We don't break the build for errors during the build, continue.");
+        }
+        if (npeTests.contains(getFailingTests())) {
+            System.out.println("Since we have surefire plugin configure to <testFailureIgnore>true</testFailureIgnore>, " +
+                    "to automatically trigger NPEFix" +
+                    "We want to fail the build if there is one test failure.");
+            throw new RuntimeException("There was one test failure");
+        }
+        
     }
 
     private NPEOutput run(Launcher  npefix, List<String> npeTests) {
