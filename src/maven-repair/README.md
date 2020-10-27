@@ -13,8 +13,72 @@ git clone https://github.com/eclipse/repairnator
 cd src/maven-repair
 mvn install
 ```
+ 
+## Activate program repair with NpeFIX for all failing builds  (in order to repair NullPointerException)
 
-## Usage to repair a NullPointerException (NpeFix)
+Add in your pom.xml
+```xml
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <trimStackTrace>false</trimStackTrace>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>fr.inria.gforge.spirals</groupId>
+        <artifactId>repair-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>npefix</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+```
+
+Then when running maven, you would aso get a patch for NPE if one is found.
+````bash
+mvn test
+````
+
+  
+## Activate program repair for all failing builds with all tools (WIP)
+
+Add in your pom.xml
+
+```xml
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <trimStackTrace>false</trimStackTrace>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>fr.inria.gforge.spirals</groupId>
+        <artifactId>repair-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <!-- not yet implemented -->
+              <goal>all-repair-tools</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+```
+ 
+
+
+## Manually triggering repair of a NullPointerException (NpeFix)
 
 ```bash
 git clone https://github.com/Spirals-Team/npe-dataset/
@@ -31,7 +95,8 @@ mvn test -DtrimStackTrace=false
 mvn fr.inria.gforge.spirals:repair-maven-plugin:npefix
 ```
 
-## Usage to repair a condition bug (Nopol)
+
+## Manually triggering repair of a condition bug (Nopol)
 
 ```bash
 git clone https://github.com/SpoonLabs/nopol-experiments
@@ -69,7 +134,7 @@ Nopol executed after: 14233 ms.
 
 
 
-## Output
+## Patches
 
 ```
 # the patches are in target
