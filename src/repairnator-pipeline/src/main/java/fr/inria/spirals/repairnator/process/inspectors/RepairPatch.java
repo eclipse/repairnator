@@ -91,41 +91,6 @@ public class RepairPatch {
 		return score;
 	}
 
-	private Double computeODSLabel(Features feature) {
-		File buggyFile = new File(filePath);
-		double score = Double.POSITIVE_INFINITY;
-		if (!buggyFile.isFile()) {
-			return score;
-		}
-
-		// read from buggyFile
-		List<String> buggyLines = new ArrayList<>();
-		try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-			stream.forEach(buggyLines::add);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// prepare patches
-		List<String> diffLines = Arrays.asList(diff.split("\n"));
-		Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
-
-		try {
-			// create patchedFile
-			String tmpName = buggyFile.getName();
-			File patchedFile = Files.createTempFile(tmpName, ".java").toFile();
-			// generate content of patchedFile by applying patches
-			List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
-			// write to patchedFile
-			Files.write(Paths.get(patchedFile.getPath()), patchedLines);
-
-		} catch (PatchFailedException | IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		return score;
-	}
-
 	public Double getOverfittingScore(Features features) {
 		if (overfittingScores.containsKey(features)) {
 			return overfittingScores.get(features);
