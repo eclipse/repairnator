@@ -4,14 +4,13 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
-
 import fr.inria.coming.changeminer.entity.FinalResult;
 import fr.inria.coming.codefeatures.RepairnatorFeatures;
+import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
 import fr.inria.coming.main.ComingMain;
 import fr.inria.coming.utils.CommandSummary;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,14 +43,14 @@ public class RepairPatch {
 	/**
 	 * correctness label predicted by ODS
 	 */
-	private String ODSLabel;
+	private ODSLabel odsLabel;
 
 	public RepairPatch(String toolname, String filePath, String diff) {
 		this.toolname = toolname;
 		this.filePath = filePath;
 		this.diff = diff;
 		this.overfittingScores = new HashMap<>();
-		this.ODSLabel = "";
+		this.odsLabel = ODSLabel.UNKNOWN;
 	}
 
 	private Double computeOverfittingScores(Features feature) {
@@ -150,12 +149,12 @@ public class RepairPatch {
 		return diff;
 	}
 	
-	public void setODSLabel(String label) {
-		this.ODSLabel  = label;
+	public void setODSLabel(ODSLabel label) {
+		this.odsLabel  = label;
 	}
 	
-	public String getODSLabel() {
-		return ODSLabel;
+	public ODSLabel getODSLabel() {
+		return odsLabel;
 	}
 
 	@Override
@@ -197,16 +196,16 @@ public class RepairPatch {
 
 		for (int patchID = 0; patchID < allPatches.size(); patchID++) {
 			RepairPatch repairPatch = allPatches.get(patchID);
-			String label  = repairPatch.computeODSLabel(patchID, buildId);
+			ODSLabel label  = repairPatch.computeODSLabel(patchID, buildId);
 			repairPatch.setODSLabel(label);
 		}
 		return allPatches;
 	}
 
-	private String computeODSLabel(int patchId, Long buildId) {
+	private ODSLabel computeODSLabel(int patchId, Long buildId) {
 		File buggyFile = new File(filePath);
 		// if no buggy file available, we provide the unknown label for the patches.
-		String label = "unknown";
+		ODSLabel label = ODSLabel.UNKNOWN;
 		if (!buggyFile.isFile()) {
 			return label;
 		}

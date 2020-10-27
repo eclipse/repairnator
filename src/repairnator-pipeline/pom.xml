@@ -48,7 +48,7 @@
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>coming</artifactId>
             <!-- see https://repo1.maven.org/maven2/com/github/spoonlabs/coming/ -->
-            <version>5</version>
+            <version>5.1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

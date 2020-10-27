@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
+import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -191,7 +191,7 @@ public class TestGlobalPatchAnalysis {
 		int overfittingCount = 0;
 
 		for(RepairPatch patch : classifyPatcheswithODS) {
-			if ("overfitting".equals(patch.getODSLabel())){
+			if (ODSLabel.OVERFITTING == patch.getODSLabel()){
 				overfittingCount++;
 			}
 		}
