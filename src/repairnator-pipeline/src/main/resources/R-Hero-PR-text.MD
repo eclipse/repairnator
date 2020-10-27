@@ -7,7 +7,7 @@
 Your feedback is very valuable to improve its patch generation skills. 
 If you would like to contribute, simply use the links below:
 
-Do you think this patch is helpful? [ [Yes :clap:](/path/to/helpful) ] / [ [Incorrect but useful :handshake:](/path/to/unhelpful) ] / [ [Useless :-1:](/path/to/incorrect) ]
+Do you think this patch is helpful? [ [Yes :clap:](%(helpfulURL)) ] / [ [Incorrect but useful :handshake:](%(incorrectURL)) ] / [ [Useless :-1:](%(uselessURL)) ]
 
 If you would like to provide more detailed feedback:heart: to the R-Hero team, please [tell us your thoughts in a Github issue](https://github.com/eclipse/repairnator/issues/new?title=[FEEDBACK]%(slug))
 
