@@ -11,6 +11,7 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.RemoteAddCommand;
@@ -24,7 +25,10 @@ import org.kohsuke.github.GitHub;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +39,8 @@ import java.util.Map;
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
-    public static final String DEFAULT_TEXT_PR = "This patch fixes failing Travis build %(travisURL) \n\n" +
-                                        "It uses the program repair tools %(tools) \n\n" +
-                                        "If you don't want to receive those PRs in the future, [open an issue on Repairnator](https://github.com/eclipse/repairnator/issues/new?title=[BLACKLIST]%(slug))" ;
+    public static final InputStream DEFAULT_TEXT_FILE = AbstractRepairStep.class.getClassLoader().getResourceAsStream("R-Hero-PR-text.MD");
+    public static final String FEEDBACK_URL = "http://sequencer.westeurope.cloudapp.azure.com:8081";
 
     public static final String GITHUB_TEXT_PR = "This patch uses the program repair tools %(tools) \n\n";
 
@@ -206,15 +209,25 @@ public abstract class AbstractRepairStep extends AbstractStep {
         String head = ghForkedRepo.getOwnerName() + ":" + newBranch;
 
         System.out.println("base: " + base + " head:" + head);
-        String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(this.getInspector().getBuggyBuild().getId(), this.getInspector().getRepoSlug());
+        long buildID = this.getInspector().getBuggyBuild() == null ? 0 : this.getInspector().getBuggyBuild().getId();
+        String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(buildID, this.getInspector().getRepoSlug());
         Map<String, String> values = new HashMap<String, String>();
         values.put("travisURL", travisURL);
         values.put("tools", String.join(",", this.getConfig().getRepairTools()));
         values.put("slug", this.getInspector().getRepoSlug());
 
+        String feedbackURL =
+                FEEDBACK_URL + "/" +
+                URLEncoder.encode(this.getInspector().getRepoSlug(), StandardCharsets.UTF_8.toString()) + "/" +
+                buildID;
+
+        values.put("helpfulURL", feedbackURL + "/0");
+        values.put("incorrectURL", feedbackURL + "/1");
+        values.put("uselessURL", feedbackURL + "/2");
+
         if (prText == null) {
             StrSubstitutor sub = new StrSubstitutor(values, "%(", ")");
-            this.prText = sub.replace(DEFAULT_TEXT_PR);
+            this.prText = sub.replace(IOUtils.toString(DEFAULT_TEXT_FILE, StandardCharsets.UTF_8));
         }
 
         GHPullRequest pullRequest = originalRepository.createPullRequest(prTitle, head, base, this.prText);
