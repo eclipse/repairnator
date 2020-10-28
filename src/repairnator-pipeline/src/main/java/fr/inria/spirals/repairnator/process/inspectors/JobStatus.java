@@ -293,7 +293,7 @@ public class JobStatus {
     }
     
     
-    protected List<RepairPatch> getCorrectbessLabeledPatches(Features features, Long buildId) {
+    protected List<RepairPatch> getCorrectnessLabeledPatches(Features features, Long buildId) {
         List<RepairPatch> allPatches = getAllPatches();
         return RepairPatch.classifyByODSWithFeatures(allPatches,buildId);
             

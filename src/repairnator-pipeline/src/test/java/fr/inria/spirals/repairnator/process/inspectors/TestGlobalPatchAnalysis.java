@@ -182,7 +182,7 @@ public class TestGlobalPatchAnalysis {
 				.addNextStep(new ComputeSourceDir(inspector, true, false)).addNextStep(nopolRepair);
 		cloneStep.execute();
 
-		List<RepairPatch> classifyPatcheswithODS = inspector.getJobStatus().getCorrectbessLabeledPatches(Features.ODS,
+		List<RepairPatch> classifyPatcheswithODS = inspector.getJobStatus().getCorrectnessLabeledPatches(Features.ODS,
 				buildId);
 
 		// There are 10 patches are generated for this failing build
