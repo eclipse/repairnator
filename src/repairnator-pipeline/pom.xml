@@ -14,6 +14,8 @@
             <id>tdurieux-maven-repository-snapshot</id>
             <name>tdurieux.github.io maven-repository</name>
             <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
+            <snapshots><enabled>true</enabled><updatePolicy>always</updatePolicy></snapshots>
+
         </repository>
         <repository>
             <id>tdurieux-maven-repository-release</id>
@@ -46,7 +48,7 @@
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>coming</artifactId>
             <!-- see https://repo1.maven.org/maven2/com/github/spoonlabs/coming/ -->
-            <version>3</version>
+            <version>5.1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
