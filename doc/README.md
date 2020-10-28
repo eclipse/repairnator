@@ -49,7 +49,7 @@ bash launch_rtscanner.sh
  
 For more information about the program repair tools and their strategies implemented in Repairnator, [take a look at this page](repair-tools.md).
 
-To add a new program repair tool in Repairnator, [here is the guide](contributing/add-repair-tool.md).
+To add a new program repair tool in Repairnator, [here is the guide](add-repair-tool.md).
 
 ## Architecture
 
