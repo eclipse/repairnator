@@ -45,7 +45,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final int MAX_PATCH_PER_TOOL = 1;
 
-    public static String prTitle = "Automatic patch found by Repairnator!";
+    public static String prTitle = "Patch automatically synthesized by R-Hero! \uD83C\uDFA9";
 
     private String prText;
 

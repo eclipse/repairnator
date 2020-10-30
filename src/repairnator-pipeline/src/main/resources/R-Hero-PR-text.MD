@@ -1,4 +1,4 @@
-### An automatic patch for you by R-Hero! :rocket:
+### Patch automatically synthesized by R-Hero! :tophat:
 
 :robot: R-Hero has found a patch for [this](%(travisURL)) failing Travis CI build. [R-Hero is a bot for automatic bug fixing](https://github.com/eclipse/repairnator), it has reproduced the bug and was able to fix it.
 
