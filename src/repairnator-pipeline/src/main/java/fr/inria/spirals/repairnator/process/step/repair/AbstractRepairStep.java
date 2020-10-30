@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -168,7 +167,9 @@ public abstract class AbstractRepairStep extends AbstractStep {
         remoteAddCommand.setName("fork-patch");
         remoteAddCommand.call();
 
-        git.push().add(branchName).setRemote("fork-patch").setCredentialsProvider(new UsernamePasswordCredentialsProvider(RepairnatorConfig.getInstance().getGithubToken(), "")).call();
+        git.push().add(branchName).setRemote("fork-patch").setCredentialsProvider(
+                new UsernamePasswordCredentialsProvider(RepairnatorConfig.getInstance().getGithubToken(),"")
+        ).call();
     }
 
     protected Git createGitBranch4Push(String branchName) throws IOException{
@@ -218,7 +219,7 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
         String feedbackURL =
                 FEEDBACK_URL + "/" +
-                URLEncoder.encode(this.getInspector().getRepoSlug(), StandardCharsets.UTF_8.toString()) + "/" +
+                this.getInspector().getRepoSlug() + "/" +
                 buildID;
 
         values.put("helpfulURL", feedbackURL + "/0");
