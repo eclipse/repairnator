@@ -189,32 +189,29 @@ public class RepairPatch {
 
 		try {
 			// create a directory to store the patch: "patches/"+buildId+patchId
-			String buggyClassName = buggyFile.getName().split(".java")[0];
-			String rootfile = filePath.split("patch")[0] + "/patches";
-			String patchpath=rootfile+"/"+ buildId + "-" + patchId;
-			Path path = Paths
-					.get(patchpath + '/' + buggyClassName);
+			String buggyClassName = buggyFile.getName().replace(".java", "");
+			String odsFilesPath = System.getProperty("user.home") + "/ODSPatches";
+
+			String patchPath = odsFilesPath + "/" + buildId + "-" + patchId;
+			Path path = Paths.get(patchPath + '/' + buggyClassName);
 			Files.createDirectories(path);
 
 			// create buggy file and patchedFile that follows Coming structure
-			File newbuggyFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_s.java");
+			File newBuggyFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_s.java");
 			File patchedFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_t.java");
 
 			// copy the buggy file under the patch folder
-			Files.write(Paths.get(newbuggyFile.getPath()), buggyLines);
+			Files.write(Paths.get(newBuggyFile.getPath()), buggyLines);
 			// generate content of patchedFile by applying patches
 			List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
 			Files.write(Paths.get(patchedFile.getPath()), patchedLines);
 
 			
-			 label = new RepairnatorFeatures().getLabel(new File(patchpath));
+			 label = new RepairnatorFeatures().getLabel(new File(patchPath));
 						
 
-		} catch (PatchFailedException | IOException e) {
-			throw new RuntimeException(e);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		return label;

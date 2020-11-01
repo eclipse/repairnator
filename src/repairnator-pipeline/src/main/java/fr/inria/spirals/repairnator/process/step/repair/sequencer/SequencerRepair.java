@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.messages.*;
+import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
@@ -247,9 +248,17 @@ public class SequencerRepair extends AbstractRepairStep {
             return StepStatus.buildPatchNotFound(this);
         }
 
-        notify(listPatches);
+        List<RepairPatch> classifiedPatches = RepairPatch.classifyByODSWithFeatures(
+                listPatches,
+                getInspector().getBuggyBuild().getId()
+        );
 
-        this.recordPatches(listPatches,MAX_PATCH_PER_TOOL);
+        List<RepairPatch> filteredPatches = classifiedPatches.stream()
+                                                .filter(patch -> patch.getODSLabel().equals(RepairnatorFeatures.ODSLabel.CORRECT))
+                                                .collect(Collectors.toList());
+
+        notify(filteredPatches);
+        this.recordPatches(filteredPatches, MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiagnostic);
 
         try {
