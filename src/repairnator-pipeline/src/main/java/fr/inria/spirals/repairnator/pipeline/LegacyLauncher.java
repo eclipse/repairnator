@@ -397,17 +397,6 @@ public class LegacyLauncher implements LauncherAPI {
         }
     }
 
-    protected void checkToolsLoaded(JSAP jsap) {
-        URLClassLoader loader;
-
-        try {
-            loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            loader.loadClass("com.sun.jdi.AbsentInformationException");
-        } catch (ClassNotFoundException e) {
-            System.err.println("Tools.jar must be loaded. The classpath given for your app is: "+System.getProperty("java.class.path"));
-        }
-    }
-
     protected void checkNopolSolverPath(JSAP jsap) {
         String solverPath = this.getConfig().getZ3solverPath();
         // by default Nopol run in Dynamoth mode

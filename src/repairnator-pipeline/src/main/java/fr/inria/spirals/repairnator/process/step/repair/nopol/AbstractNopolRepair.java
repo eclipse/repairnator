@@ -25,6 +25,7 @@ import spoon.reflect.factory.Factory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -90,8 +91,9 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
     public void checkToolsJar() throws ClassNotFoundException {
     	// Check if tools.jar is in classpath, as Nopol depends on it.
         // This is not done in compile time as we don't want Repairnator to it to compile on OpenJDK or JDK >= 9
-        System.getenv("CLASSPATH");
-        Class.forName("com.sun.jdi.AbsentInformationException");
+        URLClassLoader loader;
+        loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        loader.loadClass("com.sun.jdi.AbsentInformationException");
     }
 
     public File[] getSources() {
