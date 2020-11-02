@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -55,6 +56,16 @@ public class NopolMojo extends AbstractRepairMojo {
 
 	@Override
     public void execute() throws MojoExecutionException, MojoFailureException {
+        try {
+            // Check if tools.jar is in classpath, as Nopol depends on it.
+            // This is not done in compile time as we don't want Repairnator to it to compile on OpenJDK or JDK >= 9
+            URLClassLoader loader;
+            loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+            loader.loadClass("com.sun.jdi.AbsentInformationException");
+        } catch (ClassNotFoundException e) {
+            getLog().error("tools.jar has not been loaded, therefore Nopol can't run");
+        }
+
         final List<String> failingTestCases = getFailingTests();
         final List<URL> dependencies = getClasspath();
         final List<File> sourceFolders = getSourceFolders();
