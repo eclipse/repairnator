@@ -18,6 +18,7 @@ import fr.inria.spirals.repairnator.process.nopol.NopolStatus;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.states.PipelineState;
 import spoon.SpoonException;
 import spoon.reflect.factory.Factory;
 
@@ -84,6 +85,13 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         JobStatus jobStatus = this.getInspector().getJobStatus();
         this.setClassPath(jobStatus.getRepairClassPath());
         this.setSources(jobStatus.getRepairSourceDir());
+    }
+
+    public void checkToolsJar() throws ClassNotFoundException {
+    	// Check if tools.jar is in classpath, as Nopol depends on it.
+        // This is not done in compile time as we don't want Repairnator to it to compile on OpenJDK or JDK >= 9
+        System.getenv("CLASSPATH");
+        Class.forName("com.sun.jdi.AbsentInformationException");
     }
 
     public File[] getSources() {

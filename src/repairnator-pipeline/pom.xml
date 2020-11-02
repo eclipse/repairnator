@@ -87,6 +87,12 @@
             <artifactId>nopol</artifactId>
             <!-- from https://github.com/tdurieux/maven-repository/tree/master/releases/fr/inria/gforge/spirals/nopol -->
             <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>

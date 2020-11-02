@@ -3,6 +3,8 @@ package fr.inria.spirals.repairnator.process.step.repair.nopol;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.ComparatorFailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
+import fr.inria.spirals.repairnator.states.PipelineState;
+
 import java.util.*;
 
 /**
@@ -15,6 +17,13 @@ public class NopolMultiWithTestExclusionRepair extends AbstractNopolRepair {
     @Override
     protected StepStatus businessExecute() {
         this.getLogger().debug("Start to use nopol with test exclusion strategy to repair...");
+
+        try {
+            this.checkToolsJar();
+        } catch (ClassNotFoundException e) {
+            this.addStepError("tools.jar has not been provided. Nopol can't be launched.");
+            return StepStatus.buildError(this, PipelineState.MISSING_DEPENDENCIES);
+        }
 
         this.initPatchDir();
         this.initWithJobStatus();
