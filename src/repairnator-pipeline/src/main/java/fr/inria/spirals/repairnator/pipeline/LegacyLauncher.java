@@ -110,7 +110,6 @@ public class LegacyLauncher implements LauncherAPI {
         this.initConfig(arguments);
 
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR || this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR) {
-            this.checkToolsLoaded(jsap);
             this.checkNopolSolverPath(jsap);
             LOGGER.info("The pipeline will try to repair the following build id: "+this.getConfig().getBuildId());
         } else {

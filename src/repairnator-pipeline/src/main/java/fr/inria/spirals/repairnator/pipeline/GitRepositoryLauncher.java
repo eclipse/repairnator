@@ -82,7 +82,6 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         LauncherUtils.checkArguments(jsap, arguments, LauncherType.PIPELINE);
         this.initConfig(arguments);
 
-        checkToolsLoaded(jsap);
         this.checkNopolSolverPath(jsap);
         LOGGER.info("The pipeline will try to repair the following repository id: " + getConfig().getGitRepositoryId());
         
