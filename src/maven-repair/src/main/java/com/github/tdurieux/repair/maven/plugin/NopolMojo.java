@@ -63,7 +63,7 @@ public class NopolMojo extends AbstractRepairMojo {
             loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
             loader.loadClass("com.sun.jdi.AbsentInformationException");
         } catch (ClassNotFoundException e) {
-            getLog().error("tools.jar has not been loaded, therefore Nopol can't run");
+            throw new MojoExecutionException("tools.jar has not been loaded, therefore Nopol can't run");
         }
 
         final List<String> failingTestCases = getFailingTests();
