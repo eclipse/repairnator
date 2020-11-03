@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.net.URLClassLoader;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -76,6 +77,14 @@ public class Utils {
         } else {
             return null;
         }
+    }
+
+    public static void checkToolsJar() throws ClassNotFoundException {
+        // Check if tools.jar is in classpath, as Nopol depends on it.
+        // This is not done in compile time as we don't want Repairnator to it to compile on OpenJDK or JDK >= 9
+        URLClassLoader loader;
+        loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        loader.loadClass("com.sun.jdi.AbsentInformationException");
     }
 
 }

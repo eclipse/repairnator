@@ -151,6 +151,12 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
+
+        <dependency>
+            <groupId>fr.inria.repairnator</groupId>
+            <artifactId>repairnator-core</artifactId>
+            <version>3.3-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <repositories>

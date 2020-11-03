@@ -88,14 +88,6 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         this.setSources(jobStatus.getRepairSourceDir());
     }
 
-    public void checkToolsJar() throws ClassNotFoundException {
-    	// Check if tools.jar is in classpath, as Nopol depends on it.
-        // This is not done in compile time as we don't want Repairnator to it to compile on OpenJDK or JDK >= 9
-        URLClassLoader loader;
-        loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        loader.loadClass("com.sun.jdi.AbsentInformationException");
-    }
-
     public File[] getSources() {
         return sources;
     }

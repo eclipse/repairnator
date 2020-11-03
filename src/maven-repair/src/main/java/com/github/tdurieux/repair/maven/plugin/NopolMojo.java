@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static fr.inria.spirals.repairnator.utils.Utils.checkToolsJar;
+
 @Mojo( name = "nopol", aggregator = true,
         defaultPhase = LifecyclePhase.TEST,
         requiresDependencyResolution = ResolutionScope.TEST)
@@ -57,11 +59,7 @@ public class NopolMojo extends AbstractRepairMojo {
 	@Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
-            // Check if tools.jar is in classpath, as Nopol depends on it.
-            // This is not done in compile time as we don't want Repairnator to it to compile on OpenJDK or JDK >= 9
-            URLClassLoader loader;
-            loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            loader.loadClass("com.sun.jdi.AbsentInformationException");
+            checkToolsJar();
         } catch (ClassNotFoundException e) {
             throw new MojoExecutionException("tools.jar has not been loaded, therefore Nopol can't run");
         }

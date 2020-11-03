@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.repair.nopol;
 
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.states.PipelineState;
+import static fr.inria.spirals.repairnator.utils.Utils.checkToolsJar;
 
 import java.util.Collections;
 
@@ -16,7 +17,7 @@ public class NopolAllTestsRepair extends AbstractNopolRepair {
         this.getLogger().debug("Start to use nopol single repair to repair...");
 
         try {
-            this.checkToolsJar();
+            checkToolsJar();
         } catch (ClassNotFoundException e) {
             this.addStepError("tools.jar has not been provided. Nopol can't be launched.");
             return StepStatus.buildError(this, PipelineState.MISSING_DEPENDENCIES);
