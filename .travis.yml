@@ -54,8 +54,9 @@ jobs:
     - name: "maven-repair"
       env:
         - TEST_PATH="src/maven-repair/"
+        - TEST_LIST="**"
       install: ./.travis/travis-before.sh
-      script: ./.travis/travis-run.sh
+      script: ./.travis/travis-maven.repair.sh
       if: branch = master
     - stage: deploy
       name: "deploy to Sonatype and Dockerhub"
