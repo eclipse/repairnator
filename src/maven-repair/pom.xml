@@ -90,11 +90,6 @@
             <version>4.11</version>
         </dependency>
         <dependency>
-            <groupId>fr.inria.gforge.spirals</groupId>
-            <artifactId>nopol</artifactId>
-            <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
-        </dependency>
-        <dependency>
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
             <version>0.0.2-SNAPSHOT</version>
@@ -144,6 +139,12 @@
             <version>3.3.0</version>
             <scope>test</scope>
             <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.inria.repairnator</groupId>
+            <artifactId>repairnator-core</artifactId>
+            <version>3.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -263,6 +264,39 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>nopol</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>fr.inria.gforge.spirals</groupId>
+                    <artifactId>nopol</artifactId>
+                    <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>noNopol</id>
+            <activation>
+                <jdk>[1.9,1.16)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>fr.inria.gforge.spirals</groupId>
+                    <artifactId>nopol</artifactId>
+                    <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.sun</groupId>
+                            <artifactId>tools</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+
         <profile>
             <id>run-its</id>
             <build>

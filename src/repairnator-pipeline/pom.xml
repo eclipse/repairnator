@@ -83,12 +83,6 @@
             <version>2.21.0</version>
         </dependency>
         <dependency>
-            <groupId>fr.inria.gforge.spirals</groupId>
-            <artifactId>nopol</artifactId>
-            <!-- from https://github.com/tdurieux/maven-repository/tree/master/releases/fr/inria/gforge/spirals/nopol -->
-            <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model-builder</artifactId>
             <version>3.3.9</version>
@@ -182,4 +176,39 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>nopol</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>fr.inria.gforge.spirals</groupId>
+                    <artifactId>nopol</artifactId>
+                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>noNopol</id>
+            <activation>
+                <jdk>[1.9,1.16)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>fr.inria.gforge.spirals</groupId>
+                    <artifactId>nopol</artifactId>
+                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.sun</groupId>
+                            <artifactId>tools</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

@@ -110,7 +110,6 @@ public class LegacyLauncher implements LauncherAPI {
         this.initConfig(arguments);
 
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR || this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR) {
-            this.checkToolsLoaded(jsap);
             this.checkNopolSolverPath(jsap);
             LOGGER.info("The pipeline will try to repair the following build id: "+this.getConfig().getBuildId());
         } else {
@@ -395,17 +394,6 @@ public class LegacyLauncher implements LauncherAPI {
             this.getConfig().setExperimentalPluginRepoList(null);
         } else {
             this.getConfig().setExperimentalPluginRepoList(null);
-        }
-    }
-
-    protected void checkToolsLoaded(JSAP jsap) {
-        URLClassLoader loader;
-
-        try {
-            loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            loader.loadClass("com.sun.jdi.AbsentInformationException");
-        } catch (ClassNotFoundException e) {
-            System.err.println("Tools.jar must be loaded. The classpath given for your app is: "+System.getProperty("java.class.path"));
         }
     }
 
