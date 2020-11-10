@@ -138,6 +138,7 @@ public class RunnablePipelineContainer implements Runnable {
             //to avoid creating new unnamed volumes
             Volume workspaceVolume = docker.inspectVolume("repairnator_workspace");
             Volume logsVolume = docker.inspectVolume("repairnator_logs");
+            Volume ODSVolume = docker.inspectVolume("repairnator_ods_data");
 
             HostConfig hostConfig = HostConfig.builder()
                     .appendBinds(HostConfig.Bind
@@ -154,6 +155,11 @@ public class RunnablePipelineContainer implements Runnable {
                             .builder()
                             .from(logsVolume)
                             .to("/var/log/")
+                            .build())
+                    .appendBinds(HostConfig.Bind
+                            .builder()
+                            .from(ODSVolume)
+                            .to(SequencerConfig.getInstance().ODSPath)
                             .build())
                     .build();
 

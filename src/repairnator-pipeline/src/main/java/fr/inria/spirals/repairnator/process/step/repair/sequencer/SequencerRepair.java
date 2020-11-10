@@ -257,6 +257,10 @@ public class SequencerRepair extends AbstractRepairStep {
                                                 .filter(patch -> patch.getODSLabel().equals(RepairnatorFeatures.ODSLabel.CORRECT))
                                                 .collect(Collectors.toList());
 
+        if(filteredPatches.isEmpty()){
+            return StepStatus.buildPatchNotFound(this);
+        }
+
         notify(filteredPatches);
         this.recordPatches(filteredPatches, MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiagnostic);

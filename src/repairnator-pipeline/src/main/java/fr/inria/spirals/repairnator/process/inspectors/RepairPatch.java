@@ -4,14 +4,13 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
-import fr.inria.coming.changeminer.entity.FinalResult;
 import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
-import fr.inria.coming.main.ComingMain;
-import fr.inria.coming.utils.CommandSummary;
+import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +19,9 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class RepairPatch {
+
+	static final String ODSPath = SequencerConfig.getInstance().ODSPath;
+
 	/**
 	 * Name of the tool which produces the patch
 	 */
@@ -159,11 +161,29 @@ public class RepairPatch {
 	// ODS classification
 	public static List<RepairPatch> classifyByODSWithFeatures(List<RepairPatch> allPatches, Long buildId) {
 
-		for (int patchID = 0; patchID < allPatches.size(); patchID++) {
+		File f = new File(ODSPath);
+		f.mkdir();
+
+		int len = allPatches.size();
+
+		for (int patchID = 0; patchID < len; patchID++) {
 			RepairPatch repairPatch = allPatches.get(patchID);
-			ODSLabel label  = repairPatch.computeODSLabel(patchID, buildId);
+			ODSLabel label = repairPatch.computeODSLabel(patchID, buildId);
 			repairPatch.setODSLabel(label);
 		}
+
+		String ODSSummary = ODSPath + "/" + buildId + "_summary";
+
+		try {
+			FileWriter writer = new FileWriter(ODSSummary);
+			for (int i = 0; i < len; i++) {
+				writer.write(String.format("%s-%s %s\n", buildId, i, allPatches.get(i).getODSLabel()));
+			}
+			writer.close();
+		} catch (IOException e) {
+			throw new RuntimeException("RepairPatch error: Unable to write to ODS summary file:" + e);
+		}
+
 		return allPatches;
 	}
 
