@@ -55,9 +55,9 @@ To add a new program repair tool in Repairnator, [here is the guide](add-repair-
 
 ### The pipeline
 
-The pipeline takes as input a Travis CI build ID and tries to replicate the bug and to repair it with different repair tools. It provides a single abstraction over repair tools. As its name indicates, it's a pipeline of steps, from cloning the repository and building it, to launching the repair tools and pushing a resulting branch. It contains plenty of options, for notifying the users, creating a pull requests, etc.
+The pipeline takes as input a Travis CI build ID and tries to replicate the bug and to repair it with different repair tools. It provides a single abstraction over repair tools. As its name indicates, it's a pipeline of steps, from cloning the repository and building it, to launching the repair tools and pushing a resulting branch. It contains plenty of options, for notifying the users, creating a pull request, etc.
 
-The pipeline be used:
+The pipeline can be used:
 * directly in Java
 * or as a Docker image: it encapsulates the pipeline in an environment in which it will properly work, with the right dependencies, in a sandboxed environment.
 
@@ -91,7 +91,7 @@ When Repairnator is configured to create a pull-request automatically, it uses t
 This repository is organized as follows:
 
   * [doc](../doc) contains the reference documentation about Repairnator and its usage;
-  * [repairnator](../repairnator) is the main program dedicated to this project: it can automatically scan large set of projects, detect failing builds, reproduce them and try to repair them using our tools;
+  * [repairnator](../repairnator) is the main program dedicated to this project: it can automatically scan a large set of projects, detect failing builds, reproduce them and try to repair them using our tools;
   * [resources](../resources) contains mainly data produced by Repairnator, scripts to retrieve those data, and it also contains the schema of repairnator.json files;
   * [website](../website) contains all data to produce repairnator website.
 
