@@ -25,27 +25,18 @@ import spoon.reflect.factory.Factory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.*;
+import java.util.concurrent.*;
 
+import static fr.inria.spirals.repairnator.utils.Utils.checkToolsJar;
 
 /**
- * This step is used to launch Nopol using a repair strategy by trying first all test
- * and then only test in failure and finally only test in errors
+ * This step is used to launch Nopol against all classes of failing tests at once
  */
-public abstract class AbstractNopolRepair extends AbstractRepairStep {
+public class NopolRepair extends AbstractRepairStep {
+    protected static final String TOOL_NAME = "Nopol";
     public static int TOTAL_MAX_TIME = 60 * 4; // We expect it to run 4
                                                       // hours top.
     private static final int MIN_TIMEOUT = 2;
@@ -58,11 +49,40 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
     private boolean patchCreated;
     private JsonArray toolDiag;
 
-    public AbstractNopolRepair() {
+    public NopolRepair() {
         this.repairPatches = new ArrayList<>();
         this.toolDiag = new JsonArray();
         this.gson = new GsonBuilder().registerTypeAdapter(Path.class, new GsonPathTypeAdapter()).create();
         this.passingTime = 0;
+    }
+
+    @Override
+    public String getRepairToolName() {
+        return TOOL_NAME;
+    }
+
+    @Override
+    protected StepStatus businessExecute() {
+        this.getLogger().debug("Start to use nopol single repair to repair...");
+
+        try {
+            checkToolsJar();
+        } catch (ClassNotFoundException e) {
+            this.addStepError("tools.jar has not been provided. Nopol can't be launched.");
+            return StepStatus.buildError(this, PipelineState.MISSING_DEPENDENCIES);
+        }
+
+        this.initPatchDir();
+        this.initWithJobStatus();
+
+        if (this.getClassPath() != null && this.getSources() != null) {
+            this.runNopol(this.getInspector().getJobStatus().getFailureLocations(), Collections.EMPTY_LIST, true);
+
+            return this.recordResults();
+        } else {
+            this.addStepError("No classpath or sources directory has been given. Nopol can't be launched.");
+            return StepStatus.buildSkipped(this,"No classpath or source directory given.");
+        }
     }
 
     public void setClassPath(List<URL> classPath) {

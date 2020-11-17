@@ -3,9 +3,7 @@ fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair
 fr.inria.spirals.repairnator.process.step.repair.astor.AstorJGenProgRepair
 fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair
 fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair
-fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair
-fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair
-fr.inria.spirals.repairnator.process.step.repair.nopol.NopolAllTestsRepair
+fr.inria.spirals.repairnator.process.step.repair.nopol.NopolRepair
 fr.inria.spirals.repairnator.process.step.repair.NPERepair
 fr.inria.spirals.repairnator.process.step.repair.Sorald
 fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair

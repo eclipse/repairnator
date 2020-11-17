@@ -1,25 +1,21 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import fr.inria.coming.changeminer.entity.FinalResult;
-import fr.inria.coming.codefeatures.RepairnatorFeatures;
-import fr.inria.coming.main.ComingMain;
-import fr.inria.coming.utils.CommandSummary;
+import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
-import fr.inria.spirals.repairnator.process.step.StepStatus;
+import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolRepair;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -29,16 +25,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.*;
 
 // test the collection of all patches over different repair tools
 public class TestGlobalPatchAnalysis {
@@ -70,7 +68,6 @@ public class TestGlobalPatchAnalysis {
 	}
 
 	@Test
-	@Ignore
 	public void testGatheringPatches() throws IOException {
 		long buildId = 564711868; // surli/failingProject build https://api.travis-ci.org/v3/build/564711868
 		Build build = this.checkBuildAndReturn(buildId, false);
@@ -80,7 +77,7 @@ public class TestGlobalPatchAnalysis {
 		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
 		CloneRepository cloneStep = new CloneRepository(inspector);
-		NopolSingleTestRepair nopolRepair = new NopolSingleTestRepair();
+		NopolRepair nopolRepair = new NopolRepair();
 		nopolRepair.setProjectInspector(inspector);
 		NPERepair npeRepair = new NPERepair();
 		npeRepair.setProjectInspector(inspector);
@@ -128,7 +125,7 @@ public class TestGlobalPatchAnalysis {
 		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
 		CloneRepository cloneStep = new CloneRepository(inspector);
-		NopolSingleTestRepair nopolRepair = new NopolSingleTestRepair();
+		NopolRepair nopolRepair = new NopolRepair();
 		nopolRepair.setProjectInspector(inspector);
 		NPERepair npeRepair = new NPERepair();
 		npeRepair.setProjectInspector(inspector);
@@ -148,15 +145,15 @@ public class TestGlobalPatchAnalysis {
 		List<RepairPatch> rankedPatchesS4R = inspector.getJobStatus().getRankedPatches(Features.S4R);
 
 		// test ranking by P4J overfitting-scores
-		assertThat(rankedPatchesP4J.get(0).getToolname(), is("NopolSingleTest"));
+		assertThat(rankedPatchesP4J.get(0).getToolname(), is("Nopol"));
 		assertEquals(rankedPatchesP4J.get(0).getOverfittingScore(Features.P4J), -2590, 1);
-		assertThat(rankedPatchesP4J.get(4).getToolname(), is("NopolSingleTest"));
+		assertThat(rankedPatchesP4J.get(4).getToolname(), is("Nopol"));
 		assertEquals(rankedPatchesP4J.get(4).getOverfittingScore(Features.P4J), -410, 1);
 
 		// test ranking by S4R overfitting-scores
-		assertThat(rankedPatchesS4R.get(0).getToolname(), is("NopolSingleTest"));
+		assertThat(rankedPatchesS4R.get(0).getToolname(), is("Nopol"));
 		assertEquals(rankedPatchesS4R.get(0).getOverfittingScore(Features.S4R), -0.06, 0.001);
-		assertThat(rankedPatchesS4R.get(1).getToolname(), is("NopolSingleTest"));
+		assertThat(rankedPatchesS4R.get(1).getToolname(), is("Nopol"));
 		assertEquals(rankedPatchesS4R.get(1).getOverfittingScore(Features.S4R), -0.05, 0.001);
 	}
 
@@ -171,7 +168,7 @@ public class TestGlobalPatchAnalysis {
 		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
 		CloneRepository cloneStep = new CloneRepository(inspector);
-		NopolSingleTestRepair nopolRepair = new NopolSingleTestRepair();
+		NopolRepair nopolRepair = new NopolRepair();
 		nopolRepair.setProjectInspector(inspector);
 
 		RepairnatorConfig.getInstance().setRepairTools(new HashSet<>(Arrays.asList(nopolRepair.getRepairToolName())));

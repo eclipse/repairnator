@@ -114,7 +114,7 @@ public class BuildAnalyzerLauncher {
         opt2.setList(true);
         opt2.setListSeparator(',');
         opt2.setHelp("Specify one or several repair tools to use separated by commas (available tools might depend of your docker image)");
-        opt2.setDefault("NopolAllTests");
+        opt2.setDefault("Nopol");
         jsap.registerParameter(opt2);
 
         return jsap;

@@ -44,9 +44,9 @@ Options:
 
   --repairTools repairTools1,repairTools2,...,repairToolsN
         Specify one or several repair tools to use among:
-        NopolAllTests,NPEFix,AssertFixer,AstorJGenProg,AstorJKali,NopolSingleTest,AstorJMut,NopolTestExclusionStrategy
+        Nopol,NPEFix,AssertFixer,AstorJGenProg,AstorJKali,AstorJMut
         (default:
-        NopolAllTests,NPEFix,AssertFixer,AstorJGenProg,AstorJKali,NopolSingleTest,AstorJMut,NopolTestExclusionStrategy).
+        Nopol,NPEFix,AssertFixer,AstorJGenProg,AstorJKali,AstorJMut).
 
   [-h|--help]
 

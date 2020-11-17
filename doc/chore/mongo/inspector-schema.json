@@ -83,7 +83,7 @@
       "description": "Status computed by each steps of the pipeline",
       "default": "",
       "examples": [
-        "[ CloneRepository : SUCCESS ] -> [ CheckoutBuggyBuild : SUCCESS ] -> [ BuildProject : SUCCESS ] -> [ TestProject : SUCCESS ] -> [ GatherTestInformation : SUCCESS ] -> [ InitRepoToPush : SUCCESS ] -> [ ComputeClasspath : SUCCESS ] -> [ ComputeSourceDir : FAILURE ( SOURCEDIRNOTCOMPUTED ) ] -> [ ComputeTestDir : SUCCESS ] -> [ NopolAllTests : SKIPPED ( No classpath or source directory given. ) ] -> [ NPEFix : SKIPPED ( No NPE found. ) ] -> [ AstorJMut : SKIPPED ( Classpath or sources not computed. ) ] -> [ CommitPatch : SUCCESS ] -> [ CheckoutPatchedBuild : FAILURE ( BUILDNOTCHECKEDOUT ) ] -> [ ComputeSourceDir : FAILURE ( SOURCEDIRNOTCOMPUTED ) ] -> [ ComputeModules : SUCCESS ] -> [ WritePropertyFile : SUCCESS ] -> [ CommitProcessEnd : SUCCESS ] -> [ PushProcessEnd : SUCCESS ]"
+        "[ CloneRepository : SUCCESS ] -> [ CheckoutBuggyBuild : SUCCESS ] -> [ BuildProject : SUCCESS ] -> [ TestProject : SUCCESS ] -> [ GatherTestInformation : SUCCESS ] -> [ InitRepoToPush : SUCCESS ] -> [ ComputeClasspath : SUCCESS ] -> [ ComputeSourceDir : FAILURE ( SOURCEDIRNOTCOMPUTED ) ] -> [ ComputeTestDir : SUCCESS ] -> [ Nopol : SKIPPED ( No classpath or source directory given. ) ] -> [ NPEFix : SKIPPED ( No NPE found. ) ] -> [ AstorJMut : SKIPPED ( Classpath or sources not computed. ) ] -> [ CommitPatch : SUCCESS ] -> [ CheckoutPatchedBuild : FAILURE ( BUILDNOTCHECKEDOUT ) ] -> [ ComputeSourceDir : FAILURE ( SOURCEDIRNOTCOMPUTED ) ] -> [ ComputeModules : SUCCESS ] -> [ WritePropertyFile : SUCCESS ] -> [ CommitProcessEnd : SUCCESS ] -> [ PushProcessEnd : SUCCESS ]"
       ]
     },
     "hostname": {

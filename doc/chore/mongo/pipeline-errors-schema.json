@@ -107,11 +107,11 @@
         ]
       }
     },
-    "NopolAllTests": {
-      "$id": "/properties/NopolAllTests",
+    "Nopol": {
+      "$id": "/properties/Nopol",
       "type": "array",
       "items": {
-        "$id": "/properties/NopolAllTests/items",
+        "$id": "/properties/Nopol/items",
         "type": "string",
         "default": "",
         "examples": [

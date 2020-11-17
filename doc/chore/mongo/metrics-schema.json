@@ -120,8 +120,8 @@
             0
           ]
         },
-        "NopolAllTests": {
-          "$id": "/properties/StepsDurationsInSeconds/properties/NopolAllTests",
+        "Nopol": {
+          "$id": "/properties/StepsDurationsInSeconds/properties/Nopol",
           "type": "integer",
           "default": 0,
           "examples": [
@@ -468,8 +468,8 @@
             949400152
           ]
         },
-        "NopolAllTests": {
-          "$id": "/properties/FreeMemoryByStep/properties/NopolAllTests",
+        "Nopol": {
+          "$id": "/properties/FreeMemoryByStep/properties/Nopol",
           "type": "integer",
           "default": 0,
           "examples": [

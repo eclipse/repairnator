@@ -185,7 +185,7 @@ public class TestMetrics4BearsJsonFile {
 
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.REPAIR);
-        config.setRepairTools(new HashSet<>(Arrays.asList("NopolSingleTest")));
+        config.setRepairTools(new HashSet<>(Arrays.asList("Nopol")));
 
         ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null, null);
         inspector.run();

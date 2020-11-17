@@ -1,80 +1,42 @@
 package io.jenkins.plugins.main;
 
-import hudson.Launcher;
-import hudson.Extension;
-import hudson.model.Action;
 import hudson.EnvVars;
-import hudson.tasks.*;
-import hudson.util.FormValidation;
+import hudson.Extension;
+import hudson.Launcher;
+import hudson.Util;
 import hudson.model.AbstractBuild;
-import hudson.model.BuildListener;
 import hudson.model.AbstractProject;
-import net.sf.json.JSONObject;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.jenkinsci.plugins.workflow.steps.StepContext;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-
-import java.io.PrintStream;
-
-import java.util.logging.*;
-import java.io.IOException;
-import java.lang.InterruptedException;
-
-import java.util.Map;
-import java.util.Arrays;
-
-import java.io.File;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-
-import java.lang.ProcessBuilder;
-import java.lang.Process;
-
-import java.io.FileNotFoundException;
-import java.lang.InterruptedException;
-
-import hudson.tasks.Maven;
-import hudson.tools.ToolProperty;
-import hudson.tasks.Maven.MavenInstallation;
-import hudson.tasks.Maven.MavenInstaller;
-
-import hudson.DescriptorExtensionList;
-import hudson.tools.ToolProperty;
-import hudson.tools.ToolPropertyDescriptor;
-
-import hudson.model.Node;
-import hudson.FilePath;
-
-import org.apache.commons.io.FileUtils;
-
+import hudson.model.Action;
+import hudson.model.BuildListener;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
 import hudson.util.DescribableList;
-import hudson.Util;
+import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
+import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Date;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
-import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.BasicFileAttributes;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.HashMap;
-import java.util.Locale;
 
 /* Post build class for post build action*/
 public class RepairnatorPostBuild extends Recorder {
@@ -87,7 +49,6 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean useAstorJKali;
     private boolean useAstorJMut;
     private boolean useNPEFixSafe;
-    private boolean useNopolTestExclusionStrategy;
     private boolean useSorald;
     private final Config config = new Config();
 
@@ -167,11 +128,6 @@ public class RepairnatorPostBuild extends Recorder {
     @DataBoundSetter
     public void setUseNPEFixSafe(boolean useNPEFixSafe) {
         this.useNPEFixSafe = useNPEFixSafe;
-    }
-
-    @DataBoundSetter
-    public void setUseNopolTestExclusionStrategy(boolean useNopolTestExclusionStrategy) {
-        this.useNopolTestExclusionStrategy = useNopolTestExclusionStrategy;
     }
 
     @DataBoundSetter
@@ -323,10 +279,6 @@ public class RepairnatorPostBuild extends Recorder {
         return useNPEFixSafe;
     }
 
-    public boolean getUseNopolTestExclusionStrategy() {
-        return useNopolTestExclusionStrategy;
-    }  
-
     public boolean getUseSorald() {
         return useSorald;
     }
@@ -347,10 +299,6 @@ public class RepairnatorPostBuild extends Recorder {
 
         if (this.useNPEFixSafe) {
             dummy += ",NPEFixSafe";
-        }
-
-        if (this.useNopolTestExclusionStrategy) {
-            dummy += ",NopolTestExclusionStrategy";
         }
 
         if (this.useSorald) {
@@ -474,7 +422,7 @@ public class RepairnatorPostBuild extends Recorder {
             return false;
         }
 
-        if (!(this.useNPEFix || this.useAstorJKali || this.useAstorJMut || this.useNPEFixSafe || this.useNopolTestExclusionStrategy || this.useSorald)) {
+        if (!(this.useNPEFix || this.useAstorJKali || this.useAstorJMut || this.useNPEFixSafe || this.useSorald)) {
             System.out.println("ERROR: NO TOOL SPECIFIED , NO NEED TO REPAIR");
             return false;
         }
@@ -644,7 +592,6 @@ public class RepairnatorPostBuild extends Recorder {
         private boolean useAstorJMut;
         private boolean useAstorJKali;
         private boolean useNPEFixSafe;
-        private boolean useNopolTestExclusionStrategy;
         private boolean useSorald;
         private boolean rulesProvided;
 
@@ -652,7 +599,7 @@ public class RepairnatorPostBuild extends Recorder {
             load();
         }
 
-         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useNopolTestExclusionStrategy,@QueryParameter boolean useSorald) {
+         public FormValidation doCheckOptions(@QueryParameter boolean useNPEFix, @QueryParameter boolean useAstorJKali, @QueryParameter boolean useAstorJMut,@QueryParameter boolean useNPEFixSafe, @QueryParameter boolean useSorald) {
             if(useSorald) {
                 FormValidation.warning("Please also provide sonarRules in the textfield below");
             }
@@ -674,7 +621,6 @@ public class RepairnatorPostBuild extends Recorder {
             this.useAstorJKali = formData.getBoolean("useAstorJKali");
             this.useAstorJMut = formData.getBoolean("useAstorJMut");
             this.useNPEFixSafe = formData.getBoolean("useNPEFixSafe");
-            this.useNopolTestExclusionStrategy = formData.getBoolean("useNopolTestExclusionStrategy");
             this.useSorald = formData.getBoolean("useSorald");
 
             save();
@@ -696,10 +642,6 @@ public class RepairnatorPostBuild extends Recorder {
         public boolean getUseNPEFixSafe() {
             return useNPEFixSafe;
         }
-
-        public boolean getUseNopolTestExclusionStrategy() {
-            return useNopolTestExclusionStrategy;
-        }  
 
         public boolean getUseSorald() {
             return useSorald;

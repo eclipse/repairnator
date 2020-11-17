@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.repair;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolRepair;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
@@ -16,7 +17,6 @@ import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -59,7 +59,7 @@ public class TestNopolRepair {
     }
 
     @Test
-    public void testNopolRepairWithExclusion() throws IOException {
+    public void testNopolRepair() throws IOException {
         long buildId = 207890790; // surli/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -72,10 +72,10 @@ public class TestNopolRepair {
         ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
         CloneRepository cloneStep = new CloneRepository(inspector);
-        NopolMultiWithTestExclusionRepair nopolRepair = new NopolMultiWithTestExclusionRepair();
+        NopolRepair nopolRepair = new NopolRepair();
         nopolRepair.setProjectInspector(inspector);
         RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(nopolRepair.getRepairToolName()));
-        NopolMultiWithTestExclusionRepair.TOTAL_MAX_TIME = 2;
+        NopolRepair.TOTAL_MAX_TIME = 2;
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
                 .addNextStep(new TestProject(inspector))

@@ -1,22 +1,16 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.Sorald;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepairSafe;
-import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
-import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolAllTestsRepair;
-import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolMultiWithTestExclusionRepair;
-import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair;
-import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair; 
+import fr.inria.spirals.repairnator.process.step.repair.*;
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJGenProgRepair;
+import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair;
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair;
+import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolRepair;
+import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.ArrayList;
 
 /**
  * This class defines a java ServiceLoader to automatically discover the available
@@ -64,12 +58,8 @@ public class RepairToolsManager {
         this.repairTools.put(assertFixer.getRepairToolName(),assertFixer);
         AbstractRepairStep sequencer = new SequencerRepair();
         this.repairTools.put(sequencer.getRepairToolName(),sequencer);
-        AbstractRepairStep nopolAllTests = new NopolAllTestsRepair();
-        this.repairTools.put(nopolAllTests.getRepairToolName(),nopolAllTests);
-        AbstractRepairStep nopolTestExclusionStrategy = new NopolMultiWithTestExclusionRepair();
-        this.repairTools.put(nopolTestExclusionStrategy.getRepairToolName(),nopolTestExclusionStrategy);
-        AbstractRepairStep nopolSingleTest = new NopolSingleTestRepair();
-        this.repairTools.put(nopolSingleTest.getRepairToolName(),nopolSingleTest);
+        AbstractRepairStep nopol = new NopolRepair();
+        this.repairTools.put(nopol.getRepairToolName(),nopol);
         AbstractRepairStep astorJGenProg = new AstorJGenProgRepair();
         this.repairTools.put(astorJGenProg.getRepairToolName(),astorJGenProg);
         AbstractRepairStep astorJKali = new AstorJKaliRepair();

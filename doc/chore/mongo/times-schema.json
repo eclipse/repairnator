@@ -170,8 +170,8 @@
         0
       ]
     },
-    "NopolAllTests": {
-      "$id": "/properties/NopolAllTests",
+    "Nopol": {
+      "$id": "/properties/Nopol",
       "type": "integer",
       "default": 0,
       "examples": [

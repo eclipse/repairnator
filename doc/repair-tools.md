@@ -14,15 +14,9 @@ It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with t
 [Nopol](https://github.com/SpoonLabs/nopol) is a program repair tool developed to fix conditional statements.
 Repairnator supports different strategies to run Nopol.
 Nopol is currently configured in Repairnator to find a patch in a maximum of 4 hours.
+With this strategy, Nopol will try to find a patch that fixes all of the failing tests, from all test classes of the project.
 
-**NopolAllTests**  With this strategy, Nopol will try to find a patch that fix all the failing tests, from all tests classes of the project. This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolAllTests`.
-
-**NopolSingleTest** With this strategy, Nopol will be launched back for each test class with a failing test: it will try to find a patch for each test class in failure. This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolSingleTest`.
-
-**NopolTestExclusionStrategy** In this strategy, we consider that there is more chance to find a patch for a failing test (i.e., a test with an `AssertionError`) than for an erroring test (i.e., a test which fails with any other exception).
-This strategy will launch Nopol for each test class, but it will try to ignore erroring tests first to find a patch, and then it will look for a patch ignoring failing tests.
-
-This strategy can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `NopolTestExclusionStrategy`.
+It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `Nopol`.
 
 ## Astor
 

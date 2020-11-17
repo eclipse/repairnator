@@ -28,7 +28,7 @@ public class TestPipeline {
         assertEquals("", ((FlaggedOption)launcher.defineArgs().getByLongFlag("activemqpassword")).getDefault()[0]);
 
         // non default value is accepted
-        assertEquals("NopolAllTests", ((FlaggedOption)launcher.defineArgs().getByLongFlag("repairTools")).getStringParser().parse("NopolAllTests"));
+        assertEquals("Nopol", ((FlaggedOption)launcher.defineArgs().getByLongFlag("repairTools")).getStringParser().parse("Nopol"));
 
         // incorrect values are rejected
         try {

@@ -35,7 +35,7 @@ public class TestPipelinebTravisMode {
         assertEquals("", ((FlaggedOption)defaultJsap.getByLongFlag("activemqpassword")).getDefault()[0]);
 
         // non default value is accepted
-        assertEquals("NopolAllTests", ((FlaggedOption)defaultJsap.getByLongFlag("repairTools")).getStringParser().parse("NopolAllTests"));
+        assertEquals("Nopol", ((FlaggedOption)defaultJsap.getByLongFlag("repairTools")).getStringParser().parse("Nopol"));
 
         // incorrect values are rejected
         try {
