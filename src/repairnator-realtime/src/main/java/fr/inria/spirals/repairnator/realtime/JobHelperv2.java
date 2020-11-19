@@ -23,6 +23,15 @@ class JobHelperv2 extends JobHelper {
         super(jTravis);
     }
 
+    public JobV2 getJob (long jobId) throws Exception{
+        String url = "/jobs/" + jobId;
+        String response = this.get(url, API_VERSION.v2, 2);
+        JsonObject jsonObj = getJsonFromStringContent(response);
+        JobV2 job = createGson().fromJson(jsonObj.get("job"), JobV2.class);
+
+        return job;
+    }
+
     public Optional<List<JobV2>> allFromV2() {
         String url = "/" + TravisConstants.JOBS_ENDPOINT;
         try {

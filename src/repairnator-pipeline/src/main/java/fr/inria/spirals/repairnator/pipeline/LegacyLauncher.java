@@ -302,6 +302,20 @@ public class LegacyLauncher implements LauncherAPI {
         sw.setHelp("repair with git url , branch and commit instead of travis build ids");
         jsap.registerParameter(sw);
 
+        opt2 = new FlaggedOption("jtravisendpoint");
+        opt2.setLongFlag("jtravisendpoint");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("https://api.travis-ci.org");
+        opt2.setHelp("The endpoint where JTravis points its requests");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("travistoken");
+        opt2.setLongFlag("travistoken");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("");
+        opt2.setHelp("TravisCI.com required token");
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -370,6 +384,9 @@ public class LegacyLauncher implements LauncherAPI {
         this.getConfig().setMavenHome(arguments.getString("MavenHome"));
 
         this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
+
+        this.getConfig().setJTravisEndpoint(arguments.getString("jtravisendpoint"));
+        this.getConfig().setTravisToken(arguments.getString("travistoken"));
 
         if (arguments.getFile("projectsToIgnore") != null) {
             this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());

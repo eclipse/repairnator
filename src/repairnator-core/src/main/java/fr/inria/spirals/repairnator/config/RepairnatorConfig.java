@@ -112,6 +112,8 @@ public class RepairnatorConfig {
     private String gitBranch;
     private String gitCommitHash;
     private String mavenHome;
+    private String jTravisEndpoint;
+    private String travisToken;
 
     private String gitRepositoryUrl;
     private String gitRepositoryBranch;
@@ -608,7 +610,15 @@ public class RepairnatorConfig {
     }
 
     public JTravis getJTravis() {
-        return JTravis.builder().setGithubToken(this.getGithubToken()).build();
+        JTravis.Builder builder = JTravis.builder().setGithubToken(this.getGithubToken());
+
+        if(this.getJTravisEndpoint() != null && !this.getJTravisEndpoint().equals("")) {
+            builder.setEndpoint(this.getJTravisEndpoint());
+        }
+        if(this.getTravisToken() != null && !this.getTravisToken().equals("")) {
+            builder.setTravisToken("token " + this.getTravisToken());
+        }
+        return builder.build();
     }
 
     public BearsMode getBearsMode() {
@@ -838,6 +848,8 @@ public class RepairnatorConfig {
                 ", gitCommitHash=" + gitCommitHash +
                 ", noTravisRepair=" + noTravisRepair +
                 ", rankPatches=" + patchRankingMode +
+                ", jTravisEndpoint=" + jTravisEndpoint +
+                ", travisToken=" + travisToken +
                 '}';
     }
 
@@ -917,5 +929,21 @@ public class RepairnatorConfig {
 		return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
 				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
 				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+    }
+
+    public String getJTravisEndpoint() {
+        return jTravisEndpoint;
+    }
+
+    public void setJTravisEndpoint(String jTravisEndpoint) {
+        this.jTravisEndpoint = jTravisEndpoint;
+    }
+
+    public String getTravisToken() {
+        return travisToken;
+    }
+
+    public void setTravisToken(String travisToken) {
+        this.travisToken = travisToken;
     }
 }

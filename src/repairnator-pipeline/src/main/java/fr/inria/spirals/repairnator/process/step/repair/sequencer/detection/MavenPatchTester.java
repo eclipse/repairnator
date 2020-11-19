@@ -55,7 +55,7 @@ public class MavenPatchTester {
             return result == MavenHelper.MAVEN_SUCCESS;
 
         } catch (Exception e) {
-            logger.error("error while testing if patch is buildable");
+            logger.error("error while testing if patch is buildable:" + e) ;
             return false;
         }
     }

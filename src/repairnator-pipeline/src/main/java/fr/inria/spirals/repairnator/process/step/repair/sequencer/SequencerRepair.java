@@ -124,7 +124,8 @@ public class SequencerRepair extends AbstractRepairStep {
                                             + "--buggy_line=" + buggyLineNumber + " "
                                             + "--beam_size=" + beamSize + " "
                                             + "--real_file_path=" + relativePath + " "
-                                            + "--output=" + "/out";
+                                            + "--output=" + "/out" + " "
+                                            + "--models_dir=" + "/root/sequencer/models";
 
                 HostConfig.Builder hostConfigBuilder = HostConfig.builder();
 
@@ -162,7 +163,8 @@ public class SequencerRepair extends AbstractRepairStep {
                     outputPathStr = outputPathStr.replaceFirst(workspaceDir, mountPointSrt);
                 }
 
-                hostConfigBuilder.appendBinds(HostConfig.Bind
+                hostConfigBuilder
+                        .appendBinds(HostConfig.Bind
                                 .from(parentPathStr)
                                 .to("/tmp")
                                 .build())
@@ -253,9 +255,18 @@ public class SequencerRepair extends AbstractRepairStep {
                 getInspector().getBuggyBuild().getId()
         );
 
+        classifiedPatches.forEach(patch -> {
+            this.getLogger().debug("patch: " + patch.getFilePath() + " " + patch.getODSLabel() + "\n" );
+        });
+
+        this.getLogger().debug("patches passing before overfitting detection: " + classifiedPatches.size() + "\n" );
+
         List<RepairPatch> filteredPatches = classifiedPatches.stream()
                                                 .filter(patch -> patch.getODSLabel().equals(RepairnatorFeatures.ODSLabel.CORRECT))
                                                 .collect(Collectors.toList());
+
+        this.getLogger().debug("patches marked as CORRECT by overfitting detection: " + filteredPatches.size() + "\n" );
+
 
         if(filteredPatches.isEmpty()){
             return StepStatus.buildPatchNotFound(this);

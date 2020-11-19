@@ -174,6 +174,21 @@ public class Launcher {
         aSwitch.setHelp("This option is only useful in case of '--bears' is used and '--bearsMode both' (default) is used: it allows to" +
                         " define a delimiter to output the failing passing and then the passing passing in order to consider them separately");
         jsap.registerParameter(aSwitch);
+
+        opt2 = new FlaggedOption("jtravisendpoint");
+        opt2.setLongFlag("jtravisendpoint");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("https://api.travis-ci.org");
+        opt2.setHelp("The endpoint where JTravis points its requests");
+        jsap.registerParameter(opt2);
+
+        opt2 = new FlaggedOption("travistoken");
+        opt2.setLongFlag("travistoken");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setDefault("token-not-defined");
+        opt2.setHelp("TravisCI.com required token");
+        jsap.registerParameter(opt2);
+
         return jsap;
     }
 
@@ -224,6 +239,8 @@ public class Launcher {
         this.config.setActiveMQUrl(arguments.getString("activemqurl"));
         this.config.setActiveMQSubmitQueueName(arguments.getString("activemqqueuename"));
         this.config.setActiveMQListenQueueName(arguments.getString("activemqlistenqueuename"));
+        this.config.setJTravisEndpoint(arguments.getString("jtravisendpoint"));
+        this.config.setTravisToken(arguments.getString("travistoken"));
     }
 
     private void initSerializerEngines() {
