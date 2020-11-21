@@ -33,8 +33,7 @@ public class TestRTScanner {
     public void testRepositoryWithoutSuccessfulBuildIsNotInteresting() {
         String slug = "surli/failingProject";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
-        Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
-        assertTrue(repositoryOptional.isPresent());
+        Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
@@ -45,8 +44,7 @@ public class TestRTScanner {
     public void testRepositoryWithoutCheckstyleIsNotInteresting() {
         String slug = "surli/test-repairnator";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
-        Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
-        assertTrue(repositoryOptional.isPresent());
+        Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
@@ -57,8 +55,7 @@ public class TestRTScanner {
     public void testRepositoryWithoutCheckstyleIsInteresting() {
         String slug = "repairnator/embedded-cassandra";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
-        Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
-        assertTrue(repositoryOptional.isPresent());
+        Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
@@ -69,8 +66,7 @@ public class TestRTScanner {
     public void testRepositoryWithSuccessfulBuildIsInteresting() {
         String slug = "INRIA/spoon";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
-        Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
-        assertTrue(repositoryOptional.isPresent());
+        Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
@@ -81,8 +77,7 @@ public class TestRTScanner {
     public void testRepositoryWithoutJavaLanguageIsNotInteresting() {
         String slug = "rails/rails";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
-        Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
-        assertTrue(repositoryOptional.isPresent());
+        Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
@@ -108,4 +103,15 @@ public class TestRTScanner {
       assertEquals("rails/rails", data.get("repoName").getAsString());
     }
 
+    private static Optional<Repository> getOptionalRepository(String slug) {
+        Optional<Repository> repositoryOptional = RepairnatorConfig.getInstance().getJTravis().repository().fromSlug(slug);
+        int retryCount = 0;
+        while(!repositoryOptional.isPresent()) {
+            if (retryCount > 3) {
+                break;
+            }
+        }
+        assertTrue(repositoryOptional.isPresent());
+        return repositoryOptional;
+    }
 }
