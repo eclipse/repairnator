@@ -86,7 +86,7 @@ public class NopolMojo extends AbstractRepairMojo {
             } catch (IOException e) {
                 getLog().error("Error while setting the root project path, the created patches might have absolute paths.");
             }
-
+            System.out.println("Henry: \n" + nopolContext.toString());
             final NoPol nopol = new NoPol(nopolContext);
             this.result = nopol.build();
             printResults(result);
