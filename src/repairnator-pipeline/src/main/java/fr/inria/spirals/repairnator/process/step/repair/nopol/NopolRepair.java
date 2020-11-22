@@ -63,7 +63,7 @@ public class NopolRepair extends AbstractRepairStep {
 
     @Override
     protected StepStatus businessExecute() {
-        this.getLogger().debug("Start to use nopol single repair to repair...");
+        this.getLogger().debug("Starting to use Nopol...");
 
         try {
             checkToolsJar();
@@ -147,6 +147,7 @@ public class NopolRepair extends AbstractRepairStep {
         this.getLogger().debug("Launching repair with Nopol for following test class: " + testClass
                 + " (should timeout in " + timeout + " minutes)");
 
+        this.getLogger().debug("Creating NopolContext...");
         NopolContext nopolContext = new NopolContext(sources, classPath.toArray(new URL[classPath.size()]), testClass.toArray(new String[0]), testsToIgnore);
         nopolContext.setComplianceLevel(8);
         nopolContext.setTimeoutTestExecution(300);
@@ -158,6 +159,7 @@ public class NopolRepair extends AbstractRepairStep {
         nopolContext.setType(RepairType.COND_THEN_PRE);
         nopolContext.setOnlyOneSynthesisResult(false);
         nopolContext.setOutputFolder(patchDir.getAbsolutePath());
+        this.getLogger().debug("NopolContext created");
 
         String repoLocalPath = this.getInspector().getRepoLocalPath();
         if (repoLocalPath.startsWith("./")) {

@@ -90,11 +90,12 @@ public class GatherTestInformation extends AbstractStep {
         this.getLogger().debug("Contract: " + this.contract.getClass().getSimpleName());
 
         File rootRepo = new File(this.getInspector().getJobStatus().getPomDirPath());
-        final List<File> surefireDirs = new ArrayList<File>();
+        final List<File> surefireDirs = new ArrayList<>();
+        this.getLogger().debug("Root repo: " + rootRepo);
 
         try {
             Files.walkFileTree(rootRepo.toPath(), new SimpleFileVisitor<Path>() {
-                public FileVisitResult preVisitDirectory(Path file, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult preVisitDirectory(Path file, BasicFileAttributes attrs) {
                     if (file.toString().endsWith(SUREFIREREPORT_PATH)) {
                         surefireDirs.add(file.toFile());
                         return FileVisitResult.SKIP_SUBTREE;
@@ -109,9 +110,10 @@ public class GatherTestInformation extends AbstractStep {
         }
 
 
+        this.getLogger().debug("Starting main loop...");
         JobStatus jobStatus = this.getInspector().getJobStatus();
         for (File surefireDir : surefireDirs) {
-            SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[] { surefireDir }),
+            SurefireReportParser parser = new SurefireReportParser(Collections.singletonList(surefireDir),
                     Locale.ENGLISH, null);
             try {
                 List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();

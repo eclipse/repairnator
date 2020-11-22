@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.inspectors;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.process.inspectors.components.*;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
+import fr.inria.spirals.repairnator.process.step.AbstractStep;
 
 import java.util.List;
 
@@ -33,6 +34,12 @@ public class InspectorFactory {
 	public static ProjectInspector4Checkstyle getCheckStyleInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
 		ProjectInspector4Checkstyle inspector = new ProjectInspector4Checkstyle(buildToBeInspected,workspace,notifiers);
 		inspector.setIRunInspector(new RunInspector4CheckStyle());
+		return inspector;
+	}
+
+	public static ProjectInspector getMavenInspector(String workspace, List<AbstractStep> repairSteps, List<AbstractNotifier> notifiers) {
+		ProjectInspector inspector = new ProjectInspector(workspace, notifiers);
+		inspector.setIRunInspector(new RunInspector4Maven(repairSteps));
 		return inspector;
 	}
 }

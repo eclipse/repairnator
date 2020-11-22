@@ -1,22 +1,27 @@
 package fr.inria.spirals.repairnator.process.step;
 
-import fr.inria.spirals.repairnator.utils.Utils;
-import fr.inria.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.process.inspectors.*;
+import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
 import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
 import fr.inria.spirals.repairnator.process.inspectors.properties.reproductionBuggyBuild.ReproductionBuggyBuild;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PushState;
+import fr.inria.spirals.repairnator.utils.Utils;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class defines a step of the pipeline.
@@ -149,12 +154,26 @@ public abstract class AbstractStep {
      * It also initialize the serializers and notifiers for the whole chain of steps.
      */
     public AbstractStep addNextStep(AbstractStep nextStep) {
+        this.getLogger().debug("Adding step: " + nextStep.getName());
         if (this.nextStep != null) {
             this.nextStep.addNextStep(nextStep);
         } else {
             this.nextStep = nextStep;
             nextStep.setDataSerializer(this.serializers);
             nextStep.setNotifiers(this.notifiers);
+        }
+        return this;
+    }
+
+    public AbstractStep addNextSteps(List<AbstractStep> nextSteps) {
+        this.getLogger().debug("Adding several steps...");
+        if (this.nextStep != null) {
+            this.nextStep.addNextSteps(nextSteps);
+        } else if (nextSteps.size() == 1) {
+            this.addNextStep(nextSteps.get(0));
+        } else if (nextSteps.size() > 1) {
+            this.addNextStep(nextSteps.get(0));
+            this.nextStep.addNextSteps(nextSteps.subList(1, nextSteps.size()));
         }
         return this;
     }

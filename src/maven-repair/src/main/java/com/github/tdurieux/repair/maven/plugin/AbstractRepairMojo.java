@@ -83,7 +83,7 @@ public abstract class AbstractRepairMojo extends AbstractMojo {
                     }
                 }
             } catch (MavenReportException e) {
-                e.printStackTrace();;
+                e.printStackTrace();
             }
 
         }
