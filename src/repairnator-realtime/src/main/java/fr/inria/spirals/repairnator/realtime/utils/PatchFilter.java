@@ -206,7 +206,19 @@ public class PatchFilter {
                     String fileURL = RawURLGenerator.Generate(commit.getOwner().getFullName(), commit.getSHA1(), fullFilename);
 
                     // read from url, //raw.githubusercontent.com/{owner}/{repo}/{parent_sha}/{path}
-                    String parentFileURL = RawURLGenerator.Generate(commit.getOwner().getFullName(), commit.getParents().get(0).getSHA1(), fullFilename);
+                    String parentFilename = fullFilename;
+                    String previousFilename = f.getPreviousFilename();
+
+                    //if name change occurred -> get correct parent file
+                    if(previousFilename != null && !previousFilename.isEmpty() && !previousFilename.equals(fullFilename)){
+                        parentFilename = previousFilename;
+                    }
+
+                    String parentFileURL = RawURLGenerator.Generate(
+                            commit.getOwner().getFullName(),
+                            commit.getParents().get(0).getSHA1(),
+                            parentFilename
+                    );
 
                     String changes = readFromURL(fileURL);
                     String past = readFromURL(parentFileURL);

@@ -92,6 +92,8 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("GITHUB_USEREMAIL="+this.repairnatorConfig.getGithubUserEmail());
         this.envValues.add("NOTIFY_TO="+ StringUtils.join(this.repairnatorConfig.getNotifyTo(),','));
         this.envValues.add("OUTPUT="+output);
+        this.envValues.add("TRAVIS_ENDPOINT="+this.repairnatorConfig.getJTravisEndpoint());
+        this.envValues.add("TRAVIS_TOKEN="+this.repairnatorConfig.getTravisToken());
         if (this.repairnatorConfig.isCreatePR()) {
             this.envValues.add("CREATE_PR=1");
         }
@@ -111,6 +113,7 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("SEQUENCER_THREADS=" + sequencerConfig.threads);
             this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beamSize);
             this.envValues.add("SEQUENCER_TIMEOUT=" + sequencerConfig.timeout);
+            this.envValues.add("SEQUENCER_ODS_PATH=" + sequencerConfig.ODSPath);
         }
     }
 
