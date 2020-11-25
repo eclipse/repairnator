@@ -1,7 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.TravisInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.dockerpool.DockerPoolManager;
@@ -14,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Deque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * This class is in charge with launching the docker containers
@@ -68,7 +66,7 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
     /**
      * This allows us to automatically refresh docker images every 60 minutes
      */
-    private void refreshDockerImage() {
+    public void refreshDockerImage() {
         this.dockerImageId = DockerHelper.findDockerImage(this.dockerImageName, this.getDockerClient());
         this.limitDateNextRetrieveDockerImage = new Date(new Date().toInstant().plus(DELAY_BETWEEN_DOCKER_IMAGE_REFRESH, ChronoUnit.MINUTES).toEpochMilli());
         LOGGER.debug("Find the following docker image: "+this.dockerImageId);
@@ -87,7 +85,7 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         if (this.limitDateNextRetrieveDockerImage != null && this.limitDateNextRetrieveDockerImage.before(new Date())) {
             this.refreshDockerImage();
         }
-		this.executorService.submit(this.submitBuild(this.dockerImageId, new InputBuildId(build.getId())));
+		this.executorService.submit(this.submitBuild(this.dockerImageId, new TravisInputBuild(build.getId())));
     }
 
     public void switchOff() {
@@ -98,5 +96,13 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         }
 
         this.executorService.shutdownNow();
+    }
+
+    public Date getLimitDateNextRetrieveDockerImage() {
+        return limitDateNextRetrieveDockerImage;
+    }
+
+    public String getDockerImageId() {
+        return dockerImageId;
     }
 }

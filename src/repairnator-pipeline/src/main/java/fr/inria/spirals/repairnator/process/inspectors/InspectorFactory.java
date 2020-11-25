@@ -16,6 +16,11 @@ public class InspectorFactory {
 		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4SequencerRepair());
 	}
 
+	public static GitRepositoryProjectInspector getGitSequencerRepairInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
+															   String workspace, List<AbstractNotifier> notifiers){
+		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,notifiers);
+	}
+
 	public static GitRepositoryProjectInspector getGithubInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractNotifier> notifiers) {
 		GitRepositoryProjectInspector inspector = new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,notifiers);

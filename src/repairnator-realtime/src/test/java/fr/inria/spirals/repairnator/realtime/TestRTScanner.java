@@ -3,26 +3,19 @@ package fr.inria.spirals.repairnator.realtime;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.Repository;
-import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.dockerpool.RunnablePipelineContainer;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
 
-import static fr.inria.spirals.repairnator.config.RepairnatorConfig.PIPELINE_MODE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

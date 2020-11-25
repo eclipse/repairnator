@@ -85,8 +85,10 @@ public class ProjectInspector {
         this.buildToBeInspected = buildToBeInspected;
 
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug();
-        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.gitSlug = getRepoSlug();
+        this.repoLocalPath = workspace + File.separator + this.gitSlug;
+        long buildId = buildToBeInspected != null ? buildToBeInspected.getBuggyBuild().getId() : 0;
+        this.repoToPushLocalPath = repoLocalPath+"_topush_" + buildId;
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = serializers;
         this.gitHelper = new GitHelper();
@@ -96,6 +98,10 @@ public class ProjectInspector {
         this.steps = new ArrayList<>();
         this.buildLog = new ArrayList<>();
         this.initProperties();
+    }
+
+    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+        this(buildToBeInspected, workspace, new ArrayList<>(), notifiers);
     }
 
     public ProjectInspector(String workspace,String gitUrl,String gitBranch,String gitCommit,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
@@ -117,22 +123,7 @@ public class ProjectInspector {
         /* Skip initProperties*/
     }
 
-    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
-        this.buildToBeInspected = buildToBeInspected;
-        this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getRepoSlug();
-        long buildId = buildToBeInspected != null ? buildToBeInspected.getBuggyBuild().getId() : 0;
-        this.repoToPushLocalPath = repoLocalPath+"_topush_" + buildId;
-        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
-        this.serializers = new ArrayList<AbstractDataSerializer>();
-        this.gitHelper = new GitHelper();
-        this.jobStatus = new JobStatus(repoLocalPath);
-        this.notifiers = notifiers;
-        this.checkoutType = CheckoutType.NO_CHECKOUT;
-        this.steps = new ArrayList<>();
-        this.buildLog = new ArrayList<>();
-        this.initProperties();
-    }
+
 
     public ProjectInspector setIRunInspector(IRunInspector iRunInspector) {
         this.iRunInspector = iRunInspector;
@@ -294,9 +285,14 @@ public class ProjectInspector {
     }
 
     public String getRemoteBranchName() {
+        String formattedDate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMdd-HHmmss");
-        String formattedDate = dateFormat.format(this.getBuggyBuild().getFinishedAt());
-        return this.getRepoSlug().replace('/', '-') + '-' + this.getBuggyBuild().getId() + '-' + formattedDate;
+        if(this.getBuggyBuild() != null){
+            formattedDate = this.getBuggyBuild().getId() + "-" + dateFormat.format(this.getBuggyBuild().getFinishedAt());
+        }else {
+            formattedDate = dateFormat.format(new Date());
+        }
+        return this.getGitSlug().replace('/', '-') + '-' + formattedDate;
     }
 
     public String getProjectIdToBeInspected() {

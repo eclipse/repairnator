@@ -4,7 +4,7 @@ import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
-import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.TravisInputBuild;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
@@ -187,8 +187,8 @@ public class BuildAnalyzerLauncher {
         }
     }
 
-    private List<InputBuildId> readListOfBuildIds() {
-        List<InputBuildId> result = new ArrayList<>();
+    private List<TravisInputBuild> readListOfBuildIds() {
+        List<TravisInputBuild> result = new ArrayList<>();
 
         File inputFile = new File(this.config.getInputPath());
 
@@ -203,12 +203,12 @@ public class BuildAnalyzerLauncher {
                         if (this.config.getLauncherMode() == LauncherMode.BEARS) {
                             if (buildIds.length > 1) {
                                 long patchedBuildId = Long.parseLong(buildIds[1]);
-                                result.add(new InputBuildId(buggyBuildId, patchedBuildId));
+                                result.add(new TravisInputBuild(buggyBuildId, patchedBuildId));
                             } else {
                                 LOGGER.error("The build "+buggyBuildId+" will not be processed because there is no next build for it in the input file.");
                             }
                         } else {
-                            result.add(new InputBuildId(buggyBuildId));
+                            result.add(new TravisInputBuild(buggyBuildId));
                         }
                     }
                 }
@@ -228,7 +228,7 @@ public class BuildAnalyzerLauncher {
         hardwareInfoSerializer.serialize();
 
         EndProcessSerializer endProcessSerializer = new EndProcessSerializer(this.engines, runId);
-        List<InputBuildId> buildIds = this.readListOfBuildIds();
+        List<TravisInputBuild> buildIds = this.readListOfBuildIds();
         LOGGER.info("Find "+buildIds.size()+" builds to run.");
 
         endProcessSerializer.setNbBuilds(buildIds.size());
@@ -245,7 +245,7 @@ public class BuildAnalyzerLauncher {
 
         ExecutorService executorService = Executors.newFixedThreadPool(this.config.getNbThreads());
 
-        for (InputBuildId inputBuildId : buildIds) {
+        for (TravisInputBuild inputBuildId : buildIds) {
             executorService.submit(dockerPool.submitBuild(imageId, inputBuildId));
         }
 

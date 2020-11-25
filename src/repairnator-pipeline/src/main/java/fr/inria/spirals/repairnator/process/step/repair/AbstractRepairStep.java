@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.JenkinsProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
@@ -18,9 +19,7 @@ import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import org.kohsuke.github.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,16 +28,12 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
-    public static final InputStream DEFAULT_TEXT_FILE = AbstractRepairStep.class.getClassLoader().getResourceAsStream("R-Hero-PR-text.MD");
+    public static final InputStream DEFAULT_TEXT_FILE = AbstractRepairStep.class.getClassLoader().getResourceAsStream("R-Hero-PR-text-github.MD");
     public static final String FEEDBACK_URL = "http://sequencer.westeurope.cloudapp.azure.com:8081";
 
     public static final String GITHUB_TEXT_PR = "This patch uses the program repair tools %(tools) \n\n";
@@ -142,7 +137,23 @@ public abstract class AbstractRepairStep extends AbstractStep {
         String forkedRepo = this.getForkedRepoName();
         this.applyPatches(branchedGit,patchList,nbPatch);
         this.pushPatches(branchedGit,forkedRepo,newBranch);
-        this.createPullRequest(this.getInspector().getGitRepositoryBranch(),newBranch);
+        GitRepositoryProjectInspector ins = (GitRepositoryProjectInspector)this.getInspector();
+
+        GitHub github = new GitHubBuilder().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken()).build();
+        GHRepository repo = github.getRepository(getInspector().getRepoSlug());
+
+        Map<String, GHBranch> branches = repo.getBranches();
+
+        Optional<String> branch = branches
+                .keySet().stream()
+                .filter(key -> branches.get(key).getSHA1().equals(ins.getGitRepositoryIdCommit()))
+                .findFirst();
+
+        if(branch.isPresent()){
+            this.createPullRequest(branch.get(), newBranch);
+        }else{
+            getLogger().info("Could not create pull request");
+        }
     }
 
     protected void applyPatches(Git git,List<File> patchList,int nbPatch) throws IOException, GitAPIException, URISyntaxException {
@@ -211,9 +222,12 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
         System.out.println("base: " + base + " head:" + head);
         long buildID = this.getInspector().getBuggyBuild() == null ? 0 : this.getInspector().getBuggyBuild().getId();
-        String travisURL = this.getInspector().getBuggyBuild() == null ? "" : Utils.getTravisUrl(buildID, this.getInspector().getRepoSlug());
+
+        GitRepositoryProjectInspector ins = (GitRepositoryProjectInspector)getInspector();
+
+        String commitURL = "https://github.com/" + ins.getRepoSlug() + "/commit/" + ins.getGitRepositoryIdCommit();
         Map<String, String> values = new HashMap<String, String>();
-        values.put("travisURL", travisURL);
+        values.put("githubCommit", commitURL);
         values.put("tools", String.join(",", this.getConfig().getRepairTools()));
         values.put("slug", this.getInspector().getRepoSlug());
 

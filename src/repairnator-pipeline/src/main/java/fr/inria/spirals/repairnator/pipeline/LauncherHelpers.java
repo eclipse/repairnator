@@ -1,8 +1,7 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.TravisInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 
 import java.net.URLClassLoader;
 import java.io.InputStream;
@@ -45,7 +44,7 @@ public class LauncherHelpers {
     }
 
     public void checkNextBuildId(JSAP jsap) {
-        if (RepairnatorConfig.getInstance().getNextBuildId() == InputBuildId.NO_PATCH) {
+        if (RepairnatorConfig.getInstance().getNextBuildId() == TravisInputBuild.NO_PATCH) {
             System.err.println("A pair of builds needs to be provided in BEARS mode.");
         }
     }

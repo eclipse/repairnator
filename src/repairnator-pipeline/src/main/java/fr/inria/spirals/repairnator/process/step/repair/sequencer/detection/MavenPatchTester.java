@@ -8,6 +8,7 @@ import org.eclipse.jgit.api.ResetCommand;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -40,7 +41,17 @@ public class MavenPatchTester {
             git.checkout().setName(patchName).call();
 
             InputStream is = new ByteArrayInputStream(patch.getDiff().getBytes());
-            git.apply().setPatch(is).call();
+
+            FileWriter fw = new FileWriter(inspector.getRepoLocalPath() + "/diff");
+            fw.write(patch.getDiff());
+            fw.close();
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.directory(new File(inspector.getRepoLocalPath()));
+            processBuilder.command("git", "apply", "--ignore-whitespace", "diff");
+            processBuilder.start();
+
+//            git.apply().setPatch(is).call();
 
             //Build and test with applied patch
             MavenHelper maven = new MavenHelper(pom, goal, properties, "sequencer-builder", inspector, true);

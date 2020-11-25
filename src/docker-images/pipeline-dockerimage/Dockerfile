@@ -2,20 +2,16 @@ FROM maven:3.6.1-jdk-8
 
 LABEL Description="Repairnator Pipeline docker image" Vendor="Spirals" Version="0.0.0"
 
-VOLUME ["/var/log/"]
-
-RUN mkdir /root/workspace
-VOLUME /root/workspace
-
 COPY z3_for_linux /root/
 COPY projects_to_ignore.txt /root/
 COPY logback.xml /root/
 COPY configure_git.sh /root/
 COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
+COPY ODSmodel.bin /root/
 
 RUN apt-get update 
-RUN apt-get install xmlstarlet apt-utils cloc -y 
+RUN apt-get install xmlstarlet apt-utils cloc libgomp1 -y
 RUN curl -O -s https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/repairnator-pipeline/maven-metadata.xml
 RUN echo `xmlstarlet sel -t -v '//latest' maven-metadata.xml` > /root/version.ini
 RUN chmod +x /root/*.sh
@@ -27,6 +23,8 @@ ENV M2_HOME=$MAVEN_HOME
 ENV GITHUB_OAUTH=
 ENV REPAIR_MODE=
 ENV BUILD_ID=
+ENV GITHUB_URL=
+ENV GITHUB_SHA=
 ENV LOG_FILENAME=
 ENV RUN_ID=1
 ENV MONGODB_HOST=

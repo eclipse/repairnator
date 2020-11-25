@@ -3,19 +3,18 @@ package fr.inria.spirals.repairnator.dockerpool;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
-import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
+import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.InputBuild;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -28,7 +27,7 @@ public class RunnablePipelineContainer implements Runnable {
     private static final int DELAY_BEFORE_KILLING_DOCKER_IMAGE = 60 * 24; // in minutes
     private Date limitDateBeforeKilling;
     private String imageId;
-    private InputBuildId inputBuildId;
+    private InputBuild inputBuildId;
     private String logDirectory;
     private RepairnatorConfig repairnatorConfig;
     private TreatedBuildTracking treatedBuildTracking;
@@ -53,7 +52,7 @@ public class RunnablePipelineContainer implements Runnable {
      * @param logDirectory the path of the produced logs
      * @param treatedBuildTracking a serializer for recording the docker containers statuses
      */
-    public RunnablePipelineContainer(DockerPoolManager poolManager, String imageId, InputBuildId inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
+    public RunnablePipelineContainer(DockerPoolManager poolManager, String imageId, InputBuild inputBuildId, String logDirectory, TreatedBuildTracking treatedBuildTracking) {
         this.poolManager = poolManager;
         this.imageId = imageId;
         this.inputBuildId = inputBuildId;
@@ -61,22 +60,22 @@ public class RunnablePipelineContainer implements Runnable {
         this.repairnatorConfig = RepairnatorConfig.getInstance();
         this.treatedBuildTracking = treatedBuildTracking;
 
-        this.containerName = "docker_pipeline"+ DateUtils.formatFilenameDate(new Date())+"_"+this.inputBuildId.getBuggyBuildId()+"_"+StringUtils.join(this.repairnatorConfig.getRepairTools(),",");
-        String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/"+this.repairnatorConfig.getRunId() : "/var/log";
+        this.containerName = "docker_pipeline" +
+                DateUtils.formatFilenameDate(new Date()) + "_" +
+                inputBuildId.toString() + "_" +
+                StringUtils.join(this.repairnatorConfig.getRepairTools(),",");
 
         this.envValues = new ArrayList<>();
+        this.envValues.addAll(inputBuildId.getEnvVariables());
 
-        // depending on the mode (BEARS or repairnator)
-        // we give different arguments
-        this.envValues.add("BUILD_ID="+this.inputBuildId.getBuggyBuildId());
-        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.BEARS) {
-            this.envValues.add("NEXT_BUILD_ID="+this.inputBuildId.getPatchedBuildId());
-            if (this.repairnatorConfig.isDebug()) {
-                this.envValues.add("LOG_LEVEL=DEBUG");
-            } else {
-                this.envValues.add("LOG_LEVEL=INFO");
-            }
+        String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/" + this.repairnatorConfig.getRunId() : "/var/log";
+
+        if (this.repairnatorConfig.isDebug()) {
+            this.envValues.add("LOG_LEVEL=DEBUG");
+        } else {
+            this.envValues.add("LOG_LEVEL=INFO");
         }
+
         this.envValues.add("LOG_FILENAME="+this.containerName);
         this.envValues.add("GITHUB_OAUTH="+RepairnatorConfig.getInstance().getGithubToken());
         this.envValues.add("RUN_ID="+this.repairnatorConfig.getRunId());
@@ -117,7 +116,7 @@ public class RunnablePipelineContainer implements Runnable {
         }
     }
 
-    public InputBuildId getInputBuildId() {
+    public InputBuild getInputBuildId() {
         return this.inputBuildId;
     }
 
@@ -130,8 +129,8 @@ public class RunnablePipelineContainer implements Runnable {
         this.limitDateBeforeKilling = new Date(new Date().toInstant().plus(DELAY_BEFORE_KILLING_DOCKER_IMAGE, ChronoUnit.MINUTES).toEpochMilli());
         DockerClient docker = this.poolManager.getDockerClient();
         try {
-            LOGGER.info("Start to build and run container for build id "+this.inputBuildId.getBuggyBuildId());
-            LOGGER.info("At most this docker run will be killed at: "+this.limitDateBeforeKilling);
+            LOGGER.info("Start to build and run container for build id " + this.inputBuildId.toString());
+            LOGGER.info("At most this docker run will be killed at: "+ this.limitDateBeforeKilling);
 
             // fixme: this does not work anymore to put a name that is displayed in docker ps
             Map<String,String> labels = new HashMap<>();
@@ -176,7 +175,7 @@ public class RunnablePipelineContainer implements Runnable {
                     .build();
 
             // and we create it
-            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Create the container: "+this.containerName);
+            LOGGER.info("(BUILD ID " + this.inputBuildId.toString() + ") Create the container: " + this.containerName);
             ContainerCreation container = docker.createContainer(containerConfig);
 
             // fixme: replace it with volumes() ?
@@ -187,7 +186,7 @@ public class RunnablePipelineContainer implements Runnable {
             treatedBuildTracking.setContainerId(this.containerId);
 
             // now the container is created: let's start it
-            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Start the container: "+this.containerName);
+            LOGGER.info("(BUILD ID " + this.inputBuildId.toString() + ") Start the container: "+this.containerName);
             docker.startContainer(container.id());
 
             // and now we wait until it's finished
@@ -207,12 +206,12 @@ public class RunnablePipelineContainer implements Runnable {
             LOGGER.info("stdOut: \n" + stdOut);
             LOGGER.info("stdErr: \n" + stdErr);
 
-            LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") The container has finished with status code: "+ exitStatus.statusCode());
+            LOGGER.info("(BUILD ID " + this.inputBuildId.toString() + ") The container has finished with status code: "+ exitStatus.statusCode());
 
             // standard bash: if it's 0 everything's fine.
 
             if (!this.repairnatorConfig.isSkipDelete() && exitStatus.statusCode() == 0) {
-                LOGGER.info("(BUILD ID " + this.inputBuildId.getBuggyBuildId() + ") Container will be removed.");
+                LOGGER.info("(BUILD ID " + this.inputBuildId.toString() + ") Container will be removed.");
                 removeDockerContainer(docker);
             }
 
@@ -222,10 +221,10 @@ public class RunnablePipelineContainer implements Runnable {
                 serialize("ERROR:CODE" + exitStatus.statusCode());
             }
         } catch (InterruptedException e) {
-            LOGGER.error("Error while running the container for build id "+this.inputBuildId.getBuggyBuildId(), e);
+            LOGGER.error("Error while running the container for build id "+this.inputBuildId.toString(), e);
             killDockerContainer(docker, false);
         } catch (DockerException e) {
-            LOGGER.error("Error while creating or running the container for build id "+this.inputBuildId.getBuggyBuildId(), e);
+            LOGGER.error("Error while creating or running the container for build id "+this.inputBuildId.toString(), e);
             serialize("ERROR");
         }
         this.poolManager.removeSubmittedRunnablePipelineContainer(this);

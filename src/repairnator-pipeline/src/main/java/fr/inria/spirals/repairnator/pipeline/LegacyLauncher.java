@@ -10,7 +10,7 @@ import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.TravisInputBuild;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.Listener;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -149,7 +149,7 @@ public class LegacyLauncher implements LauncherAPI {
     }
 
     private void checkNextBuildId(JSAP jsap) {
-        if (this.getConfig().getNextBuildId() == InputBuildId.NO_PATCH) {
+        if (this.getConfig().getNextBuildId() == TravisInputBuild.NO_PATCH) {
             System.err.println("A pair of builds needs to be provided in BEARS mode.");
         }
     }

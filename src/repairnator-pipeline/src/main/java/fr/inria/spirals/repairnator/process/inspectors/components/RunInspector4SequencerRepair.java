@@ -1,7 +1,9 @@
 package fr.inria.spirals.repairnator.process.inspectors.components;
 
+import fr.inria.coming.repairability.repairtools.JKali;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
@@ -25,14 +27,14 @@ public class RunInspector4SequencerRepair extends IRunInspector{
 	@Override
 	public void run(ProjectInspector inspector) {
 
-        AbstractStep cloneRepo = new CloneRepository(inspector);
+        AbstractStep cloneRepo = new CloneCheckoutBranchRepository(inspector);
         cloneRepo.addNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneRepo.addNextStep(new BuildProject(inspector, false));
 
         AbstractStep initRepoStep = new InitRepoToPush(inspector);
 
-
         SequencerRepair testSequencerRepairStep = new SequencerRepair(new AstorDetectionStrategy());
+
         testSequencerRepairStep.setProjectInspector(inspector);
 
         AbstractStep testRepairStep = new TestProject(inspector);

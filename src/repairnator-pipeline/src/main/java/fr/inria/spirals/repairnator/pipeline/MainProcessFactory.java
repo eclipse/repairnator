@@ -1,17 +1,9 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
-import java.util.ArrayList;
-import java.io.File;
-import java.nio.file.Files;
-import java.io.IOException;
 
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
@@ -20,7 +12,6 @@ import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.step.repair.Sorald;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
@@ -31,7 +22,6 @@ import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
 import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
-import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer4GitRepository;
