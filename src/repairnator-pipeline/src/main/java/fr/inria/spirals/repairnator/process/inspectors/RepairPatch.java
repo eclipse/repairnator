@@ -25,7 +25,6 @@ public class RepairPatch {
 	static final String ODSPath = SequencerConfig.getInstance().ODSPath;
 	protected static Logger log = Logger.getLogger(Thread.currentThread().getName());
 
-
 	/**
 	 * Name of the tool which produces the patch
 	 */
@@ -236,8 +235,7 @@ public class RepairPatch {
 
 			log.info("The patchPath file passed to ODS: "+patchPath);
 
-			 label = new RepairnatorFeatures().getLabel(new File(patchPath));
-						
+			 label = new RepairnatorFeatures().getLabel(new File(patchPath));						
 
 		} catch (Exception e) {
 			log.error("Exception caused in the method of computeODSLabel: "+e);
