@@ -25,7 +25,7 @@
 
         <java.src.version>1.8</java.src.version>
         <java.test.version>1.8</java.test.version>
-        
+
         <npefix.version>0.7</npefix.version>
     </properties>
 
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>20190919</version>
         </dependency>
         <dependency>
             <groupId>fr.inria.gforge.spirals</groupId>
@@ -160,6 +160,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20160810</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.inria.repairnator</groupId>
+            <artifactId>repairnator-pipeline</artifactId>
+            <version>3.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -288,7 +293,7 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -302,7 +307,7 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
                     <exclusions>
                         <exclusion>
                             <groupId>com.sun</groupId>

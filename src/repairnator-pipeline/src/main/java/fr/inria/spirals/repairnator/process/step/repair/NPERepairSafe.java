@@ -11,6 +11,8 @@ public class NPERepairSafe extends AbstractNPERepairStep {
     public static final String TOOL_NAME = "NPEFixSafe";
 
     public NPERepairSafe() {
+        super();
+        this.selection = "safe-mono";
     }
 
     @Override

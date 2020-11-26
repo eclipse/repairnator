@@ -11,9 +11,9 @@ public class NPERepair extends AbstractNPERepairStep {
     public NPERepair() {
     }
 
-    @Override
-    public String getRepairToolName() {
-        return TOOL_NAME;
-    }
+	@Override
+	public String getRepairToolName() {
+		return TOOL_NAME;
+	}
 
 }

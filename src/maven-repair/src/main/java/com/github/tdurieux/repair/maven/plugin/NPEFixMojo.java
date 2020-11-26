@@ -26,7 +26,7 @@ import fr.inria.spirals.npefix.resi.strategies.Strat2A;
 import fr.inria.spirals.npefix.resi.strategies.Strat2B;
 import fr.inria.spirals.npefix.resi.strategies.Strat3;
 import fr.inria.spirals.npefix.resi.strategies.Strat4;
-import org.apache.maven.Maven;
+import fr.inria.spirals.repairnator.utils.Pair;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.surefire.log.api.NullConsoleLogger;
@@ -83,7 +83,12 @@ public class NPEFixMojo extends AbstractRepairMojo {
     private NPEOutput result;
 
     public void execute() throws MojoExecutionException {
-           
+        /*RepairnatorConfig.getInstance().setRepairTools(Collections.singleton("NPEFix"));
+        RepairnatorConfig.getInstance().setMavenHome(localRepository.getBasedir());
+        RepairnatorConfig.getInstance().setOutputPath("./target/repairnator-output");
+        InspectorFactory.getMavenInspector(".", Collections.singletonList(new NPERepair()), null).run();
+         */
+
         // get the failing NPE tests
         List<Pair<String, Set<File>>> npeTests = getNPETest();
 
@@ -168,6 +173,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
             // getting the patch if any (an object of type NPEOutput), see method run below
             this.result = run(npefix, tests);
 
+            System.out.println("========================RESULT=======================\n" + result);
+
             spoon.Launcher spoon = new spoon.Launcher();
             for (File s : sourceFolders) {
                 spoon.addInputResource(s.getAbsolutePath());
@@ -178,6 +185,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
             // write a JSON file with the result and the patch
             JSONObject jsonObject = result.toJSON(spoon);
+            System.out.println("JSON OBJECT: \n" + jsonObject);
             jsonObject.put("endInit", initDate.getTime());
             System.out.println(resultDirectory.getAbsolutePath());
             System.out.println(jsonObject.getJSONArray("executions"));
@@ -207,7 +215,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
                     "We want to fail the build if there is one test failure.");
             throw new RuntimeException("There was one test failure");
         }
-        
+
     }
 
     private NPEOutput run(Launcher  npefix, List<String> npeTests) {
@@ -322,7 +330,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         String buildDir = subProject.getBuild().getDirectory();
         return new File( buildDir + "/surefire-reports" );
     }
-        
+
     /** gets the failing tests due to a NullPointerException by parsing the Surefire XML files */
     private List<Pair<String, Set<File>>> getNPETest() {
         List<Pair<String, Set<File>>> output = new ArrayList<>();
@@ -348,7 +356,10 @@ public class NPEFixMojo extends AbstractRepairMojo {
                                 if (stackTrace.getExceptionType().contains("NullPointerException") || repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
                                     Set<File> files = new HashSet<>();
                                     for (StackTraceElement stackTraceElement : stackTrace.getElements()) {
+                                        System.out.println("METHOD: " + stackTraceElement.getMethod());
+                                        System.out.println("METHOD substring: " + stackTraceElement.getMethod().substring(0, stackTraceElement.getMethod().lastIndexOf(".")));
                                         String path = stackTraceElement.getMethod().substring(0, stackTraceElement.getMethod().lastIndexOf(".")).replace(".", "/") + ".java";
+                                        System.out.println("PATH : " + path);
                                         if (path.contains("$")) {
                                             path = path.substring(0, path.indexOf("$")) + ".java";
                                         }
@@ -356,6 +367,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
                                             path = path.substring(0, path.lastIndexOf("/"));
                                         }
                                         for (MavenProject project : reactorProjects) {
+                                            System.out.println("SOURCE DIRECTORY: " + project.getBuild().getSourceDirectory());
                                             File file = new File(project.getBuild().getSourceDirectory() + "/" + path);
                                             if (file.exists()) {
                                                 files.add(file);
@@ -366,6 +378,8 @@ public class NPEFixMojo extends AbstractRepairMojo {
                                             break;
                                         }
                                     }
+                                    System.out.println("KEY: " + reportTestCase.getFullClassName() + "#" + reportTestCase.getName());
+                                    System.out.println("VALUE: " + files);
                                     output.add(new Pair<>(reportTestCase.getFullClassName() + "#" + reportTestCase.getName(), files));
                                 }
                             } catch (StackTraceParser.ParseException e) {
