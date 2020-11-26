@@ -215,27 +215,27 @@ public class RepairPatch {
 		List<String> diffLines = Arrays.asList(diff.split("\n"));
 		Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
 
-			// create a directory to store the patch: "patches/"+buildId+patchId
-			String buggyClassName = buggyFile.getName().replace(".java", "");
-			String odsFilesPath = System.getProperty("user.home") + "/ODSPatches";
+		// create a directory to store the patch: "patches/"+buildId+patchId
+		String buggyClassName = buggyFile.getName().replace(".java", "");
+		String odsFilesPath = System.getProperty("user.home") + "/ODSPatches";
 
-			String patchPath = odsFilesPath + "/" + buildId + "-" + patchId;
-			Path path = Paths.get(patchPath + '/' + buggyClassName);
-			Files.createDirectories(path);
+		String patchPath = odsFilesPath + "/" + buildId + "-" + patchId;
+		Path path = Paths.get(patchPath + '/' + buggyClassName);
+		Files.createDirectories(path);
 
-			// create buggy file and patchedFile that follows Coming structure
-			File newBuggyFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_s.java");
-			File patchedFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_t.java");
+		// create buggy file and patchedFile that follows Coming structure
+		File newBuggyFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_s.java");
+		File patchedFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_t.java");
 
-			// copy the buggy file under the patch folder
-			Files.write(Paths.get(newBuggyFile.getPath()), buggyLines);
-			// generate content of patchedFile by applying patches
-			List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
-			Files.write(Paths.get(patchedFile.getPath()), patchedLines);
+		// copy the buggy file under the patch folder
+		Files.write(Paths.get(newBuggyFile.getPath()), buggyLines);
+		// generate content of patchedFile by applying patches
+		List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
+		Files.write(Paths.get(patchedFile.getPath()), patchedLines);
 
-			log.info("The patchPath file passed to ODS: "+patchPath);
+		log.info("The patchPath file passed to ODS: "+patchPath);
 
-			 label = new RepairnatorFeatures().getLabel(new File(patchPath));						
+		 label = new RepairnatorFeatures().getLabel(new File(patchPath));						
 
 		} catch (Exception e) {
 			log.error("Exception caused in the method of computeODSLabel: "+e);
