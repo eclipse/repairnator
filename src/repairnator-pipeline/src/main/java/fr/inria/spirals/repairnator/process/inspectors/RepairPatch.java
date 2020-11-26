@@ -18,9 +18,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
+
 public class RepairPatch {
 
 	static final String ODSPath = SequencerConfig.getInstance().ODSPath;
+	protected static Logger log = Logger.getLogger(Thread.currentThread().getName());
+
 
 	/**
 	 * Name of the tool which produces the patch
@@ -188,10 +192,14 @@ public class RepairPatch {
 	}
 
 	private ODSLabel computeODSLabel(int patchId, Long buildId) {
+		
+		ODSLabel label = ODSLabel.UNKNOWN;
+
+		try {		
 		File buggyFile = new File(filePath);
 		// if no buggy file available, we provide the unknown label for the patches.
-		ODSLabel label = ODSLabel.UNKNOWN;
 		if (!buggyFile.isFile()) {
+			log.error("The buggy file path not exists: "+ filePath);
 			return label;
 		}
 
@@ -201,13 +209,13 @@ public class RepairPatch {
 			stream.forEach(buggyLines::add);
 		} catch (IOException e) {
 			e.printStackTrace();
+			return label;
 		}
 
 		// prepare patches
 		List<String> diffLines = Arrays.asList(diff.split("\n"));
 		Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
 
-		try {
 			// create a directory to store the patch: "patches/"+buildId+patchId
 			String buggyClassName = buggyFile.getName().replace(".java", "");
 			String odsFilesPath = System.getProperty("user.home") + "/ODSPatches";
@@ -226,12 +234,14 @@ public class RepairPatch {
 			List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
 			Files.write(Paths.get(patchedFile.getPath()), patchedLines);
 
-			
+			log.info("The patchPath file passed to ODS: "+patchPath);
+
 			 label = new RepairnatorFeatures().getLabel(new File(patchPath));
 						
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			log.error("Exception caused in the method of computeODSLabel: "+e);
+			return label;
 		}
 
 		return label;
