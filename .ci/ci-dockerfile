@@ -1,3 +1,4 @@
 FROM maven:3.6-openjdk-8
 
 RUN apt-get update
+RUN apt-get install xmlstarlet -y
