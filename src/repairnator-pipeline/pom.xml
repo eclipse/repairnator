@@ -128,6 +128,15 @@
             <groupId>exceptionparser</groupId>
             <artifactId>exceptionparser</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <groupId>fr.inria.gforge.spirals</groupId>
+            <artifactId>npefix</artifactId>
+            <version>0.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
