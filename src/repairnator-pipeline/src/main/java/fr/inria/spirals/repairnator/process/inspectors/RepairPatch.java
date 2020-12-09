@@ -18,9 +18,12 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
+
 public class RepairPatch {
 
 	static final String ODSPath = SequencerConfig.getInstance().ODSPath;
+	protected static Logger log = Logger.getLogger(Thread.currentThread().getName());
 
 	/**
 	 * Name of the tool which produces the patch
@@ -188,50 +191,55 @@ public class RepairPatch {
 	}
 
 	private ODSLabel computeODSLabel(int patchId, Long buildId) {
-		File buggyFile = new File(filePath);
-		// if no buggy file available, we provide the unknown label for the patches.
+		
 		ODSLabel label = ODSLabel.UNKNOWN;
-		if (!buggyFile.isFile()) {
-			return label;
-		}
 
-		// read from buggyFile
-		List<String> buggyLines = new ArrayList<>();
-		try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-			stream.forEach(buggyLines::add);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// prepare patches
-		List<String> diffLines = Arrays.asList(diff.split("\n"));
-		Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
-
-		try {
+		try {		
+			File buggyFile = new File(filePath);
+			// if no buggy file available, we provide the unknown label for the patches.
+			if (!buggyFile.isFile()) {
+				log.error("The buggy file path not exists: "+ filePath);
+				return label;
+			}
+	
+			// read from buggyFile
+			List<String> buggyLines = new ArrayList<>();
+			try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+				stream.forEach(buggyLines::add);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return label;
+			}
+	
+			// prepare patches
+			List<String> diffLines = Arrays.asList(diff.split("\n"));
+			Patch<String> patches = UnifiedDiffUtils.parseUnifiedDiff(diffLines);
+	
 			// create a directory to store the patch: "patches/"+buildId+patchId
 			String buggyClassName = buggyFile.getName().replace(".java", "");
 			String odsFilesPath = System.getProperty("user.home") + "/ODSPatches";
-
+	
 			String patchPath = odsFilesPath + "/" + buildId + "-" + patchId;
 			Path path = Paths.get(patchPath + '/' + buggyClassName);
 			Files.createDirectories(path);
-
+	
 			// create buggy file and patchedFile that follows Coming structure
 			File newBuggyFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_s.java");
 			File patchedFile = new File(path + "/" + buildId + "-" + patchId + "_" + buggyClassName + "_t.java");
-
+	
 			// copy the buggy file under the patch folder
 			Files.write(Paths.get(newBuggyFile.getPath()), buggyLines);
 			// generate content of patchedFile by applying patches
 			List<String> patchedLines = DiffUtils.patch(buggyLines, patches);
 			Files.write(Paths.get(patchedFile.getPath()), patchedLines);
-
-			
-			 label = new RepairnatorFeatures().getLabel(new File(patchPath));
-						
+	
+			log.info("The patchPath file passed to ODS: "+patchPath);
+	
+			 label = new RepairnatorFeatures().getLabel(new File(patchPath));						
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			log.error("Exception caused in the method of computeODSLabel: "+e);
+			return label;
 		}
 
 		return label;
