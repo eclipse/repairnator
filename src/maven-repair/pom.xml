@@ -293,6 +293,7 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
+                    <!--Jan 13, 2020, 2:07 PM GMT-->
                     <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
                 </dependency>
             </dependencies>
@@ -307,6 +308,7 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
+                    <!--Jan 13, 2020, 2:07 PM GMT-->
                     <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
                     <exclusions>
                         <exclusion>
