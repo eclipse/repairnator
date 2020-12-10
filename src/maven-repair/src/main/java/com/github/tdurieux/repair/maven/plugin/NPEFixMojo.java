@@ -86,6 +86,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         RepairnatorConfig.getInstance().setRepairTools(Collections.singleton("NPEFix"));
         RepairnatorConfig.getInstance().setMavenHome(localRepository.getBasedir());
         RepairnatorConfig.getInstance().setOutputPath("./target/repairnator-output");
+        RepairnatorConfig.getInstance().setWorkspacePath("./target/repairnator-bin");
         InspectorFactory.getMavenInspector(".", Collections.singletonList(new NPERepair()), null).run();
 
         // get the failing NPE tests
