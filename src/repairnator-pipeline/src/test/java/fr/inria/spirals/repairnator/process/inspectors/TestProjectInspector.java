@@ -187,6 +187,12 @@ public class TestProjectInspector {
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
+        int retryCount = 0;
+        while(!optionalBuild.isPresent()) {
+            if (retryCount > 3) {
+                break;
+            }
+        }
         assertTrue(optionalBuild.isPresent());
 
         Build build = optionalBuild.get();
