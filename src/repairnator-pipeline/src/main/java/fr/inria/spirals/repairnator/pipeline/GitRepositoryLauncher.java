@@ -210,6 +210,13 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         opt.setDefault("/usr/share/maven");
         jsap.registerParameter(opt);
 
+        opt = new FlaggedOption("localMavenRepository");
+        opt.setLongFlag("localMavenRepository");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Maven local repository folder");
+        opt.setDefault(System.getenv("HOME") + "/.m2/repository");
+        jsap.registerParameter(opt);
+
         opt = new FlaggedOption("repairTools");
         opt.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
@@ -315,6 +322,7 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         getConfig().setGitBranch(arguments.getString("gitbranch"));
         getConfig().setGitCommitHash(arguments.getString("gitcommithash"));
         getConfig().setMavenHome(arguments.getString("MavenHome"));
+        getConfig().setLocalMavenRepository(arguments.getString("localMavenRepository"));
 
         if (arguments.getFile("projectsToIgnore") != null) {
             getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());

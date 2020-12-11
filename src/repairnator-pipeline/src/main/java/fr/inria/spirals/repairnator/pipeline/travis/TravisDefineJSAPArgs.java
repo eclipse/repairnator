@@ -20,11 +20,11 @@ import fr.inria.spirals.repairnator.pipeline.IDefineJSAPArgs;
 import org.apache.commons.lang3.StringUtils;
 
 /* Args definition behavior for the default use case of Repairnator */
-public class TravisDefineJSAPArgs implements IDefineJSAPArgs{
+public class TravisDefineJSAPArgs implements IDefineJSAPArgs {
 
-	@Override
-	public JSAP defineArgs() throws JSAPException{
-		// Verbose output
+    @Override
+    public JSAP defineArgs() throws JSAPException {
+        // Verbose output
         JSAP jsap = new JSAP();
 
         // -h or --help
@@ -78,7 +78,7 @@ public class TravisDefineJSAPArgs implements IDefineJSAPArgs{
         opt2.setShortFlag('n');
         opt2.setLongFlag("nextBuild");
         opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InputBuildId.NO_PATCH+"");
+        opt2.setDefault(InputBuildId.NO_PATCH + "");
         opt2.setHelp("Specify the next build id to use (only in BEARS mode).");
         jsap.registerParameter(opt2);
 
@@ -107,7 +107,7 @@ public class TravisDefineJSAPArgs implements IDefineJSAPArgs{
         opt2.setLongFlag("listenermode");
         opt2.setStringParser(JSAP.STRING_PARSER);
         opt2.setDefault(LISTENER_MODE.NOOP.name());
-        opt2.setHelp("Possible string values KUBERNETES,NOOP . KUBERNETES is for running ActiveMQListener and "+LISTENER_MODE.NOOP.name()+" is for NoopRunner.");
+        opt2.setHelp("Possible string values KUBERNETES,NOOP . KUBERNETES is for running ActiveMQListener and " + LISTENER_MODE.NOOP.name() + " is for NoopRunner.");
         jsap.registerParameter(opt2);
 
         opt2 = new FlaggedOption("activemqurl");
@@ -164,14 +164,21 @@ public class TravisDefineJSAPArgs implements IDefineJSAPArgs{
         opt2.setDefault("/usr/share/maven");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("localMavenRepository");
+        opt2.setLongFlag("localMavenRepository");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Maven local repository folder");
+        opt2.setDefault(System.getenv("HOME") + "/.m2/repository");
+        jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
 
-        opt2.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',',';'), true));
+        opt2.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',', ';'), true));
         opt2.setList(true);
         opt2.setListSeparator(',');
-        opt2.setHelp("Specify one or several repair tools to use among: "+availablerepairTools);
+        opt2.setHelp("Specify one or several repair tools to use among: " + availablerepairTools);
         opt2.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
         jsap.registerParameter(opt2);
 
@@ -205,5 +212,5 @@ public class TravisDefineJSAPArgs implements IDefineJSAPArgs{
 
 
         return jsap;
-	}
+    }
 }

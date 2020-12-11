@@ -270,6 +270,13 @@ public class LegacyLauncher implements LauncherAPI {
         opt2.setDefault("/usr/share/maven");
         jsap.registerParameter(opt2);
 
+        opt2 = new FlaggedOption("localMavenRepository");
+        opt2.setLongFlag("localMavenRepository");
+        opt2.setStringParser(JSAP.STRING_PARSER);
+        opt2.setHelp("Maven local repository folder");
+        opt2.setDefault(System.getenv("HOME") + "/.m2/repository");
+        jsap.registerParameter(opt2);
+
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
@@ -382,6 +389,7 @@ public class LegacyLauncher implements LauncherAPI {
         this.getConfig().setGitBranch(arguments.getString("gitbranch"));
         this.getConfig().setGitCommitHash(arguments.getString("gitcommithash"));
         this.getConfig().setMavenHome(arguments.getString("MavenHome"));
+        this.getConfig().setLocalMavenRepository(arguments.getString("localMavenRepository"));
 
         this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
 

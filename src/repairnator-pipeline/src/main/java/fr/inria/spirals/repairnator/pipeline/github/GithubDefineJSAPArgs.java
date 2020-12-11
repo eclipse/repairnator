@@ -138,6 +138,13 @@ public class GithubDefineJSAPArgs implements IDefineJSAPArgs{
         opt.setDefault("/usr/share/maven");
         jsap.registerParameter(opt);
 
+        opt = new FlaggedOption("localMavenRepository");
+        opt.setLongFlag("localMavenRepository");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Maven local repository folder");
+        opt.setDefault(System.getenv("HOME") + "/.m2/repository");
+        jsap.registerParameter(opt);
+
         opt = new FlaggedOption("repairTools");
         opt.setLongFlag("repairTools");
 

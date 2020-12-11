@@ -112,6 +112,7 @@ public class RepairnatorConfig {
     private String gitBranch;
     private String gitCommitHash;
     private String mavenHome;
+    private String localMavenRepository;
     private String jTravisEndpoint;
     private String travisToken;
 
@@ -694,6 +695,14 @@ public class RepairnatorConfig {
         return this.mavenHome;
     }
 
+    public String getLocalMavenRepository() {
+        return localMavenRepository;
+    }
+
+    public void setLocalMavenRepository(String localMavenRepository) {
+        this.localMavenRepository = localMavenRepository;
+    }
+
     public boolean isCreatePR() {
         return createPR;
     }
@@ -846,6 +855,8 @@ public class RepairnatorConfig {
                 ", gitUrl=" + gitUrl +
                 ", gitBranch=" + gitBranch +
                 ", gitCommitHash=" + gitCommitHash +
+                ", mavenHome=" + mavenHome +
+                ", localMavenRepository=" + localMavenRepository +
                 ", noTravisRepair=" + noTravisRepair +
                 ", rankPatches=" + patchRankingMode +
                 ", jTravisEndpoint=" + jTravisEndpoint +

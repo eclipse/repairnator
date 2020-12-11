@@ -99,6 +99,7 @@ public class TravisInitConfig implements IInitConfig {
         this.getConfig().setGitBranch(arguments.getString("gitbranch"));
         this.getConfig().setGitCommitHash(arguments.getString("gitcommithash"));
         this.getConfig().setMavenHome(arguments.getString("MavenHome"));
+        this.getConfig().setLocalMavenRepository(arguments.getString("localMavenRepository"));
 
         this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
         this.getConfig().setPatchRankingMode(arguments.getString("patchRankingMode"));

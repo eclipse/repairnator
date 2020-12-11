@@ -106,6 +106,7 @@ public class GithubInitConfig implements IInitConfig {
         getConfig().setGitBranch(arguments.getString("gitbranch"));
         getConfig().setGitCommitHash(arguments.getString("gitcommithash"));
         getConfig().setMavenHome(arguments.getString("MavenHome"));
+        getConfig().setLocalMavenRepository(arguments.getString("localMavenRepository"));
 
         if (arguments.getFile("projectsToIgnore") != null) {
             getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
