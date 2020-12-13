@@ -1,9 +1,8 @@
 package fr.inria.spirals.repairnator;
 
-import com.martiansoftware.jsap.FlaggedOption;
-import com.martiansoftware.jsap.JSAP;
-import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.Switch;
+import com.martiansoftware.jsap.*;
+import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
+import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -12,17 +11,162 @@ import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEn
 import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by fermadeiral
  */
 public class LauncherUtils {
+
+    public static void registerCommonArgs(JSAP jsap) throws JSAPException {
+        // -h or --help
+        jsap.registerParameter(LauncherUtils.defineArgHelp());
+        // -d or --debug
+        jsap.registerParameter(LauncherUtils.defineArgDebug());
+        // -o or --output
+        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
+
+        // --runId
+        jsap.registerParameter(LauncherUtils.defineArgRunId());
+
+        // --dbhost
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
+        // --dbname
+        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
+
+        // --smtpServer
+        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
+        // --smtpPort
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPort());
+        // --smtpTLS
+        jsap.registerParameter(LauncherUtils.defineArgSmtpTLS());
+        // --smtpUsername
+        jsap.registerParameter(LauncherUtils.defineArgSmtpUsername());
+        // --smtpPassword
+        jsap.registerParameter(LauncherUtils.defineArgSmtpPassword());
+
+        // --notifyto
+        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
+
+        // --pushurl
+        jsap.registerParameter(LauncherUtils.defineArgPushUrl());
+        // --ghOauth
+        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
+        // --githubUserName
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserName());
+        // --githubUserEmail
+        jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
+        // --createPR
+        jsap.registerParameter(LauncherUtils.defineArgCreatePR());
+
+        // --z3
+        jsap.registerParameter(LauncherUtils.defineArgZ3());
+
+        // --mavenHome
+        jsap.registerParameter(LauncherUtils.defineArgMavenHome());
+        // --localMavenRepository
+        jsap.registerParameter(LauncherUtils.defineArgLocalMavenRepository());
+
+        // --workspace
+        jsap.registerParameter(LauncherUtils.defineArgWorkspace());
+
+        // --projectsToIgnore
+        jsap.registerParameter(LauncherUtils.defineArgProjectsToIgnore());
+
+        // --listenerMode
+        jsap.registerParameter(LauncherUtils.defineArgListenerMode());
+
+        // --activemqurl
+        jsap.registerParameter(LauncherUtils.defineArgActiveMQUrl());
+        // --activemqlistenqueuename
+        jsap.registerParameter(LauncherUtils.defineArgActiveMQListEnqueueName());
+        // --activemqusername
+        jsap.registerParameter(LauncherUtils.defineArgActiveMQUsername());
+        // --activemqpassword
+        jsap.registerParameter(LauncherUtils.defineArgActiveMQPassword());
+
+        // --giturl
+        jsap.registerParameter(LauncherUtils.defineArgGitUrl());
+        // --gitbranch
+        jsap.registerParameter(LauncherUtils.defineArgGitBranch());
+        // --gitcommithash
+        jsap.registerParameter(LauncherUtils.defineArgGitCommitHash());
+
+        // --experimentalPluginRepoList
+        jsap.registerParameter(LauncherUtils.defineArgExperimentalPluginRepoList());
+
+        // --tmpDirAsWorkSpace
+        jsap.registerParameter(LauncherUtils.defineArgTmpDirAsWorkSpace());
+    }
+
+    public static void initCommonConfig(RepairnatorConfig config, JSAPResult arguments) {
+        if (LauncherUtils.getArgDebug(arguments)) {
+            config.setDebug(true);
+        }
+        config.setClean(true);
+        config.setRunId(LauncherUtils.getArgRunId(arguments));
+        config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
+
+        config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
+        config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
+        config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
+        config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
+        config.setSmtpPort(LauncherUtils.getArgSmtpPort(arguments));
+        config.setSmtpTLS(LauncherUtils.getArgSmtpTLS(arguments));
+        config.setSmtpUsername(LauncherUtils.getArgSmtpUsername(arguments));
+        config.setSmtpPassword(LauncherUtils.getArgSmtpPassword(arguments));
+        config.setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
+
+        if (LauncherUtils.getArgPushUrl(arguments) != null) {
+            config.setPush(true);
+            config.setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
+        }
+        config.setCreatePR(LauncherUtils.getArgCreatePR(arguments));
+
+        // we fork if we need to create a PR or if we need to notify (but only when we have a git token)
+        if (config.isCreatePR() || (config.getSmtpServer() != null && !config.getSmtpServer().isEmpty() && config.getNotifyTo() != null && config.getNotifyTo().length > 0 && config.getGithubToken() != null)) {
+            config.setFork(true);
+        }
+
+        config.setZ3solverPath(new File(LauncherUtils.getArgZ3(arguments)).getPath());
+        config.setWorkspacePath(LauncherUtils.getArgWorkspace(arguments));
+        if (LauncherUtils.getArgTmpDirAsWorkSpace(arguments)) {
+            File tempDir = com.google.common.io.Files.createTempDir();
+            config.setTempWorkspace(true);
+            config.setWorkspacePath(tempDir.getAbsolutePath());
+            config.setOutputPath(tempDir.getAbsolutePath());
+            config.setZ3solverPath(new File(tempDir.getAbsolutePath() + File.separator + "z3_for_linux").getPath());
+        }
+
+        config.setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
+        config.setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
+        config.setListenerMode(LauncherUtils.getArgListenerMode(arguments));
+        config.setActiveMQUrl(LauncherUtils.getArgActiveMQUrl(arguments));
+        config.setActiveMQListenQueueName(LauncherUtils.getArgActiveMQListEnqueueName(arguments));
+        config.setActiveMQUsername(LauncherUtils.getArgActiveMQUsername(arguments));
+        config.setActiveMQPassword(LauncherUtils.getArgActiveMQPassword(arguments));
+
+        config.setGitUrl(LauncherUtils.getArgGitUrl(arguments));
+        config.setGitBranch(LauncherUtils.getArgGitBranch(arguments));
+        config.setGitCommitHash(LauncherUtils.getArgGitCommitHash(arguments));
+
+        config.setMavenHome(LauncherUtils.getArgMavenHome(arguments));
+        config.setLocalMavenRepository(LauncherUtils.getArgLocalMavenRepository(arguments));
+
+        if (LauncherUtils.getArgProjectsToIgnore(arguments) != null) {
+            config.setProjectsToIgnoreFilePath(new File(LauncherUtils.getArgProjectsToIgnore(arguments)).getPath());
+        }
+
+    }
 
     public static Switch defineArgHelp() {
         Switch sw = new Switch("help");
@@ -200,7 +344,7 @@ public class LauncherUtils {
 
     public static File getArgOutput(JSAPResult arguments) {
         File output = new File(arguments.getString("output"));
-        if (!output.exists()) { 
+        if (!output.exists()) {
             output.mkdirs();
         }
         return output;
@@ -242,7 +386,7 @@ public class LauncherUtils {
     public static String getArgSmtpServer(JSAPResult arguments) {
         return arguments.getString("smtpServer");
     }
-    
+
     public static FlaggedOption defineArgSmtpPort() {
         FlaggedOption opt = new FlaggedOption("smtpPort");
         opt.setLongFlag("smtpPort");
@@ -251,11 +395,11 @@ public class LauncherUtils {
         opt.setHelp("The port on which to contact the SMTP server. Default 25");
         return opt;
     }
-    
+
     public static int getArgSmtpPort(JSAPResult arguments) {
         return arguments.getInt("smtpPort");
     }
-    
+
     public static Switch defineArgSmtpTLS() {
         Switch sw = new Switch("smtpTLS");
         sw.setLongFlag("smtpTLS");
@@ -263,11 +407,11 @@ public class LauncherUtils {
         sw.setHelp("Decides whether to use TLS for email communication.");
         return sw;
     }
-    
+
     public static boolean getArgSmtpTLS(JSAPResult arguments) {
         return arguments.getBoolean("smtpTLS");
     }
-    
+
     public static FlaggedOption defineArgSmtpUsername() {
         FlaggedOption opt = new FlaggedOption("smtpUsername");
         opt.setLongFlag("smtpUsername");
@@ -275,11 +419,11 @@ public class LauncherUtils {
         opt.setHelp("Username for authorized server");
         return opt;
     }
-    
+
     public static String getArgSmtpUsername(JSAPResult arguments) {
         return arguments.getString("smtpUsername");
     }
-    
+
     public static FlaggedOption defineArgSmtpPassword() {
         FlaggedOption opt = new FlaggedOption("smtpPassword");
         opt.setLongFlag("smtpPassword");
@@ -287,7 +431,7 @@ public class LauncherUtils {
         opt.setHelp("Password for authorized server");
         return opt;
     }
-    
+
     public static String getArgSmtpPassword(JSAPResult arguments) {
         return arguments.getString("smtpPassword");
     }
@@ -431,7 +575,7 @@ public class LauncherUtils {
     public static void checkArguments(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (!arguments.success()) {
             // print out specific error messages describing the problems
-            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext();) {
+            for (java.util.Iterator<?> errs = arguments.getErrorMessageIterator(); errs.hasNext(); ) {
                 System.err.println("Error: " + errs.next());
             }
         }
@@ -444,7 +588,196 @@ public class LauncherUtils {
         checkPushUrlArg(jsap, arguments, launcherType);
     }
 
+    public static FlaggedOption defineArgZ3() {
+        FlaggedOption opt = new FlaggedOption("z3");
+        opt.setLongFlag("z3");
+        opt.setDefault("./z3_for_linux");
+        opt.setHelp("Specify path to Z3");
+        return opt;
+    }
 
+    public static String getArgZ3(JSAPResult arguments) {
+        return arguments.getString("z3");
+    }
+
+    public static FlaggedOption defineArgMavenHome() {
+        FlaggedOption opt = new FlaggedOption("mavenHome");
+        opt.setLongFlag("mavenHome");
+        opt.setStringParser(FileStringParser.getParser().setMustBeDirectory(true));
+        opt.setHelp("Maven home folder, use in case if environment variable M2_HOME is null");
+        opt.setDefault("/usr/share/maven");
+        return opt;
+    }
+
+    public static String getArgMavenHome(JSAPResult arguments) {
+        return arguments.getString("mavenHome");
+    }
+
+    public static FlaggedOption defineArgLocalMavenRepository() {
+        FlaggedOption opt = new FlaggedOption("localMavenRepository");
+        opt.setLongFlag("localMavenRepository");
+        opt.setStringParser(FileStringParser.getParser().setMustBeDirectory(true));
+        opt.setHelp("Maven local repository folder");
+        opt.setDefault(System.getenv("HOME") + "/.m2/repository");
+        return opt;
+    }
+
+    public static String getArgLocalMavenRepository(JSAPResult arguments) {
+        return arguments.getString("localMavenRepository");
+    }
+
+    public static FlaggedOption defineArgWorkspace() {
+        FlaggedOption opt = new FlaggedOption("workspace");
+        opt.setLongFlag("workspace");
+        opt.setShortFlag('w');
+        opt.setDefault("./workspace");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Specify a path to be used by the pipeline at processing things like to clone the project of the repository id being processed");
+        return opt;
+    }
+
+    public static String getArgWorkspace(JSAPResult arguments) {
+        return arguments.getString("workspace");
+    }
+
+    public static FlaggedOption defineArgProjectsToIgnore() {
+        FlaggedOption opt = new FlaggedOption("projectsToIgnore");
+        opt.setLongFlag("projectsToIgnore");
+        opt.setStringParser(FileStringParser.getParser().setMustBeFile(true));
+        opt.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
+        return opt;
+    }
+
+    public static String getArgProjectsToIgnore(JSAPResult arguments) {
+        return arguments.getString("projectsToIgnore");
+    }
+
+    public static FlaggedOption defineArgListenerMode() {
+        FlaggedOption opt = new FlaggedOption("listenerMode");
+        opt.setLongFlag("listenerMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault(RepairnatorConfig.LISTENER_MODE.NOOP.name());
+        opt.setHelp("Possible string values KUBERNETES,NOOP . KUBERNETES is for running ActiveMQListener and " + RepairnatorConfig.LISTENER_MODE.NOOP.name() + " is for NoopRunner.");
+        return opt;
+    }
+
+    public static String getArgListenerMode(JSAPResult arguments) {
+        return arguments.getString("listenerMode");
+    }
+
+    public static FlaggedOption defineArgActiveMQUrl() {
+        FlaggedOption opt = new FlaggedOption("activemqurl");
+        opt.setLongFlag("activemqurl");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("tcp://localhost:61616");
+        opt.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
+        return opt;
+    }
+
+    public static String getArgActiveMQUrl(JSAPResult arguments) {
+        return arguments.getString("activemqurl");
+    }
+
+    public static FlaggedOption defineArgActiveMQListEnqueueName() {
+        FlaggedOption opt = new FlaggedOption("activemqlistenqueuename");
+        opt.setLongFlag("activemqlistenqueuename");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("pipeline");
+        opt.setHelp("Just a name, default as 'pipeline'");
+        return opt;
+    }
+
+    public static String getArgActiveMQListEnqueueName(JSAPResult arguments) {
+        return arguments.getString("activemqlistenqueuename");
+    }
+
+    public static FlaggedOption defineArgActiveMQUsername() {
+        FlaggedOption opt = new FlaggedOption("activemqusername");
+        opt.setLongFlag("activemqusername");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("");
+        opt.setHelp("The username to access ActiveMQ, which is blank by default");
+        return opt;
+    }
+
+    public static String getArgActiveMQUsername(JSAPResult arguments) {
+        return arguments.getString("activemqusername");
+    }
+
+    public static FlaggedOption defineArgActiveMQPassword() {
+        FlaggedOption opt = new FlaggedOption("activemqpassword");
+        opt.setLongFlag("activemqpassword");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("");
+        opt.setHelp("The password to access ActiveMQ, which is blank by default");
+        return opt;
+    }
+
+    public static String getArgActiveMQPassword(JSAPResult arguments) {
+        return arguments.getString("activemqpassword");
+    }
+
+    public static FlaggedOption defineArgGitUrl() {
+        FlaggedOption opt = new FlaggedOption("giturl");
+        opt.setLongFlag("giturl");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Example: https://github.com/surli/failingProject.git");
+        return opt;
+    }
+
+    public static String getArgGitUrl(JSAPResult arguments) {
+        return arguments.getString("giturl");
+    }
+
+    public static FlaggedOption defineArgGitBranch() {
+        FlaggedOption opt = new FlaggedOption("gitbranch");
+        opt.setLongFlag("gitbranch");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        return opt;
+    }
+
+    public static String getArgGitBranch(JSAPResult arguments) {
+        return arguments.getString("gitbranch");
+    }
+
+    public static FlaggedOption defineArgGitCommitHash() {
+        FlaggedOption opt = new FlaggedOption("gitcommithash");
+        opt.setLongFlag("gitcommit");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("the hash of your git commit");
+        return opt;
+    }
+
+    public static String getArgGitCommitHash(JSAPResult arguments) {
+        return arguments.getString("gitcommithash");
+    }
+
+    public static FlaggedOption defineArgExperimentalPluginRepoList() {
+        // This option will have a list and must have n*3 elements, otherwise the last will be ignored.
+        FlaggedOption opt = new FlaggedOption("experimentalPluginRepoList");
+        opt.setLongFlag("experimentalPluginRepoList");
+        opt.setList(true);
+        opt.setListSeparator(',');
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
+        return opt;
+    }
+
+    public static String[] getArgExperimentalPluginRepoList(JSAPResult arguments) {
+        return arguments.getStringArray("experimentalPluginRepoList");
+    }
+
+    public static Switch defineArgTmpDirAsWorkSpace() {
+        Switch sw = new Switch("tmpDirAsWorkSpace");
+        sw.setLongFlag("tmpDirAsWorkSpace");
+        sw.setDefault("false");
+        sw.setHelp("Create tmp directory as workspace");
+        return sw;
+    }
+
+    public static boolean getArgTmpDirAsWorkSpace(JSAPResult arguments) {
+        return arguments.getBoolean("tmpDirAsWorkSpace");
+    }
 
     public static void checkPushUrlArg(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
         if (getArgPushUrl(arguments) != null) {
@@ -455,9 +788,10 @@ public class LauncherUtils {
         }
     }
 
+
     public static void printUsage(JSAP jsap, LauncherType launcherType) {
-        String moduleName = "repairnator-"+launcherType.name().toLowerCase();
-        System.err.println("Usage: java <"+moduleName+" name> [option(s)]");
+        String moduleName = "repairnator-" + launcherType.name().toLowerCase();
+        System.err.println("Usage: java <" + moduleName + " name> [option(s)]");
         System.err.println();
         System.err.println("Options: ");
         System.err.println();
@@ -487,9 +821,9 @@ public class LauncherUtils {
     public static List<NotifierEngine> initEmailSummaryEngines(Logger logger) {
         List<NotifierEngine> summaryEngines = new ArrayList<>();
         RepairnatorConfig config = RepairnatorConfig.getInstance();
-        if(config.getSmtpServer() != null && config.getSummaryFrequency() != null && config.getNotifySummary() != null) {
+        if (config.getSmtpServer() != null && config.getSummaryFrequency() != null && config.getNotifySummary() != null) {
             logger.info("The summary email engine will be used.");
-            
+
             summaryEngines.add(new EmailNotifierEngine(config.getNotifySummary(), config.getSmtpServer(), config.getSmtpPort(), config.isSmtpTLS(), config.getSmtpUsername(), config.getSmtpPassword()));
         } else {
             logger.info("The summary email engine will not be used.");
@@ -520,7 +854,7 @@ public class LauncherUtils {
             logger.info("Initialize file serializer engines.");
 
             String path = config.getOutputPath();
-            path += config.getBuildId() > 0 ? "/"+config.getBuildId() : "";
+            path += config.getBuildId() > 0 ? "/" + config.getBuildId() : "";
 
             fileSerializerEngines.add(new CSVSerializerEngine(path));
             fileSerializerEngines.add(new JSONFileSerializerEngine(path));

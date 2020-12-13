@@ -101,6 +101,7 @@ public class RepairnatorConfig {
     private int nextBuildId;
     private String z3solverPath;
     private String workspacePath;
+    private boolean tempWorkspace;
     private String githubToken;
     private String projectsToIgnoreFilePath;
     private Set<String> repairTools;
@@ -448,6 +449,14 @@ public class RepairnatorConfig {
 
     public void setWorkspacePath(String workspacePath) {
         this.workspacePath = workspacePath;
+    }
+
+    public boolean getTempWorkspace() {
+        return tempWorkspace;
+    }
+
+    public void setTempWorkspace(boolean tempWorkspace) {
+        this.tempWorkspace = tempWorkspace;
     }
 
     public String getGithubToken() {

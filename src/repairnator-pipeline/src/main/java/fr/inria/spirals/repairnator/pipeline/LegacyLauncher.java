@@ -132,46 +132,15 @@ public class LegacyLauncher implements LauncherAPI {
         // Verbose output
         JSAP jsap = new JSAP();
 
-        // -h or --help
-        jsap.registerParameter(LauncherUtils.defineArgHelp());
-        // -d or --debug
-        jsap.registerParameter(LauncherUtils.defineArgDebug());
-        // --runId
-        jsap.registerParameter(LauncherUtils.defineArgRunId());
+        // Register arguments common to all Launchers
+        LauncherUtils.registerCommonArgs(jsap);
+
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // --checkstyle
         jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // --sequencerRepair
         jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
-        // -o or --output
-        jsap.registerParameter(LauncherUtils.defineArgOutput(LauncherType.PIPELINE, "Specify path to output serialized files"));
-        // --dbhost
-        jsap.registerParameter(LauncherUtils.defineArgMongoDBHost());
-        // --dbname
-        jsap.registerParameter(LauncherUtils.defineArgMongoDBName());
-        // --smtpServer
-        jsap.registerParameter(LauncherUtils.defineArgSmtpServer());
-        // --smtpPort
-        jsap.registerParameter(LauncherUtils.defineArgSmtpPort());
-        // --smtpTLS
-        jsap.registerParameter(LauncherUtils.defineArgSmtpTLS());
-        // --smtpUsername
-        jsap.registerParameter(LauncherUtils.defineArgSmtpUsername());
-        // --smtpPassword
-        jsap.registerParameter(LauncherUtils.defineArgSmtpPassword());
-        // --notifyto
-        jsap.registerParameter(LauncherUtils.defineArgNotifyto());
-        // --pushurl
-        jsap.registerParameter(LauncherUtils.defineArgPushUrl());
-        // --ghOauth
-        jsap.registerParameter(LauncherUtils.defineArgGithubOAuth());
-        // --githubUserName
-        jsap.registerParameter(LauncherUtils.defineArgGithubUserName());
-        // --githubUserEmail
-        jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
-        // --createPR
-        jsap.registerParameter(LauncherUtils.defineArgCreatePR());
 
         FlaggedOption opt2 = new FlaggedOption("build");
         opt2.setShortFlag('b');
@@ -188,95 +157,6 @@ public class LegacyLauncher implements LauncherAPI {
         opt2.setHelp("Specify the next build id to use (only in BEARS mode).");
         jsap.registerParameter(opt2);
 
-        opt2 = new FlaggedOption("z3");
-        opt2.setLongFlag("z3");
-        opt2.setDefault("./z3_for_linux");
-        // opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true).setMustExist(true));
-        opt2.setHelp("Specify path to Z3");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("workspace");
-        opt2.setLongFlag("workspace");
-        opt2.setShortFlag('w');
-        opt2.setDefault("./workspace");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Specify a path to be used by the pipeline at processing things like to clone the project of the build id being processed");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("projectsToIgnore");
-        opt2.setLongFlag("projectsToIgnore");
-        opt2.setStringParser(FileStringParser.getParser().setMustBeFile(true));
-        opt2.setHelp("Specify the file containing a list of projects that the pipeline should deactivate serialization when processing builds from.");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("listenermode");
-        opt2.setLongFlag("listenermode");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault(LISTENER_MODE.NOOP.name());
-        opt2.setHelp("Possible string values KUBERNETES,NOOP . KUBERNETES is for running ActiveMQListener and "+LISTENER_MODE.NOOP.name()+" is for NoopRunner.");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("activemqurl");
-        opt2.setLongFlag("activemqurl");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("tcp://localhost:61616");
-        opt2.setHelp("format: 'tcp://IP_OR_DNSNAME:61616', default as 'tcp://localhost:61616'");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("activemqlistenqueuename");
-        opt2.setLongFlag("activemqlistenqueuename");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("pipeline");
-        opt2.setHelp("Just a name, default as 'pipeline'");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("activemqusername");
-        opt2.setLongFlag("activemqusername");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("");
-        opt2.setHelp("The username to access ActiveMQ, which is blank by default");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("activemqpassword");
-        opt2.setLongFlag("activemqpassword");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("");
-        opt2.setHelp("The password to access ActiveMQ, which is blank by default");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("giturl");
-        opt2.setLongFlag("giturl");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Example: https://github.com/surli/failingProject.git");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("gitbranch");
-        opt2.setLongFlag("gitbranch");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("master");
-        opt2.setHelp("Git branch name. Default: master");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("gitcommithash");
-        opt2.setLongFlag("gitcommit");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("the hash of your git commit");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("MavenHome");
-        opt2.setLongFlag("MavenHome");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Maven home folder, use in case if enviroment variable M2_HOME is null");
-        opt2.setDefault("/usr/share/maven");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("localMavenRepository");
-        opt2.setLongFlag("localMavenRepository");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("Maven local repository folder");
-        opt2.setDefault(System.getenv("HOME") + "/.m2/repository");
-        jsap.registerParameter(opt2);
-
         opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
@@ -288,22 +168,7 @@ public class LegacyLauncher implements LauncherAPI {
         opt2.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
         jsap.registerParameter(opt2);
 
-        // This option will have a list and must have n*3 elements, otherwise the last will be ignored.
-        opt2 = new FlaggedOption("experimentalPluginRepoList");
-        opt2.setLongFlag("experimentalPluginRepoList");
-        opt2.setList(true);
-        opt2.setListSeparator(',');
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setHelp("The ids, names and urls of all experimental pluginrepos used. Must be a list of length n*3 in the order id, name, url, repeat.");
-        jsap.registerParameter(opt2);
-
-        Switch sw = new Switch("tmpDirAsWorkSpace");
-        sw.setLongFlag("tmpDirAsWorkSpace");
-        sw.setDefault("false");
-        sw.setHelp("Create tmp directory as workspace");
-        jsap.registerParameter(sw);
-
-        sw = new Switch("noTravisRepair");
+        Switch sw = new Switch("noTravisRepair");
         sw.setLongFlag("noTravisRepair");
         sw.setDefault("false");
         sw.setHelp("repair with git url , branch and commit instead of travis build ids");
@@ -327,12 +192,8 @@ public class LegacyLauncher implements LauncherAPI {
     }
 
     protected void initConfig(JSAPResult arguments) {
-        if (LauncherUtils.getArgDebug(arguments)) {
-            this.getConfig().setDebug(true);
-        }
-        this.getConfig().setClean(true);
-        this.getConfig().setRunId(LauncherUtils.getArgRunId(arguments));
-        this.getConfig().setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
+        LauncherUtils.initCommonConfig(this.getConfig(), arguments);
+
         if (LauncherUtils.getArgBearsMode(arguments)) {
             this.getConfig().setLauncherMode(LauncherMode.BEARS);
         } else if (LauncherUtils.getArgCheckstyleMode(arguments)) {
@@ -342,63 +203,16 @@ public class LegacyLauncher implements LauncherAPI {
         } else {
             this.getConfig().setLauncherMode(LauncherMode.REPAIR);
         }
-        if (LauncherUtils.getArgOutput(arguments) != null) {
-            this.getConfig().setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
-        }
-        this.getConfig().setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
-        this.getConfig().setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
-        this.getConfig().setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
-        this.getConfig().setSmtpPort(LauncherUtils.getArgSmtpPort(arguments));
-        this.getConfig().setSmtpTLS(LauncherUtils.getArgSmtpTLS(arguments));
-        this.getConfig().setSmtpUsername(LauncherUtils.getArgSmtpUsername(arguments));
-        this.getConfig().setSmtpPassword(LauncherUtils.getArgSmtpPassword(arguments));
-        this.getConfig().setNotifyTo(LauncherUtils.getArgNotifyto(arguments));
 
-        if (LauncherUtils.getArgPushUrl(arguments) != null) {
-            this.getConfig().setPush(true);
-            this.getConfig().setPushRemoteRepo(LauncherUtils.getArgPushUrl(arguments));
-        }
-        this.getConfig().setCreatePR(LauncherUtils.getArgCreatePR(arguments));
-
-        // we fork if we need to create a PR or if we need to notify (but only when we have a git token)
-        if (this.getConfig().isCreatePR() || (this.getConfig().getSmtpServer() != null && !this.getConfig().getSmtpServer().isEmpty() && this.getConfig().getNotifyTo() != null && this.getConfig().getNotifyTo().length > 0 && this.getConfig().getGithubToken() != null)) {
-            this.getConfig().setFork(true);
-        }
         this.getConfig().setBuildId(arguments.getInt("build"));
         if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
             this.getConfig().setNextBuildId(arguments.getInt("nextBuild"));
         }
-        this.getConfig().setZ3solverPath(new File(arguments.getString("z3")).getPath());
-        this.getConfig().setWorkspacePath(arguments.getString("workspace"));
-        if (arguments.getBoolean("tmpDirAsWorkSpace")) {
-            this.tempDir = com.google.common.io.Files.createTempDir();
-            this.getConfig().setWorkspacePath(this.tempDir.getAbsolutePath());
-            this.getConfig().setOutputPath(this.tempDir.getAbsolutePath());
-            this.getConfig().setZ3solverPath(new File(this.tempDir.getAbsolutePath() + File.separator + "z3_for_linux").getPath());
-        }
-
-        this.getConfig().setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
-        this.getConfig().setGithubUserName(LauncherUtils.getArgGithubUserName(arguments));
-        this.getConfig().setListenerMode(arguments.getString("listenermode"));
-        this.getConfig().setActiveMQUrl(arguments.getString("activemqurl"));
-        this.getConfig().setActiveMQListenQueueName(arguments.getString("activemqlistenqueuename"));
-        this.getConfig().setActiveMQUsername(arguments.getString("activemqusername"));
-        this.getConfig().setActiveMQPassword(arguments.getString("activemqpassword"));
-
-        this.getConfig().setGitUrl(arguments.getString("giturl"));
-        this.getConfig().setGitBranch(arguments.getString("gitbranch"));
-        this.getConfig().setGitCommitHash(arguments.getString("gitcommithash"));
-        this.getConfig().setMavenHome(arguments.getString("MavenHome"));
-        this.getConfig().setLocalMavenRepository(arguments.getString("localMavenRepository"));
 
         this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
 
         this.getConfig().setJTravisEndpoint(arguments.getString("jtravisendpoint"));
         this.getConfig().setTravisToken(arguments.getString("travistoken"));
-
-        if (arguments.getFile("projectsToIgnore") != null) {
-            this.getConfig().setProjectsToIgnoreFilePath(arguments.getFile("projectsToIgnore").getPath());
-        }
 
         if(this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR){
             this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"SequencerRepair"})));
@@ -410,9 +224,9 @@ public class LegacyLauncher implements LauncherAPI {
         }
 
         // Make sure that it is a multiple of three in the list
-        if((arguments.getStringArray("experimentalPluginRepoList").length) % 3 == 0) {
-            this.getConfig().setExperimentalPluginRepoList(arguments.getStringArray("experimentalPluginRepoList"));
-        } else if (arguments.getStringArray("experimentalPluginRepoList").length != 0) {
+        if((LauncherUtils.getArgExperimentalPluginRepoList(arguments).length) % 3 == 0) {
+            this.getConfig().setExperimentalPluginRepoList(LauncherUtils.getArgExperimentalPluginRepoList(arguments));
+        } else if (LauncherUtils.getArgExperimentalPluginRepoList(arguments).length != 0) {
             LOGGER.warn("The experimental plugin repo list is not correctly formed."
                     + " Please make sure you have provided id, name and url for all repos. "
                     + "Repairnator will continue without these repos.");
@@ -569,8 +383,8 @@ public class LegacyLauncher implements LauncherAPI {
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
-        if(this.tempDir != null) {
-            this.tempDir.delete();
+        if(this.getConfig().getTempWorkspace()) {
+            new File(this.getConfig().getWorkspacePath()).delete();
         }
 
         LOGGER.info("Inspector is finished. The process will exit now.");
