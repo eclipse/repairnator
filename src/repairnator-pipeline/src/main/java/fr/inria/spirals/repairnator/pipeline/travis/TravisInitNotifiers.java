@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.pipeline.travis;
 
-import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.utils.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;

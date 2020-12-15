@@ -7,7 +7,7 @@ import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.spotify.docker.client.DockerClient;
 import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.utils.LauncherUtils;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;

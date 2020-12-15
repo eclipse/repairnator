@@ -1,8 +1,10 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.utils;
 
+import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
-import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
+import fr.inria.spirals.repairnator.InputBuildId;
+import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -12,12 +14,10 @@ import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEng
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import fr.inria.spirals.repairnator.states.LauncherMode;
-import fr.inria.spirals.repairnator.utils.Utils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +26,7 @@ import java.util.List;
  * Created by fermadeiral
  */
 public class LauncherUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LauncherUtils.class);
 
     public static void registerCommonArgs(JSAP jsap) throws JSAPException {
         // -h or --help
@@ -106,11 +107,43 @@ public class LauncherUtils {
 
         // --tmpDirAsWorkSpace
         jsap.registerParameter(LauncherUtils.defineArgTmpDirAsWorkSpace());
+
+        // --sonarRules
+        jsap.registerParameter(LauncherUtils.defineArgSonarRules());
+        // --soraldRepairMode
+        jsap.registerParameter(LauncherUtils.defineArgSoraldRepairMode());
+        // --segmentSize
+        jsap.registerParameter(LauncherUtils.defineArgSegmentSize());
+        // --soraldMaxFixesPerRule
+        jsap.registerParameter(LauncherUtils.defineArgSoraldMaxFixesPerRule());
+
+        // --bears
+        jsap.registerParameter(LauncherUtils.defineArgBearsMode());
+        // --checkstyle
+        jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
+        // --sequencerRepair
+        jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
+
+        // --patchRankingMode
+        jsap.registerParameter(LauncherUtils.defineArgPatchRankingMode());
     }
 
     public static void initCommonConfig(RepairnatorConfig config, JSAPResult arguments) {
+        if (LauncherUtils.getArgBearsMode(arguments)) {
+            config.setLauncherMode(LauncherMode.BEARS);
+        } else if (LauncherUtils.getArgCheckstyleMode(arguments)) {
+            config.setLauncherMode(LauncherMode.CHECKSTYLE);
+        } else if (LauncherUtils.getArgSequencerRepairMode(arguments)) {
+            config.setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        } else {
+            config.setLauncherMode(LauncherMode.REPAIR);
+        }
+
         if (LauncherUtils.getArgDebug(arguments)) {
             config.setDebug(true);
+            Utils.setLoggersLevel(Level.DEBUG);
+        } else {
+            Utils.setLoggersLevel(Level.INFO);
         }
         config.setClean(true);
         config.setRunId(LauncherUtils.getArgRunId(arguments));
@@ -166,6 +199,24 @@ public class LauncherUtils {
             config.setProjectsToIgnoreFilePath(new File(LauncherUtils.getArgProjectsToIgnore(arguments)).getPath());
         }
 
+        // Make sure that it is a multiple of three in the list
+        if (LauncherUtils.getArgExperimentalPluginRepoList(arguments).length % 3 == 0) {
+            config.setExperimentalPluginRepoList(LauncherUtils.getArgExperimentalPluginRepoList(arguments));
+        } else if (LauncherUtils.getArgExperimentalPluginRepoList(arguments).length != 0) {
+            LOGGER.warn("The experimental plugin repo list is not correctly formed."
+                    + " Please make sure you have provided id, name and url for all repos. "
+                    + "Repairnator will continue without these repos.");
+            config.setExperimentalPluginRepoList(null);
+        } else {
+            config.setExperimentalPluginRepoList(null);
+        }
+
+        config.setSonarRules(Arrays.stream(LauncherUtils.getArgSonarRules(arguments).split(",")).distinct().toArray(String[]::new));
+        config.setSegmentSize(LauncherUtils.getArgSegmentSize(arguments));
+        config.setSoraldRepairMode(RepairnatorConfig.SORALD_REPAIR_MODE.valueOf(LauncherUtils.getArgSoraldRepairMode(arguments)));
+        config.setSoraldMaxFixesPerRule(LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
+
+        config.setPatchRankingMode(LauncherUtils.getArgPatchRankingMode(arguments));
     }
 
     public static Switch defineArgHelp() {
@@ -777,6 +828,71 @@ public class LauncherUtils {
 
     public static boolean getArgTmpDirAsWorkSpace(JSAPResult arguments) {
         return arguments.getBoolean("tmpDirAsWorkSpace");
+    }
+
+    public static FlaggedOption defineArgSonarRules() {
+        FlaggedOption opt = new FlaggedOption("sonarRules");
+        opt.setLongFlag("sonarRules");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("2116");
+        opt.setHelp("Required if SonarQube is specified in the repairtools as argument. Format: 1948,1854,RuleNumber.. . Supported rules: https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md");
+        return opt;
+    }
+
+    public static String getArgSonarRules(JSAPResult arguments) {
+        return arguments.getString("sonarRules");
+    }
+
+    public static FlaggedOption defineArgSoraldRepairMode() {
+        FlaggedOption opt = new FlaggedOption("soraldRepairMode");
+        opt.setLongFlag("soraldRepairMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault(RepairnatorConfig.SORALD_REPAIR_MODE.DEFAULT.name());
+        opt.setHelp("DEFAULT - default mode , load everything in at once into Sorald. SEGMENT - repair segments of the projects instead, segmentsize can be specified.");
+        return opt;
+    }
+
+    public static String getArgSoraldRepairMode(JSAPResult arguments) {
+        return arguments.getString("soraldRepairMode");
+    }
+
+    public static FlaggedOption defineArgSegmentSize() {
+        FlaggedOption opt = new FlaggedOption("segmentSize");
+        opt.setLongFlag("segmentSize");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("200");
+        opt.setHelp("Segment size for the segment repair.");
+        return opt;
+    }
+
+    public static Integer getArgSegmentSize(JSAPResult arguments) {
+        return arguments.getInt("segmentSize");
+    }
+
+    public static FlaggedOption defineArgSoraldMaxFixesPerRule() {
+        FlaggedOption opt = new FlaggedOption("soraldMaxFixesPerRule");
+        opt.setLongFlag("soraldMaxFixesPerRule");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("2000");
+        opt.setHelp("Number of fixes per SonarQube rule.");
+        return opt;
+    }
+
+    public static Integer getArgSoraldMaxFixesPerRule(JSAPResult arguments) {
+        return arguments.getInt("soraldMaxFixesPerRule");
+    }
+
+    public static FlaggedOption defineArgPatchRankingMode() {
+        FlaggedOption opt = new FlaggedOption("patchRankingMode");
+        opt.setLongFlag("patchRankingMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault(RepairnatorConfig.PATCH_RANKING_MODE.NONE.name());
+        opt.setHelp("Possible string values NONE, OVERFITTING.");
+        return opt;
+    }
+
+    public static String getArgPatchRankingMode(JSAPResult arguments) {
+        return arguments.getString("patchRankingMode");
     }
 
     public static void checkPushUrlArg(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {

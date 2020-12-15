@@ -1,50 +1,31 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import static fr.inria.spirals.repairnator.config.RepairnatorConfig.LISTENER_MODE;
-import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
-import java.lang.reflect.Constructor;
-import fr.inria.spirals.repairnator.Listener;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
-import com.martiansoftware.jsap.stringparsers.FileStringParser;
-import com.martiansoftware.jsap.Switch;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.Listener;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
-import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.notifier.PatchNotifier;
-import fr.inria.spirals.repairnator.notifier.PatchNotifierImpl;
+import fr.inria.spirals.repairnator.notifier.*;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Checkstyle;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
-import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
-import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
-import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
-import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
-import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
+import fr.inria.spirals.repairnator.serializer.*;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.utils.TravisLauncherUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
-import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,14 +33,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLClassLoader;
+import java.lang.reflect.Constructor;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * This class is the main entry point for the repairnator pipeline.
@@ -78,7 +54,7 @@ public class LegacyLauncher implements LauncherAPI {
     public RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
-    
+
     /* just give an empty instance of the launcher for customized execution */
     public LegacyLauncher() {
         /* Reset fields*/
@@ -87,7 +63,7 @@ public class LegacyLauncher implements LauncherAPI {
         this.engines = null;
         this.notifiers = null;
         this.patchNotifier = null;
-        this.inspector = null; 
+        this.inspector = null;
     }
 
     public LegacyLauncher(String[] args) throws JSAPException {
@@ -99,7 +75,7 @@ public class LegacyLauncher implements LauncherAPI {
             } catch (IOException e) {
                 LOGGER.error("Error while loading property file.", e);
             }
-            LOGGER.info("PIPELINE VERSION: "+properties.getProperty("PIPELINE_VERSION"));
+            LOGGER.info("PIPELINE VERSION: {}", properties.getProperty("PIPELINE_VERSION"));
         } else {
             LOGGER.info("No information about PIPELINE VERSION has been found.");
         }
@@ -111,10 +87,11 @@ public class LegacyLauncher implements LauncherAPI {
 
         if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR || this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR) {
             this.checkNopolSolverPath(jsap);
-            LOGGER.info("The pipeline will try to repair the following build id: "+this.getConfig().getBuildId());
+            LOGGER.info("The pipeline will try to repair the following build id: {}", this.getConfig().getBuildId());
         } else {
             this.checkNextBuildId(jsap);
-            LOGGER.info("The pipeline will try to reproduce a bug from build "+this.getConfig().getBuildId()+" and its corresponding patch from build "+this.getConfig().getNextBuildId());
+            LOGGER.info("The pipeline will try to reproduce a bug from build {} and its corresponding patch from build {}",
+                    this.getConfig().getBuildId(), this.getConfig().getNextBuildId());
         }
 
         if (this.getConfig().isDebug()) {
@@ -134,58 +111,17 @@ public class LegacyLauncher implements LauncherAPI {
 
         // Register arguments common to all Launchers
         LauncherUtils.registerCommonArgs(jsap);
+        // Register arguments for TravisCI
+        TravisLauncherUtils.registerTravisArgs(jsap);
 
-        // --bears
-        jsap.registerParameter(LauncherUtils.defineArgBearsMode());
-        // --checkstyle
-        jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
-        // --sequencerRepair
-        jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
-
-        FlaggedOption opt2 = new FlaggedOption("build");
-        opt2.setShortFlag('b');
-        opt2.setLongFlag("build");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setHelp("Specify the build id to use.");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("nextBuild");
-        opt2.setShortFlag('n');
-        opt2.setLongFlag("nextBuild");
-        opt2.setStringParser(JSAP.INTEGER_PARSER);
-        opt2.setDefault(InputBuildId.NO_PATCH+"");
-        opt2.setHelp("Specify the next build id to use (only in BEARS mode).");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("repairTools");
+        FlaggedOption opt2 = new FlaggedOption("repairTools");
         opt2.setLongFlag("repairTools");
         String availablerepairTools = StringUtils.join(RepairToolsManager.getRepairToolsName(), ",");
-
-        opt2.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',',';'), true));
+        opt2.setStringParser(EnumeratedStringParser.getParser(availablerepairTools.replace(',', ';'), true));
         opt2.setList(true);
         opt2.setListSeparator(',');
-        opt2.setHelp("Specify one or several repair tools to use among: "+availablerepairTools);
+        opt2.setHelp("Specify one or several repair tools to use among: " + availablerepairTools);
         opt2.setDefault(NPERepair.TOOL_NAME); // default one is not all available ones
-        jsap.registerParameter(opt2);
-
-        Switch sw = new Switch("noTravisRepair");
-        sw.setLongFlag("noTravisRepair");
-        sw.setDefault("false");
-        sw.setHelp("repair with git url , branch and commit instead of travis build ids");
-        jsap.registerParameter(sw);
-
-        opt2 = new FlaggedOption("jtravisendpoint");
-        opt2.setLongFlag("jtravisendpoint");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("https://api.travis-ci.org");
-        opt2.setHelp("The endpoint where JTravis points its requests");
-        jsap.registerParameter(opt2);
-
-        opt2 = new FlaggedOption("travistoken");
-        opt2.setLongFlag("travistoken");
-        opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("");
-        opt2.setHelp("TravisCI.com required token");
         jsap.registerParameter(opt2);
 
         return jsap;
@@ -193,46 +129,16 @@ public class LegacyLauncher implements LauncherAPI {
 
     protected void initConfig(JSAPResult arguments) {
         LauncherUtils.initCommonConfig(this.getConfig(), arguments);
+        TravisLauncherUtils.initTravisConfig(this.getConfig(), arguments);
 
-        if (LauncherUtils.getArgBearsMode(arguments)) {
-            this.getConfig().setLauncherMode(LauncherMode.BEARS);
-        } else if (LauncherUtils.getArgCheckstyleMode(arguments)) {
-            this.getConfig().setLauncherMode(LauncherMode.CHECKSTYLE);
-        } else if (LauncherUtils.getArgSequencerRepairMode(arguments)) {
-            this.getConfig().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        if (this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR) {
+            this.getConfig().setRepairTools(new HashSet<>(Collections.singletonList("SequencerRepair")));
         } else {
-            this.getConfig().setLauncherMode(LauncherMode.REPAIR);
-        }
-
-        this.getConfig().setBuildId(arguments.getInt("build"));
-        if (this.getConfig().getLauncherMode() == LauncherMode.BEARS) {
-            this.getConfig().setNextBuildId(arguments.getInt("nextBuild"));
-        }
-
-        this.getConfig().setNoTravisRepair(arguments.getBoolean("noTravisRepair"));
-
-        this.getConfig().setJTravisEndpoint(arguments.getString("jtravisendpoint"));
-        this.getConfig().setTravisToken(arguments.getString("travistoken"));
-
-        if(this.getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR){
-            this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(new String[]{"SequencerRepair"})));
-        } else{
             this.getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
         }
-        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
-            LOGGER.info("The following repair tools will be used: " + StringUtils.join(this.getConfig().getRepairTools(), ", "));
-        }
 
-        // Make sure that it is a multiple of three in the list
-        if((LauncherUtils.getArgExperimentalPluginRepoList(arguments).length) % 3 == 0) {
-            this.getConfig().setExperimentalPluginRepoList(LauncherUtils.getArgExperimentalPluginRepoList(arguments));
-        } else if (LauncherUtils.getArgExperimentalPluginRepoList(arguments).length != 0) {
-            LOGGER.warn("The experimental plugin repo list is not correctly formed."
-                    + " Please make sure you have provided id, name and url for all repos. "
-                    + "Repairnator will continue without these repos.");
-            this.getConfig().setExperimentalPluginRepoList(null);
-        } else {
-            this.getConfig().setExperimentalPluginRepoList(null);
+        if (this.getConfig().getLauncherMode() == LauncherMode.REPAIR) {
+            LOGGER.info("The following repair tools will be used: {}", StringUtils.join(getConfig().getRepairTools(), ", "));
         }
     }
 
@@ -279,7 +185,7 @@ public class LegacyLauncher implements LauncherAPI {
                     result.add(line.trim().toLowerCase());
                 }
             } catch (IOException e) {
-                LOGGER.error("Error while reading projects to be ignored from file "+this.getConfig().getProjectsToIgnoreFilePath(), e);
+                LOGGER.error("Error while reading projects to be ignored from file " + this.getConfig().getProjectsToIgnoreFilePath(), e);
             }
         }
         return result;
@@ -331,7 +237,7 @@ public class LegacyLauncher implements LauncherAPI {
                 this.getConfig().setFork(false);
                 this.getConfig().setCreatePR(false);
                 this.engines.clear();
-                LOGGER.info("The build "+this.getConfig().getBuildId()+" is from a project to be ignored ("+project+"), thus the pipeline deactivated serialization for that build.");
+                LOGGER.info("The build " + this.getConfig().getBuildId() + " is from a project to be ignored (" + project + "), thus the pipeline deactivated serialization for that build.");
             }
         }
         return true;
@@ -339,19 +245,19 @@ public class LegacyLauncher implements LauncherAPI {
 
     @Override
     public boolean mainProcess() {
-        LOGGER.info("Start by getting the build (buildId: "+this.getConfig().getBuildId()+") with the following config: "+this.getConfig());
+        LOGGER.info("Start by getting the build (buildId: " + this.getConfig().getBuildId() + ") with the following config: " + this.getConfig());
         if (!this.getBuildToBeInspected()) {
             return false;
         }
 
-        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.getConfig().getRunId(), this.getConfig().getBuildId()+"");
+        HardwareInfoSerializer hardwareInfoSerializer = new HardwareInfoSerializer(this.engines, this.getConfig().getRunId(), this.getConfig().getBuildId() + "");
         hardwareInfoSerializer.serialize();
 
         List<AbstractDataSerializer> serializers = new ArrayList<>();
 
         LauncherMode launcherMode = this.getConfig().getLauncherMode();
         String workspacePath = this.getConfig().getWorkspacePath();
-        switch (launcherMode){
+        switch (launcherMode) {
             case BEARS:
                 inspector = InspectorFactory.getBearsInspector(buildToBeInspected, workspacePath, this.notifiers);
                 break;
@@ -383,7 +289,7 @@ public class LegacyLauncher implements LauncherAPI {
         inspector.setPatchNotifier(this.patchNotifier);
         inspector.run();
 
-        if(this.getConfig().getTempWorkspace()) {
+        if (this.getConfig().getTempWorkspace()) {
             new File(this.getConfig().getWorkspacePath()).delete();
         }
 
@@ -392,10 +298,10 @@ public class LegacyLauncher implements LauncherAPI {
     }
 
     /**
-     * if listener mode is NOOP it will run the usual pipeline, aka mainProcess in runListenerServer 
+     * if listener mode is NOOP it will run the usual pipeline, aka mainProcess in runListenerServer
      * if KUBERNETES it will run as ActiveMQListener and run kubernetesProcess.
      *
-     * @param launcher , launch depending on listenerMode 
+     * @param launcher , launch depending on listenerMode
      */
     protected void initProcess(LegacyLauncher launcher) {
         try {

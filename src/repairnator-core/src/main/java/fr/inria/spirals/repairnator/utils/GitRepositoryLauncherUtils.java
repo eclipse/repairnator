@@ -1,24 +1,61 @@
-package fr.inria.spirals.repairnator;
+package fr.inria.spirals.repairnator.utils;
+
+import com.martiansoftware.jsap.*;
+import fr.inria.spirals.repairnator.LauncherType;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
+import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
+import fr.inria.spirals.repairnator.states.LauncherMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-
-import com.martiansoftware.jsap.FlaggedOption;
-import com.martiansoftware.jsap.JSAP;
-import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.Switch;
-
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
-import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-
 public class GitRepositoryLauncherUtils {
-	
-	public static Switch defineArgGitRepositoryMode() {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitRepositoryLauncherUtils.class);
+
+    public static void registerGitArgs(JSAP jsap) throws JSAPException {
+        // --gitRepo
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryMode());
+        // --gitRepoUrl
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryUrl());
+        // --gitRepoBranch
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryBranch());
+        // --gitRepoIdCommit
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryIdCommit());
+        // --gitRepoFirstCommit
+    }
+
+    public static void initGitConfig(RepairnatorConfig config, JSAPResult arguments, JSAP jsap) {
+        if (GitRepositoryLauncherUtils.getArgGitRepositoryMode(arguments)) {
+            config.setLauncherMode(LauncherMode.GIT_REPOSITORY);
+            if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
+                config.setGitRepositoryFirstCommit(true);
+            }
+        } else {
+            LOGGER.error("Parameter 'gitrepo' is required in GIT_REPOSITORY launcher mode.");
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        }
+
+        if (arguments.getString("gitRepositoryUrl") == null) {
+            LOGGER.error("Parameter 'gitrepourl' is required in GIT_REPOSITORY launcher mode.");
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        }
+
+        if (config.isGitRepositoryFirstCommit() && arguments.getString("gitRepositoryIdCommit") != null) {
+            LOGGER.error("Parameters 'gitrepofirstcommit' and 'gitrepoidcommit' cannot be used at the same time.");
+            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        }
+
+        config.setGitRepositoryUrl(GitRepositoryLauncherUtils.getArgGitRepositoryUrl(arguments));
+        config.setGitRepositoryBranch(GitRepositoryLauncherUtils.getArgGitRepositoryBranch(arguments));
+        config.setGitRepositoryIdCommit(GitRepositoryLauncherUtils.getArgGitRepositoryIdCommit(arguments));
+    }
+
+    public static Switch defineArgGitRepositoryMode() {
         Switch sw = new Switch("gitRepo");
         sw.setLongFlag("gitrepo");
         sw.setDefault("false");
@@ -89,7 +126,7 @@ public class GitRepositoryLauncherUtils {
             if (config.getGitRepositoryId() != null) {
                 path += File.separator + config.getGitRepositoryId();
             }
-            
+
             fileSerializerEngines.add(new CSVSerializerEngine(path));
             fileSerializerEngines.add(new JSONFileSerializerEngine(path));
         } else {
