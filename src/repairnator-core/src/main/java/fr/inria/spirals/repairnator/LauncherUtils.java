@@ -1,10 +1,8 @@
-package fr.inria.spirals.repairnator.utils;
+package fr.inria.spirals.repairnator;
 
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
-import fr.inria.spirals.repairnator.InputBuildId;
-import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.engines.EmailNotifierEngine;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
@@ -14,6 +12,7 @@ import fr.inria.spirals.repairnator.serializer.engines.json.MongoDBSerializerEng
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.mongodb.MongoConnection;
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

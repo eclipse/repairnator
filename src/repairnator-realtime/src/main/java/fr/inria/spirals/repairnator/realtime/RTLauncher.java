@@ -7,7 +7,7 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.PeriodStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;

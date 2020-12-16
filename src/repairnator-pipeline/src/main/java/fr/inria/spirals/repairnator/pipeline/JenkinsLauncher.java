@@ -15,7 +15,7 @@ import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import fr.inria.spirals.repairnator.notifier.JenkinsPatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 
 import org.slf4j.Logger;

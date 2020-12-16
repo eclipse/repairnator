@@ -8,7 +8,7 @@ import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.repairnator.Listener;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.LauncherType;
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;

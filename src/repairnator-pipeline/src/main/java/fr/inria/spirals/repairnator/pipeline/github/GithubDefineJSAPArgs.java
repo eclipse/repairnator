@@ -7,8 +7,8 @@ import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.repairnator.pipeline.IDefineJSAPArgs;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.utils.GitRepositoryLauncherUtils;
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /* Args definition behavior for repairing with Github instead of Travis */

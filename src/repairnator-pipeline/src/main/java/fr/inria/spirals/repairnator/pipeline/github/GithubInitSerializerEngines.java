@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.pipeline.github;
 
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-import fr.inria.spirals.repairnator.utils.GitRepositoryLauncherUtils;
+import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
 import fr.inria.spirals.repairnator.pipeline.IInitSerializerEngines;
 
 import java.util.ArrayList;

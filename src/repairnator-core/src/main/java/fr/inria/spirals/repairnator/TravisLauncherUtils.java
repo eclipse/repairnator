@@ -1,7 +1,6 @@
-package fr.inria.spirals.repairnator.utils;
+package fr.inria.spirals.repairnator;
 
 import com.martiansoftware.jsap.*;
-import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;

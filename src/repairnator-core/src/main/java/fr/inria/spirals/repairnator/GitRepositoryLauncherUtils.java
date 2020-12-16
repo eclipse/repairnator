@@ -1,7 +1,6 @@
-package fr.inria.spirals.repairnator.utils;
+package fr.inria.spirals.repairnator;
 
 import com.martiansoftware.jsap.*;
-import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;

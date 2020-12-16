@@ -4,8 +4,8 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPResult;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.pipeline.IInitConfig;
-import fr.inria.spirals.repairnator.utils.GitRepositoryLauncherUtils;
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.GitRepositoryLauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

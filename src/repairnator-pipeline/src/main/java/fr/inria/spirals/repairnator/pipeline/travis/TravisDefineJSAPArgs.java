@@ -7,8 +7,8 @@ import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
 import fr.inria.spirals.repairnator.pipeline.IDefineJSAPArgs;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
-import fr.inria.spirals.repairnator.utils.TravisLauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.TravisLauncherUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /* Args definition behavior for the default use case of Repairnator */

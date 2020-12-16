@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.pipeline.github;
 
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;

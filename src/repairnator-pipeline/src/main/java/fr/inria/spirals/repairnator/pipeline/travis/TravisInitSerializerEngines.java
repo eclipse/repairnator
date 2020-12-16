@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.pipeline.travis;
 
-import fr.inria.spirals.repairnator.utils.LauncherUtils;
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.pipeline.IInitSerializerEngines;
 
