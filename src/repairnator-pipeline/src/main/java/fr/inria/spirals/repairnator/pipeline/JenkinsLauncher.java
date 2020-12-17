@@ -1,22 +1,17 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
 import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.JenkinsProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
 import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
 import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
 import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
 import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
 import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.notifier.JenkinsPatchNotifierImpl;
 import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
@@ -26,17 +21,11 @@ import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.io.File;
-import java.io.IOException;
-import com.google.common.io.Files;
 import java.util.Properties;
 
 /* Entry point as Jenkins plugin - skip JSAP */

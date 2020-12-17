@@ -101,6 +101,7 @@ public class RepairnatorConfig {
     private int nextBuildId;
     private String z3solverPath;
     private String workspacePath;
+    private boolean tempWorkspace;
     private String githubToken;
     private String projectsToIgnoreFilePath;
     private Set<String> repairTools;
@@ -112,6 +113,7 @@ public class RepairnatorConfig {
     private String gitBranch;
     private String gitCommitHash;
     private String mavenHome;
+    private String localMavenRepository;
     private String jTravisEndpoint;
     private String travisToken;
 
@@ -449,6 +451,14 @@ public class RepairnatorConfig {
         this.workspacePath = workspacePath;
     }
 
+    public boolean getTempWorkspace() {
+        return tempWorkspace;
+    }
+
+    public void setTempWorkspace(boolean tempWorkspace) {
+        this.tempWorkspace = tempWorkspace;
+    }
+
     public String getGithubToken() {
         return githubToken;
     }
@@ -694,6 +704,14 @@ public class RepairnatorConfig {
         return this.mavenHome;
     }
 
+    public String getLocalMavenRepository() {
+        return localMavenRepository;
+    }
+
+    public void setLocalMavenRepository(String localMavenRepository) {
+        this.localMavenRepository = localMavenRepository;
+    }
+
     public boolean isCreatePR() {
         return createPR;
     }
@@ -846,6 +864,8 @@ public class RepairnatorConfig {
                 ", gitUrl=" + gitUrl +
                 ", gitBranch=" + gitBranch +
                 ", gitCommitHash=" + gitCommitHash +
+                ", mavenHome=" + mavenHome +
+                ", localMavenRepository=" + localMavenRepository +
                 ", noTravisRepair=" + noTravisRepair +
                 ", rankPatches=" + patchRankingMode +
                 ", jTravisEndpoint=" + jTravisEndpoint +
