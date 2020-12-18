@@ -148,7 +148,7 @@ public class LauncherUtils {
         config.setRunId(LauncherUtils.getArgRunId(arguments));
         config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
 
-        config.setOutputPath(LauncherUtils.getArgOutput(arguments).getPath());
+        config.setOutputPath(LauncherUtils.getArgOutput(arguments).getAbsolutePath());
         config.setMongodbHost(LauncherUtils.getArgMongoDBHost(arguments));
         config.setMongodbName(LauncherUtils.getArgMongoDBName(arguments));
         config.setSmtpServer(LauncherUtils.getArgSmtpServer(arguments));
@@ -169,14 +169,14 @@ public class LauncherUtils {
             config.setFork(true);
         }
 
-        config.setZ3solverPath(new File(LauncherUtils.getArgZ3(arguments)).getPath());
+        config.setZ3solverPath(new File(LauncherUtils.getArgZ3(arguments)).getAbsolutePath());
         config.setWorkspacePath(LauncherUtils.getArgWorkspace(arguments));
         if (LauncherUtils.getArgTmpDirAsWorkSpace(arguments)) {
             File tempDir = com.google.common.io.Files.createTempDir();
             config.setTempWorkspace(true);
             config.setWorkspacePath(tempDir.getAbsolutePath());
             config.setOutputPath(tempDir.getAbsolutePath());
-            config.setZ3solverPath(new File(tempDir.getAbsolutePath() + File.separator + "z3_for_linux").getPath());
+            config.setZ3solverPath(new File(tempDir.getAbsolutePath() + File.separator + "z3_for_linux").getAbsolutePath());
         }
 
         config.setGithubUserEmail(LauncherUtils.getArgGithubUserEmail(arguments));
@@ -191,11 +191,11 @@ public class LauncherUtils {
         config.setGitBranch(LauncherUtils.getArgGitBranch(arguments));
         config.setGitCommitHash(LauncherUtils.getArgGitCommitHash(arguments));
 
-        config.setMavenHome(LauncherUtils.getArgMavenHome(arguments));
-        config.setLocalMavenRepository(LauncherUtils.getArgLocalMavenRepository(arguments));
+        config.setMavenHome(LauncherUtils.getArgMavenHome(arguments).getAbsolutePath());
+        config.setLocalMavenRepository(LauncherUtils.getArgLocalMavenRepository(arguments).getAbsolutePath());
 
         if (LauncherUtils.getArgProjectsToIgnore(arguments) != null) {
-            config.setProjectsToIgnoreFilePath(new File(LauncherUtils.getArgProjectsToIgnore(arguments)).getPath());
+            config.setProjectsToIgnoreFilePath(new File(LauncherUtils.getArgProjectsToIgnore(arguments).getAbsolutePath()).getPath());
         }
 
         // Make sure that it is a multiple of three in the list
@@ -659,8 +659,8 @@ public class LauncherUtils {
         return opt;
     }
 
-    public static String getArgMavenHome(JSAPResult arguments) {
-        return arguments.getString("mavenHome");
+    public static File getArgMavenHome(JSAPResult arguments) {
+        return arguments.getFile("mavenHome");
     }
 
     public static FlaggedOption defineArgLocalMavenRepository() {
@@ -672,8 +672,8 @@ public class LauncherUtils {
         return opt;
     }
 
-    public static String getArgLocalMavenRepository(JSAPResult arguments) {
-        return arguments.getString("localMavenRepository");
+    public static File getArgLocalMavenRepository(JSAPResult arguments) {
+        return arguments.getFile("localMavenRepository");
     }
 
     public static FlaggedOption defineArgWorkspace() {
@@ -698,8 +698,8 @@ public class LauncherUtils {
         return opt;
     }
 
-    public static String getArgProjectsToIgnore(JSAPResult arguments) {
-        return arguments.getString("projectsToIgnore");
+    public static File getArgProjectsToIgnore(JSAPResult arguments) {
+        return arguments.getFile("projectsToIgnore");
     }
 
     public static FlaggedOption defineArgListenerMode() {
