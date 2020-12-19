@@ -71,6 +71,11 @@ public class Utils {
         jgit.setLevel(Level.WARN);
     }
 
+    public static Level getLoggersLevel() {
+        Logger allinria = (Logger) LoggerFactory.getLogger("fr.inria");
+        return allinria.getLevel();
+    }
+
     public static String getValue(List<Object> value, int index) {
         if (index < value.size()) {
             return value.get(index).toString();
