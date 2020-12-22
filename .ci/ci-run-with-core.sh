@@ -3,7 +3,7 @@
 
 set -e
 set -x
-export M2_HOME=/usr/local/maven
+export M2_HOME=/usr/share/maven
 
 # sudo apt-get update
 # sudo apt-get install -y xmlstarlet
