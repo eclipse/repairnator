@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.TravisLauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.utils.Utils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -17,6 +18,11 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class TestPipelineArgs {
+
+    @Before
+    public void resetRepairnatorConfig() {
+        RepairnatorConfig.deleteInstance();
+    }
 
     @Test
     public void testDefaultArgsLauncher() throws Exception {
