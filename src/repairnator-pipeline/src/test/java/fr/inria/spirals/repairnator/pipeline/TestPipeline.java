@@ -221,7 +221,8 @@ public class TestPipeline {
         GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         			"--gitrepo",
         			"--gitrepourl", "https://github.com/surli/failingProject",
-        		});
+					"--workspace", folder.getRoot().getAbsolutePath()
+		});
 
         Patches patchNotifier = new Patches();
 		l.setPatchNotifier(patchNotifier);
@@ -237,8 +238,9 @@ public class TestPipeline {
 	        		"--gitrepo",
 	        		"--gitrepourl", "https://github.com/surli/failingProject",
 	        		"--gitrepobranch", "astor-jkali-failure",
-	        		"--repairTools", "AstorJKali"
-        		});
+	        		"--repairTools", "AstorJKali",
+					"--workspace", folder.getRoot().getAbsolutePath()
+		});
 
         l.mainProcess();
         assertEquals("TEST FAILURE", l.getInspector().getFinding());
@@ -251,7 +253,8 @@ public class TestPipeline {
         		"--gitrepourl", "https://github.com/javierron/failingProject",
 				"--gitrepoidcommit", "883bc40f01902654b1b1df094b2badb28e192097",
 				"--gitrepobranch", "nofixes",
-        		});
+				"--workspace", folder.getRoot().getAbsolutePath()
+		});
 
         l.mainProcess();
         assertEquals("TEST FAILURE", l.getInspector().getFinding());
@@ -280,8 +283,9 @@ public class TestPipeline {
     	GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         		"--gitrepo",
         		"--gitrepourl", "https://github.com/surli/failingProject",
-        		"--gitrepofirstcommit"
-        		});
+        		"--gitrepofirstcommit",
+				"--workspace", folder.getRoot().getAbsolutePath()
+		});
 
         l.mainProcess();
         assertEquals("NOTBUILDABLE", l.getInspector().getFinding());
@@ -300,7 +304,7 @@ public class TestPipeline {
 	public void testPRLuc12() throws Exception {
     	// reproducing the 12th PR of Luc
 		// see https://github.com/eclipse/repairnator/issues/758
-		Launcher l = new Launcher(new String[]{"--build", "395891390", "--repairTools", "NPEFix" });
+		Launcher l = new Launcher(new String[]{"--build", "395891390", "--repairTools", "NPEFix", "--workspace", folder.getRoot().getAbsolutePath()});
 		Patches patchNotifier = new Patches();
 		l.setPatchNotifier(patchNotifier);
 		l.mainProcess();
