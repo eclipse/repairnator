@@ -21,10 +21,9 @@ public class TestPipelineArgs {
 
     @Test
     public void testDefaultArgsLauncher() throws Exception {
-        Launcher launcher = new Launcher();
+        Launcher launcher = new Launcher(new String[]{""});
 
         JSAPResult arguments = launcher.defineArgs().parse("");
-        launcher = new Launcher(new String[]{""});
         RepairnatorConfig config = RepairnatorConfig.getInstance();
 
         // help is disabled by default
