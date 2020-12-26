@@ -12,14 +12,21 @@ import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.utils.Utils;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class TestPipeline {
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
     public void testDefaultArgsLauncher() throws Exception {
@@ -215,7 +222,7 @@ public class TestPipeline {
         			"--gitrepo",
         			"--gitrepourl", "https://github.com/surli/failingProject",
         		});
-        
+
         Patches patchNotifier = new Patches();
 		l.setPatchNotifier(patchNotifier);
         l.mainProcess();
@@ -232,7 +239,7 @@ public class TestPipeline {
 	        		"--gitrepobranch", "astor-jkali-failure",
 	        		"--repairTools", "AstorJKali"
         		});
-        
+
         l.mainProcess();
         assertEquals("TEST FAILURE", l.getInspector().getFinding());
 	}
@@ -245,7 +252,7 @@ public class TestPipeline {
 				"--gitrepoidcommit", "883bc40f01902654b1b1df094b2badb28e192097",
 				"--gitrepobranch", "nofixes",
         		});
-        
+
         l.mainProcess();
         assertEquals("TEST FAILURE", l.getInspector().getFinding());
 	}
@@ -255,9 +262,10 @@ public class TestPipeline {
     	GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
         		"--gitrepo",
         		"--gitrepourl", "https://github.com/surli/failingProject",
-        		"--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9"
+        		"--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
+                "--workspace", folder.getRoot().getAbsolutePath()
         		});
-        
+
         Patches patchNotifier = new Patches();
 		l.setPatchNotifier(patchNotifier);
         l.mainProcess();
@@ -265,7 +273,7 @@ public class TestPipeline {
 		assertEquals(10, patchNotifier.allpatches.size());
 		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("list == null"));
 	}
-    
+
     @Ignore
     @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
@@ -274,7 +282,7 @@ public class TestPipeline {
         		"--gitrepourl", "https://github.com/surli/failingProject",
         		"--gitrepofirstcommit"
         		});
-        
+
         l.mainProcess();
         assertEquals("NOTBUILDABLE", l.getInspector().getFinding());
 	}
