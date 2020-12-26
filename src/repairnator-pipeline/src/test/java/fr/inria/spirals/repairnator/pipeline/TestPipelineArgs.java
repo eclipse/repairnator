@@ -19,16 +19,12 @@ import static org.junit.Assert.*;
 
 public class TestPipelineArgs {
 
-    @Before
-    public void resetRepairnatorConfig() {
-        RepairnatorConfig.deleteInstance();
-    }
-
     @Test
     public void testDefaultArgsLauncher() throws Exception {
         Launcher launcher = new Launcher();
 
         JSAPResult arguments = launcher.defineArgs().parse("");
+        launcher = new Launcher(new String[]{""});
         RepairnatorConfig config = RepairnatorConfig.getInstance();
 
         // help is disabled by default
