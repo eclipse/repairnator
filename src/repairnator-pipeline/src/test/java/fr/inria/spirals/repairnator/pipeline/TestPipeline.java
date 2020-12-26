@@ -1,27 +1,18 @@
 package fr.inria.spirals.repairnator.pipeline;
 
-import ch.qos.logback.classic.Level;
-import com.martiansoftware.jsap.FlaggedOption;
-import com.martiansoftware.jsap.JSAPResult;
-import fr.inria.spirals.repairnator.InputBuildId;
-import fr.inria.spirals.repairnator.LauncherUtils;
-import fr.inria.spirals.repairnator.TravisLauncherUtils;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.utils.Utils;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestPipeline {
 
