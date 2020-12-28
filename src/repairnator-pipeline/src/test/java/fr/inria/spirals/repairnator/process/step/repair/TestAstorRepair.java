@@ -52,7 +52,8 @@ public class TestAstorRepair {
 
     @After
     public void tearDown() throws IOException {
-        FileHelper.deleteFile(tmpDir);
+		RepairnatorConfig.deleteInstance();
+		FileHelper.deleteFile(tmpDir);
     }
 
 	@Test

@@ -1,13 +1,16 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,11 @@ public class TestPipeline {
 
     @Rule
     public TemporaryFolder outputFolder = new TemporaryFolder();
+
+    @After
+    public void tearDown() throws IOException {
+        RepairnatorConfig.deleteInstance();
+    }
 
     @Test
     public void testPipeline() throws Exception {

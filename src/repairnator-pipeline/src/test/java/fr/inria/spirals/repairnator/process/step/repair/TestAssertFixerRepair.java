@@ -48,6 +48,7 @@ public class TestAssertFixerRepair {
 
     @After
     public void tearDown() throws IOException {
+        RepairnatorConfig.deleteInstance();
         FileHelper.deleteFile(tmpDir);
     }
 

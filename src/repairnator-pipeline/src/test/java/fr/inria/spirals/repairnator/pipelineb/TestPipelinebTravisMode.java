@@ -1,26 +1,37 @@
 package fr.inria.spirals.repairnator.pipeline;
 
 import com.martiansoftware.jsap.FlaggedOption;
+import com.martiansoftware.jsap.JSAP;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisDefineJSAPArgs;
+import fr.inria.spirals.repairnator.pipeline.travis.TravisMainProcess;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.pipeline.travis.TravisMainProcess;
-import fr.inria.spirals.repairnator.pipeline.travis.TravisDefineJSAPArgs;
-
+import org.junit.After;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import com.martiansoftware.jsap.JSAP;
+import static org.junit.Assert.*;
 
 public class TestPipelinebTravisMode {
+
+    @Rule
+    public TemporaryFolder workspaceFolder = new TemporaryFolder();
+
+    @Rule
+    public TemporaryFolder outputFolder = new TemporaryFolder();
+
+    @After
+    public void tearDown() throws IOException {
+        RepairnatorConfig.deleteInstance();
+    }
 
     @Test
     public void testPipelineArgs() throws Exception {
@@ -51,9 +62,12 @@ public class TestPipelinebTravisMode {
         // (set in Travis config)
         // eg export M2_HOME=/usr/share/maven
         // from surli/failingBuild
-        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{"--build", "564711868",
-            "--repairTools", "NPEFix",
-            "--workspace","./workspace-pipelinep"});
+        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{
+                "--build", "564711868",
+                "--repairTools", "NPEFix",
+                "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
+                "--output", outputFolder.getRoot().getAbsolutePath()
+        });
 		Patches patchNotifier = new Patches();
 		mainProc.setPatchNotifier(patchNotifier);
 		mainProc.run();
@@ -70,13 +84,18 @@ public class TestPipelinebTravisMode {
     	// reproducing the 12th PR of Luc
 		// see https://github.com/eclipse/repairnator/issues/758
 
-        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{"--build", "395891390", "--repairTools", "NPEFix", "--workspace","./workspace-pipelinep" });
+        TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{
+                "--build", "395891390",
+                "--repairTools", "NPEFix",
+                "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
+                "--output", outputFolder.getRoot().getAbsolutePath()
+        });
 		Patches patchNotifier = new Patches();
 		mainProc.setPatchNotifier(patchNotifier);
 		mainProc.run();
 		assertEquals("PATCHED", mainProc.getInspector().getFinding());
 		assertEquals(1, patchNotifier.allpatches.size());
-		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("hashtagStore != null"));	
+		assertTrue("patch is found", patchNotifier.allpatches.get(0).getDiff().contains("hashtagStore != null"));
     }
 
 
