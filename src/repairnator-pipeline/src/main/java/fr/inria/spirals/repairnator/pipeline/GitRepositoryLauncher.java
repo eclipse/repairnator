@@ -93,6 +93,7 @@ public class GitRepositoryLauncher extends LegacyLauncher {
     @Override
     protected void initConfig(JSAPResult arguments) {
         LauncherUtils.initCommonConfig(this.getConfig(), arguments);
+        GitRepositoryLauncherUtils.initGitConfig(this.getConfig(), arguments, jsap);
 
         if (getConfig().getLauncherMode() == LauncherMode.SEQUENCER_REPAIR) {
             getConfig().setRepairTools(new HashSet<>(Collections.singletonList("SequencerRepair")));
