@@ -31,7 +31,7 @@ public final class SequencerConfig {
         this.collectorPath = getEnvOrDefault("SEQUENCER_COLLECTOR_PATH",
                 System.getProperty("user.home") + "/continuous-learning-data");
         this.contextSize = Integer.parseInt(getEnvOrDefault("SEQUENCER_CONTEXT_SIZE", "3"));
-        this.ODSPath = (getEnvOrDefault("SEQUENCER_ODS_PATH", System.getProperty("user.home") + "/ODSPatches"));
+        this.ODSPath = (getEnvOrDefault("SEQUENCER_ODS_PATH", RepairnatorConfig.getInstance().getOutputPath() + "/ODSPatches"));
         this.rawURLSource = parseRawURLSource();
 
     }
