@@ -33,20 +33,9 @@ spec:
                 }
             }
         }
-        stage('repairnator-pipeline'){
-            environment {
-                TEST_PATH="src/repairnator-pipeline/"
-                TEST_LIST="**"
-            }
-            steps {
-                container('maven') {
-                  sh 'bash ./.ci/ci-run-with-core.sh'
-                }
-            }
-        }
         stage('repairnator-realtime'){
             environment {
-                TEST_PATH="src/repairnator-pipeline/"
+                TEST_PATH="src/repairnator-realtime/"
                 TEST_LIST="**"
             }
             steps {
