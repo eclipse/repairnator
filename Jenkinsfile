@@ -32,6 +32,9 @@ spec:
                   sh 'bash ./.ci/ci-run.sh'
                 }
             }
+            options {
+                timeout(time: 2, unit: "MINUTES")
+            }
         }
         stage('repairnator-realtime'){
             environment {
@@ -43,6 +46,10 @@ spec:
                   sh 'bash ./.ci/ci-run-with-core.sh'
                 }
             }
+            options {
+                timeout(time: 2, unit: "MINUTES")
+            }
+
         }
         stage('repairnator-jenkins-plugin'){
             environment {
@@ -52,6 +59,9 @@ spec:
                 container('maven') {
                   sh 'bash ./.ci/ci-run.sh'
                 }
+            }
+            options {
+                timeout(time: 2, unit: "MINUTES")
             }
         }
         stage('repairnator-maven-repair'){
@@ -63,6 +73,9 @@ spec:
                 container('maven') {
                   sh 'bash ./.ci/ci-maven-repair.sh'
                 }
+            }
+            options {
+                timeout(time: 5, unit: "MINUTES")
             }
         }
     }
