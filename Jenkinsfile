@@ -61,7 +61,7 @@ spec:
                 }
             }
             options {
-                timeout(time: 2, unit: "MINUTES")
+                timeout(time: 5, unit: "MINUTES")
             }
         }
         stage('repairnator-maven-repair'){
