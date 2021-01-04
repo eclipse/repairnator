@@ -10,14 +10,17 @@ public class NPEfixMojoTest extends BetterAbstractMojoTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Process mvn_clean_test = Runtime.getRuntime().exec("mvn clean test", null,	new File(projectPath));
-		mvn_clean_test.waitFor();
+		ProcessBuilder pb = new ProcessBuilder("mvn", "clean", "test");
+		pb.directory(new File(projectPath));
+		pb.inheritIO();
+		Process p = pb.start();
+		p.waitFor();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		Process mvn_clean = Runtime.getRuntime().exec("mvn clean", null,	new File(projectPath));
+		Process mvn_clean = Runtime.getRuntime().exec("mvn clean",null, new File(projectPath));
 		mvn_clean.waitFor();
 	}
 
