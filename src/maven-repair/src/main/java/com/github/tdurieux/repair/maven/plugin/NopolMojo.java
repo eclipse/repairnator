@@ -198,6 +198,7 @@ public class NopolMojo extends AbstractRepairMojo {
         File fileJar = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifactJar));
 
 		classpath.addAll(getClassPathFromPom(filePom, fileJar));
+
         return classpath;
     }
 
@@ -221,6 +222,7 @@ public class NopolMojo extends AbstractRepairMojo {
             e.printStackTrace();
             System.err.println("Error occurred, dependency will be passed: "+e.getMessage());
         }
+
         return new ArrayList<>(classpath);
     }
 

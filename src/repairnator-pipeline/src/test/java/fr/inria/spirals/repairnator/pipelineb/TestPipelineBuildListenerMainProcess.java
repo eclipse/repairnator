@@ -1,20 +1,41 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.pipeline.listener.PipelineBuildListenerMainProcess;
 
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.activemq.util.ByteSequence;
+import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import javax.jms.MessageNotWriteableException;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestPipelineBuildListenerMainProcess {
+
+    @Rule
+    public TemporaryFolder workspaceFolder = new TemporaryFolder();
+
+    @Rule
+    public TemporaryFolder outputFolder = new TemporaryFolder();
+
+    @After
+    public void tearDown() throws IOException {
+        RepairnatorConfig.deleteInstance();
+    }
+
     @Test
     public void testMessageExtractor() {
-        PipelineBuildListenerMainProcess buildListener = (PipelineBuildListenerMainProcess) MainProcessFactory.getPipelineListenerMainProcess(new String[]{});
+        PipelineBuildListenerMainProcess buildListener = (PipelineBuildListenerMainProcess) MainProcessFactory.getPipelineListenerMainProcess(new String[]{
+                "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
+                "--output", outputFolder.getRoot().getAbsolutePath()
+        });
         ActiveMQTextMessage textMessage = new ActiveMQTextMessage();
 
         try {

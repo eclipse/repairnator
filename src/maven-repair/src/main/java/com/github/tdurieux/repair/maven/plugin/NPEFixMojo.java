@@ -26,6 +26,7 @@ import fr.inria.spirals.npefix.resi.strategies.Strat2A;
 import fr.inria.spirals.npefix.resi.strategies.Strat2B;
 import fr.inria.spirals.npefix.resi.strategies.Strat3;
 import fr.inria.spirals.npefix.resi.strategies.Strat4;
+import org.apache.maven.Maven;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.surefire.log.api.NullConsoleLogger;
@@ -309,7 +310,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
             URL s = dependencies.get(i);
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
-        final Artifact artifact =artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  getNpeFixVersion(), null, "jar");
+        final Artifact artifact = artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  getNpeFixVersion(), null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
 
         sb.append(file.getAbsoluteFile());

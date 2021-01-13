@@ -23,7 +23,9 @@ public class TravisLauncherUtils {
     }
 
     public static void initTravisConfig(RepairnatorConfig config, JSAPResult arguments) {
-        config.setBuildId(TravisLauncherUtils.getArgBuild(arguments));
+        if (TravisLauncherUtils.isArgBuildSpecified(arguments)) {
+            config.setBuildId(TravisLauncherUtils.getArgBuild(arguments));
+        }
         if (config.getLauncherMode() == LauncherMode.BEARS) {
             config.setNextBuildId(TravisLauncherUtils.getArgNextBuild(arguments));
         }
@@ -44,6 +46,10 @@ public class TravisLauncherUtils {
 
     public static Integer getArgBuild(JSAPResult arguments) {
         return arguments.getInt("build");
+    }
+
+    public static boolean isArgBuildSpecified(JSAPResult arguments) {
+        return arguments.contains("build");
     }
 
     public static FlaggedOption defineArgNextBuild() {

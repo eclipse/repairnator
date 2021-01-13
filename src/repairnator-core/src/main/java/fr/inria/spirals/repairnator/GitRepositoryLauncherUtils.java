@@ -26,6 +26,7 @@ public class GitRepositoryLauncherUtils {
         // --gitRepoIdCommit
         jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryIdCommit());
         // --gitRepoFirstCommit
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryFirstCommit());
     }
 
     public static void initGitConfig(RepairnatorConfig config, JSAPResult arguments, JSAP jsap) {

@@ -217,7 +217,7 @@ public class RepairPatch {
 	
 			// create a directory to store the patch: "patches/"+buildId+patchId
 			String buggyClassName = buggyFile.getName().replace(".java", "");
-			String odsFilesPath = System.getProperty("user.home") + "/ODSPatches";
+			String odsFilesPath = SequencerConfig.getInstance().ODSPath;
 	
 			String patchPath = odsFilesPath + "/" + buildId + "-" + patchId;
 			Path path = Paths.get(patchPath + '/' + buggyClassName);
