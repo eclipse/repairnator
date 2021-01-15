@@ -13,19 +13,11 @@ import fr.inria.spirals.npefix.resi.context.Decision;
 import fr.inria.spirals.npefix.resi.context.Lapse;
 import fr.inria.spirals.npefix.resi.context.NPEOutput;
 import fr.inria.spirals.npefix.resi.exception.NoMoreDecision;
-import fr.inria.spirals.npefix.resi.selector.ExplorerSelector;
-import fr.inria.spirals.npefix.resi.selector.GreedySelector;
-import fr.inria.spirals.npefix.resi.selector.MonoExplorerSelector;
-import fr.inria.spirals.npefix.resi.selector.RandomSelector;
-import fr.inria.spirals.npefix.resi.selector.Selector;
-import fr.inria.spirals.npefix.resi.strategies.NoStrat;
-import fr.inria.spirals.npefix.resi.strategies.ReturnType;
-import fr.inria.spirals.npefix.resi.strategies.Strat1A;
-import fr.inria.spirals.npefix.resi.strategies.Strat1B;
-import fr.inria.spirals.npefix.resi.strategies.Strat2A;
-import fr.inria.spirals.npefix.resi.strategies.Strat2B;
-import fr.inria.spirals.npefix.resi.strategies.Strat3;
-import fr.inria.spirals.npefix.resi.strategies.Strat4;
+import fr.inria.spirals.npefix.resi.selector.*;
+import fr.inria.spirals.npefix.resi.strategies.*;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
 import fr.inria.spirals.repairnator.utils.Pair;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -46,15 +38,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
-@Mojo( name = "npefix", aggregator = true,
+@Mojo(name = "npefix", aggregator = true,
         defaultPhase = LifecyclePhase.TEST,
         requiresDependencyResolution = ResolutionScope.TEST)
 public class NPEFixMojo extends AbstractRepairMojo {
@@ -62,34 +48,34 @@ public class NPEFixMojo extends AbstractRepairMojo {
     /**
      * Location of the file.
      */
-    @Parameter( defaultValue = "${project.build.directory}/npefix", property = "outputDir", required = true )
+    @Parameter(defaultValue = "${project.build.directory}/npefix", property = "outputDir", required = true)
     private File outputDirectory;
 
-    @Parameter( defaultValue = "${project.build.directory}/npefix", property = "resultDir", required = true )
+    @Parameter(defaultValue = "${project.build.directory}/npefix", property = "resultDir", required = true)
     private File resultDirectory;
 
-    @Parameter( defaultValue = "exploration", property = "selector", required = true )
+    @Parameter(defaultValue = "exploration", property = "selector", required = true)
     private String selector;
 
-    @Parameter( defaultValue = "100", property = "laps", required = true )
+    @Parameter(defaultValue = "100", property = "laps", required = true)
     private int nbIteration;
 
-    @Parameter( defaultValue = "class", property = "scope", required = true )
+    @Parameter(defaultValue = "class", property = "scope", required = true)
     private String scope;
 
-    @Parameter( defaultValue = "default", property = "strategy", required = true )
+    @Parameter(defaultValue = "default", property = "strategy", required = true)
     private String repairStrategy;
 
     private NPEOutput result;
 
     public void execute() throws MojoExecutionException {
         RepairnatorConfig.getInstance().setRepairTools(Collections.singleton("NPEFix"));
-        RepairnatorConfig.getInstance().setMavenHome(localRepository.getBasedir());
-        RepairnatorConfig.getInstance().setOutputPath("./target/repairnator-output");
-        RepairnatorConfig.getInstance().setWorkspacePath("./target/repairnator-bin");
-        RepairnatorConfig.getInstance().setLocalMavenRepository(localRepository.toString());
+        RepairnatorConfig.getInstance().setOutputPath(resultDirectory.getAbsolutePath());
+        RepairnatorConfig.getInstance().setWorkspacePath(resultDirectory.getAbsolutePath());
+        RepairnatorConfig.getInstance().setLocalMavenRepository(localRepository.getBasedir());
         InspectorFactory.getMavenInspector(".", Collections.singletonList(new NPERepair()), null).run();
 
+        /*
         // get the failing NPE tests
         List<Pair<String, Set<File>>> npeTests = getNPETest();
 
@@ -117,14 +103,16 @@ public class NPEFixMojo extends AbstractRepairMojo {
             throw new RuntimeException("No failing test with NullPointerException or the NPE occurred outside the source.");
         }
 
-        final String[] sources = new String[sourceFolders.size() /* + testFolders.size()*/];
+        final String[] sources = new String[sourceFolders.size() /* + testFolders.size()*//*];
         int indexSource = 0;
+        */
 
         /*for (int i = 0; i < testFolders.size(); i++, indexSource++) {
             String s = testFolders.get(i);
             sources[indexSource] = s;
             System.out.println("Test: " + s);
         }*/
+        /*
             
         // collecting the source and bin folders
         for (File sourceFolder : sourceFolders) {
@@ -216,41 +204,42 @@ public class NPEFixMojo extends AbstractRepairMojo {
                     "We want to fail the build if there is one test failure.");
             throw new RuntimeException("There was one test failure");
         }
+        */
 
     }
 
-    private NPEOutput run(Launcher  npefix, List<String> npeTests) {
+    private NPEOutput run(Launcher npefix, List<String> npeTests) {
         switch (selector.toLowerCase()) {
-        case "dom":
-            return npefix.runStrategy(npeTests,
-                    new NoStrat(),
-                    new Strat1A(),
-                    new Strat1B(),
-                    new Strat2A(),
-                    new Strat2B(),
-                    new Strat3(),
-                    new Strat4(ReturnType.NULL),
-                    new Strat4(ReturnType.VAR),
-                    new Strat4(ReturnType.NEW),
-                    new Strat4(ReturnType.VOID));
-        case "exploration":
-            ExplorerSelector selector = new ExplorerSelector();
-            if (repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
-                selector =  new ExplorerSelector(new Strat4(ReturnType.NULL), new Strat4(ReturnType.VAR), new Strat4(ReturnType.NEW), new Strat4(ReturnType.VOID));
-            }
-            return multipleRuns(npefix, npeTests, selector);
-        case "mono":
-            Config.CONFIG.setMultiPoints(false);
-            return multipleRuns(npefix, npeTests, new MonoExplorerSelector());
-        case "greedy":
-            return multipleRuns(npefix, npeTests, new GreedySelector());
-        case "random":
-            return multipleRuns(npefix, npeTests, new RandomSelector());
+            case "dom":
+                return npefix.runStrategy(npeTests,
+                        new NoStrat(),
+                        new Strat1A(),
+                        new Strat1B(),
+                        new Strat2A(),
+                        new Strat2B(),
+                        new Strat3(),
+                        new Strat4(ReturnType.NULL),
+                        new Strat4(ReturnType.VAR),
+                        new Strat4(ReturnType.NEW),
+                        new Strat4(ReturnType.VOID));
+            case "exploration":
+                ExplorerSelector selector = new ExplorerSelector();
+                if (repairStrategy.toLowerCase().equals("TryCatch".toLowerCase())) {
+                    selector = new ExplorerSelector(new Strat4(ReturnType.NULL), new Strat4(ReturnType.VAR), new Strat4(ReturnType.NEW), new Strat4(ReturnType.VOID));
+                }
+                return multipleRuns(npefix, npeTests, selector);
+            case "mono":
+                Config.CONFIG.setMultiPoints(false);
+                return multipleRuns(npefix, npeTests, new MonoExplorerSelector());
+            case "greedy":
+                return multipleRuns(npefix, npeTests, new GreedySelector());
+            case "random":
+                return multipleRuns(npefix, npeTests, new RandomSelector());
         }
         return null;
     }
 
-    private NPEOutput multipleRuns(Launcher  npefix, List<String> npeTests, Selector selector) {
+    private NPEOutput multipleRuns(Launcher npefix, List<String> npeTests, Selector selector) {
         DecisionServer decisionServer = new DecisionServer(selector);
         decisionServer.startServer();
 
@@ -258,12 +247,12 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
         int countError = 0;
         while (output.size() < nbIteration) {
-            if(countError > 5) {
+            if (countError > 5) {
                 break;
             }
             try {
                 List<Lapse> result = npefix.run(selector, npeTests);
-                if(result.isEmpty()) {
+                if (result.isEmpty()) {
                     countError++;
                     continue;
                 }
@@ -282,7 +271,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
                     continue;
                 }
                 countError = 0;
-                if(output.size() + result.size() > nbIteration) {
+                if (output.size() + result.size() > nbIteration) {
                     output.addAll(result.subList(0, (nbIteration - output.size())));
                 } else {
                     output.addAll(result);
@@ -292,7 +281,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
                 countError++;
                 continue;
             } catch (Exception e) {
-                if(e.getCause() instanceof OutOfMemoryError) {
+                if (e.getCause() instanceof OutOfMemoryError) {
                     countError++;
                     continue;
                 }
@@ -300,7 +289,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
                 countError++;
                 continue;
             }
-            System.out.println("Multirun " + output.size() + "/" + nbIteration + " " + ((int)(output.size()/(double)nbIteration * 100)) + "%");
+            System.out.println("Multirun " + output.size() + "/" + nbIteration + " " + ((int) (output.size() / (double) nbIteration * 100)) + "%");
         }
         output.setEnd(new Date());
         return output;
@@ -308,18 +297,21 @@ public class NPEFixMojo extends AbstractRepairMojo {
 
     public static String getNpeFixVersion() {
         try {
-        final java.util.Properties properties = new java.util.Properties();
-        properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("versions.properties"));
-        return (properties.getProperty("npefix.version"));
-        } catch (Exception e) { throw new RuntimeException(e); }
+            final java.util.Properties properties = new java.util.Properties();
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("versions.properties"));
+            return (properties.getProperty("npefix.version"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
+
     private String classpath(List<URL> dependencies) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < dependencies.size(); i++) {
             URL s = dependencies.get(i);
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
-        final Artifact artifact = artifactFactory.createArtifact("fr.inria.gforge.spirals","npefix",  getNpeFixVersion(), null, "jar");
+        final Artifact artifact = artifactFactory.createArtifact("fr.inria.gforge.spirals", "npefix", getNpeFixVersion(), null, "jar");
         File file = new File(localRepository.getBasedir() + "/" + localRepository.pathOf(artifact));
 
         sb.append(file.getAbsoluteFile());
@@ -327,12 +319,14 @@ public class NPEFixMojo extends AbstractRepairMojo {
         return sb.toString();
     }
 
-    private File getSurefireReportsDirectory( MavenProject subProject ) {
+    private File getSurefireReportsDirectory(MavenProject subProject) {
         String buildDir = subProject.getBuild().getDirectory();
-        return new File( buildDir + "/surefire-reports" );
+        return new File(buildDir + "/surefire-reports");
     }
 
-    /** gets the failing tests due to a NullPointerException by parsing the Surefire XML files */
+    /**
+     * gets the failing tests due to a NullPointerException by parsing the Surefire XML files
+     */
     private List<Pair<String, Set<File>>> getNPETest() {
         List<Pair<String, Set<File>>> output = new ArrayList<>();
 
