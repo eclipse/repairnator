@@ -1,8 +1,12 @@
 package com.github.tdurieux.repair.maven.plugin;
 
+import fr.inria.spirals.npefix.resi.context.NPEOutput;
 import org.apache.maven.plugin.Mojo;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class NPEfixMojoTest extends BetterAbstractMojoTestCase {
 	private final String projectPath = "src/test/resources/projects/example2/";
@@ -10,7 +14,7 @@ public class NPEfixMojoTest extends BetterAbstractMojoTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		ProcessBuilder pb = new ProcessBuilder("mvn", "clean", "test");
+		ProcessBuilder pb = new ProcessBuilder("mvn", "clean");
 		pb.directory(new File(projectPath));
 		pb.inheritIO();
 		Process p = pb.start();
@@ -33,6 +37,17 @@ public class NPEfixMojoTest extends BetterAbstractMojoTestCase {
 		NPEFixMojo repair = (NPEFixMojo) mojo;
 		repair.execute();
 
-		assertTrue(repair.getResult().size() > 0);
+		List<File> patches = Arrays.asList(repair.getResultDirectory()
+				.listFiles(((dir, name) -> name.startsWith("patches") && name.endsWith(".json"))));
+		assertEquals(patches.size(), 1);
+		JSONObject result = new JSONObject(patches.get(0));
+		assertEquals(result.getJSONArray("executions").length(), 5);
+		int successCount = 0;
+		for (Object ob : result.getJSONArray("executions")) {
+			if (((JSONObject) ob).getBoolean("success")) {
+				successCount++;
+			}
+		}
+		assertEquals(successCount, 3);
 	}
 }

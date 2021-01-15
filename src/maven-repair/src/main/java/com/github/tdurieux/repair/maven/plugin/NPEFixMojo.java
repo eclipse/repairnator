@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,14 +67,30 @@ public class NPEFixMojo extends AbstractRepairMojo {
     @Parameter(defaultValue = "default", property = "strategy", required = true)
     private String repairStrategy;
 
-    private NPEOutput result;
+    private File patchesJson;
 
     public void execute() throws MojoExecutionException {
+        File tmpRepairnatorDir = com.google.common.io.Files.createTempDir();
         RepairnatorConfig.getInstance().setRepairTools(Collections.singleton("NPEFix"));
-        RepairnatorConfig.getInstance().setOutputPath(resultDirectory.getAbsolutePath());
-        RepairnatorConfig.getInstance().setWorkspacePath(resultDirectory.getAbsolutePath());
+        RepairnatorConfig.getInstance().setOutputPath(tmpRepairnatorDir.getAbsolutePath());
+        RepairnatorConfig.getInstance().setWorkspacePath(tmpRepairnatorDir.getAbsolutePath());
         RepairnatorConfig.getInstance().setLocalMavenRepository(localRepository.getBasedir());
         InspectorFactory.getMavenInspector(".", Collections.singletonList(new NPERepair()), null).run();
+
+        List<File> patches = Arrays.asList(tmpRepairnatorDir.listFiles(((dir, name) -> name.startsWith("patches") && name.endsWith(".json"))));
+
+        if (patches.size() == 0) {
+            this.getLog().error("No patches have been found by NPEFix");
+        } else {
+            try {
+                resultDirectory.mkdirs();
+                patchesJson = new File(resultDirectory.getAbsolutePath() + "/" + patches.get(0).getName());
+                patchesJson.createNewFile();
+                com.google.common.io.Files.copy(patches.get(0), patchesJson);
+            } catch (IOException e) {
+                this.getLog().error(e);
+            }
+        }
 
         /*
         // get the failing NPE tests
@@ -391,7 +408,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         return output;
     }
 
-    public NPEOutput getResult() {
-        return result;
+    public File getResultDirectory() {
+        return resultDirectory;
     }
 }
