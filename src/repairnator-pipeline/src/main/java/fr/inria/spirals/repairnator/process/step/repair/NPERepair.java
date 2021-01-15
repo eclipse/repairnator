@@ -293,6 +293,7 @@ public class NPERepair extends AbstractRepairStep {
         for (URL s : dependencies) {
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
+        sb.append(this.getConfig().getLocalMavenRepository() + "/fr/inria/gforge/spirals/npefix/" + 0.7 + "/npefix-" + 0.7 + ".jar");
 
         System.out.println(sb);
         return sb.toString();
