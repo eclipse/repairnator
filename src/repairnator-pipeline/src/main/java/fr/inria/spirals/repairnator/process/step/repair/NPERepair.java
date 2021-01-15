@@ -100,11 +100,14 @@ public class NPERepair extends AbstractRepairStep {
             final List<URL> dependencies = this.getInspector().getJobStatus().getRepairClassPath();
             final File[] sourceFolders = this.getInspector().getJobStatus().getRepairSourceDir();
             File binFolder = new File(this.getConfig().getWorkspacePath() + "/npefix-bin");
-            System.out.println(binFolder);
+            File npeFixJar = new File(this.getConfig().getLocalMavenRepository() + "/fr/inria/gforge/spirals/npefix/0.7/npefix-0.7.jar");
 
             // setting up dependencies
             try {
+                System.out.println(dependencies);
                 dependencies.add(binFolder.toURI().toURL());
+                dependencies.add(npeFixJar.toURI().toURL());
+                System.out.println(dependencies);
             } catch (MalformedURLException e) {
                 this.getLogger().error(e.getMessage());
             }
@@ -122,7 +125,7 @@ public class NPERepair extends AbstractRepairStep {
 			}
 			 */
 
-            System.out.println(classpath(dependencies));
+            this.getLogger().debug("CLASSPATH: " + classpath(dependencies));
 
             Launcher npefix = new Launcher(sources, this.getConfig().getOutputPath() + "/npefix-output", binFolder.getAbsolutePath(), classpath(dependencies), complianceLevel, strategy);
 
@@ -293,9 +296,6 @@ public class NPERepair extends AbstractRepairStep {
         for (URL s : dependencies) {
             sb.append(s.getPath()).append(File.pathSeparatorChar);
         }
-        sb.append(this.getConfig().getLocalMavenRepository() + "/fr/inria/gforge/spirals/npefix/" + 0.7 + "/npefix-" + 0.7 + ".jar");
-
-        System.out.println(sb);
         return sb.toString();
     }
 }
