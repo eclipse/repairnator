@@ -1,10 +1,18 @@
 package com.github.tdurieux.repair.maven.plugin;
 
+import com.google.common.io.CharStreams;
+import com.mongodb.util.JSON;
 import fr.inria.spirals.npefix.resi.context.NPEOutput;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.Mojo;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,11 +48,16 @@ public class NPEfixMojoTest extends BetterAbstractMojoTestCase {
 		List<File> patches = Arrays.asList(repair.getResultDirectory()
 				.listFiles(((dir, name) -> name.startsWith("patches") && name.endsWith(".json"))));
 		assertEquals(patches.size(), 1);
-		JSONObject result = new JSONObject(patches.get(0));
-		assertEquals(result.getJSONArray("executions").length(), 5);
+
+		InputStream is = new BufferedInputStream(new FileInputStream(patches.get(0)));
+		JSONParser parser = new JSONParser();
+		JSONObject result = (JSONObject) parser.parse(IOUtils.toString(is));
+
+		assertEquals(((JSONArray) result.get("executions")).size(), 5);
 		int successCount = 0;
-		for (Object ob : result.getJSONArray("executions")) {
-			if (((JSONObject) ob).getBoolean("success")) {
+		for (Object ob : (JSONArray) result.get("executions")) {
+			JSONObject res = (JSONObject) ((JSONObject)ob).get("result");
+			if (res.get("success").equals(true)) {
 				successCount++;
 			}
 		}

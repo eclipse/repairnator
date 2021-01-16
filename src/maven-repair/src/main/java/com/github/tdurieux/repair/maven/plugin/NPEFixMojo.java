@@ -67,6 +67,10 @@ public class NPEFixMojo extends AbstractRepairMojo {
     @Parameter(defaultValue = "default", property = "strategy", required = true)
     private String repairStrategy;
 
+    @Parameter(readonly = true, defaultValue = "${project}")
+    private MavenProject project;
+
+
     private File patchesJson;
 
     public void execute() throws MojoExecutionException {
@@ -75,7 +79,7 @@ public class NPEFixMojo extends AbstractRepairMojo {
         RepairnatorConfig.getInstance().setOutputPath(tmpRepairnatorDir.getAbsolutePath());
         RepairnatorConfig.getInstance().setWorkspacePath(tmpRepairnatorDir.getAbsolutePath());
         RepairnatorConfig.getInstance().setLocalMavenRepository(localRepository.getBasedir());
-        InspectorFactory.getMavenInspector(".", Collections.singletonList(new NPERepair()), null).run();
+        InspectorFactory.getMavenInspector(project.getBasedir().getAbsolutePath(), Collections.singletonList(new NPERepair()), null).run();
 
         List<File> patches = Arrays.asList(tmpRepairnatorDir.listFiles(((dir, name) -> name.startsWith("patches") && name.endsWith(".json"))));
 
