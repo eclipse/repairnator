@@ -70,7 +70,6 @@ public class NPEFixMojo extends AbstractRepairMojo {
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
-
     private File patchesJson;
 
     public void execute() throws MojoExecutionException {

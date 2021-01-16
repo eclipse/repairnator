@@ -15,6 +15,10 @@ import fr.inria.spirals.npefix.resi.context.NPEOutput;
 import fr.inria.spirals.npefix.resi.exception.NoMoreDecision;
 import fr.inria.spirals.npefix.resi.selector.SafeMonoSelector;
 import fr.inria.spirals.npefix.resi.selector.Selector;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepairSafe;
 import fr.inria.spirals.repairnator.utils.Pair;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -35,13 +39,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Mojo( name = "npefix-safe", aggregator = true,
         defaultPhase = LifecyclePhase.TEST,
@@ -69,9 +67,35 @@ public class NPEFixSafeMojo extends AbstractRepairMojo {
     @Parameter( defaultValue = "default", property = "strategy", required = true )
     private String repairStrategy;
 
-    private NPEOutput result;
+    @Parameter(readonly = true, defaultValue = "${project}")
+    private MavenProject project;
+
+    private File patchesJson;
 
     public void execute() throws MojoExecutionException {
+        File tmpRepairnatorDir = com.google.common.io.Files.createTempDir();
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton("NPEFixSafe"));
+        RepairnatorConfig.getInstance().setOutputPath(tmpRepairnatorDir.getAbsolutePath());
+        RepairnatorConfig.getInstance().setWorkspacePath(tmpRepairnatorDir.getAbsolutePath());
+        RepairnatorConfig.getInstance().setLocalMavenRepository(localRepository.getBasedir());
+        InspectorFactory.getMavenInspector(project.getBasedir().getAbsolutePath(), Collections.singletonList(new NPERepairSafe()), null).run();
+
+        List<File> patches = Arrays.asList(tmpRepairnatorDir.listFiles(((dir, name) -> name.startsWith("patches") && name.endsWith(".json"))));
+
+        if (patches.size() == 0) {
+            this.getLog().error("No patches have been found by NPEFix");
+        } else {
+            try {
+                resultDirectory.mkdirs();
+                patchesJson = new File(resultDirectory.getAbsolutePath() + "/" + patches.get(0).getName());
+                patchesJson.createNewFile();
+                com.google.common.io.Files.copy(patches.get(0), patchesJson);
+            } catch (IOException e) {
+                this.getLog().error(e);
+            }
+        }
+
+        /*
         List<Pair<String, Set<File>>> npeTests = getNPETest();
 
         try {
@@ -97,14 +121,14 @@ public class NPEFixSafeMojo extends AbstractRepairMojo {
             throw new RuntimeException("No failing test with NullPointerException or the NPE occurred outside the source.");
         }
 
-        final String[] sources = new String[sourceFolders.size() /* + testFolders.size()*/];
+        final String[] sources = new String[sourceFolders.size() /* + testFolders.size()*//*];
         int indexSource = 0;
 
         /*for (int i = 0; i < testFolders.size(); i++, indexSource++) {
             String s = testFolders.get(i);
             sources[indexSource] = s;
             System.out.println("Test: " + s);
-        }*/
+        }*//*
         for (File sourceFolder : sourceFolders) {
             sources[indexSource] = sourceFolder.getAbsolutePath();
             System.out.println("Source: " + sourceFolder);
@@ -230,6 +254,7 @@ public class NPEFixSafeMojo extends AbstractRepairMojo {
         }
         output.setEnd(new Date());
         return output;
+        */
     }
 
     private String classpath(List<URL> dependencies) {
@@ -309,7 +334,7 @@ public class NPEFixSafeMojo extends AbstractRepairMojo {
         return output;
     }
 
-    public NPEOutput getResult() {
-        return result;
+    public File getResultDirectory() {
+        return resultDirectory;
     }
 }
