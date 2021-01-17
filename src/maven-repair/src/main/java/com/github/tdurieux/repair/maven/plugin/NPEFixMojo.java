@@ -76,7 +76,6 @@ public class NPEFixMojo extends AbstractRepairMojo {
         File tmpRepairnatorDir = com.google.common.io.Files.createTempDir();
         RepairnatorConfig.getInstance().setRepairTools(Collections.singleton("NPEFix"));
         RepairnatorConfig.getInstance().setOutputPath(tmpRepairnatorDir.getAbsolutePath());
-        RepairnatorConfig.getInstance().setWorkspacePath(tmpRepairnatorDir.getAbsolutePath());
         RepairnatorConfig.getInstance().setLocalMavenRepository(localRepository.getBasedir());
         InspectorFactory.getMavenInspector(project.getBasedir().getAbsolutePath(), Collections.singletonList(new NPERepair()), null).run();
 
