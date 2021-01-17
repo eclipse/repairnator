@@ -4,39 +4,15 @@ import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
-import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.components.IRunInspector;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.MachineInfo;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
-import fr.inria.spirals.repairnator.process.step.BuildProject;
-import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.TestProject;
-import fr.inria.spirals.repairnator.process.step.WritePropertyFile;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
-import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
-import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
-import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
-import fr.inria.spirals.repairnator.process.step.push.CommitPatch;
-import fr.inria.spirals.repairnator.process.step.push.CommitProcessEnd;
-import fr.inria.spirals.repairnator.process.step.push.CommitType;
-import fr.inria.spirals.repairnator.process.step.push.InitRepoToPush;
-import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
-import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
-import fr.inria.spirals.repairnator.process.inspectors.components.IRunInspector;
-
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
@@ -100,10 +76,6 @@ public class ProjectInspector {
         this.initProperties();
     }
 
-    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
-        this(buildToBeInspected, workspace, new ArrayList<>(), notifiers);
-    }
-
     public ProjectInspector(String workspace,String gitUrl,String gitBranch,String gitCommit,List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
         this.gitUrl = gitUrl;
         this.gitBranch = gitBranch;
@@ -139,6 +111,7 @@ public class ProjectInspector {
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
         this.workspace = workspace;
+        this.gitSlug = getRepoSlug();
         this.repoLocalPath = workspace + File.separator + getRepoSlug();
         long buildId = buildToBeInspected != null ? buildToBeInspected.getBuggyBuild().getId() : 0;
         this.repoToPushLocalPath = repoLocalPath+"_topush_" + buildId;
@@ -152,7 +125,6 @@ public class ProjectInspector {
         this.buildLog = new ArrayList<>();
         this.initProperties();
     }
->>>>>>> 2b69621c (Partial unify)
 
     public ProjectInspector setIRunInspector(IRunInspector iRunInspector) {
         this.iRunInspector = iRunInspector;
