@@ -97,7 +97,7 @@ public class TestPipelineArgs {
         File defaultMavenHome = new File("/usr/share/maven");
         assertEquals(defaultMavenHome, LauncherUtils.getArgMavenHome(arguments));
         assertEquals(defaultMavenHome.getPath(), config.getMavenHome());
-        File defaultLocalMavenRepository = new File(System.getenv("HOME") + "/.m2/repository");
+        File defaultLocalMavenRepository = new File(System.getProperty("user.home") + "/.m2/repository");
         assertEquals(defaultLocalMavenRepository, LauncherUtils.getArgLocalMavenRepository(arguments));
         assertEquals(defaultLocalMavenRepository.getPath(), config.getLocalMavenRepository());
 

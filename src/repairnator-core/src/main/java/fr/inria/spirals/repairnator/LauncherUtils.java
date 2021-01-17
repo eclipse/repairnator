@@ -668,7 +668,7 @@ public class LauncherUtils {
         opt.setLongFlag("localMavenRepository");
         opt.setStringParser(FileStringParser.getParser().setMustBeDirectory(true));
         opt.setHelp("Maven local repository folder");
-        opt.setDefault(System.getenv("HOME") + "/.m2/repository");
+        opt.setDefault(System.getProperty("user.home") + "/.m2/repository");
         return opt;
     }
 

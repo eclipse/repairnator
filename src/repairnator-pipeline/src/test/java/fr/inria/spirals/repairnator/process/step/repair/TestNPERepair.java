@@ -3,23 +3,23 @@ package fr.inria.spirals.repairnator.process.step.repair;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-<<<<<<< HEAD
-=======
-import fr.inria.spirals.repairnator.process.step.*;
->>>>>>> 9969ca14 (Fix pipeline)
-import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
-import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
+import fr.inria.spirals.repairnator.process.step.BuildProject;
+import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
+import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
+import fr.inria.spirals.repairnator.utils.Utils;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
@@ -44,7 +44,7 @@ import static org.junit.Assert.assertTrue;
 public class TestNPERepair {
 
     private File tmpDir;
-    
+
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
@@ -87,8 +87,6 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(8));
-        StepStatus npeStatus = stepStatusList.get(7);
         assertThat(stepStatusList.size(), is(9));
         StepStatus npeStatus = stepStatusList.get(8);
         assertThat(npeStatus.getStep(), is(npeRepair));
