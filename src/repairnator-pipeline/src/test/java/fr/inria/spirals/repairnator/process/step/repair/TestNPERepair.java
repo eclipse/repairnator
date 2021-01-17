@@ -3,6 +3,10 @@ package fr.inria.spirals.repairnator.process.step.repair;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+<<<<<<< HEAD
+=======
+import fr.inria.spirals.repairnator.process.step.*;
+>>>>>>> 9969ca14 (Fix pipeline)
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
@@ -11,10 +15,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
-import fr.inria.spirals.repairnator.process.step.StepStatus;
-import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
-import fr.inria.spirals.repairnator.process.step.CloneRepository;
-import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -74,6 +74,7 @@ public class TestNPERepair {
         npeRepair.setProjectInspector(inspector);
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new BuildProject(inspector))
                 .addNextStep(new TestProject(inspector))
                 .addNextStep(new ComputeClasspath(inspector, false))
                 .addNextStep(new ComputeSourceDir(inspector, false, false))
@@ -88,6 +89,8 @@ public class TestNPERepair {
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
         assertThat(stepStatusList.size(), is(8));
         StepStatus npeStatus = stepStatusList.get(7);
+        assertThat(stepStatusList.size(), is(9));
+        StepStatus npeStatus = stepStatusList.get(8);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
         for (StepStatus stepStatus : stepStatusList) {

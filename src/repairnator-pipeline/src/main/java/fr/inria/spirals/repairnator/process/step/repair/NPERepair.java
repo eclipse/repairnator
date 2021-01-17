@@ -101,7 +101,7 @@ public class NPERepair extends AbstractRepairStep {
 
             final List<URL> dependencies = this.getInspector().getJobStatus().getRepairClassPath();
             final File[] sourceFolders = this.getInspector().getJobStatus().getRepairSourceDir();
-            File binFolder = new File(this.getConfig().getWorkspacePath() + "/npefix-bin");
+            File binFolder = new File(this.getInspector().getWorkspace() + "/npefix-bin");
             File npeFixJar = new File(this.getConfig().getLocalMavenRepository() + "/fr/inria/gforge/spirals/npefix/0.7/npefix-0.7.jar");
 
             // setting up dependencies
