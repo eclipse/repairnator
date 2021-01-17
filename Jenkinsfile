@@ -49,7 +49,6 @@ spec:
       steps {
         container('maven') {
           sh 'bash ./.ci/ci-run.sh'
-          junit testResults: 'src/repairnator-core/target/surefire-reports/*.xml'
         }
       }
       options {
@@ -64,7 +63,6 @@ spec:
       steps {
         container('maven') {
           sh 'bash ./.ci/ci-run-with-core.sh'
-          junit testResults: 'src/repairnator-realtime/target/surefire-reports/*.xml'
         }
       }
       options {
@@ -78,7 +76,6 @@ spec:
       steps {
         container('maven') {
           sh 'bash ./.ci/ci-run.sh'
-          junit testResults: 'src/repairnator-jenkins-plugin/target/surefire-reports/*.xml'
         }
       }
       options {
@@ -93,7 +90,6 @@ spec:
       steps {
         container('maven') {
           sh 'bash ./.ci/ci-maven-repair.sh'
-          junit testResults: 'src/maven-repair/target/surefire-reports/*.xml'
         }
       }
       options {
@@ -108,12 +104,16 @@ spec:
       steps {
         container('maven') {
           sh 'bash ./.ci/ci-run-with-core.sh'
-          junit testResults: 'src/repairnator-pipeline/target/surefire-reports/*.xml'
         }
       }
       options {
         timeout(time: 3, unit: "HOURS")
       }
+    }
+  }
+  post {
+    always {
+      junit testResults: '**/target/surefire-reports/*.xml'
     }
   }
 }
