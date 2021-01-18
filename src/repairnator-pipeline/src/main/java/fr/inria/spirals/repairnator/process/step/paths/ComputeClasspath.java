@@ -128,6 +128,7 @@ public class ComputeClasspath extends AbstractStep {
         // Default "/target/classes" and "/target/test-classes" dirs are then added here
         this.addDefaultDirsToClassPath(incriminatedModule);
         this.getInspector().getJobStatus().setRepairClassPath(this.classPath);
+        this.getLogger().debug("Computed classpath " + this.classPath);
 
         return StepStatus.buildSuccess(this);
     }

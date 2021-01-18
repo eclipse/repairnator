@@ -37,6 +37,7 @@ public class NPERepairSafe extends AbstractRepairStep {
     }
 
     private boolean isThereNPE() {
+        /*
         for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
             Map<String, List<ErrorType>> errorsMap = failureLocation.getErroringMethodsAndErrors();
             for (String method : errorsMap.keySet()) {
@@ -46,6 +47,8 @@ public class NPERepairSafe extends AbstractRepairStep {
                 }
             }
         }
+
+         */
         return false;
     }
 
