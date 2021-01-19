@@ -1,11 +1,9 @@
 package fr.inria.spirals.repairnator.dockerpool;
 
 import com.spotify.docker.client.DockerClient;
-import fr.inria.spirals.repairnator.GithubInputBuild;
-import fr.inria.spirals.repairnator.TravisInputBuild;
+import fr.inria.spirals.repairnator.InputBuild;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
-import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedTravisBuildTracking;
-import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedGithubBuildTracking;
+import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,33 +59,20 @@ public class DockerPoolManager {
 
     /**
      * For preparing the build, we first clean the older containers
-     * @param buildId
+     * @param inputBuild
      * @return
      */
-    public TreatedTravisBuildTracking prepareBeforeSubmitBuild(long buildId) {
+    public TreatedBuildTracking prepareBeforeSubmitBuild(InputBuild inputBuild){
         this.cleanUpOlderContainers();
-        return new TreatedTravisBuildTracking(this.engines, this.runId, buildId);
-    }
-
-    public TreatedGithubBuildTracking prepareBeforeSubmitBuild(String url, String commitID) {
-        this.cleanUpOlderContainers();
-        return new TreatedGithubBuildTracking(this.engines, this.runId, url, commitID);
+        return new TreatedBuildTracking(this.engines, this.runId, inputBuild);
     }
 
     /**
-     * For submitting build, we first call {@link #prepareBeforeSubmitBuild(long)}, then we create the container and add it to the list of submitted.
+     * For submitting build, we first call {@link #prepareBeforeSubmitBuild(InputBuild)}, then we create the container and add it to the list of submitted.
      */
-    public RunnablePipelineContainer submitBuild(String imageId, TravisInputBuild inputBuildId) {
-        TreatedTravisBuildTracking treatedTravisBuildTracking = this.prepareBeforeSubmitBuild(inputBuildId.getBuggyBuildId());
+    public RunnablePipelineContainer submitBuild(String imageId, InputBuild inputBuildId) {
+        TreatedBuildTracking treatedTravisBuildTracking = this.prepareBeforeSubmitBuild(inputBuildId);
         RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, inputBuildId, this.dockerOutputDir, treatedTravisBuildTracking);
-        this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
-
-        return runnablePipelineContainer;
-    }
-
-    public RunnablePipelineContainer submitBuild(String imageId, GithubInputBuild inputBuild) {
-        TreatedGithubBuildTracking treatedGithubBuildTracking = this.prepareBeforeSubmitBuild(inputBuild.getUrl(), inputBuild.getSha());
-        RunnablePipelineContainer runnablePipelineContainer = new RunnablePipelineContainer(this, imageId, inputBuild, this.dockerOutputDir, treatedGithubBuildTracking);
         this.submittedRunnablePipelineContainers.add(runnablePipelineContainer);
 
         return runnablePipelineContainer;

@@ -1,7 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.jtravis.entities.Build;
-import fr.inria.spirals.repairnator.TravisInputBuild;
+import fr.inria.spirals.repairnator.InputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.dockerpool.DockerPoolManager;
@@ -81,11 +80,11 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         return this.submittedRunnablePipelineContainers.size();
     }
 
-    public void submitBuild(Build build) {
+    public void submitBuild(InputBuild build) {
         if (this.limitDateNextRetrieveDockerImage != null && this.limitDateNextRetrieveDockerImage.before(new Date())) {
             this.refreshDockerImage();
         }
-		this.executorService.submit(this.submitBuild(this.dockerImageId, new TravisInputBuild(build.getId())));
+		this.executorService.submit(this.submitBuild(this.dockerImageId, build));
     }
 
     public void switchOff() {

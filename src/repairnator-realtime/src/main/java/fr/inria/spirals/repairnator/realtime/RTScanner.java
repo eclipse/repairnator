@@ -7,6 +7,7 @@ import fr.inria.jtravis.entities.Job;
 import fr.inria.jtravis.entities.Log;
 import fr.inria.jtravis.entities.Repository;
 import fr.inria.jtravis.entities.StateType;
+import fr.inria.spirals.repairnator.TravisInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.EndProcessNotifier;
 import fr.inria.spirals.repairnator.realtime.counter.PullRequestCounter;
@@ -340,7 +341,7 @@ public class RTScanner {
 
         if (failing) {
             LOGGER.info("Failing or erroring tests has been found in build (id: "+build.getId()+")");
-            this.pipelineRunner.submitBuild(build);
+            this.pipelineRunner.submitBuild( new TravisInputBuild(build.getId()));
         } else {
             LOGGER.info("No failing or erroring test has been found in build (id: "+build.getId()+")");
         }

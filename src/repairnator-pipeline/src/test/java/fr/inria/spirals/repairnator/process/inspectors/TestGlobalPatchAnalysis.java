@@ -183,7 +183,7 @@ public class TestGlobalPatchAnalysis {
 		cloneStep.execute();
 
 		List<RepairPatch> classifyPatcheswithODS = inspector.getJobStatus().getCorrectnessLabeledPatches(Features.ODS,
-				buildId);
+				String.valueOf(buildId));
 
 		// There are 10 patches are generated for this failing build
 		assertThat(classifyPatcheswithODS.size(), is(10));

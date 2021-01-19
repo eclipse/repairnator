@@ -33,7 +33,7 @@ import java.util.*;
 public abstract class AbstractRepairStep extends AbstractStep {
 
     public static final String DEFAULT_DIR_PATCHES = "repairnator-patches";
-    public static final InputStream DEFAULT_TEXT_FILE = AbstractRepairStep.class.getClassLoader().getResourceAsStream("R-Hero-PR-text-github.MD");
+    public static final InputStream DEFAULT_TEXT_FILE = AbstractRepairStep.class.getClassLoader().getResourceAsStream("R-Hero-PR-text.MD");
     public static final String FEEDBACK_URL = "http://sequencer.westeurope.cloudapp.azure.com:8081";
 
     public static final String GITHUB_TEXT_PR = "This patch uses the program repair tools %(tools) \n\n";

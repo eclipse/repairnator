@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.InputBuild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner {
         }
     }
 
-    public void submitBuild(Build build) {
+    public void submitBuild(InputBuild build) {
         try {
             /*
              * Getting JMS connection from the JMS server and starting it
@@ -96,7 +96,7 @@ public class ActiveMQPipelineRunner implements PipelineRunner {
              * MessageProducer is used for sending messages to the queue.
              */
             MessageProducer producer = session.createProducer(destination);
-            TextMessage message = session.createTextMessage(Long.toString(build.getId()));
+            TextMessage message = session.createTextMessage(build.toString());
 
             producer.send(message);
 

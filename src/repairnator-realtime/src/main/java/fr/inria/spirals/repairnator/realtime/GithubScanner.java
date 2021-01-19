@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.GithubAPICommitAdapter;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.FailedCommit;
@@ -8,6 +9,7 @@ import fr.inria.spirals.repairnator.states.LauncherMode;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -17,7 +19,7 @@ public class GithubScanner {
     static long scanIntervalLength = 60 * 60 * 1000; // 1 hour
     static long frequency = 60 * 60 * 1000; // 1 hour
 
-    static GithubCommitRunner runner;
+    DockerPipelineRunner runner;
 
     public static void main(String[] args) {
 
@@ -30,13 +32,13 @@ public class GithubScanner {
         RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:latest");
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
 
-        runner = new GithubCommitRunner();
+        GithubScanner scanner = new GithubScanner();
 
         while (true){
             try {
-                List<FailedCommit> failedCommits = fetch();
+                List<FailedCommit> failedCommits = scanner.fetch();
 
-                failedCommits.forEach(GithubScanner::process);
+                failedCommits.forEach(scanner::process);
 
                 TimeUnit.MILLISECONDS.sleep(frequency);
             } catch (Exception e) {
@@ -45,7 +47,12 @@ public class GithubScanner {
         }
     }
 
-    public static List<FailedCommit> fetch() throws Exception{
+    public GithubScanner(){
+        runner = new DockerPipelineRunner();
+        runner.initRunner();
+    }
+
+    public List<FailedCommit> fetch() throws Exception{
 
         long endTime = System.currentTimeMillis() - scanIntervalDelay;
         long startTime = endTime - scanIntervalLength;
@@ -55,13 +62,13 @@ public class GithubScanner {
         return commits.stream().filter(commit -> !commit.getTravisFailed()).collect(Collectors.toList());
     }
 
-    public static void process(FailedCommit commit){
+    public void process(FailedCommit commit){
         String url = "https://github.com/" + commit.getRepoName();
         String sha = commit.getCommitId();
 
         System.out.println(url);
         System.out.println(sha);
 
-        runner.submitBuild(url, sha);
+        runner.submitBuild(new GithubInputBuild(url, sha));
     }
 }
