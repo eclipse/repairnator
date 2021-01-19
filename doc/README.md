@@ -83,10 +83,11 @@ The documentation about the scripts is [available here](scripts.md). More detail
 
 ### Pull-requests
 
+To enamble this functionality refer to the `--createPR` option in the [Command Line Usage](https://github.com/eclipse/repairnator/blob/master/doc/main-classes.md) documentation.
+
 When Repairnator is configured to create a pull-request automatically, it uses the text found on [this file](https://github.com/eclipse/repairnator/blob/master/src/repairnator-pipeline/src/main/resources/R-Hero-PR-text.MD). In the future, it is planned to generate a specific piece of text to explain the patch (see [Explainable Software Bot Contributions: Case Study of Automated Bug Fixes](http://arxiv.org/pdf/1905.02597) ([doi:10.1109/BotSE.2019.00010](https://doi.org/10.1109/BotSE.2019.00010)))
 
-By default, the links created in the PR text direct to a web service, which stores the feedback information on a table on our Azure storage account.
-
+Currently the PR text produces feedback links which should be handled by an instance of the [R-Hero feedback service](https://github.com/repairnator/r-hero-feedback-service)
 
 ## Content of the repository
 
