@@ -104,12 +104,12 @@ spec:
       steps {
         container('maven') {
           sh 'bash ./.ci/ci-run-with-core.sh'
+          junit skipPublishingChecks: true, 'src/repairnator-pipeline/target/surefire-reports/TEST-fr.inria.spirals.repairnator.pipeline.TestPipelinebGithubMode.xml'
         }
       }
       options {
         timeout(time: 3, unit: "HOURS")
       }
-      junit skipPublishingChecks: true, 'src/repairnator-pipeline/target/surefire-reports/TEST-fr.inria.spirals.repairnator.pipeline.TestPipelinebGithubMode.xml'
     }
   }
 }
