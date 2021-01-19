@@ -109,6 +109,7 @@ spec:
       options {
         timeout(time: 3, unit: "HOURS")
       }
+      junit skipPublishingChecks: true, 'src/repairnator-pipeline/target/surefire-reports/TEST-fr.inria.spirals.repairnator.pipeline.TestPipelinebGithubMode.xml'
     }
   }
 }
