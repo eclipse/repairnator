@@ -705,6 +705,9 @@ public class RepairnatorConfig {
     }
 
     public String getLocalMavenRepository() {
+        if (localMavenRepository == null) {
+            setLocalMavenRepository(System.getProperty("user.home") + "/.m2/repository");
+        }
         return localMavenRepository;
     }
 
