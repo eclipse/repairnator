@@ -1,7 +1,8 @@
 package fr.inria.spirals.repairnator.buildrainer;
 
+import fr.inria.spirals.repairnator.TravisInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.InputBuild;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -69,7 +70,7 @@ public class BuildRainer extends WebSocketClient implements BuildSubmitter{
             if (state.equals("failed") && language.equals("java")) {
                 LOGGER.info("state: " + state + " language: " + language);
                 int build_id = obj.getJSONObject("data").getInt("build_id");
-                this.submitBuild(config.getInstance().getJTravis().build().fromId(build_id).get());
+                this.submitBuild(new TravisInputBuild(build_id));
             }
         }
         this.recentMessage = message;
@@ -89,8 +90,8 @@ public class BuildRainer extends WebSocketClient implements BuildSubmitter{
     }
 
     @Override
-    public void submitBuild(Build b) {
-        this.submitter.submitBuild(b);
+    public void submitBuild(InputBuild b) {
+        submitter.submitBuild(b);
     }
 
 

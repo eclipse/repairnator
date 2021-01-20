@@ -2,32 +2,28 @@ package fr.inria.spirals.repairnator.dockerpool.serializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fr.inria.spirals.repairnator.InputBuild;
 import fr.inria.spirals.repairnator.serializer.SerializerImpl;
-import fr.inria.spirals.repairnator.utils.DateUtils;
-import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by urli on 03/03/2017.
- */
 public class TreatedBuildTracking extends SerializerImpl {
+    protected String buildId;
+    protected String runId;
+    protected String containerId;
+    protected String status;
 
-    private String runid;
-    private Long buildId;
-    private String containerId;
-    private String status;
-
-    public TreatedBuildTracking(List<SerializerEngine> engines, String runid, Long buildId) {
+    public TreatedBuildTracking(List<SerializerEngine> engines, String runId, InputBuild build) {
         super(engines, SerializerType.TREATEDBUILD);
-
-        this.runid = runid;
-        this.buildId = buildId;
+        this.buildId = build.toString();
+        this.runId = runId;
         this.containerId = "N/A";
         this.status = "DETECTED";
         this.serialize();
@@ -41,11 +37,11 @@ public class TreatedBuildTracking extends SerializerImpl {
         this.status = status;
     }
 
-    private List<Object> serializeAsList() {
+    protected List<Object> serializeAsList() {
         Date date = new Date();
 
         List<Object> dataCol = new ArrayList<Object>();
-        dataCol.add(runid);
+        dataCol.add(runId);
         dataCol.add(buildId);
         dataCol.add(containerId);
         dataCol.add(DateUtils.formatCompleteDate(date));
@@ -55,11 +51,11 @@ public class TreatedBuildTracking extends SerializerImpl {
         return dataCol;
     }
 
-    private JsonElement serializeAsJson() {
+    protected JsonElement serializeAsJson() {
         Date date = new Date();
 
         JsonObject result = new JsonObject();
-        result.addProperty("runId", runid);
+        result.addProperty("runId", runId);
         result.addProperty("buildId", buildId);
         result.addProperty("containerId", containerId);
         result.addProperty("dateReproducedBuildStr", DateUtils.formatCompleteDate(date));

@@ -36,12 +36,21 @@ export TRAVIS_TOKEN=
 
 LOCAL_REPAIR_MODE=repair
 
-if [[ -z "$BUILD_ID" ]]; then
-    echo you must pass a BUILD_ID environment variable
-    exit -1
+
+# Github XOR Travis
+if [[ -n "$GITHUB_URL" ]] && [[ -s "$GITHUB_SHA" ]]; then
+  echo "adding GitHub mode variables"
+  args="$args --gitrepo --gitrepourl $GITHUB_URL --gitrepoidcommit $GITHUB_SHA"
+elif [[ -n "$BUILD_ID" ]]; then
+  echo "adding Travis mode variables"
+  args="$args -b $BUILD_ID"
+else
+  echo "Error: Neither GitHub mode nor Travis mode parameters hve been provided correctly."
+  exit -1
 fi
 
-LOCAL_BUILD_ID=$BUILD_ID
+export GITHUB_URL=
+export GITHUB_SHA=
 export BUILD_ID=
 
 if [[ -z "$RUN_ID" ]]; then
@@ -84,4 +93,4 @@ export GITHUB_USEREMAIL=
 
 echo "Execute pipeline with following supplementary args: $args"
 
-java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d -b $LOCAL_BUILD_ID --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args
+java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args

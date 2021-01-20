@@ -6,6 +6,7 @@ import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.PatchFailedException;
 import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
+import fr.inria.coming.main.ComingProperties;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
@@ -162,7 +163,7 @@ public class RepairPatch {
 	}
 
 	// ODS classification
-	public static List<RepairPatch> classifyByODSWithFeatures(List<RepairPatch> allPatches, Long buildId) {
+	public static List<RepairPatch> classifyByODSWithFeatures(List<RepairPatch> allPatches, String buildId) {
 
 		File f = new File(ODSPath);
 		f.mkdir();
@@ -190,7 +191,7 @@ public class RepairPatch {
 		return allPatches;
 	}
 
-	private ODSLabel computeODSLabel(int patchId, Long buildId) {
+	private ODSLabel computeODSLabel(int patchId, String buildId) {
 		
 		ODSLabel label = ODSLabel.UNKNOWN;
 

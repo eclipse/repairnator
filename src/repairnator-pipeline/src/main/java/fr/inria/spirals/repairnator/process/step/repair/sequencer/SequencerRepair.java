@@ -7,6 +7,7 @@ import com.spotify.docker.client.messages.*;
 import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.detection.ModificationPoint;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
@@ -237,7 +238,7 @@ public class SequencerRepair extends AbstractRepairStep {
 
             List<String> diffs = result.getDiffs();
 
-
+            diffs.stream().forEach(d -> System.out.println(d));
             Stream<RepairPatch> patches = diffs.stream()
                 .map(diff -> new RepairPatch(this.getRepairToolName(), result.getBuggyFilePath(), diff))
                 .filter(detectionStrategy::validate);
@@ -250,9 +251,11 @@ public class SequencerRepair extends AbstractRepairStep {
             return StepStatus.buildPatchNotFound(this);
         }
 
+        GitRepositoryProjectInspector gitInspector = (GitRepositoryProjectInspector)this.getInspector();
+
         List<RepairPatch> classifiedPatches = RepairPatch.classifyByODSWithFeatures(
                 listPatches,
-                getInspector().getBuggyBuild().getId()
+                (gitInspector.getRepoSlug() + "-" + gitInspector.getGitRepositoryIdCommit()).replace("/", "-")
         );
 
         classifiedPatches.forEach(patch -> {

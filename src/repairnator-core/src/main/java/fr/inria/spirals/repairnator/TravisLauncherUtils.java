@@ -57,7 +57,7 @@ public class TravisLauncherUtils {
         opt.setShortFlag('n');
         opt.setLongFlag("nextBuild");
         opt.setStringParser(JSAP.INTEGER_PARSER);
-        opt.setDefault(InputBuildId.NO_PATCH + "");
+        opt.setDefault(TravisInputBuild.NO_PATCH + "");
         opt.setHelp("Specify the next build id to use (only in BEARS mode).");
         return opt;
     }

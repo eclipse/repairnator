@@ -1,8 +1,8 @@
 package fr.inria.spirals.repairnator.buildrainer;
 
-import fr.inria.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.InputBuild;
 
 // Submit build ids received from websocket
 public interface BuildSubmitter {
-    void submitBuild(Build b);
+    void submitBuild(InputBuild b);
 }

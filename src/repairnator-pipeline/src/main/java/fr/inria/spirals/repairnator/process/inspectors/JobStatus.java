@@ -293,9 +293,9 @@ public class JobStatus {
     }
     
     
-    protected List<RepairPatch> getCorrectnessLabeledPatches(Features features, Long buildId) {
+    protected List<RepairPatch> getCorrectnessLabeledPatches(Features features, String buildId) {
         List<RepairPatch> allPatches = getAllPatches();
-        return RepairPatch.classifyByODSWithFeatures(allPatches,buildId);
+        return RepairPatch.classifyByODSWithFeatures(allPatches, buildId);
             
     }    
    

@@ -4,8 +4,8 @@ package fr.inria.spirals.repairnator.pipeline;
 import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAPResult;
-import fr.inria.spirals.repairnator.InputBuildId;
 import fr.inria.spirals.repairnator.LauncherUtils;
+import fr.inria.spirals.repairnator.TravisInputBuild;
 import fr.inria.spirals.repairnator.TravisLauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.utils.Utils;
@@ -171,7 +171,7 @@ public class TestPipelineArgs {
         assertEquals(defaultPatchRankingMode, config.getPatchRankingMode());
 
         // travis arguments
-        Integer defaultNextBuildId = InputBuildId.NO_PATCH;
+        Integer defaultNextBuildId = TravisInputBuild.NO_PATCH;
         assertEquals(defaultNextBuildId, TravisLauncherUtils.getArgNextBuild(arguments));
         boolean defaultNoTravisRepair = false;
         assertEquals(defaultNoTravisRepair, TravisLauncherUtils.getArgNoTravisRepair(arguments));

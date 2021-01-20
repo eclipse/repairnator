@@ -5,13 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -21,20 +18,30 @@ import fr.inria.spirals.repairnator.states.PipelineState;
 
 public class CloneCheckoutBranchRepository extends AbstractStep {
 
-	public CloneCheckoutBranchRepository(GitRepositoryProjectInspector inspector) {
+
+	public CloneCheckoutBranchRepository(ProjectInspector inspector) {
         super(inspector, true);
     }
 	
 	@Override
     protected StepStatus businessExecute() {
+
+		GitRepositoryProjectInspector githubInspector;
+
+		try {
+			githubInspector = (GitRepositoryProjectInspector) getInspector();
+		}catch (Exception ex){
+			this.addStepError("CloneCheckoutBranchRepository only supports GitHub commit references");
+			return StepStatus.buildError(this, PipelineState.NOTCLONABLE);
+		}
         
-        String repoUrl = ((GitRepositoryProjectInspector) getInspector()).getGitRepositoryUrl() + ".git";
+        String repoUrl = githubInspector.getGitRepositoryUrl() + ".git";
         String branch = null;
-        if (((GitRepositoryProjectInspector) getInspector()).getGitRepositoryBranch() != null) {
-        	branch = "refs/heads/" + ((GitRepositoryProjectInspector) getInspector()).getGitRepositoryBranch();
+        if (githubInspector.getGitRepositoryBranch() != null) {
+        	branch = "refs/heads/" + githubInspector.getGitRepositoryBranch();
         }
         
-        String repoLocalPath = this.getInspector().getRepoLocalPath();
+        String repoLocalPath = githubInspector.getRepoLocalPath();
         try {
             this.getLogger().info("Cloning repository " + repoUrl + " in the following directory: " + repoLocalPath);
 
@@ -77,29 +84,15 @@ public class CloneCheckoutBranchRepository extends AbstractStep {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		List<RevCommit> commitList = new ArrayList<RevCommit>();
+		List<RevCommit> commitList = new ArrayList<>();
 		
 		try {
 			Git git = Git.open(new File(path));
-			git.log().add(repository.resolve(treeName)).call().forEach((commit) -> {
-				commitList.add(commit);
-			});
-		} catch (RevisionSyntaxException e) {
-			e.printStackTrace();
-		} catch (NoHeadException e) {
-			e.printStackTrace();
-		} catch (MissingObjectException e) {
-			e.printStackTrace();
-		} catch (IncorrectObjectTypeException e) {
-			e.printStackTrace();
-		} catch (AmbiguousObjectException e) {
-			e.printStackTrace();
-		} catch (GitAPIException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			git.log().add(repository.resolve(treeName)).call().forEach(commitList::add);
+		} catch (RevisionSyntaxException | GitAPIException | IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return commitList;
 	}
 }
