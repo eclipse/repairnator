@@ -81,10 +81,14 @@ We provided some documentation [about backups](chore/managedb.md) and [about Mon
 The documentation about the scripts is [available here](scripts.md). More details about the Repairnator configuration file can be found [here](repairnator-config.md).
 
 
-### Pull-requests
+### Automated Pull-requests
 
-When Repairnator is configured to create a pull-request automatically, it uses the text of `TEXT_PR` from [AbstractRepairStep](https://github.com/eclipse/repairnator/blob/master/src/repairnator-pipeline/src/main/java/fr/inria/spirals/repairnator/process/step/repair/AbstractRepairStep.java). In the future, it is planned to generate a specific piece of text to explain the patch (see [Explainable Software Bot Contributions: Case Study of Automated Bug Fixes](http://arxiv.org/pdf/1905.02597) ([doi:10.1109/BotSE.2019.00010](https://doi.org/10.1109/BotSE.2019.00010)))
+Repairnator can be configured to create pull-requests automatically.
+To enable this functionality, see the `--createPR` option in the [Command Line Usage](https://github.com/eclipse/repairnator/blob/master/doc/main-classes.md) documentation.
 
+The PR uses the text found on [this file](https://github.com/eclipse/repairnator/blob/master/src/repairnator-pipeline/src/main/resources/R-Hero-PR-text.MD). In the future, it is planned to generate a specific piece of text for each patch (see [Explainable Software Bot Contributions: Case Study of Automated Bug Fixes](http://arxiv.org/pdf/1905.02597) ([doi:10.1109/BotSE.2019.00010](https://doi.org/10.1109/BotSE.2019.00010)))
+
+The PR text contains feedback links, meant to be handled by an instance of the [R-Hero feedback service](https://github.com/repairnator/r-hero-feedback-service).
 
 ## Content of the repository
 
