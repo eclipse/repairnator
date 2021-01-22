@@ -38,7 +38,7 @@ public abstract class AbstractStep {
     /**
      * The next step to be executed
      */
-    private AbstractStep nextStep;
+    protected AbstractStep nextStep;
 
     /**
      * This flag force the pipeline to stop if it's set to true

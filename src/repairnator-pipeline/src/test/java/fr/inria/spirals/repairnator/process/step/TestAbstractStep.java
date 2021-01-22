@@ -13,6 +13,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -33,6 +36,10 @@ public class TestAbstractStep {
         @Override
         protected StepStatus businessExecute() {
             return StepStatus.buildSuccess(this);
+        }
+
+        public AbstractStep getNextStep() {
+            return this.nextStep;
         }
     }
 
@@ -114,6 +121,42 @@ public class TestAbstractStep {
         String actualPomPath = step.getPom();
 
         assertThat(actualPomPath, is(expectedPomPath));
+    }
+
+    @Test
+    public void testAddNextStep() {
+        String localRepoPath = "./src/test/resources/test-abstractstep/simple-maven-project";
+        JobStatus jobStatus = new JobStatus(localRepoPath);
+        ProjectInspector mockInspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, localRepoPath);
+
+        AbstractStepNop step1 = new AbstractStepNop(mockInspector);
+        AbstractStepNop step2 = new AbstractStepNop(mockInspector);
+        AbstractStepNop step3 = new AbstractStepNop(mockInspector);
+
+        step1.addNextStep(step2).addNextStep(step3);
+
+        assertThat(step1.getNextStep(), is(step2));
+        assertThat(step2.getNextStep(), is(step3));
+    }
+
+    @Test
+    public void testAddNextSteps() {
+        String localRepoPath = "./src/test/resources/test-abstractstep/simple-maven-project";
+        JobStatus jobStatus = new JobStatus(localRepoPath);
+        ProjectInspector mockInspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, localRepoPath);
+
+        AbstractStepNop step1 = new AbstractStepNop(mockInspector);
+        AbstractStepNop step2 = new AbstractStepNop(mockInspector);
+        AbstractStepNop step3 = new AbstractStepNop(mockInspector);
+
+        List<AbstractStep> steps = new ArrayList<>();
+        steps.add(step2);
+        steps.add(step3);
+
+        step1.addNextSteps(steps);
+
+        assertThat(step1.getNextStep(), is(step2));
+        assertThat(step2.getNextStep(), is(step3));
     }
 
 }
