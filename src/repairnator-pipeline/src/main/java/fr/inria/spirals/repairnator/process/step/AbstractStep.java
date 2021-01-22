@@ -38,7 +38,7 @@ public abstract class AbstractStep {
     /**
      * The next step to be executed
      */
-    private AbstractStep nextStep;
+    protected AbstractStep nextStep;
 
     /**
      * This flag force the pipeline to stop if it's set to true
@@ -155,6 +155,19 @@ public abstract class AbstractStep {
             this.nextStep = nextStep;
             nextStep.setDataSerializer(this.serializers);
             nextStep.setNotifiers(this.notifiers);
+        }
+        return this;
+    }
+
+    public AbstractStep addNextSteps(List<AbstractStep> nextSteps) {
+        this.getLogger().debug("Adding several steps...");
+        if (this.nextStep != null) {
+            this.nextStep.addNextSteps(nextSteps);
+        } else if (nextSteps.size() == 1) {
+            this.addNextStep(nextSteps.get(0));
+        } else if (nextSteps.size() > 1) {
+            this.addNextStep(nextSteps.get(0));
+            this.nextStep.addNextSteps(nextSteps.subList(1, nextSteps.size()));
         }
         return this;
     }
