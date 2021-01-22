@@ -123,7 +123,36 @@ public class ProjectInspector {
         /* Skip initProperties*/
     }
 
+    public ProjectInspector(String workspace, List<AbstractNotifier> notifiers) {
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator;
+        this.repoToPushLocalPath = repoLocalPath+"_topush";
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+        this.buildLog = new ArrayList<>();
+        /* Skip initProperties */
+    }
 
+    public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+        this.buildToBeInspected = buildToBeInspected;
+        this.workspace = workspace;
+        this.repoLocalPath = workspace + File.separator + getRepoSlug();
+        long buildId = buildToBeInspected != null ? buildToBeInspected.getBuggyBuild().getId() : 0;
+        this.repoToPushLocalPath = repoLocalPath+"_topush_" + buildId;
+        this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
+        this.serializers = new ArrayList<AbstractDataSerializer>();
+        this.gitHelper = new GitHelper();
+        this.jobStatus = new JobStatus(repoLocalPath);
+        this.notifiers = notifiers;
+        this.checkoutType = CheckoutType.NO_CHECKOUT;
+        this.steps = new ArrayList<>();
+        this.buildLog = new ArrayList<>();
+        this.initProperties();
+    }
+>>>>>>> 2b69621c (Partial unify)
 
     public ProjectInspector setIRunInspector(IRunInspector iRunInspector) {
         this.iRunInspector = iRunInspector;
