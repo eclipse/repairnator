@@ -159,6 +159,19 @@ public abstract class AbstractStep {
         return this;
     }
 
+    public AbstractStep addNextSteps(List<AbstractStep> nextSteps) {
+        this.getLogger().debug("Adding several steps...");
+        if (this.nextStep != null) {
+            this.nextStep.addNextSteps(nextSteps);
+        } else if (nextSteps.size() == 1) {
+            this.addNextStep(nextSteps.get(0));
+        } else if (nextSteps.size() > 1) {
+            this.addNextStep(nextSteps.get(0));
+            this.nextStep.addNextSteps(nextSteps.subList(1, nextSteps.size()));
+        }
+        return this;
+    }
+
     public AbstractStep addBranchingStep(BranchingStep nextStep) {
         if (this.nextStep != null) {
             this.nextStep.addBranchingStep(nextStep);
