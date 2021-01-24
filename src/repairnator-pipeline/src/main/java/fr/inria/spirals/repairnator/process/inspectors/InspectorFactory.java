@@ -42,9 +42,9 @@ public class InspectorFactory {
 		return inspector;
 	}
 
-	public static ProjectInspector getMavenInspector(String workspace, List<AbstractStep> repairSteps, List<AbstractNotifier> notifiers) {
+	public static ProjectInspector getMavenInspector(String workspace, List<AbstractNotifier> notifiers) {
 		ProjectInspector inspector = new ProjectInspector(workspace, notifiers);
-		inspector.setIRunInspector(new RunInspector4Maven(repairSteps));
+		inspector.setIRunInspector(new RunInspector4Maven());
 		return inspector;
 	}
 }
