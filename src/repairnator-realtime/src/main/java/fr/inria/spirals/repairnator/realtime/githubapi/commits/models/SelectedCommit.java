@@ -1,6 +1,6 @@
 package fr.inria.spirals.repairnator.realtime.githubapi.commits.models;
 
-public class FailedCommit {
+public class SelectedCommit {
     private static final String COMMIT_URL_TEMPLATE = "https://github.com/{repo}/commit/{commit}";
     private Boolean isTravisFailed;
     private Boolean isGithubActionsFailed;
@@ -8,7 +8,7 @@ public class FailedCommit {
     private String repoName;
     private String commitUrl;
 
-    public FailedCommit
+    public SelectedCommit
             (
                     Boolean isTravisFailed,
                     Boolean isGithubActionsFailed,
@@ -64,7 +64,7 @@ public class FailedCommit {
 
     @Override
     public String toString() {
-        return "FailedCommit{" +
+        return "SelectedCommit{" +
                 "commitId='" + commitId + '\'' +
                 ", repoName='" + repoName + '\'' +
                 '}';

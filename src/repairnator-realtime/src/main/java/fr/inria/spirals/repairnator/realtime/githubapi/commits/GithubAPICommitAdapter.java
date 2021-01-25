@@ -1,13 +1,13 @@
 package fr.inria.spirals.repairnator.realtime.githubapi.commits;
 
+import fr.inria.spirals.repairnator.realtime.GithubScanner;
 import org.kohsuke.github.*;
 import fr.inria.spirals.repairnator.realtime.githubapi.GAA;
-import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.FailedCommit;
+import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import fr.inria.spirals.repairnator.realtime.githubapi.repositories.GithubAPIRepoAdapter;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GithubAPICommitAdapter {
     private static GithubAPICommitAdapter _instance;
@@ -18,8 +18,14 @@ public class GithubAPICommitAdapter {
         return _instance;
     }
 
-    public List<FailedCommit> getFailedCommits(GHRepository repo, long since, long until) throws IOException {
-        List<FailedCommit> res = new ArrayList<>();
+    public List<SelectedCommit> getSelectedCommits
+            (
+                    GHRepository repo,
+                    long since,
+                    long until,
+                    GithubScanner.FetchMode fetchMode
+            ) throws IOException {
+        List<SelectedCommit> res = new ArrayList<>();
 
         GHCommitQueryBuilder query = repo.queryCommits().since(since).until(until);
         for (GHCommit commit : query.list().toList()) {
@@ -41,20 +47,25 @@ public class GithubAPICommitAdapter {
                     break;
             }
 
-            if(isTravisFailed || isGithubActionsFailed){
-                res.add(new FailedCommit(isTravisFailed, isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+            if(isTravisFailed || isGithubActionsFailed || fetchMode == GithubScanner.FetchMode.ALL){
+                res.add(new SelectedCommit(isTravisFailed, isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
             }
         }
 
         return res;
     }
 
-    public List<FailedCommit> getFailedCommits(long intervalStart, long intervalEnd) throws IOException {
+    public List<SelectedCommit> getSelectedCommits
+            (
+                    long intervalStart,
+                    long intervalEnd,
+                    GithubScanner.FetchMode fetchMode
+            ) throws IOException {
         Set<String> repos = GithubAPIRepoAdapter.getInstance()
                 .listJavaRepositories(intervalStart, 0, GithubAPIRepoAdapter.MAX_STARS);
 
         int cnt = 0;
-        List<FailedCommit> failedCommits = new ArrayList<>();
+        List<SelectedCommit> selectedCommits = new ArrayList<>();
         for (String repoName : repos) {
             try {
                 GHRepository repo = GAA.g().getRepository(repoName);
@@ -72,14 +83,14 @@ public class GithubAPICommitAdapter {
                     continue;
                 }
 
-                failedCommits.addAll(GithubAPICommitAdapter.getInstance()
-                        .getFailedCommits(repo, intervalStart, intervalEnd));
+                selectedCommits.addAll(GithubAPICommitAdapter.getInstance()
+                        .getSelectedCommits(repo, intervalStart, intervalEnd, fetchMode));
 
             } catch (Exception e) {
                 System.err.println("error occurred for: " + repoName);
                 e.printStackTrace();
             }
         }
-        return failedCommits;
+        return selectedCommits;
     }
 }
