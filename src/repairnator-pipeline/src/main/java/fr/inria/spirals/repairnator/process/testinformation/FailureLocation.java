@@ -31,11 +31,11 @@ public class FailureLocation {
         }
     }
 
-    public void addErroringMethod(String erroringMethod, FailureType failures) {
-        if (this.failingMethods.containsKey(erroringMethod)) {
-            this.failingMethods.get(erroringMethod).add(failures);
+    public void addErroringMethod(String erroringMethod, FailureType failure) {
+        if (this.erroringMethods.containsKey(erroringMethod)) {
+            this.erroringMethods.get(erroringMethod).add(failure);
         } else {
-            this.failingMethods.put(erroringMethod, Collections.singletonList(failures));
+            this.erroringMethods.put(erroringMethod, Collections.singletonList(failure));
         }
     }
 
