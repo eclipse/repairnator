@@ -42,9 +42,9 @@ public class GithubScanner {
 
         while (true){
             try {
-                List<SelectedCommit> failedCommits = scanner.fetch();
+                List<SelectedCommit> selectedCommits = scanner.fetch();
 
-                failedCommits.forEach(scanner::process);
+                selectedCommits.forEach(scanner::process);
 
                 TimeUnit.MILLISECONDS.sleep(frequency);
             } catch (Exception e) {

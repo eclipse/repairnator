@@ -64,7 +64,7 @@ public class SelectedCommit {
 
     @Override
     public String toString() {
-        return "FailedCommit{" +
+        return "SelectedCommit{" +
                 "commitId='" + commitId + '\'' +
                 ", repoName='" + repoName + '\'' +
                 '}';
