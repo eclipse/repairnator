@@ -17,11 +17,25 @@ import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Encapsulates ProjectInspector's behaviour for a local Maven project. It is meant to be used through `maven-repair`.
+ *
+ * The `workspace` of the pipeline should be the root of a Maven project.
+ *
+ * @author andre15silva
+ */
 public class RunInspector4Maven extends IRunInspector {
+    /**
+     * List of repair steps that will be executed.
+     */
     private List<AbstractStep> repairSteps = new ArrayList<>();
 
+    /**
+     * Constructs pipeline and executes its steps.
+     *
+     * @param inspector
+     */
     @Override
     public void run(ProjectInspector inspector) {
         AbstractStep buildProjectStep = new BuildProject(inspector);
