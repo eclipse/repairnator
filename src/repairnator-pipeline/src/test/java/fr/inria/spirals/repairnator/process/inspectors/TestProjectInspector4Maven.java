@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
+import fr.inria.spirals.repairnator.process.maven.MavenHelper;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
@@ -12,12 +13,14 @@ import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -43,11 +46,14 @@ public class TestProjectInspector4Maven {
     }
 
     @Test
-    public void testPatchFailingProject() {
+    public void testPatchFailingProject() throws IOException {
         String projectPath = "src/test/resources/projects/example1";
 
+        tmpDir = Files.createTempDirectory("testMavenInspector").toFile();
+        FileUtils.copyDirectory(new File(projectPath), tmpDir);
+
         List<AbstractNotifier> notifiers = new ArrayList<>();
-        ProjectInspector inspector = InspectorFactory.getMavenInspector(projectPath, notifiers);
+        ProjectInspector inspector = InspectorFactory.getMavenInspector(tmpDir.getAbsolutePath(), notifiers);
 
         inspector.run();
 
