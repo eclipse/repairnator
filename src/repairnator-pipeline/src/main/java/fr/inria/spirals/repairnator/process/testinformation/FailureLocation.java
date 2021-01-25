@@ -1,9 +1,6 @@
 package fr.inria.spirals.repairnator.process.testinformation;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represent the location of a failure for Repair Tools. For now only Nopol is
@@ -11,50 +8,51 @@ import java.util.Set;
  */
 public class FailureLocation {
     private String className;
-    private Set<String> failingMethods;
-    private Set<String> erroringMethods;
-    private List<FailureType> failures;
+    private HashMap<String, List<FailureType>> failingMethods;
+    private HashMap<String, List<FailureType>> erroringMethods;
     private int nbFailures;
     private int nbErrors;
 
     public FailureLocation(String className) {
         this.className = className;
-        this.failures = new ArrayList<>();
-        this.failingMethods = new HashSet<String>();
-        this.erroringMethods = new HashSet<String>();
+        this.failingMethods = new HashMap<>();
+        this.erroringMethods = new HashMap<>();
     }
 
     public String getClassName() {
         return className;
     }
 
-    public void addFailure(FailureType failure) {
-        this.failures.add(failure);
-        if (failure.isError()) {
-            nbErrors++;
+    public void addFailingMethod(String failingMethod, FailureType failure) {
+        if (this.failingMethods.containsKey(failingMethod)) {
+            this.failingMethods.get(failingMethod).add(failure);
         } else {
-            nbFailures++;
+            this.failingMethods.put(failingMethod, Collections.singletonList(failure));
         }
     }
 
-    public void addFailingMethod(String failingMethod) {
-        this.failingMethods.add(failingMethod);
-    }
-
-    public void addErroringMethod(String erroringMethod) {
-        this.erroringMethods.add(erroringMethod);
+    public void addErroringMethod(String erroringMethod, FailureType failures) {
+        if (this.failingMethods.containsKey(erroringMethod)) {
+            this.failingMethods.get(erroringMethod).add(failures);
+        } else {
+            this.failingMethods.put(erroringMethod, Collections.singletonList(failures));
+        }
     }
 
     public Set<String> getFailingMethods() {
-        return failingMethods;
+        return failingMethods.keySet();
     }
 
     public Set<String> getErroringMethods() {
-        return erroringMethods;
+        return erroringMethods.keySet();
     }
 
-    public List<FailureType> getFailures() {
-        return failures;
+    public Map<String, List<FailureType>> getFailingMethodsAndFailures() {
+        return failingMethods;
+    }
+
+    public Map<String, List<FailureType>> getErroringMethodsAndFailures() {
+        return erroringMethods;
     }
 
     public int getNbFailures() {
@@ -75,7 +73,6 @@ public class FailureLocation {
                 "className='" + className + '\'' +
                 ", failingMethods=" + failingMethods +
                 ", erroringMethods=" + erroringMethods +
-                ", failures=" + failures +
                 ", nbFailures=" + nbFailures +
                 ", nbErrors=" + nbErrors +
                 '}';
@@ -85,25 +82,16 @@ public class FailureLocation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         FailureLocation that = (FailureLocation) o;
-
-        if (nbFailures != that.nbFailures) return false;
-        if (nbErrors != that.nbErrors) return false;
-        if (className != null ? !className.equals(that.className) : that.className != null) return false;
-        if (failingMethods != null ? !failingMethods.equals(that.failingMethods) : that.failingMethods != null) return false;
-        if (erroringMethods != null ? !erroringMethods.equals(that.erroringMethods) : that.erroringMethods != null) return false;
-        return failures != null ? failures.equals(that.failures) : that.failures == null;
+        return nbFailures == that.nbFailures &&
+                nbErrors == that.nbErrors &&
+                Objects.equals(className, that.className) &&
+                Objects.equals(failingMethods, that.failingMethods) &&
+                Objects.equals(erroringMethods, that.erroringMethods);
     }
 
     @Override
     public int hashCode() {
-        int result = className != null ? className.hashCode() : 0;
-        result = 31 * result + (failingMethods != null ? failingMethods.hashCode() : 0);
-        result = 31 * result + (erroringMethods != null ? erroringMethods.hashCode() : 0);
-        result = 31 * result + (failures != null ? failures.hashCode() : 0);
-        result = 31 * result + nbFailures;
-        result = 31 * result + nbErrors;
-        return result;
+        return Objects.hash(className, failingMethods, erroringMethods, nbFailures, nbErrors);
     }
 }

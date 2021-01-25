@@ -154,8 +154,7 @@ public class TestGatherTestInformation {
 
         FailureLocation expectedFailureLocation = new FailureLocation("nopol_examples.nopol_example_1.NopolExampleTest");
         FailureType failureType = new FailureType("java.lang.StringIndexOutOfBoundsException", "String index out of range: -5", true);
-        expectedFailureLocation.addFailure(failureType);
-        expectedFailureLocation.addErroringMethod("test5");
+        expectedFailureLocation.addErroringMethod("test5", failureType);
 
         FailureLocation actualLocation = jobStatus.getFailureLocations().iterator().next();
 
