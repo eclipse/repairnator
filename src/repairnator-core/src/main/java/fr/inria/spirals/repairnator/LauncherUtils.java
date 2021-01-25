@@ -113,6 +113,8 @@ public class LauncherUtils {
         jsap.registerParameter(LauncherUtils.defineArgSoraldRepairMode());
         // --soraldSegmentSize
         jsap.registerParameter(LauncherUtils.defineArgSoraldSegmentSize());
+        // --soraldCommitCollectorMode
+        jsap.registerParameter(LauncherUtils.defineArgSoraldCommitCollectorMode());
         // --soraldMaxFixesPerRule
         jsap.registerParameter(LauncherUtils.defineArgSoraldMaxFixesPerRule());
         // --soraldSkipPR
@@ -869,6 +871,19 @@ public class LauncherUtils {
 
     public static Integer getArgSoraldSegmentSize(JSAPResult arguments) {
         return arguments.getInt("soraldSegmentSize");
+    }
+
+    public static FlaggedOption defineArgSoraldCommitCollectorMode() {
+        FlaggedOption opt = new FlaggedOption("soraldCommitCollectorMode");
+        opt.setLongFlag("soraldCommitCollectorMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("200");
+        opt.setHelp("Segment size for the segment repair.");
+        return opt;
+    }
+
+    public static Integer getArgSoraldCommitCollectorMode(JSAPResult arguments) {
+        return arguments.getInt("segmentSize");
     }
 
     public static FlaggedOption defineArgSoraldMaxFixesPerRule() {

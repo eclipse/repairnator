@@ -68,6 +68,15 @@ public class RepairnatorConfig {
         SEGMENT
     }
 
+    /**
+     * DEFAULT - all given the commits iare analyzed
+     * VIOLATION_INTRODUCING - only commits that introduce new violations of the specified type are analyzed
+     */
+    public enum SORALD_COMMIT_COLLECTOR_MODE {
+        DEFAULT,
+        VIOLATION_INTRODUCING
+    }
+
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -127,6 +136,7 @@ public class RepairnatorConfig {
     private int soraldMaxFixesPerRule;
     private int soraldSegmentSize;
     private SORALD_REPAIR_MODE soraldRepairMode;
+    private SORALD_COMMIT_COLLECTOR_MODE soraldCommitCollectorMode;
     private boolean measureSoraldTime;
     private boolean soraldSkipPR;
 
@@ -762,6 +772,14 @@ public class RepairnatorConfig {
 
     public SORALD_REPAIR_MODE getSoraldRepairMode() {
         return this.soraldRepairMode;
+    }
+
+    public void setSoraldCommitCollectorMode(SORALD_COMMIT_COLLECTOR_MODE soraldCommitCollectorMode) {
+        this.soraldCommitCollectorMode = soraldCommitCollectorMode;
+    }
+
+    public SORALD_COMMIT_COLLECTOR_MODE getSoraldCommitCollectorMode() {
+        return this.soraldCommitCollectorMode;
     }
 
     public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
