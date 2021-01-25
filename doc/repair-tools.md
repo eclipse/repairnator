@@ -57,7 +57,7 @@ Additional parameters:
 * `--soraldRepairMode`: DEFAULT - the normal mode of Sorald, where the entire project is inputted. SEGMENT - the input project is sliced into smaller fixed-size segments.
 * `--soraldMaxFixesPerRule`: specify the upper bound of the number of warning fixes.
 * `--segmentSize`: the number of files per segment if Sorald runs in Segment mode.
-
+* `--soraldCommitCollectorMode`: DEFAULT - all commits are analyzed. VIOLATION_INTRODUCING - only commits that are introducing new violations of the specified types are analyzed.
 ## Sequencer
 
 [Sequencer](http://arxiv.org/pdf/1901.01808) is a repair tool based on machine learning with sequence-to-sequence. You run it as follows:
