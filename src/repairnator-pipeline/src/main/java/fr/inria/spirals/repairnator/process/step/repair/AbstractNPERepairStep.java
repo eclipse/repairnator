@@ -175,7 +175,7 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
         // Iterate over failure locations
         for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
             // NPEEs are errors
-            Map<String, List<FailureType>> failingMethodsAndFailures = failureLocation.getFailingMethodsAndFailures();
+            Map<String, List<FailureType>> failingMethodsAndFailures = failureLocation.getErroringMethodsAndFailures();
 
             // Check if test method has an NPE
             for (String method : failingMethodsAndFailures.keySet()) {
