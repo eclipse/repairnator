@@ -153,7 +153,7 @@ public class GatherTestInformation extends AbstractStep {
                                 }
 
                                 this.failureNames.add(failureType);
-                                FailureType typeTof = new FailureType(failureType, testCase.getFailureMessage(), testCase.hasError());
+                                FailureType typeTof = new FailureType(failureType, testCase.getFailureDetail(), testCase.hasError());
                                 FailureLocation failureLocation = null;
 
                                 for (FailureLocation location : this.failureLocations) {
