@@ -3,19 +3,19 @@ package fr.inria.spirals.repairnator.realtime.githubapi.commits.models;
 import java.util.List;
 
 public class FailedCommitList {
-    private List<FailedCommit> failedCommits;
+    private List<SelectedCommit> failedCommits;
     private Integer totalCount;
 
-    public FailedCommitList(List<FailedCommit> failedCommits){
+    public FailedCommitList(List<SelectedCommit> failedCommits){
         this.failedCommits = failedCommits;
         this.totalCount = failedCommits.size();
     }
 
-    public List<FailedCommit> getFailedCommits() {
+    public List<SelectedCommit> getFailedCommits() {
         return failedCommits;
     }
 
-    public void setFailedCommits(List<FailedCommit> failedCommits) {
+    public void setFailedCommits(List<SelectedCommit> failedCommits) {
         this.failedCommits = failedCommits;
     }
 
