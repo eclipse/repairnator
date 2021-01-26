@@ -29,26 +29,27 @@ public class GithubAPICommitAdapter {
 
         GHCommitQueryBuilder query = repo.queryCommits().since(since).until(until);
         for (GHCommit commit : query.list().toList()) {
-            boolean isGithubActionsFailed = false, isTravisFailed = false;
+            boolean isGithubActionsFailed = false;
             for (GHCheckRun check : commit.getCheckRuns()) {
-                if (check.getApp().getName().equals("Travis CI") && !isTravisFailed) {
-                    if (check.getConclusion() != null && (!check.getConclusion().equals("success")
-                            && !check.getConclusion().equals("neutral") && !check.getConclusion().equals("skipped"))) {
-                        isTravisFailed = true;
-                    }
-                }
                 if (check.getApp().getName().equals("GitHub Actions") && !isGithubActionsFailed) {
                     if (check.getConclusion() != null && (!check.getConclusion().equals("success")
                             && !check.getConclusion().equals("neutral") && !check.getConclusion().equals("skipped"))) {
                         isGithubActionsFailed = true;
                     }
                 }
-                if (isGithubActionsFailed && isTravisFailed)
+                if (isGithubActionsFailed)
                     break;
             }
 
-            if(isTravisFailed || isGithubActionsFailed || fetchMode == GithubScanner.FetchMode.ALL){
-                res.add(new SelectedCommit(isTravisFailed, isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+            switch(fetchMode) {
+                case ALL:
+                    res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+                    break;
+                case FAILED:
+                default:
+                    if(isGithubActionsFailed)
+                        res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+                    break;
             }
         }
 
@@ -59,10 +60,11 @@ public class GithubAPICommitAdapter {
             (
                     long intervalStart,
                     long intervalEnd,
-                    GithubScanner.FetchMode fetchMode
+                    GithubScanner.FetchMode fetchMode,
+                    Set<String> repos
             ) throws IOException {
-        Set<String> repos = GithubAPIRepoAdapter.getInstance()
-                .listJavaRepositories(intervalStart, 0, GithubAPIRepoAdapter.MAX_STARS);
+         repos = repos == null ? GithubAPIRepoAdapter.getInstance()
+                .listJavaRepositories(intervalStart, 0, GithubAPIRepoAdapter.MAX_STARS) : repos;
 
         int cnt = 0;
         List<SelectedCommit> selectedCommits = new ArrayList<>();
