@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by urli on 10/07/2017.
@@ -34,8 +35,10 @@ public class NPERepair extends AbstractRepairStep {
 
     private boolean isThereNPE() {
         for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
-            for (FailureType failureType : failureLocation.getFailures()) {
-                if (failureType.getFailureName().startsWith("java.lang.NullPointerException")) {
+            Map<String, List<FailureType>> errorsMap = failureLocation.getErroringMethodsAndFailures();
+            for (String method : errorsMap.keySet()) {
+                if (errorsMap.get(method).stream()
+                        .anyMatch((FailureType ft) -> ft.getFailureName().startsWith("java.lang.NullPointerException"))) {
                     return true;
                 }
             }
