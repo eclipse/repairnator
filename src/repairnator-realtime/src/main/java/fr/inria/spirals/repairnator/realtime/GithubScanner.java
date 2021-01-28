@@ -27,16 +27,6 @@ public class GithubScanner {
     Set<String> repos;
 
     public static void main(String[] args) throws IOException {
-
-        Set<String> repairTools = new HashSet();
-        repairTools.add(getEnvOrDefault("REPAIR_TOOL", "SequencerRepair"));
-        RepairnatorConfig.getInstance().setRepairTools(repairTools);
-        RepairnatorConfig.getInstance().setNbThreads(16);
-        RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
-        RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
-        RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:latest");
-        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
-
         Set<String> repos = null;
         String reposPath = System.getenv("REPOS_PATH");
         if (reposPath != null)
@@ -45,6 +35,7 @@ public class GithubScanner {
         FetchMode fetchMode = parseFetchMode();
 
         GithubScanner scanner = new GithubScanner(fetchMode, repos);
+        scanner.setup();
 
         while (true) {
             try {
@@ -76,6 +67,16 @@ public class GithubScanner {
         long startTime = endTime - scanIntervalLength;
 
         return fetch(startTime, endTime);
+    }
+
+    public void setup(){
+        Set<String> repairTools = new HashSet();
+        repairTools.add(getEnvOrDefault("REPAIR_TOOL", "SequencerRepair"));
+        RepairnatorConfig.getInstance().setRepairTools(repairTools);
+        RepairnatorConfig.getInstance().setNbThreads(16);
+        RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
+        RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
+        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
     }
 
     public List<SelectedCommit> fetch(long startTime, long endTime) throws Exception {

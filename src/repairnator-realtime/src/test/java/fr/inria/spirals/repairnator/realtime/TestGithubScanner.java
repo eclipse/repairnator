@@ -42,6 +42,7 @@ public class TestGithubScanner {
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                         .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
         GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.ALL, repos);
+        scanner.setup();
 
         List<SelectedCommit> commits =
                 scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("01/12/2020").getTime(),
@@ -55,6 +56,7 @@ public class TestGithubScanner {
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                 .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
         GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.FAILED, repos);
+        scanner.setup();
 
         List<SelectedCommit> commits =
                 scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("01/12/2020").getTime(),
