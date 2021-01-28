@@ -59,6 +59,7 @@ spec:
       environment {
         TEST_PATH="src/repairnator-realtime/"
         TEST_LIST="**"
+        GITHUB_OAUTH=credentials("github-bot-token")
       }
       steps {
         container('maven') {
