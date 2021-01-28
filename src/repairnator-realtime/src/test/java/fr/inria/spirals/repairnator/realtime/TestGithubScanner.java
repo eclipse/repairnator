@@ -64,5 +64,4 @@ public class TestGithubScanner {
         assertFalse(commits.stream().anyMatch(x -> x.getCommitId().equals("290bdc01884f7c9bf2140a7c66d22ca72fe50fbb")));
         assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("e3456813fdcca1ed5075c0fb72b0bcbc9524e791")));
     }
-
 }

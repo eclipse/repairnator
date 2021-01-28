@@ -6,9 +6,9 @@ COPY z3_for_linux /root/
 COPY projects_to_ignore.txt /root/
 COPY logback.xml /root/
 COPY configure_git.sh /root/
-COPY build_repairnator.sh /root/
+# COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
-COPY ODSmodel.bin /root/
+# COPY ODSmodel.bin /root/
 
 RUN apt-get update 
 RUN apt-get install xmlstarlet apt-utils cloc libgomp1 -y
@@ -17,7 +17,8 @@ RUN echo `xmlstarlet sel -t -v '//latest' maven-metadata.xml` > /root/version.in
 RUN chmod +x /root/*.sh
 RUN echo "Europe/Paris" > /etc/timezone 
 RUN /root/configure_git.sh 
-RUN /root/build_repairnator.sh
+# RUN /root/build_repairnator.sh
+COPY repairnator-pipeline.jar /root/
 
 ENV M2_HOME=$MAVEN_HOME
 ENV GITHUB_OAUTH=
@@ -51,4 +52,4 @@ ENV ACTIVEMQ_USERNAME=
 ENV ACTIVEMQ_PASSWORD=
 
 WORKDIR /root
-ENTRYPOINT /root/pipeline_launcher.sh
+CMD /root/pipeline_launcher.sh

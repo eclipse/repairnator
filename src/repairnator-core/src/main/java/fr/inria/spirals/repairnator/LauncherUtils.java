@@ -111,10 +111,12 @@ public class LauncherUtils {
         jsap.registerParameter(LauncherUtils.defineArgSonarRules());
         // --soraldRepairMode
         jsap.registerParameter(LauncherUtils.defineArgSoraldRepairMode());
-        // --segmentSize
-        jsap.registerParameter(LauncherUtils.defineArgSegmentSize());
+        // --soraldSegmentSize
+        jsap.registerParameter(LauncherUtils.defineArgSoraldSegmentSize());
         // --soraldMaxFixesPerRule
         jsap.registerParameter(LauncherUtils.defineArgSoraldMaxFixesPerRule());
+        // --soraldSkipPR
+        jsap.registerParameter(LauncherUtils.defineArgSoraldSkipPR());
 
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
@@ -211,9 +213,10 @@ public class LauncherUtils {
         }
 
         config.setSonarRules(Arrays.stream(LauncherUtils.getArgSonarRules(arguments).split(",")).distinct().toArray(String[]::new));
-        config.setSegmentSize(LauncherUtils.getArgSegmentSize(arguments));
+        config.setSoraldSegmentSize(LauncherUtils.getArgSoraldSegmentSize(arguments));
         config.setSoraldRepairMode(RepairnatorConfig.SORALD_REPAIR_MODE.valueOf(LauncherUtils.getArgSoraldRepairMode(arguments)));
         config.setSoraldMaxFixesPerRule(LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
+        config.setSoraldSkipPR(LauncherUtils.getArgSoraldSkipPR(arguments));
 
         config.setPatchRankingMode(LauncherUtils.getArgPatchRankingMode(arguments));
     }
@@ -855,17 +858,17 @@ public class LauncherUtils {
         return arguments.getString("soraldRepairMode");
     }
 
-    public static FlaggedOption defineArgSegmentSize() {
-        FlaggedOption opt = new FlaggedOption("segmentSize");
-        opt.setLongFlag("segmentSize");
+    public static FlaggedOption defineArgSoraldSegmentSize() {
+        FlaggedOption opt = new FlaggedOption("soraldSegmentSize");
+        opt.setLongFlag("soraldSegmentSize");
         opt.setStringParser(JSAP.INTEGER_PARSER);
         opt.setDefault("200");
         opt.setHelp("Segment size for the segment repair.");
         return opt;
     }
 
-    public static Integer getArgSegmentSize(JSAPResult arguments) {
-        return arguments.getInt("segmentSize");
+    public static Integer getArgSoraldSegmentSize(JSAPResult arguments) {
+        return arguments.getInt("soraldSegmentSize");
     }
 
     public static FlaggedOption defineArgSoraldMaxFixesPerRule() {
@@ -879,6 +882,18 @@ public class LauncherUtils {
 
     public static Integer getArgSoraldMaxFixesPerRule(JSAPResult arguments) {
         return arguments.getInt("soraldMaxFixesPerRule");
+    }
+
+    public static Switch defineArgSoraldSkipPR() {
+        Switch opt = new Switch("soraldSkipPR");
+        opt.setLongFlag("soraldSkipPR");
+        opt.setDefault("false");
+        opt.setHelp("Create fork and push but not a PR.");
+        return opt;
+    }
+
+    public static Boolean getArgSoraldSkipPR(JSAPResult arguments) {
+        return arguments.getBoolean("soraldSkipPR");
     }
 
     public static FlaggedOption defineArgPatchRankingMode() {

@@ -93,6 +93,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("OUTPUT="+output);
         this.envValues.add("TRAVIS_ENDPOINT="+this.repairnatorConfig.getJTravisEndpoint());
         this.envValues.add("TRAVIS_TOKEN="+this.repairnatorConfig.getTravisToken());
+
         if (this.repairnatorConfig.isCreatePR()) {
             this.envValues.add("CREATE_PR=1");
         }
@@ -102,7 +103,10 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("SMTP_TLS=0");
         }
 
-        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR || this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE) {
+        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR ||
+                this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE ||
+                this.repairnatorConfig.getLauncherMode() == LauncherMode.GIT_REPOSITORY
+        ) {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
         }
 
@@ -113,6 +117,15 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beamSize);
             this.envValues.add("SEQUENCER_TIMEOUT=" + sequencerConfig.timeout);
             this.envValues.add("SEQUENCER_ODS_PATH=" + sequencerConfig.ODSPath);
+        }
+
+        if (this.repairnatorConfig.getRepairTools().contains("Sorald")){
+            this.envValues.add("SORALD_REPAIR_MODE=" + repairnatorConfig.getSoraldRepairMode());
+            this.envValues.add("SORALD_MAX_FIXES_PER_RULE=" + repairnatorConfig.getSoraldMaxFixesPerRule());
+            this.envValues.add("SORALD_SONAR_RULES=" + String.join(",", repairnatorConfig.getSonarRules()));
+            this.envValues.add("SORALD_SEGMENT_SIZE=" + repairnatorConfig.getSoraldSegmentSize());
+            this.envValues.add("SORALD_SKIP_PR=" + repairnatorConfig.isSoraldSkipPR());
+            this.envValues.add("SORALD_STATIC_ANALYSIS=" + repairnatorConfig.isStaticAnalysis());
         }
     }
 
@@ -158,11 +171,11 @@ public class RunnablePipelineContainer implements Runnable {
                             .from(logsVolume)
                             .to("/var/log/")
                             .build())
-                    .appendBinds(HostConfig.Bind
-                            .builder()
-                            .from(ODSVolume)
-                            .to(SequencerConfig.getInstance().ODSPath)
-                            .build())
+//                    .appendBinds(HostConfig.Bind
+//                            .builder()
+//                            .from(ODSVolume)
+//                            .to(SequencerConfig.getInstance().ODSPath)
+//                            .build())
                     .build();
 
             // we specify the complete configuration of the container

@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,14 +33,19 @@ public class GithubScanner {
         if (reposPath != null)
             repos = new HashSet<String>(FileUtils.readLines(new File(reposPath), "UTF-8"));
 
-        FetchMode fetchMode = parseFetchMode();
+        FetchMode fetchMode = FetchMode.ALL; // parseFetchMode();
 
+        RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:sorald");
         GithubScanner scanner = new GithubScanner(fetchMode, repos);
         scanner.setup();
 
         while (true) {
             try {
-                List<SelectedCommit> selectedCommits = scanner.fetch();
+//                List<SelectedCommit> selectedCommits = scanner.fetch();
+                List<SelectedCommit> selectedCommits = scanner.fetch(
+                        new SimpleDateFormat("dd/MM/yyyy").parse("05/01/2021").getTime(),
+                        new SimpleDateFormat("dd/MM/yyyy").parse("08/01/2021").getTime()
+                );
 
                 selectedCommits.forEach(scanner::process);
 
@@ -71,12 +77,20 @@ public class GithubScanner {
 
     public void setup(){
         Set<String> repairTools = new HashSet();
-        repairTools.add(getEnvOrDefault("REPAIR_TOOL", "SequencerRepair"));
+        repairTools.add(getEnvOrDefault("REPAIR_TOOL", "Sorald"));
         RepairnatorConfig.getInstance().setRepairTools(repairTools);
         RepairnatorConfig.getInstance().setNbThreads(16);
         RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
-        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.GIT_REPOSITORY);
+
+
+//        RepairnatorConfig.getInstance().setCreatePR(true);
+        RepairnatorConfig.getInstance().setSoraldSkipPR(true);
+        RepairnatorConfig.getInstance().setSonarRules(new String[] {"2204"});//, "2111", "2142", "2272", "2167", "2116"});
+        RepairnatorConfig.getInstance().setSoraldSegmentSize(200);
+        RepairnatorConfig.getInstance().setSoraldMaxFixesPerRule(2000);
+
     }
 
     public List<SelectedCommit> fetch(long startTime, long endTime) throws Exception {

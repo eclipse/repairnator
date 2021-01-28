@@ -125,9 +125,10 @@ public class RepairnatorConfig {
     private String[] sonarRules;
     private boolean isStaticAnalysis;
     private int soraldMaxFixesPerRule;
-    private int segmentSize;
+    private int soraldSegmentSize;
     private SORALD_REPAIR_MODE soraldRepairMode;
     private boolean measureSoraldTime;
+    private boolean soraldSkipPR;
 
     private PATCH_RANKING_MODE patchRankingMode;
     
@@ -747,12 +748,12 @@ public class RepairnatorConfig {
         return this.isStaticAnalysis;
     }
 
-    public void setSegmentSize(int segmentSize) {
-        this.segmentSize = segmentSize;
+    public void setSoraldSegmentSize(int soraldSegmentSize) {
+        this.soraldSegmentSize = soraldSegmentSize;
     }
 
-    public int getSegmentSize() {
-        return this.segmentSize;
+    public int getSoraldSegmentSize() {
+        return this.soraldSegmentSize;
     }
 
     public void setSoraldRepairMode(SORALD_REPAIR_MODE soraldRepairMode) {
@@ -968,5 +969,13 @@ public class RepairnatorConfig {
 
     public void setTravisToken(String travisToken) {
         this.travisToken = travisToken;
+    }
+
+    public void setSoraldSkipPR(boolean soraldSkipPR) {
+        this.soraldSkipPR = soraldSkipPR;
+    }
+
+    public boolean isSoraldSkipPR() {
+        return soraldSkipPR;
     }
 }

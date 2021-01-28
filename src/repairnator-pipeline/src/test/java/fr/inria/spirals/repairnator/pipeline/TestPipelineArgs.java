@@ -10,7 +10,6 @@ import fr.inria.spirals.repairnator.TravisLauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.utils.Utils;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -159,8 +158,8 @@ public class TestPipelineArgs {
         assertEquals(defaultSoraldRepairMode.name(), LauncherUtils.getArgSoraldRepairMode(arguments));
         assertEquals(defaultSoraldRepairMode, config.getSoraldRepairMode());
         Integer defaultSegmentSize = 200;
-        assertEquals(defaultSegmentSize, LauncherUtils.getArgSegmentSize(arguments));
-        assertEquals((int) defaultSegmentSize, config.getSegmentSize());
+        assertEquals(defaultSegmentSize, LauncherUtils.getArgSoraldSegmentSize(arguments));
+        assertEquals((int) defaultSegmentSize, config.getSoraldSegmentSize());
         Integer defaultMaxFixesPerRule = 2000;
         assertEquals(defaultMaxFixesPerRule, LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
         assertEquals((int) defaultMaxFixesPerRule, config.getSoraldMaxFixesPerRule());
