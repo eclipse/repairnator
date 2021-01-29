@@ -24,6 +24,7 @@ public class FailureLocation {
     }
 
     public void addFailingMethod(String failingMethod, FailureType failure) {
+        this.nbFailures++;
         if (this.failingMethods.containsKey(failingMethod)) {
             this.failingMethods.get(failingMethod).add(failure);
         } else {
@@ -32,6 +33,7 @@ public class FailureLocation {
     }
 
     public void addErroringMethod(String erroringMethod, FailureType failure) {
+        this.nbErrors++;
         if (this.erroringMethods.containsKey(erroringMethod)) {
             this.erroringMethods.get(erroringMethod).add(failure);
         } else {
