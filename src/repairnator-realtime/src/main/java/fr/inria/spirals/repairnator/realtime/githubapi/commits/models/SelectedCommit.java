@@ -1,22 +1,19 @@
 package fr.inria.spirals.repairnator.realtime.githubapi.commits.models;
 
-public class FailedCommit {
+public class SelectedCommit {
     private static final String COMMIT_URL_TEMPLATE = "https://github.com/{repo}/commit/{commit}";
-    private Boolean isTravisFailed;
     private Boolean isGithubActionsFailed;
     private String commitId;
     private String repoName;
     private String commitUrl;
 
-    public FailedCommit
+    public SelectedCommit
             (
-                    Boolean isTravisFailed,
                     Boolean isGithubActionsFailed,
                     String commitId,
                     String repoName
             ) {
         this.isGithubActionsFailed = isGithubActionsFailed;
-        this.isTravisFailed = isTravisFailed;
         this.commitId = commitId;
         this.repoName = repoName;
         this.commitUrl = COMMIT_URL_TEMPLATE.replace("{repo}", repoName).replace("{commit}", commitId);
@@ -54,17 +51,9 @@ public class FailedCommit {
         isGithubActionsFailed = githubActionsFailed;
     }
 
-    public Boolean getTravisFailed() {
-        return isTravisFailed;
-    }
-
-    public void setTravisFailed(Boolean travisFailed) {
-        isTravisFailed = travisFailed;
-    }
-
     @Override
     public String toString() {
-        return "FailedCommit{" +
+        return "SelectedCommit{" +
                 "commitId='" + commitId + '\'' +
                 ", repoName='" + repoName + '\'' +
                 '}';
