@@ -209,7 +209,8 @@ public class Sorald extends AbstractRepairStep {
                         Constants.ARG_TEMP_DIR,
                         Files.createTempDirectory("mining_tmp").toString(),
                         Constants.ARG_STATS_OUTPUT_FILE,
-                        stats.getPath()
+                        stats.getPath(),
+                        Constants.ARG_HANDLED_RULES
                 };
 
         Main.main(args);
