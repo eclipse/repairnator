@@ -153,7 +153,39 @@ public class TestGatherTestInformation {
         assertThat(jobStatus.getFailureLocations().size(), is(1));
 
         FailureLocation expectedFailureLocation = new FailureLocation("nopol_examples.nopol_example_1.NopolExampleTest");
-        FailureType failureType = new FailureType("java.lang.StringIndexOutOfBoundsException", "String index out of range: -5", true);
+        FailureType failureType = new FailureType("java.lang.StringIndexOutOfBoundsException", "java.lang.StringIndexOutOfBoundsException: String index out of range: -5\n" +
+                "\tat java.lang.String.charAt(String.java:658)\n" +
+                "\tat nopol_examples.nopol_example_1.NopolExample.charAt(NopolExample.java:16)\n" +
+                "\tat nopol_examples.nopol_example_1.NopolExampleTest.test5(NopolExampleTest.java:39)\n" +
+                "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
+                "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n" +
+                "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
+                "\tat java.lang.reflect.Method.invoke(Method.java:498)\n" +
+                "\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n" +
+                "\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n" +
+                "\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n" +
+                "\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n" +
+                "\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n" +
+                "\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n" +
+                "\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n" +
+                "\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n" +
+                "\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n" +
+                "\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n" +
+                "\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n" +
+                "\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n" +
+                "\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n" +
+                "\tat org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)\n" +
+                "\tat org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)\n" +
+                "\tat org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)\n" +
+                "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
+                "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n" +
+                "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
+                "\tat java.lang.reflect.Method.invoke(Method.java:498)\n" +
+                "\tat org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)\n" +
+                "\tat org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)\n" +
+                "\tat org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)\n" +
+                "\tat org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)\n" +
+                "\tat org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)", true);
         expectedFailureLocation.addErroringMethod("test5", failureType);
 
         FailureLocation actualLocation = jobStatus.getFailureLocations().iterator().next();
