@@ -4,7 +4,6 @@ import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.Git;
@@ -21,6 +20,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.*;
 import java.net.URISyntaxException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import fr.inria.spirals.repairnator.utils.DateUtils;
@@ -60,9 +60,9 @@ public class Sorald extends AbstractRepairStep {
         this.getLogger().info("Entrance in Sorald step...");
         String pathToRepoDir = this.getInspector().getRepoLocalPath();
 
-        Set<String> introducedViolationTypes = new HashSet<String>();
+        Map<String, Set<String>> introducedViolationTypesToFiles;
         try {
-            introducedViolationTypes = getIntroducedViolationTypes(pathToRepoDir);
+            introducedViolationTypesToFiles = getIntroducedViolations(pathToRepoDir);
         } catch (Exception e) {
             return StepStatus.buildSkipped(this, "Error while mining with Sorald");
         }
@@ -74,9 +74,9 @@ public class Sorald extends AbstractRepairStep {
         String newBranchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
 
         for (String rule : RepairnatorConfig.getInstance().getSonarRules()) {
-            if(RepairnatorConfig.getInstance().getSoraldCommitCollectorMode()
+            if (RepairnatorConfig.getInstance().getSoraldCommitCollectorMode()
                     == RepairnatorConfig.SORALD_COMMIT_COLLECTOR_MODE.VIOLATION_INTRODUCING
-                    && !introducedViolationTypes.contains(rule))
+                    && !introducedViolationTypesToFiles.keySet().contains(rule))
                 continue;
 
             this.getLogger().info("Repo: " + pathToRepoDir);
@@ -98,11 +98,16 @@ public class Sorald extends AbstractRepairStep {
 
             File patchDir = new File(RepairnatorConfig.getInstance().getWorkspacePath() + File.separator + "SoraldGitPatches");
 
+            Set<String> violationIntroducingFiles = introducedViolationTypesToFiles.get(rule);
 
             if (patchDir.exists()) {
-                File[] patchFiles = patchDir.listFiles();
-                this.getLogger().info("Number of patches found: " + patchFiles.length);
-                if (patchFiles.length != 0) {
+                File[] patchFilesArr = patchDir.listFiles();
+                List<File> patchFiles = Arrays.stream(patchFilesArr)
+                        .filter(x -> violationIntroducingFiles.stream().anyMatch(y -> y.contains(x.getName())))
+                        .collect(Collectors.toList());
+
+                this.getLogger().info("Number of patches found: " + patchFiles.size());
+                if (patchFiles.size() != 0) {
                     List<RepairPatch> repairPatches = new ArrayList<RepairPatch>();
                     for (File patchFile : patchFiles) {
                         try {
@@ -148,28 +153,55 @@ public class Sorald extends AbstractRepairStep {
         return StepStatus.buildSuccess(this);
     }
 
-    private Set<String> getIntroducedViolationTypes(String pathToRepoDir)
+    /**
+     * @return A map from ruleNumber to the set of files with more violation locations in the new version.
+     */
+    private Map<String, Set<String>> getIntroducedViolations(String pathToRepoDir)
             throws IOException, GitAPIException, ParseException {
         File copyRepoDir = new File(Files.createTempDirectory("repo_copy").toString());
         FileUtils.copyDirectory(new File(pathToRepoDir), copyRepoDir);
 
-        Map<String, Integer> lastRuleToCnt = countRuleViolations(copyRepoDir);
+        Map<String, Set<String>> lastRuleToLocations = listViolationLocations(copyRepoDir);
 
         Git git = Git.open(copyRepoDir);
         ObjectId previousCommitId = git.getRepository().resolve("HEAD^");
         git.checkout().setName(previousCommitId.getName()).call();
 
-        Map<String, Integer> previousRuleToCnt = countRuleViolations(copyRepoDir);
+        Map<String, Set<String>> previousRuleToLocations = listViolationLocations(copyRepoDir);
 
-        return lastRuleToCnt.entrySet().stream().filter(x -> x.getValue() > previousRuleToCnt.get(x.getKey()))
-                .map(x -> x.getKey()).collect(Collectors.toSet());
+        FileUtils.deleteDirectory(copyRepoDir);
+
+        Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
+
+        for (Map.Entry<String, Set<String>> e : lastRuleToLocations.entrySet()) {
+            String ruleNumber = e.getKey();
+            Map<String, Long> newFileToViolationCnt =
+                    e.getValue().stream().map(specifier -> specifier.split(File.pathSeparator)[1])
+                            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+            Map<String, Long> oldFileToViolationCnt =
+                    previousRuleToLocations.get(ruleNumber).stream()
+                            .map(specifier -> specifier.split(File.pathSeparator)[1])
+                            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+            ret.put(ruleNumber, newFileToViolationCnt.entrySet().stream()
+                    .filter(x -> !oldFileToViolationCnt.containsKey(x.getKey())
+                            || x.getValue() > oldFileToViolationCnt.get(x.getKey()))
+                    .map(Map.Entry::getKey).collect(Collectors.toSet()));
+        }
+
+        return ret;
     }
 
-    private Map<String, Integer> countRuleViolations(File repoDir) throws IOException, ParseException {
-        Map<String, Integer> ret = new HashMap<String, Integer>();
+    /**
+     * @param repoDir .
+     * @return A map from ruleNumber to the set of corresponding violation locations.
+     */
+    private Map<String, Set<String>> listViolationLocations(File repoDir) throws IOException, ParseException {
+        Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
 
         File stats = new File(Files.createTempDirectory("mining_stats.json").toString());
-        String[] baseArgs =
+        String[] args =
                 new String[]{
                         Constants.MINE_COMMAND_NAME,
                         Constants.ARG_ORIGINAL_FILES_PATH,
@@ -180,15 +212,25 @@ public class Sorald extends AbstractRepairStep {
                         stats.getPath()
                 };
 
+        Main.main(args);
+
         JSONParser parser = new JSONParser();
         JSONObject jo = (JSONObject) parser.parse(new FileReader(stats));
         JSONArray ja = (JSONArray) jo.get("minedRules");
         for (int i = 0; i < ja.size(); i++) {
+            Set<String> violationLocations = new HashSet<String>();
+
             jo = (JSONObject) ja.get(i);
-            int violationCnt = Integer.parseInt(jo.get("nbFoundWarnings").toString());
-            if (violationCnt > 0) {
-                String rule = jo.get("ruleKey").toString();
-                ret.put(rule, violationCnt);
+            String rule = jo.get("ruleKey").toString();
+
+            JSONArray warningLocations = (JSONArray) jo.get("warningLocations");
+            for (int j = 0; j < warningLocations.size(); j++) {
+                String location = jo.get("violationSpecifier").toString();
+                violationLocations.add(location);
+            }
+
+            if (violationLocations.size() > 0) {
+                ret.put(rule, violationLocations);
             }
         }
 
