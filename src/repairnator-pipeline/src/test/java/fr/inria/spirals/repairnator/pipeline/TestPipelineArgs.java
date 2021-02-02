@@ -165,6 +165,20 @@ public class TestPipelineArgs {
         assertEquals(defaultMaxFixesPerRule, LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
         assertEquals((int) defaultMaxFixesPerRule, config.getSoraldMaxFixesPerRule());
 
+        // default NPEFix rules
+        String defaultNPESelection = "exploration";
+        assertEquals(defaultNPESelection, LauncherUtils.getArgNPESelection(arguments));
+        assertEquals(defaultNPESelection, config.getNPESelection());
+        Integer defaultNbIteration = 100;
+        assertEquals(defaultNbIteration, LauncherUtils.getArgNPENbIteration(arguments));
+        assertEquals(defaultNbIteration, config.getNPENbIteration());
+        String defaultNPEScope = "class";
+        assertEquals(defaultNPEScope, LauncherUtils.getArgNPEScope(arguments));
+        assertEquals(defaultNPEScope, config.getNPEScope());
+        String defaultNPERepairStrategy = "default";
+        assertEquals(defaultNPERepairStrategy, LauncherUtils.getArgNPERepairStrategy(arguments));
+        assertEquals(defaultNPERepairStrategy, config.getNPERepairStrategy());
+
         // default patch ranking mode
         RepairnatorConfig.PATCH_RANKING_MODE defaultPatchRankingMode = RepairnatorConfig.PATCH_RANKING_MODE.NONE;
         assertEquals(defaultPatchRankingMode.name(), LauncherUtils.getArgPatchRankingMode(arguments));

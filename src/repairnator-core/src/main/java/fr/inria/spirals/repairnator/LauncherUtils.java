@@ -905,7 +905,7 @@ public class LauncherUtils {
     }
 
     public static String getArgNPESelection(JSAPResult arguments) {
-        return arguments.getString("npeRepairSelection");
+        return arguments.getString("npeSelection");
     }
 
     public static FlaggedOption defineArgNPENbIteration() {
@@ -944,7 +944,7 @@ public class LauncherUtils {
     }
 
     public static String getArgNPERepairStrategy(JSAPResult arguments) {
-        return arguments.getString("default");
+        return arguments.getString("npeRepairStrategy");
     }
 
     public static FlaggedOption defineArgPatchRankingMode() {
