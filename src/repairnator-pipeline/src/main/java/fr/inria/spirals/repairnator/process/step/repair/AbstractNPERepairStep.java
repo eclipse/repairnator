@@ -40,13 +40,10 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
     private String repairStrategy = "default";
 
     public AbstractNPERepairStep() {
-    }
-
-    public AbstractNPERepairStep(String selection, int nbIteration, String scope, String repairStrategy) {
-        this.selection = selection;
-        this.nbIteration = nbIteration;
-        this.scope = scope;
-        this.repairStrategy = repairStrategy;
+        this.selection = this.getConfig().getNPESelection() != null ? this.getConfig().getNPESelection() : selection;
+        this.nbIteration = this.getConfig().getNPENbIteration() != null ? this.getConfig().getNPENbIteration() : nbIteration;
+        this.scope = this.getConfig().getNPEScope() != null ? this.getConfig().getNPEScope() : scope;
+        this.repairStrategy = this.getConfig().getNPERepairStrategy() != null ? this.getConfig().getNPERepairStrategy() : repairStrategy;
     }
 
     @Override

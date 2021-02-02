@@ -11,10 +11,6 @@ public class NPERepair extends AbstractNPERepairStep {
     public NPERepair() {
     }
 
-    public NPERepair(String selection, int nbIteration, String scope, String repairStrategy) {
-        super(selection, nbIteration, scope, repairStrategy);
-    }
-
     @Override
     public String getRepairToolName() {
         return TOOL_NAME;
