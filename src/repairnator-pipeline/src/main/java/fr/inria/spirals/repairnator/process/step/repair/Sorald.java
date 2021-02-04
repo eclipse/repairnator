@@ -53,7 +53,6 @@ public class Sorald extends AbstractRepairStep {
         return TOOL_NAME;
     }
 
-
     @Override
     protected StepStatus businessExecute() {
         boolean patchFound = false;
@@ -175,6 +174,8 @@ public class Sorald extends AbstractRepairStep {
 
         for (Map.Entry<String, Set<String>> e : lastRuleToLocations.entrySet()) {
             String ruleNumber = e.getKey();
+
+            // a map from the filename to the number of violations of this type in that file
             Map<String, Long> newFileToViolationCnt =
                     e.getValue().stream().map(specifier -> specifier.split(File.pathSeparator)[1])
                             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -200,18 +201,22 @@ public class Sorald extends AbstractRepairStep {
     private Map<String, Set<String>> listViolationLocations(File repoDir) throws IOException, ParseException {
         Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
 
-        File stats = new File(Files.createTempDirectory("mining_stats.json").toString());
+        File stats = new File(Files.createTempFile("mining_stats", ".json").toString()),
+                miningTmpFile = new File(Files.createTempDirectory("mining_tmp").toString());
+
         String[] args =
                 new String[]{
                         Constants.MINE_COMMAND_NAME,
                         Constants.ARG_ORIGINAL_FILES_PATH,
                         repoDir.getPath(),
                         Constants.ARG_TEMP_DIR,
-                        Files.createTempDirectory("mining_tmp").toString(),
+                        miningTmpFile.getPath(),
                         Constants.ARG_STATS_OUTPUT_FILE,
                         stats.getPath(),
                         Constants.ARG_HANDLED_RULES
                 };
+
+        FileUtils.deleteDirectory(miningTmpFile);
 
         Main.main(args);
 
@@ -234,6 +239,8 @@ public class Sorald extends AbstractRepairStep {
                 ret.put(rule, violationLocations);
             }
         }
+
+        stats.delete();
 
         return ret;
     }
