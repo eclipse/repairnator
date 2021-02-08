@@ -177,6 +177,10 @@ public class GatherTestInformation extends AbstractStep {
 
                                     try {
                                         // Descend stack trace
+<<<<<<< HEAD
+=======
+                                        this.getLogger().info(testCase.getFailureDetail());
+>>>>>>> ea3eab47 (Split errors and failures. Add source classes information to errors.)
                                         StackTrace stackTrace = StackTraceParser.parse(testCase.getFailureDetail());
                                         StackTrace causedBy = stackTrace.getCausedBy();
                                         while (causedBy != null) {
@@ -202,6 +206,7 @@ public class GatherTestInformation extends AbstractStep {
                                                 File file = new File(sourcedir.getAbsolutePath() + "/" + path);
                                                 File packageFile = new File(sourcedir.getAbsolutePath() + "/" + packagePath);
                                                 if (file.exists()) {
+<<<<<<< HEAD
                                                     if (!onePass) {
                                                         this.getLogger().debug("classFiles: " + file.getAbsolutePath());
                                                         classFiles.add(file);
@@ -211,6 +216,16 @@ public class GatherTestInformation extends AbstractStep {
                                                 }
                                                 if (packageFile.exists()) {
                                                     this.getLogger().debug("packageFiles: " + packageFile.getAbsolutePath());
+=======
+                                                    this.getLogger().info("Added file : " + file.getAbsolutePath());
+                                                    if (!onePass) {
+                                                        classFiles.add(file);
+                                                    }
+                                                    stackFiles.add(file);
+                                                }
+                                                if (packageFile.exists()) {
+                                                    this.getLogger().info("Added file : " + packageFile.getAbsolutePath());
+>>>>>>> ea3eab47 (Split errors and failures. Add source classes information to errors.)
                                                     packageFiles.add(packageFile);
                                                 }
                                                 if (file.exists() || packageFile.exists())
@@ -225,7 +240,11 @@ public class GatherTestInformation extends AbstractStep {
                                     } catch (StackTraceParser.ParseException e) {
                                         this.addStepError("Error while parsing stack trace.", e);
                                     }
+<<<<<<< HEAD
 
+=======
+                                    
+>>>>>>> ea3eab47 (Split errors and failures. Add source classes information to errors.)
                                     failureLocation.addErroringMethod(testCase.getName(), typeTof);
                                 } else {
                                     FailureType typeTof = new FailureType(failureType, testCase.getFailureDetail());

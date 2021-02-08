@@ -18,8 +18,10 @@ import fr.inria.spirals.npefix.resi.selector.*;
 import fr.inria.spirals.npefix.resi.strategies.*;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
+import fr.inria.spirals.repairnator.process.testinformation.ErrorType;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import fr.inria.spirals.repairnator.utils.Pair;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by andre15silva on 17/01/2021
@@ -51,7 +54,7 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
         this.getLogger().debug("Entrance in NPERepair step...");
 
         // Get the failing NPE tests
-        List<String> npeTests = getNPETests();
+        List<Pair<String, List<ErrorType>>> npeTests = getNPETests();
 
         if (!npeTests.isEmpty()) {
             this.getLogger().info("NPE found, start NPEFix");
@@ -64,9 +67,23 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
             }
 
             final List<URL> dependencies = this.getInspector().getJobStatus().getRepairClassPath();
-            final File[] sourceFolders = this.getInspector().getJobStatus().getRepairSourceDir();
             File binFolder = new File(this.getInspector().getWorkspace() + "/npefix-bin");
             File npeFixJar = new File(this.getConfig().getLocalMavenRepository() + "/fr/inria/gforge/spirals/npefix/0.7/npefix-0.7.jar");
+
+            List<File> sourceFolders = new ArrayList<>();
+            if (scope.equals("project")) {
+                sourceFolders = Arrays.asList(this.getInspector().getJobStatus().getRepairSourceDir());
+            } else if (scope.equals("class")) {
+                sourceFolders = npeTests.stream().map(Pair::getValue).flatMap(List::stream)
+                        .map(ErrorType::getClassFiles).flatMap(Set::stream).collect(Collectors.toList());
+            } else if (scope.equals("package")) {
+                sourceFolders = npeTests.stream().map(Pair::getValue).flatMap(List::stream)
+                        .map(ErrorType::getPackageFiles).flatMap(Set::stream).collect(Collectors.toList());
+            } else if (scope.equals("stack")) {
+                sourceFolders = npeTests.stream().map(Pair::getValue).flatMap(List::stream)
+                        .map(ErrorType::getStackFiles).flatMap(Set::stream).collect(Collectors.toList());
+            }
+            this.getLogger().info("Using scope " + scope + ", " + sourceFolders.size() + " files/dirs will be used");
 
             // setting up dependencies
             try {
@@ -80,8 +97,8 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
             }
             int complianceLevel = 7;
 
-            String[] sources = Arrays.stream(sourceFolders)
-                    .map(File::getAbsolutePath).toArray(String[]::new);
+            String[] sources = sourceFolders.stream()
+                    .map(File::getAbsolutePath).peek(System.out::println).toArray(String[]::new);
             DefaultRepairStrategy strategy = new DefaultRepairStrategy(sources);
             if (repairStrategy.equalsIgnoreCase("TryCatch")) {
                 strategy = new TryCatchRepairStrategy(sources);
@@ -93,7 +110,7 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
 
             npefix.instrument();
 
-            NPEOutput result = run(npefix, npeTests);
+            NPEOutput result = run(npefix, npeTests.stream().map((Pair::getKey)).collect(Collectors.toList()));
 
             spoon.Launcher spoon = new spoon.Launcher();
             for (File s : sourceFolders) {
@@ -165,22 +182,23 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
         }
     }
 
-    private List<String> getNPETests() {
+    private List<Pair<String, List<ErrorType>>> getNPETests() {
         this.getLogger().debug("Parsing test information for NPE...");
-        List<String> npeTests = new ArrayList<>();
+        List<Pair<String, List<ErrorType>>> npeTests = new ArrayList<>();
 
         // Iterate over failure locations
         for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
             // NPEEs are errors
-            Map<String, List<FailureType>> failingMethodsAndFailures = failureLocation.getErroringMethodsAndFailures();
+            Map<String, List<ErrorType>> erroringMethodsAndErrors = failureLocation.getErroringMethodsAndErrors();
 
             // Check if test method has an NPE
-            for (String method : failingMethodsAndFailures.keySet()) {
-                if (failingMethodsAndFailures.get(method).stream()
-                        .anyMatch((FailureType ft) -> ft.getFailureName().startsWith("java.lang.NullPointerException"))) {
+            for (String method : erroringMethodsAndErrors.keySet()) {
+                if (erroringMethodsAndErrors.get(method).stream()
+                        .anyMatch((ErrorType et) -> et.getName().startsWith("java.lang.NullPointerException"))) {
                     String test = failureLocation.getClassName() + '#' + method;
                     this.getLogger().debug(String.format("Found NPE in %s", test));
-                    npeTests.add(test);
+                    List<ErrorType> errorTypes = erroringMethodsAndErrors.get(method);
+                    npeTests.add(new Pair<>(test, errorTypes));
                 }
             }
         }

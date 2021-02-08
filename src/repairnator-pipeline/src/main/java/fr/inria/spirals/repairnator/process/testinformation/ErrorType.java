@@ -26,7 +26,7 @@ public class ErrorType extends BugType {
     /**
      * Class representing a type of error that occurred during a test execution
      *
-     * @param name The name of the type of error
+     * @param name   The name of the type of error
      * @param detail The detailed message generated for this error
      */
     public ErrorType(String name, String detail) {
