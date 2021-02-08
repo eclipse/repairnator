@@ -9,7 +9,7 @@ import java.util.*;
 public class FailureLocation {
     private String className;
     private HashMap<String, List<FailureType>> failingMethods;
-    private HashMap<String, List<FailureType>> erroringMethods;
+    private HashMap<String, List<ErrorType>> erroringMethods;
     private int nbFailures;
     private int nbErrors;
 
@@ -32,12 +32,12 @@ public class FailureLocation {
         }
     }
 
-    public void addErroringMethod(String erroringMethod, FailureType failure) {
+    public void addErroringMethod(String erroringMethod, ErrorType error) {
         this.nbErrors++;
         if (this.erroringMethods.containsKey(erroringMethod)) {
-            this.erroringMethods.get(erroringMethod).add(failure);
+            this.erroringMethods.get(erroringMethod).add(error);
         } else {
-            this.erroringMethods.put(erroringMethod, Collections.singletonList(failure));
+            this.erroringMethods.put(erroringMethod, Collections.singletonList(error));
         }
     }
 
@@ -53,7 +53,7 @@ public class FailureLocation {
         return failingMethods;
     }
 
-    public Map<String, List<FailureType>> getErroringMethodsAndFailures() {
+    public Map<String, List<ErrorType>> getErroringMethodsAndErrors() {
         return erroringMethods;
     }
 

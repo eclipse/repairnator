@@ -1,11 +1,16 @@
 package fr.inria.spirals.repairnator.process.step.gatherinfo;
 
+import exceptionparser.StackTrace;
+import exceptionparser.StackTraceElement;
+import exceptionparser.StackTraceParser;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.properties.tests.*;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
+import fr.inria.spirals.repairnator.process.testinformation.BugType;
+import fr.inria.spirals.repairnator.process.testinformation.ErrorType;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.maven.plugins.surefire.report.ReportTestCase;
@@ -47,8 +52,9 @@ public class GatherTestInformation extends AbstractStep {
      * This step intends to gather test information produced during {@link fr.inria.spirals.repairnator.process.step.TestProject} step.
      * A contract is asked to know if the step should find test failure or if everything must pass. Moreover, this step send by default
      * information to the JobStatus, but it can be skipping by setting the boolean to true.
-     * @param inspector The inspector responsible of the step pipeline
-     * @param contract The contract to know in which case the step should stop the pipeline
+     *
+     * @param inspector                    The inspector responsible of the step pipeline
+     * @param contract                     The contract to know in which case the step should stop the pipeline
      * @param skipSettingStatusInformation If set to true, the step won't push any information to the JobStatus of the inspector.
      */
     public GatherTestInformation(ProjectInspector inspector, boolean blockingStep, ContractForGatherTestInformation contract, boolean skipSettingStatusInformation, String stepName) {
@@ -111,10 +117,10 @@ public class GatherTestInformation extends AbstractStep {
 
         JobStatus jobStatus = this.getInspector().getJobStatus();
         for (File surefireDir : surefireDirs) {
-            SurefireReportParser parser = new SurefireReportParser(Arrays.asList(new File[] { surefireDir }),
+            SurefireReportParser surefireReportParser = new SurefireReportParser(Arrays.asList(new File[]{surefireDir}),
                     Locale.ENGLISH, null);
             try {
-                List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
+                List<ReportTestSuite> testSuites = surefireReportParser.parseXMLReportFiles();
                 for (ReportTestSuite testSuite : testSuites) {
                     this.nbTotalTests += testSuite.getNumberOfTests();
                     int runningTests = testSuite.getNumberOfTests() - testSuite.getNumberOfSkipped();
@@ -152,38 +158,90 @@ public class GatherTestInformation extends AbstractStep {
                                     failureType = failureType.substring(0, failureType.length() - 1);
                                 }
 
+                                // Find FailureLocation or create a new one
                                 this.failureNames.add(failureType);
-                                FailureType typeTof = new FailureType(failureType, testCase.getFailureDetail(), testCase.hasError());
                                 FailureLocation failureLocation = null;
-
                                 for (FailureLocation location : this.failureLocations) {
                                     if (location.getClassName().equals(testCase.getFullClassName())) {
                                         failureLocation = location;
                                         break;
                                     }
                                 }
-
                                 if (failureLocation == null) {
                                     failureLocation = new FailureLocation(testCase.getFullClassName());
                                     this.failureLocations.add(failureLocation);
                                 }
 
                                 if (testCase.hasError()) {
+                                    ErrorType typeTof = new ErrorType(failureType, testCase.getFailureDetail());
+
+                                    try {
+                                        // Descend stack trace
+                                        StackTrace stackTrace = StackTraceParser.parse(testCase.getFailureDetail());
+                                        StackTrace causedBy = stackTrace.getCausedBy();
+                                        while (causedBy != null) {
+                                            stackTrace = causedBy;
+                                            causedBy = stackTrace.getCausedBy();
+                                        }
+
+                                        // Get source files where error has occurred
+                                        Set<File> classFiles = new HashSet<>();
+                                        Set<File> packageFiles = new HashSet<>();
+                                        Set<File> stackFiles = new HashSet<>();
+                                        boolean onePass = false;
+                                        for (StackTraceElement stackTraceElement : stackTrace.getElements()) {
+                                            String path = stackTraceElement.getMethod().substring(0, stackTraceElement.getMethod().lastIndexOf(".")).replace(".", "/") + ".java";
+                                            if (path.contains("$")) {
+                                                path = path.substring(0, path.indexOf("$")) + ".java";
+                                            }
+                                            String packagePath = ".";
+                                            if (path.lastIndexOf("/") != -1) {
+                                                packagePath = path.substring(0, path.lastIndexOf("/"));
+                                            }
+                                            for (File sourcedir : this.getInspector().getJobStatus().getRepairSourceDir()) {
+                                                File file = new File(sourcedir.getAbsolutePath() + "/" + path);
+                                                File packageFile = new File(sourcedir.getAbsolutePath() + "/" + packagePath);
+                                                if (file.exists()) {
+                                                    if (!onePass) {
+                                                        this.getLogger().debug("classFiles: " + file.getAbsolutePath());
+                                                        classFiles.add(file);
+                                                    }
+                                                    this.getLogger().debug("stackFiles: " + file.getAbsolutePath());
+                                                    stackFiles.add(file);
+                                                }
+                                                if (packageFile.exists()) {
+                                                    this.getLogger().debug("packageFiles: " + packageFile.getAbsolutePath());
+                                                    packageFiles.add(packageFile);
+                                                }
+                                                if (file.exists() || packageFile.exists())
+                                                    break;
+                                            }
+                                            onePass = true;
+                                        }
+
+                                        typeTof.addClassFiles(classFiles);
+                                        typeTof.addPackageFiles(packageFiles);
+                                        typeTof.addStackFiles(stackFiles);
+                                    } catch (StackTraceParser.ParseException e) {
+                                        this.addStepError("Error while parsing stack trace.", e);
+                                    }
+
                                     failureLocation.addErroringMethod(testCase.getName(), typeTof);
                                 } else {
+                                    FailureType typeTof = new FailureType(failureType, testCase.getFailureDetail());
                                     failureLocation.addFailingMethod(testCase.getName(), typeTof);
                                 }
 
                                 if (!this.skipSettingStatusInformation) {
                                     Properties properties = this.getInspector().getJobStatus().getProperties();
-                                    properties.getTests().getOverallMetrics().addFailure(typeTof.getFailureName(), typeTof.isError());
+                                    properties.getTests().getOverallMetrics().addFailure(failureType, testCase.hasError());
 
                                     FailureDetail failureDetail = new FailureDetail();
                                     failureDetail.setTestClass(failureLocation.getClassName());
                                     failureDetail.setTestMethod(testCase.getName());
-                                    failureDetail.setFailureName(typeTof.getFailureName());
-                                    failureDetail.setDetail(typeTof.getFailureDetail());
-                                    failureDetail.setError(typeTof.isError());
+                                    failureDetail.setFailureName(failureType);
+                                    failureDetail.setDetail(testCase.getFailureDetail());
+                                    failureDetail.setError(testCase.hasError());
                                     properties.getTests().addFailureDetail(failureDetail);
                                 }
                             }

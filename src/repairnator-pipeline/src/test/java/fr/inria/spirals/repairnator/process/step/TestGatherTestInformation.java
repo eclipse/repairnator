@@ -3,6 +3,8 @@ package fr.inria.spirals.repairnator.process.step;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.testinformation.ErrorType;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
@@ -25,6 +27,7 @@ import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.internal.runners.statements.Fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,15 +76,15 @@ public class TestGatherTestInformation {
         CloneRepository cloneStep = new CloneRepository(inspector);
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
-
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
                 .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeSourceDir(inspector, true, false))
                 .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(5));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(4);
         assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
 
         for (StepStatus stepStatus : stepStatusList) {
@@ -124,12 +127,15 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeSourceDir(inspector, true, false))
+                .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(5));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(4);
         assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
 
         for (StepStatus stepStatus : stepStatusList) {
@@ -153,7 +159,7 @@ public class TestGatherTestInformation {
         assertThat(jobStatus.getFailureLocations().size(), is(1));
 
         FailureLocation expectedFailureLocation = new FailureLocation("nopol_examples.nopol_example_1.NopolExampleTest");
-        FailureType failureType = new FailureType("java.lang.StringIndexOutOfBoundsException", "java.lang.StringIndexOutOfBoundsException: String index out of range: -5\n" +
+        ErrorType errorType = new ErrorType("java.lang.StringIndexOutOfBoundsException", "java.lang.StringIndexOutOfBoundsException: String index out of range: -5\n" +
                 "\tat java.lang.String.charAt(String.java:658)\n" +
                 "\tat nopol_examples.nopol_example_1.NopolExample.charAt(NopolExample.java:16)\n" +
                 "\tat nopol_examples.nopol_example_1.NopolExampleTest.test5(NopolExampleTest.java:39)\n" +
@@ -185,12 +191,22 @@ public class TestGatherTestInformation {
                 "\tat org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)\n" +
                 "\tat org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)\n" +
                 "\tat org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)\n" +
-                "\tat org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)", true);
-        expectedFailureLocation.addErroringMethod("test5", failureType);
+                "\tat org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)");
+        expectedFailureLocation.addErroringMethod("test5", errorType);
 
         FailureLocation actualLocation = jobStatus.getFailureLocations().iterator().next();
 
         assertThat(actualLocation, is(expectedFailureLocation));
+        assertThat(actualLocation.getErroringMethodsAndErrors().size(), is(1));
+        assertTrue(actualLocation.getErroringMethodsAndErrors().containsKey("test5"));
+
+        ErrorType actualErrorType = actualLocation.getErroringMethodsAndErrors().get("test5").get(0);
+
+        assertThat(actualErrorType.getClassFiles().size(), is(0));
+        assertThat(actualErrorType.getStackFiles().size(), is(1));
+        System.out.println(actualErrorType.getStackFiles());
+        assertThat(actualErrorType.getPackageFiles().size(), is(1));
+        System.out.println(actualErrorType.getPackageFiles());
     }
 
     @Test
@@ -214,12 +230,15 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeSourceDir(inspector, true, false))
+                .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(5));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(4);
         assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
 
         for (StepStatus stepStatus : stepStatusList) {
@@ -265,12 +284,15 @@ public class TestGatherTestInformation {
         GatherTestInformation gatherTestInformation = new GatherTestInformation(inspector, true, new BuildShouldFail(), false);
 
 
-        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector)).addNextStep(gatherTestInformation);
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeSourceDir(inspector, true, false))
+                .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(5));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(4);
         assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
 
         for (StepStatus stepStatus : stepStatusList) {
@@ -316,12 +338,13 @@ public class TestGatherTestInformation {
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
                 .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeSourceDir(inspector, true, false))
                 .addNextStep(gatherTestInformation);
         cloneStep.execute();
 
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(4));
-        StepStatus gatherTestInfoStatus = stepStatusList.get(3);
+        assertThat(stepStatusList.size(), is(5));
+        StepStatus gatherTestInfoStatus = stepStatusList.get(4);
         assertThat(gatherTestInfoStatus.getStep(), is(gatherTestInformation));
 
         for (StepStatus stepStatus : stepStatusList) {
