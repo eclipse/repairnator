@@ -7,6 +7,13 @@ public abstract class BugType {
     private String name;
     private String detail;
 
+
+    /**
+     * Abstract Class representing a type of bug that occurred during a test execution
+     *
+     * @param name The name of the type of bug
+     * @param detail The detailed message generated for this bug
+     */
     public BugType(String name, String detail) {
         this.name = name;
         this.detail = detail;

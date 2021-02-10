@@ -3,8 +3,10 @@ package fr.inria.spirals.repairnator.process.testinformation;
 import java.util.*;
 
 /**
- * Represent the location of a failure for Repair Tools. For now only Nopol is
- * using and it's repairing Test Classes, so we only consider that information
+ * Represents the location of a failure for Repair Tools.
+ *
+ * For now only Nopol and NPEFix are using this. We only consider Test Classes for failures, but we also consider
+ * Source Classes for errors.
  */
 public class FailureLocation {
     private String className;

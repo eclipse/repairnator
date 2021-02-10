@@ -7,12 +7,28 @@ import java.util.Set;
 
 public class ErrorType extends BugType {
 
+    /**
+     * Source class files where the error occurred.
+     */
     private Set<File> classFiles = new HashSet<>();
 
+    /**
+     * Source package files (directories) that contain classes where the error occurred or classes that are
+     * present in the stack trace of the error.
+     */
     private Set<File> packageFiles = new HashSet<>();
 
+    /**
+     * Source class files that are present in the error stack trace.
+     */
     private Set<File> stackFiles = new HashSet<>();
 
+    /**
+     * Class representing a type of error that occurred during a test execution
+     *
+     * @param name The name of the type of error
+     * @param detail The detailed message generated for this error
+     */
     public ErrorType(String name, String detail) {
         super(name, detail);
     }
