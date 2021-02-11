@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.maven.MavenHelper;
+import fr.inria.spirals.repairnator.process.testinformation.ErrorType;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.process.testinformation.FailureType;
 import org.apache.commons.io.FileUtils;
@@ -37,10 +38,10 @@ public class NPERepairSafe extends AbstractRepairStep {
 
     private boolean isThereNPE() {
         for (FailureLocation failureLocation : this.getInspector().getJobStatus().getFailureLocations()) {
-            Map<String, List<FailureType>> errorsMap = failureLocation.getErroringMethodsAndFailures();
+            Map<String, List<ErrorType>> errorsMap = failureLocation.getErroringMethodsAndErrors();
             for (String method : errorsMap.keySet()) {
                 if (errorsMap.get(method).stream()
-                        .anyMatch((FailureType ft) -> ft.getFailureName().startsWith("java.lang.NullPointerException"))) {
+                        .anyMatch((ErrorType et) -> et.getName().startsWith("java.lang.NullPointerException"))) {
                     return true;
                 }
             }

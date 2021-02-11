@@ -3,6 +3,9 @@ package fr.inria.spirals.repairnator.process.step.repair;
 import ch.qos.logback.classic.Level;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
@@ -72,6 +75,9 @@ public class TestNPERepair {
 
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
                 .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeClasspath(inspector, false))
+                .addNextStep(new ComputeSourceDir(inspector, false, false))
+                .addNextStep(new ComputeTestDir(inspector, true))
                 .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                 .addNextStep(npeRepair);
 
@@ -80,8 +86,8 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(5));
-        StepStatus npeStatus = stepStatusList.get(4);
+        assertThat(stepStatusList.size(), is(8));
+        StepStatus npeStatus = stepStatusList.get(7);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
         for (StepStatus stepStatus : stepStatusList) {

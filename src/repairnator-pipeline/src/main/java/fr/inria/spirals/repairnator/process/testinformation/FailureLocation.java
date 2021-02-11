@@ -3,13 +3,15 @@ package fr.inria.spirals.repairnator.process.testinformation;
 import java.util.*;
 
 /**
- * Represent the location of a failure for Repair Tools. For now only Nopol is
- * using and it's repairing Test Classes, so we only consider that information
+ * Represents the location of a failure for Repair Tools.
+ *
+ * For now only Nopol and NPEFix are using this. We only consider Test Classes for failures, but we also consider
+ * Source Classes for errors.
  */
 public class FailureLocation {
     private String className;
     private HashMap<String, List<FailureType>> failingMethods;
-    private HashMap<String, List<FailureType>> erroringMethods;
+    private HashMap<String, List<ErrorType>> erroringMethods;
     private int nbFailures;
     private int nbErrors;
 
@@ -32,12 +34,12 @@ public class FailureLocation {
         }
     }
 
-    public void addErroringMethod(String erroringMethod, FailureType failure) {
+    public void addErroringMethod(String erroringMethod, ErrorType error) {
         this.nbErrors++;
         if (this.erroringMethods.containsKey(erroringMethod)) {
-            this.erroringMethods.get(erroringMethod).add(failure);
+            this.erroringMethods.get(erroringMethod).add(error);
         } else {
-            this.erroringMethods.put(erroringMethod, Collections.singletonList(failure));
+            this.erroringMethods.put(erroringMethod, Collections.singletonList(error));
         }
     }
 
@@ -53,7 +55,7 @@ public class FailureLocation {
         return failingMethods;
     }
 
-    public Map<String, List<FailureType>> getErroringMethodsAndFailures() {
+    public Map<String, List<ErrorType>> getErroringMethodsAndErrors() {
         return erroringMethods;
     }
 

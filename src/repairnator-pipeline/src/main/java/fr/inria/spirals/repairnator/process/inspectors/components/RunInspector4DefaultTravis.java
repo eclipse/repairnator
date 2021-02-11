@@ -56,10 +56,10 @@ public class RunInspector4DefaultTravis extends IRunInspector{
                 cloneRepo
                     .addNextStep(new BuildProject(inspector))
                     .addNextStep(new TestProject(inspector))
-                    .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                     .addNextStep(new ComputeClasspath(inspector, false))
                     .addNextStep(new ComputeSourceDir(inspector, false, false))
-                    .addNextStep(new ComputeTestDir(inspector, false));
+                    .addNextStep(new ComputeTestDir(inspector, true))
+                    .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false));
             }
            
             cloneRepo.addNextStep(new InitRepoToPush(inspector));
