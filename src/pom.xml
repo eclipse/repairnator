@@ -74,7 +74,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <maven-jacoco-plugin.version>0.7.9</maven-jacoco-plugin.version>
+        <maven-jacoco-plugin.version>0.8.3</maven-jacoco-plugin.version>
         <maven-coveralls-plugin.version>4.0.0</maven-coveralls-plugin.version>
     </properties>
 

@@ -24,6 +24,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -58,7 +59,8 @@ public class TestNopolRepair {
         FileHelper.deleteFile(tmpDir);
     }
 
-    @Test
+    @Ignore
+    //@Test
     public void testNopolRepairWithExclusion() throws IOException {
         long buildId = 207890790; // surli/failingProject build
 
