@@ -49,9 +49,13 @@ public class MavenPatchTester {
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.directory(new File(inspector.getRepoLocalPath()));
             processBuilder.command("git", "apply", "--ignore-whitespace", "diff");
-            processBuilder.start();
+            Process applyProc = processBuilder.start();
 
-//            git.apply().setPatch(is).call();
+            applyProc.waitFor();
+
+            if(applyProc.exitValue() != 0){
+                return false;
+            }
 
             //Build and test with applied patch
             MavenHelper maven = new MavenHelper(pom, goal, properties, "sequencer-builder", inspector, true);
