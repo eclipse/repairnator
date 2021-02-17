@@ -37,7 +37,7 @@
         <dependency>
             <groupId>se.kth.castor</groupId>
             <artifactId>sorald</artifactId>
-            <version>1.1-20200928.114859-2</version>
+            <version>17f106c8e7b3aea25542966410c0b26c2e6c2e43-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.inria.repairnator</groupId>
