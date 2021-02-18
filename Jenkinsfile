@@ -104,7 +104,7 @@ spec:
       }
       steps {
         container('maven') {
-          sh 'bash ./.ci/ci-run-with-core.sh'
+          sh 'bash ./.ci/ci-pipeline.sh'
         }
       }
       options {
