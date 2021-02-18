@@ -90,7 +90,7 @@ public class MavenHelper {
         }
 
         // we want to use a dedicated Maven repository
-        this.properties.setProperty("maven.repo.local", RepairnatorConfig.getInstance().getLocalMavenRepository());
+        this.properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
         for (String skip : SKIP_LIST) {
             this.properties.setProperty(skip, "true");
         }
