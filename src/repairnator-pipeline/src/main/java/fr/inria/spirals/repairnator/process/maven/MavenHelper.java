@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.maven;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.output.MavenErrorHandler;
 import fr.inria.spirals.repairnator.process.maven.output.MavenFilterOutputHandler;
@@ -89,7 +90,7 @@ public class MavenHelper {
         }
 
         // we want to use a dedicated Maven repository
-        this.properties.setProperty("maven.repo.local", this.inspector.getM2LocalPath());
+        this.properties.setProperty("maven.repo.local", RepairnatorConfig.getInstance().getLocalMavenRepository());
         for (String skip : SKIP_LIST) {
             this.properties.setProperty(skip, "true");
         }
