@@ -59,6 +59,7 @@ public class TestNPERepair {
     @Test
     public void testNPERepair() throws IOException {
         long buildId = 252712792; // surli/failingProject build
+        RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -100,6 +101,202 @@ public class TestNPERepair {
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(6));
+        assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+    }
+
+    @Test
+    public void testNPERepairClassScope() throws IOException {
+        long buildId = 760311031; // andre15silva/failingProject build
+        RepairnatorConfig.getInstance().setNPEScope("class");
+        RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
+
+        Build build = this.checkBuildAndReturn(buildId, false);
+
+        tmpDir = Files.createTempDirectory("test_nperepair").toFile();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        NPERepair npeRepair = new NPERepair();
+        npeRepair.setProjectInspector(inspector);
+
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new BuildProject(inspector))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeClasspath(inspector, false))
+                .addNextStep(new ComputeSourceDir(inspector, false, false))
+                .addNextStep(new ComputeTestDir(inspector, true))
+                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .addNextStep(npeRepair);
+
+        cloneStep.execute();
+
+        assertThat(npeRepair.isShouldStop(), is(false));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+        assertThat(stepStatusList.size(), is(9));
+        StepStatus npeStatus = stepStatusList.get(8);
+        assertThat(npeStatus.getStep(), is(npeRepair));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
+
+        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+        assertThat(allPatches.size(), is(23));
+        assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+    }
+
+    @Test
+    public void testNPERepairPackageScope() throws IOException {
+        long buildId = 760311031; // andre15silva/failingProject build
+        RepairnatorConfig.getInstance().setNPEScope("package");
+        RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
+
+        Build build = this.checkBuildAndReturn(buildId, false);
+
+        tmpDir = Files.createTempDirectory("test_nperepair").toFile();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        NPERepair npeRepair = new NPERepair();
+        npeRepair.setProjectInspector(inspector);
+
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new BuildProject(inspector))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeClasspath(inspector, false))
+                .addNextStep(new ComputeSourceDir(inspector, false, false))
+                .addNextStep(new ComputeTestDir(inspector, true))
+                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .addNextStep(npeRepair);
+
+        cloneStep.execute();
+
+        assertThat(npeRepair.isShouldStop(), is(false));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+        assertThat(stepStatusList.size(), is(9));
+        StepStatus npeStatus = stepStatusList.get(8);
+        assertThat(npeStatus.getStep(), is(npeRepair));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
+
+        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+        assertThat(allPatches.size(), is(23));
+        assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+    }
+
+    @Test
+    public void testNPERepairStackScope() throws IOException {
+        long buildId = 760311031; // andre15silva/failingProject build
+        RepairnatorConfig.getInstance().setNPEScope("stack");
+        RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
+
+        Build build = this.checkBuildAndReturn(buildId, false);
+
+        tmpDir = Files.createTempDirectory("test_nperepair").toFile();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        NPERepair npeRepair = new NPERepair();
+        npeRepair.setProjectInspector(inspector);
+
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new BuildProject(inspector))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeClasspath(inspector, false))
+                .addNextStep(new ComputeSourceDir(inspector, false, false))
+                .addNextStep(new ComputeTestDir(inspector, true))
+                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .addNextStep(npeRepair);
+
+        cloneStep.execute();
+
+        assertThat(npeRepair.isShouldStop(), is(false));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+        assertThat(stepStatusList.size(), is(9));
+        StepStatus npeStatus = stepStatusList.get(8);
+        assertThat(npeStatus.getStep(), is(npeRepair));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
+
+        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+        assertThat(allPatches.size(), is(23));
+        assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+    }
+
+    @Test
+    public void testNPERepairProjectScope() throws IOException {
+        long buildId = 760311031; // andre15silva/failingProject build
+        RepairnatorConfig.getInstance().setNPEScope("project");
+        RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
+
+        Build build = this.checkBuildAndReturn(buildId, false);
+
+        tmpDir = Files.createTempDirectory("test_nperepair").toFile();
+
+        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
+
+        RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(NPERepair.TOOL_NAME));
+        ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
+
+        CloneRepository cloneStep = new CloneRepository(inspector);
+        NPERepair npeRepair = new NPERepair();
+        npeRepair.setProjectInspector(inspector);
+
+        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true))
+                .addNextStep(new BuildProject(inspector))
+                .addNextStep(new TestProject(inspector))
+                .addNextStep(new ComputeClasspath(inspector, false))
+                .addNextStep(new ComputeSourceDir(inspector, false, false))
+                .addNextStep(new ComputeTestDir(inspector, true))
+                .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
+                .addNextStep(npeRepair);
+
+        cloneStep.execute();
+
+        assertThat(npeRepair.isShouldStop(), is(false));
+
+        List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
+        assertThat(stepStatusList.size(), is(9));
+        StepStatus npeStatus = stepStatusList.get(8);
+        assertThat(npeStatus.getStep(), is(npeRepair));
+
+        for (StepStatus stepStatus : stepStatusList) {
+            assertThat(stepStatus.isSuccess(), is(true));
+        }
+
+        String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
+        assertThat(finalStatus, is("PATCHED"));
+
+        List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
+        assertThat(allPatches.size(), is(23));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
     }
 
