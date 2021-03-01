@@ -7,8 +7,19 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class NopolMojoTest {
 /*
+@Ignore is ignored because this is ran with JUnit3. JUnit3 will run the test anyway.
+
+We can't disable compatibility mode because of the following conflicts:
+
+Method call super.tearDown() will not compile when class com.github.tdurieux.repair.maven.plugin.NopolMojoTest is converted to JUnit 4
+Method call super.setUp() will not compile when class com.github.tdurieux.repair.maven.plugin.NopolMojoTest is converted to JUnit 4
+Method call lookupConfiguredMojo(f, "nopol") will not compile when class com.github.tdurieux.repair.maven.plugin.NopolMojoTest is converted to JUnit 4
+
+*/
+
+public class NopolMojoTest /*extends BetterAbstractMojoTestCase*/ {
+    /*
 	private final String projectPath = "src/test/resources/projects/example1/";
 
 	@Override
@@ -25,8 +36,9 @@ public class NopolMojoTest {
 		mvn_clean.waitFor();
 	}
 
-	//@Ignore
-	//@Test
+    // This test is ignored since Repairnator has been moved to Java 11, as this test requires Java 8 or else Nopol fails.
+	@Ignore
+	@Test
 	public void testNopolRepair() throws Exception {
 		File f = getTestFile(projectPath + "pom.xml");
 		Mojo mojo = lookupConfiguredMojo(f, "nopol");
@@ -38,5 +50,5 @@ public class NopolMojoTest {
 
 		assertEquals(NopolStatus.PATCH, repair.getResult().getNopolStatus());
 	}
-*/
+	*/
 }

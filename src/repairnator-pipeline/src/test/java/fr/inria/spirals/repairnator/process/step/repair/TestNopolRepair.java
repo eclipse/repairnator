@@ -58,9 +58,10 @@ public class TestNopolRepair {
         RepairnatorConfig.deleteInstance();
         FileHelper.deleteFile(tmpDir);
     }
-
+    
+    // This test is ignored since Repairnator has been moved to Java 11, as this test requires Java 8 or else Nopol fails.
     @Ignore
-    //@Test
+    @Test
     public void testNopolRepairWithExclusion() throws IOException {
         long buildId = 207890790; // surli/failingProject build
 
