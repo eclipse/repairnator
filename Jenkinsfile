@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: andre15silva/repairnator-ci:latest
+    image: repairnator/ci-env:latest
     command:
     - cat
     tty: true
