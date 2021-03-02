@@ -36,7 +36,7 @@ public class GithubInitNotifiers implements IInitNotifiers {
     	return this.notifiers;
     }
 
-    public PatchNotifier getPatchNotifers() {
+    public PatchNotifier getPatchNotifiers() {
     	return this.patchNotifier;
     }
 }

@@ -28,7 +28,6 @@ public class TravisInitConfig implements IInitConfig {
         LauncherHelpers.getInstance().loadProperty();
         JSAPResult arguments = jsap.parse(inputArgs);
 
-        LauncherUtils.initCommonConfig(getConfig(), arguments);
         TravisLauncherUtils.initTravisConfig(getConfig(), arguments);
 
         getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
@@ -36,5 +35,6 @@ public class TravisInitConfig implements IInitConfig {
             LOGGER.info("The following repair tools will be used: " + StringUtils.join(getConfig().getRepairTools(), ", "));
         }
 
+        getConfig().setWorkspacePath(arguments.getString("workspace"));
     }
 }

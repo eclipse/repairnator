@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
@@ -115,7 +116,7 @@ public class MainProcessFactory {
 
 		serializeHardwareInfoSerializer(githubInitSerializerEngines.getEngines());
 
-		ProjectInspector inspector =  constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
+		ProjectInspector inspector = constructInspector4Github(githubInitSerializerEngines.getEngines(),githubInitNotifiers.getNotifiers());
 
 		githubMainProcess = githubMainProcess.setInspector(inspector)
 												.setNotifiers(githubInitNotifiers.getNotifiers())
@@ -139,11 +140,12 @@ public class MainProcessFactory {
 	private static GitRepositoryProjectInspector constructInspector4Github(List<SerializerEngine> engines,List<AbstractNotifier> notifiers) {
 		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(Sorald.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
-		System.out.println("Gitbranch " + getConfig().getGitRepositoryBranch());
-		GitRepositoryProjectInspector inspector = (GitRepositoryProjectInspector) InspectorFactory.getGithubInspector(
-                getConfig().getGitRepositoryUrl(),
-                getConfig().getGitRepositoryBranch(),
-                getConfig().getGitRepositoryIdCommit(),
+		GitRepositoryProjectInspector inspector = InspectorFactory.getGithubInspector(
+                new GithubInputBuild(
+					getConfig().getGitRepositoryUrl(),
+                	getConfig().getGitRepositoryBranch(),
+                	getConfig().getGitRepositoryIdCommit()
+				),
                 getConfig().isGitRepositoryFirstCommit(),
                 getConfig().getWorkspacePath(),
                 notifiers

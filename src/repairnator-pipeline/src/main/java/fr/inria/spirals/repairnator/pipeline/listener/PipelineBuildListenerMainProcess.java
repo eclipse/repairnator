@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.pipeline.IInitNotifiers;
 import fr.inria.spirals.repairnator.pipeline.IInitSerializerEngines;
 import fr.inria.spirals.repairnator.pipeline.IInitConfig;
 
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -201,6 +202,11 @@ public class PipelineBuildListenerMainProcess implements MainProcess,MessageList
 
     @Override
     public PatchNotifier getPatchNotifier() {
+        return null;
+    }
+
+    @Override
+    public ProjectInspector getInspector() {
         return null;
     }
 }

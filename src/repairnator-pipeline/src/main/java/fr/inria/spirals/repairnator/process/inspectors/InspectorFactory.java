@@ -1,9 +1,10 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import fr.inria.spirals.repairnator.BuildToBeInspected;
+import fr.inria.spirals.repairnator.GithubInputBuild;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.components.*;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
 
 import java.util.List;
 
@@ -17,15 +18,18 @@ public class InspectorFactory {
 		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4SequencerRepair());
 	}
 
-	public static GitRepositoryProjectInspector getGitSequencerRepairInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
-															   String workspace, List<AbstractNotifier> notifiers){
-		return new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,notifiers);
-	}
-
-	public static GitRepositoryProjectInspector getGithubInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
+	public static GitRepositoryProjectInspector getGithubInspector(GithubInputBuild build, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractNotifier> notifiers) {
-		GitRepositoryProjectInspector inspector = new GitRepositoryProjectInspector(gitRepoUrl,gitRepoBranch,gitRepoIdCommit,isGitRepositoryFirstCommit,workspace,notifiers);
-		inspector.setIRunInspector(new RunInspector4DefaultGit());
+		GitRepositoryProjectInspector inspector = new GitRepositoryProjectInspector(build, isGitRepositoryFirstCommit, workspace, notifiers);
+
+		switch (RepairnatorConfig.getInstance().getLauncherMode()){
+			case SEQUENCER_REPAIR:
+				inspector.setIRunInspector(new RunInspector4SequencerRepair());
+				break;
+			default:
+				inspector.setIRunInspector(new RunInspector4DefaultGit());
+				break;
+		}
 		return inspector;
 	}
 

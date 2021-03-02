@@ -90,7 +90,7 @@ public class GithubScanner {
         System.out.println(url);
         System.out.println(sha);
 
-        runner.submitBuild(new GithubInputBuild(url, sha));
+        runner.submitBuild(new GithubInputBuild(url, null, sha));
     }
 
     private static String getEnvOrDefault(String name, String dfault) {

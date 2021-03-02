@@ -40,7 +40,7 @@ import java.util.stream.Stream;
  * @author Javier Ron
 */
 public class SequencerRepair extends AbstractRepairStep {
-    protected static final String TOOL_NAME = "SequencerRepair";
+    public static final String TOOL_NAME = "SequencerRepair";
     private final SequencerConfig config;
     private final DockerClient docker;
 

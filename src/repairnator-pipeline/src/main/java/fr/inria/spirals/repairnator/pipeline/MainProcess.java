@@ -1,6 +1,8 @@
 package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 
 /* Main process of some procedure */
 public interface MainProcess {
@@ -33,6 +35,13 @@ public interface MainProcess {
   	  */
     IInitSerializerEngines getIInitSerializerEngines();
 
+
+	/**
+	 * Get the assigned project inspector.
+	 *
+	 * @return project inspector
+	 */
+	ProjectInspector getInspector();
 
     void setPatchNotifier(PatchNotifier patchNotifier);
 

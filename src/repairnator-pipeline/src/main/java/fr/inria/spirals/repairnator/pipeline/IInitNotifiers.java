@@ -11,6 +11,6 @@ public interface IInitNotifiers {
 
 	List<AbstractNotifier> getNotifiers();
 
-    PatchNotifier getPatchNotifers();
+    PatchNotifier getPatchNotifiers();
 
 }

@@ -5,6 +5,7 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.stringparsers.EnumeratedStringParser;
+import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.notifier.BugAndFixerBuildsNotifier;
 import fr.inria.spirals.repairnator.notifier.GitRepositoryErrorNotifier;
@@ -134,9 +135,11 @@ public class GitRepositoryLauncher extends LegacyLauncher {
         hardwareInfoSerializer.serialize();
 
         inspector = InspectorFactory.getGithubInspector(
-                getConfig().getGitRepositoryUrl(),
-                getConfig().getGitRepositoryBranch(),
-                getConfig().getGitRepositoryIdCommit(),
+                new GithubInputBuild(
+                    getConfig().getGitRepositoryUrl(),
+                    getConfig().getGitRepositoryBranch(),
+                    getConfig().getGitRepositoryIdCommit()
+                ),
                 getConfig().isGitRepositoryFirstCommit(),
                 getConfig().getWorkspacePath(),
                 this.notifiers

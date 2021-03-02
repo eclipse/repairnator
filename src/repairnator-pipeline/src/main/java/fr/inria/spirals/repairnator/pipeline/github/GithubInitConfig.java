@@ -28,6 +28,8 @@ public class GithubInitConfig implements IInitConfig {
         GitRepositoryLauncherUtils.initGitConfig(getConfig(), arguments, jsap);
 
         getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+
+        getConfig().setWorkspacePath(arguments.getString("workspace"));
     }
 
 }

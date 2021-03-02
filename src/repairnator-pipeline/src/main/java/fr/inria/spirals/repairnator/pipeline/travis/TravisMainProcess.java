@@ -3,20 +3,8 @@ package fr.inria.spirals.repairnator.pipeline.travis;
 import fr.inria.jtravis.JTravis;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Bears;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector4Checkstyle;
 
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
-import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
-import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
-import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
-import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
-import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
-import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
@@ -25,7 +13,6 @@ import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.jtravis.entities.StateType;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
-import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 
 import fr.inria.spirals.repairnator.pipeline.MainProcess;
 import fr.inria.spirals.repairnator.pipeline.IDefineJSAPArgs;
@@ -65,13 +52,14 @@ public class TravisMainProcess implements MainProcess {
 
         this.engines = iInitSerializerEngines.getEngines();
         this.notifiers = iInitNotifiers.getNotifiers();
-        this.patchNotifier = iInitNotifiers.getPatchNotifers();
+        this.patchNotifier = iInitNotifiers.getPatchNotifiers();
     }
 
 	protected static RepairnatorConfig getConfig() {
         return RepairnatorConfig.getInstance();
     }
 
+    @Override
     public ProjectInspector getInspector() {
         return this.inspector;
     }

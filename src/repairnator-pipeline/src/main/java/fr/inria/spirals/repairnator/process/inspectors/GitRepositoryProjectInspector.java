@@ -1,31 +1,9 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
-import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
-import fr.inria.spirals.repairnator.process.step.BuildProject;
-import fr.inria.spirals.repairnator.process.step.CloneCheckoutBranchRepository;
-import fr.inria.spirals.repairnator.process.step.TestProject;
-import fr.inria.spirals.repairnator.process.step.WritePropertyFile;
-import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
-import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
-import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
-import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeModules;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
-import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
-import fr.inria.spirals.repairnator.process.step.push.CommitType;
-import fr.inria.spirals.repairnator.process.step.push.GitRepositoryCommitPatch;
-import fr.inria.spirals.repairnator.process.step.push.GitRepositoryCommitProcessEnd;
-import fr.inria.spirals.repairnator.process.step.push.GitRepositoryInitRepoToPush;
-import fr.inria.spirals.repairnator.process.step.push.GitRepositoryPushProcessEnd;
-import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,20 +19,16 @@ import java.util.List;
 public class GitRepositoryProjectInspector extends ProjectInspector {
     private final Logger logger = LoggerFactory.getLogger(GitRepositoryProjectInspector.class);
 
-    private String gitRepositoryUrl;
-    private String gitRepositoryBranch;
-    private String gitRepositoryIdCommit;
+    private GithubInputBuild inputBuild;
     private boolean gitRepositoryFirstCommit;
     
-    public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
+    public GitRepositoryProjectInspector(GithubInputBuild inputBuild, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractDataSerializer> serializers, List<AbstractNotifier> notifiers) {
 
-    	this.gitRepositoryUrl = gitRepoUrl;
-        this.gitRepositoryBranch = gitRepoBranch;
-        this.gitRepositoryIdCommit = gitRepoIdCommit;
+    	this.inputBuild = inputBuild;
         this.gitRepositoryFirstCommit = isGitRepositoryFirstCommit;
 
-        this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
+        this.gitSlug = this.inputBuild.getSlug().replace("/", "-");
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected() + "_repo";
 
@@ -69,15 +43,13 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
         this.buildLog = new ArrayList<>();
     }
     
-    public GitRepositoryProjectInspector(String gitRepoUrl, String gitRepoBranch, String gitRepoIdCommit, boolean isGitRepositoryFirstCommit,
-            String workspace, List<AbstractNotifier> notifiers) {
+    public GitRepositoryProjectInspector(GithubInputBuild inputBuild, boolean isGitRepositoryFirstCommit,
+                                         String workspace, List<AbstractNotifier> notifiers) {
 
-        this.gitRepositoryUrl = gitRepoUrl;
-        this.gitRepositoryBranch = gitRepoBranch;
-        this.gitRepositoryIdCommit = gitRepoIdCommit;
+        this.inputBuild = inputBuild;
         this.gitRepositoryFirstCommit = isGitRepositoryFirstCommit;
 
-        this.gitSlug = this.gitRepositoryUrl.split("https://github.com/",2)[1].replace("/", "-");
+        this.gitSlug = this.inputBuild.getSlug().replace("/", "-");
         this.workspace = workspace;
         this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected() + "_repo";
 
@@ -96,20 +68,20 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
 
     @Override
     public String getRepoSlug() {
-        return this.gitRepositoryUrl.split("https://github.com/",2)[1];
+        return this.inputBuild.getSlug();
     }
 
     public String getGitRepositoryUrl() {
-    	return this.gitRepositoryUrl;
+    	return this.inputBuild.getUrl();
     }
 
     @Override
     public String getGitRepositoryBranch() {
-    	return this.gitRepositoryBranch;
+    	return this.inputBuild.getBranch();
     }
 
     public String getGitRepositoryIdCommit() {
-    	return this.gitRepositoryIdCommit;
+    	return this.inputBuild.getSha();
     }
 
     public boolean isGitRepositoryFirstCommit() {
