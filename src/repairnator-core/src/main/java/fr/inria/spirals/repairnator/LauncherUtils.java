@@ -116,6 +116,15 @@ public class LauncherUtils {
         // --soraldMaxFixesPerRule
         jsap.registerParameter(LauncherUtils.defineArgSoraldMaxFixesPerRule());
 
+        // --npeSelection
+        jsap.registerParameter(LauncherUtils.defineArgNPESelection());
+        // --npeNbIteration
+        jsap.registerParameter(LauncherUtils.defineArgNPENbIteration());
+        // --npeScope
+        jsap.registerParameter(LauncherUtils.defineArgNPEScope());
+        // --npeRepairStrategy
+        jsap.registerParameter(LauncherUtils.defineArgNPERepairStrategy());
+
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // --checkstyle
@@ -214,6 +223,11 @@ public class LauncherUtils {
         config.setSegmentSize(LauncherUtils.getArgSegmentSize(arguments));
         config.setSoraldRepairMode(RepairnatorConfig.SORALD_REPAIR_MODE.valueOf(LauncherUtils.getArgSoraldRepairMode(arguments)));
         config.setSoraldMaxFixesPerRule(LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
+
+        config.setNPESelection(LauncherUtils.getArgNPESelection(arguments));
+        config.setNPENbIteration(LauncherUtils.getArgNPENbIteration(arguments));
+        config.setNPEScope(LauncherUtils.getArgNPEScope(arguments));
+        config.setNPERepairStrategy(LauncherUtils.getArgNPERepairStrategy(arguments));
 
         config.setPatchRankingMode(LauncherUtils.getArgPatchRankingMode(arguments));
     }
@@ -668,7 +682,7 @@ public class LauncherUtils {
         opt.setLongFlag("localMavenRepository");
         opt.setStringParser(FileStringParser.getParser().setMustBeDirectory(true));
         opt.setHelp("Maven local repository folder");
-        opt.setDefault(System.getenv("HOME") + "/.m2/repository");
+        opt.setDefault(System.getProperty("user.home") + "/.m2/repository");
         return opt;
     }
 
@@ -879,6 +893,58 @@ public class LauncherUtils {
 
     public static Integer getArgSoraldMaxFixesPerRule(JSAPResult arguments) {
         return arguments.getInt("soraldMaxFixesPerRule");
+    }
+
+    public static FlaggedOption defineArgNPESelection() {
+        FlaggedOption opt = new FlaggedOption("npeSelection");
+        opt.setLongFlag("npeSelection");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("exploration");
+        opt.setHelp("Selection strategy for NPEFix repair tool.");
+        return opt;
+    }
+
+    public static String getArgNPESelection(JSAPResult arguments) {
+        return arguments.getString("npeSelection");
+    }
+
+    public static FlaggedOption defineArgNPENbIteration() {
+        FlaggedOption opt = new FlaggedOption("npeRepairNbIteration");
+        opt.setLongFlag("npeRepairNbIteration");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("100");
+        opt.setHelp("Number of iteration for NPEFix repair tool");
+        return opt;
+    }
+
+    public static Integer getArgNPENbIteration(JSAPResult arguments) {
+        return arguments.getInt("npeRepairNbIteration");
+    }
+
+    public static FlaggedOption defineArgNPEScope() {
+        FlaggedOption opt = new FlaggedOption("npeScope");
+        opt.setLongFlag("npeScope");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("class");
+        opt.setHelp("Scope for NPEFix repair tool.");
+        return opt;
+    }
+
+    public static String getArgNPEScope(JSAPResult arguments) {
+        return arguments.getString("npeScope");
+    }
+
+    public static FlaggedOption defineArgNPERepairStrategy() {
+        FlaggedOption opt = new FlaggedOption("npeRepairStrategy");
+        opt.setLongFlag("npeRepairStrategy");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("default");
+        opt.setHelp("Repair strategy for NPEFix repair tool.");
+        return opt;
+    }
+
+    public static String getArgNPERepairStrategy(JSAPResult arguments) {
+        return arguments.getString("npeRepairStrategy");
     }
 
     public static FlaggedOption defineArgPatchRankingMode() {

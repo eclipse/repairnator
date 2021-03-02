@@ -97,7 +97,7 @@ public class TestPipelineArgs {
         File defaultMavenHome = new File("/usr/share/maven");
         assertEquals(defaultMavenHome, LauncherUtils.getArgMavenHome(arguments));
         assertEquals(defaultMavenHome.getPath(), config.getMavenHome());
-        File defaultLocalMavenRepository = new File(System.getenv("HOME") + "/.m2/repository");
+        File defaultLocalMavenRepository = new File(System.getProperty("user.home") + "/.m2/repository");
         assertEquals(defaultLocalMavenRepository, LauncherUtils.getArgLocalMavenRepository(arguments));
         assertEquals(defaultLocalMavenRepository.getPath(), config.getLocalMavenRepository());
 
@@ -164,6 +164,20 @@ public class TestPipelineArgs {
         Integer defaultMaxFixesPerRule = 2000;
         assertEquals(defaultMaxFixesPerRule, LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
         assertEquals((int) defaultMaxFixesPerRule, config.getSoraldMaxFixesPerRule());
+
+        // default NPEFix rules
+        String defaultNPESelection = "exploration";
+        assertEquals(defaultNPESelection, LauncherUtils.getArgNPESelection(arguments));
+        assertEquals(defaultNPESelection, config.getNPESelection());
+        Integer defaultNbIteration = 100;
+        assertEquals(defaultNbIteration, LauncherUtils.getArgNPENbIteration(arguments));
+        assertEquals(defaultNbIteration, config.getNPENbIteration());
+        String defaultNPEScope = "class";
+        assertEquals(defaultNPEScope, LauncherUtils.getArgNPEScope(arguments));
+        assertEquals(defaultNPEScope, config.getNPEScope());
+        String defaultNPERepairStrategy = "default";
+        assertEquals(defaultNPERepairStrategy, LauncherUtils.getArgNPERepairStrategy(arguments));
+        assertEquals(defaultNPERepairStrategy, config.getNPERepairStrategy());
 
         // default patch ranking mode
         RepairnatorConfig.PATCH_RANKING_MODE defaultPatchRankingMode = RepairnatorConfig.PATCH_RANKING_MODE.NONE;

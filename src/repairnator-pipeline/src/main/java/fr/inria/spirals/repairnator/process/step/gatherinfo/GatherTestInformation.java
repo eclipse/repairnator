@@ -202,11 +202,10 @@ public class GatherTestInformation extends AbstractStep {
                                                 File file = new File(sourcedir.getAbsolutePath() + "/" + path);
                                                 File packageFile = new File(sourcedir.getAbsolutePath() + "/" + packagePath);
                                                 if (file.exists()) {
+                                                    this.getLogger().debug("classFiles: " + file.getAbsolutePath());
                                                     if (!onePass) {
-                                                        this.getLogger().debug("classFiles: " + file.getAbsolutePath());
                                                         classFiles.add(file);
                                                     }
-                                                    this.getLogger().debug("stackFiles: " + file.getAbsolutePath());
                                                     stackFiles.add(file);
                                                 }
                                                 if (packageFile.exists()) {
@@ -225,7 +224,6 @@ public class GatherTestInformation extends AbstractStep {
                                     } catch (StackTraceParser.ParseException e) {
                                         this.addStepError("Error while parsing stack trace.", e);
                                     }
-
                                     failureLocation.addErroringMethod(testCase.getName(), typeTof);
                                 } else {
                                     FailureType typeTof = new FailureType(failureType, testCase.getFailureDetail());

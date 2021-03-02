@@ -129,6 +129,11 @@ public class RepairnatorConfig {
     private SORALD_REPAIR_MODE soraldRepairMode;
     private boolean measureSoraldTime;
 
+    private String npeSelection;
+    private Integer npeNbIteration;
+    private String npeScope;
+    private String npeRepairStrategy;
+
     private PATCH_RANKING_MODE patchRankingMode;
     
     private PATCH_CLASSIFICATION_MODE patchClassificationMode;
@@ -769,6 +774,38 @@ public class RepairnatorConfig {
 
     public int getSoraldMaxFixesPerRule() {
         return this.soraldMaxFixesPerRule;
+    }
+
+    public String getNPESelection() {
+        return npeSelection;
+    }
+
+    public void setNPESelection(String npeSelection) {
+        this.npeSelection = npeSelection;
+    }
+
+    public Integer getNPENbIteration() {
+        return npeNbIteration;
+    }
+
+    public void setNPENbIteration(Integer npeNbIteration) {
+        this.npeNbIteration = npeNbIteration;
+    }
+
+    public String getNPEScope() {
+        return npeScope;
+    }
+
+    public void setNPEScope(String npeScope) {
+        this.npeScope = npeScope;
+    }
+
+    public String getNPERepairStrategy() {
+        return npeRepairStrategy;
+    }
+
+    public void setNPERepairStrategy(String npeRepairStrategy) {
+        this.npeRepairStrategy = npeRepairStrategy;
     }
 
     public PATCH_RANKING_MODE getPatchRankingMode() {
