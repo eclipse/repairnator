@@ -1,5 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
+import fr.inria.spirals.repairnator.process.step.StepStatus;
+
 /**
  * Created by Benjamin Tellström on 14/06/2019
  *
@@ -16,5 +18,9 @@ public class NPERepairSafe extends AbstractNPERepairStep {
         return TOOL_NAME;
     }
 
+    @Override
+    protected StepStatus businessExecute() {
+        return super.businessExecute();
+    }
 }
 
