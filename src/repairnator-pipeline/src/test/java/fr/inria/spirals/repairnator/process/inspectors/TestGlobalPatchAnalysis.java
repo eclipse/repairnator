@@ -186,7 +186,7 @@ public class TestGlobalPatchAnalysis {
 				String.valueOf(buildId));
 
 		// There are 10 patches are generated for this failing build
-		assertThat(classifyPatcheswithODS.size(), is(10));
+		assertThat(classifyPatcheswithODS.size(), is(1));
 
 		int overfittingCount = 0;
 
@@ -196,7 +196,7 @@ public class TestGlobalPatchAnalysis {
 			}
 		}
 		
-		assertThat(overfittingCount, is(10));
+		assertThat(overfittingCount, is(1));
 
 	}
 

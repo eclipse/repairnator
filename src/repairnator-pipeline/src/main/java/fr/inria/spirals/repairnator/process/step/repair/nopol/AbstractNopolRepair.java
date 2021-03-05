@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.process.step.repair.nopol;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import fr.inria.lille.commons.synthesis.smt.solver.SolverFactory;
 import fr.inria.lille.repair.common.config.NopolContext;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.common.synth.RepairType;
@@ -134,7 +135,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         nopolContext.setMaxTimeInMinutes(timeout);
         nopolContext.setLocalizer(NopolContext.NopolLocalizer.COCOSPOON);
         nopolContext.setSolverPath(this.getConfig().getZ3solverPath());
-        nopolContext.setSynthesis(NopolContext.NopolSynthesis.DYNAMOTH);
+        nopolContext.setSynthesis(NopolContext.NopolSynthesis.SMT);
         nopolContext.setType(RepairType.COND_THEN_PRE);
         nopolContext.setOnlyOneSynthesisResult(false);
         nopolContext.setOutputFolder(patchDir.getAbsolutePath());
@@ -149,7 +150,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         nopolInformation.setNopolContext(nopolContext);
 
         // not required in Dynamoth mode
-        // SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
+        SolverFactory.setSolver(nopolContext.getSolver(), nopolContext.getSolverPath());
 
         long beforeNopol = new Date().getTime();
 

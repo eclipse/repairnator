@@ -61,7 +61,7 @@ public class TestProjectInspector {
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setPush(true);
         config.setPushRemoteRepo("");
-        config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix")));
+        config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "NopolSingleTest")));
         config.setGithubUserEmail("noreply@github.com");
         config.setGithubUserName("repairnator");
         Utils.setLoggersLevel(Level.ERROR);
@@ -75,7 +75,7 @@ public class TestProjectInspector {
 
     @Test
     public void testPatchFailingProject() throws IOException, GitAPIException {
-        long buildId = 332712656; // surli/failingProject simple-npe
+        long buildId = 208897371; // surli/failingProject only-one-failing
 
         tmpDir = Files.createTempDirectory("test_complete").toFile();
 
@@ -109,6 +109,7 @@ public class TestProjectInspector {
         Map<Class<? extends AbstractStep>, StepStatus.StatusKind> expectedStatuses = new HashMap<>();
         expectedStatuses.put(PushProcessEnd.class, StepStatus.StatusKind.SKIPPED); // no remote info provided
         expectedStatuses.put(CheckoutPatchedBuild.class, StepStatus.StatusKind.FAILURE); // no patch build to find
+        expectedStatuses.put(NPERepair.class, StepStatus.StatusKind.SKIPPED); // No NPE
 
         this.checkStepStatus(stepStatusList, expectedStatuses);
 
@@ -119,7 +120,7 @@ public class TestProjectInspector {
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
 
-        String remoteBranchName = "surli-failingProject-332712656-20180124-101215";
+        String remoteBranchName = "surli-failingProject-208897371-20170308-040702";
         assertEquals(remoteBranchName, inspector.getRemoteBranchName());
 
         verify(notifierEngine, atLeast(1)).notify(anyString(), anyString());

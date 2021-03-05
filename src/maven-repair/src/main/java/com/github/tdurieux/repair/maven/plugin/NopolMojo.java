@@ -45,10 +45,10 @@ public class NopolMojo extends AbstractRepairMojo {
     @Parameter( defaultValue = "10", property = "maxTime", required = true )
     private int maxTime;
 
-    @Parameter( defaultValue = "gzoltar", property = "localizer", required = true )
+    @Parameter( defaultValue = "cocospoon", property = "localizer", required = true )
     private String localizer;
 
-    @Parameter( defaultValue = "dynamoth", property = "synthesis", required = true )
+    @Parameter( defaultValue = "smt", property = "synthesis", required = true )
     private String synthesis;
 
     @Parameter( defaultValue = "z3", property = "solver", required = true )

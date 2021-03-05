@@ -24,7 +24,6 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -58,9 +57,7 @@ public class TestNopolRepair {
         RepairnatorConfig.deleteInstance();
         FileHelper.deleteFile(tmpDir);
     }
-    
-    // This test is ignored since Repairnator has been moved to Java 11, as this test requires Java 8 or else Nopol fails.
-    @Ignore
+
     @Test
     public void testNopolRepairWithExclusion() throws IOException {
         long buildId = 207890790; // surli/failingProject build
@@ -103,7 +100,7 @@ public class TestNopolRepair {
         assertThat(finalStatus, is("PATCHED"));
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertThat(allPatches.size(), is(77));
+        assertThat(allPatches.size(), is(9));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
     }
 
