@@ -135,7 +135,7 @@ public abstract class AbstractNopolRepair extends AbstractRepairStep {
         nopolContext.setMaxTimeInMinutes(timeout);
         nopolContext.setLocalizer(NopolContext.NopolLocalizer.COCOSPOON);
         nopolContext.setSolverPath(this.getConfig().getZ3solverPath());
-        nopolContext.setSynthesis(NopolContext.NopolSynthesis.SMT);
+        nopolContext.setSynthesis(NopolContext.NopolSynthesis.SMT); // We cannout use Dynamoth because it currently depends on tolls.jar
         nopolContext.setType(RepairType.COND_THEN_PRE);
         nopolContext.setOnlyOneSynthesisResult(false);
         nopolContext.setOutputFolder(patchDir.getAbsolutePath());
