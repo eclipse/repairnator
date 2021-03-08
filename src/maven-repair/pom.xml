@@ -296,6 +296,7 @@
             <id>noNopol</id>
             <activation>
                 <jdk>[1.9,1.16)</jdk>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <dependency>

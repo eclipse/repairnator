@@ -160,13 +160,14 @@ public class TestGatherTestInformation {
 
         FailureLocation expectedFailureLocation = new FailureLocation("nopol_examples.nopol_example_1.NopolExampleTest");
         ErrorType errorType = new ErrorType("java.lang.StringIndexOutOfBoundsException", "java.lang.StringIndexOutOfBoundsException: String index out of range: -5\n" +
-                "\tat java.lang.String.charAt(String.java:658)\n" +
+                "\tat java.base/java.lang.StringLatin1.charAt(StringLatin1.java:47)\n" +
+                "\tat java.base/java.lang.String.charAt(String.java:693)\n" +
                 "\tat nopol_examples.nopol_example_1.NopolExample.charAt(NopolExample.java:16)\n" +
                 "\tat nopol_examples.nopol_example_1.NopolExampleTest.test5(NopolExampleTest.java:39)\n" +
-                "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
-                "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n" +
-                "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
-                "\tat java.lang.reflect.Method.invoke(Method.java:498)\n" +
+                "\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
+                "\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n" +
+                "\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
+                "\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n" +
                 "\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n" +
                 "\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n" +
                 "\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n" +
@@ -183,10 +184,10 @@ public class TestGatherTestInformation {
                 "\tat org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)\n" +
                 "\tat org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)\n" +
                 "\tat org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)\n" +
-                "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
-                "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n" +
-                "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
-                "\tat java.lang.reflect.Method.invoke(Method.java:498)\n" +
+                "\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
+                "\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n" +
+                "\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
+                "\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n" +
                 "\tat org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)\n" +
                 "\tat org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)\n" +
                 "\tat org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)\n" +

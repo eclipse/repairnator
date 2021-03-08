@@ -72,7 +72,7 @@ public class TestPipeline {
     public void testPipelineGitRepositoryAndBranch() throws Exception {
         GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/surli/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepobranch", "astor-jkali-failure",
                 "--repairTools", "AstorJKali",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),

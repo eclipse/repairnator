@@ -52,7 +52,7 @@ public class TestPipelinebGithubMode {
     public void testPipelineGitRepositoryAndBranch() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/surli/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepobranch", "astor-jkali-failure",
                 "--repairTools", "AstorJKali",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),

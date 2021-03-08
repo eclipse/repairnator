@@ -2,6 +2,7 @@ package com.github.tdurieux.repair.maven.plugin;
 
 import fr.inria.lille.repair.nopol.NopolStatus;
 import org.apache.maven.plugin.Mojo;
+import org.junit.Test;
 
 import java.io.File;
 
@@ -23,6 +24,7 @@ public class NopolMojoTest extends BetterAbstractMojoTestCase {
 		mvn_clean.waitFor();
 	}
 
+	@Test
 	public void testNopolRepair() throws Exception {
 		File f = getTestFile(projectPath + "pom.xml");
 		Mojo mojo = lookupConfiguredMojo(f, "nopol");
