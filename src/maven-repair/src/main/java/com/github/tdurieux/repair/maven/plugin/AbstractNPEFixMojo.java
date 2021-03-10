@@ -49,7 +49,7 @@ public abstract class AbstractNPEFixMojo extends AbstractRepairMojo {
         RepairnatorConfig.getInstance().setRepairTools(Collections.singleton(repairStep.getRepairToolName()));
         RepairnatorConfig.getInstance().setOutputPath(tmpRepairnatorDir.getAbsolutePath());
         RepairnatorConfig.getInstance().setLocalMavenRepository(localRepository.getBasedir());
-        InspectorFactory.getMavenInspector(project.getBasedir().getAbsolutePath(), Collections.singletonList(repairStep), null).run();
+        InspectorFactory.getMavenInspector(project.getBasedir().getAbsolutePath(), null).run();
 
         List<File> patches = Arrays.asList(tmpRepairnatorDir.listFiles(((dir, name) -> name.startsWith("patches") && name.endsWith(".json"))));
 

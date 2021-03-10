@@ -12,7 +12,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 public class NPEFixMojo extends AbstractNPEFixMojo {
 
     public void execute() throws MojoExecutionException {
-        this.repairStep = new NPERepair(selector, nbIteration, scope, repairStrategy);
+        this.repairStep = new NPERepair();
         super.execute();
 
     }
