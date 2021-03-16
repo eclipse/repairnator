@@ -49,23 +49,14 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>30.1-jre</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>coming</artifactId>
             <!-- see https://repo1.maven.org/maven2/com/github/spoonlabs/coming/ -->
-            <version>5.1.0</version>
+            <version>5.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

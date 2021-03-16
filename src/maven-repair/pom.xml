@@ -295,6 +295,12 @@
                     <artifactId>nopol</artifactId>
                     <!--Jan 13, 2020, 2:07 PM GMT-->
                     <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.google.guava</groupId>
+                            <artifactId>guava</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
@@ -314,6 +320,10 @@
                         <exclusion>
                             <groupId>com.sun</groupId>
                             <artifactId>tools</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>com.google.guava</groupId>
+                            <artifactId>guava</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
