@@ -63,7 +63,8 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.2.5</version>
+            <!--do not upgrade to >= 3.6.0, as it will cause a compatibility issue with other guava dependencies-->
+            <version>3.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -293,14 +294,8 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <!--Jan 13, 2020, 2:07 PM GMT-->
-                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>com.google.guava</groupId>
-                            <artifactId>guava</artifactId>
-                        </exclusion>
-                    </exclusions>
+                    <!--Mar 18, 2021, 2:06 PM GMT-->
+                    <version>689e97eab451a671378b3fd55f790a39ce0d21d3</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -314,16 +309,12 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <!--Jan 13, 2020, 2:07 PM GMT-->
-                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
+                    <!--Mar 18, 2021, 2:06 PM GMT-->
+                    <version>689e97eab451a671378b3fd55f790a39ce0d21d3</version>
                     <exclusions>
                         <exclusion>
                             <groupId>com.sun</groupId>
                             <artifactId>tools</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>com.google.guava</groupId>
-                            <artifactId>guava</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
